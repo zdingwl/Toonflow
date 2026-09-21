@@ -14,7 +14,7 @@ test("分镜决策层必须先读回本场，再派发缺场，齐全后才审�
   assert.ok(stage, "缺少阶段4调度规则");
   assert.match(stage, /每次 `run_sub_agent_storyboard_table` 只能处理一场/);
   assert.match(stage, /重新读取工作区已保存的分镜表/);
-  assert.match(stage, /只补缺场/);
+  assert.match(stage, /(?:只|仅)补缺场/);
   assert.match(stage, /此前不派发监督层、阶段5或后续阶段/);
   assert.match(audit, /阶段4全部场次已核实保存后/);
   assert.doesNotMatch(audit, /阶段1或阶段4执行完毕后/);
