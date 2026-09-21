@@ -1070,6 +1070,7 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.integer("episodesId");
         table.text("isolationKey").notNullable();
         table.text("inputHash").notNullable();
+        table.text("inputContent");
         table.text("status").notNullable();
         table.text("error");
         table.integer("createTime").notNullable();
@@ -1083,6 +1084,9 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.text("id").notNullable().primary();
         table.text("runId").notNullable();
         table.text("stepKey").notNullable();
+        table.text("inputHash");
+        table.text("inputContent");
+        table.text("output");
         table.text("status").notNullable();
         table.text("resultRef");
         table.text("error");
