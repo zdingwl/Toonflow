@@ -8,11 +8,15 @@ on:
       - "src/agents/**"
       - "src/routes/production/**"
       - "src/routes/scriptAgent/**"
+      - "src/routes/script/getAiRegex.ts"
       - "src/utils/storyboardScenes.ts"
       - "src/utils/ai.ts"
       - "src/utils/agent/**"
       - "Toonflow-web-master/src/stores/**"
       - "Toonflow-web-master/src/utils/useChat.ts"
+      - "Toonflow-web-master/src/utils/parseScript.ts"
+      - "Toonflow-web-master/src/utils/axios.ts"
+      - "Toonflow-web-master/src/views/script/components/batchAddScript.vue"
       - "data/skills/**"
       - "tests/**"
   workflow_dispatch:
@@ -28,5 +32,5 @@ jobs:
           cache: yarn
       - name: 安装检查所需依赖
         run: yarn install --frozen-lockfile --ignore-scripts
-      - name: 运行 Agent、分镜及 XML 回归检查
+      - name: 运行 Agent、分镜及剧本解析回归检查
         run: node --test tests/*.test.mjs
