@@ -26,11 +26,12 @@ function makeScriptAgentStore(projectId: string) {
           if (snapshot === lastQueuedSnapshot) return saveQueue;
           lastQueuedSnapshot = snapshot;
           const currentSave = saveQueue.then(async () => {
-            const response = await axios.post("/scriptAgent/setPlanData", {
+            // axios 响应拦截器在运行时解包 response.data，类型声明仍是 AxiosResponse。
+            const response: { code: number; message?: string } = (await axios.post("/scriptAgent/setPlanData", {
               projectId: projectId,
               agentType: "scriptAgent",
               data: JSON.parse(snapshot),
-            });
+            })) as any;
             if (response?.code !== 200) throw new Error(response?.message || "剧本保存未得到成功回执");
           });
           saveQueue = currentSave.then(
