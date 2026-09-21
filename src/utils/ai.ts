@@ -191,7 +191,7 @@ class AiText {
     const baseModel = await sdkFn(this.think, this.thinkLevel);
     const mws = [
       ...(switchAiDevTool?.value === "1" ? [devToolsMiddleware()] : []),
-      ...(middleware ? (Array.isArray(middleware) ? middleware : [middleware] : [])),
+      ...(middleware ? (Array.isArray(middleware) ? middleware : [middleware]) : []),
     ];
     return mws.length > 0 ? wrapLanguageModel({ model: baseModel, middleware: mws.length === 1 ? mws[0] : mws }) : baseModel;
   }
@@ -241,7 +241,7 @@ interface TaskRecord {
   taskClass: string; // 任务分类
   describe: string; // 任务描述
   relatedObjects: string; // 相关对象信息，便于后续分析和追踪
-  projectId: number;
+  projectId: number; // 项目ID
 }
 
 class AiImage {
