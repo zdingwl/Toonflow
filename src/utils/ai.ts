@@ -67,7 +67,8 @@ async function resolveModelName(value: AiType | `${string}:${string}`): Promise<
     let modelName = null;
 
     if (!agentDeployData?.modelName) {
-      const [mainly] = agentDeployData!.key!.split(/:(.+)/);
+      // 子 Agent 专属配置缺失时，应从请求 key 解析父级配置；此时 agentDeployData 可能不存在。
+      const [mainly] = value.split(/:(.+)/);
       const mainlyData = await u.db("o_agentDeploy").where("key", mainly).first();
       if (!mainlyData?.modelName) throw new Error(`未找到部署配置 ${value}`);
       modelName = mainlyData.modelName;
@@ -100,7 +101,7 @@ async function getModelConfig(value: AiType | `${string}:${string}`) {
     const agentDeployData = await u.db("o_agentDeploy").where("key", value).first();
 
     if (!agentDeployData?.modelName) {
-      const [mainly] = agentDeployData!.key!.split(/:(.+)/);
+      const [mainly] = value.split(/:(.+)/);
       const mainlyData = await u.db("o_agentDeploy").where("key", mainly).first();
       if (!mainlyData?.modelName) throw new Error(`未找到部署配置 ${value}`);
       return mainlyData;
@@ -190,7 +191,7 @@ class AiText {
     const baseModel = await sdkFn(this.think, this.thinkLevel);
     const mws = [
       ...(switchAiDevTool?.value === "1" ? [devToolsMiddleware()] : []),
-      ...(middleware ? (Array.isArray(middleware) ? middleware : [middleware]) : []),
+      ...(middleware ? (Array.isArray(middleware) ? middleware : [middleware] : [])),
     ];
     return mws.length > 0 ? wrapLanguageModel({ model: baseModel, middleware: mws.length === 1 ? mws[0] : mws }) : baseModel;
   }
@@ -221,7 +222,7 @@ class AiText {
 function referenceList2imageBase642(id: string, input: any) {
   const version = u.vendor.getVendor(id).version;
   if (!version || isNaN(parseFloat(version)) || parseFloat(version) < 2.0) {
-    input.imageBase64 = input.referenceList.map((item: any) => item.base64);
+    input.imageBase64 = (input.referenceList ?? []).map((item: any) => item.base64);
     return input;
   }
   return input;
@@ -240,7 +241,7 @@ interface TaskRecord {
   taskClass: string; // 任务分类
   describe: string; // 任务描述
   relatedObjects: string; // 相关对象信息，便于后续分析和追踪
-  projectId: number; // 项目ID
+  projectId: number;
 }
 
 class AiImage {
@@ -330,14 +331,12 @@ class AiAudio {
   async run(input: VideoConfig, taskRecord?: TaskRecord) {
     const modelName = await resolveModelName(this.key);
     const exec = async (mn: `${string}:${string}`) => {
-      try {
-        const fn = await getVendorTemplateFn("ttsRequest", mn);
-        await referenceList2imageBase642(mn.split(/:(.+)/)[0], input);
-        this.result = await fn(input);
+      const fn = await getVendorTemplateFn("ttsRequest", mn);
+      await referenceList2imageBase642(mn.split(/:(.+)/)[0], input);
+      this.result = await fn(input);
 
-        if (this.result.startsWith("http")) this.result = await urlToBase64(this.result);
-        return this;
-      } catch (e) {}
+      if (this.result.startsWith("http")) this.result = await urlToBase64(this.result);
+      return this;
     };
     if (taskRecord) {
       return withTaskRecord(this.key, taskRecord.taskClass, taskRecord.describe, taskRecord.relatedObjects, taskRecord.projectId, exec);
