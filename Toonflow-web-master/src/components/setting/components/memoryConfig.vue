@@ -4,16 +4,59 @@
 
     <t-form :data="formData" labelAlign="top" labelWidth="180px" class="memoryForm" @submit="handleSave">
       <t-card :title="$t('settings.memory.vectorModelConfig')" :bordered="true" style="margin-top: 16px">
-        <t-form-item :label="$t('settings.memory.modelFilePath')" name="modelOnnxFile">
-          <t-tag-input v-model="formData.modelOnnxFile" clearable />
-          <template #help>向量模型文件路径：/data/models/{{ formData.modelOnnxFile ? formData.modelOnnxFile.join("/") : "" }}</template>
-        </t-form-item>
-        <t-form-item :label="$t('settings.memory.quantizationType')" name="modelDtype">
-          <t-select v-model="formData.modelDtype" :placeholder="$t('settings.memory.quantizationPlaceholder')">
-            <t-option v-for="item in dtypeOptions" :key="item" :value="item" :label="item" />
+        <t-form-item label="Embedding 后端" name="embeddingBackend">
+          <t-select v-model="formData.embeddingBackend">
+            <t-option value="onnx" label="ONNX（兼容现有本地模型）" />
+            <t-option value="ollama" label="Ollama（推荐 Qwen3 Embedding）" />
           </t-select>
-          <template #help></template>
+          <template #help>切换后会释放当前 Embedding 实例；旧向量按模型版本隔离，不会与新向量混用。</template>
         </t-form-item>
+
+        <template v-if="formData.embeddingBackend === 'onnx'">
+          <t-form-item :label="$t('settings.memory.modelFilePath')" name="modelOnnxFile">
+            <t-tag-input v-model="formData.modelOnnxFile" clearable />
+            <template #help>向量模型文件路径：/data/models/{{ formData.modelOnnxFile ? formData.modelOnnxFile.join("/") : "" }}</template>
+          </t-form-item>
+          <t-form-item :label="$t('settings.memory.quantizationType')" name="modelDtype">
+            <t-select v-model="formData.modelDtype" :placeholder="$t('settings.memory.quantizationPlaceholder')">
+              <t-option v-for="item in dtypeOptions" :key="item" :value="item" :label="item" />
+            </t-select>
+          </t-form-item>
+        </template>
+
+        <t-form-item v-else label="Ollama Embedding 模型" name="ollamaEmbeddingModel">
+          <t-input v-model="formData.ollamaEmbeddingModel" placeholder="qwen3-embedding:4b" />
+          <template #help>仅连接本机 127.0.0.1:11434。你的 5090D 环境建议使用 qwen3-embedding:4b。</template>
+        </t-form-item>
+      </t-card>
+
+      <t-card title="高级检索配置" :bordered="true" style="margin-top: 16px">
+        <t-form-item label="混合检索" name="memoryHybridRetrieval">
+          <t-switch v-model="formData.memoryHybridRetrieval" />
+          <template #help>同时使用关键词召回和向量召回，提高中文项目名、角色名和精确术语的命中率。</template>
+        </t-form-item>
+        <t-form-item label="记忆上下文 Token 预算" name="memoryContextTokenBudget">
+          <t-input-number v-model="formData.memoryContextTokenBudget" :min="400" :max="32768" :step="100" :allowInputOverLimit="false" />
+        </t-form-item>
+        <t-form-item label="向量分页扫描大小" name="memoryVectorScanPageSize">
+          <t-input-number v-model="formData.memoryVectorScanPageSize" :min="64" :max="2000" :step="64" :allowInputOverLimit="false" />
+          <template #help>只影响 SQLite 向量扫描的单页内存占用；默认 256。</template>
+        </t-form-item>
+        <t-form-item label="启用本地 Reranker" name="memoryRerankerEnabled">
+          <t-switch v-model="formData.memoryRerankerEnabled" />
+        </t-form-item>
+        <template v-if="formData.memoryRerankerEnabled">
+          <t-form-item label="Reranker 地址" name="memoryRerankerUrl">
+            <t-input v-model="formData.memoryRerankerUrl" placeholder="http://127.0.0.1:11435/rerank" />
+          </t-form-item>
+          <t-form-item label="Reranker 模型" name="memoryRerankerModel">
+            <t-input v-model="formData.memoryRerankerModel" placeholder="Qwen3-Reranker-4B" />
+          </t-form-item>
+          <t-form-item label="Reranker 候选数" name="memoryRerankerCandidates">
+            <t-input-number v-model="formData.memoryRerankerCandidates" :min="8" :max="100" :step="4" :allowInputOverLimit="false" />
+            <template #help>推荐 24；先混合召回候选，再由本地 Reranker 精排。</template>
+          </t-form-item>
+        </template>
       </t-card>
       <t-card :title="$t('settings.memory.memoryParams')" :bordered="true" style="margin-top: 16px">
         <t-form-item :label="$t('settings.memory.messagesPerSummary')" name="messagesPerSummary">
@@ -65,6 +108,15 @@ interface MemoryConfigForm {
   deepRetrieveSummaryLimit: number;
   modelOnnxFile: string[];
   modelDtype: string;
+  embeddingBackend: "onnx" | "ollama";
+  ollamaEmbeddingModel: string;
+  memoryHybridRetrieval: boolean;
+  memoryRerankerEnabled: boolean;
+  memoryRerankerUrl: string;
+  memoryRerankerModel: string;
+  memoryRerankerCandidates: number;
+  memoryContextTokenBudget: number;
+  memoryVectorScanPageSize: number;
 }
 
 const formData = ref<MemoryConfigForm>({
@@ -76,6 +128,15 @@ const formData = ref<MemoryConfigForm>({
   deepRetrieveSummaryLimit: 5,
   modelOnnxFile: ["all-MiniLM-L6-v2", "onnx", "model_fp16.onnx"], // 模型文件路径
   modelDtype: "fp16",
+  embeddingBackend: "onnx",
+  ollamaEmbeddingModel: "qwen3-embedding:4b",
+  memoryHybridRetrieval: true,
+  memoryRerankerEnabled: false,
+  memoryRerankerUrl: "http://127.0.0.1:11435/rerank",
+  memoryRerankerModel: "Qwen3-Reranker-4B",
+  memoryRerankerCandidates: 24,
+  memoryContextTokenBudget: 2400,
+  memoryVectorScanPageSize: 256,
 });
 
 const dtypeOptions = ["fp16", "auto", "fp32", "q8", "int8", "uint8", "q4", "bnb4", "q4f16"];
@@ -97,6 +158,15 @@ async function getMemoryConfig() {
       deepRetrieveSummaryLimit: data.deepRetrieveSummaryLimit ?? 5,
       modelOnnxFile: data.modelOnnxFile ?? ["all-MiniLM-L6-v2", "onnx", "model_fp16.onnx"], // 模型文件路径
       modelDtype: data.modelDtype ?? "fp16",
+      embeddingBackend: data.embeddingBackend === "ollama" ? "ollama" : "onnx",
+      ollamaEmbeddingModel: data.ollamaEmbeddingModel ?? "qwen3-embedding:4b",
+      memoryHybridRetrieval: data.memoryHybridRetrieval ?? true,
+      memoryRerankerEnabled: data.memoryRerankerEnabled ?? false,
+      memoryRerankerUrl: data.memoryRerankerUrl ?? "http://127.0.0.1:11435/rerank",
+      memoryRerankerModel: data.memoryRerankerModel ?? "Qwen3-Reranker-4B",
+      memoryRerankerCandidates: data.memoryRerankerCandidates ?? 24,
+      memoryContextTokenBudget: data.memoryContextTokenBudget ?? 2400,
+      memoryVectorScanPageSize: data.memoryVectorScanPageSize ?? 256,
     };
   } catch (error: any) {
     window.$message.warning(error?.message);
@@ -151,6 +221,15 @@ function handleRestory() {
     deepRetrieveSummaryLimit: 5,
     modelOnnxFile: ["all-MiniLM-L6-v2", "onnx", "model_fp16.onnx"], // 模型文件路径
     modelDtype: "fp16",
+    embeddingBackend: "onnx",
+    ollamaEmbeddingModel: "qwen3-embedding:4b",
+    memoryHybridRetrieval: true,
+    memoryRerankerEnabled: false,
+    memoryRerankerUrl: "http://127.0.0.1:11435/rerank",
+    memoryRerankerModel: "Qwen3-Reranker-4B",
+    memoryRerankerCandidates: 24,
+    memoryContextTokenBudget: 2400,
+    memoryVectorScanPageSize: 256,
   };
   handleSave();
 }
