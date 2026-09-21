@@ -77,7 +77,16 @@ export default async (knex: Knex): Promise<void> => {
   await addColumn("o_agentStep", "inputContent", "text");
   await addColumn("o_agentStep", "output", "text");
   if (await knex.schema.hasTable("o_setting")) {
-    await knex("o_setting").insert({ key: "memoryContextTokenBudget", value: "2400" }).onConflict("key").ignore();
+    await knex("o_setting").insert([
+      { key: "memoryContextTokenBudget", value: "2400" },
+      { key: "embeddingBackend", value: "onnx" },
+      { key: "ollamaEmbeddingModel", value: "qwen3-embedding:4b" },
+      { key: "memoryHybridRetrieval", value: "1" },
+      { key: "memoryRerankerEnabled", value: "0" },
+      { key: "memoryRerankerUrl", value: "http://127.0.0.1:11435/rerank" },
+      { key: "memoryRerankerModel", value: "Qwen3-Reranker-4B" },
+      { key: "memoryRerankerCandidates", value: "24" },
+    ]).onConflict("key").ignore();
   }
   await addColumn("o_prompt", "useData", "text");
   // 添加新字段
