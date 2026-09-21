@@ -3,7 +3,6 @@ import { ref, shallowRef, onMounted, onUnmounted, computed } from "vue";
 import { io, Socket } from "socket.io-client";
 import type { ChatMessagesData, AIMessage, UserMessage, AIMessageContent, ChatMessageStatus } from "@tdesign-vue-next/chat";
 
-// Socket 事件类型定义
 export interface MessageEvent {
   id: string;
   role: "assistant" | "user" | "system";
@@ -49,6 +48,8 @@ export interface XmlTagEvent {
   attrs: Record<string, string>;
   children: XmlChildItem[];
   status: ChatMessageStatus;
+  /** XML 标签本身是否已闭合。消息状态 complete 不代表标签闭合。 */
+  isComplete: boolean;
 }
 
 export interface XmlTagOption {
@@ -57,12 +58,9 @@ export interface XmlTagOption {
 }
 
 export interface ChatSocketEvents {
-  // 发送事件
   chat: { content: string; attachments?: any[] };
   stop: { messageId: string };
   regenerate: { messageId: string };
-
-  // 接收事件
   message: MessageEvent;
   "message:update": MessageUpdateEvent;
   "content:add": ContentAddEvent;
@@ -118,45 +116,25 @@ export function useChat(options: UseChatOptions) {
   const emittedXmlState = new Map<string, Record<string, string>>();
   const rawContentState = new Map<string, string>();
 
-  // 计算属性 - 修复：增加对内容流状态的判断
   const isGenerating = computed(() => {
     const lastMsg = messages.value[messages.value.length - 1];
     if (!lastMsg || lastMsg.role !== "assistant") return false;
-
     const status = lastMsg.status;
-    // pending 或 streaming 状态都算生成中
     if (status === "pending" || status === "streaming") return true;
-
-    // 额外检查：如果消息状态是其他，但有内容块还在流式中
     const aiMsg = lastMsg as AIMessage;
-    if (aiMsg.content?.some((c) => c.status === "pending" || c.status === "streaming")) {
-      return true;
-    }
-
+    if (aiMsg.content?.some((c) => c.status === "pending" || c.status === "streaming")) return true;
     return false;
   });
 
   const lastMessage = computed(() => messages.value[messages.value.length - 1]);
-
-  // 工具方法
-  const findMessage = (id: string): ChatMessagesData | undefined => {
-    return messages.value.find((m) => m.id === id);
-  };
-
-  const findMessageIndex = (id: string): number => {
-    return messages.value.findIndex((m) => m.id === id);
-  };
-
-  const findContent = (msg: AIMessage, contentId: string): AIMessageContent | undefined => {
-    return msg.content?.find((c) => c.id === contentId);
-  };
+  const findMessage = (id: string): ChatMessagesData | undefined => messages.value.find((m) => m.id === id);
+  const findMessageIndex = (id: string): number => messages.value.findIndex((m) => m.id === id);
+  const findContent = (msg: AIMessage, contentId: string): AIMessageContent | undefined => msg.content?.find((c) => c.id === contentId);
 
   const isEmptyMessageContent = (msg: ChatMessagesData | undefined): boolean => {
     if (!msg || msg.role !== "assistant") return false;
-
     const aiMsg = msg as AIMessage;
     if (!aiMsg.content || aiMsg.content.length === 0) return true;
-
     return aiMsg.content.every((item) => {
       if (item.data === null || item.data === undefined) return true;
       if (typeof item.data === "string") return item.data.trim() === "";
@@ -164,12 +142,10 @@ export function useChat(options: UseChatOptions) {
     });
   };
 
-  const isXmlTextContent = (content: AIMessageContent): content is Extract<AIMessageContent, { type: "text" | "markdown" }> => {
-    return (content.type === "text" || content.type === "markdown") && typeof content.data === "string";
-  };
+  const isXmlTextContent = (content: AIMessageContent): content is Extract<AIMessageContent, { type: "text" | "markdown" }> =>
+    (content.type === "text" || content.type === "markdown") && typeof content.data === "string";
 
   const getContentKey = (messageId: string, content: Pick<AIMessageContent, "id" | "type">) => `${messageId}:${content.id ?? content.type}`;
-
   const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
   const parseXmlAttributes = (tagStr: string): Record<string, string> => {
@@ -184,42 +160,28 @@ export function useChat(options: UseChatOptions) {
 
   const parseXmlChildren = (content: string): XmlChildItem[] => {
     const children: XmlChildItem[] = [];
-    // 匹配已闭合的子元素（含自闭合标签）
     const childRegex = /<(\w+)((?:\s+[\w-]+\s*=\s*(?:"[^"]*"|'[^']*'))*)\s*(?:\/>|>([\s\S]*?)<\/\1>)/g;
     let match: RegExpExecArray | null;
     let lastIndex = 0;
     while ((match = childRegex.exec(content)) !== null) {
-      children.push({
-        tag: match[1],
-        attrs: parseXmlAttributes(match[2]),
-        value: match[3] ?? "",
-      });
+      children.push({ tag: match[1], attrs: parseXmlAttributes(match[2]), value: match[3] ?? "" });
       lastIndex = childRegex.lastIndex;
     }
-    // 匹配尾部未闭合的子元素（流式场景）
     const remaining = content.slice(lastIndex);
     const unclosedMatch = remaining.match(/<(\w+)((?:\s+[\w-]+\s*=\s*(?:"[^"]*"|'[^']*'))*)\s*>([\s\S]*)$/);
     if (unclosedMatch) {
-      children.push({
-        tag: unclosedMatch[1],
-        attrs: parseXmlAttributes(unclosedMatch[2]),
-        value: unclosedMatch[3],
-      });
+      children.push({ tag: unclosedMatch[1], attrs: parseXmlAttributes(unclosedMatch[2]), value: unclosedMatch[3] });
     }
     return children;
   };
 
   const parseXmlTag = (text: string, tag: string) => {
     const escapedTag = escapeRegExp(tag);
-    // Match opening tag with optional attributes: <tag> or <tag attr="val">
     const openRegex = new RegExp(`<${escapedTag}(\\s[^>]*)?>`, "g");
     let lastMatch: RegExpExecArray | null = null;
     let m: RegExpExecArray | null;
-    while ((m = openRegex.exec(text)) !== null) {
-      lastMatch = m;
-    }
+    while ((m = openRegex.exec(text)) !== null) lastMatch = m;
     if (!lastMatch) return null;
-
     const attrs = parseXmlAttributes(lastMatch[1] ?? "");
     const contentStart = lastMatch.index + lastMatch[0].length;
     const closeTag = `</${tag}>`;
@@ -227,25 +189,16 @@ export function useChat(options: UseChatOptions) {
     const isComplete = closeIndex !== -1;
     const value = text.slice(contentStart, isComplete ? closeIndex : text.length).trim();
     const children = parseXmlChildren(value);
-
-    return {
-      value,
-      attrs,
-      children,
-      isComplete,
-    };
+    return { value, attrs, children, isComplete };
   };
 
   const stripXmlFromMessage = (text: string) => {
     let sanitized = text;
-
     for (const tag of hiddenXmlTags) {
       const escapedTag = escapeRegExp(tag);
-      // Match tags with or without attributes
       sanitized = sanitized.replace(new RegExp(`<${escapedTag}(?:\\s[^>]*)?>[\\s\\S]*?<\\/${escapedTag}>`, "g"), "");
       sanitized = sanitized.replace(new RegExp(`<${escapedTag}(?:\\s[^>]*)?>[\\s\\S]*$`, "g"), "");
     }
-
     return sanitized;
   };
 
@@ -253,7 +206,6 @@ export function useChat(options: UseChatOptions) {
     if (!isXmlTextContent(content)) return null;
     return rawContentState.get(getContentKey(messageId, content)) ?? content.data;
   };
-
   const syncContentDisplay = (messageId: string, content: AIMessageContent) => {
     if (!isXmlTextContent(content)) return;
     const rawText = getRawContentData(messageId, content) ?? "";
@@ -261,35 +213,27 @@ export function useChat(options: UseChatOptions) {
   };
 
   const syncXmlData = (messageId: string, content: AIMessageContent, messageStatus?: ChatMessageStatus) => {
-    if (!normalizedXmlTags.length) return;
-    if (!isXmlTextContent(content)) return;
-
+    if (!normalizedXmlTags.length || !isXmlTextContent(content)) return;
     const contentKey = getContentKey(messageId, content);
     const prevState = emittedXmlState.get(contentKey) ?? {};
     const nextState = { ...prevState };
     const nextMessageData = { ...(xmlDataByMessage.value[messageId] ?? {}) };
     const status = content.status ?? messageStatus ?? "pending";
     const rawText = getRawContentData(messageId, content);
-
     if (rawText === null) return;
-
     let changed = false;
-
     for (const tag of normalizedXmlTags) {
       const parsed = parseXmlTag(rawText, tag);
       if (parsed === null) continue;
-
       const { value, isComplete } = parsed;
-      const eventStatus = isComplete ? (status === "error" || status === "stop" ? status : "complete") : status;
-
+      // 消息已结束但 XML 未闭合时，绝不能向调用方报告标签 complete。
+      const eventStatus = isComplete ? (status === "error" || status === "stop" ? status : "complete") : status === "complete" ? "error" : status;
       const shouldEmit = prevState[tag] !== value || eventStatus === "complete";
       if (!shouldEmit) continue;
-
       nextState[tag] = value;
       nextMessageData[tag] = value;
       xmlData.value = { ...xmlData.value, [tag]: value };
       changed = true;
-
       onXmlTag?.({
         messageId,
         contentId: content.id,
@@ -299,35 +243,26 @@ export function useChat(options: UseChatOptions) {
         attrs: parsed.attrs,
         children: parsed.children,
         status: eventStatus,
+        isComplete,
       });
     }
-
     if (!changed) return;
-
     emittedXmlState.set(contentKey, nextState);
-    xmlDataByMessage.value = {
-      ...xmlDataByMessage.value,
-      [messageId]: nextMessageData,
-    };
+    xmlDataByMessage.value = { ...xmlDataByMessage.value, [messageId]: nextMessageData };
   };
 
   const syncMessageXmlData = (messageId: string, message: ChatMessagesData | undefined, messageStatus?: ChatMessageStatus) => {
     if (!message || message.role !== "assistant") return;
-
     const aiMessage = message as AIMessage;
     aiMessage.content?.forEach((content) => syncXmlData(messageId, content, messageStatus ?? aiMessage.status));
   };
 
-  // 深度合并工具
   const deepMerge = <T extends Record<string, any>>(target: T, source: Partial<T>): T => {
     if (typeof source !== "object" || source === null) return source as T;
-
     const result: Record<string, any> = { ...target };
-
     for (const key in source) {
       const sourceVal = source[key];
       const targetVal = result[key];
-
       if (Array.isArray(sourceVal)) {
         result[key] = [...(Array.isArray(targetVal) ? targetVal : []), ...sourceVal];
       } else if (typeof sourceVal === "object" && sourceVal !== null) {
@@ -337,11 +272,9 @@ export function useChat(options: UseChatOptions) {
         result[key] = sourceVal;
       }
     }
-
     return result as T;
   };
 
-  // 字符串追加处理
   const appendStringData = (content: AIMessageContent, delta: string) => {
     if (typeof content.data === "string") {
       content.data += delta;
@@ -352,43 +285,25 @@ export function useChat(options: UseChatOptions) {
     }
   };
 
-  // 处理内容更新的核心逻辑
   const handleContentUpdate = (event: ContentUpdateEvent) => {
     const { messageId, contentId, type, data, strategy, status: eventStatus } = event;
-
     const msg = findMessage(messageId) as AIMessage;
     if (!msg || msg.role !== "assistant") return;
-
     const content = findContent(msg, contentId);
     if (!content) return;
-
-    // 更新内容状态
-    if (eventStatus) {
-      content.status = eventStatus;
-    }
-
-    // 关键修复：当内容块开始流式输出时，同步更新消息状态
+    if (eventStatus) content.status = eventStatus;
     if (eventStatus === "streaming" || (strategy === "append" && data)) {
-      if (msg.status === "pending") {
-        msg.status = "streaming";
-      }
-      if (currentMessageId.value === messageId) {
-        status.value = "streaming";
-      }
+      if (msg.status === "pending") msg.status = "streaming";
+      if (currentMessageId.value === messageId) status.value = "streaming";
     }
-
-    // 无数据时仅更新状态
     if (data === undefined || data === null) {
       syncXmlData(messageId, content, msg.status);
       return;
     }
-
-    // 根据策略处理数据
     if (isXmlTextContent(content) && typeof data === "string") {
       const contentKey = getContentKey(messageId, content);
       const previousRaw = rawContentState.get(contentKey) ?? content.data;
       const nextRaw = strategy === "append" ? previousRaw + data : data;
-
       rawContentState.set(contentKey, nextRaw);
       syncContentDisplay(messageId, content);
     } else if (strategy === "append") {
@@ -404,20 +319,12 @@ export function useChat(options: UseChatOptions) {
         content.data = data;
       }
     }
-
-    // 流式状态（如果没有显式指定状态且是追加模式）
-    if (!eventStatus && strategy === "append") {
-      content.status = "streaming";
-    }
-
+    if (!eventStatus && strategy === "append") content.status = "streaming";
     syncXmlData(messageId, content, msg.status);
   };
 
-  // 消息处理器
   const setupHandlers = () => {
     if (!socket.value) return;
-
-    // 新消息
     socket.value.on("message", (data: MessageEvent) => {
       const newMessage: ChatMessagesData = {
         id: data.id,
@@ -428,11 +335,7 @@ export function useChat(options: UseChatOptions) {
         content: data.content || [],
         ext: data.ext,
       } as ChatMessagesData;
-
-      if (newMessage.status === "complete" && isEmptyMessageContent(newMessage)) {
-        return;
-      }
-
+      if (newMessage.status === "complete" && isEmptyMessageContent(newMessage)) return;
       if (data.role === "assistant") {
         const aiMessage = newMessage as AIMessage;
         aiMessage.content?.forEach((content) => {
@@ -441,37 +344,21 @@ export function useChat(options: UseChatOptions) {
           syncContentDisplay(data.id, content);
         });
       }
-
       messages.value.push(newMessage);
-
       if (data.role === "assistant") {
         const aiMessage = newMessage as AIMessage;
         aiMessage.content?.forEach((content) => syncXmlData(data.id, content, aiMessage.status));
-      }
-
-      if (data.role === "assistant") {
         currentMessageId.value = data.id;
         status.value = data.status === "streaming" ? "streaming" : "pending";
       }
     });
 
-    // 消息状态更新
     socket.value.on("message:update", (data: MessageUpdateEvent) => {
       const msg = findMessage(data.id);
       if (!msg) return;
-
-      if (data.status) {
-        msg.status = data.status;
-      }
-
-      if (data.ext) {
-        msg.ext = { ...msg.ext, ...data.ext };
-      }
-
-      if (data.status) {
-        syncMessageXmlData(data.id, msg, data.status);
-      }
-
+      if (data.status) msg.status = data.status;
+      if (data.ext) msg.ext = { ...msg.ext, ...data.ext };
+      if (data.status) syncMessageXmlData(data.id, msg, data.status);
       if (data.status === "complete" && isEmptyMessageContent(msg)) {
         removeMessage(data.id);
         if (currentMessageId.value === data.id) {
@@ -480,11 +367,7 @@ export function useChat(options: UseChatOptions) {
         }
         return;
       }
-
-      if (data.status === "streaming") {
-        status.value = "streaming";
-      }
-
+      if (data.status === "streaming") status.value = "streaming";
       if (data.status === "complete" || data.status === "error" || data.status === "stop") {
         if (currentMessageId.value === data.id) {
           currentMessageId.value = null;
@@ -493,73 +376,48 @@ export function useChat(options: UseChatOptions) {
       }
     });
 
-    // 添加内容块 - 修复：不要在这里改变消息状态
     socket.value.on("content:add", (data: ContentAddEvent) => {
       const msg = findMessage(data.messageId) as AIMessage;
       if (!msg || msg.role !== "assistant") return;
-
-      if (!msg.content) {
-        msg.content = [];
-      }
-
-      // 确保内容块有默认状态
+      if (!msg.content) msg.content = [];
       const content = {
         ...data.content,
         status: data.content.status || "pending",
-        // thinking 内容块默认折叠
         ...(data.content.type === "thinking" ? { ext: { collapsed: true, ...data.content.ext } } : {}),
       };
-
       if (isXmlTextContent(content)) {
         rawContentState.set(getContentKey(data.messageId, content), content.data);
         syncContentDisplay(data.messageId, content);
       }
-
-      // thinking 内容块需要放在 content 最前面，但如果最前面已经是 thinking 则放在其后
       if (content.type === "thinking") {
         const firstNonThinkingIndex = msg.content.findIndex((c: any) => c.type !== "thinking");
-        if (firstNonThinkingIndex === -1) {
-          msg.content.push(content);
-        } else {
-          msg.content.splice(firstNonThinkingIndex, 0, content);
-        }
+        if (firstNonThinkingIndex === -1) msg.content.push(content);
+        else msg.content.splice(firstNonThinkingIndex, 0, content);
       } else {
         msg.content.push(content);
       }
       syncXmlData(data.messageId, content, msg.status);
-
-      // 关键修复：只有当内容块状态是 streaming 时才更新消息状态
-      // pending 状态的内容块表示还没有真正开始输出
       if (content.status === "streaming") {
-        if (msg.status === "pending") {
-          msg.status = "streaming";
-        }
+        if (msg.status === "pending") msg.status = "streaming";
       }
     });
 
-    // 内容更新（流式/完成）
     socket.value.on("content:update", handleContentUpdate);
-
-    // 错误处理
     socket.value.on("error", (error: { code: string; message: string }) => {
       console.error("[Chat Error]", error);
       onError?.(error);
     });
-
-    // 连接事件
     socket.value.on("connect", () => {
       connected.value = true;
       connecting.value = false;
       onConnect?.();
     });
-
     socket.value.on("disconnect", (reason) => {
       connected.value = false;
       connecting.value = false;
       onDisconnect?.();
       console.log("[Chat Disconnected]", reason);
     });
-
     socket.value.on("connect_error", (error) => {
       connected.value = false;
       connecting.value = false;
@@ -567,12 +425,9 @@ export function useChat(options: UseChatOptions) {
     });
   };
 
-  // 连接管理
   const connect = () => {
     if (socket.value?.connected || connecting.value) return;
-
     connecting.value = true;
-
     if (!socket.value) {
       socket.value = io(url, {
         transports: ["websocket", "polling"],
@@ -583,7 +438,6 @@ export function useChat(options: UseChatOptions) {
         timeout: 10000,
         auth: { token: localStorage.getItem("token"), ...(typeof auth === "function" ? auth() : auth) },
       });
-
       setupHandlers();
     } else {
       socket.value.connect();
@@ -595,13 +449,11 @@ export function useChat(options: UseChatOptions) {
     connected.value = false;
     connecting.value = false;
   };
-
   const reconnect = () => {
     disconnect();
     setTimeout(connect, 100);
   };
 
-  // 发送方法
   const emit = <E extends keyof ChatSocketEvents & string>(event: E, data?: ChatSocketEvents[E]) => {
     if (!socket.value?.connected) {
       console.warn("[Chat] Socket not connected");
@@ -610,25 +462,19 @@ export function useChat(options: UseChatOptions) {
     socket.value.emit(event, data);
     return true;
   };
-
-  // 监听方法
   const on = <E extends keyof ChatSocketEvents & string>(event: E, callback: (data: ChatSocketEvents[E]) => void) => {
     socket.value?.on(event, callback as any);
     return () => socket.value?.off(event, callback as any);
   };
-
   const once = <E extends keyof ChatSocketEvents & string>(event: E, callback: (data: ChatSocketEvents[E]) => void) => {
     socket.value?.once(event, callback as any);
   };
-
   const off = <E extends keyof ChatSocketEvents & string>(event: E, callback?: (data: ChatSocketEvents[E]) => void) => {
     socket.value?.off(event, callback as any);
   };
 
-  // 业务方法
   const chat = (content: string, attachments?: any[]) => {
     if (!content.trim() && !attachments?.length) return false;
-
     const userMessage: UserMessage = {
       id: `user_${Date.now()}`,
       role: "user",
@@ -636,40 +482,23 @@ export function useChat(options: UseChatOptions) {
       datetime: new Date().toISOString(),
       content: [{ type: "text", data: content, status: "complete" }],
     };
-
     if (attachments?.length) {
-      userMessage.content.push({
-        type: "attachment",
-        data: attachments,
-        status: "complete",
-      });
+      userMessage.content.push({ type: "attachment", data: attachments, status: "complete" });
     }
-
     messages.value.push(userMessage);
-
     return emit("chat", { content, attachments });
   };
 
   const stopGenerate = (messageId?: string) => {
     const id = messageId || currentMessageId.value;
     if (!id) return false;
-
-    // 立即更新本地状态，不等服务端响应
     const msg = findMessage(id);
-    if (msg) {
-      msg.status = "stop";
-    }
+    if (msg) msg.status = "stop";
     currentMessageId.value = null;
     status.value = "idle";
-
     return emit("stop", { messageId: id });
   };
-
-  const regenerate = (messageId: string) => {
-    return emit("regenerate", { messageId });
-  };
-
-  // 消息管理
+  const regenerate = (messageId: string) => emit("regenerate", { messageId });
   const clearMessages = () => {
     messages.value = [];
     currentMessageId.value = null;
@@ -679,7 +508,6 @@ export function useChat(options: UseChatOptions) {
     emittedXmlState.clear();
     rawContentState.clear();
   };
-
   const removeMessage = (id: string) => {
     const idx = findMessageIndex(id);
     if (idx > -1) {
@@ -694,33 +522,24 @@ export function useChat(options: UseChatOptions) {
       messages.value.splice(idx, 1);
     }
   };
-
   const removeMessagesAfter = (id: string) => {
     const idx = findMessageIndex(id);
-    if (idx > -1) {
-      messages.value.splice(idx + 1);
-    }
+    if (idx > -1) messages.value.splice(idx + 1);
   };
-
   const updateMessage = (id: string, updates: Partial<ChatMessagesData>) => {
     const msg = findMessage(id);
-    if (msg) {
-      Object.assign(msg, updates);
-    }
+    if (msg) Object.assign(msg, updates);
   };
-
   const getContentByType = <T extends AIMessageContent["type"]>(messageId: string, type: T): Extract<AIMessageContent, { type: T }>[] => {
     const msg = findMessage(messageId) as AIMessage;
     if (!msg || msg.role !== "assistant") return [];
     return (msg.content?.filter((c) => c.type === type) || []) as Extract<AIMessageContent, { type: T }>[];
   };
 
-  // 生命周期
   if (manageLifecycle) {
     onMounted(() => {
       if (autoConnect) connect();
     });
-
     onUnmounted(() => {
       disconnect();
       socket.value?.removeAllListeners();
