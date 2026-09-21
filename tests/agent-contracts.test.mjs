@@ -17,6 +17,7 @@ test("修改过的 Agent、保存接口与前端 Store TypeScript 文件无语�
     "src/utils/storyboardScenes.ts",
     "src/utils/agent/skillsTools.ts",
     "src/utils/agent/runtime/taskStore.ts",
+    "src/utils/agent/runtime/toolExecutor.ts",
     "src/agents/scriptAgent/workspace.ts",
     "src/agents/productionAgent/directorPlan.ts",
     "src/socket/routes/scriptAgent.ts",
