@@ -6,6 +6,8 @@ type ToolRecord = {
   [key: string]: any;
 };
 
+const REQUEST_ID_TOOLS = new Set(["add_flowData_storyboard", "add_deriveAsset", "del_deriveAsset"]);
+
 function json(value: unknown): string {
   try {
     return JSON.stringify(value);
@@ -43,10 +45,26 @@ export function wrapAgentTools(
         {
           ...definition,
           execute: async (...args: any[]) => {
-            const input = args[0];
+            const sideEffect = sideEffects.has(toolName);
+            let input = args[0];
+            if (
+              sideEffect &&
+              REQUEST_ID_TOOLS.has(toolName) &&
+              input &&
+              typeof input === "object" &&
+              !Array.isArray(input) &&
+              !(typeof input.requestId === "string" && input.requestId)
+            ) {
+              const seed = json(input);
+              const requestId = "agent_" + createHash("sha256")
+                .update(`${options.runId}\n${options.stepKey ?? "run"}\n${toolName}\n${seed}`)
+                .digest("hex")
+                .slice(0, 32);
+              input = { ...input, requestId };
+              args[0] = input;
+            }
             const inputJson = json(input);
             const inputHash = createHash("sha256").update(inputJson).digest("hex");
-            const sideEffect = sideEffects.has(toolName);
             const operationKey = sideEffect
               ? createHash("sha256").update(`${options.runId}\n${options.stepKey ?? "run"}\n${toolName}\n${inputHash}`).digest("hex")
               : null;
