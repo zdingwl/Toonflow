@@ -3,7 +3,6 @@ import u from "@/utils";
 import { z } from "zod";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
-import { useSkill } from "@/utils/agent/skillsTools";
 import { tool, jsonSchema } from "ai";
 import { o_script } from "@/types/database";
 import { normalizeScriptIds } from "@/utils/scriptAssetIds";
@@ -41,17 +40,14 @@ type GroupResult = {
   existingRefs: ExistingAssetRef[];
 } | null;
 
-/** 将 scriptIds 数组按 groupSize 分组 */
-function chunkArray(arr: number[], groupSize: number): number[][][] {
-  const chunks: number[][] = [];
-  for (let i = 0; i < arr.length; i += 5) {
-    chunks.push(arr.slice(i, i + 5));
+/** 将 scriptIds 按“每批 groupSize 集”直接分组。旧实现会把 5×groupSize 集塞进一次 AI 调用。 */
+export function chunkArray(arr: number[], groupSize: number): number[][] {
+  const safeGroupSize = Math.max(1, Math.floor(groupSize));
+  const groups: number[][] = [];
+  for (let i = 0; i < arr.length; i += safeGroupSize) {
+    groups.push(arr.slice(i, i + safeGroupSize));
   }
-  const groupChunks = [];
-  for (let i = 0; i < chunks.length; i += groupSize) {
-    groupChunks.push(chunks.slice(i, i + groupSize));
-  }
-  return groupChunks;
+  return groups;
 }
 
 export default router.post(
@@ -75,7 +71,6 @@ export default router.post(
     });
 
     const errors: { scriptId: number; error: string }[] = [];
-    let successCount = 0;
 
     // 将 scriptIds 按 groupSize（默认5）分组，每组一起发给 AI
     const scriptGroups = chunkArray(scriptIds as number[], groupSize);
@@ -166,11 +161,10 @@ export default router.post(
     }
     res.send(success("开始提取资产"));
 
-    function processGroup(group: number[][][]) {
+    function processGroup(group: number[][]) {
       group.map(async (itemIds) => {
         const validScripts: { id: number; script: o_script }[] = [];
-        for (const scriptIds of itemIds as number[][]) {
-          for (const scriptId of scriptIds) {
+        for (const scriptId of itemIds) {
             const script = scriptMap.get(scriptId);
             if (!script) {
               errors.push({ scriptId, error: "未找到对应剧本" });
@@ -182,7 +176,6 @@ export default router.post(
                 validScripts.push({ id: scriptId, script });
               }
             }
-          }
         }
         if (!validScripts.length) return;
         const validScriptIds = validScripts.map((v) => v.id);
@@ -232,22 +225,53 @@ export default router.post(
           const existingHint = existingAssetsList
             ? `\n\n【已有资产列表】：${existingAssetsList}\n对于已有资产，如果在剧本中出现，只需在 existingAssetRefs 中给出资产名称和对应的 scriptIds 数组即可，无需重复生成 desc/type。对于新发现的资产（不在已有列表中），请在 newAssets 中给出完整信息。`
             : "";
-          const output = await u.Ai.Text("universalAi").invoke({
-            messages: [
-              {
-                role: "system",
-                content:
-                  scriptAssetExtraction +
-                  "\n\n提取剧本中涉及的资产（角色、场景、道具），参考技能 script_assets_extract 规范，结果必须通过 resultTool 工具返回。" +
-                  "\n\n注意：本次会同时提供多集剧本，每集剧本以 ===== 【剧本ID: xxx】 ===== 分隔。你需要分析每集剧本使用了哪些资产，并在输出中用 scriptIds 数组标明每个资产在哪些剧本中出现。",
-              },
-              {
-                role: "user",
-                content: `当前已有资产列表：${existingHint}\n\n请根据以下${validScripts.length}集剧本提取对应的剧本资产（角色、场景、道具）:\n\n${scriptsContent}`,
-              },
-            ],
-            tools: { resultTool },
-          });
+          const systemPrompt =
+            (scriptAssetExtraction || "") +
+            "\n\n你是剧本资产提取器。只提取可复用的角色、场景、关键道具，不要把动作、对白、情绪或镜头描述当成资产。" +
+            "\n必须调用 resultTool 返回结果，不要只输出普通文本。resultTool 中 newAssets 与 existingAssetRefs 至少一个应有内容；如果资产已存在必须放到 existingAssetRefs。" +
+            "\n每个资产的 scriptIds 必须是数组，并且只能填写本次提供的剧本ID。" +
+            "\n本次会同时提供多集剧本，每集以 ===== 【剧本ID: xxx】 ===== 分隔，请逐集分析后合并同名资产。";
+
+          const invokeExtraction = async () => {
+            await u.Ai.Text("universalAi").invoke({
+              messages: [
+                { role: "system", content: systemPrompt },
+                {
+                  role: "user",
+                  content: `当前已有资产列表：${existingHint}\n\n本批允许的剧本ID：[${validScriptIds.join(", ")}]\n\n请根据以下${validScripts.length}集剧本提取对应的剧本资产：\n\n${scriptsContent}`,
+                },
+              ],
+              tools: { resultTool },
+              toolChoice: { type: "tool", toolName: "resultTool" },
+            });
+          };
+
+          await invokeExtraction();
+          if (!collectedNew.length && !collectedExisting.length) {
+            // 某些 OpenAI-compatible 模型偶发第一次未执行工具；清空并用更短、更强约束的提示重试一次。
+            collectedNew = [];
+            collectedExisting = [];
+            await u.Ai.Text("universalAi").invoke({
+              messages: [
+                {
+                  role: "system",
+                  content:
+                    "必须调用 resultTool。禁止输出普通文本。提取角色、场景、关键道具；scriptIds 只能使用本批剧本ID，并且必须是数组。",
+                },
+                {
+                  role: "user",
+                  content: `允许剧本ID：[${validScriptIds.join(", ")}]\n已有资产：${existingAssetsList || "无"}\n\n${scriptsContent}`,
+                },
+              ],
+              tools: { resultTool },
+              toolChoice: { type: "tool", toolName: "resultTool" },
+            });
+          }
+
+          if (!collectedNew.length && !collectedExisting.length) {
+            throw new Error("AI 连续两次未调用资产结果工具或返回空资产；请检查通用AI模型是否支持工具调用");
+          }
+
           await persistGroupResult({
             batchScriptIds: validScriptIds,
             newAssets: collectedNew,
@@ -265,13 +289,7 @@ export default router.post(
           }
           return;
         }
-        if (!collectedNew.length && !collectedExisting.length) {
-          for (const { id } of validScripts) {
-            errors.push({ scriptId: id, error: "AI 未返回任何资产" });
-            await u.db("o_script").where("id", id).where("projectId", projectId).update({ extractState: -1, errorReason: "AI 未返回任何资产" });
-          }
-          return;
-        }
+
       });
     }
     processGroup(scriptGroups);
