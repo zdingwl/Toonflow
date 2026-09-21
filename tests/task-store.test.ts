@@ -122,3 +122,38 @@ test("存在待核对步骤时拒绝自动恢复", async () => {
     await db.destroy();
   }
 });
+
+
+test("存在 retryable 步骤时不能把任务误标为 completed", async () => {
+  const db = knex({ client: "better-sqlite3", connection: { filename: ":memory:" }, useNullAsDefault: true });
+  try {
+    await db.schema.createTable("o_agentRun", (t) => {
+      t.text("id").primary(); t.text("agentType"); t.integer("projectId"); t.integer("episodesId");
+      t.text("isolationKey"); t.text("inputHash"); t.text("inputContent"); t.text("status"); t.text("error");
+      t.integer("createTime"); t.integer("updateTime");
+    });
+    await db.schema.createTable("o_agentStep", (t) => {
+      t.text("id").primary(); t.text("runId"); t.text("stepKey"); t.text("inputHash"); t.text("inputContent"); t.text("output"); t.text("status");
+      t.text("resultRef"); t.text("error"); t.integer("createTime"); t.integer("updateTime");
+      t.unique(["runId", "stepKey"]);
+    });
+    await db.schema.createTable("o_agentSkillSnapshot", (t) => {
+      t.text("runId"); t.text("filePath"); t.text("contentHash"); t.text("content"); t.integer("createTime");
+      t.primary(["runId", "filePath"]);
+    });
+    await db.schema.createTable("o_agentToolCall", (t) => {
+      t.text("id").primary(); t.text("runId"); t.text("stepKey"); t.text("toolName"); t.text("operationKey");
+      t.text("inputHash"); t.text("inputJson"); t.text("outputJson"); t.integer("sideEffect");
+      t.text("status"); t.text("error"); t.integer("createTime"); t.integer("updateTime");
+    });
+    const store = new TaskStore(db);
+    await store.begin({ requestId: "request-003", agentType: "scriptAgent", projectId: 9, isolationKey: "9:scriptAgent", content: "继续剧本" });
+    const stepKey = TaskStore.makeStepKey("scriptAgent:scriptAgent", "episode-2");
+    await store.beginStep("request-003", stepKey, "episode-2");
+    await store.markStepReconciling("request-003", stepKey, "中断");
+    await store.resolveStep("request-003", stepKey, "retryable");
+    await assert.rejects(() => store.finish("request-003", "completed"), /不能标记完成/);
+  } finally {
+    await db.destroy();
+  }
+});

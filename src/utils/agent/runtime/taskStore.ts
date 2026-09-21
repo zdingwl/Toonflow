@@ -183,7 +183,15 @@ export class TaskStore {
 
   async finish(runId: string, status: "completed" | "failed" | "reconciling", error?: string): Promise<void> {
     await this.db.transaction(async (trx) => {
-      if (status !== "completed") {
+      if (status === "completed") {
+        const [unresolvedSteps, unresolvedTools] = await Promise.all([
+          trx("o_agentStep").where({ runId }).whereIn("status", ["running", "reconciling", "failed", "retryable"]),
+          trx("o_agentToolCall").where({ runId, sideEffect: 1 }).whereIn("status", ["running", "reconciling", "failed", "retryable"]),
+        ]);
+        if (unresolvedSteps.length || unresolvedTools.length) {
+          throw new Error(`任务仍有待处理状态：步骤 ${unresolvedSteps.length} 个，写工具 ${unresolvedTools.length} 个，不能标记完成`);
+        }
+      } else {
         await trx("o_agentStep").where({ runId, status: "running" })
           .update({ status: "reconciling", error: error ?? null, updateTime: Date.now() });
         await trx("o_agentToolCall").where({ runId, status: "running", sideEffect: 1 })
