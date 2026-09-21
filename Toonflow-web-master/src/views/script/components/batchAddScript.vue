@@ -295,6 +295,31 @@ function getAiRegexErrorMessage(reason: unknown): string {
   return "AI解析正则失败：未收到可读的错误信息，请检查通用AI模型配置及网络连接";
 }
 
+function validateAiRegexAgainstFullText(regexText: string): string | null {
+  let episodes: ReturnType<typeof parseScript>;
+  try {
+    episodes = parseScript(content.value, regexText);
+  } catch {
+    return "AI返回的拆集正则无法用于完整剧本，已保留当前拆集规则";
+  }
+  if (!episodes.length) return "AI返回的拆集正则未识别到任何剧集，已保留当前拆集规则";
+
+  const invalid = episodes.find((item) => !Number.isInteger(item.index) || item.index <= 0);
+  if (invalid) return "AI返回的拆集正则产生了无效集号，已保留当前拆集规则";
+
+  const seen = new Set<number>();
+  const duplicates = new Set<number>();
+  for (const item of episodes) {
+    if (seen.has(item.index)) duplicates.add(item.index);
+    seen.add(item.index);
+  }
+  if (duplicates.size) {
+    const preview = [...duplicates].sort((a, b) => a - b).slice(0, 10).map((index) => `第${index}集`).join("、");
+    return `AI返回的拆集正则在完整剧本中产生重复集号（${preview}${duplicates.size > 10 ? "等" : ""}），可能把结尾字幕或正文误当成集标题；已拒绝应用`;
+  }
+  return null;
+}
+
 async function getAiRegex() {
   if (!content.value.trim()) {
     window.$message.warning($t("workbench.script.import.msg.selectChapters"));
@@ -306,6 +331,8 @@ async function getAiRegex() {
   try {
     const { data } = await axios.post("/script/getAiRegex", { content: sample });
     if (typeof data !== "string" || !data.trim()) throw new Error("AI未返回有效的拆集正则，请检查通用AI模型配置或重试");
+    const fullTextError = validateAiRegexAgainstFullText(data);
+    if (fullTextError) throw new Error(fullTextError);
     customRegStr.value = data;
   } catch (e) {
     aiRegexError.value = getAiRegexErrorMessage(e);
