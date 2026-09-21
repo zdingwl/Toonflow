@@ -18,9 +18,9 @@ function normalizeAiRegex(text: string, sample: string): string {
   if (pattern.length > 512 || !/^[gimu]*$/.test(flags) || new Set(flags).size !== flags.length) {
     throw new Error("AI返回的正则过长或包含不支持的标志");
   }
-  // 只接受从独立集标题行开始的表达式；非行首匹配会把正文中的“第X集”误拆成新集。
-  if (!pattern.startsWith("^")) {
-    throw new Error("AI返回的正则未限定集标题行首，请重试或手动输入");
+  // 只接受从独立集标题行开始的表达式；^\s* 会跨行吞掉正文，必须要求使用行内空白。
+  if (!pattern.startsWith("^") || /^\^\\s(?:\*|\+|\{)/.test(pattern)) {
+    throw new Error("AI返回的正则未正确限定集标题行首，请重试或手动输入");
   }
   let regex: RegExp;
   try {
