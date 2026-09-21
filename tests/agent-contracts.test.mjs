@@ -15,6 +15,7 @@ test("修改过的 Agent、保存接口与前端 Store TypeScript 文件无语�
     "src/agents/scriptAgent/tools.ts",
     "src/utils/agent/skillsTools.ts",
     "src/routes/production/storyboard/batchAddStoryboardInfo.ts",
+    "src/routes/production/saveFlowData.ts",
     "src/routes/scriptAgent/getPlanData.ts",
     "src/routes/scriptAgent/setPlanData.ts",
     "Toonflow-web-master/src/stores/scriptAgent.ts",
@@ -68,11 +69,24 @@ test("章节校验不读取整章小说正文", () => {
   assert.match(events, /未找到章节编号/);
 });
 
-test("分镜面板批量写入在分配轨道后读回 trackId，且查询限定项目", () => {
+test("分镜面板批量写入使用事务、校验引用资产并读回已保存的分组 ID", () => {
   const route = source("src/routes/production/storyboard/batchAddStoryboardInfo.ts");
-  assert.match(route, /persistedStoryboard\s*=\s*await u\.db\("o_storyboard"\)/);
-  assert.match(route, /trackId:\s*persisted\?\.trackId/);
-  assert.match(route, /\.where\(\{ scriptId, projectId \}\)/);
+  assert.match(route, /await u\.db\.transaction\(async \(trx\) =>/);
+  assert.match(route, /where\(\{ id: scriptId, projectId \}\)/);
+  assert.match(route, /引用资产不属于当前项目或不存在/);
+  assert.match(route, /where\(\{ scriptId, projectId \}\)/);
+  assert.match(route, /const stored = await trx\("o_storyboard"\)/);
+  assert.match(route, /trackId: item\.trackId/);
+  assert.match(route, /Math\.max\(Date\.now\(\), Number\(maxRow\?\.maxId \?\? 0\) \+ 1\)/);
+});
+
+test("制作工作区保存先校验分镜归属，事务内读回数据后才回执", () => {
+  const route = source("src/routes/production/saveFlowData.ts");
+  assert.match(route, /await u\.db\.transaction\(async \(trx\) =>/);
+  assert.match(route, /where\(\{ id: item\.id, projectId, scriptId: episodesId \}\)/);
+  assert.match(route, /key: "productionAgent"/);
+  assert.match(route, /saved\.data !== serialized/);
+  assert.match(route, /工作区数据写入校验失败/);
 });
 
 test("剧本初始化、写入及前端自动保存具有持久化核对与顺序约束", () => {
