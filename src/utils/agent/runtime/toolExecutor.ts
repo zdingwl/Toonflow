@@ -48,7 +48,7 @@ export function wrapAgentTools(
             const inputHash = createHash("sha256").update(inputJson).digest("hex");
             const sideEffect = sideEffects.has(toolName);
             const operationKey = sideEffect
-              ? createHash("sha256").update(`${options.runId}\n${toolName}\n${inputHash}`).digest("hex")
+              ? createHash("sha256").update(`${options.runId}\n${options.stepKey ?? "run"}\n${toolName}\n${inputHash}`).digest("hex")
               : null;
 
             let id = randomUUID();
