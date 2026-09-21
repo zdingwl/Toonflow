@@ -341,6 +341,10 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
             value: "24",
           },
           {
+            key: "memoryVectorScanPageSize",
+            value: "256",
+          },
+          {
             key: "switchAiDevTool",
             value: "0",
           },
