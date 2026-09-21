@@ -6,7 +6,13 @@ type ToolRecord = {
   [key: string]: any;
 };
 
-const REQUEST_ID_TOOLS = new Set(["add_flowData_storyboard", "add_deriveAsset", "del_deriveAsset"]);
+const REQUEST_ID_TOOLS = new Set([
+  "add_flowData_storyboard",
+  "add_deriveAsset",
+  "del_deriveAsset",
+  "generate_deriveAsset",
+  "generate_storyboard",
+]);
 
 function json(value: unknown): string {
   try {
