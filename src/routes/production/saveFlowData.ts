@@ -41,7 +41,7 @@ export default router.post(
         let sceneResult: ReturnType<typeof mergeStoryboardScene> | undefined;
 
         if (scene) {
-          // 仅在一场 XML 已完整闭合后才会进入此分支；合并和进度记录与数据库写入属于同一事务。
+          // 单场与其进度写入同一事务；在没有对应 XML 闭合回执前，调用方不能提交单场。
           sceneResult = mergeStoryboardScene(
             storedData.storyboardTable ?? "",
             storedData.storyboardTableProgress as StoryboardTableProgress | undefined,
@@ -52,17 +52,21 @@ export default router.post(
           nextData = { ...data };
           const previous = storedData.storyboardTableProgress as StoryboardTableProgress | undefined;
           const incoming = nextData.storyboardTableProgress as StoryboardTableProgress | undefined;
-          if (previous && incoming?.revision !== previous.revision) {
-            if (nextData.resetStoryboardTable === true) {
-              // 只有显式完成的完整旧版 XML 可以开始新的整表任务。
-              delete nextData.storyboardTableProgress;
-            } else {
-              // 节流保存可能在单场提交后晚到：必须保留数据库里较新的场次及进度。
+          if (previous) {
+            if (nextData.resetStoryboardTable === true && incoming?.revision !== previous.revision) {
+              // 旧版整表的延迟保存可能晚于新场次提交；绝不允许旧快照自动清空较新的进度。
+              throw new Error("已有逐场分镜进度，整表覆盖前请先显式清空或完成当前任务");
+            }
+            if (incoming?.revision !== previous.revision || incoming?.taskId !== previous.taskId) {
               nextData.storyboardTable = storedData.storyboardTable;
               nextData.storyboardTableProgress = previous;
+            } else if (nextData.storyboardTable !== storedData.storyboardTable) {
+              // 当前版本的人工编辑可以保存，但随即停止自动合并，保护手动调整的内容。
+              delete nextData.storyboardTableProgress;
             }
-          } else if (previous && incoming?.revision === previous.revision && nextData.storyboardTable !== storedData.storyboardTable) {
-            // 人工编辑可以保存，但随即停止自动合并，避免后续分段覆盖人工内容。
+          } else if (incoming) {
+            // 旧客户端快照不能恢复一个已经被清空或人工修改的旧任务进度。
+            nextData.storyboardTable = storedData.storyboardTable;
             delete nextData.storyboardTableProgress;
           }
           delete nextData.resetStoryboardTable;
