@@ -3,7 +3,9 @@ import u from "@/utils";
 import { z } from "zod";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
+
 const router = express.Router();
+
 export default router.post(
   "/",
   validateFields({
@@ -24,89 +26,104 @@ export default router.post(
   }),
   async (req, res) => {
     const { data, scriptId, projectId } = req.body;
-    if (!data.length) return res.status(400).send({ success: false, message: "数据不能为空" });
-    for (const item of data) {
-      const [id] = await u.db("o_storyboard").insert({
-        prompt: item.prompt,
-        duration: String(item.duration),
-        state: item.state,
-        scriptId,
-        projectId,
-        track: item.track,
-        videoDesc: item.videoDesc,
-        shouldGenerateImage: item.shouldGenerateImage,
-        createTime: Date.now(),
+    if (!data.length) return res.status(400).send(error("数据不能为空"));
+
+    try {
+      const { stored, createdIds } = await u.db.transaction(async (trx) => {
+        const script = await trx("o_script").where({ id: scriptId, projectId }).first();
+        if (!script) throw new Error("剧本不属于当前项目，分镜未写入");
+
+        // 在新增分镜之前验证全部引用资产，避免写入一半才发现资产 ID 无效。
+        const assetIds: number[] = [...new Set<number>(data.flatMap((item: any) => item.associateAssetsIds))];
+        if (assetIds.length) {
+          const assets = await trx("o_assets").where({ projectId }).whereIn("id", assetIds).select("id");
+          const found = new Set<number>(assets.map((item: any) => Number(item.id)));
+          const missing = assetIds.filter((id) => !found.has(id));
+          if (missing.length) throw new Error(`引用资产不属于当前项目或不存在：${missing.join(",")}`);
+        }
+
+        const createdIds: number[] = [];
+        for (const item of data) {
+          const [id] = await trx("o_storyboard").insert({
+            prompt: item.prompt,
+            duration: String(item.duration),
+            state: item.state,
+            scriptId,
+            projectId,
+            track: item.track,
+            videoDesc: item.videoDesc,
+            shouldGenerateImage: item.shouldGenerateImage,
+            createTime: Date.now(),
+          });
+          createdIds.push(id);
+          if (item.associateAssetsIds?.length) {
+            await trx("o_assets2Storyboard").insert(
+              [...new Set<number>(item.associateAssetsIds)].map((assetId) => ({ assetId, storyboardId: id })),
+            );
+          }
+        }
+
+        const lastStoryboard = await trx("o_storyboard").where({ scriptId, projectId });
+        if (!lastStoryboard.length) throw new Error("未查到分镜数据");
+        const storyboardGroupByTrack: Record<string, number[]> = {};
+        for (const item of lastStoryboard) {
+          (storyboardGroupByTrack[item.track] ??= []).push(item.id);
+        }
+
+        for (const track of Object.keys(storyboardGroupByTrack)) {
+          const storyboardIds = storyboardGroupByTrack[track];
+          const trackDuration = lastStoryboard
+            .filter((item: any) => item.track === track)
+            .reduce((sum: number, item: any) => sum + Number(item.duration), 0);
+          const existingStoryboard = await trx("o_storyboard")
+            .where({ scriptId, projectId, track })
+            .whereNotNull("trackId")
+            .first();
+
+          let trackId: number;
+          if (existingStoryboard?.trackId) {
+            trackId = existingStoryboard.trackId;
+            const updated = await trx("o_videoTrack").where({ id: trackId, scriptId, projectId }).update({ duration: trackDuration });
+            if (updated !== 1) throw new Error(`分镜分组 ${track} 不属于当前剧本`);
+          } else {
+            // Date.now() 在同一毫秒连续创建分组时可能重复；保留原有时间戳 ID 形式，同时确保唯一。
+            const maxRow = await trx("o_videoTrack").max({ maxId: "id" }).first();
+            trackId = Math.max(Date.now(), Number(maxRow?.maxId ?? 0) + 1);
+            await trx("o_videoTrack").insert({ id: trackId, scriptId, projectId, duration: trackDuration });
+          }
+          await trx("o_storyboard").where({ scriptId, projectId }).whereIn("id", storyboardIds).update({ trackId });
+        }
+
+        const stored = await trx("o_storyboard").where({ scriptId, projectId });
+        if (stored.length !== lastStoryboard.length || stored.some((item: any) => !item.trackId)) {
+          throw new Error("分镜分组保存不完整");
+        }
+        return { stored, createdIds };
       });
-      if (item.associateAssetsIds?.length) {
-        await u.db("o_assets2Storyboard").insert(
-          item.associateAssetsIds.map((assetId: number) => ({
-            assetId,
-            storyboardId: id,
-          })),
-        );
-      }
-      item.id = id;
+
+      // 只有事务整体成功后才向调用方回填真实 ID；失败时不留下部分新镜头或关联数据。
+      data.forEach((item: any, index: number) => { item.id = createdIds[index]; });
+      const storyboardData = await Promise.all(
+        stored.map(async (item: any) => ({
+          associateAssetsIds: await u.db("o_assets2Storyboard")
+            .where("storyboardId", item.id)
+            .orderBy("rowid")
+            .pluck("assetId"),
+          src: item.filePath ? await u.oss.getSmallImageUrl(item.filePath).catch(() => "") : "",
+          id: item.id,
+          trackId: item.trackId,
+          prompt: item.prompt,
+          duration: Number(item.duration),
+          state: item.state,
+          scriptId: item.scriptId,
+          reason: item.reason,
+          videoDesc: item.videoDesc,
+        })),
+      );
+      return res.status(200).send(success(storyboardData));
+    } catch (reason) {
+      console.error("[storyboard/batchAddStoryboardInfo]", reason);
+      return res.status(400).send(error(reason instanceof Error ? reason.message : "分镜批量写入失败"));
     }
-    const lastStoryboard = await u.db("o_storyboard").where({ scriptId, projectId });
-    if (!lastStoryboard || !lastStoryboard.length) return res.status(400).send(error("未查到分镜数据"));
-    // 根据 track 分组；限定当前项目和剧本，避免混入其他项目的数据。
-    const storyboardGroupByTrack: Record<string, number[]> = {};
-    lastStoryboard.forEach((item: any) => {
-      if (!storyboardGroupByTrack[item.track]) {
-        storyboardGroupByTrack[item.track] = [];
-      }
-      storyboardGroupByTrack[item.track].push(item.id);
-    });
-
-    // 查找已有分组并更新时长；新分组沿用原有 videoTrack 创建逻辑。
-    for (const track in storyboardGroupByTrack) {
-      const storyboardIds = storyboardGroupByTrack[track] ?? [];
-      const trackDuration = lastStoryboard
-        .filter((item: any) => item.track == track)
-        .reduce((sum: number, item: any) => sum + Number(item.duration), 0);
-      const existingStoryboard = await u.db("o_storyboard").where({ scriptId, projectId, track }).whereNotNull("trackId").first();
-
-      let trackId: number;
-      if (existingStoryboard?.trackId) {
-        trackId = existingStoryboard.trackId;
-        await u.db("o_videoTrack").where({ id: trackId, scriptId, projectId }).update({ duration: trackDuration });
-      } else {
-        const newTrackId = Date.now();
-        await u.db("o_videoTrack").insert({
-          id: newTrackId,
-          scriptId,
-          projectId,
-          duration: trackDuration,
-        });
-        trackId = newTrackId;
-      }
-
-      await u.db("o_storyboard").where({ scriptId, projectId }).whereIn("id", storyboardIds).update({ trackId });
-    }
-
-    // 上面的 lastStoryboard 是分配 trackId 之前读取的快照；重新查询，确保回执包含真实已保存的分组 ID。
-    const persistedStoryboard = await u.db("o_storyboard").where({ scriptId, projectId }).whereIn(
-      "id",
-      lastStoryboard.map((item: any) => item.id),
-    );
-    const persistedById = new Map(persistedStoryboard.map((item: any) => [item.id, item]));
-    const storyboardData = await Promise.all(
-      lastStoryboard.map(async (i: any) => {
-        const persisted = persistedById.get(i.id) as any;
-        return {
-          associateAssetsIds: await u.db("o_assets2Storyboard").where("storyboardId", i.id).orderBy("rowid").select("assetId").pluck("assetId"),
-          src: i.filePath ? await u.oss.getSmallImageUrl(i.filePath) : "",
-          id: i.id,
-          trackId: persisted?.trackId ?? i.trackId,
-          prompt: i.prompt,
-          duration: Number(i.duration),
-          state: i.state,
-          scriptId: i.scriptId,
-          reason: i.reason,
-          videoDesc: i.videoDesc,
-        };
-      }),
-    );
-    return res.status(200).send(success(storyboardData));
   },
 );
