@@ -19,9 +19,10 @@ export default router.post(
       total: z.number().int().min(1).max(1000),
       content: z.string().min(1).max(60000),
     }).optional(),
+    writeFields: z.array(z.enum(["scriptPlan", "storyboardTable"])).max(2).optional(),
   }),
   async (req, res) => {
-    const { data, projectId, episodesId, scene } = req.body;
+    const { data, projectId, episodesId, scene, writeFields = [] } = req.body;
     if (scene && data !== undefined) return res.status(400).send({ code: 400, message: "单场保存与整份工作区保存不能同时提交", data: null });
     const serialized = scene ? undefined : JSON.stringify(data);
     if (!scene && (serialized === undefined || !data || typeof data !== "object" || Array.isArray(data))) {
@@ -49,10 +50,25 @@ export default router.post(
           );
           nextData = { ...storedData, storyboardTable: sceneResult.storyboardTable, storyboardTableProgress: sceneResult.storyboardTableProgress };
         } else {
-          nextData = { ...data };
+          const explicitWrites = new Set<string>(writeFields);
+          const explicitStoryboardTable = explicitWrites.has("storyboardTable") || data.resetStoryboardTable === true;
+          nextData = { ...storedData, ...data };
+
+          // script 始终以 o_script 为准，浏览器快照不能覆盖后端剧本正文。
+          nextData.script = script.content ?? "";
+
+          // 导演计划由后端 Agent 提交；普通自动保存不得用过期浏览器快照覆盖。
+          if (!explicitWrites.has("scriptPlan")) {
+            nextData.scriptPlan = storedData.scriptPlan ?? "";
+          }
+
           const previous = storedData.storyboardTableProgress as StoryboardTableProgress | undefined;
           const incoming = nextData.storyboardTableProgress as StoryboardTableProgress | undefined;
-          if (previous) {
+          if (!explicitStoryboardTable) {
+            nextData.storyboardTable = storedData.storyboardTable ?? "";
+            if (previous) nextData.storyboardTableProgress = previous;
+            else delete nextData.storyboardTableProgress;
+          } else if (previous) {
             if (nextData.resetStoryboardTable === true && incoming?.revision !== previous.revision) {
               // 旧版整表的延迟保存可能晚于新场次提交；绝不允许旧快照自动清空较新的进度。
               throw new Error("已有逐场分镜进度，整表覆盖前请先显式清空或完成当前任务");
