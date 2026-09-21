@@ -76,6 +76,7 @@ export default async (knex: Knex): Promise<void> => {
   await addColumn("o_agentStep", "inputHash", "text");
   await addColumn("o_agentStep", "inputContent", "text");
   await addColumn("o_agentStep", "output", "text");
+  await addColumn("o_agentToolCall", "stepKey", "text");
   if (await knex.schema.hasTable("o_setting")) {
     await knex("o_setting").insert([
       { key: "memoryContextTokenBudget", value: "2400" },
