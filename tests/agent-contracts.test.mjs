@@ -19,6 +19,7 @@ test("修改过的 Agent、保存接口与前端 Store TypeScript 文件无语�
     "src/utils/agent/runtime/taskStore.ts",
     "src/utils/agent/runtime/toolExecutor.ts",
     "src/utils/agent/runtime/operationReceipt.ts",
+    "src/utils/agent/chatHistory.ts",
     "src/utils/agent/embeddingConfig.ts",
     "src/routes/setting/memoryConfig/getMemory.ts",
     "src/routes/setting/memoryConfig/sureMemory.ts",
@@ -234,4 +235,28 @@ test("导演计划读取以后端数据库为准，自动保存不会覆盖 Agen
   assert.match(production, /导演计划已保存到工作区/);
   assert.match(production, /const visibleMemory = removeAllXmlTags\(fullResponse\)\.trim\(\)/);
   assert.match(history, /row\.content\.trim\(\)\.length > 0/);
+});
+
+
+test("聊天卡片结构化持久化，刷新后保留执行进度而不是退化成纯 Markdown", () => {
+  const initDb = source("src/lib/initDB.ts");
+  const historyStore = source("src/utils/agent/chatHistory.ts");
+  const historyRoute = source("src/routes/agents/getMemory.ts");
+  const clearRoute = source("src/routes/agents/clearMemory.ts");
+  const productionSocket = source("src/socket/routes/productionAgent.ts");
+  const scriptSocket = source("src/socket/routes/scriptAgent.ts");
+
+  assert.match(initDb, /name: "o_agentChatMessage"/);
+  assert.match(historyStore, /recordContentAdd/);
+  assert.match(historyStore, /recordContentUpdate/);
+  assert.match(historyStore, /recordMessageUpdate/);
+  assert.match(historyRoute, /AgentChatHistoryStore/);
+  assert.match(historyRoute, /sanitizeStructuredMessage/);
+  assert.match(historyRoute, /scriptPlan/);
+  assert.match(historyRoute, /storyboardTable/);
+  assert.match(clearRoute, /o_agentChatMessage/);
+  assert.match(productionSocket, /onAnyOutgoing/);
+  assert.match(productionSocket, /recordContentUpdate/);
+  assert.match(scriptSocket, /onAnyOutgoing/);
+  assert.match(scriptSocket, /recordContentUpdate/);
 });
