@@ -181,6 +181,8 @@ test("记忆设置可配置本地 Ollama Embedding、混合召回、Reranker 与
     assert.match(saveRoute, new RegExp(key));
   }
   assert.match(saveRoute, /disposeEmbedding/);
+  assert.match(saveRoute, /getOllamaModelDigest/);
+  assert.match(saveRoute, /Reranker 只允许使用本机 HTTP 地址/);
   assert.match(client, /qwen3-embedding:4b/);
   assert.match(client, /Qwen3-Reranker-4B/);
   assert.match(embeddingConfig, /q4f16/);
