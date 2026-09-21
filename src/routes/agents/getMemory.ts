@@ -26,15 +26,17 @@ export default router.post(
       .orderBy("createTime", "asc")
       .select("id", "role", "name", "content", "createTime");
 
-    const history = rows.map((row) => ({
+    const history = rows
+      .filter((row) => typeof row.content === "string" && row.content.trim().length > 0)
+      .map((row) => ({
       id: row.id,
       role: normalizeRole(row.role),
       name: row.name ?? undefined,
       status: "complete",
       datetime: new Date(row.createTime).toISOString(),
       content: [{ type: "markdown", status: "complete", data: row.content }],
-      createTime: row.createTime,
-    }));
+        createTime: row.createTime,
+      }));
 
     res.status(200).send(success(history));
   },
