@@ -29,12 +29,13 @@ function createHarness() {
   };
   const exports = {};
   const module = { exports };
-  new Function("require", "module", "exports", transpiled.outputText)(
+  // useChat 在 connect 时读取浏览器 token；单元测试不依赖真实浏览器或账号。
+  new Function("require", "module", "exports", "localStorage", transpiled.outputText)(
     (name) => {
       if (name === "vue") return fakeVue;
       if (name === "socket.io-client") return { io: () => socket };
       throw new Error(`Unexpected import: ${name}`);
-    }, module, exports,
+    }, module, exports, { getItem: () => null },
   );
   const received = [];
   const chat = module.exports.useChat({ url: "ws://localhost", xmlTags: ["storyboardTable"], autoConnect: false, manageLifecycle: false, onXmlTag: (event) => received.push(event) });
