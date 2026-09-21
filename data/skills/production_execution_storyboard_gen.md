@@ -12,7 +12,7 @@ description: >-
 
 - 执行前先调用 `get_flowData` 确认工作区状态；已有内容在其基础上修改，除非指令要求重写
 - 只执行当前任务对应的工作，不越权执行其他阶段
-- 完成写入后返回一句简短确认即可，不复述完整内容；返回后本次任务终止
+- 生成工具返回“开始生成”只代表任务已发起，不代表图片生成完成；发起后简短报告当前状态
 
 ---
 
@@ -22,17 +22,19 @@ description: >-
 
 | 操作 | 调用 |
 |------|------|
-| 读取分镜面板 | `get_flowData("storyboard")` |
-| 生成图片 | `generate_storyboard_images({ ids: [分镜ID列表] })` |
+| 读取分镜面板 | `get_flowData({ key: "storyboard" })` |
+| 生成图片 | `generate_storyboard({ ids: [分镜ID列表] })` |
 
 ### 执行流程
 
-1. 获取 `storyboard`
-2. 提取真实分镜 ID 列表
-3. 调用 `generate_storyboard_images({ ids: [真实分镜ID列表] })` 生成分镜图片（异步，发起即返回）
+1. 获取 `storyboard`；数据较多时可使用 `get_flowData({ key: "storyboard", offset: 0, limit: 10 })` 逐段读取，按 `nextOffset` 继续直到为 `null`
+2. 提取当前任务需要生成图片的真实分镜 ID 列表，排除已有图片且不需要重新生成的分镜
+3. 调用 `generate_storyboard({ ids: [真实分镜ID列表] })` 发起图片生成（异步，发起即返回）
+4. 只确认任务已发起；尚未收到生成结果时不得声明“分镜图片已全部生成”
 
 ### 约束
 
 - 前置条件：分镜面板已写入完成
 - 图片必须与分镜描述匹配
 - 仅使用 `storyboard` 中的真实分镜 ID，禁止编造或复用无效 ID
+- 若任务明确要求重新生成指定分镜，允许使用其真实 ID 再次发起生成
