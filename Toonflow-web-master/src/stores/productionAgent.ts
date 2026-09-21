@@ -507,6 +507,19 @@ function makeProductionAgentStore(projectId: string) {
       }
     }
 
+    const emitAck = <T = any>(event: string, payload: any = {}) =>
+      new Promise<T>((resolve, reject) => {
+        if (!socket.value?.connected) return reject(new Error("Agent 尚未连接"));
+        socket.value.emit(event, payload, (response: any) => {
+          if (!response?.success) reject(new Error(response?.error ?? "Agent 操作失败"));
+          else resolve(response as T);
+        });
+      });
+
+    const getAgentRuns = () => emitAck<{ success: true; runs: any[] }>("agent:runs");
+    const reconcileRun = (runId: string) => emitAck<{ success: true; run: any }>("agent:reconcile", { runId });
+    const resumeRun = (runId: string) => emitAck<{ success: true; runId: string }>("agent:resume", { runId });
+
     return {
       connected,
       messages,
@@ -527,6 +540,9 @@ function makeProductionAgentStore(projectId: string) {
       reconnect,
       thinkLevel,
       updateThinkConfig,
+      getAgentRuns,
+      reconcileRun,
+      resumeRun,
     };
   });
 }
