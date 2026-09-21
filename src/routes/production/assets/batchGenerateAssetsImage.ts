@@ -6,6 +6,7 @@ import { validateFields } from "@/middleware/middleware";
 import { getOperationReceipt, withOperationReceipt } from "@/utils/agent/runtime/operationReceipt";
 
 const router = express.Router();
+const activeAssetGenerationRequests = new Set<string>();
 
 export default router.post(
   "/",
@@ -21,6 +22,8 @@ export default router.post(
     const requestId = req.body.requestId ?? `assetgen_${u.uuid()}`;
     const normalizedIds = [...new Set<number>(assetIds.map(Number))].sort((a, b) => a - b);
     if (!normalizedIds.length) return res.status(400).send(error("assetIds不能为空"));
+    const generationKey = `${projectId}:${scriptId}:${requestId}`;
+    let ownsGenerationWorker = false;
 
     try {
       const projectSettingData = await u.db("o_project")
@@ -73,6 +76,11 @@ export default router.post(
         },
       );
 
+      if (!claimed.duplicate || !activeAssetGenerationRequests.has(generationKey)) {
+        activeAssetGenerationRequests.add(generationKey);
+        ownsGenerationWorker = true;
+      }
+
       const currentRows = await u.db("o_assets")
         .leftJoin("o_image", "o_assets.imageId", "o_image.id")
         .where({ "o_assets.projectId": projectId })
@@ -89,12 +97,21 @@ export default router.post(
       );
       res.status(200).send(success(currentData));
 
-      // 相同 requestId 已经被后端受理：只返回当前状态，绝不创建第二批图片任务。
-      if (claimed.duplicate) return;
+      if (!ownsGenerationWorker) return;
+      const generationIds = claimed.duplicate
+        ? currentRows.filter((item: any) => item.state === "生成中").map((item: any) => Number(item.id))
+        : normalizedIds;
+      if (!generationIds.length) {
+        activeAssetGenerationRequests.delete(generationKey);
+        ownsGenerationWorker = false;
+        return;
+      }
 
+      // 进程重启后内存中的 worker 锁会丢失；相同 requestId 若仍有“生成中”记录，
+      // 使用原 operation receipt 里的 imageId 继续任务，而不是创建第二批 image 记录。
       const assetsDataArr = await u.db("o_assets")
         .where({ projectId })
-        .whereIn("id", normalizedIds)
+        .whereIn("id", generationIds)
         .select("id", "describe", "name", "type", "assetsId");
       const parentIds = assetsDataArr.map((item: any) => item.assetsId).filter((id: any) => id !== null);
       const parentAssetsData = parentIds.length
@@ -167,13 +184,24 @@ export default router.post(
         }
       };
 
-      for (let i = 0; i < assetsDataArr.length; i += concurrentCount) {
-        const batch = assetsDataArr.slice(i, i + concurrentCount);
-        await Promise.all(batch.map(generateSingleAsset));
+      try {
+        for (let i = 0; i < assetsDataArr.length; i += concurrentCount) {
+          const batch = assetsDataArr.slice(i, i + concurrentCount);
+          await Promise.all(batch.map(generateSingleAsset));
+        }
+      } finally {
+        if (ownsGenerationWorker) {
+          activeAssetGenerationRequests.delete(generationKey);
+          ownsGenerationWorker = false;
+        }
       }
     } catch (reason) {
       const message = u.error(reason).message;
       console.error("[assets/batchGenerateAssetsImage]", reason);
+      if (ownsGenerationWorker) {
+        activeAssetGenerationRequests.delete(generationKey);
+        ownsGenerationWorker = false;
+      }
       if (res.headersSent) {
         try {
           const receipt = await getOperationReceipt<{ imageIdMap: Record<number, number> }>(
