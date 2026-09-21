@@ -160,7 +160,7 @@ export class TaskStore {
     resultRef?: string,
     error?: string,
   ): Promise<void> {
-    const count = await this.db("o_agentStep").where({ runId, stepKey }).whereIn("status", ["reconciling", "failed"])
+    const count = await this.db("o_agentStep").where({ runId, stepKey }).whereIn("status", ["reconciling", "failed", "retryable"])
       .update({
         status: resolution,
         resultRef: resolution === "completed" ? resultRef ?? null : null,
@@ -187,7 +187,7 @@ export class TaskStore {
   ): Promise<void> {
     const count = await this.db("o_agentToolCall")
       .where({ id, runId, sideEffect: 1 })
-      .whereIn("status", ["running", "reconciling", "failed"])
+      .whereIn("status", ["running", "reconciling", "failed", "retryable"])
       .update({
         status: resolution,
         outputJson: resolution === "completed" ? JSON.stringify(output ?? null) : null,
