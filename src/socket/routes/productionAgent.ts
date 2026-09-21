@@ -337,7 +337,7 @@ export default (nsp: Namespace) => {
     });
 
     socket.on("agent:resolve-step", async (
-      data: { runId: string; stepKey: string; resolution: "completed" | "failed" | "retryable"; resultRef?: string; error?: string },
+      data: { runId: string; stepKey: string; resolution: "completed" | "failed" | "retryable" | "cancelled"; resultRef?: string; error?: string },
       callback,
     ) => {
       try {
@@ -350,7 +350,7 @@ export default (nsp: Namespace) => {
     });
 
     socket.on("agent:resolve-tool", async (
-      data: { runId: string; id: string; resolution: "completed" | "retryable"; output?: unknown; error?: string },
+      data: { runId: string; id: string; resolution: "completed" | "retryable" | "cancelled"; output?: unknown; error?: string },
       callback,
     ) => {
       try {
