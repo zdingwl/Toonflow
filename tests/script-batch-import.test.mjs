@@ -13,22 +13,30 @@ const edit = readFileSync(new URL("../Toonflow-web-master/src/views/script/compo
 const addRoute = readFileSync(new URL("../src/routes/script/addScript.ts", import.meta.url), "utf8");
 const editRoute = readFileSync(new URL("../src/routes/script/updateScript.ts", import.meta.url), "utf8");
 
-test("批量导入只要求勾选剧集，不按所有剧集的总字数禁用保存", () => {
+test("批量导入按单集字数校验，30 集合计超过 5000 字仍可保存", () => {
   const saveButton = component.match(/<t-button\s+theme="primary"\s+style="margin-left: 10px"\s+:disabled="([^"]+)"\s+:loading="nextLoading"\s+@click="keep">\s*保存\s*<\/t-button>/)?.[1];
-  assert.equal(saveButton, "!selectedRows.length");
+  assert.equal(saveButton, "!selectedRows.length || !!selectedOversizedRows.length");
   assert.doesNotMatch(component, /selectedTextLength\s*>\s*otherSetting\.scriptEpisodeLength/);
-  assert.match(component, /selectedTextLength\s*=\s*computed\(/, "仍展示已选字数");
+  assert.match(component, /selectedTextLength\s*=\s*computed\(/, "仍展示已选剧集的总字数");
+  assert.match(component, /selectedOversizedRows\s*=\s*computed\(\(\) => selectedRows\.value\.filter\(\(item\) => item\.scriptData\.length > otherSetting\.value\.scriptEpisodeLength\)\)/);
+  assert.match(component, /v-if="selectedOversizedRows\.length"\s+role="alert"/);
+  assert.match(component, /if \(selectedOversizedRows\.value\.length\)/, "提交前再次核对逐集限制");
+  const rows = Array.from({ length: 30 }, (_, index) => ({ index: index + 1, scriptData: "文".repeat(1900) }));
+  assert.ok(rows.reduce((sum, item) => sum + item.scriptData.length, 0) > 5000);
+  assert.deepEqual(rows.filter((item) => item.scriptData.length > 5000), []);
+  rows[11].scriptData = "文".repeat(5001);
+  assert.deepEqual(rows.filter((item) => item.scriptData.length > 5000).map((item) => item.index), [12]);
 });
 
-test("新建和编辑剧本支持超过 5000 字并保留正文必填校验", () => {
-  assert.doesNotMatch(add, /scriptEpisodeLength/);
-  assert.doesNotMatch(edit, /scriptEpisodeLength/);
-  assert.match(add, /<t-button theme="primary" :loading="keepLoading" @click="handleConfirm">/);
-  assert.match(edit, /style="margin-left: 10px"\s+@click="onConfirm">/);
+test("新建和编辑仅按当前单集字数判断，保留正文必填与完整保存", () => {
+  assert.match(add, /:disabled="scriptData\.length > otherSetting\.scriptEpisodeLength"/);
+  assert.match(edit, /:disabled="props\.item\.content\.length > otherSetting\.scriptEpisodeLength"/);
+  assert.match(add, /if \(scriptData\.value\.length > otherSetting\.value\.scriptEpisodeLength\)/);
+  assert.match(edit, /if \(props\.item\.content\.length > otherSetting\.value\.scriptEpisodeLength\)/);
   assert.match(add, /if \(!scriptData\.value\.trim\(\)\)/);
   assert.match(add, /if \(!scriptName\.value\.trim\(\)\)/);
-  assert.match(add, /scriptData\.length\s*\}\}\s*\{\{ \$t\("workbench\.novel\.import\.chars"\)/);
-  assert.match(edit, /props\.item\.content\.length\s*\}\}\s*\{\{ \$t\("workbench\.novel\.import\.chars"\)/);
+  assert.match(add, /scriptData\.length\s*\}\}\/\{\{ otherSetting\.scriptEpisodeLength \}\}/);
+  assert.match(edit, /props\.item\.content\.length\s*\}\}\/\{\{ otherSetting\.scriptEpisodeLength \}\}/);
 });
 
 test("新增、编辑及批量保存接口均不截断剧本正文", () => {
