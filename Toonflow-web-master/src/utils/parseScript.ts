@@ -1,10 +1,12 @@
-// 默认剧本集正则：匹配"第X集 标题"格式，支持中文数字和阿拉伯数字
-const DEFAULT_EPISODE_REGEX = /第\s*([0-9０-９零一二三四五六七八九十百千万]+)\s*集\s*([^\n\r]*)/g;
+// 默认剧本集正则：只匹配独立行首的“第X集 标题”，避免把正文中的集数误判为分集标记。
+const DEFAULT_EPISODE_REGEX = /^[ \t]*第[ \t]*([0-9０-９零〇一二三四五六七八九十百千万两]+)[ \t]*集[ \t]*([^\n\r]*)/gm;
 
 const CHINESE_NUM_MAP: { [key: string]: number } = {
   零: 0,
+  〇: 0,
   一: 1,
   二: 2,
+  两: 2,
   三: 3,
   四: 4,
   五: 5,
@@ -31,9 +33,8 @@ export interface Episode {
   text: string;
 }
 
-
 function parseNumber(numStr: string): number {
-  if (/^\d+$/.test(numStr)) return parseInt(numStr, 10);
+  if (/^[0-9０-９]+$/.test(numStr)) return Number(numStr.replace(/[０-９]/g, (c) => String(c.charCodeAt(0) - 0xff10)));
   if (/^十[一二三四五六七八九]?$/.test(numStr)) {
     if (numStr.length === 1) return 10;
     return 10 + CHINESE_NUM_MAP[numStr[1]];
@@ -66,8 +67,8 @@ function parseRegStr(regStr: string): RegExp {
 /**
  * 解析剧本文本，提取各集的集数、标题和正文内容
  * @param text 剧本原始文本
- * @param customRegStr 自定义正则字符串（优先级最高），留空则依次回退到设置中的正则和默认正则
- * @returns 解析后的剧本分组列表（每组包含若干集）
+ * @param customRegStr 自定义正则字符串（优先级最高），留空则使用默认正则
+ * @returns 解析后的剧本列表
  */
 export default function parseScript(text: string, customRegStr?: string): Episode[] {
   let EPISODE_REGEX: RegExp;
@@ -108,5 +109,3 @@ export default function parseScript(text: string, customRegStr?: string): Episod
 
   return episodes;
 }
-
-
