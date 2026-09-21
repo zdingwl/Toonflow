@@ -1,6 +1,7 @@
 import esbuild from "esbuild";
 import fs from "fs";
 import path from "path";
+import generateRouter from "../src/core";
 
 // 打包默认使用 prod 环境变量
 if (!process.env.NODE_ENV) {
@@ -72,10 +73,11 @@ const mainBuildConfig: esbuild.BuildOptions = {
   try {
     console.log("🔨 开始构建...\n");
 
-    // 并行构建
+    // 新检出的仓库中 src/router.ts 尚未生成；必须先生成路由再让 esbuild 解析入口。
+    await generateRouter();
     await Promise.all([esbuild.build(appBuildConfig), esbuild.build(mainBuildConfig)]);
 
-    console.log("✅ 后端服务构建完成: build/app.js");
+    console.log("✅ 后端服务构建完成: data/serve/app.js");
     console.log("✅ Electron主进程构建完成: build/main.js");
     console.log("\n🎉 所有构建任务完成!\n");
   } catch (err) {
