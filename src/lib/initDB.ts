@@ -1043,6 +1043,22 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
     },
     //记忆表（message=原始消息, summary=压缩摘要）
     {
+      name: "o_agentChatMessage",
+      builder: (table) => {
+        table.text("id").notNullable().primary();
+        table.text("isolationKey").notNullable();
+        table.text("role").notNullable();
+        table.text("name");
+        table.text("status").notNullable();
+        table.text("datetime").notNullable();
+        table.text("contentJson").notNullable();
+        table.text("extJson");
+        table.integer("createTime").notNullable();
+        table.integer("updateTime").notNullable();
+        table.index(["isolationKey", "createTime"]);
+      },
+    },
+    {
       name: "memories",
       builder: (table) => {
         table.text("id").notNullable();
