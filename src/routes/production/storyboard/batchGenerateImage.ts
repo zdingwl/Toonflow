@@ -69,14 +69,20 @@ export default router.post(
               .whereIn("id", normalizedIds)
               .update({ state: "生成中", shouldGenerateImage: 1, reason: null });
           } else {
-            await trx("o_storyboard")
-              .where({ scriptId, projectId, shouldGenerateImage: 0 })
-              .whereIn("id", normalizedIds)
-              .update({ state: "未生成", reason: null });
-            await trx("o_storyboard")
-              .where({ scriptId, projectId, shouldGenerateImage: 1 })
-              .whereIn("id", normalizedIds)
-              .update({ state: "生成中", reason: null });
+            const skippedIds = rows.filter((item: any) => Number(item.shouldGenerateImage) === 0).map((item: any) => Number(item.id));
+            const generateIds = rows.filter((item: any) => Number(item.shouldGenerateImage) !== 0).map((item: any) => Number(item.id));
+            if (skippedIds.length) {
+              await trx("o_storyboard")
+                .where({ scriptId, projectId })
+                .whereIn("id", skippedIds)
+                .update({ state: "未生成", reason: null });
+            }
+            if (generateIds.length) {
+              await trx("o_storyboard")
+                .where({ scriptId, projectId })
+                .whereIn("id", generateIds)
+                .update({ state: "生成中", reason: null });
+            }
           }
           return { storyboardIds: normalizedIds, compulsory };
         },
@@ -107,15 +113,15 @@ export default router.post(
         .where({ scriptId, projectId })
         .whereIn("id", normalizedIds)
         .orderBy("index", "asc");
-      const responseData = storyboardData.map((item: any) => ({
+      const responseData = await Promise.all(storyboardData.map(async (item: any) => ({
         id: item.id,
         prompt: item.prompt,
         associateAssetsIds: assetRecord[item.id] ?? [],
-        src: item.filePath ?? null,
+        src: item.filePath ? await u.oss.getSmallImageUrl(item.filePath) : null,
         state: item.state,
         videoDesc: item.videoDesc,
         shouldGenerateImage: item.shouldGenerateImage,
-      }));
+      })));
       res.status(200).send(success(responseData));
 
       // 相同 requestId 已经受理过：返回真实当前状态，不再次启动图片任务。
