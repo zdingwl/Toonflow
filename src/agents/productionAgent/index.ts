@@ -60,7 +60,10 @@ export async function runDecisionAI(ctx: AgentContext) {
   const isRef = Array.isArray(videoMode) ? true : false;
 
   const modelInfo = `项目使用的模型如下：\n图像模型：${imageModelName}\n视频模型：${videoModelName}\n多参：${isRef ? "是" : "否"}`;
-  const mem = buildMemoryPrompt(await memory.get(text));
+  const budgetRow = await u.db("o_setting").where({ key: "memoryContextTokenBudget" }).select("value").first();
+  const configuredBudget = Number(budgetRow?.value);
+  const memoryBudget = Number.isSafeInteger(configuredBudget) && configuredBudget >= 400 ? configuredBudget : 2400;
+  const mem = buildMemoryPrompt(await memory.get(text), memoryBudget);
 
   const { fullStream } = await u.Ai.Text("productionAgent:decisionAgent", ctx.thinkConfig.think, ctx.thinkConfig.thinlLevel).stream({
     messages: [
