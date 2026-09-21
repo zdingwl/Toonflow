@@ -84,7 +84,6 @@ async function createSubAgent(parentCtx: AgentContext) {
   const memory = new Memory("productionAgent", parentCtx.isolationKey);
   const taskStore = new TaskStore(u.db);
   const readSkill = (filePath: string) => parentCtx.runId ? taskStore.readSkill(parentCtx.runId, filePath) : fs.promises.readFile(filePath, "utf-8");
-  let stepNumber = 0;
   async function runAgent({
     key,
     prompt,
@@ -102,52 +101,57 @@ async function createSubAgent(parentCtx: AgentContext) {
     tools?: Record<string, any>;
     messages?: { role: "user" | "assistant" | "system"; content: string }[];
   }) {
-    const stepKey = `${key}:${++stepNumber}`;
-    if (parentCtx.runId) await taskStore.startStep(parentCtx.runId, stepKey);
-    try {
-    parentCtx.msg.complete();
-    const subMsg = resTool.newMessage("assistant", name);
-    const isDirectorPlan = key === "productionAgent:directorPlanAgent";
-    const scope = { projectId: Number(resTool.data.projectId), episodesId: Number(resTool.data.scriptId), key: "productionAgent" };
-    const startingWorkspace = isDirectorPlan ? await u.db("o_agentWorkData").where(scope).select("data").first() : null;
-    const expectedPlan = startingWorkspace?.data ? JSON.parse(startingWorkspace.data).scriptPlan ?? "" : "";
-
-    const { fullStream } = await u.Ai.Text(key, parentCtx.thinkConfig.think, parentCtx.thinkConfig.thinlLevel).stream({
-      system,
-      messages: messages ?? [{ role: "user", content: prompt }],
-      abortSignal,
-      tools: { ...extraTools, ...useTools({ resTool, msg: subMsg }) },
-    });
-
-    const fullResponse = await consumeFullStream(fullStream, subMsg, undefined, !isDirectorPlan);
-    if (isDirectorPlan) {
-      try {
-        const plan = extractDirectorPlan(fullResponse);
-        await saveDirectorPlan(u.db, scope.projectId, scope.episodesId, plan, expectedPlan);
-        resTool.socket.emit("scriptPlan:committed", { episodesId: Number(resTool.data.scriptId), plan });
-        subMsg.complete();
-      } catch (error) {
-        console.error("[directorPlan] 输出校验失败，文本长度:", fullResponse.length, "开头:", fullResponse.slice(0, 180));
-        subMsg.error(u.error(error).message);
-        throw error;
-      }
-    }
-    if (fullResponse.trim()) {
-      await memory.add(memoryKey, removeAllXmlTags(fullResponse), {
-        name,
-        createTime: new Date(subMsg.datetime).getTime(),
-      });
-    }
-
+    const stepInput = JSON.stringify({ key, prompt, messages: messages ?? null });
+    const stepKey = TaskStore.makeStepKey(key, stepInput);
     if (parentCtx.runId) {
-      const resultRef = isDirectorPlan ? `directorPlan:${scope.projectId}:${scope.episodesId}` : `message:${subMsg.id}`;
-      await taskStore.finishStep(parentCtx.runId, stepKey, resultRef);
+      const prior = await taskStore.beginStep(parentCtx.runId, stepKey, stepInput);
+      if (prior.cached) return prior.output ?? "";
     }
+    try {
+      parentCtx.msg.complete();
+      const subMsg = resTool.newMessage("assistant", name);
+      const isDirectorPlan = key === "productionAgent:directorPlanAgent";
+      const scope = { projectId: Number(resTool.data.projectId), episodesId: Number(resTool.data.scriptId), key: "productionAgent" };
+      const startingWorkspace = isDirectorPlan ? await u.db("o_agentWorkData").where(scope).select("data").first() : null;
+      const expectedPlan = startingWorkspace?.data ? JSON.parse(startingWorkspace.data).scriptPlan ?? "" : "";
 
-    parentCtx.msg = resTool.newMessage("assistant", "视频策划");
-    return fullResponse;
+      const { fullStream } = await u.Ai.Text(key, parentCtx.thinkConfig.think, parentCtx.thinkConfig.thinlLevel).stream({
+        system,
+        messages: messages ?? [{ role: "user", content: prompt }],
+        abortSignal,
+        tools: { ...extraTools, ...useTools({ resTool, msg: subMsg }) },
+      });
+
+      const fullResponse = await consumeFullStream(fullStream, subMsg, undefined, !isDirectorPlan);
+      if (parentCtx.runId) await taskStore.saveStepOutput(parentCtx.runId, stepKey, fullResponse);
+      if (isDirectorPlan) {
+        try {
+          const plan = extractDirectorPlan(fullResponse);
+          await saveDirectorPlan(u.db, scope.projectId, scope.episodesId, plan, expectedPlan);
+          resTool.socket.emit("scriptPlan:committed", { episodesId: Number(resTool.data.scriptId), plan });
+          subMsg.complete();
+        } catch (error) {
+          console.error("[directorPlan] 输出校验失败，文本长度:", fullResponse.length, "开头:", fullResponse.slice(0, 180));
+          subMsg.error(u.error(error).message);
+          throw error;
+        }
+      }
+      if (fullResponse.trim()) {
+        await memory.add(memoryKey, removeAllXmlTags(fullResponse), {
+          name,
+          createTime: new Date(subMsg.datetime).getTime(),
+        });
+      }
+
+      if (parentCtx.runId) {
+        const resultRef = isDirectorPlan ? `directorPlan:${scope.projectId}:${scope.episodesId}` : `message:${subMsg.id}`;
+        await taskStore.finishStep(parentCtx.runId, stepKey, resultRef);
+      }
+
+      parentCtx.msg = resTool.newMessage("assistant", "视频策划");
+      return fullResponse;
     } catch (error) {
-      if (parentCtx.runId) await taskStore.failStep(parentCtx.runId, stepKey, u.error(error).message);
+      if (parentCtx.runId) await taskStore.markStepReconciling(parentCtx.runId, stepKey, u.error(error).message);
       throw error;
     }
   }
