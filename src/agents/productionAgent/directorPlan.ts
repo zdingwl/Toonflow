@@ -32,3 +32,19 @@ export async function saveDirectorPlan(db: Knex, projectId: number, episodesId: 
     if (!saved || JSON.parse(saved.data ?? "{}").scriptPlan !== plan) throw new Error("导演计划写入后校验失败");
   });
 }
+
+
+/** 只核对数据库是否已经存在模型输出，不在恢复阶段自动覆盖用户后来修改的计划。 */
+export async function reconcileDirectorPlanOutput(
+  db: Knex,
+  projectId: number,
+  episodesId: number,
+  output: string | undefined,
+): Promise<string | null> {
+  if (!output) return null;
+  const plan = extractDirectorPlan(output);
+  const row = await db("o_agentWorkData").where({ projectId, episodesId, key: "productionAgent" }).select("data").first();
+  if (!row?.data) return null;
+  const current = JSON.parse(row.data);
+  return current.scriptPlan === plan ? `directorPlan:${projectId}:${episodesId}` : null;
+}
