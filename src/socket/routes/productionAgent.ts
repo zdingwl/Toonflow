@@ -4,6 +4,7 @@ import { Namespace, Socket } from "socket.io";
 import * as agent from "@/agents/productionAgent/index";
 import ResTool from "@/socket/resTool";
 import { TaskStore } from "@/utils/agent/runtime/taskStore";
+import { reconcileDirectorPlanOutput } from "@/agents/productionAgent/directorPlan";
 
 async function verifyToken(rawToken: string): Promise<Boolean> {
   const setting = await u.db("o_setting").where("key", "tokenKey").select("value").first();
@@ -67,6 +68,26 @@ export default (nsp: Namespace) => {
       return run;
     };
 
+    const reconcileKnownSteps = async (runId: string) => {
+      let state = await taskStore.reconcile(runId);
+      for (const step of state.steps.filter((item) => item.status === "reconciling")) {
+        if (!step.stepKey.startsWith("productionAgent:directorPlanAgent:")) continue;
+        try {
+          const resultRef = await reconcileDirectorPlanOutput(
+            u.db,
+            Number(resTool.data.projectId),
+            Number(resTool.data.scriptId),
+            step.output,
+          );
+          if (resultRef) await taskStore.resolveStep(runId, step.stepKey, "completed", resultRef);
+        } catch (error) {
+          console.warn("[productionAgent] 自动核对导演计划失败:", step.stepKey, u.error(error).message);
+        }
+      }
+      state = await taskStore.reconcile(runId);
+      return state;
+    };
+
     const executeRun = async (runId: string, content: string, controller: AbortController) => {
       const msg = resTool.newMessage("assistant", "视频策划");
       const ctx: agent.AgentContext = {
@@ -110,7 +131,7 @@ export default (nsp: Namespace) => {
     socket.on("agent:reconcile", async (data: { runId: string }, callback) => {
       try {
         await ensureRunScope(data.runId);
-        callback?.({ success: true, run: await taskStore.reconcile(data.runId) });
+        callback?.({ success: true, run: await reconcileKnownSteps(data.runId) });
       } catch (error) {
         callback?.({ success: false, error: u.error(error).message });
       }
@@ -119,6 +140,8 @@ export default (nsp: Namespace) => {
     socket.on("agent:resume", async (data: { runId: string }, callback) => {
       try {
         if (activeRunId || abortController) throw new Error("当前已有任务正在执行，请先停止后再恢复");
+        await ensureRunScope(data.runId);
+        await reconcileKnownSteps(data.runId);
         const resumed = await taskStore.resume(data.runId, scope());
         const controller = new AbortController();
         abortController = controller;
