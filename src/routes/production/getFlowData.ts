@@ -18,10 +18,12 @@ export default router.post(
       .db("o_agentWorkData")
       .where("projectId", String(projectId))
       .andWhere("episodesId", String(episodesId))
+      .andWhere("key", "productionAgent")
       .select("data")
       .first();
 
     const scriptData = await u.db("o_script").where("projectId", projectId).where("id", episodesId).first();
+    if (!scriptData) return res.status(400).send(error("当前项目不存在该集剧本"));
     const scriptAssets = await u.db("o_scriptAssets").where("scriptId", episodesId);
     const assetIds = scriptAssets.map((i) => i.assetId);
     const assetsData = await u
@@ -44,7 +46,7 @@ export default router.post(
 
     if (!sqlData) {
       const flowData: FlowData = {
-        script: scriptData?.content ?? "",
+        script: scriptData.content ?? "",
         scriptPlan: "",
         assets: await Promise.all(
           assetsData.map(async (item) => ({
@@ -85,7 +87,7 @@ export default router.post(
       return res.status(200).send(success(flowData));
     } else {
       try {
-        const storyboardData = await u.db("o_storyboard").where("scriptId", episodesId);
+        const storyboardData = await u.db("o_storyboard").where({ scriptId: episodesId, projectId });
 
         await Promise.all(
           storyboardData.map(async (i) => {
@@ -153,7 +155,7 @@ export default router.post(
             flowId: i.flowId,
           }))
           .sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
-        flowData.script = scriptData?.content ?? "";
+        flowData.script = scriptData.content ?? "";
         res.status(200).send(success(flowData));
       } catch (err) {
         res.status(400).send(error());
