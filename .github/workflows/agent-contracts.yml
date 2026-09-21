@@ -12,6 +12,7 @@ on:
       - "src/utils/storyboardScenes.ts"
       - "src/utils/ai.ts"
       - "src/utils/agent/**"
+      - "scripts/main.ts"
       - "Toonflow-web-master/src/stores/**"
       - "Toonflow-web-master/src/utils/useChat.ts"
       - "Toonflow-web-master/src/utils/parseScript.ts"
