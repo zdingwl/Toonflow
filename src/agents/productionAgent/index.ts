@@ -166,6 +166,7 @@ async function createSubAgent(parentCtx: AgentContext) {
           const plan = extractDirectorPlan(fullResponse);
           await saveDirectorPlan(u.db, scope.projectId, scope.episodesId, plan, expectedPlan);
           resTool.socket.emit("scriptPlan:committed", { episodesId: Number(resTool.data.scriptId), plan });
+          subMsg.text("导演计划已保存到工作区。").complete();
           subMsg.complete();
         } catch (error) {
           console.error("[directorPlan] 输出校验失败，文本长度:", fullResponse.length, "开头:", fullResponse.slice(0, 180));
@@ -189,6 +190,10 @@ async function createSubAgent(parentCtx: AgentContext) {
             savedScenes: committed.savedScenes,
             missingScenes: committed.missingScenes,
           });
+          const progressText = committed.missingScenes.length
+            ? `分镜表已保存：已完成场次 ${committed.savedScenes.join(", ")}；待补场次 ${committed.missingScenes.join(", ")}。`
+            : "分镜表已完整保存到工作区。";
+          subMsg.text(progressText).complete();
           subMsg.complete();
         } catch (error) {
           console.error("[storyboardTable] 输出或提交校验失败，文本长度:", fullResponse.length, "开头:", fullResponse.slice(0, 180));
@@ -196,8 +201,15 @@ async function createSubAgent(parentCtx: AgentContext) {
           throw error;
         }
       }
-      if (fullResponse.trim()) {
-        await memory.add(memoryKey, removeAllXmlTags(fullResponse), {
+      const visibleMemory = removeAllXmlTags(fullResponse).trim();
+      const memoryContent = visibleMemory ||
+        (isDirectorPlan
+          ? "导演计划已保存到工作区。"
+          : isStoryboardTable
+            ? "分镜表产出已保存到工作区。"
+            : "");
+      if (memoryContent) {
+        await memory.add(memoryKey, memoryContent, {
           name,
           createTime: new Date(subMsg.datetime).getTime(),
         });
