@@ -232,6 +232,7 @@ $line-height: 28px;
     align-items: center;
     justify-content: space-between;
     height: 64px;
+    width: 100%;
 
     .titleWrapper {
       display: flex;
@@ -298,11 +299,13 @@ $line-height: 28px;
     .assets-section {
       .assets-header {
         display: flex;
+        align-items: center;
         justify-content: space-between;
       }
       .assets-list {
         display: flex;
         flex-wrap: wrap;
+        gap: 8px;
       }
       .assets-empty {
         font-size: 13px;
