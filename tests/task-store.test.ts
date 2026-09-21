@@ -24,6 +24,11 @@ test("任务状态、步骤缓存与恢复持久化，重复请求不能重复�
       t.text("runId"); t.text("filePath"); t.text("contentHash"); t.text("content"); t.integer("createTime");
       t.primary(["runId", "filePath"]);
     });
+    await db.schema.createTable("o_agentToolCall", (t) => {
+      t.text("id").primary(); t.text("runId"); t.text("stepKey"); t.text("toolName"); t.text("operationKey");
+      t.text("inputHash"); t.text("inputJson"); t.text("outputJson"); t.integer("sideEffect");
+      t.text("status"); t.text("error"); t.integer("createTime"); t.integer("updateTime");
+    });
     const store = new TaskStore(db);
     const input = { requestId: "request-001", agentType: "productionAgent" as const, projectId: 3, episodesId: 5, isolationKey: "3:productionAgent:5", content: "生成导演计划" };
     assert.deepEqual(await store.begin(input), { id: "request-001", status: "running", duplicate: false });
@@ -56,6 +61,7 @@ test("任务状态、步骤缓存与恢复持久化，重复请求不能重复�
         output: "<scriptPlan>计划A</scriptPlan>",
         error: undefined,
       }],
+      toolCalls: [],
     });
     assert.equal((await store.begin(input)).status, "completed");
 
@@ -89,6 +95,11 @@ test("存在待核对步骤时拒绝自动恢复", async () => {
     await db.schema.createTable("o_agentSkillSnapshot", (t) => {
       t.text("runId"); t.text("filePath"); t.text("contentHash"); t.text("content"); t.integer("createTime");
       t.primary(["runId", "filePath"]);
+    });
+    await db.schema.createTable("o_agentToolCall", (t) => {
+      t.text("id").primary(); t.text("runId"); t.text("stepKey"); t.text("toolName"); t.text("operationKey");
+      t.text("inputHash"); t.text("inputJson"); t.text("outputJson"); t.integer("sideEffect");
+      t.text("status"); t.text("error"); t.integer("createTime"); t.integer("updateTime");
     });
     const store = new TaskStore(db);
     const input = { requestId: "request-002", agentType: "scriptAgent" as const, projectId: 8, isolationKey: "8:scriptAgent", content: "生成剧本" };
