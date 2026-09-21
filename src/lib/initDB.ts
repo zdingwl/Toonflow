@@ -313,6 +313,34 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
             value: "fp16",
           },
           {
+            key: "embeddingBackend",
+            value: "onnx",
+          },
+          {
+            key: "ollamaEmbeddingModel",
+            value: "qwen3-embedding:4b",
+          },
+          {
+            key: "memoryHybridRetrieval",
+            value: "1",
+          },
+          {
+            key: "memoryRerankerEnabled",
+            value: "0",
+          },
+          {
+            key: "memoryRerankerUrl",
+            value: "http://127.0.0.1:11435/rerank",
+          },
+          {
+            key: "memoryRerankerModel",
+            value: "Qwen3-Reranker-4B",
+          },
+          {
+            key: "memoryRerankerCandidates",
+            value: "24",
+          },
+          {
             key: "switchAiDevTool",
             value: "0",
           },
