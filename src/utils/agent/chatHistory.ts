@@ -68,6 +68,9 @@ function applyContentUpdate(content: any, event: any) {
 
 export class AgentChatHistoryStore {
   private readonly queues = new Map<string, Promise<void>>();
+  private readonly snapshots = new Map<string, PersistedChatMessage>();
+  private readonly timers = new Map<string, ReturnType<typeof setTimeout>>();
+  private readonly debounceMs = 200;
 
   constructor(
     private readonly db: Knex,
@@ -85,6 +88,56 @@ export class AgentChatHistoryStore {
     });
   }
 
+  private persistNow(messageId: string) {
+    const timer = this.timers.get(messageId);
+    if (timer) {
+      clearTimeout(timer);
+      this.timers.delete(messageId);
+    }
+    const message = this.snapshots.get(messageId);
+    if (!message) return;
+    const row = {
+      id: message.id,
+      isolationKey: this.isolationKey,
+      role: message.role,
+      name: message.name ?? null,
+      status: message.status,
+      datetime: message.datetime,
+      contentJson: JSON.stringify(message.content ?? []),
+      extJson: message.ext ? JSON.stringify(message.ext) : null,
+      createTime: message.createTime,
+      updateTime: Date.now(),
+    };
+    this.enqueue(messageId, async () => {
+      await this.db("o_agentChatMessage")
+        .insert(row)
+        .onConflict("id")
+        .merge({
+          isolationKey: row.isolationKey,
+          role: row.role,
+          name: row.name,
+          status: row.status,
+          datetime: row.datetime,
+          contentJson: row.contentJson,
+          extJson: row.extJson,
+          updateTime: row.updateTime,
+        });
+    });
+  }
+
+  private schedulePersist(messageId: string, immediate = false) {
+    if (immediate) {
+      this.persistNow(messageId);
+      return;
+    }
+    const prior = this.timers.get(messageId);
+    if (prior) clearTimeout(prior);
+    this.timers.set(messageId, setTimeout(() => {
+      this.timers.delete(messageId);
+      this.persistNow(messageId);
+    }, this.debounceMs));
+  }
+
   recordMessage(message: {
     id: string;
     role: ChatRole;
@@ -97,57 +150,36 @@ export class AgentChatHistoryStore {
     const createTime = Number.isFinite(Date.parse(message.datetime ?? ""))
       ? Date.parse(message.datetime!)
       : Date.now();
-    this.enqueue(message.id, async () => {
-      await this.db("o_agentChatMessage")
-        .insert({
-          id: message.id,
-          isolationKey: this.isolationKey,
-          role: message.role,
-          name: message.name ?? null,
-          status: message.status ?? "pending",
-          datetime: message.datetime ?? new Date(createTime).toISOString(),
-          contentJson: JSON.stringify(message.content ?? []),
-          extJson: message.ext ? JSON.stringify(message.ext) : null,
-          createTime,
-          updateTime: Date.now(),
-        })
-        .onConflict("id")
-        .merge({
-          isolationKey: this.isolationKey,
-          role: message.role,
-          name: message.name ?? null,
-          status: message.status ?? "pending",
-          datetime: message.datetime ?? new Date(createTime).toISOString(),
-          contentJson: JSON.stringify(message.content ?? []),
-          extJson: message.ext ? JSON.stringify(message.ext) : null,
-          updateTime: Date.now(),
-        });
+    this.snapshots.set(message.id, {
+      id: message.id,
+      role: message.role,
+      name: message.name,
+      status: message.status ?? "pending",
+      datetime: message.datetime ?? new Date(createTime).toISOString(),
+      content: [...(message.content ?? [])],
+      ext: message.ext,
+      createTime,
     });
+    this.persistNow(message.id);
   }
 
   recordMessageUpdate(messageId: string, update: { status?: ChatMessageStatus; ext?: Record<string, unknown> }) {
-    this.enqueue(messageId, async () => {
-      const row = await this.db("o_agentChatMessage").where({ id: messageId, isolationKey: this.isolationKey }).first();
-      if (!row) return;
-      const patch: Record<string, unknown> = { updateTime: Date.now() };
-      if (update.status) patch.status = update.status;
-      if (update.ext) patch.extJson = JSON.stringify({ ...parseJson(row.extJson, {}), ...update.ext });
-      await this.db("o_agentChatMessage").where({ id: messageId, isolationKey: this.isolationKey }).update(patch);
-    });
+    const message = this.snapshots.get(messageId);
+    if (!message) return;
+    if (update.status) message.status = update.status;
+    if (update.ext) message.ext = { ...(message.ext ?? {}), ...update.ext };
+    const terminal = update.status === "complete" || update.status === "error" || update.status === "stop";
+    this.schedulePersist(messageId, terminal);
   }
 
   recordContentAdd(messageId: string, content: AIMessageContent) {
-    this.enqueue(messageId, async () => {
-      const row = await this.db("o_agentChatMessage").where({ id: messageId, isolationKey: this.isolationKey }).first();
-      if (!row) return;
-      const items = parseJson<any[]>(row.contentJson, []);
-      const id = (content as any).id;
-      if (!id || !items.some((item) => item?.id === id)) items.push(content);
-      await this.db("o_agentChatMessage").where({ id: messageId, isolationKey: this.isolationKey }).update({
-        contentJson: JSON.stringify(items),
-        updateTime: Date.now(),
-      });
-    });
+    const message = this.snapshots.get(messageId);
+    if (!message) return;
+    const id = (content as any).id;
+    if (!id || !message.content.some((item: any) => item?.id === id)) {
+      message.content.push(JSON.parse(JSON.stringify(content)));
+    }
+    this.schedulePersist(messageId);
   }
 
   recordContentUpdate(event: {
@@ -158,29 +190,27 @@ export class AgentChatHistoryStore {
     strategy?: "merge" | "append";
     status?: ChatMessageStatus;
   }) {
-    this.enqueue(event.messageId, async () => {
-      const row = await this.db("o_agentChatMessage").where({ id: event.messageId, isolationKey: this.isolationKey }).first();
-      if (!row) return;
-      const items = parseJson<any[]>(row.contentJson, []);
-      let content = items.find((item) => item?.id === event.contentId);
-      if (!content) {
-        content = {
-          id: event.contentId,
-          type: event.type ?? "text",
-          data: event.type === "thinking" ? {} : "",
-          status: event.status ?? "pending",
-        };
-        items.push(content);
-      }
-      applyContentUpdate(content, event);
-      await this.db("o_agentChatMessage").where({ id: event.messageId, isolationKey: this.isolationKey }).update({
-        contentJson: JSON.stringify(items),
-        updateTime: Date.now(),
-      });
-    });
+    const message = this.snapshots.get(event.messageId);
+    if (!message) return;
+    let content = message.content.find((item: any) => item?.id === event.contentId) as any;
+    if (!content) {
+      content = {
+        id: event.contentId,
+        type: event.type ?? "text",
+        data: event.type === "thinking" ? {} : "",
+        status: event.status ?? "pending",
+      };
+      message.content.push(content);
+    }
+    applyContentUpdate(content, event);
+    const terminal = event.status === "complete" || event.status === "error" || event.status === "stop";
+    this.schedulePersist(event.messageId, terminal);
   }
 
   async flush() {
+    for (const timer of this.timers.values()) clearTimeout(timer);
+    this.timers.clear();
+    for (const messageId of this.snapshots.keys()) this.persistNow(messageId);
     await Promise.all([...this.queues.values()]);
   }
 
