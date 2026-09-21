@@ -132,6 +132,19 @@ export default (nsp: Namespace) => {
       }
     });
 
+    socket.on("agent:resolve-step", async (
+      data: { runId: string; stepKey: string; resolution: "completed" | "failed" | "retryable"; resultRef?: string; error?: string },
+      callback,
+    ) => {
+      try {
+        await ensureRunScope(data.runId);
+        await taskStore.resolveStep(data.runId, data.stepKey, data.resolution, data.resultRef, data.error);
+        callback?.({ success: true, run: await taskStore.reconcile(data.runId) });
+      } catch (error) {
+        callback?.({ success: false, error: u.error(error).message });
+      }
+    });
+
     socket.on("agent:resume", async (data: { runId: string }, callback) => {
       try {
         if (activeRunId || abortController) throw new Error("当前已有任务正在执行，请先停止后再恢复");
