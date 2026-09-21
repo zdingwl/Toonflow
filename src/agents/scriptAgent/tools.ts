@@ -45,7 +45,7 @@ export default (toolCpnfig: ToolConfig) => {
   const { socket } = resTool;
   const tools: Record<string, Tool> = {
     get_novel_events: tool({
-      description: "获取章节事件",
+      description: "获取章节事件；当请求的章节编号不存在时，结果会明确列出缺失章节，校验原著范围时不得忽略。",
       inputSchema: jsonSchema<{ chapterIndexs: number[] }>(
         z
           .object({
@@ -56,17 +56,29 @@ export default (toolCpnfig: ToolConfig) => {
       execute: async ({ chapterIndexs }) => {
         console.log("[tools] get_novel_events", chapterIndexs);
         const thinking = msg.thinking("正在查询章节事件...");
-        const data = await u
-          .db("o_novel")
-          .where("projectId", resTool.data.projectId)
-          .select("id", "chapterIndex as index", "reel", "chapter", "chapterData", "event", "eventState")
-          .whereIn("chapterIndex", chapterIndexs);
+        // 事件查询只需要章节编号、标题和事件；不读取整章 chapterData 原文。
+        const data = chapterIndexs.length
+          ? await u
+              .db("o_novel")
+              .where("projectId", resTool.data.projectId)
+              .select("chapterIndex as index", "chapter", "event")
+              .whereIn("chapterIndex", chapterIndexs)
+          : [];
         thinking.appendText("正在查询章节编号: " + chapterIndexs.join(","));
-        const eventString = data.map((i: any) => [`第${i.index}章，标题:${i.chapter}，事件:${i.event}`].join("\n")).join("\n");
-        thinking.appendText("查询结果:\n" + eventString);
+        const eventString = data.map((i: any) => `第${i.index}章，标题:${i.chapter}，事件:${i.event}`).join("\n");
+        const found = new Set(data.map((i: any) => String(i.index)));
+        const missing = [...new Set(chapterIndexs)].filter((index) => !found.has(String(index)));
+        const result = [
+          eventString,
+          missing.length ? `未找到章节编号：${missing.join(",")}。章节范围校验未通过，不得将缺失章节视为已读取。` : "",
+          chapterIndexs.length === 0 ? "未指定章节编号，请提供需要查询的章节编号。" : "",
+        ]
+          .filter(Boolean)
+          .join("\n");
+        thinking.appendText("查询结果:\n" + result);
         thinking.updateTitle("查询章节事件完成");
         thinking.complete();
-        return eventString ?? "无数据";
+        return result || "无数据";
       },
     }),
     get_planData: tool({
