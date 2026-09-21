@@ -21,6 +21,19 @@ const planDataKeyLabels = Object.fromEntries(
   Object.entries(planData.shape).map(([key, schema]) => [key, (schema as z.ZodTypeAny).description ?? key]),
 ) as Record<keyof planData, string>;
 
+// 未传 offset/limit 时原样返回字符串，保持既有 Agent 调用的返回类型不变。
+function optionalTextChunk(text: string, offset?: number, limit?: number) {
+  if (offset === undefined && limit === undefined) return text;
+  const start = Math.min(offset ?? 0, text.length);
+  const end = Math.min(start + (limit ?? 6000), text.length);
+  return {
+    data: text.slice(start, end),
+    offset: start,
+    total: text.length,
+    nextOffset: end < text.length ? end : null,
+  };
+}
+
 interface ToolConfig {
   resTool: ResTool;
   toolsNames?: string[];
@@ -76,43 +89,49 @@ export default (toolCpnfig: ToolConfig) => {
       },
     }),
     get_novel_text: tool({
-      description: "获取小说章节原始文本内容",
-      inputSchema: jsonSchema<{ chapterIndex: string }>(
+      description: "获取指定小说章节原文；默认返回完整原始字符串。长章节可选 offset/limit 按字符分段，返回 data、total、nextOffset；按 nextOffset 续读直至 null。",
+      inputSchema: jsonSchema<{ chapterIndex: string; offset?: number; limit?: number }>(
         z
           .object({
             chapterIndex: z.string().describe("章节编号"),
+            offset: z.number().int().min(0).optional().describe("可选字符起点，从0开始；不传 offset/limit 时返回完整原文"),
+            limit: z.number().int().min(1).max(12000).optional().describe("可选分段长度，默认6000字符；不传 offset/limit 时返回完整原文"),
           })
           .toJSONSchema(),
       ),
-      execute: async ({ chapterIndex }) => {
-        console.log("[tools] get_novel_text", "[tools] get_novel_text", chapterIndex);
+      execute: async ({ chapterIndex, offset, limit }) => {
+        console.log("[tools] get_novel_text", chapterIndex);
         const thinking = msg.thinking(`正在获取小说章节原文...`);
         const data = await u.db("o_novel").where("projectId", resTool.data.projectId).where({ chapterIndex }).select("chapterData").first();
         const text = data && data?.chapterData ? data.chapterData : "";
-        thinking.appendText(`获取到原文:\n` + text);
+        const result = optionalTextChunk(text, offset, limit);
+        thinking.appendText(`获取到原文:\n` + (typeof result === "string" ? result : JSON.stringify(result)));
         thinking.updateTitle(`获取小说章节原文完成`);
         thinking.complete();
-        return text ?? "无数据";
+        return result;
       },
     }),
     get_script_content: tool({
-      description: "获取剧本本内容",
-      inputSchema: jsonSchema<{ ids: string[] }>(
+      description: "获取当前项目的剧本内容；默认返回原有完整 scriptItem 字符串。可选 offset/limit 按字符分段，返回 data、total、nextOffset；分段 data 可能包含不完整的 XML 标签，须按 nextOffset 续读后再合并。",
+      inputSchema: jsonSchema<{ ids: string[]; offset?: number; limit?: number }>(
         z
           .object({
             ids: z.array(z.string()).describe("脚本id"),
+            offset: z.number().int().min(0).optional().describe("可选字符起点，从0开始；不传 offset/limit 时返回完整剧本"),
+            limit: z.number().int().min(1).max(12000).optional().describe("可选分段长度，默认6000字符；不传 offset/limit 时返回完整剧本"),
           })
           .toJSONSchema(),
       ),
-      execute: async ({ ids }) => {
-        console.log("[tools] get_script_content", "[tools] get_script_content", ids);
+      execute: async ({ ids, offset, limit }) => {
+        console.log("[tools] get_script_content", ids);
         const thinking = msg.thinking(`正在获取脚本内容...`);
-        const data = await u.db("o_script").whereIn("id", ids).select("content", "name");
+        const data = await u.db("o_script").where("projectId", resTool.data.projectId).whereIn("id", ids).select("content", "name");
         const text = data && data.length ? data.map((d) => `<scriptItem name="${d.name}">${d.content}</scriptItem>`).join("\n") : "";
-        thinking.appendText(`获取到脚本内容:\n` + JSON.stringify(data, null, 2));
+        const result = optionalTextChunk(text, offset, limit);
+        thinking.appendText(`获取到脚本内容:\n` + (typeof result === "string" ? JSON.stringify(data, null, 2) : JSON.stringify(result)));
         thinking.updateTitle(`获取脚本内容完成`);
         thinking.complete();
-        return text ?? "无数据";
+        return result;
       },
     }),
   };
