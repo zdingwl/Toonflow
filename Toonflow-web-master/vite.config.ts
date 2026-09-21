@@ -10,6 +10,9 @@ import postcsspxtoviewport from "postcss-px-to-viewport";
 export default defineConfig({
   base: "./",
   build: {
+    // Electron 实际加载 data/web；直接输出到运行目录，避免源码构建后仍使用仓库里的旧前端 bundle。
+    outDir: "../data/web",
+    emptyOutDir: true,
     assetsInlineLimit: Infinity,
     rollupOptions: {
       output: {
