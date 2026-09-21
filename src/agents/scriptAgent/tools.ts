@@ -82,7 +82,7 @@ export default (toolCpnfig: ToolConfig) => {
       },
     }),
     get_planData: tool({
-      description: "获取工作区数据",
+      description: "获取工作区数据；若客户端没有回应，会报告读取超时，而不是一直等待。",
       inputSchema: jsonSchema<{ key: keyof planData }>(
         z
           .object({
@@ -93,11 +93,33 @@ export default (toolCpnfig: ToolConfig) => {
       execute: async ({ key }) => {
         console.log("[tools] get_planData", key);
         const thinking = msg.thinking(`正在获取${planDataKeyLabels[key]}工作区数据...`);
-        const planData: planData = await new Promise((resolve) => socket.emit("getPlanData", { key }, (res: any) => resolve(res)));
-        thinking.appendText(`获取到${planDataKeyLabels[key]}:\n` + planData[key]);
-        thinking.updateTitle(`获取${planDataKeyLabels[key]}完成`);
-        thinking.complete();
-        return planData[key] ?? "无数据";
+        try {
+          const workspace: planData = await new Promise((resolve, reject) => {
+            const timer = setTimeout(() => reject(new Error(`获取${planDataKeyLabels[key]}工作区数据超时，请检查客户端连接`)), 30_000);
+            try {
+              socket.emit("getPlanData", { key }, (res: any) => {
+                clearTimeout(timer);
+                if (!res || typeof res !== "object" || !(key in res)) {
+                  reject(new Error(`工作区未返回${planDataKeyLabels[key]}数据`));
+                  return;
+                }
+                resolve(res as planData);
+              });
+            } catch (error) {
+              clearTimeout(timer);
+              reject(error);
+            }
+          });
+          thinking.appendText(`获取到${planDataKeyLabels[key]}:\n` + workspace[key]);
+          thinking.updateTitle(`获取${planDataKeyLabels[key]}完成`);
+          thinking.complete();
+          return workspace[key] ?? "无数据";
+        } catch (error) {
+          thinking.appendText(`读取失败: ${u.error(error).message}`);
+          thinking.updateTitle(`获取${planDataKeyLabels[key]}失败`);
+          thinking.complete();
+          throw error;
+        }
       },
     }),
     get_novel_text: tool({
