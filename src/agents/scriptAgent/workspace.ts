@@ -126,3 +126,35 @@ export async function saveScriptItem(
     return Number(current.id);
   });
 }
+
+
+/**
+ * 仅核对已经持久化的结果，不主动覆盖当前业务数据。
+ * 返回 resultRef 表示可以安全把 reconciling 步骤标记为 completed。
+ */
+export async function reconcileScriptStepOutput(
+  db: Knex,
+  projectId: number,
+  stepKey: string,
+  output: string | undefined,
+): Promise<string | null> {
+  if (!output) return null;
+  if (stepKey.startsWith("scriptAgent:storySkeletonAgent:")) {
+    const value = extractScriptWorkspaceField(output, "storySkeleton");
+    return (await readScriptWorkspaceField(db, projectId, "storySkeleton")) === value ? `storySkeleton:${projectId}` : null;
+  }
+  if (stepKey.startsWith("scriptAgent:adaptationStrategyAgent:")) {
+    const value = extractScriptWorkspaceField(output, "adaptationStrategy");
+    return (await readScriptWorkspaceField(db, projectId, "adaptationStrategy")) === value ? `adaptationStrategy:${projectId}` : null;
+  }
+  if (stepKey.startsWith("scriptAgent:scriptAgent:")) {
+    const item = extractScriptItem(output);
+    const row = await db("o_script").where({ projectId, name: item.name }).select("id", "content").first();
+    return row && String(row.content ?? "") === item.content ? `script:${projectId}:${row.id}` : null;
+  }
+  // 监督 Agent 没有业务写入；只要完整输出已保存，就可以安全复用。
+  if (stepKey.startsWith("scriptAgent:supervisionAgent:")) {
+    return output.trim() ? `recovered:${stepKey}` : null;
+  }
+  return null;
+}
