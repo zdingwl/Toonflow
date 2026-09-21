@@ -8,6 +8,9 @@ app.commandLine.appendSwitch("disable-gpu-shader-disk-cache");
 app.commandLine.appendSwitch("disable-features", "CalculateNativeWinOcclusion");
 
 const TARGET_ENTRIES = new Set(["assets", "models", "serve", "skills", "web", "vendor"]);
+// serve/web 是当前安装包的运行时代码，不属于用户数据。
+// 即使应用版本号没有变化（开发构建常见），也必须刷新，否则会继续运行旧 bundle。
+const RUNTIME_ENTRIES = new Set(["serve", "web"]);
 
 function copyDir(src: string, dest: string): void {
   if (!fs.existsSync(src)) return;
@@ -57,7 +60,8 @@ function initializeData(): void {
 
   for (const dir of TARGET_ENTRIES) {
     const targetDir = path.join(destDir, dir);
-    if (shouldForceReplace) {
+    // 运行时代码必须始终与当前安装包一致；用户可修改的数据目录仍沿用版本升级时替换的旧逻辑。
+    if (shouldForceReplace || RUNTIME_ENTRIES.has(dir)) {
       fs.rmSync(targetDir, { recursive: true, force: true });
       copyDir(path.join(srcDir, dir), targetDir);
       continue;
