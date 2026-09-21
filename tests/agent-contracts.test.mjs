@@ -187,3 +187,19 @@ test("记忆设置可配置本地 Ollama Embedding、混合召回、Reranker 与
   assert.match(client, /Qwen3-Reranker-4B/);
   assert.match(embeddingConfig, /q4f16/);
 });
+
+
+test("已受理的图片生成在进程重启后只恢复仍为生成中的任务", () => {
+  const assetRoute = source("src/routes/production/assets/batchGenerateAssetsImage.ts");
+  const storyboardRoute = source("src/routes/production/storyboard/batchGenerateImage.ts");
+
+  assert.match(assetRoute, /activeAssetGenerationRequests/);
+  assert.match(assetRoute, /claimed\.duplicate[\s\S]*state === "生成中"/);
+  assert.match(assetRoute, /claimed\.receipt\.data\.imageIdMap/);
+  assert.match(assetRoute, /activeAssetGenerationRequests\.delete\(generationKey\)/);
+
+  assert.match(storyboardRoute, /activeStoryboardGenerationRequests/);
+  assert.match(storyboardRoute, /claimed\.duplicate[\s\S]*state === "生成中"/);
+  assert.match(storyboardRoute, /generationIdSet/);
+  assert.match(storyboardRoute, /activeStoryboardGenerationRequests\.delete\(generationKey\)/);
+});
