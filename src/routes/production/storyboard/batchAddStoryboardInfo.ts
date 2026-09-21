@@ -47,9 +47,9 @@ export default router.post(
       }
       item.id = id;
     }
-    const lastStoryboard = await u.db("o_storyboard").where("scriptId", scriptId);
+    const lastStoryboard = await u.db("o_storyboard").where({ scriptId, projectId });
     if (!lastStoryboard || !lastStoryboard.length) return res.status(400).send(error("未查到分镜数据"));
-    //根据track分组
+    // 根据 track 分组；限定当前项目和剧本，避免混入其他项目的数据。
     const storyboardGroupByTrack: Record<string, number[]> = {};
     lastStoryboard.forEach((item: any) => {
       if (!storyboardGroupByTrack[item.track]) {
@@ -58,26 +58,20 @@ export default router.post(
       storyboardGroupByTrack[item.track].push(item.id);
     });
 
-    //循环：先查询数据库中是否已存在相同track名称的trackId，有则复用，没有则新建
+    // 查找已有分组并更新时长；新分组沿用原有 videoTrack 创建逻辑。
     for (const track in storyboardGroupByTrack) {
       const storyboardIds = storyboardGroupByTrack[track] ?? [];
-
-      // 计算该track下所有分镜的duration总和
       const trackDuration = lastStoryboard
         .filter((item: any) => item.track == track)
         .reduce((sum: number, item: any) => sum + Number(item.duration), 0);
-
-      // 查找该scriptId下是否已有相同track名称且已分配trackId的分镜记录
-      const existingStoryboard = await u.db("o_storyboard").where({ scriptId, track }).whereNotNull("trackId").first();
+      const existingStoryboard = await u.db("o_storyboard").where({ scriptId, projectId, track }).whereNotNull("trackId").first();
 
       let trackId: number;
       if (existingStoryboard?.trackId) {
-        // 已存在相同track名称的trackId，直接复用，并更新duration
         trackId = existingStoryboard.trackId;
-        await u.db("o_videoTrack").where("id", trackId).update({ duration: trackDuration });
+        await u.db("o_videoTrack").where({ id: trackId, scriptId, projectId }).update({ duration: trackDuration });
       } else {
-        // 不存在，新建videoTrack
-        const newTrackId = Date.now()
+        const newTrackId = Date.now();
         await u.db("o_videoTrack").insert({
           id: newTrackId,
           scriptId,
@@ -87,22 +81,29 @@ export default router.post(
         trackId = newTrackId;
       }
 
-      await u.db("o_storyboard").whereIn("id", storyboardIds).update({ trackId });
+      await u.db("o_storyboard").where({ scriptId, projectId }).whereIn("id", storyboardIds).update({ trackId });
     }
 
+    // 上面的 lastStoryboard 是分配 trackId 之前读取的快照；重新查询，确保回执包含真实已保存的分组 ID。
+    const persistedStoryboard = await u.db("o_storyboard").where({ scriptId, projectId }).whereIn(
+      "id",
+      lastStoryboard.map((item: any) => item.id),
+    );
+    const persistedById = new Map(persistedStoryboard.map((item: any) => [item.id, item]));
     const storyboardData = await Promise.all(
-      lastStoryboard.map(async (i) => {
+      lastStoryboard.map(async (i: any) => {
+        const persisted = persistedById.get(i.id) as any;
         return {
           associateAssetsIds: await u.db("o_assets2Storyboard").where("storyboardId", i.id).orderBy("rowid").select("assetId").pluck("assetId"),
           src: i.filePath ? await u.oss.getSmallImageUrl(i.filePath) : "",
           id: i.id,
-          trackId: i.trackId,
+          trackId: persisted?.trackId ?? i.trackId,
           prompt: i.prompt,
           duration: Number(i.duration),
           state: i.state,
           scriptId: i.scriptId,
           reason: i.reason,
-          videoDesc: i.videoDesc
+          videoDesc: i.videoDesc,
         };
       }),
     );
