@@ -8,10 +8,13 @@ import ts from "typescript";
 const root = fileURLToPath(new URL("../", import.meta.url));
 const backend = readFileSync(path.join(root, "src/routes/script/getAiRegex.ts"), "utf8");
 const axios = readFileSync(path.join(root, "Toonflow-web-master/src/utils/axios.ts"), "utf8");
+const frontend = readFileSync(path.join(root, "Toonflow-web-master/src/views/script/components/batchAddScript.vue"), "utf8");
+const parserSource = readFileSync(path.join(root, "Toonflow-web-master/src/utils/parseScript.ts"), "utf8");
+const compilerOptions = { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, esModuleInterop: true };
 const compiled = ts.transpileModule(backend, {
   fileName: "getAiRegex.ts",
   reportDiagnostics: true,
-  compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, esModuleInterop: true },
+  compilerOptions,
 });
 assert.deepEqual((compiled.diagnostics ?? []).filter((d) => d.category === ts.DiagnosticCategory.Error), []);
 
@@ -56,13 +59,12 @@ function makeRoute(reply = "") {
   };
 }
 
-test("已可按默认规则拆集时复用原规则，无需调用通用AI模型", async () => {
-  const route = makeRoute(new Error("未找到部署配置 universalAi"));
+test("即使默认正则匹配到多集，点击 AI 解析也必须请求模型而不是复用错误拆集数量", async () => {
+  const route = makeRoute(String.raw`/^[ \t]*第[ \t]*(\d+)[ \t]*集[ \t]*([^\n\r]*)/gm`);
   const result = await route.request("第1集 起点\n内容\n第2集 转折\n内容");
   assert.equal(result.statusCode, 200);
-  assert.equal(route.calls, 0);
-  assert.match(result.body.data, /\\s\*/);
-  assert.ok(new RegExp(result.body.data.slice(1, -2), "g").exec("第1集 起点"));
+  assert.equal(route.calls, 1);
+  assert.match(result.body.data, /\/gm$/);
 });
 
 test("AI 正则示例保留反斜杠，去除代码围栏并验证两组实际可匹配", async () => {
@@ -71,18 +73,42 @@ test("AI 正则示例保留反斜杠，去除代码围栏并验证两组实际�
   assert.equal(result.statusCode, 200);
   assert.equal(route.calls, 1);
   assert.equal(result.body.data, "/^EPISODE\\s*(\\d+):\\s*([^\\n\\r]*)/gm");
-  assert.ok(route.prompt.includes(String.raw`第\s*`), "提示词示例不能吞掉正则转义字符");
+  assert.ok(route.prompt.includes(String.raw`第[ \t]*`), "提示词应保留行首锚定和行内空白要求");
 });
 
-test("无效模型输出不覆盖手工拆集规则，模型配置缺失给出可读错误", async () => {
-  for (const value of ["/(/g", "/^S(\\d+)$/gm", ""]) {
-    const result = await makeRoute(value).request("S1: 起点\nS2: 后续");
-    assert.equal(result.statusCode, 400);
+test("AI 正则拒绝行内误匹配、跨行吞正文、无效语法及捕获组缺失", async () => {
+  const sample = "第1集 起点\n正文\n第2集 转折";
+  for (const value of [String.raw`/第(\d+)集([^\n]*)/g`, String.raw`/^\s*第(\d+)集(.*)/gm`, "/(/g", "/^S(\\d+)$/gm", ""]) {
+    const result = await makeRoute(value).request(sample);
+    assert.equal(result.statusCode, 400, value);
     assert.ok(result.body.message.length > 5);
   }
-  const missing = await makeRoute(new Error("未找到部署配置 universalAi")).request("S1: 起点");
+  const missing = await makeRoute(new Error("未找到部署配置 universalAi")).request(sample);
   assert.equal(missing.statusCode, 400);
   assert.match(missing.body.message, /通用AI/);
+});
+
+test("默认拆集只识别独立集标题行，不把正文的‘第X集’计为新集", () => {
+  const js = ts.transpileModule(parserSource, { fileName: "parseScript.ts", compilerOptions }).outputText;
+  const module = { exports: {} };
+  new Function("module", "exports", js)(module, module.exports);
+  const episodes = module.exports.default("片名候选：\n1、候选标题\n第1集 开始\n对白：上一季第12集讲过此事\n第2集 转折\n正文结束");
+  assert.equal(episodes.length, 2);
+  assert.deepEqual(episodes.map((e) => e.index), [1, 2]);
+  assert.match(episodes[0].text, /上一季第12集/);
+});
+
+test("AI 采样覆盖长剧本中后段而非只发送开头 2000 字", () => {
+  const declaration = frontend.match(/function getEpisodeRegexSample\(text: string\): string \{[\s\S]*?\n\}/)?.[0];
+  assert.ok(declaration);
+  const js = ts.transpileModule(declaration, { fileName: "sample.ts", compilerOptions }).outputText;
+  const sample = new Function(`${js}\nreturn getEpisodeRegexSample;`)();
+  const text = `${"片名候选：作品介绍\n".repeat(250)}第1集 起点\n${"正文内容\n".repeat(350)}第2集 发展\n${"情节描述\n".repeat(350)}第3集 结局\n`;
+  const result = sample(text);
+  assert.ok(result.length <= 6000);
+  assert.match(result, /片名候选/);
+  assert.match(result, /第3集 结局/);
+  assert.match(frontend, /getEpisodeRegexSample\(content\.value\)/);
 });
 
 test("HTTP 超时没有 Axios response 时，错误处理器不会二次抛出 TypeError", () => {
