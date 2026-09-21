@@ -70,7 +70,12 @@ export default (nsp: Namespace) => {
       for (const step of state.steps.filter((item) => item.status === "reconciling")) {
         try {
           const resultRef = await reconcileScriptStepOutput(u.db, Number(resTool.data.projectId), step.stepKey, step.output);
-          if (resultRef) await taskStore.resolveStep(runId, step.stepKey, "completed", resultRef);
+          if (resultRef) {
+            await taskStore.resolveStep(runId, step.stepKey, "completed", resultRef);
+          } else if (!step.output) {
+            // ScriptAgent 的业务写入只发生在模型完整输出后；没有保存输出时可以安全重跑模型步骤。
+            await taskStore.resolveStep(runId, step.stepKey, "retryable", undefined, "模型输出尚未完成，可安全重试");
+          }
         } catch (error) {
           console.warn("[scriptAgent] 自动核对步骤失败:", step.stepKey, u.error(error).message);
         }
