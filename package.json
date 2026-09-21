@@ -25,6 +25,7 @@
     "start": "cross-env NODE_ENV=prod node data/serve/app.js",
     "lint": "tsc --noEmit",
     "test:agent": "tsx --test tests/*.test.ts tests/*.test.mjs",
+    "benchmark:agent-local": "node scripts/benchmark-agent-local.mjs",
     "build": "yarn build:web && yarn build:backend",
     "pack": "electron-builder --dir",
     "dist": "yarn build && electron-builder",
