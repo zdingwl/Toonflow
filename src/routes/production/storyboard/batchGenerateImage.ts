@@ -7,6 +7,7 @@ import { assetItemSchema } from "@/agents/productionAgent/tools";
 import { withOperationReceipt } from "@/utils/agent/runtime/operationReceipt";
 
 const router = express.Router();
+const activeStoryboardGenerationRequests = new Set<string>();
 export type AssetData = z.infer<typeof assetItemSchema>;
 
 export default router.post(
@@ -36,6 +37,8 @@ export default router.post(
     const requestId = req.body.requestId ?? `storygen_${u.uuid()}`;
     const normalizedIds = [...new Set<number>(storyboardIds.map(Number))].sort((a, b) => a - b);
     if (!normalizedIds.length) return res.status(400).send(error("storyboardIds不能为空"));
+    const generationKey = `${projectId}:${scriptId}:${requestId}`;
+    let ownsGenerationWorker = false;
 
     try {
       const projectSettingData = await u.db("o_project")
@@ -88,6 +91,11 @@ export default router.post(
         },
       );
 
+      if (!claimed.duplicate || !activeStoryboardGenerationRequests.has(generationKey)) {
+        activeStoryboardGenerationRequests.add(generationKey);
+        ownsGenerationWorker = true;
+      }
+
       const assets2StoryboardRows = await u.db("o_assets2Storyboard")
         .whereIn("storyboardId", normalizedIds)
         .orderBy("rowid")
@@ -124,9 +132,20 @@ export default router.post(
       })));
       res.status(200).send(success(responseData));
 
-      // 相同 requestId 已经受理过：返回真实当前状态，不再次启动图片任务。
-      if (claimed.duplicate) return;
+      if (!ownsGenerationWorker) return;
+      const generationIds = claimed.duplicate
+        ? storyboardData
+            .filter((item: any) => item.state === "生成中" && (compulsory || Number(item.shouldGenerateImage) !== 0))
+            .map((item: any) => Number(item.id))
+        : normalizedIds;
+      if (!generationIds.length) {
+        activeStoryboardGenerationRequests.delete(generationKey);
+        ownsGenerationWorker = false;
+        return;
+      }
 
+      // 进程重启后使用同一 requestId 恢复仍处于“生成中”的分镜。
+      // operation receipt 已证明这批任务之前只受理过一次，因此不会重复创建业务记录。
       const generateTask = async (item: (typeof storyboardData)[number]) => {
         const repeloadObj = {
           prompt: item.prompt!,
@@ -162,16 +181,29 @@ export default router.post(
         }
       };
 
-      const generateList = compulsory
+      const generationIdSet = new Set(generationIds);
+      const generateList = (compulsory
         ? storyboardData
-        : storyboardData.filter((item: any) => item.shouldGenerateImage !== 0);
-      for (let i = 0; i < generateList.length; i += concurrentCount) {
-        const batch = generateList.slice(i, i + concurrentCount);
-        await Promise.all(batch.map(generateTask));
+        : storyboardData.filter((item: any) => item.shouldGenerateImage !== 0))
+        .filter((item: any) => generationIdSet.has(Number(item.id)));
+      try {
+        for (let i = 0; i < generateList.length; i += concurrentCount) {
+          const batch = generateList.slice(i, i + concurrentCount);
+          await Promise.all(batch.map(generateTask));
+        }
+      } finally {
+        if (ownsGenerationWorker) {
+          activeStoryboardGenerationRequests.delete(generationKey);
+          ownsGenerationWorker = false;
+        }
       }
     } catch (reason) {
       const message = u.error(reason).message;
       console.error("[storyboard/batchGenerateImage]", reason);
+      if (ownsGenerationWorker) {
+        activeStoryboardGenerationRequests.delete(generationKey);
+        ownsGenerationWorker = false;
+      }
       if (!res.headersSent) return res.status(400).send(error(message));
     }
   },
