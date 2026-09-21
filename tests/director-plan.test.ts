@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import knex from "knex";
-import { extractDirectorPlan, saveDirectorPlan } from "../src/agents/productionAgent/directorPlan";
+import { extractDirectorPlan, reconcileDirectorPlanOutput, saveDirectorPlan } from "../src/agents/productionAgent/directorPlan";
 
 test("导演计划只有完整单份 XML 才可提交", () => {
   assert.equal(extractDirectorPlan("说明<scriptPlan>第一场\n第二场</scriptPlan>完成"), "第一场\n第二场");
@@ -41,6 +41,32 @@ test("导演计划提交后读回，保留其他工作区字段并校验剧集�
     assert.equal(await db("o_agentWorkData").count({ count: "*" }).first().then((row) => Number(row?.count)), 1);
     await assert.rejects(() => saveDirectorPlan(db, 12, 1, "覆盖", "计划 A"), /已被修改/);
     await assert.rejects(() => saveDirectorPlan(db, 99, 1, "非法计划", ""));
+  } finally {
+    await db.destroy();
+  }
+});
+
+
+test("导演计划恢复核对只接受已经提交到当前剧集的数据", async () => {
+  const db = knex({ client: "better-sqlite3", connection: { filename: ":memory:" }, useNullAsDefault: true });
+  try {
+    await db.schema.createTable("o_script", (t) => {
+      t.integer("id").primary(); t.integer("projectId"); t.text("content");
+    });
+    await db.schema.createTable("o_agentWorkData", (t) => {
+      t.increments("id").primary(); t.integer("projectId"); t.integer("episodesId"); t.string("key"); t.text("data");
+      t.integer("createTime"); t.integer("updateTime");
+    });
+    await db("o_script").insert({ id: 2, projectId: 7, content: "剧本" });
+    await saveDirectorPlan(db, 7, 2, "计划A", "");
+    assert.equal(
+      await reconcileDirectorPlanOutput(db, 7, 2, "<scriptPlan>计划A</scriptPlan>"),
+      "directorPlan:7:2",
+    );
+    assert.equal(
+      await reconcileDirectorPlanOutput(db, 7, 2, "<scriptPlan>另一计划</scriptPlan>"),
+      null,
+    );
   } finally {
     await db.destroy();
   }
