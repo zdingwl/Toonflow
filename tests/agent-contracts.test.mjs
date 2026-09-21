@@ -20,6 +20,8 @@ test("修改过的 Agent、保存接口与前端 Store TypeScript 文件无语�
     "src/utils/agent/runtime/toolExecutor.ts",
     "src/agents/scriptAgent/workspace.ts",
     "src/agents/productionAgent/directorPlan.ts",
+    "src/agents/productionAgent/storyboardTable.ts",
+    "src/utils/agent/retrieval/vectorTopK.ts",
     "src/socket/routes/scriptAgent.ts",
     "src/socket/routes/productionAgent.ts",
     "src/routes/production/storyboard/batchAddStoryboardInfo.ts",
