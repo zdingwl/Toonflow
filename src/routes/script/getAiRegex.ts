@@ -6,10 +6,6 @@ import { validateFields } from "@/middleware/middleware";
 
 const router = express.Router();
 
-// 已能按原有规则拆集的剧本不需要额外请求模型；返回与客户端默认拆集器一致的表达式。
-const DEFAULT_EPISODE_REGEX = String.raw`/第\s*([0-9０-９零一二三四五六七八九十百千万]+)\s*集\s*([^\n\r]*)/g`;
-const DEFAULT_HEADING_REGEX = /^[ \t]*第[ \t]*[0-9０-９零一二三四五六七八九十百千万]+[ \t]*集[^\r\n]*$/gm;
-
 function normalizeAiRegex(text: string, sample: string): string {
   const cleaned = text.trim()
     .replace(/^```(?:regex|javascript|js)?\s*\r?\n/i, "")
@@ -22,16 +18,26 @@ function normalizeAiRegex(text: string, sample: string): string {
   if (pattern.length > 512 || !/^[gimu]*$/.test(flags) || new Set(flags).size !== flags.length) {
     throw new Error("AI返回的正则过长或包含不支持的标志");
   }
+  // 只接受从独立集标题行开始的表达式；非行首匹配会把正文中的“第X集”误拆成新集。
+  if (!pattern.startsWith("^")) {
+    throw new Error("AI返回的正则未限定集标题行首，请重试或手动输入");
+  }
   let regex: RegExp;
   try {
-    regex = new RegExp(pattern, flags.includes("g") ? flags : `${flags}g`);
+    regex = new RegExp(pattern, [...new Set(`${flags}gm`)].join(""));
   } catch {
     throw new Error("AI返回的正则语法不合法，请重试或手动输入");
   }
-  const match = regex.exec(sample);
-  if (!match || !/^[0-9０-９零一二三四五六七八九十百千万]+$/.test(match[1]?.trim() ?? "") || match[2] === undefined) {
-    throw new Error("AI返回的正则无法从样本中提取集数和标题，请重试或手动输入");
+  let found = false;
+  for (const match of sample.matchAll(regex)) {
+    if (!match[0] || match[0].includes("\n") ||
+      !/^[0-9０-９零〇一二三四五六七八九十百千万两]+$/.test(match[1]?.trim() ?? "") ||
+      match[2] === undefined) {
+      throw new Error("AI返回的正则无法正确提取独立集标题行，请重试或手动输入");
+    }
+    found = true;
   }
+  if (!found) throw new Error("AI返回的正则未匹配到样本中的集标题，请检查剧本格式");
   return `/${pattern}/${regex.flags}`;
 }
 
@@ -42,20 +48,13 @@ export default router.post(
   }),
   async (req, res) => {
     const { content } = req.body as { content: string };
-    // 用户已使用默认规则成功拆集时，AI调用失败不应阻断已有的拆集功能。
-    DEFAULT_HEADING_REGEX.lastIndex = 0;
-    const standardHeadings = content.match(DEFAULT_HEADING_REGEX);
-    if (standardHeadings && standardHeadings.length >= 2) {
-      return res.status(200).send(success(DEFAULT_EPISODE_REGEX));
-    }
-
-    // String.raw 保留提示词示例中的 \s、\n、\r，避免 JS 模板字符串吞掉反斜杠。
-    const systemPrompt = String.raw`你是一个正则表达式专家。用户提供剧本文本，请识别每集标题行的分隔模式，只返回 JavaScript 正则表达式。
+    // 匹配数量无法证明拆集正确：即使默认规则已匹配多集，用户点击 AI 解析时也必须真正分析格式。
+    const systemPrompt = String.raw`你是一个正则表达式专家。用户提供的文本包含剧本片名、说明、正文及可能的集标题。请识别真正的每集标题行的格式，只返回 JavaScript 正则表达式。
 要求：
-1. 第一个捕获组匹配集数（阿拉伯数字或中文数字）；第二个捕获组匹配该集标题，标题可为空。
-2. 尽量只匹配独立的集标题行，不得把正文或对白误判为集标题。
-3. 返回格式为 /正则表达式/g，例如：/第\s*([0-9一二三四五六七八九十百千万]+)\s*集\s*([^\n\r]*)/g。
-4. 只返回正则表达式本身，不要说明、引号或 Markdown；如果没有明显的分集标题，返回空字符串。`;
+1. 第一个捕获组只匹配集数（阿拉伯数字或中文数字）；第二个捕获组匹配该集标题，标题可为空。
+2. 必须用 ^ 锚定标题行首，以 m 标志逐行匹配；行首允许用 [ \t]* 匹配空格，但不能用 \s* 跨行吞掉正文。只匹配真正的集标题，不得把片名候选、正文、对白或场次编号当作集标题。
+3. 只匹配单行的集标题，不得跨行吞掉正文。返回格式如：/^[ \t]*第[ \t]*([0-9一二三四五六七八九十百千万]+)[ \t]*集[ \t]*([^\n\r]*)/gm。若剧本使用其他格式，请根据原文调整，不能套用示例。
+4. 只返回正则表达式本身，不要说明、引号或 Markdown；如果样本中没有明显的分集标题，返回空字符串。`;
 
     try {
       const resText = await u.Ai.Text("universalAi").invoke({
@@ -70,7 +69,7 @@ export default router.post(
         ? "未配置通用AI文本模型，请先在模型设置中完成配置；也可以手动填写拆集正则"
         : /AI返回|模型未识别/.test(details)
           ? details
-          : "AI解析正则失败，请检查通用AI模型、网络连接或稍后重试；已解析的剧集仍可继续使用";
+          : "AI解析正则失败，请检查通用AI模型、网络连接或稍后重试；请勿在拆集结果不正确时保存";
       return res.status(400).send(error(message));
     }
   },
