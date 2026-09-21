@@ -300,19 +300,19 @@ async function getAiRegex() {
       padding: 38px 16px;
       border: 2px dashed #969494;
       border-radius: 8px;
-      transition: border-color 0.2s;
+      text-align: center;
       cursor: pointer;
-      transition: border-color 0.2s;
+      transition: all 0.2s;
       &:hover {
         border-color: #000000;
       }
 
       .dragIcon {
-        margin-top: 0;
-        i-upload-one { color: var(--td-brand-color); }
+        margin-bottom: 12px;
       }
 
       .uploadText {
+        font-size: 14px;
         margin: 0 0 8px;
       }
 
@@ -329,7 +329,7 @@ async function getAiRegex() {
         margin-bottom: 8px;
       }
       .footerInfo {
-        margin-top: 8px;
+        font-size: 12px;
         .tips.warn {
           margin-left: 8px;
         }
