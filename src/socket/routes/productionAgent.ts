@@ -103,6 +103,63 @@ export default (nsp: Namespace) => {
       }
 
       state = await taskStore.reconcile(runId);
+      for (const call of state.toolCalls.filter(
+        (item) => ["add_deriveAsset", "del_deriveAsset"].includes(item.toolName) && ["reconciling", "failed"].includes(item.status),
+      )) {
+        try {
+          const input = (call.input ?? {}) as Record<string, unknown>;
+          const requestId =
+            (typeof input.requestId === "string" && input.requestId) ||
+            call.error?.match(/requestId=([A-Za-z0-9_-]{8,128})/)?.[1];
+          if (!requestId) continue;
+
+          if (call.toolName === "add_deriveAsset") {
+            const receipt = await u.db("o_agentWorkData")
+              .where({ projectId, episodesId, key: `deriveAssetWrite:${requestId}` })
+              .select("data")
+              .first();
+            if (!receipt?.data) continue;
+            const saved = JSON.parse(receipt.data);
+            const assetId = Number(saved.assetId);
+            const parentId = Number(input.assetsId);
+            const asset = await u.db("o_assets").where({ id: assetId, projectId, assetsId: parentId }).first();
+            const linked = await u.db("o_scriptAssets").where({ scriptId: episodesId, assetId }).first();
+            if (
+              !asset ||
+              !linked ||
+              (typeof input.name === "string" && asset.name !== input.name) ||
+              (typeof input.desc === "string" && (asset.describe ?? "") !== input.desc)
+            ) continue;
+            await taskStore.resolveToolCall(runId, call.id, "completed", {
+              success: true,
+              requestId,
+              id: assetId,
+              reconciled: true,
+            });
+          } else {
+            const receipt = await u.db("o_agentWorkData")
+              .where({ projectId, episodesId, key: `deriveAssetDelete:${requestId}` })
+              .select("data")
+              .first();
+            if (!receipt?.data) continue;
+            const saved = JSON.parse(receipt.data);
+            const assetId = Number(saved.assetId);
+            const asset = await u.db("o_assets").where({ id: assetId, projectId }).first();
+            const linked = await u.db("o_scriptAssets").where({ scriptId: episodesId, assetId }).first();
+            if (asset || linked) continue;
+            await taskStore.resolveToolCall(runId, call.id, "completed", {
+              success: true,
+              requestId,
+              id: assetId,
+              reconciled: true,
+            });
+          }
+        } catch (error) {
+          console.warn("[productionAgent] 自动核对衍生资产写入失败:", call.id, u.error(error).message);
+        }
+      }
+
+      state = await taskStore.reconcile(runId);
       for (const step of state.steps.filter((item) => item.status === "reconciling")) {
         try {
           if (step.stepKey.startsWith("productionAgent:directorPlanAgent:")) {
@@ -120,15 +177,16 @@ export default (nsp: Namespace) => {
 
           const sideEffects = state.toolCalls.filter((call) => call.stepKey === step.stepKey && call.sideEffect);
           if (!sideEffects.length) {
-            // 没有任何写工具开始执行时，中断只影响模型推理，可安全重试该步骤。
-            await taskStore.resolveStep(runId, step.stepKey, "retryable", undefined, "未发现写操作，可安全重试");
+            if (step.output?.trim()) {
+              await taskStore.resolveStep(runId, step.stepKey, "completed", `recovered:${step.stepKey}`);
+            } else {
+              await taskStore.resolveStep(runId, step.stepKey, "retryable", undefined, "未发现写操作且模型输出未完成，可安全重试");
+            }
             continue;
           }
-          if (
-            sideEffects.every((call) => call.toolName === "add_flowData_storyboard" && call.status === "completed")
-          ) {
-            // 分镜写入已由 requestId 确认，重跑模型时 ToolExecutor 会直接复用已完成回执。
-            await taskStore.resolveStep(runId, step.stepKey, "retryable", undefined, "分镜写入已确认，模型步骤可安全重试");
+          if (sideEffects.every((call) => call.status === "completed") && step.output?.trim()) {
+            // 模型完整输出已经落盘，且所有写工具都有成功回执；无需再次运行模型和业务写入。
+            await taskStore.resolveStep(runId, step.stepKey, "completed", `recovered:${step.stepKey}`);
           }
         } catch (error) {
           console.warn("[productionAgent] 自动核对步骤失败:", step.stepKey, u.error(error).message);
