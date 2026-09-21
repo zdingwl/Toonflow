@@ -12,8 +12,8 @@
                 clearable
                 :disabled="aiRegexLoading"
                 style="flex: 1"
-                :status="regexError ? 'error' : undefined"
-                :tips="regexError || undefined" />
+                :status="effectiveRegexError ? 'error' : undefined"
+                :tips="effectiveRegexError || undefined" />
               <t-button :loading="aiRegexLoading" @click="getAiRegex">{{ $t("workbench.script.import.getAiRegex") }}</t-button>
             </div>
             <div v-if="aiRegexError" role="alert" class="aiRegexError">{{ aiRegexError }}</div>
@@ -50,7 +50,7 @@
             </div>
 
             <div style="margin-top: 16px; text-align: right">
-              <t-button theme="primary" style="margin-left: 10px" :disabled="!content || !tableData.length" @click="activeKey = 'To2'">
+              <t-button theme="primary" style="margin-left: 10px" :disabled="!content || !tableData.length || !!effectiveRegexError" @click="activeKey = 'To2'">
                 {{ $t("workbench.novel.import.nextStep") }}
               </t-button>
             </div>
@@ -147,20 +147,54 @@ const columns: PrimaryTableCol<TableRowData>[] = [
   { colKey: "scriptData", title: $t("workbench.script.import.col.scriptData"), ellipsis: true },
 ];
 
-// 解析后的章节数据
-const tableData = computed<ChapterItem[]>(() => {
-  if (!content.value) return [];
+function validateEpisodeSequence(episodes: Array<{ index: number }>): string | null {
+  if (!episodes.length) return "当前拆集正则未识别到任何剧集";
+  const invalid = episodes.find((item) => !Number.isInteger(item.index) || item.index <= 0);
+  if (invalid) return "当前拆集正则产生了无效集号，请调整正则";
+
+  const seen = new Set<number>();
+  const duplicates = new Set<number>();
+  for (const item of episodes) {
+    if (seen.has(item.index)) duplicates.add(item.index);
+    seen.add(item.index);
+  }
+  if (duplicates.size) {
+    const preview = [...duplicates].sort((a, b) => a - b).slice(0, 10).map((index) => `第${index}集`).join("、");
+    return `当前拆集正则产生重复集号（${preview}${duplicates.size > 10 ? "等" : ""}），可能把结尾字幕或正文误当成新集`;
+  }
+
+  const ordered = [...seen].sort((a, b) => a - b);
+  for (let i = 1; i < ordered.length; i++) {
+    if (ordered[i] !== ordered[i - 1] + 1) {
+      return `当前拆集正则产生不连续集号（第${ordered[i - 1]}集后直接到第${ordered[i]}集），请检查是否误拆或漏拆`;
+    }
+  }
+  return null;
+}
+
+// 解析后的章节数据。自定义正则必须先通过全文语义校验，错误结果不再作为“已解析 N 集”展示。
+const parsedTable = computed<{ rows: ChapterItem[]; error: string }>(() => {
+  if (!content.value) return { rows: [], error: "" };
   try {
-    return parseScript(content.value, customRegStr.value || undefined).map((ep) => ({
-      index: ep.index,
-      scriptName: ep.chapter,
-      scriptData: ep.text,
-    }));
+    const episodes = parseScript(content.value, customRegStr.value || undefined);
+    const semanticError = customRegStr.value.trim() ? validateEpisodeSequence(episodes) : null;
+    if (semanticError) return { rows: [], error: semanticError };
+    return {
+      rows: episodes.map((ep) => ({
+        index: ep.index,
+        scriptName: ep.chapter,
+        scriptData: ep.text,
+      })),
+      error: "",
+    };
   } catch (e) {
     console.error("解析剧本内容出错:", e);
-    return [];
+    return { rows: [], error: $t("workbench.script.import.regexInvalid") };
   }
 });
+const tableData = computed<ChapterItem[]>(() => parsedTable.value.rows);
+const semanticRegexError = computed(() => parsedTable.value.error);
+const effectiveRegexError = computed(() => regexError.value || semanticRegexError.value);
 
 // 选中的行数据
 const selectedRows = computed(() => tableData.value.filter((item) => selectedRowKeys.value.includes(item.index)));
@@ -302,22 +336,8 @@ function validateAiRegexAgainstFullText(regexText: string): string | null {
   } catch {
     return "AI返回的拆集正则无法用于完整剧本，已保留当前拆集规则";
   }
-  if (!episodes.length) return "AI返回的拆集正则未识别到任何剧集，已保留当前拆集规则";
-
-  const invalid = episodes.find((item) => !Number.isInteger(item.index) || item.index <= 0);
-  if (invalid) return "AI返回的拆集正则产生了无效集号，已保留当前拆集规则";
-
-  const seen = new Set<number>();
-  const duplicates = new Set<number>();
-  for (const item of episodes) {
-    if (seen.has(item.index)) duplicates.add(item.index);
-    seen.add(item.index);
-  }
-  if (duplicates.size) {
-    const preview = [...duplicates].sort((a, b) => a - b).slice(0, 10).map((index) => `第${index}集`).join("、");
-    return `AI返回的拆集正则在完整剧本中产生重复集号（${preview}${duplicates.size > 10 ? "等" : ""}），可能把结尾字幕或正文误当成集标题；已拒绝应用`;
-  }
-  return null;
+  const error = validateEpisodeSequence(episodes);
+  return error ? `AI返回的拆集正则未通过完整剧本校验：${error}；已拒绝应用` : null;
 }
 
 async function getAiRegex() {
