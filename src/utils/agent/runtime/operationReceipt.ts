@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import type { Knex } from "knex";
 
 export type OperationReceiptScope = {
@@ -13,6 +13,7 @@ export type OperationReceipt<T = unknown> = {
   inputHash: string;
   data: T;
   createTime: number;
+  claimToken?: string;
 };
 
 function stableJson(value: unknown): string {
@@ -87,29 +88,66 @@ export async function withOperationReceipt<T>(
     const prior = await getOperationReceipt<T>(trx as unknown as Knex, scope, kind, requestId, input);
     if (prior) return { duplicate: true, receipt: prior };
 
-    const data = await create(trx);
-    const receipt: OperationReceipt<T> = {
+    const id = operationReceiptId(kind, requestId);
+    const key = operationReceiptKey(kind, requestId);
+    const inputHash = operationInputHash(input);
+    const createTime = Date.now();
+    const claimToken = randomUUID();
+    const provisional: OperationReceipt<null> = {
       version: 1,
       kind,
       requestId,
-      inputHash: operationInputHash(input),
-      data,
-      createTime: Date.now(),
+      inputHash,
+      data: null,
+      createTime,
+      claimToken,
     };
-    const id = operationReceiptId(kind, requestId);
-    const key = operationReceiptKey(kind, requestId);
+
+    // 先用确定性主键抢占操作，再执行真正副作用。两个并发重试最多只有一个能拥有 claimToken。
     await trx("o_agentWorkData").insert({
       id,
       projectId: scope.projectId,
       episodesId: scope.episodesId,
       key,
-      data: JSON.stringify(receipt),
-      createTime: receipt.createTime,
-      updateTime: receipt.createTime,
+      data: JSON.stringify(provisional),
+      createTime,
+      updateTime: createTime,
     }).onConflict("id").ignore();
 
+    const claimedRow = await trx("o_agentWorkData").where({ id }).first();
+    if (!claimedRow) throw new Error("操作回执抢占失败");
+    if (
+      Number(claimedRow.projectId) !== scope.projectId ||
+      Number(claimedRow.episodesId) !== scope.episodesId ||
+      claimedRow.key !== key
+    ) throw new Error("操作回执 ID 冲突或作用域不匹配");
+    const claimedReceipt = parseReceipt<any>(claimedRow.data);
+    if (claimedReceipt.inputHash !== inputHash || claimedReceipt.kind !== kind || claimedReceipt.requestId !== requestId) {
+      throw new Error("相同 requestId 对应不同操作内容");
+    }
+    if (claimedReceipt.claimToken !== claimToken) {
+      if (claimedReceipt.data == null) throw new Error("相同操作正在由另一个请求提交，请稍后重试");
+      return { duplicate: true, receipt: claimedReceipt as OperationReceipt<T> };
+    }
+
+    const data = await create(trx);
+    const receipt: OperationReceipt<T> = {
+      version: 1,
+      kind,
+      requestId,
+      inputHash,
+      data,
+      createTime,
+      claimToken,
+    };
+    const updated = await trx("o_agentWorkData").where({ id }).update({
+      data: JSON.stringify(receipt),
+      updateTime: Date.now(),
+    });
+    if (updated !== 1) throw new Error("操作回执完成状态写入失败");
+
     const saved = await getOperationReceipt<T>(trx as unknown as Knex, scope, kind, requestId, input);
-    if (!saved) throw new Error("操作回执写入失败");
-    return { duplicate: saved.createTime !== receipt.createTime, receipt: saved };
+    if (!saved || saved.data == null) throw new Error("操作回执写入失败");
+    return { duplicate: false, receipt: saved };
   });
 }
