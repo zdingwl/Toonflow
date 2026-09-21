@@ -51,29 +51,53 @@ export function wrapAgentTools(
               ? createHash("sha256").update(`${options.runId}\n${toolName}\n${inputHash}`).digest("hex")
               : null;
 
+            let id = randomUUID();
+            const now = Date.now();
             if (operationKey) {
               const prior = await options.db("o_agentToolCall").where({ operationKey }).first();
               if (prior) {
                 if (prior.status === "completed") return parseStored(prior.outputJson);
-                throw new Error(`工具 ${toolName} 的相同写操作当前状态为 ${prior.status}，必须先核对结果，不能重复执行`);
+                if (prior.status !== "retryable") {
+                  throw new Error(`工具 ${toolName} 的相同写操作当前状态为 ${prior.status}，必须先核对结果，不能重复执行`);
+                }
+                id = prior.id;
+                const claimed = await options.db("o_agentToolCall").where({ id, status: "retryable" }).update({
+                  status: "running",
+                  error: null,
+                  outputJson: null,
+                  updateTime: now,
+                });
+                if (claimed !== 1) throw new Error(`工具 ${toolName} 的重试状态已变化，请重新核对`);
+              } else {
+                await options.db("o_agentToolCall").insert({
+                  id,
+                  runId: options.runId,
+                  stepKey: options.stepKey ?? null,
+                  toolName,
+                  operationKey,
+                  inputHash,
+                  inputJson,
+                  sideEffect: sideEffect ? 1 : 0,
+                  status: "running",
+                  createTime: now,
+                  updateTime: now,
+                });
               }
+            } else {
+              await options.db("o_agentToolCall").insert({
+                id,
+                runId: options.runId,
+                stepKey: options.stepKey ?? null,
+                toolName,
+                operationKey,
+                inputHash,
+                inputJson,
+                sideEffect: sideEffect ? 1 : 0,
+                status: "running",
+                createTime: now,
+                updateTime: now,
+              });
             }
-
-            const id = randomUUID();
-            const now = Date.now();
-            await options.db("o_agentToolCall").insert({
-              id,
-              runId: options.runId,
-              stepKey: options.stepKey ?? null,
-              toolName,
-              operationKey,
-              inputHash,
-              inputJson,
-              sideEffect: sideEffect ? 1 : 0,
-              status: "running",
-              createTime: now,
-              updateTime: now,
-            });
 
             try {
               const result = await original(...args);
