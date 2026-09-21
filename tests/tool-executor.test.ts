@@ -105,3 +105,19 @@ test("核对为 retryable 的写工具可以再次执行并复用同一操作记
     await db.destroy();
   }
 });
+
+
+test("相同写入参数在不同步骤中不会被错误去重", async () => {
+  const db = await makeDb();
+  try {
+    let writes = 0;
+    const definition = { write: { execute: async () => ({ n: ++writes }) } };
+    const first = wrapAgentTools(definition, { db, runId: "run-step", stepKey: "step-a", sideEffectTools: ["write"] });
+    const second = wrapAgentTools(definition, { db, runId: "run-step", stepKey: "step-b", sideEffectTools: ["write"] });
+    assert.deepEqual(await first.write.execute!({ id: 1 }), { n: 1 });
+    assert.deepEqual(await second.write.execute!({ id: 1 }), { n: 2 });
+    assert.equal((await db("o_agentToolCall")).length, 2);
+  } finally {
+    await db.destroy();
+  }
+});
