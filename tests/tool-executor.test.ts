@@ -121,3 +121,29 @@ test("相同写入参数在不同步骤中不会被错误去重", async () => {
     await db.destroy();
   }
 });
+
+
+test("需要业务回执的写工具会获得稳定 requestId 并写入追踪输入", async () => {
+  const db = await makeDb();
+  try {
+    const tools = wrapAgentTools(
+      {
+        add_flowData_storyboard: {
+          execute: async (input: any) => ({ requestId: input.requestId }),
+        },
+      },
+      { db, runId: "run-request", stepKey: "step-request", sideEffectTools: ["add_flowData_storyboard"] },
+    );
+    const first = await tools.add_flowData_storyboard.execute!({ videoDesc: "镜头" });
+    assert.match(first.requestId, /^agent_[a-f0-9]{32}$/);
+    const row = await db("o_agentToolCall").first();
+    const stored = JSON.parse(row.inputJson);
+    assert.equal(stored.requestId, first.requestId);
+
+    const second = await tools.add_flowData_storyboard.execute!({ videoDesc: "镜头" });
+    assert.equal(second.requestId, first.requestId);
+    assert.equal((await db("o_agentToolCall")).length, 1);
+  } finally {
+    await db.destroy();
+  }
+});
