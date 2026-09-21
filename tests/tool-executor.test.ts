@@ -6,7 +6,7 @@ import { wrapAgentTools } from "../src/utils/agent/runtime/toolExecutor";
 async function makeDb() {
   const db = knex({ client: "better-sqlite3", connection: { filename: ":memory:" }, useNullAsDefault: true });
   await db.schema.createTable("o_agentToolCall", (t) => {
-    t.text("id").primary(); t.text("runId"); t.text("toolName"); t.text("operationKey").unique();
+    t.text("id").primary(); t.text("runId"); t.text("stepKey"); t.text("toolName"); t.text("operationKey").unique();
     t.text("inputHash"); t.text("inputJson"); t.text("outputJson"); t.integer("sideEffect");
     t.text("status"); t.text("error"); t.integer("createTime"); t.integer("updateTime");
   });
@@ -58,6 +58,49 @@ test("可能产生副作用的失败写操作进入待核对状态且禁止自�
     assert.equal(attempts, 1);
     const row = await db("o_agentToolCall").first();
     assert.equal(row.status, "reconciling");
+  } finally {
+    await db.destroy();
+  }
+});
+
+
+test("核对为 retryable 的写工具可以再次执行并复用同一操作记录", async () => {
+  const db = await makeDb();
+  try {
+    let attempts = 0;
+    const wrapped = wrapAgentTools(
+      {
+        mutate: {
+          execute: async () => ({ attempt: ++attempts }),
+        },
+      },
+      { db, runId: "run-3", stepKey: "step-1", sideEffectTools: ["mutate"] },
+    );
+    await db("o_agentToolCall").insert({
+      id: "call-1", runId: "run-3", stepKey: "step-1", toolName: "mutate",
+      operationKey: "placeholder", inputHash: "placeholder", inputJson: "{}", sideEffect: 1,
+      status: "retryable", createTime: Date.now(), updateTime: Date.now(),
+    });
+    // 使用真实 operationKey 触发 retryable 路径。
+    await db("o_agentToolCall").where({ id: "call-1" }).del();
+    const first = wrapAgentTools(
+      {
+        mutate: {
+          execute: async () => {
+            attempts++;
+            throw new Error("第一次失败");
+          },
+        },
+      },
+      { db, runId: "run-3", stepKey: "step-1", sideEffectTools: ["mutate"] },
+    );
+    await assert.rejects(() => first.mutate.execute!({ id: 9 }), /第一次失败/);
+    const prior = await db("o_agentToolCall").first();
+    await db("o_agentToolCall").where({ id: prior.id }).update({ status: "retryable", error: null });
+    assert.deepEqual(await wrapped.mutate.execute!({ id: 9 }), { attempt: 2 });
+    const rows = await db("o_agentToolCall");
+    assert.equal(rows.length, 1);
+    assert.equal(rows[0].status, "completed");
   } finally {
     await db.destroy();
   }
