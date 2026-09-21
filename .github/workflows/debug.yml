@@ -22,10 +22,14 @@ jobs:
         include:
           - arch: x64
             name: x64
+            os: windows-latest
           - arch: arm64
             name: ARM64
+            os: windows-2022
 
-    runs-on: windows-latest
+    # Electron 当前使用的 node-gyp 在部分 VS 2026 runner 上不能识别原生工具链；
+    # ARM64 交叉编译固定在预装 ARM64 C++ 工具的 VS 2022 runner 上。
+    runs-on: ${{ matrix.os }}
     name: 构建 Windows (${{ matrix.name }})
 
     steps:
