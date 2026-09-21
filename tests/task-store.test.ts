@@ -64,6 +64,11 @@ test("任务状态、步骤缓存与恢复持久化，重复请求不能重复�
       toolCalls: [],
     });
     assert.equal((await store.begin(input)).status, "completed");
+    const resumePrompt = await store.buildResumePrompt("request-001");
+    assert.match(resumePrompt, /Agent Runtime 任务检查点/);
+    assert.match(resumePrompt, /productionAgent:directorPlanAgent/);
+    assert.match(resumePrompt, /completed/);
+    assert.match(resumePrompt, /禁止再次派发/);
 
     const skillFile = path.join(os.tmpdir(), `toonflow-skill-${randomUUID()}.md`);
     try {
