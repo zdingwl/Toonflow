@@ -89,7 +89,7 @@ test("AI 正则拒绝行内误匹配、跨行吞正文、无效语法及捕获�
 });
 
 test("AI 正则拒绝同一集号在样本中重复命中，避免把结尾字幕再次当成集标题", async () => {
-  const route = makeRoute(String.raw`/^[ \\t]*第[ \\t]*(\\d+)[ \\t]*集[ \\t]*([^\\n\\r]*)/gm`);
+  const route = makeRoute(String.raw`/^[ \t]*第[ \t]*(\d+)[ \t]*集[ \t]*([^\n\r]*)/gm`);
   const result = await route.request("第1集 起点\n正文\n第1集 起点（结尾字幕）\n第2集 转折\n正文");
   assert.equal(result.statusCode, 400);
   assert.match(result.body.message, /重复匹配|结尾字幕/);
