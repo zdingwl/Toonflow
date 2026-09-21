@@ -16,12 +16,15 @@ test("制作工作区读取限定项目、剧本及 Agent 类型", () => {
   assert.match(route, /当前项目不存在该集剧本/);
 });
 
-test("制作工作区保存及分镜排序在同一事务，并校验真实持久化内容", () => {
+test("分镜单场进度与制作工作区在同一事务，保留更高版本的分镜表", () => {
   const route = source("src/routes/production/saveFlowData.ts");
   assert.match(route, /await u\.db\.transaction\(async \(trx\) =>/);
+  assert.match(route, /mergeStoryboardScene\(/);
+  assert.match(route, /nextData\.storyboardTable = storedData\.storyboardTable/);
+  assert.match(route, /workbench: \{ videoList: \[\] \}/);
   assert.match(route, /where\(\{ id: item\.id, projectId, scriptId: episodesId \}\)/);
   assert.match(route, /key: "productionAgent"/);
-  assert.match(route, /saved\.data !== serialized/);
+  assert.match(route, /saved\.data !== payload/);
 });
 
 test("分镜批量写入的请求标识与新 ID 在同一事务中保存", () => {
