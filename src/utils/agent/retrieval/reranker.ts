@@ -41,9 +41,10 @@ export async function rerankRows<T extends { content: string }>(
   rows: T[],
   limit: number,
   fetcher: typeof fetch = fetch,
+  configOverride?: RerankerConfig,
 ): Promise<T[]> {
   if (limit <= 0 || !rows.length) return [];
-  const config = await getConfig();
+  const config = configOverride ?? await getConfig();
   if (!config.enabled || rows.length <= 1) return rows.slice(0, limit);
 
   const response = await fetcher(config.url, {
