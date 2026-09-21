@@ -122,6 +122,19 @@ function makeProductionAgentStore(projectId: string) {
           s.on("scriptPlan:committed", ({ episodesId: savedEpisode, plan }: { episodesId: number; plan: string }) => {
             if (episodesId.value === savedEpisode) flowData.value.scriptPlan = plan;
           });
+          s.on("storyboardTable:committed", (payload: {
+            episodesId: number;
+            storyboardTable: string;
+            storyboardTableProgress?: unknown;
+          }) => {
+            if (episodesId.value !== payload.episodesId) return;
+            flowData.value.storyboardTable = payload.storyboardTable ?? "";
+            if (payload.storyboardTableProgress) {
+              (flowData.value as any).storyboardTableProgress = payload.storyboardTableProgress;
+            } else {
+              delete (flowData.value as any).storyboardTableProgress;
+            }
+          });
           s.on("connect", () => {
             getHistory();
           });
@@ -519,6 +532,20 @@ function makeProductionAgentStore(projectId: string) {
     const getAgentRuns = () => emitAck<{ success: true; runs: any[] }>("agent:runs");
     const reconcileRun = (runId: string) => emitAck<{ success: true; run: any }>("agent:reconcile", { runId });
     const resumeRun = (runId: string) => emitAck<{ success: true; runId: string }>("agent:resume", { runId });
+    const resolveRunStep = (
+      runId: string,
+      stepKey: string,
+      resolution: "completed" | "failed" | "retryable",
+      resultRef?: string,
+      error?: string,
+    ) => emitAck<{ success: true; run: any }>("agent:resolve-step", { runId, stepKey, resolution, resultRef, error });
+    const resolveRunTool = (
+      runId: string,
+      id: string,
+      resolution: "completed" | "retryable",
+      output?: unknown,
+      error?: string,
+    ) => emitAck<{ success: true; run: any }>("agent:resolve-tool", { runId, id, resolution, output, error });
 
     return {
       connected,
@@ -543,6 +570,8 @@ function makeProductionAgentStore(projectId: string) {
       getAgentRuns,
       reconcileRun,
       resumeRun,
+      resolveRunStep,
+      resolveRunTool,
     };
   });
 }
