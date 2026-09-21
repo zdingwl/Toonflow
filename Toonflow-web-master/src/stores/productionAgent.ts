@@ -562,14 +562,14 @@ function makeProductionAgentStore(projectId: string) {
     const resolveRunStep = (
       runId: string,
       stepKey: string,
-      resolution: "completed" | "failed" | "retryable",
+      resolution: "completed" | "failed" | "retryable" | "cancelled",
       resultRef?: string,
       error?: string,
     ) => emitAck<{ success: true; run: any }>("agent:resolve-step", { runId, stepKey, resolution, resultRef, error });
     const resolveRunTool = (
       runId: string,
       id: string,
-      resolution: "completed" | "retryable",
+      resolution: "completed" | "retryable" | "cancelled",
       output?: unknown,
       error?: string,
     ) => emitAck<{ success: true; run: any }>("agent:resolve-tool", { runId, id, resolution, output, error });
