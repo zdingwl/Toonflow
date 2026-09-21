@@ -38,6 +38,8 @@ function makeProductionAgentStore(projectId: string) {
     });
 
     const episodesId = ref<number>();
+    // useChat 对已闭合的 XML 可能多次触发 complete；同一消息/场次只发送一次保存请求。
+    const sceneReceipts = new Map<string, Promise<void>>();
 
     const { connected, messages, chat, stopGenerate, socket, status, reconnect, connect, disconnect } = useChat({
       url: `${settingStore().baseUrl}/socket/productionAgent`,
@@ -55,74 +57,63 @@ function makeProductionAgentStore(projectId: string) {
         { tag: "storyboardItem", keepInMessage: false },
       ],
       onXmlTag: async (data) => {
-        const { tag, value, children, attrs, status } = data;
+        const { tag, value, attrs, status } = data;
         if (tag === "script") {
           flowData.value.script = value ?? "";
         } else if (tag === "scriptPlan") {
           flowData.value.scriptPlan = value ?? "";
         } else if (tag === "storyboardTable") {
+          if (attrs.scene !== undefined || attrs.total !== undefined || attrs.task !== undefined) {
+            // 分段 XML 在未闭合时绝不改动工作区；旧版无属性的整表输出保持兼容。
+            if (status !== "complete") return;
+            const episode = episodesId.value;
+            const scene = Number(attrs.scene);
+            const total = Number(attrs.total);
+            const taskId = attrs.task ?? "";
+            const key = `${episode}:${data.messageId}:${data.contentId}:${scene}`;
+            if (!sceneReceipts.has(key)) {
+              const write = (async () => {
+                if (!episode || !Number.isSafeInteger(scene) || !Number.isSafeInteger(total)) throw new Error("分镜段落缺少有效场次和总场次数");
+                const response = (await axios.post("/production/saveFlowData", {
+                  projectId: Number(projectId),
+                  episodesId: episode,
+                  scene: { taskId, index: scene, total, content: value },
+                })) as unknown as { code: number; message?: string; data?: { storyboardTable: string; storyboardTableProgress: unknown; savedScenes: number[]; missingScenes: number[] } };
+                if (response?.code !== 200 || !response.data) throw new Error(response?.message ?? "分镜单场保存失败");
+                if (episodesId.value === episode) {
+                  flowData.value.storyboardTable = response.data.storyboardTable;
+                  (flowData.value as any).storyboardTableProgress = response.data.storyboardTableProgress;
+                }
+              })();
+              sceneReceipts.set(key, write);
+              void write.catch((reason) => {
+                sceneReceipts.delete(key);
+                window.$message.error(reason instanceof Error ? reason.message : "分镜单场保存失败");
+              });
+            }
+            return;
+          }
+          // 原有完整 XML：未闭合的长表不保存；闭合后继续走原有整表写入流程。
+          if (status !== "complete") return;
           flowData.value.storyboardTable = value ?? "";
+          (flowData.value as any).resetStoryboardTable = true;
         }
-        // else if (tag === "storyboardItem") {
-        //   if (status === "complete") {
-        //     const prompt = attrs.prompt ?? "";
-        //     const duration = Number(attrs.duration) || 0;
-        //     const track = attrs.track || "";
-        //     const shouldGenerateImage =
-        //       (typeof attrs.shouldGenerateImage == "boolean" && attrs.shouldGenerateImage) ||
-        //       String(attrs.shouldGenerateImage).toLowerCase() == "true"
-        //         ? 1
-        //         : 0;
-
-        //     const videoDesc = attrs?.videoDesc ?? "";
-        //     const existingIndex = flowData.value.storyboard.findIndex(
-        //       (s) => s.prompt == prompt && s.duration == duration && videoDesc == s.videoDesc,
-        //     );
-        //     if (existingIndex !== -1) {
-        //       // 已存在则更新 content，保留 id
-        //       flowData.value.storyboard[existingIndex].prompt = prompt;
-        //     } else {
-        //       // 不存在则追加新条目
-        //       flowData.value.storyboard.push({
-        //         prompt: prompt || "",
-        //         duration: Number(duration) || 0,
-        //         state: "未生成" as "未生成" | "生成中" | "已完成" | "生成失败",
-        //         src: null,
-        //         associateAssetsIds: JSON.parse(attrs.associateAssetsIds) || [],
-        //         videoDesc: videoDesc,
-        //         shouldGenerateImage: shouldGenerateImage,
-        //       });
-        //       await addStoryboardInfo([
-        //         {
-        //           prompt: prompt || "",
-        //           duration: Number(duration) || 0,
-        //           track: track || "",
-        //           state: "未生成" as "未生成" | "生成中" | "已完成" | "生成失败",
-        //           src: null,
-        //           videoDesc,
-        //           shouldGenerateImage,
-        //           associateAssetsIds: JSON.parse(attrs.associateAssetsIds) || [],
-        //         },
-        //       ]);
-        //     }
-        //   }
-        // }
         if (status == "complete") {
           throttledFn();
         }
       },
     });
 
-    // 实际的节流方法
     const throttledFn = useThrottleFn(
       () => {
-        setFlowData(episodesId.value);
+        void setFlowData(episodesId.value).catch((reason) => {
+          window.$message.error(reason instanceof Error ? reason.message : "工作区保存失败");
+        });
       },
       500,
       true,
       true,
     );
-    // 注册 getPlanData 事件（无需依赖组件生命周期）
     watch(
       socket,
       (s) => {
@@ -211,14 +202,12 @@ function makeProductionAgentStore(projectId: string) {
               associateAssetsIds: data.associateAssetsIds || [],
             };
             flowData.value.storyboard.push(insertVal);
-            // 保留本次新增镜头的对象引用；不能根据 prompt/时长/文案匹配，否则合法的相同镜头会被误合并。
             const pending = flowData.value.storyboard[flowData.value.storyboard.length - 1];
             try {
               await addStoryboardInfo([insertVal], [pending], requestId);
               throttledFn();
               callback({ success: true, message: $t("storyboard.assets.derivativeAddSuccess"), requestId, id: pending.id });
             } catch (reason) {
-              // HTTP 回执可能在数据库提交后丢失；移除未经确认的本地条目，不盲目重试插入。
               const index = flowData.value.storyboard.indexOf(pending);
               if (index !== -1 && !pending.id) flowData.value.storyboard.splice(index, 1);
               const message = reason instanceof Error ? reason.message : "分镜保存失败";
@@ -231,9 +220,11 @@ function makeProductionAgentStore(projectId: string) {
     );
 
     async function setFlowData(scriptId?: number) {
+      const snapshot = JSON.parse(JSON.stringify(flowData.value));
+      delete (flowData.value as any).resetStoryboardTable;
       await axios.post("/production/saveFlowData", {
         projectId: projectId,
-        data: flowData.value,
+        data: snapshot,
         episodesId: scriptId || episodesId.value,
       });
     }
@@ -329,7 +320,6 @@ function makeProductionAgentStore(projectId: string) {
       });
       return ids;
     });
-    // ---- 资产图片轮询 ----
     let assetsPollingTimer: number | null = null;
     let assetsPollingInFlight = false;
 
@@ -372,7 +362,6 @@ function makeProductionAgentStore(projectId: string) {
         }
         await pollAssetsImages();
       }, 5000);
-      // 立即执行一次
       pollAssetsImages();
     }
 
@@ -394,7 +383,6 @@ function makeProductionAgentStore(projectId: string) {
       },
     );
 
-    // ---- 分镜图片轮询 ----
     let storyboardPollingTimer: number | null = null;
     let storyboardPollingInFlight = false;
 
@@ -432,7 +420,6 @@ function makeProductionAgentStore(projectId: string) {
         }
         await pollStoryboardImages();
       }, 5000);
-      // 立即执行一次
       pollStoryboardImages();
     }
 
@@ -465,7 +452,6 @@ function makeProductionAgentStore(projectId: string) {
       socket.value!.emit("updateContext", ctx);
     }
     async function addStoryboardInfo(items: any[], pendingItems: Storyboard[], requestId: string) {
-      // Axios 响应拦截器返回响应体而不是 AxiosResponse，使用实际接口形状检查回执。
       const response = (await axios.post("/production/storyboard/batchAddStoryboardInfo", {
         scriptId: episodesId.value,
         data: items,
@@ -476,7 +462,6 @@ function makeProductionAgentStore(projectId: string) {
         throw new Error(response?.message ?? "分镜保存回执缺少本批镜头 ID");
       }
       const persisted = new Map(response.data.map((item) => [item.id, item]));
-      // 先验证整批映射，再修改本地数据；相同文案和时长的不同镜头仍各自保留自己的 ID。
       const saved = response.createdIds.map((id) => persisted.get(id));
       if (saved.some((item) => !item)) throw new Error("分镜保存回执与数据库记录不一致");
       saved.forEach((item, index) => {
