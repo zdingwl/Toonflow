@@ -8,9 +8,17 @@ import ts from "typescript";
 const root = fileURLToPath(new URL("../", import.meta.url));
 const source = (name) => readFileSync(path.join(root, name), "utf8");
 
-// 仅校验受本轮改动影响的静态协议和工具函数；不替代真实数据库、Socket 或模型端到端测试。
-test("修改过的 Agent TypeScript 文件无语法诊断", () => {
-  for (const file of ["src/utils/ai.ts", "src/agents/scriptAgent/tools.ts", "src/utils/agent/skillsTools.ts"]) {
+// 代码级协议与语法检查，不替代真实数据库、Socket、浏览器或模型生成的端到端测试。
+test("修改过的 Agent、保存接口与前端 Store TypeScript 文件无语法诊断", () => {
+  for (const file of [
+    "src/utils/ai.ts",
+    "src/agents/scriptAgent/tools.ts",
+    "src/utils/agent/skillsTools.ts",
+    "src/routes/production/storyboard/batchAddStoryboardInfo.ts",
+    "src/routes/scriptAgent/getPlanData.ts",
+    "src/routes/scriptAgent/setPlanData.ts",
+    "Toonflow-web-master/src/stores/scriptAgent.ts",
+  ]) {
     const result = ts.transpileModule(source(file), {
       fileName: path.basename(file),
       reportDiagnostics: true,
@@ -58,4 +66,24 @@ test("章节校验不读取整章小说正文", () => {
   assert.ok(events);
   assert.doesNotMatch(events, /\.select\([^\n]*chapterData/);
   assert.match(events, /未找到章节编号/);
+});
+
+test("分镜面板批量写入在分配轨道后读回 trackId，且查询限定项目", () => {
+  const route = source("src/routes/production/storyboard/batchAddStoryboardInfo.ts");
+  assert.match(route, /persistedStoryboard\s*=\s*await u\.db\("o_storyboard"\)/);
+  assert.match(route, /trackId:\s*persisted\?\.trackId/);
+  assert.match(route, /\.where\(\{ scriptId, projectId \}\)/);
+});
+
+test("剧本初始化、写入及前端自动保存具有持久化核对与顺序约束", () => {
+  const init = source("src/routes/scriptAgent/getPlanData.ts");
+  const save = source("src/routes/scriptAgent/setPlanData.ts");
+  const client = source("Toonflow-web-master/src/stores/scriptAgent.ts");
+  assert.match(init, /script:\s*\[\]/);
+  assert.match(save, /if \(!updated\)/);
+  assert.match(save, /剧本工作区保存校验失败/);
+  assert.match(save, /剧本正文保存校验失败/);
+  assert.match(client, /saveQueue\.then\(async/);
+  assert.match(client, /lastQueuedSnapshot/);
+  assert.match(client, /保存失败，请检查后端状态/);
 });
