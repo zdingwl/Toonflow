@@ -28,6 +28,7 @@ export function wrapAgentTools(
   options: {
     db: Knex;
     runId?: string;
+    stepKey?: string;
     sideEffectTools?: Iterable<string>;
   },
 ): Record<string, ToolRecord> {
@@ -63,6 +64,7 @@ export function wrapAgentTools(
             await options.db("o_agentToolCall").insert({
               id,
               runId: options.runId,
+              stepKey: options.stepKey ?? null,
               toolName,
               operationKey,
               inputHash,
