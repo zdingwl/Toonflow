@@ -168,8 +168,9 @@ function createSubAgent(parentCtx: AgentContext) {
         resultRef = `script:${projectId}:${scriptId}`;
       }
 
-      if (fullResponse.trim()) {
-        await memory.add(memoryKey, removeAllXmlTags(fullResponse), {
+      const visibleMemory = removeAllXmlTags(fullResponse).trim();
+      if (visibleMemory) {
+        await memory.add(memoryKey, visibleMemory, {
           name,
           createTime: new Date(subMsg.datetime).getTime(),
         });
