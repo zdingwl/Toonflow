@@ -3,6 +3,7 @@ import u from "@/utils";
 import * as zod from "zod";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
+import { buildAssetPromptSystemPrompt, buildAssetPromptUserPrompt, type AssetPromptType } from "@/utils/assetPrompt";
 const router = express.Router();
 
 
@@ -30,13 +31,14 @@ export default router.post(
     //查询资产是否是衍生资产
     const assetsData = await u.db("o_assets").where("id", assetsId).select("assetsId").first();
     if (!assetsData) return { code: 500, message: "资产不存在" };
-    const typeConfig: Record<string, { promptKey: string; itemType: ItemType; label: string; nameLabel: string; visualManual: string }> = {
+    const typeConfig: Record<string, { promptKey: string; itemType: ItemType; label: string; nameLabel: string; visualManual: string; assetType: AssetPromptType }> = {
       role: {
         promptKey: "role-polish",
         itemType: "characters",
         label: "角色标准四视图",
         nameLabel: "角色",
         visualManual: assetsData.assetsId ? "art_character_derivative" : "art_character",
+        assetType: "role",
       },
       scene: {
         promptKey: "scene-polish",
@@ -44,6 +46,7 @@ export default router.post(
         label: "场景图",
         nameLabel: "场景",
         visualManual: assetsData.assetsId ? "art_scene_derivative" : "art_scene",
+        assetType: "scene",
       },
       tool: {
         promptKey: "tool-polish",
@@ -51,6 +54,7 @@ export default router.post(
         label: "道具图",
         nameLabel: "道具",
         visualManual: assetsData.assetsId ? "art_prop_derivative" : "art_prop",
+        assetType: "tool",
       },
     };
 
@@ -60,17 +64,14 @@ export default router.post(
     //获取到视觉手册
     const visualManual = await u.getArtPrompt(project.artStyle as string, "art_skills", config.visualManual);
     if (!visualManual) return res.status(500).send(error("视觉手册未定义"));
-    const systemPrompt = visualManual;
+    const systemPrompt = buildAssetPromptSystemPrompt(visualManual, config.assetType);
     try {
       const { _output } = (await u.Ai.Text("universalAi").invoke({
         system: systemPrompt,
         messages: [
           {
             role: "user",
-            content: `**基础参数：**
-      **${config.nameLabel}设定：**
-      - ${config.nameLabel}名称:${name},
-      - ${config.nameLabel}描述:${describe},`,
+            content: buildAssetPromptUserPrompt(config.nameLabel, name, describe),
           },
         ],
       })) as any;
