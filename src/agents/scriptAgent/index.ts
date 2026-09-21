@@ -137,7 +137,7 @@ function createSubAgent(parentCtx: AgentContext) {
         abortSignal,
         tools: {
           ...extraTools,
-          ...wrapAgentTools(useTools({ resTool, msg: subMsg }), { db: u.db, runId: parentCtx.runId }),
+          ...wrapAgentTools(useTools({ resTool, msg: subMsg }), { db: u.db, runId: parentCtx.runId, stepKey }),
         },
       });
 
