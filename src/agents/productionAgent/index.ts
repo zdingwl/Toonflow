@@ -9,6 +9,11 @@ import ResTool from "@/socket/resTool";
 import * as fs from "fs";
 import path from "path";
 import { extractDirectorPlan, saveDirectorPlan } from "./directorPlan";
+import {
+  commitStoryboardTableOutput,
+  extractStoryboardTable,
+  readStoryboardTableSnapshot,
+} from "./storyboardTable";
 import { TaskStore } from "@/utils/agent/runtime/taskStore";
 import { wrapAgentTools } from "@/utils/agent/runtime/toolExecutor";
 import { buildMemoryPrompt } from "@/utils/agent/contextManager";
@@ -125,9 +130,16 @@ async function createSubAgent(parentCtx: AgentContext) {
       parentCtx.msg.complete();
       const subMsg = resTool.newMessage("assistant", name);
       const isDirectorPlan = key === "productionAgent:directorPlanAgent";
+      const isStoryboardTable = key === "productionAgent:storyboardTableAgent";
       const scope = { projectId: Number(resTool.data.projectId), episodesId: Number(resTool.data.scriptId), key: "productionAgent" };
-      const startingWorkspace = isDirectorPlan ? await u.db("o_agentWorkData").where(scope).select("data").first() : null;
-      const expectedPlan = startingWorkspace?.data ? JSON.parse(startingWorkspace.data).scriptPlan ?? "" : "";
+      const startingWorkspace = (isDirectorPlan || isStoryboardTable)
+        ? await u.db("o_agentWorkData").where(scope).select("data").first()
+        : null;
+      const startingData = startingWorkspace?.data ? JSON.parse(startingWorkspace.data) : {};
+      const expectedPlan = startingData.scriptPlan ?? "";
+      const expectedStoryboardTable = isStoryboardTable
+        ? await readStoryboardTableSnapshot(u.db, scope.projectId, scope.episodesId)
+        : undefined;
 
       const { fullStream } = await u.Ai.Text(key, parentCtx.thinkConfig.think, parentCtx.thinkConfig.thinlLevel).stream({
         system,
@@ -142,7 +154,7 @@ async function createSubAgent(parentCtx: AgentContext) {
         },
       });
 
-      const fullResponse = await consumeFullStream(fullStream, subMsg, undefined, !isDirectorPlan);
+      const fullResponse = await consumeFullStream(fullStream, subMsg, undefined, !(isDirectorPlan || isStoryboardTable));
       if (parentCtx.runId) await taskStore.saveStepOutput(parentCtx.runId, stepKey, fullResponse);
       if (isDirectorPlan) {
         try {
@@ -155,6 +167,29 @@ async function createSubAgent(parentCtx: AgentContext) {
           subMsg.error(u.error(error).message);
           throw error;
         }
+      } else if (isStoryboardTable) {
+        try {
+          const parsed = extractStoryboardTable(fullResponse);
+          const committed = await commitStoryboardTableOutput(
+            u.db,
+            scope.projectId,
+            scope.episodesId,
+            parsed,
+            expectedStoryboardTable,
+          );
+          resTool.socket.emit("storyboardTable:committed", {
+            episodesId: scope.episodesId,
+            storyboardTable: committed.storyboardTable,
+            storyboardTableProgress: committed.storyboardTableProgress,
+            savedScenes: committed.savedScenes,
+            missingScenes: committed.missingScenes,
+          });
+          subMsg.complete();
+        } catch (error) {
+          console.error("[storyboardTable] 输出或提交校验失败，文本长度:", fullResponse.length, "开头:", fullResponse.slice(0, 180));
+          subMsg.error(u.error(error).message);
+          throw error;
+        }
       }
       if (fullResponse.trim()) {
         await memory.add(memoryKey, removeAllXmlTags(fullResponse), {
@@ -164,7 +199,14 @@ async function createSubAgent(parentCtx: AgentContext) {
       }
 
       if (parentCtx.runId) {
-        const resultRef = isDirectorPlan ? `directorPlan:${scope.projectId}:${scope.episodesId}` : `message:${subMsg.id}`;
+        let resultRef = `message:${subMsg.id}`;
+        if (isDirectorPlan) resultRef = `directorPlan:${scope.projectId}:${scope.episodesId}`;
+        if (isStoryboardTable) {
+          const parsed = extractStoryboardTable(fullResponse);
+          resultRef = parsed.mode === "scene"
+            ? `storyboardTable:${scope.projectId}:${scope.episodesId}:scene:${parsed.scene}`
+            : `storyboardTable:${scope.projectId}:${scope.episodesId}:full`;
+        }
         await taskStore.finishStep(parentCtx.runId, stepKey, resultRef);
       }
 
