@@ -10,7 +10,7 @@
       <div class="data">
         <div class="section name">
           <span class="section-label">{{ $t("workbench.script.add.scriptName") }}</span>
-          <t-input v-model="scriptName" :placeholder="$t("workbench.script.add.scriptNamePh")" />
+          <t-input v-model="scriptName" :placeholder="$t('workbench.script.add.scriptNamePh')" />
         </div>
 
         <div class="section upload">
@@ -258,7 +258,7 @@ $line-height: 28px;
 
     .section {
       display: flex;
-    flex-direction: column;
+      flex-direction: column;
       gap: 8px;
       .scriptLen {
         text-align: right;
