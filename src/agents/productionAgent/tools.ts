@@ -338,69 +338,79 @@ export default (toolCpnfig: ToolConfig) => {
       },
     }),
     generate_deriveAsset: tool({
-      description: "生成衍生资产图片",
-      inputSchema: jsonSchema<{ ids: number[] }>(
+      description: "生成衍生资产图片。相同生成请求重试时必须复用 requestId，避免重复创建生成任务。",
+      inputSchema: jsonSchema<{ ids: number[]; requestId?: string }>(
         z
           .object({
             ids: z.array(z.number()).describe("需要生成的 衍生资产ID"),
+            requestId: z.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional()
+              .describe("可选生成请求标识；失败重试必须复用错误信息中的 requestId"),
           })
           .toJSONSchema(),
       ),
-      execute: async ({ ids }) => {
+      execute: async ({ ids, requestId: rawRequestId }) => {
         const thinking = msg.thinking("正在生成衍生资产...");
+        const requestId = rawRequestId ?? `ga_${randomUUID()}`;
         try {
           const res = await new Promise<any>((resolve, reject) => {
             const timeout = setTimeout(() => reject(new Error("衍生资产生成请求超时")), 60000);
-            socket.emit("generateDeriveAsset", { ids }, (ack: any) => {
+            socket.emit("generateDeriveAsset", { ids, requestId }, (ack: any) => {
               clearTimeout(timeout);
-              if (ack === false || ack?.error || ack?.success === false) reject(new Error(ack?.error ?? "衍生资产生成失败"));
+              if (ack === false || ack?.error || ack?.success === false) reject(new Error(ack?.error ?? ack?.message ?? "衍生资产生成失败"));
               else resolve(ack);
             });
           });
-          thinking.appendText(`生成请求已确认，ID: ${JSON.stringify(res, null, 2)}\n`);
+          thinking.appendText(`生成请求已确认，requestId=${requestId}，回执: ${JSON.stringify(res, null, 2)}\n`);
           thinking.updateTitle("衍生资产生成请求已确认");
           thinking.complete();
-          return res ?? "生成请求已确认";
+          return { success: true, requestId, ack: res ?? null };
         } catch (error) {
+          const detail = `${u.error(error).message}；同一生成请求如需重试，请复用 requestId=${requestId}`;
+          thinking.appendText("生成请求失败:\n" + detail);
           thinking.updateTitle("衍生资产生成失败");
           thinking.complete();
-          throw error;
+          throw new Error(detail);
         }
       },
     }),
     generate_storyboard: tool({
-      description: "生成分镜图片",
-      inputSchema: jsonSchema<{ ids: number[] }>(
+      description: "生成分镜图片。相同生成请求重试时必须复用 requestId，避免重复创建生成任务。",
+      inputSchema: jsonSchema<{ ids: number[]; requestId?: string }>(
         z
           .object({
             ids: z.array(z.number()).describe("必须获取真实的分镜ID，支持批量生成"),
+            requestId: z.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional()
+              .describe("可选生成请求标识；失败重试必须复用错误信息中的 requestId"),
           })
           .toJSONSchema(),
       ),
-      execute: async ({ ids }) => {
+      execute: async ({ ids, requestId: rawRequestId }) => {
         const thinking = msg.thinking("正在生成分镜...");
+        const requestId = rawRequestId ?? `gs_${randomUUID()}`;
         try {
           const res = await socketQueue(
-          () =>
-            new Promise((resolve, reject) =>
+            () =>
+              new Promise((resolve, reject) =>
               {
                 const timeout = setTimeout(() => reject(new Error("分镜生成请求超时")), 60000);
-                socket.emit("generateStoryboard", { ids }, (res: any) => {
+                socket.emit("generateStoryboard", { ids, requestId }, (res: any) => {
                   clearTimeout(timeout);
-                  if (res?.error || res?.success === false) return reject(new Error(res?.error ?? "分镜生成失败"));
+                  if (res?.error || res?.success === false) return reject(new Error(res?.error ?? res?.message ?? "分镜生成失败"));
                   resolve(res);
                 });
               },
             ),
           );
-          thinking.appendText("分镜生成请求已确认:\n" + JSON.stringify(res, null, 2));
+          thinking.appendText(`分镜生成请求已确认，requestId=${requestId}:\n` + JSON.stringify(res, null, 2));
           thinking.updateTitle("分镜生成请求已确认");
           thinking.complete();
-          return res ?? "生成请求已确认";
+          return { success: true, requestId, ack: res ?? null };
         } catch (error) {
+          const detail = `${u.error(error).message}；同一生成请求如需重试，请复用 requestId=${requestId}`;
+          thinking.appendText("分镜生成请求失败:\n" + detail);
           thinking.updateTitle("分镜生成失败");
           thinking.complete();
-          throw error;
+          throw new Error(detail);
         }
       },
     }),
