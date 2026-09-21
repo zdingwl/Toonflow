@@ -120,14 +120,14 @@ function makeProductionAgentStore(projectId: string) {
       (s) => {
         if (s) {
           s.on("scriptPlan:committed", ({ episodesId: savedEpisode, plan }: { episodesId: number; plan: string }) => {
-            if (episodesId.value === savedEpisode) flowData.value.scriptPlan = plan;
+            if (Number(episodesId.value) === Number(savedEpisode)) flowData.value.scriptPlan = plan;
           });
           s.on("storyboardTable:committed", (payload: {
             episodesId: number;
             storyboardTable: string;
             storyboardTableProgress?: unknown;
           }) => {
-            if (episodesId.value !== payload.episodesId) return;
+            if (Number(episodesId.value) !== Number(payload.episodesId)) return;
             flowData.value.storyboardTable = payload.storyboardTable ?? "";
             if (payload.storyboardTableProgress) {
               (flowData.value as any).storyboardTableProgress = payload.storyboardTableProgress;
@@ -252,13 +252,17 @@ function makeProductionAgentStore(projectId: string) {
       { immediate: true },
     );
 
-    async function setFlowData(scriptId?: number) {
+    async function setFlowData(
+      scriptId?: number,
+      writeFields: Array<"scriptPlan" | "storyboardTable"> = [],
+    ) {
       const snapshot = JSON.parse(JSON.stringify(flowData.value));
       delete (flowData.value as any).resetStoryboardTable;
       await axios.post("/production/saveFlowData", {
         projectId: projectId,
         data: snapshot,
         episodesId: scriptId || episodesId.value,
+        writeFields,
       });
     }
 
