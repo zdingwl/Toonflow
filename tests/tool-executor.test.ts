@@ -147,3 +147,30 @@ test("需要业务回执的写工具会获得稳定 requestId 并写入追踪输
     await db.destroy();
   }
 });
+
+
+test("生成工具的 ID 顺序不影响幂等键和稳定 requestId", async () => {
+  const db = await makeDb();
+  try {
+    let calls = 0;
+    const definition = {
+      generate_storyboard: {
+        execute: async (input: any) => ({ requestId: input.requestId, ids: input.ids, call: ++calls }),
+      },
+    };
+    const wrapped = wrapAgentTools(definition, {
+      db,
+      runId: "run-order",
+      stepKey: "step-order",
+      sideEffectTools: ["generate_storyboard"],
+    });
+    const first = await wrapped.generate_storyboard.execute!({ ids: [3, 1, 2, 2] });
+    const second = await wrapped.generate_storyboard.execute!({ ids: [2, 3, 1] });
+    assert.deepEqual(first.ids, [1, 2, 3]);
+    assert.equal(second.requestId, first.requestId);
+    assert.equal(second.call, 1);
+    assert.equal(calls, 1);
+  } finally {
+    await db.destroy();
+  }
+});
