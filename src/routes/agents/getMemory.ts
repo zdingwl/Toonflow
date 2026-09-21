@@ -11,10 +11,7 @@ function normalizeRole(role?: string | null): "user" | "assistant" {
 }
 
 function escapeRegExp(value: string) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\function normalizeRole(role?: string | null): "user" | "assistant" {
-  return role?.startsWith("assistant") ? "assistant" : "user";
-}
-");
+  return value.replace(/[.*+?^${}()|[\]\\]/g, (match) => "\\" + match);
 }
 
 function stripHiddenXml(text: string, tags: string[]) {
