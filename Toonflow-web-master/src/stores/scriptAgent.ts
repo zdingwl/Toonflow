@@ -107,10 +107,17 @@ function makeScriptAgentStore(projectId: string) {
         const getAgentRuns = () => emitAck<{ success: true; runs: any[] }>("agent:runs");
         const reconcileRun = (runId: string) => emitAck<{ success: true; run: any }>("agent:reconcile", { runId });
         const resumeRun = (runId: string) => emitAck<{ success: true; runId: string }>("agent:resume", { runId });
+        const resolveRunStep = (
+          runId: string,
+          stepKey: string,
+          resolution: "completed" | "failed" | "retryable",
+          resultRef?: string,
+          error?: string,
+        ) => emitAck<{ success: true; run: any }>("agent:resolve-step", { runId, stepKey, resolution, resultRef, error });
 
         return {
           connected, messages, chat, stopGenerate, socket, status, planData, setPlanData, connect, disconnect,
-          thinkLevel, updateThinkConfig, getAgentRuns, reconcileRun, resumeRun,
+          thinkLevel, updateThinkConfig, getAgentRuns, reconcileRun, resumeRun, resolveRunStep,
         };
       });
 }
