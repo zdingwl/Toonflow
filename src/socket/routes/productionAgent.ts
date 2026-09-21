@@ -5,6 +5,7 @@ import * as agent from "@/agents/productionAgent/index";
 import ResTool from "@/socket/resTool";
 import { TaskStore } from "@/utils/agent/runtime/taskStore";
 import { reconcileDirectorPlanOutput } from "@/agents/productionAgent/directorPlan";
+import { reconcileStoryboardTableOutput } from "@/agents/productionAgent/storyboardTable";
 
 async function verifyToken(rawToken: string): Promise<Boolean> {
   const setting = await u.db("o_setting").where("key", "tokenKey").select("value").first();
@@ -107,6 +108,13 @@ export default (nsp: Namespace) => {
           if (step.stepKey.startsWith("productionAgent:directorPlanAgent:")) {
             const resultRef = await reconcileDirectorPlanOutput(u.db, projectId, episodesId, step.output);
             if (resultRef) await taskStore.resolveStep(runId, step.stepKey, "completed", resultRef);
+            else if (!step.output) await taskStore.resolveStep(runId, step.stepKey, "retryable", undefined, "模型输出尚未完成，可安全重试");
+            continue;
+          }
+          if (step.stepKey.startsWith("productionAgent:storyboardTableAgent:")) {
+            const resultRef = await reconcileStoryboardTableOutput(u.db, projectId, episodesId, step.output);
+            if (resultRef) await taskStore.resolveStep(runId, step.stepKey, "completed", resultRef);
+            else if (!step.output) await taskStore.resolveStep(runId, step.stepKey, "retryable", undefined, "分镜表输出尚未完成，可安全重试");
             continue;
           }
 
@@ -173,6 +181,32 @@ export default (nsp: Namespace) => {
       try {
         await ensureRunScope(data.runId);
         callback?.({ success: true, run: await reconcileKnownSteps(data.runId) });
+      } catch (error) {
+        callback?.({ success: false, error: u.error(error).message });
+      }
+    });
+
+    socket.on("agent:resolve-step", async (
+      data: { runId: string; stepKey: string; resolution: "completed" | "failed" | "retryable"; resultRef?: string; error?: string },
+      callback,
+    ) => {
+      try {
+        await ensureRunScope(data.runId);
+        await taskStore.resolveStep(data.runId, data.stepKey, data.resolution, data.resultRef, data.error);
+        callback?.({ success: true, run: await taskStore.reconcile(data.runId) });
+      } catch (error) {
+        callback?.({ success: false, error: u.error(error).message });
+      }
+    });
+
+    socket.on("agent:resolve-tool", async (
+      data: { runId: string; id: string; resolution: "completed" | "retryable"; output?: unknown; error?: string },
+      callback,
+    ) => {
+      try {
+        await ensureRunScope(data.runId);
+        await taskStore.resolveToolCall(data.runId, data.id, data.resolution, data.output, data.error);
+        callback?.({ success: true, run: await taskStore.reconcile(data.runId) });
       } catch (error) {
         callback?.({ success: false, error: u.error(error).message });
       }
