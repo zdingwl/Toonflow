@@ -193,12 +193,28 @@ function makeProductionAgentStore(projectId: string) {
             callback({ success: true, message: $t("storyboard.assets.derivativeDelSuccess") });
           });
           s.on("generateDeriveAsset", async (data, callback) => {
-            const assetsData = await batchGenerateAssets(data.ids);
-            callback({ success: true, message: assetsData });
+            try {
+              const assetsData = await batchGenerateAssets(data.ids, data.requestId);
+              callback({ success: true, requestId: data.requestId, message: assetsData });
+            } catch (reason) {
+              callback({
+                success: false,
+                requestId: data.requestId,
+                error: reason instanceof Error ? reason.message : "衍生资产生成请求失败",
+              });
+            }
           });
           s.on("generateStoryboard", async (data, callback) => {
-            const storyData = await batchGenerateStoryboard(data.ids);
-            callback({ success: true, message: storyData });
+            try {
+              const storyData = await batchGenerateStoryboard(data.ids, false, data.requestId);
+              callback({ success: true, requestId: data.requestId, message: storyData });
+            } catch (reason) {
+              callback({
+                success: false,
+                requestId: data.requestId,
+                error: reason instanceof Error ? reason.message : "分镜生成请求失败",
+              });
+            }
           });
           s.on("addStoryboard", async (data, callback) => {
             const requestId =
@@ -253,7 +269,7 @@ function makeProductionAgentStore(projectId: string) {
       });
       flowData.value = data;
     }
-    async function batchGenerateStoryboard(allIds: number[], compulsory: boolean = false) {
+    async function batchGenerateStoryboard(allIds: number[], compulsory: boolean = false, requestId?: string) {
       try {
         const { data } = await axios.post("/production/storyboard/batchGenerateImage", {
           scriptId: episodesId.value,
@@ -261,6 +277,7 @@ function makeProductionAgentStore(projectId: string) {
           storyboardIds: allIds,
           concurrentCount: settingStore().otherSetting.assetsBatchGenereateSize,
           compulsory,
+          requestId,
         });
         if (data) {
           if (flowData.value.storyboard.length === 0) {
@@ -279,9 +296,10 @@ function makeProductionAgentStore(projectId: string) {
         return data;
       } catch (e) {
         window.$message.error((e as any)?.message);
+        throw e;
       }
     }
-    async function batchGenerateAssets(allIds: number[]) {
+    async function batchGenerateAssets(allIds: number[], requestId?: string) {
       flowData.value.assets.forEach((asset) => {
         if (asset.derive) {
           asset.derive.forEach((derive) => {
@@ -297,6 +315,7 @@ function makeProductionAgentStore(projectId: string) {
           projectId: projectId,
           scriptId: episodesId.value,
           concurrentCount: settingStore().otherSetting.assetsBatchGenereateSize,
+          requestId,
         });
         if (data) {
           data.forEach((record: { id: number; state: "未生成" | "生成中" | "已完成" | "生成失败"; src: string }) => {
@@ -313,7 +332,10 @@ function makeProductionAgentStore(projectId: string) {
           });
         }
         return data;
-      } catch (e) {}
+      } catch (e) {
+        window.$message.error((e as any)?.message);
+        throw e;
+      }
     }
     const assetsNotStateImageIds = computed(() => {
       const ids: number[] = [];
