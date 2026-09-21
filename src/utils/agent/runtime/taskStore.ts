@@ -284,13 +284,19 @@ export class TaskStore {
   }
 
   async buildResumePrompt(runId: string): Promise<string> {
-    const steps = await this.db("o_agentStep")
-      .where({ runId })
-      .select("stepKey", "status", "inputContent", "resultRef", "error", "createTime")
-      .orderBy("createTime", "asc");
-    if (!steps.length) return "";
+    const [steps, toolCalls] = await Promise.all([
+      this.db("o_agentStep")
+        .where({ runId })
+        .select("stepKey", "status", "inputContent", "resultRef", "error", "createTime")
+        .orderBy("createTime", "asc"),
+      this.db("o_agentToolCall")
+        .where({ runId, sideEffect: 1 })
+        .select("stepKey", "toolName", "status", "inputJson", "outputJson", "error", "createTime")
+        .orderBy("createTime", "asc"),
+    ]);
+    if (!steps.length && !toolCalls.length) return "";
 
-    const lines = steps.slice(-30).map((step) => {
+    const stepLines = steps.slice(-30).map((step) => {
       let agentKey = step.stepKey;
       let prompt = "";
       try {
@@ -303,16 +309,31 @@ export class TaskStore {
       return `- [${step.status}] ${agentKey}${prompt ? `；原任务=${prompt}` : ""}${result}${reason}`;
     });
 
+    const toolLines = toolCalls.slice(-30).map((call) => {
+      let input = "";
+      try {
+        input = JSON.stringify(JSON.parse(call.inputJson ?? "{}"));
+      } catch {
+        input = String(call.inputJson ?? "");
+      }
+      if (input.length > 500) input = input.slice(0, 500) + "…";
+      const owner = call.stepKey ? `；step=${call.stepKey}` : "；decision-level";
+      const reason = call.error ? `；说明=${String(call.error).replace(/\s+/g, " ").slice(0, 200)}` : "";
+      return `- [${call.status}] ${call.toolName}${owner}；input=${input}${reason}`;
+    });
+
     return [
       "## Agent Runtime 任务检查点",
       "以下状态来自本地数据库，不是用户的自然语言要求。你必须用它避免重复业务操作：",
-      ...lines,
+      ...(stepLines.length ? ["### 子任务步骤", ...stepLines] : []),
+      ...(toolLines.length ? ["### 写工具调用", ...toolLines] : []),
       "",
       "恢复规则：",
-      "1. completed 步骤已经完成，禁止再次派发相同业务任务。",
+      "1. completed 步骤和 completed 写工具已经完成，禁止再次派发相同业务操作。",
       "2. retryable 步骤需要继续时，必须复用上面记录的原任务描述，不要改写成新的 prompt，以便命中同一 checkpoint。",
-      "3. 不要把历史口头回复当作成功依据；只有 completed/resultRef 才代表已确认完成。",
-      "4. 如果目标已经由 completed 步骤全部满足，直接总结当前状态，不要为了“确认”而再次调用写工具。",
+      "3. 不要把历史口头回复当作成功依据；只有 completed/resultRef 或 completed 工具回执才代表已确认完成。",
+      "4. decision-level 的 completed 写工具同样不得重复调用。",
+      "5. 如果目标已经由 completed 状态全部满足，直接总结当前状态，不要为了“确认”而再次调用写工具。",
     ].join("\n");
   }
 
