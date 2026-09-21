@@ -7,6 +7,7 @@ import {
   saveScriptItem,
   saveScriptWorkspaceField,
   snapshotProjectScripts,
+  reconcileScriptStepOutput,
 } from "../src/agents/scriptAgent/workspace";
 
 async function createDb() {
@@ -57,6 +58,29 @@ test("单集剧本提交区分新建与更新，并拒绝覆盖生成期间的�
     await db("o_script").where({ projectId: 1, name: "第1集" }).update({ content: "人工修改" });
     await assert.rejects(() => saveScriptItem(db, 1, { name: "第1集", content: "版本C" }, "版本B"), /已被修改/);
     await assert.rejects(() => saveScriptItem(db, 1, { name: "第1集", content: "重复新建" }, null), /已被创建/);
+  } finally {
+    await db.destroy();
+  }
+});
+
+
+test("恢复核对只接受已经真实写入数据库的 Agent 输出", async () => {
+  const db = await createDb();
+  try {
+    await saveScriptWorkspaceField(db, 1, "storySkeleton", "骨架A", "");
+    assert.equal(
+      await reconcileScriptStepOutput(db, 1, "scriptAgent:storySkeletonAgent:abc", "<storySkeleton>骨架A</storySkeleton>"),
+      "storySkeleton:1",
+    );
+    assert.equal(
+      await reconcileScriptStepOutput(db, 1, "scriptAgent:storySkeletonAgent:def", "<storySkeleton>另一份</storySkeleton>"),
+      null,
+    );
+    const id = await saveScriptItem(db, 1, { name: "第2集", content: "正文2" }, null);
+    assert.equal(
+      await reconcileScriptStepOutput(db, 1, "scriptAgent:scriptAgent:abc", '<scriptItem name="第2集">正文2</scriptItem>'),
+      `script:1:${id}`,
+    );
   } finally {
     await db.destroy();
   }
