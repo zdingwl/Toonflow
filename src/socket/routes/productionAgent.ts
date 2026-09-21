@@ -3,6 +3,7 @@ import u from "@/utils";
 import { Namespace, Socket } from "socket.io";
 import * as agent from "@/agents/productionAgent/index";
 import ResTool from "@/socket/resTool";
+import { AgentChatHistoryStore } from "@/utils/agent/chatHistory";
 import { TaskStore } from "@/utils/agent/runtime/taskStore";
 import { reconcileDirectorPlanOutput } from "@/agents/productionAgent/directorPlan";
 import { reconcileStoryboardTableOutput } from "@/agents/productionAgent/storyboardTable";
@@ -43,6 +44,15 @@ export default (nsp: Namespace) => {
     let resTool = new ResTool(socket, {
       projectId: socket.handshake.auth.projectId,
       scriptId: socket.handshake.auth.scriptId,
+    });
+    let chatHistory = new AgentChatHistoryStore(u.db, isolationKey);
+    socket.onAnyOutgoing((event, ...args) => {
+      const payload = args[0];
+      if (!payload || typeof payload !== "object") return;
+      if (event === "message") chatHistory.recordMessage(payload);
+      else if (event === "message:update") chatHistory.recordMessageUpdate(payload.id, payload);
+      else if (event === "content:add") chatHistory.recordContentAdd(payload.messageId, payload.content);
+      else if (event === "content:update") chatHistory.recordContentUpdate(payload);
     });
     let abortController: AbortController | null = null;
     let activeRunId: string | null = null;
@@ -388,12 +398,21 @@ export default (nsp: Namespace) => {
         projectId: data.projectId,
         scriptId: data.scriptId,
       });
+      chatHistory = new AgentChatHistoryStore(u.db, isolationKey);
       console.log("[productionAgent] 上下文已更新:", isolationKey);
       callback?.({ success: true });
     });
 
     socket.on("chat", async (data: { content: string; requestId?: string }) => {
       const { content } = data;
+      const userMessageId = data.requestId ? `user_${data.requestId}` : `user_${u.uuid()}`;
+      chatHistory.recordMessage({
+        id: userMessageId,
+        role: "user",
+        status: "complete",
+        datetime: new Date().toISOString(),
+        content: [{ id: `text_${userMessageId}`, type: "text", data: content, status: "complete" }],
+      });
       abortController?.abort();
       const interruptedRunId = activeRunId;
       abortController = new AbortController();
