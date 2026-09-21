@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { createHash } from "node:crypto";
 import { getEmbedding, getEmbeddingModelId, cosineSimilarity } from "./embedding";
 import { indexMemoryTerms, lexicalCandidates, queueMemoryVector, queueMissingVectors, startMemoryIndex } from "./retrieval/memoryIndex";
+import { getRerankerCandidateLimit, rerankRows } from "./retrieval/reranker";
 import type { memories as MemoryRow } from "@/types/database";
 import { tool, jsonSchema } from "ai";
 import { z } from "zod";
@@ -113,7 +114,14 @@ class Memory {
         const included = new Set(rows.map((row: any) => row.id));
         rows.push(...lexical.filter((row: any) => !included.has(row.id)));
       }
-      return vectorSearch(rows, queryEmbedding, limit, new Set(ids ?? []));
+      const candidateLimit = await getRerankerCandidateLimit(limit);
+      const candidates = vectorSearch(rows, queryEmbedding, candidateLimit, new Set(ids ?? []));
+      try {
+        return await rerankRows(text, candidates, limit);
+      } catch (rerankError) {
+        console.error("[Memory] Reranker 降级:", rerankError instanceof Error ? rerankError.message : rerankError);
+        return candidates.slice(0, limit);
+      }
     } catch (error) {
       console.error("[Memory] 检索降级:", error instanceof Error ? error.message : error);
       try {
