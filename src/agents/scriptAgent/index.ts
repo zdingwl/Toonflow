@@ -42,7 +42,10 @@ export async function runDecisionAI(ctx: AgentContext) {
   const skill = path.join(u.getPath("skills"), "script_agent_decision.md");
   const prompt = ctx.runId ? await new TaskStore(u.db).readSkill(ctx.runId, skill) : await fs.promises.readFile(skill, "utf-8");
 
-  const mem = buildMemoryPrompt(await memory.get(text));
+  const budgetRow = await u.db("o_setting").where({ key: "memoryContextTokenBudget" }).select("value").first();
+  const configuredBudget = Number(budgetRow?.value);
+  const memoryBudget = Number.isSafeInteger(configuredBudget) && configuredBudget >= 400 ? configuredBudget : 2400;
+  const mem = buildMemoryPrompt(await memory.get(text), memoryBudget);
 
   const projectData = await u.db("o_project").where("id", resTool.data.projectId).first();
 
