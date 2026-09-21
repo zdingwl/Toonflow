@@ -3,7 +3,8 @@ import type { Knex } from "knex";
 import { readFile } from "node:fs/promises";
 
 export type RunStatus = "running" | "completed" | "failed" | "reconciling";
-export type StepStatus = RunStatus;
+export type StepStatus = RunStatus | "retryable";
+export type ToolCallStatus = "running" | "completed" | "failed" | "reconciling" | "retryable";
 
 export type RunScope = {
   agentType: "scriptAgent" | "productionAgent";
@@ -19,6 +20,26 @@ export type StepState = {
   output?: string;
   error?: string;
 };
+
+export type ToolCallState = {
+  id: string;
+  stepKey?: string;
+  toolName: string;
+  status: ToolCallStatus;
+  sideEffect: boolean;
+  input?: unknown;
+  output?: unknown;
+  error?: string;
+};
+
+function parseJson(value: string | null | undefined): unknown {
+  if (!value) return undefined;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return value;
+  }
+}
 
 export class TaskStore {
   constructor(private readonly db: Knex) {}
@@ -78,6 +99,13 @@ export class TaskStore {
         if (prior.status === "completed") {
           return { cached: true, output: prior.output ?? undefined, resultRef: prior.resultRef ?? undefined };
         }
+        if (prior.status === "retryable") {
+          const claimed = await trx("o_agentStep").where({ runId, stepKey, status: "retryable" }).update({
+            status: "running", output: null, resultRef: null, error: null, updateTime: Date.now(),
+          });
+          if (claimed !== 1) throw new Error(`步骤 ${stepKey} 的重试状态已变化，请重新核对`);
+          return { cached: false };
+        }
         throw new Error(`步骤 ${stepKey} 当前状态为 ${prior.status}，必须先核对结果再继续`);
       }
       const now = Date.now();
@@ -117,21 +145,48 @@ export class TaskStore {
       .update({ status: "reconciling", error, updateTime: Date.now() });
   }
 
-  async resolveStep(runId: string, stepKey: string, resolution: "completed" | "failed", resultRef?: string, error?: string): Promise<void> {
-    const count = await this.db("o_agentStep").where({ runId, stepKey, status: "reconciling" })
+  async resolveStep(
+    runId: string,
+    stepKey: string,
+    resolution: "completed" | "failed" | "retryable",
+    resultRef?: string,
+    error?: string,
+  ): Promise<void> {
+    const count = await this.db("o_agentStep").where({ runId, stepKey }).whereIn("status", ["reconciling", "failed"])
       .update({
         status: resolution,
         resultRef: resolution === "completed" ? resultRef ?? null : null,
-        error: resolution === "failed" ? error ?? "已核对为失败" : null,
+        error: resolution === "completed" ? null : error ?? (resolution === "retryable" ? "已核对，可安全重试" : "已核对为失败"),
         updateTime: Date.now(),
       });
-    if (count !== 1) throw new Error(`步骤 ${stepKey} 不在待核对状态`);
+    if (count !== 1) throw new Error(`步骤 ${stepKey} 不在可核对状态`);
+  }
+
+  async resolveToolCall(
+    runId: string,
+    id: string,
+    resolution: "completed" | "retryable",
+    output?: unknown,
+    error?: string,
+  ): Promise<void> {
+    const count = await this.db("o_agentToolCall")
+      .where({ id, runId, sideEffect: 1 })
+      .whereIn("status", ["running", "reconciling", "failed"])
+      .update({
+        status: resolution,
+        outputJson: resolution === "completed" ? JSON.stringify(output ?? null) : null,
+        error: resolution === "completed" ? null : error ?? "已核对，可安全重试",
+        updateTime: Date.now(),
+      });
+    if (count !== 1) throw new Error("工具调用不在可核对状态");
   }
 
   async finish(runId: string, status: "completed" | "failed" | "reconciling", error?: string): Promise<void> {
     await this.db.transaction(async (trx) => {
       if (status !== "completed") {
         await trx("o_agentStep").where({ runId, status: "running" })
+          .update({ status: "reconciling", error: error ?? null, updateTime: Date.now() });
+        await trx("o_agentToolCall").where({ runId, status: "running", sideEffect: 1 })
           .update({ status: "reconciling", error: error ?? null, updateTime: Date.now() });
       }
       await trx("o_agentRun").where({ id: runId, status: "running" })
@@ -156,9 +211,16 @@ export class TaskStore {
         run.isolationKey !== scope.isolationKey
       ) throw new Error("任务不属于当前项目或 Agent 上下文");
       if (!["reconciling", "failed"].includes(run.status)) throw new Error(`任务当前状态为 ${run.status}，不能恢复`);
-      const unresolved = await trx("o_agentStep").where({ runId }).whereIn("status", ["running", "reconciling", "failed"]);
-      if (unresolved.length) {
-        throw new Error(`仍有 ${unresolved.length} 个步骤需要核对，不能自动恢复`);
+
+      const unresolvedSteps = await trx("o_agentStep").where({ runId }).whereIn("status", ["running", "reconciling", "failed"]);
+      if (unresolvedSteps.length) {
+        throw new Error(`仍有 ${unresolvedSteps.length} 个步骤需要核对，不能自动恢复`);
+      }
+      const unresolvedTools = await trx("o_agentToolCall")
+        .where({ runId, sideEffect: 1 })
+        .whereIn("status", ["running", "reconciling", "failed"]);
+      if (unresolvedTools.length) {
+        throw new Error(`仍有 ${unresolvedTools.length} 个写工具调用需要核对，不能自动恢复`);
       }
       if (typeof run.inputContent !== "string" || !run.inputContent.length) {
         throw new Error("旧任务未保存原始输入，无法自动恢复");
@@ -170,10 +232,13 @@ export class TaskStore {
     });
   }
 
-  async reconcile(runId: string): Promise<{ status: RunStatus; steps: StepState[] }> {
+  async reconcile(runId: string): Promise<{ status: RunStatus; steps: StepState[]; toolCalls: ToolCallState[] }> {
     const run = await this.db("o_agentRun").where({ id: runId }).first();
     if (!run) throw new Error("任务不存在");
-    const steps = await this.db("o_agentStep").where({ runId }).orderBy("createTime", "asc");
+    const [steps, toolCalls] = await Promise.all([
+      this.db("o_agentStep").where({ runId }).orderBy("createTime", "asc"),
+      this.db("o_agentToolCall").where({ runId }).orderBy("createTime", "asc"),
+    ]);
     return {
       status: run.status as RunStatus,
       steps: steps.map((step) => ({
@@ -182,6 +247,16 @@ export class TaskStore {
         resultRef: step.resultRef ?? undefined,
         output: step.output ?? undefined,
         error: step.error ?? undefined,
+      })),
+      toolCalls: toolCalls.map((call) => ({
+        id: call.id,
+        stepKey: call.stepKey ?? undefined,
+        toolName: call.toolName,
+        status: call.status,
+        sideEffect: Number(call.sideEffect) === 1,
+        input: parseJson(call.inputJson),
+        output: parseJson(call.outputJson),
+        error: call.error ?? undefined,
       })),
     };
   }
