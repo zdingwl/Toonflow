@@ -65,11 +65,14 @@ export default router.post(
     } catch (reason) {
       console.error("[script/getAiRegex]", reason);
       const details = reason instanceof Error ? reason.message : "";
-      const message = /未找到.*(?:配置|模型)|模型配置/.test(details)
-        ? "未配置通用AI文本模型，请先在模型设置中完成配置；也可以手动填写拆集正则"
-        : /AI返回|模型未识别/.test(details)
-          ? details
-          : "AI解析正则失败，请检查通用AI模型、网络连接或稍后重试；请勿在拆集结果不正确时保存";
+      const invalidUrl = (reason as { code?: unknown } | null)?.code === "ERR_INVALID_URL" || /Invalid URL|ERR_INVALID_URL/.test(details);
+      const message = invalidUrl
+        ? "通用AI所选供应商的请求地址无效：请在模型供应商设置中填写以 http:// 或 https:// 开头的完整接口地址，不要把 ark- 开头的模型接入点 ID 填进请求地址；确认通用AI所选模型后重试"
+        : /未找到.*(?:配置|模型)|模型配置/.test(details)
+          ? "未配置通用AI文本模型，请先在模型设置中完成配置；也可以手动填写拆集正则"
+          : /AI返回|模型未识别/.test(details)
+            ? details
+            : "AI解析正则失败，请检查通用AI模型、网络连接或稍后重试；请勿在拆集结果不正确时保存";
       return res.status(400).send(error(message));
     }
   },
