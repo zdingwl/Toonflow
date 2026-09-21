@@ -1096,6 +1096,25 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
       },
     },
     {
+      name: "o_agentToolCall",
+      builder: (table) => {
+        table.text("id").notNullable().primary();
+        table.text("runId").notNullable();
+        table.text("toolName").notNullable();
+        table.text("operationKey").unique();
+        table.text("inputHash").notNullable();
+        table.text("inputJson").notNullable();
+        table.text("outputJson");
+        table.integer("sideEffect").notNullable().defaultTo(0);
+        table.text("status").notNullable();
+        table.text("error");
+        table.integer("createTime").notNullable();
+        table.integer("updateTime").notNullable();
+        table.index(["runId", "status"]);
+        table.index(["toolName", "status"]);
+      },
+    },
+    {
       name: "o_agentSkillSnapshot",
       builder: (table) => {
         table.text("runId").notNullable();
