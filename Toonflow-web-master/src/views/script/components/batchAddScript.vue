@@ -260,12 +260,26 @@ watch(purgeNovelShow, (newVal) => {
   }
 });
 
+// 长文本只取前 2000 字可能全是片名和说明，导致 AI 根本看不到真正的集标题。
+// 按完整行采样开头、中段和末尾；总长度保留在后端 6000 字的请求限制内。
+function getEpisodeRegexSample(text: string): string {
+  if (text.length <= 5600) return text;
+  const windowFromLine = (start: number, maxLength: number): string => {
+    const nextLine = start === 0 ? -1 : text.indexOf("\n", start);
+    const from = nextLine < 0 ? (start === 0 ? 0 : start) : nextLine + 1;
+    const end = Math.min(text.length, from + maxLength);
+    const lastLine = text.lastIndexOf("\n", end);
+    return text.slice(from, lastLine > from ? lastLine : end);
+  };
+  return [windowFromLine(0, 2600), windowFromLine(Math.floor(text.length / 2), 1500), windowFromLine(text.length - 1500, 1500)].join("\n");
+}
+
 async function getAiRegex() {
   if (!content.value.trim()) {
     window.$message.warning($t("workbench.script.import.msg.selectChapters"));
     return;
   }
-  const sample = content.value.slice(0, 2000);
+  const sample = getEpisodeRegexSample(content.value);
   aiRegexLoading.value = true;
   try {
     const { data } = await axios.post("/script/getAiRegex", { content: sample });
@@ -305,7 +319,6 @@ async function getAiRegex() {
       }
 
       .uploadHint {
-        font-size: 12px;
         margin: 0;
       }
     }
