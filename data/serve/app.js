@@ -37286,7 +37286,7 @@ var require_websocket2 = __commonJS({
     var http4 = require("http");
     var net = require("net");
     var tls = require("tls");
-    var { randomBytes, createHash } = require("crypto");
+    var { randomBytes, createHash: createHash2 } = require("crypto");
     var { Duplex, Readable: Readable2 } = require("stream");
     var { URL: URL2 } = require("url");
     var PerMessageDeflate = require_permessage_deflate();
@@ -37943,7 +37943,7 @@ var require_websocket2 = __commonJS({
           abortHandshake(websocket, socket, "Invalid Upgrade header");
           return;
         }
-        const digest = createHash("sha1").update(key + GUID).digest("base64");
+        const digest = createHash2("sha1").update(key + GUID).digest("base64");
         if (res.headers["sec-websocket-accept"] !== digest) {
           abortHandshake(websocket, socket, "Invalid Sec-WebSocket-Accept header");
           return;
@@ -38310,7 +38310,7 @@ var require_websocket_server = __commonJS({
     var EventEmitter3 = require("events");
     var http4 = require("http");
     var { Duplex } = require("stream");
-    var { createHash } = require("crypto");
+    var { createHash: createHash2 } = require("crypto");
     var extension = require_extension();
     var PerMessageDeflate = require_permessage_deflate();
     var subprotocol = require_subprotocol();
@@ -38607,7 +38607,7 @@ var require_websocket_server = __commonJS({
           );
         }
         if (this._state > RUNNING) return abortHandshake(socket, 503);
-        const digest = createHash("sha1").update(key + GUID).digest("base64");
+        const digest = createHash2("sha1").update(key + GUID).digest("base64");
         const headers = [
           "HTTP/1.1 101 Switching Protocols",
           "Upgrade: websocket",
@@ -47436,7 +47436,7 @@ var require_websocket4 = __commonJS({
     var http4 = require("http");
     var net = require("net");
     var tls = require("tls");
-    var { randomBytes, createHash } = require("crypto");
+    var { randomBytes, createHash: createHash2 } = require("crypto");
     var { Readable: Readable2 } = require("stream");
     var { URL: URL2 } = require("url");
     var PerMessageDeflate = require_permessage_deflate2();
@@ -48010,7 +48010,7 @@ var require_websocket4 = __commonJS({
           abortHandshake(websocket, socket, "Invalid Upgrade header");
           return;
         }
-        const digest = createHash("sha1").update(key + GUID).digest("base64");
+        const digest = createHash2("sha1").update(key + GUID).digest("base64");
         if (res.headers["sec-websocket-accept"] !== digest) {
           abortHandshake(websocket, socket, "Invalid Sec-WebSocket-Accept header");
           return;
@@ -48318,7 +48318,7 @@ var require_websocket_server2 = __commonJS({
     var https2 = require("https");
     var net = require("net");
     var tls = require("tls");
-    var { createHash } = require("crypto");
+    var { createHash: createHash2 } = require("crypto");
     var PerMessageDeflate = require_permessage_deflate2();
     var WebSocket = require_websocket4();
     var { format, parse: parse4 } = require_extension2();
@@ -48539,7 +48539,7 @@ var require_websocket_server2 = __commonJS({
           );
         }
         if (this._state > RUNNING) return abortHandshake(socket, 503);
-        const digest = createHash("sha1").update(key + GUID).digest("base64");
+        const digest = createHash2("sha1").update(key + GUID).digest("base64");
         const headers = [
           "HTTP/1.1 101 Switching Protocols",
           "Upgrade: websocket",
@@ -53652,11 +53652,11 @@ var require_out = __commonJS({
       async.read(path34, getSettings(optionsOrSettingsOrCallback), callback);
     }
     exports2.stat = stat;
-    function statSync(path34, optionsOrSettings) {
+    function statSync2(path34, optionsOrSettings) {
       const settings = getSettings(optionsOrSettings);
       return sync.read(path34, settings);
     }
-    exports2.statSync = statSync;
+    exports2.statSync = statSync2;
     function getSettings(settingsOrOptions = {}) {
       if (settingsOrOptions instanceof settings_1.default) {
         return settingsOrOptions;
@@ -236846,7 +236846,7 @@ async function resolveModelName(value) {
     const agentDeployData = await utils_default.db("o_agentDeploy").where("key", value).first();
     let modelName = null;
     if (!agentDeployData?.modelName) {
-      const [mainly] = agentDeployData.key.split(/:(.+)/);
+      const [mainly] = value.split(/:(.+)/);
       const mainlyData = await utils_default.db("o_agentDeploy").where("key", mainly).first();
       if (!mainlyData?.modelName) throw new Error(`\u672A\u627E\u5230\u90E8\u7F72\u914D\u7F6E ${value}`);
       modelName = mainlyData.modelName;
@@ -236872,7 +236872,7 @@ async function getModelConfig(value) {
     }
     const agentDeployData = await utils_default.db("o_agentDeploy").where("key", value).first();
     if (!agentDeployData?.modelName) {
-      const [mainly] = agentDeployData.key.split(/:(.+)/);
+      const [mainly] = value.split(/:(.+)/);
       const mainlyData = await utils_default.db("o_agentDeploy").where("key", mainly).first();
       if (!mainlyData?.modelName) throw new Error(`\u672A\u627E\u5230\u90E8\u7F72\u914D\u7F6E ${value}`);
       return mainlyData;
@@ -236933,7 +236933,7 @@ async function urlToBase642(url4, retries = 3, delay2 = 1e3) {
 function referenceList2imageBase642(id, input) {
   const version3 = utils_default.vendor.getVendor(id).version;
   if (!version3 || isNaN(parseFloat(version3)) || parseFloat(version3) < 2) {
-    input.imageBase64 = input.referenceList.map((item) => item.base64);
+    input.imageBase64 = (input.referenceList ?? []).map((item) => item.base64);
     return input;
   }
   return input;
@@ -237073,14 +237073,11 @@ var init_ai = __esm({
       async run(input, taskRecord2) {
         const modelName = await resolveModelName(this.key);
         const exec2 = async (mn) => {
-          try {
-            const fn = await getVendorTemplateFn("ttsRequest", mn);
-            await referenceList2imageBase642(mn.split(/:(.+)/)[0], input);
-            this.result = await fn(input);
-            if (this.result.startsWith("http")) this.result = await urlToBase642(this.result);
-            return this;
-          } catch (e) {
-          }
+          const fn = await getVendorTemplateFn("ttsRequest", mn);
+          await referenceList2imageBase642(mn.split(/:(.+)/)[0], input);
+          this.result = await fn(input);
+          if (this.result.startsWith("http")) this.result = await urlToBase642(this.result);
+          return this;
         };
         if (taskRecord2) {
           return withTaskRecord(this.key, taskRecord2.taskClass, taskRecord2.describe, taskRecord2.relatedObjects, taskRecord2.projectId, exec2);
@@ -240382,15 +240379,16 @@ var init_getFlowData = __esm({
       }),
       async (req, res) => {
         const { projectId, episodesId } = req.body;
-        const sqlData = await utils_default.db("o_agentWorkData").where("projectId", String(projectId)).andWhere("episodesId", String(episodesId)).select("data").first();
+        const sqlData = await utils_default.db("o_agentWorkData").where("projectId", String(projectId)).andWhere("episodesId", String(episodesId)).andWhere("key", "productionAgent").select("data").first();
         const scriptData = await utils_default.db("o_script").where("projectId", projectId).where("id", episodesId).first();
+        if (!scriptData) return res.status(400).send(error50("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C"));
         const scriptAssets = await utils_default.db("o_scriptAssets").where("scriptId", episodesId);
         const assetIds = scriptAssets.map((i) => i.assetId);
         const assetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_assets.*", "o_image.filePath", "o_image.state", "o_image.errorReason").where("o_assets.id", "in", assetIds).andWhere("o_assets.assetsId", null).where("o_assets.projectId", projectId);
         let childAssetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_assets.*", "o_image.filePath", "o_image.state", "o_image.errorReason").where("o_assets.projectId", projectId).where("o_assets.assetsId", "in", assetIds).whereNotNull("o_assets.assetsId");
         if (!sqlData) {
           const flowData = {
-            script: scriptData?.content ?? "",
+            script: scriptData.content ?? "",
             scriptPlan: "",
             assets: await Promise.all(
               assetsData.map(async (item) => ({
@@ -240430,7 +240428,7 @@ var init_getFlowData = __esm({
           return res.status(200).send(success3(flowData));
         } else {
           try {
-            const storyboardData = await utils_default.db("o_storyboard").where("scriptId", episodesId);
+            const storyboardData = await utils_default.db("o_storyboard").where({ scriptId: episodesId, projectId });
             await Promise.all(
               storyboardData.map(async (i) => {
                 if (i.filePath) {
@@ -240492,7 +240490,7 @@ var init_getFlowData = __esm({
               reason: i?.reason ?? "",
               flowId: i.flowId
             })).sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
-            flowData.script = scriptData?.content ?? "";
+            flowData.script = scriptData.content ?? "";
             res.status(200).send(success3(flowData));
           } catch (err) {
             res.status(400).send(error50());
@@ -240577,6 +240575,48 @@ var init_getStoryboardData = __esm({
   }
 });
 
+// src/utils/storyboardScenes.ts
+function renderStoryboardScenes(scenes) {
+  return Object.keys(scenes).map(Number).sort((a, b) => a - b).map((number6) => scenes[String(number6)]).join("\n\n");
+}
+function mergeStoryboardScene(previousTable, previous, taskId, sceneIndex, total, markdown) {
+  if (!/^[a-zA-Z0-9_-]{8,128}$/.test(taskId)) throw new Error("\u5206\u955C\u4EFB\u52A1\u6807\u8BC6\u65E0\u6548");
+  if (!Number.isSafeInteger(sceneIndex) || !Number.isSafeInteger(total) || sceneIndex < 1 || total < sceneIndex || total > 1e3) {
+    throw new Error("\u573A\u6B21\u6216\u603B\u573A\u6B21\u6570\u65E0\u6548");
+  }
+  const scene = markdown.trim();
+  if (!scene || scene.length > 6e4 || /<\/?storyboardTable\b/i.test(scene)) throw new Error("\u5355\u573A\u5185\u5BB9\u4E3A\u7A7A\u3001\u8FC7\u957F\u6216\u5305\u542B\u5D4C\u5957 XML \u6807\u7B7E");
+  const headings = [...scene.matchAll(/^##\s*场\s*(\d+)\s*[：:]/gm)];
+  if (headings.length !== 1 || Number(headings[0][1]) !== sceneIndex || headings[0].index !== 0) {
+    throw new Error(`\u5355\u573A\u5206\u955C\u5FC5\u987B\u4EE5\u201C## \u573A${sceneIndex}\uFF1A\u201D\u5F00\u5934\uFF0C\u4E14\u4E0D\u80FD\u5305\u542B\u5176\u4ED6\u573A\u6B21`);
+  }
+  if (previous) {
+    if (previous.taskId !== taskId || previous.total !== total) throw new Error("\u4EFB\u52A1\u6807\u8BC6\u6216\u603B\u573A\u6B21\u6570\u4E0E\u5DF2\u4FDD\u5B58\u7684\u5206\u955C\u8868\u4E0D\u4E00\u81F4");
+    if (previousTable !== renderStoryboardScenes(previous.scenes)) throw new Error("\u5206\u955C\u8868\u5DF2\u88AB\u4EBA\u5DE5\u4FEE\u6539\uFF0C\u505C\u6B62\u81EA\u52A8\u5408\u5E76\u4EE5\u4FDD\u62A4\u73B0\u6709\u5185\u5BB9");
+  } else if (previousTable.trim()) {
+    throw new Error("\u5DE5\u4F5C\u533A\u5DF2\u6709\u5206\u955C\u8868\uFF1B\u8BF7\u5148\u786E\u8BA4\u6216\u6E05\u7A7A\u65E7\u7248\u5185\u5BB9\uFF0C\u4E0D\u80FD\u81EA\u52A8\u8986\u76D6");
+  }
+  const scenes = { ...previous?.scenes ?? {} };
+  if (scenes[String(sceneIndex)] && scenes[String(sceneIndex)] !== scene) {
+    throw new Error(`\u573A${sceneIndex}\u5DF2\u4FDD\u5B58\u4E14\u5185\u5BB9\u4E0D\u540C\uFF0C\u4E0D\u80FD\u81EA\u52A8\u8986\u76D6\uFF1B\u8BF7\u4EBA\u5DE5\u6838\u5BF9\u540E\u518D\u5904\u7406`);
+  }
+  const changed = !scenes[String(sceneIndex)];
+  scenes[String(sceneIndex)] = scene;
+  const savedScenes = Object.keys(scenes).map(Number).sort((a, b) => a - b);
+  const missingScenes = Array.from({ length: total }, (_, i) => i + 1).filter((number6) => !scenes[String(number6)]);
+  return {
+    storyboardTable: renderStoryboardScenes(scenes),
+    storyboardTableProgress: { taskId, total, scenes, revision: (previous?.revision ?? 0) + (changed ? 1 : 0), complete: missingScenes.length === 0 },
+    savedScenes,
+    missingScenes
+  };
+}
+var init_storyboardScenes = __esm({
+  "src/utils/storyboardScenes.ts"() {
+    "use strict";
+  }
+});
+
 // src/routes/production/saveFlowData.ts
 var import_express64, router64, saveFlowData_default;
 var init_saveFlowData = __esm({
@@ -240587,50 +240627,97 @@ var init_saveFlowData = __esm({
     init_zod();
     init_responseFormat();
     init_middleware();
+    init_storyboardScenes();
     router64 = import_express64.default.Router();
     saveFlowData_default = router64.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
         episodesId: external_exports.number(),
-        data: external_exports.any()
+        data: external_exports.any().optional(),
+        scene: external_exports.object({
+          taskId: external_exports.string().min(8).max(128),
+          index: external_exports.number().int().min(1),
+          total: external_exports.number().int().min(1).max(1e3),
+          content: external_exports.string().min(1).max(6e4)
+        }).optional()
       }),
       async (req, res) => {
-        const {
-          data,
-          projectId,
-          episodesId
-        } = req.body;
-        const sqlData = await utils_default.db("o_agentWorkData").where("projectId", String(projectId)).andWhere("episodesId", String(episodesId)).first();
-        if (data.storyboard && data.storyboard.length) {
-          const filterDatas = data?.storyboard.filter((i) => !i.id);
-          if (!filterDatas.length) {
-            try {
-              await Promise.all(
-                data.storyboard.filter((i) => i.id).map(async (i, index) => {
-                  await utils_default.db("o_storyboard").where("id", i.id).update({
-                    index
-                  });
-                })
+        const { data, projectId, episodesId, scene } = req.body;
+        if (scene && data !== void 0) return res.status(400).send({ code: 400, message: "\u5355\u573A\u4FDD\u5B58\u4E0E\u6574\u4EFD\u5DE5\u4F5C\u533A\u4FDD\u5B58\u4E0D\u80FD\u540C\u65F6\u63D0\u4EA4", data: null });
+        const serialized = scene ? void 0 : JSON.stringify(data);
+        if (!scene && (serialized === void 0 || !data || typeof data !== "object" || Array.isArray(data))) {
+          return res.status(400).send({ code: 400, message: "\u5DE5\u4F5C\u533A\u6570\u636E\u683C\u5F0F\u9519\u8BEF", data: null });
+        }
+        try {
+          const result = await utils_default.db.transaction(async (trx) => {
+            const scope = { projectId, episodesId, key: "productionAgent" };
+            const script = await trx("o_script").where({ id: episodesId, projectId }).first();
+            if (!script) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C");
+            const existing = await trx("o_agentWorkData").where(scope).first();
+            const storedData = existing ? JSON.parse(existing.data || "{}") : {
+              script: script.content ?? "",
+              scriptPlan: "",
+              assets: [],
+              storyboardTable: "",
+              storyboard: [],
+              workbench: { videoList: [] }
+            };
+            let nextData;
+            let sceneResult;
+            if (scene) {
+              sceneResult = mergeStoryboardScene(
+                storedData.storyboardTable ?? "",
+                storedData.storyboardTableProgress,
+                scene.taskId,
+                scene.index,
+                scene.total,
+                scene.content
               );
-            } catch (error73) {
-              console.error("\u66F4\u65B0\u5206\u955C\u6392\u5E8F\u5931\u8D25", error73);
+              nextData = { ...storedData, storyboardTable: sceneResult.storyboardTable, storyboardTableProgress: sceneResult.storyboardTableProgress };
+            } else {
+              nextData = { ...data };
+              const previous = storedData.storyboardTableProgress;
+              const incoming = nextData.storyboardTableProgress;
+              if (previous) {
+                if (nextData.resetStoryboardTable === true && incoming?.revision !== previous.revision) {
+                  throw new Error("\u5DF2\u6709\u9010\u573A\u5206\u955C\u8FDB\u5EA6\uFF0C\u6574\u8868\u8986\u76D6\u524D\u8BF7\u5148\u663E\u5F0F\u6E05\u7A7A\u6216\u5B8C\u6210\u5F53\u524D\u4EFB\u52A1");
+                }
+                if (incoming?.revision !== previous.revision || incoming?.taskId !== previous.taskId) {
+                  nextData.storyboardTable = storedData.storyboardTable;
+                  nextData.storyboardTableProgress = previous;
+                } else if (nextData.storyboardTable !== storedData.storyboardTable) {
+                  delete nextData.storyboardTableProgress;
+                }
+              } else if (incoming) {
+                nextData.storyboardTable = storedData.storyboardTable;
+                delete nextData.storyboardTableProgress;
+              }
+              delete nextData.resetStoryboardTable;
+              if (Array.isArray(data.storyboard) && data.storyboard.length && data.storyboard.every((item) => item.id)) {
+                for (const [index, item] of data.storyboard.entries()) {
+                  const updated = await trx("o_storyboard").where({ id: item.id, projectId, scriptId: episodesId }).update({ index });
+                  if (updated !== 1) throw new Error(`\u5206\u955C ${item.id} \u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u548C\u5267\u672C\uFF0C\u5DE5\u4F5C\u533A\u672A\u4FDD\u5B58`);
+                }
+              }
             }
-          }
-        }
-        if (!sqlData) {
-          await utils_default.db("o_agentWorkData").insert({
-            projectId,
-            episodesId,
-            key: "productionAgent",
-            data: JSON.stringify(data)
+            const payload = JSON.stringify(nextData);
+            if (existing) {
+              const updated = await trx("o_agentWorkData").where(scope).update({ data: payload });
+              if (updated !== 1) throw new Error("\u5DE5\u4F5C\u533A\u8BB0\u5F55\u66F4\u65B0\u5931\u8D25");
+            } else {
+              await trx("o_agentWorkData").insert({ ...scope, data: payload });
+            }
+            const saved = await trx("o_agentWorkData").where(scope).select("data").first();
+            if (!saved || saved.data !== payload) throw new Error("\u5DE5\u4F5C\u533A\u6570\u636E\u5199\u5165\u6821\u9A8C\u5931\u8D25");
+            return sceneResult;
           });
-        } else {
-          await utils_default.db("o_agentWorkData").where("projectId", String(projectId)).where("key", "productionAgent").andWhere("episodesId", String(episodesId)).update({
-            data: JSON.stringify(data)
-          });
+          return res.status(200).send(success3(result ?? null));
+        } catch (reason) {
+          const message = reason instanceof Error ? reason.message : "\u5DE5\u4F5C\u533A\u4FDD\u5B58\u5931\u8D25";
+          console.error("[production/saveFlowData]", reason);
+          return res.status(400).send({ code: 400, message, data: null });
         }
-        return res.status(200).send(success3());
       }
     );
   }
@@ -240685,11 +240772,12 @@ var init_addStoryboard = __esm({
 });
 
 // src/routes/production/storyboard/batchAddStoryboardInfo.ts
-var import_express66, router66, batchAddStoryboardInfo_default;
+var import_express66, import_node_crypto4, router66, batchAddStoryboardInfo_default;
 var init_batchAddStoryboardInfo = __esm({
   "src/routes/production/storyboard/batchAddStoryboardInfo.ts"() {
     "use strict";
     import_express66 = __toESM(require_express2());
+    import_node_crypto4 = require("node:crypto");
     init_utils3();
     init_zod();
     init_responseFormat();
@@ -240711,79 +240799,125 @@ var init_batchAddStoryboardInfo = __esm({
           })
         ),
         scriptId: external_exports.number(),
-        projectId: external_exports.number()
+        projectId: external_exports.number(),
+        // 可选：同一个业务写入操作的重试必须复用相同的 requestId；旧客户端无需提供。
+        requestId: external_exports.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional()
       }),
       async (req, res) => {
-        const { data, scriptId, projectId } = req.body;
-        if (!data.length) return res.status(400).send({ success: false, message: "\u6570\u636E\u4E0D\u80FD\u4E3A\u7A7A" });
-        for (const item of data) {
-          const [id] = await utils_default.db("o_storyboard").insert({
-            prompt: item.prompt,
-            duration: String(item.duration),
-            state: item.state,
-            scriptId,
-            projectId,
-            track: item.track,
-            videoDesc: item.videoDesc,
-            shouldGenerateImage: item.shouldGenerateImage,
-            createTime: Date.now()
+        const { data, scriptId, projectId, requestId } = req.body;
+        if (!data.length) return res.status(400).send(error50("\u6570\u636E\u4E0D\u80FD\u4E3A\u7A7A"));
+        const requestKey = requestId ? `storyboardWrite:${requestId}` : null;
+        const payloadHash = requestKey ? (0, import_node_crypto4.createHash)("sha256").update(JSON.stringify(data)).digest("hex") : null;
+        try {
+          const { stored, createdIds, associationMap } = await utils_default.db.transaction(async (trx) => {
+            const script = await trx("o_script").where({ id: scriptId, projectId }).first();
+            if (!script) throw new Error("\u5267\u672C\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\uFF0C\u5206\u955C\u672A\u5199\u5165");
+            let createdIds2 = null;
+            if (requestKey) {
+              const previous = await trx("o_agentWorkData").where({ projectId, episodesId: scriptId, key: requestKey }).first();
+              if (previous) {
+                const prior = JSON.parse(previous.data ?? "{}");
+                if (prior.payloadHash !== payloadHash || !Array.isArray(prior.createdIds) || prior.createdIds.length !== data.length) {
+                  throw new Error("\u76F8\u540C requestId \u5BF9\u5E94\u4E0D\u540C\u7684\u5206\u955C\u5185\u5BB9\uFF0C\u5DF2\u62D2\u7EDD\u91CD\u590D\u63D0\u4EA4");
+                }
+                createdIds2 = prior.createdIds;
+                const persisted = await trx("o_storyboard").where({ scriptId, projectId }).whereIn("id", createdIds2).select("id");
+                if (persisted.length !== createdIds2.length) {
+                  throw new Error("\u539F\u8BF7\u6C42\u7684\u90E8\u5206\u5206\u955C\u5DF2\u4E0D\u5B58\u5728\uFF0C\u4E0D\u80FD\u4F5C\u4E3A\u6210\u529F\u7684\u91CD\u8BD5\u8FD4\u56DE");
+                }
+              }
+            }
+            if (!createdIds2) {
+              const assetIds = [...new Set(data.flatMap((item) => item.associateAssetsIds))];
+              if (assetIds.length) {
+                const assets = await trx("o_assets").where({ projectId }).whereIn("id", assetIds).select("id");
+                const found = new Set(assets.map((item) => Number(item.id)));
+                const missing = assetIds.filter((id) => !found.has(id));
+                if (missing.length) throw new Error(`\u5F15\u7528\u8D44\u4EA7\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u6216\u4E0D\u5B58\u5728\uFF1A${missing.join(",")}`);
+              }
+              createdIds2 = [];
+              for (const item of data) {
+                const [id] = await trx("o_storyboard").insert({
+                  prompt: item.prompt,
+                  duration: String(item.duration),
+                  state: item.state,
+                  scriptId,
+                  projectId,
+                  track: item.track,
+                  videoDesc: item.videoDesc,
+                  shouldGenerateImage: item.shouldGenerateImage,
+                  createTime: Date.now()
+                });
+                createdIds2.push(id);
+                if (item.associateAssetsIds?.length) {
+                  await trx("o_assets2Storyboard").insert(
+                    [...new Set(item.associateAssetsIds)].map((assetId) => ({ assetId, storyboardId: id }))
+                  );
+                }
+              }
+              const lastStoryboard = await trx("o_storyboard").where({ scriptId, projectId });
+              if (!lastStoryboard.length) throw new Error("\u672A\u67E5\u5230\u5206\u955C\u6570\u636E");
+              const storyboardGroupByTrack = {};
+              for (const item of lastStoryboard) {
+                (storyboardGroupByTrack[item.track] ??= []).push(item.id);
+              }
+              for (const track of Object.keys(storyboardGroupByTrack)) {
+                const storyboardIds2 = storyboardGroupByTrack[track];
+                const trackDuration = lastStoryboard.filter((item) => item.track === track).reduce((sum, item) => sum + Number(item.duration), 0);
+                const existingStoryboard = await trx("o_storyboard").where({ scriptId, projectId, track }).whereNotNull("trackId").first();
+                let trackId;
+                if (existingStoryboard?.trackId) {
+                  trackId = existingStoryboard.trackId;
+                  const updated = await trx("o_videoTrack").where({ id: trackId, scriptId, projectId }).update({ duration: trackDuration });
+                  if (updated !== 1) throw new Error(`\u5206\u955C\u5206\u7EC4 ${track} \u4E0D\u5C5E\u4E8E\u5F53\u524D\u5267\u672C`);
+                } else {
+                  const maxRow = await trx("o_videoTrack").max({ maxId: "id" }).first();
+                  trackId = Math.max(Date.now(), Number(maxRow?.maxId ?? 0) + 1);
+                  await trx("o_videoTrack").insert({ id: trackId, scriptId, projectId, duration: trackDuration });
+                }
+                await trx("o_storyboard").where({ scriptId, projectId }).whereIn("id", storyboardIds2).update({ trackId });
+              }
+              const verified = await trx("o_storyboard").where({ scriptId, projectId });
+              if (verified.length !== lastStoryboard.length || verified.some((item) => !item.trackId)) {
+                throw new Error("\u5206\u955C\u5206\u7EC4\u4FDD\u5B58\u4E0D\u5B8C\u6574");
+              }
+              if (requestKey) {
+                await trx("o_agentWorkData").insert({
+                  projectId,
+                  episodesId: scriptId,
+                  key: requestKey,
+                  data: JSON.stringify({ payloadHash, createdIds: createdIds2 })
+                });
+              }
+            }
+            const stored2 = await trx("o_storyboard").where({ scriptId, projectId });
+            const storyboardIds = stored2.map((item) => item.id);
+            const links = storyboardIds.length ? await trx("o_assets2Storyboard").whereIn("storyboardId", storyboardIds).orderBy("rowid").select("storyboardId", "assetId") : [];
+            const associationMap2 = {};
+            for (const link of links) {
+              (associationMap2[link.storyboardId] ??= []).push(link.assetId);
+            }
+            return { stored: stored2, createdIds: createdIds2, associationMap: associationMap2 };
           });
-          if (item.associateAssetsIds?.length) {
-            await utils_default.db("o_assets2Storyboard").insert(
-              item.associateAssetsIds.map((assetId) => ({
-                assetId,
-                storyboardId: id
-              }))
-            );
-          }
-          item.id = id;
+          const storyboardData = await Promise.all(
+            stored.map(async (item) => ({
+              associateAssetsIds: associationMap[item.id] ?? [],
+              src: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath).catch(() => "") : "",
+              id: item.id,
+              trackId: item.trackId,
+              prompt: item.prompt,
+              duration: Number(item.duration),
+              state: item.state,
+              scriptId: item.scriptId,
+              reason: item.reason,
+              videoDesc: item.videoDesc
+            }))
+          );
+          return res.status(200).send({ ...success3(storyboardData), createdIds });
+        } catch (reason) {
+          console.error("[storyboard/batchAddStoryboardInfo]", reason);
+          return res.status(400).send(error50(reason instanceof Error ? reason.message : "\u5206\u955C\u6279\u91CF\u5199\u5165\u5931\u8D25"));
         }
-        const lastStoryboard = await utils_default.db("o_storyboard").where("scriptId", scriptId);
-        if (!lastStoryboard || !lastStoryboard.length) return res.status(400).send(error50("\u672A\u67E5\u5230\u5206\u955C\u6570\u636E"));
-        const storyboardGroupByTrack = {};
-        lastStoryboard.forEach((item) => {
-          if (!storyboardGroupByTrack[item.track]) {
-            storyboardGroupByTrack[item.track] = [];
-          }
-          storyboardGroupByTrack[item.track].push(item.id);
-        });
-        for (const track in storyboardGroupByTrack) {
-          const storyboardIds = storyboardGroupByTrack[track] ?? [];
-          const trackDuration = lastStoryboard.filter((item) => item.track == track).reduce((sum, item) => sum + Number(item.duration), 0);
-          const existingStoryboard = await utils_default.db("o_storyboard").where({ scriptId, track }).whereNotNull("trackId").first();
-          let trackId;
-          if (existingStoryboard?.trackId) {
-            trackId = existingStoryboard.trackId;
-            await utils_default.db("o_videoTrack").where("id", trackId).update({ duration: trackDuration });
-          } else {
-            const newTrackId = Date.now();
-            await utils_default.db("o_videoTrack").insert({
-              id: newTrackId,
-              scriptId,
-              projectId,
-              duration: trackDuration
-            });
-            trackId = newTrackId;
-          }
-          await utils_default.db("o_storyboard").whereIn("id", storyboardIds).update({ trackId });
-        }
-        const storyboardData = await Promise.all(
-          lastStoryboard.map(async (i) => {
-            return {
-              associateAssetsIds: await utils_default.db("o_assets2Storyboard").where("storyboardId", i.id).orderBy("rowid").select("assetId").pluck("assetId"),
-              src: i.filePath ? await utils_default.oss.getSmallImageUrl(i.filePath) : "",
-              id: i.id,
-              trackId: i.trackId,
-              prompt: i.prompt,
-              duration: Number(i.duration),
-              state: i.state,
-              scriptId: i.scriptId,
-              reason: i.reason,
-              videoDesc: i.videoDesc
-            };
-          })
-        );
-        return res.status(200).send(success3(storyboardData));
       }
     );
   }
@@ -253862,6 +253996,40 @@ ${scriptsContent}`
 });
 
 // src/routes/script/getAiRegex.ts
+function normalizeAiRegex(text2, sample) {
+  const cleaned = text2.trim().replace(/^```(?:regex|javascript|js)?\s*\r?\n/i, "").replace(/\r?\n```\s*$/, "").trim();
+  if (!cleaned) throw new Error("\u6A21\u578B\u672A\u8BC6\u522B\u5230\u96C6\u6570\u6807\u9898\uFF0C\u8BF7\u624B\u52A8\u8F93\u5165\u62C6\u96C6\u6B63\u5219");
+  const literal3 = /^\/([\s\S]*)\/([a-z]*)$/i.exec(cleaned);
+  const pattern = literal3 ? literal3[1] : cleaned;
+  const flags = literal3 ? literal3[2] : "g";
+  if (pattern.length > 512 || !/^[gimu]*$/.test(flags) || new Set(flags).size !== flags.length) {
+    throw new Error("AI\u8FD4\u56DE\u7684\u6B63\u5219\u8FC7\u957F\u6216\u5305\u542B\u4E0D\u652F\u6301\u7684\u6807\u5FD7");
+  }
+  if (!pattern.startsWith("^") || /^\^\\s(?:\*|\+|\{)/.test(pattern)) {
+    throw new Error("AI\u8FD4\u56DE\u7684\u6B63\u5219\u672A\u6B63\u786E\u9650\u5B9A\u96C6\u6807\u9898\u884C\u9996\uFF0C\u8BF7\u91CD\u8BD5\u6216\u624B\u52A8\u8F93\u5165");
+  }
+  let regex;
+  try {
+    regex = new RegExp(pattern, [...new Set(`${flags}gm`)].join(""));
+  } catch {
+    throw new Error("AI\u8FD4\u56DE\u7684\u6B63\u5219\u8BED\u6CD5\u4E0D\u5408\u6CD5\uFF0C\u8BF7\u91CD\u8BD5\u6216\u624B\u52A8\u8F93\u5165");
+  }
+  let found = false;
+  const seenEpisodeNumbers = /* @__PURE__ */ new Set();
+  for (const match of sample.matchAll(regex)) {
+    if (match.length !== 3 || !match[0] || match[0].includes("\n") || !/^[0-9０-９零〇一二三四五六七八九十百千万两]+$/.test(match[1]?.trim() ?? "") || match[2] === void 0) {
+      throw new Error("AI\u8FD4\u56DE\u7684\u6B63\u5219\u5FC5\u987B\u4E14\u53EA\u80FD\u5305\u542B\u4E24\u4E2A\u6355\u83B7\u7EC4\uFF1A\u7B2C1\u7EC4\u4E3A\u96C6\u6570\u3001\u7B2C2\u7EC4\u4E3A\u6807\u9898\uFF1B\u8BF7\u91CD\u8BD5\u6216\u624B\u52A8\u8F93\u5165");
+    }
+    const episodeNumber = match[1].trim();
+    if (seenEpisodeNumbers.has(episodeNumber)) {
+      throw new Error(`AI\u8FD4\u56DE\u7684\u6B63\u5219\u5728\u6837\u672C\u4E2D\u91CD\u590D\u5339\u914D\u7B2C${episodeNumber}\u96C6\uFF0C\u53EF\u80FD\u628A\u7ED3\u5C3E\u5B57\u5E55\u6216\u6B63\u6587\u5F53\u6210\u96C6\u6807\u9898\uFF1B\u8BF7\u91CD\u8BD5\u6216\u624B\u52A8\u8F93\u5165`);
+    }
+    seenEpisodeNumbers.add(episodeNumber);
+    found = true;
+  }
+  if (!found) throw new Error("AI\u8FD4\u56DE\u7684\u6B63\u5219\u672A\u5339\u914D\u5230\u6837\u672C\u4E2D\u7684\u96C6\u6807\u9898\uFF0C\u8BF7\u68C0\u67E5\u5267\u672C\u683C\u5F0F");
+  return `/${pattern}/${regex.flags}`;
+}
 var import_express111, router111, getAiRegex_default;
 var init_getAiRegex = __esm({
   "src/routes/script/getAiRegex.ts"() {
@@ -253875,29 +254043,29 @@ var init_getAiRegex = __esm({
     getAiRegex_default = router111.post(
       "/",
       validateFields({
-        content: external_exports.string()
+        content: external_exports.string().min(1).max(6e3)
       }),
       async (req, res) => {
         const { content } = req.body;
-        const systemPrompt = `\u4F60\u662F\u4E00\u4E2A\u6B63\u5219\u8868\u8FBE\u5F0F\u4E13\u5BB6\u3002\u7528\u6237\u4F1A\u63D0\u4F9B\u4E00\u6BB5\u5267\u672C\u6587\u672C\uFF0C\u4F60\u9700\u8981\u5206\u6790\u5176\u4E2D\u7684\u96C6/\u7AE0\u8282\u5206\u9694\u6A21\u5F0F\uFF0C\u8FD4\u56DE\u4E00\u4E2AJavaScript\u6B63\u5219\u8868\u8FBE\u5F0F\u5B57\u7B26\u4E32\u3002
-
-\u8981\u6C42\uFF1A
-1. \u6B63\u5219\u5FC5\u987B\u5305\u542B\u4E24\u4E2A\u6355\u83B7\u7EC4\uFF1A\u7B2C\u4E00\u4E2A\u6355\u83B7\u7EC4\u5339\u914D\u96C6\u6570/\u7AE0\u8282\u7F16\u53F7\uFF08\u6570\u5B57\u6216\u4E2D\u6587\u6570\u5B57\uFF09\uFF0C\u7B2C\u4E8C\u4E2A\u6355\u83B7\u7EC4\u5339\u914D\u8BE5\u96C6\u7684\u6807\u9898/\u540D\u79F0\uFF08scriptName\uFF09\u3002
-2. \u8FD4\u56DE\u683C\u5F0F\u4E3A /\u6B63\u5219\u8868\u8FBE\u5F0F/g\uFF0C\u4F8B\u5982\uFF1A/\u7B2Cs*([0-9\u4E00\u4E8C\u4E09\u56DB\u4E94\u516D\u4E03\u516B\u4E5D\u5341\u767E\u5343\u4E07]+)s*\u96C6s*([^
-\r]*)/g
-3. \u53EA\u8FD4\u56DE\u6B63\u5219\u8868\u8FBE\u5F0F\u5B57\u7B26\u4E32\u672C\u8EAB\uFF0C\u4E0D\u8981\u6709\u4EFB\u4F55\u5176\u4ED6\u89E3\u91CA\u6587\u5B57\u6216markdown\u683C\u5F0F\u3002
-4. \u5982\u679C\u6587\u672C\u4E2D\u6CA1\u6709\u660E\u663E\u7684\u7AE0\u8282\u5206\u9694\u6A21\u5F0F\uFF0C\u8FD4\u56DE\u7A7A\u5B57\u7B26\u4E32\u3002`;
-        const resText = await utils_default.Ai.Text("universalAi").invoke({
-          system: systemPrompt,
-          messages: [
-            {
-              role: "user",
-              content: content.slice(0, 2e3)
-            }
-          ]
-        });
-        const result = (resText.text || "").trim();
-        res.status(200).send(success3(result));
+        const systemPrompt = String.raw`你是一个正则表达式专家。用户提供的文本包含剧本片名、说明、正文及可能的集标题。请识别真正的每集标题行的格式，只返回 JavaScript 正则表达式。
+要求：
+1. 第一个捕获组只匹配集数（阿拉伯数字或中文数字）；第二个捕获组匹配该集标题，标题可为空。整个正则必须且只能有这两个捕获组，其他辅助分组一律使用 (?:...) 非捕获组。
+2. 必须用 ^ 锚定标题行首，以 m 标志逐行匹配；行首允许用 [ \t]* 匹配空格，但不能用 \s* 跨行吞掉正文。只匹配真正的集标题，不得把片名候选、正文、对白或场次编号当作集标题。
+3. 只匹配单行的集标题，不得跨行吞掉正文。返回格式如：/^[ \t]*第[ \t]*([0-9一二三四五六七八九十百千万]+)[ \t]*集[ \t]*([^\n\r]*)/gm。若剧本使用其他格式，请根据原文调整，不能套用示例。
+4. 只返回正则表达式本身，不要说明、引号或 Markdown；如果样本中没有明显的分集标题，返回空字符串。`;
+        try {
+          const resText = await utils_default.Ai.Text("universalAi").invoke({
+            system: systemPrompt,
+            messages: [{ role: "user", content }]
+          });
+          return res.status(200).send(success3(normalizeAiRegex(resText.text || "", content)));
+        } catch (reason) {
+          console.error("[script/getAiRegex]", reason);
+          const details = reason instanceof Error ? reason.message : "";
+          const invalidUrl = reason?.code === "ERR_INVALID_URL" || /Invalid URL|ERR_INVALID_URL/.test(details);
+          const message = invalidUrl ? "\u901A\u7528AI\u6240\u9009\u4F9B\u5E94\u5546\u7684\u8BF7\u6C42\u5730\u5740\u65E0\u6548\uFF1A\u8BF7\u5728\u6A21\u578B\u4F9B\u5E94\u5546\u8BBE\u7F6E\u4E2D\u586B\u5199\u4EE5 http:// \u6216 https:// \u5F00\u5934\u7684\u5B8C\u6574\u63A5\u53E3\u5730\u5740\uFF0C\u4E0D\u8981\u628A ark- \u5F00\u5934\u7684\u6A21\u578B\u63A5\u5165\u70B9 ID \u586B\u8FDB\u8BF7\u6C42\u5730\u5740\uFF1B\u786E\u8BA4\u901A\u7528AI\u6240\u9009\u6A21\u578B\u540E\u91CD\u8BD5" : /未找到.*(?:配置|模型)|模型配置/.test(details) ? "\u672A\u914D\u7F6E\u901A\u7528AI\u6587\u672C\u6A21\u578B\uFF0C\u8BF7\u5148\u5728\u6A21\u578B\u8BBE\u7F6E\u4E2D\u5B8C\u6210\u914D\u7F6E\uFF1B\u4E5F\u53EF\u4EE5\u624B\u52A8\u586B\u5199\u62C6\u96C6\u6B63\u5219" : /AI返回|模型未识别/.test(details) ? details : "AI\u89E3\u6790\u6B63\u5219\u5931\u8D25\uFF0C\u8BF7\u68C0\u67E5\u901A\u7528AI\u6A21\u578B\u3001\u7F51\u7EDC\u8FDE\u63A5\u6216\u7A0D\u540E\u91CD\u8BD5\uFF1B\u8BF7\u52FF\u5728\u62C6\u96C6\u7ED3\u679C\u4E0D\u6B63\u786E\u65F6\u4FDD\u5B58";
+          return res.status(400).send(error50(message));
+        }
       }
     );
   }
@@ -254044,23 +254212,17 @@ var init_getPlanData = __esm({
         const { projectId, agentType } = req.body;
         const row = await utils_default.db("o_agentWorkData").where({ projectId, key: agentType }).first();
         if (!row) {
+          const initialData = {
+            storySkeleton: "",
+            adaptationStrategy: "",
+            script: []
+          };
           const [id] = await utils_default.db("o_agentWorkData").insert({
             projectId,
             key: agentType,
-            data: JSON.stringify({
-              storySkeleton: "",
-              adaptationStrategy: ""
-            })
+            data: JSON.stringify(initialData)
           });
-          return res.status(200).send(
-            success3({
-              data: {
-                storySkeleton: "",
-                adaptationStrategy: ""
-              },
-              id
-            })
-          );
+          return res.status(200).send(success3({ data: initialData, id }));
         }
         const data = JSON.parse(row.data ?? "{}");
         data.script = await utils_default.db("o_script").where({ projectId }).select("id", "name", "content");
@@ -254088,26 +254250,40 @@ var init_setPlanData = __esm({
         agentType: external_exports.enum(["scriptAgent"]),
         data: external_exports.object({
           storySkeleton: external_exports.string(),
-          adaptationStrategy: external_exports.string()
+          adaptationStrategy: external_exports.string(),
+          script: external_exports.array(external_exports.object({ name: external_exports.string().min(1), content: external_exports.string() })).optional()
         })
       }),
       async (req, res) => {
         const { projectId, agentType, data } = req.body;
-        await utils_default.db("o_agentWorkData").where({ projectId, key: agentType }).update({
-          data: JSON.stringify(data)
-        });
-        const script = data.script;
-        await Promise.all(
-          script.map(async (s) => {
-            const row = await utils_default.db("o_script").where({ projectId, name: s.name }).first();
-            if (row) {
-              await utils_default.db("o_script").where({ id: row.id }).update({ content: s.content });
-            } else {
-              await utils_default.db("o_script").insert({ projectId, name: s.name, content: s.content });
-            }
-          })
-        );
-        res.status(200).send(success3());
+        const workspaceQuery = () => utils_default.db("o_agentWorkData").where({ projectId, key: agentType });
+        const serialized = JSON.stringify(data);
+        const updated = await workspaceQuery().update({ data: serialized });
+        if (!updated) {
+          await utils_default.db("o_agentWorkData").insert({ projectId, key: agentType, data: serialized });
+        }
+        const scripts = [...new Map((data.script ?? []).map((item) => [item.name, item])).values()];
+        for (const item of scripts) {
+          const row = await utils_default.db("o_script").where({ projectId, name: item.name }).first();
+          if (row) {
+            await utils_default.db("o_script").where({ id: row.id, projectId }).update({ content: item.content });
+          } else {
+            await utils_default.db("o_script").insert({ projectId, name: item.name, content: item.content });
+          }
+        }
+        const savedWorkspace = await workspaceQuery().select("data").first();
+        const savedData = savedWorkspace?.data ? JSON.parse(savedWorkspace.data) : null;
+        if (savedData?.storySkeleton !== data.storySkeleton || savedData?.adaptationStrategy !== data.adaptationStrategy) {
+          throw new Error("\u5267\u672C\u5DE5\u4F5C\u533A\u4FDD\u5B58\u6821\u9A8C\u5931\u8D25");
+        }
+        if (scripts.length) {
+          const savedScripts = await utils_default.db("o_script").where({ projectId }).whereIn("name", scripts.map((item) => item.name)).select("name", "content");
+          const byName = new Map(savedScripts.map((item) => [item.name, item.content]));
+          if (scripts.some((item) => byName.get(item.name) !== item.content)) {
+            throw new Error("\u5267\u672C\u6B63\u6587\u4FDD\u5B58\u6821\u9A8C\u5931\u8D25");
+          }
+        }
+        return res.status(200).send(success3());
       }
     );
   }
@@ -256837,6 +257013,7 @@ init_is_path_inside();
 init_getPath();
 var fs10 = __toESM(require("fs"));
 var import_fast_glob2 = __toESM(require_out4());
+var MAX_SKILL_FILE_BYTES = 256 * 1024;
 function toUnixPath(filePath) {
   return filePath.replace(/\\/g, "/");
 }
@@ -256898,17 +257075,44 @@ function parseFrontmatter(content) {
   }
   return { name: result.name, description: result.description };
 }
+function discoverSelectedStyleResources(mainSkills, skillsRootDir) {
+  const resources = /* @__PURE__ */ new Set();
+  const addFile = (filePath) => {
+    if (fs10.existsSync(filePath) && fs10.statSync(filePath).isFile()) {
+      resources.add(toUnixPath(import_path9.default.relative(skillsRootDir, filePath)));
+    }
+  };
+  for (const skill of mainSkills) {
+    const relativeSkill = toUnixPath(import_path9.default.relative(skillsRootDir, import_path9.default.resolve(skill.path)));
+    const match = relativeSkill.match(/^(art_skills|story_skills)\/([^/]+)\/driector_skills\/[^/]+\.md$/);
+    if (!match) continue;
+    const [, category, selectedName] = match;
+    const selectedDir = import_path9.default.join(skillsRootDir, category, selectedName);
+    addFile(import_path9.default.join(selectedDir, "README.md"));
+    if (category !== "art_skills") continue;
+    addFile(import_path9.default.join(selectedDir, "prefix.md"));
+    const artPromptDir = import_path9.default.join(selectedDir, "art_prompt");
+    if (!fs10.existsSync(artPromptDir) || !fs10.statSync(artPromptDir).isDirectory()) continue;
+    for (const entry of fs10.readdirSync(artPromptDir, { withFileTypes: true })) {
+      if (entry.isFile() && entry.name.endsWith(".md")) addFile(import_path9.default.join(artPromptDir, entry.name));
+    }
+  }
+  return [...resources].sort();
+}
 function createSkillTools(skills, skillPaths, rootDir = getPath_default("skills")) {
   const activated = /* @__PURE__ */ new Set();
   const skillsRootDir = import_path9.default.resolve(rootDir);
   const skillNames = skills.map((s) => s.name);
   const skillMap = new Map(skillPaths.mainSkill.map((s) => [s.name, s]));
+  const selectedStyleResources = discoverSelectedStyleResources(skillPaths.mainSkill, skillsRootDir);
+  let selectedStyleResourcesAnnounced = false;
+  let tertiaryResourcesAnnounced = false;
   return {
     activate_skill: tool({
       description: `\u6FC0\u6D3B\u4E00\u4E2A\u6280\u80FD\uFF0C\u52A0\u8F7D\u5176\u5B8C\u6574\u6307\u4EE4\u548C\u6346\u7ED1\u8D44\u6E90\u5217\u8868\u5230\u4E0A\u4E0B\u6587\u3002\u53EF\u7528\u6280\u80FD\uFF1A${skillNames.join(", ")}`,
       inputSchema: jsonSchema(
         external_exports.object({
-          name: external_exports.enum(skillNames).describe("\u8981\u6FC0\u6D3B\u7684\u6280\u80FD\u540D\u79F0")
+          name: (skillNames.length ? external_exports.enum(skillNames) : external_exports.string()).describe("\u8981\u6FC0\u6D3B\u7684\u6280\u80FD\u540D\u79F0")
         }).toJSONSchema()
       ),
       execute: async ({ name: name28 }) => {
@@ -256918,72 +257122,87 @@ function createSkillTools(skills, skillPaths, rootDir = getPath_default("skills"
         }
         const matched = skillMap.get(name28);
         if (!matched) return { error: `\u672A\u627E\u5230\u6280\u80FD "${name28}"` };
-        let raw = "";
+        let raw;
         try {
+          const stat = await fs10.promises.stat(matched.path);
+          if (!stat.isFile() || stat.size > MAX_SKILL_FILE_BYTES) {
+            return { error: `\u6280\u80FD\u6587\u4EF6\u65E0\u6548\u6216\u8D85\u8FC7\u5927\u5C0F\u9650\u5236: ${matched.path}` };
+          }
           raw = await fs10.promises.readFile(matched.path, "utf-8");
           console.log(`\u26A1[\u4E3B\u6280\u80FD] \u2713 \u5DF2\u8BFB\u53D6\u4E3B\u6280\u80FD\u6587\u4EF6\uFF1A ${matched.path}\uFF08${raw.length} \u5B57\u7B26\uFF09`);
         } catch (error73) {
-          console.log(`\u26A1[\u4E3B\u6280\u80FD] \u2717 \u8BFB\u53D6\u5931\u8D25\uFF1A\u672A\u627E\u5230\u6587\u4EF6 "${matched.path}"`);
+          console.error(`\u26A1[\u4E3B\u6280\u80FD] \u2717 \u6280\u80FD\u8BFB\u53D6\u5931\u8D25\uFF1A${matched.path}`, error73);
+          return { error: `\u6280\u80FD\u6587\u4EF6\u8BFB\u53D6\u5931\u8D25\uFF0C\u8BF7\u68C0\u67E5\u6587\u4EF6\u662F\u5426\u5B58\u5728: ${matched.path}` };
         }
-        activated.add(name28);
-        console.log(`\u26A1[\u4E3B\u6280\u80FD] \u2713 \u6280\u80FD "${name28}" \u5DF2\u6FC0\u6D3B`);
-        const body = ensureNonEmptyBody(raw.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, ""), "\u8BE5\u6280\u80FD\u6587\u4EF6\u65E0\u6B63\u6587\u5185\u5BB9\u3002");
-        let content = "";
-        content = `<skill_content name="${name28}">
+        const body = raw.replace(/^\uFEFF?---[ \t]*\r?\n[\s\S]*?\r?\n---[ \t]*(?:\r?\n|$)/, "").trim();
+        if (!body) return { error: `\u6280\u80FD\u6587\u4EF6\u6CA1\u6709\u6B63\u6587: ${matched.path}` };
+        let content = `<skill_content name="${name28}">
 `;
         content += body + "\n\n";
         content += "\u4F7F\u7528 read_skill_file \u5DE5\u5177\u8BFB\u53D6\u8D44\u6E90\u6587\u4EF6\u3002\n";
-        if (skillPaths.secondarySkills.length > 0) {
+        const resourcePaths = [
+          ...skillPaths.secondarySkills,
+          ...selectedStyleResourcesAnnounced ? [] : selectedStyleResources
+        ];
+        if (resourcePaths.length > 0) {
           content += "\n<skill_resources>\n";
-          for (const path34 of skillPaths.secondarySkills) {
-            content += `  <file>${path34}</file>
+          for (const resourcePath of new Set(resourcePaths)) {
+            content += `  <file>${resourcePath}</file>
 `;
           }
           content += "</skill_resources>\n";
         }
         content += "</skill_content>";
+        selectedStyleResourcesAnnounced = true;
+        activated.add(name28);
+        console.log(`\u26A1[\u4E3B\u6280\u80FD] \u2713 \u6280\u80FD "${name28}" \u5DF2\u6FC0\u6D3B`);
         return { content };
       }
     }),
     read_skill_file: tool({
-      description: "\u8BFB\u53D6\u5DF2\u6FC0\u6D3B\u6280\u80FD\u76EE\u5F55\u4E0B\u7684\u8D44\u6E90\u6587\u4EF6\u3002\u4F20\u5165 activate_skill \u8FD4\u56DE\u7684 skill_resources \u4E2D\u7684\u6587\u4EF6\u8DEF\u5F84\u3002",
+      description: "\u8BFB\u53D6\u6280\u80FD\u76EE\u5F55\u4E0B\u7684\u8D44\u6E90\u6587\u4EF6\u3002\u4F18\u5148\u4F20\u5165 activate_skill \u8FD4\u56DE\u7684 skill_resources \u4E2D\u7684\u76F8\u5BF9\u8DEF\u5F84\u3002",
       inputSchema: jsonSchema(
         external_exports.object({
-          filePath: external_exports.string().describe("\u8D44\u6E90\u6587\u4EF6\u7684\u76F8\u5BF9\u8DEF\u5F84\uFF0C\u6765\u81EA activate_skill \u8FD4\u56DE\u7684 skill_resources")
+          filePath: external_exports.string().describe("\u8D44\u6E90\u6587\u4EF6\u76F8\u5BF9\u4E8E skills \u6839\u76EE\u5F55\u7684\u8DEF\u5F84")
         }).toJSONSchema()
       ),
       execute: async ({ filePath }) => {
         const normalizedInputPath = toUnixPath(filePath).trim();
-        if (!normalizedInputPath) {
-          console.log(`\u{1F4D6}[\u6280\u6CD5\u6587\u4EF6] \u2717 filePath \u4E0D\u80FD\u4E3A\u7A7A`);
-          return { error: "filePath \u4E0D\u80FD\u4E3A\u7A7A" };
+        if (!normalizedInputPath) return { error: "filePath \u4E0D\u80FD\u4E3A\u7A7A" };
+        if (import_path9.default.isAbsolute(normalizedInputPath) || !normalizedInputPath.toLowerCase().endsWith(".md")) {
+          return { error: "\u53EA\u5141\u8BB8\u8BFB\u53D6\u6280\u80FD\u76EE\u5F55\u4E0B\u7684 Markdown \u76F8\u5BF9\u8DEF\u5F84" };
         }
-        const fullPath = import_path9.default.resolve(import_path9.default.join(skillsRootDir, normalizedInputPath));
-        if (!(fullPath === skillsRootDir || isPathInside(fullPath, skillsRootDir))) {
+        const fullPath = import_path9.default.resolve(skillsRootDir, normalizedInputPath);
+        if (!isPathInside(fullPath, skillsRootDir)) {
           console.log(`\u{1F4D6}[\u6280\u6CD5\u6587\u4EF6] \u2717 \u8DEF\u5F84\u8D8A\u754C\u5DF2\u62E6\u622A\uFF1A"${filePath}" \u8D85\u51FA\u6280\u80FD\u76EE\u5F55\u8303\u56F4`);
           return { error: "Access denied: path is outside skill directory" };
         }
-        let body = "";
+        let body;
         try {
-          body = await fs10.promises.readFile(fullPath, "utf-8");
+          const [realRoot, realFile] = await Promise.all([fs10.promises.realpath(skillsRootDir), fs10.promises.realpath(fullPath)]);
+          if (!isPathInside(realFile, realRoot)) return { error: "Access denied: resource is outside skill directory" };
+          const stat = await fs10.promises.stat(realFile);
+          if (!stat.isFile() || stat.size > MAX_SKILL_FILE_BYTES) {
+            return { error: `\u6280\u80FD\u8D44\u6E90\u65E0\u6548\u6216\u8D85\u8FC7\u5927\u5C0F\u9650\u5236: ${filePath}` };
+          }
+          body = await fs10.promises.readFile(realFile, "utf-8");
           console.log(`\u{1F4D6}[\u6280\u6CD5\u6587\u4EF6] \u2713 \u5DF2\u8BFB\u53D6\u6587\u4EF6\uFF1A ${filePath}\uFF08${body.length} \u5B57\u7B26\uFF09`);
-        } catch {
-          console.log(`\u{1F4D6}[\u6280\u6CD5\u6587\u4EF6] \u2717 \u8BFB\u53D6\u5931\u8D25\uFF1A\u672A\u627E\u5230\u6587\u4EF6 "${filePath}"`);
-          return { error: `File not found: ${filePath}` };
+        } catch (error73) {
+          console.error(`\u{1F4D6}[\u6280\u6CD5\u6587\u4EF6] \u2717 \u8BFB\u53D6\u5931\u8D25\uFF1A${filePath}`, error73);
+          return { error: `File not found or unreadable: ${filePath}` };
         }
         const safeBody = ensureNonEmptyBody(body, "\u8BE5\u8D44\u6E90\u6587\u4EF6\u4E3A\u7A7A\u3002");
-        let content = "";
-        content = `<skill_content>
-`;
+        let content = "<skill_content>\n";
         content += safeBody + "\n\n";
         content += "\u53EF\u4EE5\u4F7F\u7528 read_skill_file \u5DE5\u5177\u8BFB\u53D6\u8D44\u6E90\u6587\u4EF6\u3002\n";
-        if (skillPaths.tertiarySkills.length > 0) {
+        if (!tertiaryResourcesAnnounced && skillPaths.tertiarySkills.length > 0) {
           content += "\n<skill_resources>\n";
-          for (const path34 of skillPaths.tertiarySkills) {
-            content += `  <file>${path34}</file>
+          for (const resourcePath of skillPaths.tertiarySkills) {
+            content += `  <file>${resourcePath}</file>
 `;
           }
           content += "</skill_resources>\n";
+          tertiaryResourcesAnnounced = true;
         }
         content += "</skill_content>";
         return { content };
@@ -257056,40 +257275,74 @@ var flowDataKeyLabels = Object.fromEntries(
 function createSocketQueue(delayMs = 800) {
   let lastPromise = Promise.resolve();
   return (fn) => {
-    lastPromise = lastPromise.then(
+    const operation = lastPromise.then(
       () => new Promise((resolve3, reject) => {
-        setTimeout(() => fn().then(resolve3, reject), delayMs);
+        setTimeout(() => {
+          try {
+            Promise.resolve(fn()).then(resolve3, reject);
+          } catch (error73) {
+            reject(error73);
+          }
+        }, delayMs);
       })
     );
-    return lastPromise;
+    lastPromise = operation.then(() => void 0, () => void 0);
+    return operation;
   };
 }
 var tools_default = (toolCpnfig) => {
   const { resTool, toolsNames, msg } = toolCpnfig;
   const { socket } = resTool;
   const socketQueue = createSocketQueue(800);
-  const workMap = {};
   const tools = {
     get_flowData: tool({
-      description: "\u83B7\u53D6\u5DE5\u4F5C\u533A\u6570\u636E",
+      description: "\u83B7\u53D6\u5DE5\u4F5C\u533A\u6570\u636E\uFF1B\u4E0D\u4F20 offset/limit \u65F6\u8FD4\u56DE\u5B8C\u6574\u539F\u59CB\u6570\u636E\u3002\u957F\u6587\u672C\u53EF\u9009\u7528 offset/limit \u6309\u5B57\u7B26\u5206\u6BB5\uFF0C\u6570\u7EC4\u6309\u6761\u76EE\u5206\u6BB5\uFF0C\u8FD4\u56DE data\u3001total\u3001nextOffset\u3002",
       inputSchema: jsonSchema(
         external_exports.object({
-          key: keySchema.describe("\u6570\u636Ekey")
+          key: keySchema.describe("\u6570\u636Ekey"),
+          offset: external_exports.number().int().min(0).optional().describe("\u53EF\u9009\u5206\u6BB5\u8D77\u70B9\uFF0C\u4ECE0\u5F00\u59CB\uFF1B\u6587\u672C\u6309\u5B57\u7B26\u3001\u6570\u7EC4\u6309\u6761\u76EE\u8BA1\u6570"),
+          limit: external_exports.number().int().min(1).max(12e3).optional().describe("\u53EF\u9009\u5206\u6BB5\u957F\u5EA6\uFF0C\u9ED8\u8BA4\u6587\u672C6000\u5B57\u7B26\u3001\u6570\u7EC410\u6761\uFF1B\u4E0D\u4F20 offset/limit \u65F6\u8FD4\u56DE\u5B8C\u6574\u6570\u636E")
         }).toJSONSchema()
       ),
-      execute: async ({ key }) => {
+      execute: async ({ key, offset, limit }) => {
         const thinking = msg.thinking(`\u6B63\u5728\u83B7\u53D6${flowDataKeyLabels[key]}\u5DE5\u4F5C\u533A\u6570\u636E...`);
-        const flowData = await new Promise((resolve3) => socket.emit("getFlowData", { key }, (res) => resolve3(res)));
-        thinking.appendText(`\u83B7\u53D6\u5230${flowDataKeyLabels[key]}:
-` + JSON.stringify(flowData[key], null, 2));
-        thinking.updateTitle(`\u83B7\u53D6${flowDataKeyLabels[key]}\u5B8C\u6210`);
-        thinking.complete();
-        if (workMap[key] && JSON.stringify(workMap[key]) === JSON.stringify(flowData[key])) {
-          console.info(`[tools] get_flowData: ${flowDataKeyLabels[key]}\u6570\u636E\u672A\u53D8\u5316\uFF0C\u65E0\u9700\u66F4\u65B0`);
-          return `${flowDataKeyLabels[key]}\u6570\u636E\u672A\u53D8\u5316\uFF0C\u65E0\u9700\u66F4\u65B0`;
+        try {
+          const flowData = await new Promise((resolve3, reject) => {
+            const timeout = setTimeout(() => reject(new Error(`\u83B7\u53D6${flowDataKeyLabels[key]}\u8D85\u65F6\uFF0C\u672A\u6536\u5230\u5DE5\u4F5C\u533A\u54CD\u5E94`)), 6e4);
+            socket.emit("getFlowData", { key }, (res) => {
+              clearTimeout(timeout);
+              if (!res || typeof res !== "object" || res.error || !(key in res)) {
+                reject(new Error(res?.error ?? `\u5DE5\u4F5C\u533A\u672A\u8FD4\u56DE${flowDataKeyLabels[key]}\u6570\u636E`));
+                return;
+              }
+              resolve3(res);
+            });
+          });
+          const value = flowData[key];
+          const useChunk = offset !== void 0 || limit !== void 0;
+          let result = value;
+          if (useChunk && (typeof value === "string" || Array.isArray(value))) {
+            const start = offset ?? 0;
+            const count = limit ?? (typeof value === "string" ? 6e3 : 10);
+            const end = Math.min(start + count, value.length);
+            result = {
+              data: value.slice(start, end),
+              offset: start,
+              total: value.length,
+              nextOffset: end < value.length ? end : null
+            };
+          }
+          thinking.appendText(`\u83B7\u53D6\u5230${flowDataKeyLabels[key]}:
+` + JSON.stringify(result, null, 2));
+          thinking.updateTitle(`\u83B7\u53D6${flowDataKeyLabels[key]}\u5B8C\u6210`);
+          thinking.complete();
+          return result;
+        } catch (error73) {
+          thinking.appendText(`\u8BFB\u53D6\u5931\u8D25: ${utils_default.error(error73).message}`);
+          thinking.updateTitle(`\u83B7\u53D6${flowDataKeyLabels[key]}\u5931\u8D25`);
+          thinking.complete();
+          throw error73;
         }
-        workMap[key] = flowData[key];
-        return flowData[key];
       }
     }),
     add_deriveAsset: tool({
@@ -257209,7 +257462,7 @@ var tools_default = (toolCpnfig) => {
       }
     }),
     add_flowData_storyboard: tool({
-      description: "\u65B0\u589E\u5206\u955C\u9762\u677F\u5230\u5DE5\u4F5C\u533A",
+      description: "\u65B0\u589E\u5206\u955C\u9762\u677F\u5230\u5DE5\u4F5C\u533A\u3002\u91CD\u8BD5\u540C\u4E00\u955C\u5934\u65F6\u5FC5\u987B\u590D\u7528\u539F requestId\uFF1B\u4E0D\u540C\u955C\u5934\u987B\u4F7F\u7528\u4E0D\u540C requestId\u3002",
       inputSchema: jsonSchema(
         external_exports.object({
           videoDesc: external_exports.string().describe("\u753B\u9762\u63CF\u8FF0\u3001\u573A\u666F\u3001\u5173\u8054\u8D44\u4EA7\u540D\u79F0\u3001\u65F6\u957F\u3001\u666F\u522B\u3001\u8FD0\u955C\u3001\u89D2\u8272\u52A8\u4F5C\u3001\u60C5\u7EEA\u3001\u5149\u5F71\u6C1B\u56F4\u3001\u53F0\u8BCD\u3001\u97F3\u6548\u3001\u5173\u8054\u8D44\u4EA7ID"),
@@ -257217,7 +257470,8 @@ var tools_default = (toolCpnfig) => {
           track: external_exports.string().describe("\u5206\u7EC4"),
           duration: external_exports.number().describe("\u89C6\u9891\u63A8\u8350\u65F6\u95F4"),
           associateAssetsIds: external_exports.array(external_exports.number()).nullable().describe("\u8BE5\u5206\u955C\u6240\u9700\u7684\u8D44\u4EA7ID\u5217\u8868"),
-          shouldGenerateImage: external_exports.enum(["true", "false"]).describe("\u662F\u5426\u9700\u8981\u751F\u6210\u5206\u955C\u56FE\u7247")
+          shouldGenerateImage: external_exports.enum(["true", "false"]).describe("\u662F\u5426\u9700\u8981\u751F\u6210\u5206\u955C\u56FE\u7247"),
+          requestId: external_exports.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional().describe("\u53EF\u9009\u64CD\u4F5C\u6807\u8BC6\uFF1B\u9996\u6B21\u8C03\u7528\u53EF\u7701\u7565\u3002\u8D85\u65F6\u6216\u5931\u8D25\u540E\u91CD\u8BD5\u76F8\u540C\u955C\u5934\u65F6\uFF0C\u5FC5\u987B\u590D\u7528\u4E0A\u6B21\u9519\u8BEF\u6D88\u606F\u4E2D\u7684 requestId\uFF0C\u4E0D\u53EF\u91CD\u65B0\u751F\u6210\u65B0\u6807\u8BC6\u3002")
         }).toJSONSchema()
       ),
       execute: async (raw) => {
@@ -257228,25 +257482,34 @@ var tools_default = (toolCpnfig) => {
           track: raw.track,
           duration: raw.duration,
           associateAssetsIds: raw.associateAssetsIds ?? [],
-          shouldGenerateImage: raw.shouldGenerateImage
+          shouldGenerateImage: raw.shouldGenerateImage,
+          requestId: raw.requestId ?? `sb_${Date.now()}_${Math.random().toString(36).slice(2)}`
         };
-        socketQueue(
-          () => new Promise(
-            (resolve3, reject) => socket.emit("addStoryboard", { ...data }, (res) => {
-              if (res?.error) return reject(new Error(res.error));
-              resolve3(res);
+        try {
+          const res = await socketQueue(
+            () => new Promise((resolve3, reject) => {
+              const timeout = setTimeout(() => reject(new Error("\u5206\u955C\u5199\u5165\u8D85\u65F6\uFF0C\u672A\u6536\u5230\u524D\u7AEF\u786E\u8BA4")), 6e4);
+              socket.emit("addStoryboard", { ...data }, (ack) => {
+                clearTimeout(timeout);
+                if (ack === false || ack?.success === false || ack?.error) {
+                  reject(new Error(ack?.error ?? ack?.message ?? "\u5206\u955C\u5199\u5165\u5931\u8D25"));
+                  return;
+                }
+                resolve3(ack);
+              });
             })
-          )
-        ).then((res) => {
+          );
           thinking.appendText("\u65B0\u589E\u7684\u5206\u955C\u6570\u636E:\n" + JSON.stringify(data, null, 2));
           thinking.updateTitle("\u65B0\u589E\u5206\u955C\u6210\u529F");
           thinking.complete();
-        }).catch((e) => {
-          thinking.appendText("\u65B0\u589E\u7684\u5206\u955C\u6570\u636E:\n" + JSON.stringify(data, null, 2));
+          return res ?? true;
+        } catch (error73) {
+          const detail = `${utils_default.error(error73).message}\uFF1B\u540C\u4E00\u955C\u5934\u5982\u9700\u91CD\u8BD5\uFF0C\u8BF7\u4F7F\u7528 requestId=${data.requestId} \u5E76\u4FDD\u6301\u5176\u4ED6\u53C2\u6570\u4E0D\u53D8`;
+          thinking.appendText("\u5206\u955C\u5199\u5165\u5931\u8D25:\n" + detail);
           thinking.updateTitle("\u65B0\u589E\u5206\u955C\u5931\u8D25");
           thinking.complete();
-        });
-        return true;
+          throw new Error(detail);
+        }
       }
     })
   };
@@ -257354,12 +257617,9 @@ async function createSubAgent(parentCtx) {
     parentCtx.msg = resTool.newMessage("assistant", "\u89C6\u9891\u7B56\u5212");
     return fullResponse;
   }
-  const promptInput = external_exports.object({
-    prompt: external_exports.string().describe("\u4EA4\u7ED9\u5B50Agent\u7684\u4EFB\u52A1\u7B80\u7EA6\u63CF\u8FF0\uFF0C100\u5B57\u4EE5\u5185")
-  }).toJSONSchema();
+  const promptInput = external_exports.object({ prompt: external_exports.string().describe("\u4EA4\u7ED9\u5B50Agent\u7684\u4EFB\u52A1\u7B80\u7EA6\u63CF\u8FF0\uFF0C100\u5B57\u4EE5\u5185") }).toJSONSchema();
   const projectInfo = await utils_default.db("o_project").where("id", resTool.data.projectId).first();
   if (!projectInfo) throw new Error(`\u9879\u76EE\u4E0D\u5B58\u5728\uFF0CID: ${resTool.data.projectId}`);
-  const artSkills = await createArtSkills(projectInfo?.artStyle, projectInfo?.directorManual);
   const [_, imageModelName] = projectInfo.imageModel.split(/:(.+)/);
   const [id, videoModelName] = projectInfo.videoModel.split(/:(.+)/);
   const models = await utils_default.vendor.getModelList(id);
@@ -257375,10 +257635,13 @@ async function createSubAgent(parentCtx) {
 \u56FE\u50CF\u6A21\u578B\uFF1A${imageModelName}
 \u89C6\u9891\u6A21\u578B\uFF1A${videoModelName}
 \u591A\u53C2\uFF1A${isRef ? "\u662F" : "\u5426"}`;
+  const loadArtSkills = () => createArtSkills(projectInfo?.artStyle, projectInfo?.directorManual);
+  const loadProductionSkills = () => useProductionSkills(projectInfo?.artStyle, projectInfo?.directorManual);
   const run_sub_agent_derive_assets = tool({
     description: "\u8FD0\u884C\u6267\u884CsubAgent\u6765\u5B8C\u6210\u884D\u751F\u8D44\u4EA7\u5206\u6790\u4E0E\u4FE1\u606F\u5199\u5165\u76F8\u5173\u4EFB\u52A1",
     inputSchema: jsonSchema(promptInput),
     execute: async ({ prompt }) => {
+      const artSkills = await loadArtSkills();
       const skill = import_path10.default.join(utils_default.getPath("skills"), "production_execution_derive_assets.md");
       const systemPrompt = await fs11.promises.readFile(skill, "utf-8");
       return runAgent({
@@ -257392,7 +257655,7 @@ async function createSubAgent(parentCtx) {
 ${modelInfo}` },
           { role: "user", content: prompt }
         ],
-        tools: { activate_skill: artSkills.tools.activate_skill }
+        tools: { ...artSkills.tools }
       });
     }
   });
@@ -257400,6 +257663,7 @@ ${modelInfo}` },
     description: "\u8FD0\u884C\u6267\u884CsubAgent\u6765\u5B8C\u6210\u884D\u751F\u8D44\u4EA7\u56FE\u7247\u751F\u6210\u76F8\u5173\u4EFB\u52A1",
     inputSchema: jsonSchema(promptInput),
     execute: async ({ prompt }) => {
+      const artSkills = await loadArtSkills();
       const skill = import_path10.default.join(utils_default.getPath("skills"), "production_execution_generate_assets.md");
       const systemPrompt = await fs11.promises.readFile(skill, "utf-8");
       return runAgent({
@@ -257413,7 +257677,7 @@ ${modelInfo}` },
 ${modelInfo}` },
           { role: "user", content: prompt }
         ],
-        tools: { activate_skill: artSkills.tools.activate_skill }
+        tools: { ...artSkills.tools }
       });
     }
   });
@@ -257421,6 +257685,7 @@ ${modelInfo}` },
     description: "\u8FD0\u884C\u6267\u884CsubAgent\u6765\u5B8C\u6210\u5BFC\u6F14\u89C4\u5212\u76F8\u5173\u4EFB\u52A1",
     inputSchema: jsonSchema(promptInput),
     execute: async ({ prompt }) => {
+      const artSkills = await loadArtSkills();
       const skill = import_path10.default.join(utils_default.getPath("skills"), "production_execution_director_plan.md");
       const systemPrompt = await fs11.promises.readFile(skill, "utf-8");
       const addPrompt = "\n\u4F60\u5FC5\u987B\u4F7F\u7528\u5982\u4E0BXML\u683C\u5F0F\u5199\u5165\u5DE5\u4F5C\u533A\uFF1A\n```\n<scriptPlan>\u5185\u5BB9</scriptPlan>\n```";
@@ -257435,7 +257700,7 @@ ${modelInfo}` },
 ${modelInfo}` },
           { role: "user", content: prompt + addPrompt }
         ],
-        tools: { activate_skill: artSkills.tools.activate_skill }
+        tools: { ...artSkills.tools }
       });
     }
   });
@@ -257443,6 +257708,7 @@ ${modelInfo}` },
     description: "\u8FD0\u884C\u6267\u884CsubAgent\u6765\u5B8C\u6210\u5206\u955C\u56FE\u751F\u6210\u76F8\u5173\u4EFB\u52A1",
     inputSchema: jsonSchema(promptInput),
     execute: async ({ prompt }) => {
+      const artSkills = await loadArtSkills();
       const skill = import_path10.default.join(utils_default.getPath("skills"), "production_execution_storyboard_gen.md");
       const systemPrompt = await fs11.promises.readFile(skill, "utf-8");
       return runAgent({
@@ -257456,30 +257722,29 @@ ${modelInfo}` },
 ${modelInfo}` },
           { role: "user", content: prompt }
         ],
-        tools: { activate_skill: artSkills.tools.activate_skill }
+        tools: { ...artSkills.tools }
       });
     }
   });
-  const productionSkills = await useProductionSkills(projectInfo?.artStyle, projectInfo?.directorManual);
   const run_sub_agent_storyboard_panel = tool({
     description: "\u8FD0\u884C\u6267\u884CsubAgent\u6765\u5B8C\u6210\u5206\u955C\u9762\u677F\u5199\u5165\u76F8\u5173\u4EFB\u52A1",
     inputSchema: jsonSchema(promptInput),
     execute: async ({ prompt }) => {
+      const productionSkills = await loadProductionSkills();
       const skill = import_path10.default.join(utils_default.getPath("skills"), "production_execution_storyboard_panel.md");
       const systemPrompt = await fs11.promises.readFile(skill, "utf-8");
-      const addPrompt = "\n\u4F60\u5FC5\u987B\u4F7F\u7528\u5982\u4E0BXML\u683C\u5F0F\u5199\u5165\u5DE5\u4F5C\u533A\uFF1A\n```\n<storyboardItem videoDesc='\u89C6\u9891\u63CF\u8FF0' prompt=\u63D0\u793A\u8BCD\u5185\u5BB9 track='\u5206\u7EC4' shouldGenerateImage='true/false' duration='\u89C6\u9891\u63A8\u8350\u65F6\u95F4' associateAssetsIds='[\u8BE5\u5206\u955C\u6240\u9700\u7684\u8D44\u4EA7ID\u5217\u8868]'></storyboardItem>\n```";
       return runAgent({
         key: "productionAgent:storyboardPanelAgent",
         prompt,
-        system: systemPrompt + addPrompt,
+        system: systemPrompt,
         name: "\u6267\u884C\u5BFC\u6F14",
         memoryKey: "assistant:execution",
         messages: [
           { role: "assistant", content: productionSkills.prompt + `
 ${modelInfo}` },
-          { role: "user", content: prompt + addPrompt }
+          { role: "user", content: prompt }
         ],
-        tools: { activate_skill: productionSkills.tools.activate_skill }
+        tools: { ...productionSkills.tools }
       });
     }
   });
@@ -257487,6 +257752,7 @@ ${modelInfo}` },
     description: "\u8FD0\u884C\u6267\u884CsubAgent\u6765\u5B8C\u6210\u5206\u955C\u8868\u6784\u5EFA\u76F8\u5173\u4EFB\u52A1",
     inputSchema: jsonSchema(promptInput),
     execute: async ({ prompt }) => {
+      const productionSkills = await loadProductionSkills();
       const skill = import_path10.default.join(utils_default.getPath("skills"), "production_execution_storyboard_table.md");
       const systemPrompt = await fs11.promises.readFile(skill, "utf-8");
       const addPrompt = "\n\u4F60\u5FC5\u987B\u4F7F\u7528\u5982\u4E0BXML\u683C\u5F0F\u5199\u5165\u5DE5\u4F5C\u533A\uFF1A\n```\n<storyboardTable>\u5185\u5BB9</storyboardTable>\n```";
@@ -257501,7 +257767,7 @@ ${modelInfo}` },
 ${modelInfo}` },
           { role: "user", content: prompt + addPrompt }
         ],
-        tools: { activate_skill: productionSkills.tools.activate_skill }
+        tools: { ...productionSkills.tools }
       });
     }
   });
@@ -257541,14 +257807,13 @@ async function createArtSkills(artName, storyName) {
     const parsed = parseFrontmatter(content);
     mainSkills.push({ path: skillPath, ...parsed });
   }
-  const res = {
+  return {
     prompt: `## Skills
 \u4EE5\u4E0B\u6280\u80FD\u63D0\u4F9B\u4E86\u4E13\u4E1A\u4EFB\u52A1\u7684\u4E13\u7528\u6307\u4EE4\u3002
 \u5F53\u4EFB\u52A1\u4E0E\u67D0\u4E2A\u6280\u80FD\u7684\u63CF\u8FF0\u5339\u914D\u65F6\uFF0C\u8C03\u7528 activate_skill \u5DE5\u5177\u5E76\u4F20\u5165\u6280\u80FD\u540D\u79F0\u6765\u52A0\u8F7D\u5B8C\u6574\u6307\u4EE4\u3002
 ${buildSkillPrompt(mainSkills)}`,
     tools: createSkillTools(mainSkills, { mainSkill: mainSkills, secondarySkills: [], tertiarySkills: [] })
   };
-  return res;
 }
 async function consumeFullStream(fullStream, initialMsg, syncMsg) {
   let msg = initialMsg;
@@ -257628,14 +257893,13 @@ async function useProductionSkills(artName, storyName) {
     const parsed = parseFrontmatter(content);
     mainSkills.push({ path: skillPath, ...parsed });
   }
-  const res = {
+  return {
     prompt: `## Skills
 \u4EE5\u4E0B\u6280\u80FD\u63D0\u4F9B\u4E86\u4E13\u4E1A\u4EFB\u52A1\u7684\u4E13\u7528\u6307\u4EE4\u3002
 \u5F53\u4EFB\u52A1\u4E0E\u67D0\u4E2A\u6280\u80FD\u7684\u63CF\u8FF0\u5339\u914D\u65F6\uFF0C\u8C03\u7528 activate_skill \u5DE5\u5177\u5E76\u4F20\u5165\u6280\u80FD\u540D\u79F0\u6765\u52A0\u8F7D\u5B8C\u6574\u6307\u4EE4\u3002
 ${buildSkillPrompt(mainSkills)}`,
     tools: createSkillTools(mainSkills, { mainSkill: mainSkills, secondarySkills: [], tertiarySkills: [] })
   };
-  return res;
 }
 
 // src/socket/resTool.ts
@@ -258335,12 +258599,23 @@ var keySchema2 = external_exports.enum(Object.keys(planData.shape));
 var planDataKeyLabels = Object.fromEntries(
   Object.entries(planData.shape).map(([key, schema]) => [key, schema.description ?? key])
 );
+function optionalTextChunk(text2, offset, limit) {
+  if (offset === void 0 && limit === void 0) return text2;
+  const start = Math.min(offset ?? 0, text2.length);
+  const end = Math.min(start + (limit ?? 6e3), text2.length);
+  return {
+    data: text2.slice(start, end),
+    offset: start,
+    total: text2.length,
+    nextOffset: end < text2.length ? end : null
+  };
+}
 var tools_default2 = (toolCpnfig) => {
   const { resTool, toolsNames, msg } = toolCpnfig;
   const { socket } = resTool;
   const tools = {
     get_novel_events: tool({
-      description: "\u83B7\u53D6\u7AE0\u8282\u4E8B\u4EF6",
+      description: "\u83B7\u53D6\u7AE0\u8282\u4E8B\u4EF6\uFF1B\u5F53\u8BF7\u6C42\u7684\u7AE0\u8282\u7F16\u53F7\u4E0D\u5B58\u5728\u65F6\uFF0C\u7ED3\u679C\u4F1A\u660E\u786E\u5217\u51FA\u7F3A\u5931\u7AE0\u8282\uFF0C\u6821\u9A8C\u539F\u8457\u8303\u56F4\u65F6\u4E0D\u5F97\u5FFD\u7565\u3002",
       inputSchema: jsonSchema(
         external_exports.object({
           chapterIndexs: external_exports.array(external_exports.number()).describe("\u7AE0\u8282\u7684\u7F16\u53F7")
@@ -258349,17 +258624,24 @@ var tools_default2 = (toolCpnfig) => {
       execute: async ({ chapterIndexs }) => {
         console.log("[tools] get_novel_events", chapterIndexs);
         const thinking = msg.thinking("\u6B63\u5728\u67E5\u8BE2\u7AE0\u8282\u4E8B\u4EF6...");
-        const data = await utils_default.db("o_novel").where("projectId", resTool.data.projectId).select("id", "chapterIndex as index", "reel", "chapter", "chapterData", "event", "eventState").whereIn("chapterIndex", chapterIndexs);
+        const data = chapterIndexs.length ? await utils_default.db("o_novel").where("projectId", resTool.data.projectId).select("chapterIndex as index", "chapter", "event").whereIn("chapterIndex", chapterIndexs) : [];
         thinking.appendText("\u6B63\u5728\u67E5\u8BE2\u7AE0\u8282\u7F16\u53F7: " + chapterIndexs.join(","));
-        const eventString = data.map((i) => [`\u7B2C${i.index}\u7AE0\uFF0C\u6807\u9898:${i.chapter}\uFF0C\u4E8B\u4EF6:${i.event}`].join("\n")).join("\n");
-        thinking.appendText("\u67E5\u8BE2\u7ED3\u679C:\n" + eventString);
+        const eventString = data.map((i) => `\u7B2C${i.index}\u7AE0\uFF0C\u6807\u9898:${i.chapter}\uFF0C\u4E8B\u4EF6:${i.event}`).join("\n");
+        const found = new Set(data.map((i) => String(i.index)));
+        const missing = [...new Set(chapterIndexs)].filter((index) => !found.has(String(index)));
+        const result = [
+          eventString,
+          missing.length ? `\u672A\u627E\u5230\u7AE0\u8282\u7F16\u53F7\uFF1A${missing.join(",")}\u3002\u7AE0\u8282\u8303\u56F4\u6821\u9A8C\u672A\u901A\u8FC7\uFF0C\u4E0D\u5F97\u5C06\u7F3A\u5931\u7AE0\u8282\u89C6\u4E3A\u5DF2\u8BFB\u53D6\u3002` : "",
+          chapterIndexs.length === 0 ? "\u672A\u6307\u5B9A\u7AE0\u8282\u7F16\u53F7\uFF0C\u8BF7\u63D0\u4F9B\u9700\u8981\u67E5\u8BE2\u7684\u7AE0\u8282\u7F16\u53F7\u3002" : ""
+        ].filter(Boolean).join("\n");
+        thinking.appendText("\u67E5\u8BE2\u7ED3\u679C:\n" + result);
         thinking.updateTitle("\u67E5\u8BE2\u7AE0\u8282\u4E8B\u4EF6\u5B8C\u6210");
         thinking.complete();
-        return eventString ?? "\u65E0\u6570\u636E";
+        return result || "\u65E0\u6570\u636E";
       }
     }),
     get_planData: tool({
-      description: "\u83B7\u53D6\u5DE5\u4F5C\u533A\u6570\u636E",
+      description: "\u83B7\u53D6\u5DE5\u4F5C\u533A\u6570\u636E\uFF1B\u82E5\u5BA2\u6237\u7AEF\u6CA1\u6709\u56DE\u5E94\uFF0C\u4F1A\u62A5\u544A\u8BFB\u53D6\u8D85\u65F6\uFF0C\u800C\u4E0D\u662F\u4E00\u76F4\u7B49\u5F85\u3002",
       inputSchema: jsonSchema(
         external_exports.object({
           key: keySchema2.describe("\u6570\u636Ekey")
@@ -258368,50 +258650,78 @@ var tools_default2 = (toolCpnfig) => {
       execute: async ({ key }) => {
         console.log("[tools] get_planData", key);
         const thinking = msg.thinking(`\u6B63\u5728\u83B7\u53D6${planDataKeyLabels[key]}\u5DE5\u4F5C\u533A\u6570\u636E...`);
-        const planData2 = await new Promise((resolve3) => socket.emit("getPlanData", { key }, (res) => resolve3(res)));
-        thinking.appendText(`\u83B7\u53D6\u5230${planDataKeyLabels[key]}:
-` + planData2[key]);
-        thinking.updateTitle(`\u83B7\u53D6${planDataKeyLabels[key]}\u5B8C\u6210`);
-        thinking.complete();
-        return planData2[key] ?? "\u65E0\u6570\u636E";
+        try {
+          const workspace = await new Promise((resolve3, reject) => {
+            const timer = setTimeout(() => reject(new Error(`\u83B7\u53D6${planDataKeyLabels[key]}\u5DE5\u4F5C\u533A\u6570\u636E\u8D85\u65F6\uFF0C\u8BF7\u68C0\u67E5\u5BA2\u6237\u7AEF\u8FDE\u63A5`)), 3e4);
+            try {
+              socket.emit("getPlanData", { key }, (res) => {
+                clearTimeout(timer);
+                if (!res || typeof res !== "object" || !(key in res)) {
+                  reject(new Error(`\u5DE5\u4F5C\u533A\u672A\u8FD4\u56DE${planDataKeyLabels[key]}\u6570\u636E`));
+                  return;
+                }
+                resolve3(res);
+              });
+            } catch (error73) {
+              clearTimeout(timer);
+              reject(error73);
+            }
+          });
+          thinking.appendText(`\u83B7\u53D6\u5230${planDataKeyLabels[key]}:
+` + workspace[key]);
+          thinking.updateTitle(`\u83B7\u53D6${planDataKeyLabels[key]}\u5B8C\u6210`);
+          thinking.complete();
+          return workspace[key] ?? "\u65E0\u6570\u636E";
+        } catch (error73) {
+          thinking.appendText(`\u8BFB\u53D6\u5931\u8D25: ${utils_default.error(error73).message}`);
+          thinking.updateTitle(`\u83B7\u53D6${planDataKeyLabels[key]}\u5931\u8D25`);
+          thinking.complete();
+          throw error73;
+        }
       }
     }),
     get_novel_text: tool({
-      description: "\u83B7\u53D6\u5C0F\u8BF4\u7AE0\u8282\u539F\u59CB\u6587\u672C\u5185\u5BB9",
+      description: "\u83B7\u53D6\u6307\u5B9A\u5C0F\u8BF4\u7AE0\u8282\u539F\u6587\uFF1B\u9ED8\u8BA4\u8FD4\u56DE\u5B8C\u6574\u539F\u59CB\u5B57\u7B26\u4E32\u3002\u957F\u7AE0\u8282\u53EF\u9009 offset/limit \u6309\u5B57\u7B26\u5206\u6BB5\uFF0C\u8FD4\u56DE data\u3001total\u3001nextOffset\uFF1B\u6309 nextOffset \u7EED\u8BFB\u76F4\u81F3 null\u3002",
       inputSchema: jsonSchema(
         external_exports.object({
-          chapterIndex: external_exports.string().describe("\u7AE0\u8282\u7F16\u53F7")
+          chapterIndex: external_exports.string().describe("\u7AE0\u8282\u7F16\u53F7"),
+          offset: external_exports.number().int().min(0).optional().describe("\u53EF\u9009\u5B57\u7B26\u8D77\u70B9\uFF0C\u4ECE0\u5F00\u59CB\uFF1B\u4E0D\u4F20 offset/limit \u65F6\u8FD4\u56DE\u5B8C\u6574\u539F\u6587"),
+          limit: external_exports.number().int().min(1).max(12e3).optional().describe("\u53EF\u9009\u5206\u6BB5\u957F\u5EA6\uFF0C\u9ED8\u8BA46000\u5B57\u7B26\uFF1B\u4E0D\u4F20 offset/limit \u65F6\u8FD4\u56DE\u5B8C\u6574\u539F\u6587")
         }).toJSONSchema()
       ),
-      execute: async ({ chapterIndex }) => {
-        console.log("[tools] get_novel_text", "[tools] get_novel_text", chapterIndex);
+      execute: async ({ chapterIndex, offset, limit }) => {
+        console.log("[tools] get_novel_text", chapterIndex);
         const thinking = msg.thinking(`\u6B63\u5728\u83B7\u53D6\u5C0F\u8BF4\u7AE0\u8282\u539F\u6587...`);
         const data = await utils_default.db("o_novel").where("projectId", resTool.data.projectId).where({ chapterIndex }).select("chapterData").first();
         const text2 = data && data?.chapterData ? data.chapterData : "";
+        const result = optionalTextChunk(text2, offset, limit);
         thinking.appendText(`\u83B7\u53D6\u5230\u539F\u6587:
-` + text2);
+` + (typeof result === "string" ? result : JSON.stringify(result)));
         thinking.updateTitle(`\u83B7\u53D6\u5C0F\u8BF4\u7AE0\u8282\u539F\u6587\u5B8C\u6210`);
         thinking.complete();
-        return text2 ?? "\u65E0\u6570\u636E";
+        return result;
       }
     }),
     get_script_content: tool({
-      description: "\u83B7\u53D6\u5267\u672C\u672C\u5185\u5BB9",
+      description: "\u83B7\u53D6\u5F53\u524D\u9879\u76EE\u7684\u5267\u672C\u5185\u5BB9\uFF1B\u9ED8\u8BA4\u8FD4\u56DE\u539F\u6709\u5B8C\u6574 scriptItem \u5B57\u7B26\u4E32\u3002\u53EF\u9009 offset/limit \u6309\u5B57\u7B26\u5206\u6BB5\uFF0C\u8FD4\u56DE data\u3001total\u3001nextOffset\uFF1B\u5206\u6BB5 data \u53EF\u80FD\u5305\u542B\u4E0D\u5B8C\u6574\u7684 XML \u6807\u7B7E\uFF0C\u987B\u6309 nextOffset \u7EED\u8BFB\u540E\u518D\u5408\u5E76\u3002",
       inputSchema: jsonSchema(
         external_exports.object({
-          ids: external_exports.array(external_exports.string()).describe("\u811A\u672Cid")
+          ids: external_exports.array(external_exports.string()).describe("\u811A\u672Cid"),
+          offset: external_exports.number().int().min(0).optional().describe("\u53EF\u9009\u5B57\u7B26\u8D77\u70B9\uFF0C\u4ECE0\u5F00\u59CB\uFF1B\u4E0D\u4F20 offset/limit \u65F6\u8FD4\u56DE\u5B8C\u6574\u5267\u672C"),
+          limit: external_exports.number().int().min(1).max(12e3).optional().describe("\u53EF\u9009\u5206\u6BB5\u957F\u5EA6\uFF0C\u9ED8\u8BA46000\u5B57\u7B26\uFF1B\u4E0D\u4F20 offset/limit \u65F6\u8FD4\u56DE\u5B8C\u6574\u5267\u672C")
         }).toJSONSchema()
       ),
-      execute: async ({ ids }) => {
-        console.log("[tools] get_script_content", "[tools] get_script_content", ids);
+      execute: async ({ ids, offset, limit }) => {
+        console.log("[tools] get_script_content", ids);
         const thinking = msg.thinking(`\u6B63\u5728\u83B7\u53D6\u811A\u672C\u5185\u5BB9...`);
-        const data = await utils_default.db("o_script").whereIn("id", ids).select("content", "name");
+        const data = await utils_default.db("o_script").where("projectId", resTool.data.projectId).whereIn("id", ids).select("content", "name");
         const text2 = data && data.length ? data.map((d) => `<scriptItem name="${d.name}">${d.content}</scriptItem>`).join("\n") : "";
+        const result = optionalTextChunk(text2, offset, limit);
         thinking.appendText(`\u83B7\u53D6\u5230\u811A\u672C\u5185\u5BB9:
-` + JSON.stringify(data, null, 2));
+` + (typeof result === "string" ? JSON.stringify(data, null, 2) : JSON.stringify(result)));
         thinking.updateTitle(`\u83B7\u53D6\u811A\u672C\u5185\u5BB9\u5B8C\u6210`);
         thinking.complete();
-        return text2 ?? "\u65E0\u6570\u636E";
+        return result;
       }
     })
   };
@@ -258561,9 +258871,7 @@ function createSubAgent2(parentCtx) {
         "\n"
       );
       const novelData = await utils_default.db("o_novel").where("projectId", resTool.data.projectId).select("chapterIndex");
-      const formatPrompt = `
-\u4F60\u5FC5\u987B\u4F7F\u7528\u5982\u4E0BXML\u683C\u5F0F\u5199\u5165\u5DE5\u4F5C\u533A\uFF1A
-XML\u4E0D\u5F97\u6DFB\u52A0\u4EFB\u4F55\u989D\u5916\u6807\u7B7E<scriptItem name="\u5267\u672C\u540D\u79F0">\u5267\u672C\u5185\u5BB9</scriptItem><scriptItem name="\u5267\u672C\u540D\u79F0">\u5267\u672C\u5185\u5BB9</scriptItem><scriptItem name="\u5267\u672C\u540D\u79F0">\u5267\u672C\u5185\u5BB9</scriptItem>`;
+      const formatPrompt = '\n\u672C\u6B21\u4EFB\u52A1\u4EC5\u7F16\u5199\u51B3\u7B56\u5C42\u6D3E\u53D1\u7684\u4E00\u96C6\u5267\u672C\u3002\u6309\u73B0\u6709XML\u534F\u8BAE\u5199\u5165\u5DE5\u4F5C\u533A\uFF1A<scriptItem name="\u5267\u672C\u540D\u79F0">\u672C\u96C6\u5B8C\u6574\u5267\u672C\u6B63\u6587</scriptItem>\u3002\u53EA\u8F93\u51FA\u8FD9\u4E00\u5BF9scriptItem\u6807\u7B7E\uFF1B\u4E0D\u5F97\u590D\u5236\u793A\u4F8B\u3001\u91CD\u590D\u5199\u5165\u672C\u96C6\u6216\u751F\u6210\u5176\u4ED6\u96C6\u3002\u6807\u7B7E\u5916\u7684\u7B80\u77ED\u601D\u8DEF\u548C\u5B8C\u6210\u786E\u8BA4\u4ECD\u6309\u672C\u6280\u80FD\u8981\u6C42\u6267\u884C\u3002';
       return runAgent({
         key: "scriptAgent:scriptAgent",
         prompt,
