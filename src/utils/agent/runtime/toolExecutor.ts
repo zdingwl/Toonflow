@@ -1,0 +1,98 @@
+import { createHash, randomUUID } from "node:crypto";
+import type { Knex } from "knex";
+
+type ToolRecord = {
+  execute?: (...args: any[]) => any;
+  [key: string]: any;
+};
+
+function json(value: unknown): string {
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return JSON.stringify({ unserializable: true, type: typeof value });
+  }
+}
+
+function parseStored(value: string | null | undefined): unknown {
+  if (!value) return undefined;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return value;
+  }
+}
+
+export function wrapAgentTools(
+  tools: Record<string, ToolRecord>,
+  options: {
+    db: Knex;
+    runId?: string;
+    sideEffectTools?: Iterable<string>;
+  },
+): Record<string, ToolRecord> {
+  if (!options.runId) return tools;
+  const sideEffects = new Set(options.sideEffectTools ?? []);
+  return Object.fromEntries(
+    Object.entries(tools).map(([toolName, definition]) => {
+      if (typeof definition?.execute !== "function") return [toolName, definition];
+      const original = definition.execute.bind(definition);
+      return [
+        toolName,
+        {
+          ...definition,
+          execute: async (...args: any[]) => {
+            const input = args[0];
+            const inputJson = json(input);
+            const inputHash = createHash("sha256").update(inputJson).digest("hex");
+            const sideEffect = sideEffects.has(toolName);
+            const operationKey = sideEffect
+              ? createHash("sha256").update(`${options.runId}\n${toolName}\n${inputHash}`).digest("hex")
+              : null;
+
+            if (operationKey) {
+              const prior = await options.db("o_agentToolCall").where({ operationKey }).first();
+              if (prior) {
+                if (prior.status === "completed") return parseStored(prior.outputJson);
+                throw new Error(`工具 ${toolName} 的相同写操作当前状态为 ${prior.status}，必须先核对结果，不能重复执行`);
+              }
+            }
+
+            const id = randomUUID();
+            const now = Date.now();
+            await options.db("o_agentToolCall").insert({
+              id,
+              runId: options.runId,
+              toolName,
+              operationKey,
+              inputHash,
+              inputJson,
+              sideEffect: sideEffect ? 1 : 0,
+              status: "running",
+              createTime: now,
+              updateTime: now,
+            });
+
+            try {
+              const result = await original(...args);
+              await options.db("o_agentToolCall").where({ id, status: "running" }).update({
+                status: "completed",
+                outputJson: json(result),
+                error: null,
+                updateTime: Date.now(),
+              });
+              return result;
+            } catch (error) {
+              await options.db("o_agentToolCall").where({ id, status: "running" }).update({
+                status: sideEffect ? "reconciling" : "failed",
+                error: error instanceof Error ? error.message : String(error),
+                updateTime: Date.now(),
+              });
+              throw error;
+            }
+          },
+        },
+      ];
+    }),
+  );
+}
