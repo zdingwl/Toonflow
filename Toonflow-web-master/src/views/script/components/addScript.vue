@@ -39,7 +39,7 @@
             :placeholder="$t('workbench.script.add.scriptContentPh')"
             name="description"
             :autosize="{ minRows: 12, maxRows: 12 }" />
-          <div class="scriptLen">{{ scriptData.length }}/{{ otherSetting.scriptEpisodeLength }}</div>
+          <div class="scriptLen">{{ scriptData.length }} {{ $t("workbench.novel.import.chars") }}</div>
         </div>
 
         <div class="section assets-section">
@@ -61,7 +61,7 @@
       <template #footer>
         <div class="dialog-footer">
           <t-button theme="default" @click="handleCancel">{{ $t("workbench.script.add.cancel") }}</t-button>
-          <t-button theme="primary" :loading="keepLoading" :disabled="scriptData.length > otherSetting.scriptEpisodeLength" @click="handleConfirm">
+          <t-button theme="primary" :loading="keepLoading" @click="handleConfirm">
             {{ $t("workbench.script.add.confirm") }}
           </t-button>
         </div>
@@ -77,8 +77,6 @@ import type { UploadFile } from "tdesign-vue-next";
 import axios from "@/utils/axios";
 import projectStore from "@/stores/project";
 import openAssetsSelector from "@/utils/assetsCheck";
-import settingStore from "@/stores/setting";
-const { otherSetting } = storeToRefs(settingStore());
 const { project } = storeToRefs(projectStore());
 
 const addScriptShow = defineModel<boolean>({
@@ -234,7 +232,6 @@ $line-height: 28px;
     align-items: center;
     justify-content: space-between;
     height: 64px;
-    width: 100%;
 
     .titleWrapper {
       display: flex;
@@ -301,13 +298,11 @@ $line-height: 28px;
     .assets-section {
       .assets-header {
         display: flex;
-        align-items: center;
         justify-content: space-between;
       }
       .assets-list {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
       }
       .assets-empty {
         font-size: 13px;
