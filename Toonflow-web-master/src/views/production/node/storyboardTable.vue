@@ -89,7 +89,7 @@ function openEdit() {
 function onConfirm() {
   storyboardTable.value = editContent.value;
   dialogVisible.value = false;
-  productionAgentStore().setFlowData();
+  productionAgentStore().setFlowData(undefined, ["storyboardTable"]);
 
 }
 
