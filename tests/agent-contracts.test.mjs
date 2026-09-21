@@ -18,6 +18,7 @@ test("修改过的 Agent、保存接口与前端 Store TypeScript 文件无语�
     "src/utils/agent/skillsTools.ts",
     "src/utils/agent/runtime/taskStore.ts",
     "src/utils/agent/runtime/toolExecutor.ts",
+    "src/utils/agent/runtime/operationReceipt.ts",
     "src/agents/scriptAgent/workspace.ts",
     "src/agents/productionAgent/directorPlan.ts",
     "src/agents/productionAgent/storyboardTable.ts",
@@ -25,6 +26,8 @@ test("修改过的 Agent、保存接口与前端 Store TypeScript 文件无语�
     "src/socket/routes/scriptAgent.ts",
     "src/socket/routes/productionAgent.ts",
     "src/routes/production/storyboard/batchAddStoryboardInfo.ts",
+    "src/routes/production/storyboard/batchGenerateImage.ts",
+    "src/routes/production/assets/batchGenerateAssetsImage.ts",
     "src/routes/production/saveFlowData.ts",
     "src/routes/scriptAgent/getPlanData.ts",
     "src/routes/scriptAgent/setPlanData.ts",
@@ -122,4 +125,32 @@ test("剧本初始化、写入及前端提交回执具有持久化核对与顺�
   assert.match(client, /lastQueuedSnapshot/);
   assert.match(client, /scriptWorkspace:committed/);
   assert.match(client, /后端校验、事务写入并读回确认/);
+});
+
+
+test("资产与分镜图片生成使用 requestId 持久化回执并在重复请求时禁止重复启动", () => {
+  const assetRoute = source("src/routes/production/assets/batchGenerateAssetsImage.ts");
+  const storyboardRoute = source("src/routes/production/storyboard/batchGenerateImage.ts");
+  const client = source("Toonflow-web-master/src/stores/productionAgent.ts");
+  const socketRoute = source("src/socket/routes/productionAgent.ts");
+
+  assert.match(assetRoute, /withOperationReceipt/);
+  assert.match(assetRoute, /"asset-generate"/);
+  assert.match(assetRoute, /claimed\.duplicate/);
+  assert.match(assetRoute, /where\(\{ id: scriptId, projectId \}\)/);
+  assert.match(assetRoute, /where\(\{ scriptId \}\)/);
+
+  assert.match(storyboardRoute, /withOperationReceipt/);
+  assert.match(storyboardRoute, /"storyboard-generate"/);
+  assert.match(storyboardRoute, /claimed\.duplicate/);
+  assert.match(storyboardRoute, /where\(\{ scriptId, projectId \}\)/);
+
+  assert.match(client, /batchGenerateAssets\(data\.ids, data\.requestId\)/);
+  assert.match(client, /batchGenerateStoryboard\(data\.ids, false, data\.requestId\)/);
+  assert.match(client, /requestId,/);
+
+  assert.match(socketRoute, /getOperationReceipt/);
+  assert.match(socketRoute, /"generate_deriveAsset"/);
+  assert.match(socketRoute, /"generate_storyboard"/);
+  assert.match(socketRoute, /后端未发现生成任务受理回执，可安全重试/);
 });
