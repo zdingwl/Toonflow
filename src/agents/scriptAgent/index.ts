@@ -192,7 +192,7 @@ function createSubAgent(parentCtx: AgentContext) {
 
       const novelData = await u.db("o_novel").where("projectId", resTool.data.projectId).select("chapterIndex");
 
-      const formatPrompt = `\n你必须使用如下XML格式写入工作区：\nXML不得添加任何额外标签<scriptItem name="剧本名称">剧本内容</scriptItem><scriptItem name="剧本名称">剧本内容</scriptItem><scriptItem name="剧本名称">剧本内容</scriptItem>`;
+      const formatPrompt = '\n本次任务仅编写决策层派发的一集剧本。按现有XML协议写入工作区：<scriptItem name="剧本名称">本集完整剧本正文</scriptItem>。只输出这一对scriptItem标签；不得复制示例、重复写入本集或生成其他集。标签外的简短思路和完成确认仍按本技能要求执行。';
 
       return runAgent({
         key: "scriptAgent:scriptAgent",
