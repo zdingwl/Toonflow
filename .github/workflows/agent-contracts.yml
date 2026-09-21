@@ -12,17 +12,22 @@ on:
       - "src/agents/**"
       - "src/routes/production/**"
       - "src/routes/scriptAgent/**"
+      - "src/routes/setting/memoryConfig/**"
       - "src/routes/script/getAiRegex.ts"
       - "src/utils/storyboardScenes.ts"
       - "src/utils/ai.ts"
       - "src/utils/agent/**"
       - "scripts/main.ts"
       - "Toonflow-web-master/src/stores/**"
+      - "Toonflow-web-master/src/components/setting/components/memoryConfig.vue"
       - "Toonflow-web-master/src/utils/useChat.ts"
       - "Toonflow-web-master/src/utils/parseScript.ts"
       - "Toonflow-web-master/src/utils/axios.ts"
       - "Toonflow-web-master/src/views/script/components/batchAddScript.vue"
       - "data/skills/**"
+      - "scripts/benchmark-agent-local.mjs"
+      - "scripts/reranker-server.py"
+      - "package.json"
       - "tests/**"
   workflow_dispatch:
 
@@ -39,3 +44,7 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: 运行 Agent、分镜及剧本解析回归检查
         run: yarn test:agent
+      - name: 检查本地检索辅助脚本语法
+        run: |
+          node --check scripts/benchmark-agent-local.mjs
+          python -m py_compile scripts/reranker-server.py
