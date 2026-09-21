@@ -10,7 +10,16 @@ import * as fs from "fs";
 import path from "path";
 import { extractDirectorPlan, saveDirectorPlan } from "./directorPlan";
 import { TaskStore } from "@/utils/agent/runtime/taskStore";
+import { wrapAgentTools } from "@/utils/agent/runtime/toolExecutor";
 import { buildMemoryPrompt } from "@/utils/agent/contextManager";
+
+const PRODUCTION_SIDE_EFFECT_TOOLS = new Set([
+  "add_deriveAsset",
+  "del_deriveAsset",
+  "generate_deriveAsset",
+  "generate_storyboard",
+  "add_flowData_storyboard",
+]);
 
 export interface AgentContext {
   runId?: string;
@@ -61,8 +70,10 @@ export async function runDecisionAI(ctx: AgentContext) {
     ],
     abortSignal,
     tools: {
-      ...memory.getTools(),
-      ...useTools({ resTool: ctx.resTool, msg: ctx.msg }),
+      ...wrapAgentTools(
+        { ...memory.getTools(), ...useTools({ resTool: ctx.resTool, msg: ctx.msg }) },
+        { db: u.db, runId: ctx.runId, sideEffectTools: PRODUCTION_SIDE_EFFECT_TOOLS },
+      ),
       ...(await createSubAgent(ctx)),
     },
     onFinish: async (completion) => {
@@ -119,7 +130,13 @@ async function createSubAgent(parentCtx: AgentContext) {
         system,
         messages: messages ?? [{ role: "user", content: prompt }],
         abortSignal,
-        tools: { ...extraTools, ...useTools({ resTool, msg: subMsg }) },
+        tools: {
+          ...extraTools,
+          ...wrapAgentTools(
+            useTools({ resTool, msg: subMsg }),
+            { db: u.db, runId: parentCtx.runId, sideEffectTools: PRODUCTION_SIDE_EFFECT_TOOLS },
+          ),
+        },
       });
 
       const fullResponse = await consumeFullStream(fullStream, subMsg, undefined, !isDirectorPlan);
