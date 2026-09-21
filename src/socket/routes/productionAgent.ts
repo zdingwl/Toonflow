@@ -70,22 +70,63 @@ export default (nsp: Namespace) => {
 
     const reconcileKnownSteps = async (runId: string) => {
       let state = await taskStore.reconcile(runId);
-      for (const step of state.steps.filter((item) => item.status === "reconciling")) {
-        if (!step.stepKey.startsWith("productionAgent:directorPlanAgent:")) continue;
+      const projectId = Number(resTool.data.projectId);
+      const episodesId = Number(resTool.data.scriptId);
+
+      // 分镜新增本身已有 requestId 事务回执；连接中断后可通过后端保存记录确认是否真实写入。
+      for (const call of state.toolCalls.filter(
+        (item) => item.toolName === "add_flowData_storyboard" && ["reconciling", "failed"].includes(item.status),
+      )) {
         try {
-          const resultRef = await reconcileDirectorPlanOutput(
-            u.db,
-            Number(resTool.data.projectId),
-            Number(resTool.data.scriptId),
-            step.output,
-          );
-          if (resultRef) await taskStore.resolveStep(runId, step.stepKey, "completed", resultRef);
+          const input = (call.input ?? {}) as Record<string, unknown>;
+          const requestId =
+            (typeof input.requestId === "string" && input.requestId) ||
+            call.error?.match(/requestId=([A-Za-z0-9_-]{8,128})/)?.[1];
+          if (!requestId) continue;
+          const receipt = await u.db("o_agentWorkData")
+            .where({ projectId, episodesId, key: `storyboardWrite:${requestId}` })
+            .select("data")
+            .first();
+          if (!receipt?.data) continue;
+          const saved = JSON.parse(receipt.data);
+          if (!Array.isArray(saved.createdIds) || !saved.createdIds.length) continue;
+          await taskStore.resolveToolCall(runId, call.id, "completed", {
+            success: true,
+            requestId,
+            createdIds: saved.createdIds,
+            reconciled: true,
+          });
         } catch (error) {
-          console.warn("[productionAgent] 自动核对导演计划失败:", step.stepKey, u.error(error).message);
+          console.warn("[productionAgent] 自动核对分镜写入失败:", call.id, u.error(error).message);
         }
       }
+
       state = await taskStore.reconcile(runId);
-      return state;
+      for (const step of state.steps.filter((item) => item.status === "reconciling")) {
+        try {
+          if (step.stepKey.startsWith("productionAgent:directorPlanAgent:")) {
+            const resultRef = await reconcileDirectorPlanOutput(u.db, projectId, episodesId, step.output);
+            if (resultRef) await taskStore.resolveStep(runId, step.stepKey, "completed", resultRef);
+            continue;
+          }
+
+          const sideEffects = state.toolCalls.filter((call) => call.stepKey === step.stepKey && call.sideEffect);
+          if (!sideEffects.length) {
+            // 没有任何写工具开始执行时，中断只影响模型推理，可安全重试该步骤。
+            await taskStore.resolveStep(runId, step.stepKey, "retryable", undefined, "未发现写操作，可安全重试");
+            continue;
+          }
+          if (
+            sideEffects.every((call) => call.toolName === "add_flowData_storyboard" && call.status === "completed")
+          ) {
+            // 分镜写入已由 requestId 确认，重跑模型时 ToolExecutor 会直接复用已完成回执。
+            await taskStore.resolveStep(runId, step.stepKey, "retryable", undefined, "分镜写入已确认，模型步骤可安全重试");
+          }
+        } catch (error) {
+          console.warn("[productionAgent] 自动核对步骤失败:", step.stepKey, u.error(error).message);
+        }
+      }
+      return taskStore.reconcile(runId);
     };
 
     const executeRun = async (runId: string, content: string, controller: AbortController) => {
