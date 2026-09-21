@@ -64,6 +64,36 @@ interface ToolConfig {
   msg: ReturnType<ResTool["newMessage"]>;
 }
 
+async function readAuthoritativeTextValue(
+  key: keyof FlowData,
+  projectIdRaw: unknown,
+  scriptIdRaw: unknown,
+): Promise<{ handled: boolean; value?: string }> {
+  const projectId = Number(projectIdRaw);
+  const scriptId = Number(scriptIdRaw);
+  if (!Number.isSafeInteger(projectId) || !Number.isSafeInteger(scriptId)) {
+    throw new Error("工作区缺少有效的项目或剧集 ID");
+  }
+
+  if (key === "script") {
+    const script = await u.db("o_script").where({ id: scriptId, projectId }).select("content").first();
+    if (!script) throw new Error("当前项目不存在该集剧本");
+    return { handled: true, value: script.content ?? "" };
+  }
+
+  if (key === "scriptPlan" || key === "storyboardTable") {
+    const row = await u.db("o_agentWorkData")
+      .where({ projectId, episodesId: scriptId, key: "productionAgent" })
+      .select("data")
+      .first();
+    if (!row?.data) return { handled: true, value: "" };
+    const data = JSON.parse(row.data);
+    return { handled: true, value: typeof data[key] === "string" ? data[key] : "" };
+  }
+
+  return { handled: false };
+}
+
 /** 串行队列：一个请求失败不能让其后的分镜操作全部停在已拒绝的 Promise 上。 */
 function createSocketQueue(delayMs = 800) {
   let lastPromise: Promise<unknown> = Promise.resolve();
@@ -91,7 +121,7 @@ export default (toolCpnfig: ToolConfig) => {
   const socketQueue = createSocketQueue(800);
   const tools: Record<string, Tool> = {
     get_flowData: tool({
-      description: "获取工作区数据；不传 offset/limit 时返回完整原始数据。长文本可选用 offset/limit 按字符分段，数组按条目分段，返回 data、total、nextOffset。",
+      description: "获取工作区数据；script/scriptPlan/storyboardTable 直接读取后端数据库真实值，避免浏览器缓存导致误判。其他字段保持兼容读取。长文本可选 offset/limit 分段。",
       inputSchema: jsonSchema<{ key: keyof FlowData; offset?: number; limit?: number }>(
         z
           .object({
@@ -104,18 +134,24 @@ export default (toolCpnfig: ToolConfig) => {
       execute: async ({ key, offset, limit }) => {
         const thinking = msg.thinking(`正在获取${flowDataKeyLabels[key]}工作区数据...`);
         try {
-          const flowData: FlowData = await new Promise((resolve, reject) => {
-            const timeout = setTimeout(() => reject(new Error(`获取${flowDataKeyLabels[key]}超时，未收到工作区响应`)), 60000);
-            socket.emit("getFlowData", { key }, (res: any) => {
-              clearTimeout(timeout);
-              if (!res || typeof res !== "object" || res.error || !(key in res)) {
-                reject(new Error(res?.error ?? `工作区未返回${flowDataKeyLabels[key]}数据`));
-                return;
-              }
-              resolve(res);
+          const authoritative = await readAuthoritativeTextValue(key, resTool.data.projectId, resTool.data.scriptId);
+          let value: unknown;
+          if (authoritative.handled) {
+            value = authoritative.value ?? "";
+          } else {
+            const flowData: FlowData = await new Promise((resolve, reject) => {
+              const timeout = setTimeout(() => reject(new Error(`获取${flowDataKeyLabels[key]}超时，未收到工作区响应`)), 60000);
+              socket.emit("getFlowData", { key }, (res: any) => {
+                clearTimeout(timeout);
+                if (!res || typeof res !== "object" || res.error || !(key in res)) {
+                  reject(new Error(res?.error ?? `工作区未返回${flowDataKeyLabels[key]}数据`));
+                  return;
+                }
+                resolve(res);
+              });
             });
-          });
-          const value = flowData[key];
+            value = flowData[key];
+          }
           // 只有显式传入分段参数才改变返回形状；原有 Agent 调用保持原始值类型。
           const useChunk = offset !== undefined || limit !== undefined;
           let result: unknown = value;
