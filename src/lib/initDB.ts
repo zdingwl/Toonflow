@@ -1132,6 +1132,7 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
       builder: (table) => {
         table.text("id").notNullable().primary();
         table.text("runId").notNullable();
+        table.text("stepKey");
         table.text("toolName").notNullable();
         table.text("operationKey").unique();
         table.text("inputHash").notNullable();
