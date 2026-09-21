@@ -157,3 +157,56 @@ test("存在 retryable 步骤时不能把任务误标为 completed", async () =>
     await db.destroy();
   }
 });
+
+
+test("步骤存在未核对写工具时不能标记完成", async () => {
+  const db = knex({ client: "better-sqlite3", connection: { filename: ":memory:" }, useNullAsDefault: true });
+  try {
+    await db.schema.createTable("o_agentRun", (t) => {
+      t.text("id").primary(); t.text("agentType"); t.integer("projectId"); t.integer("episodesId");
+      t.text("isolationKey"); t.text("inputHash"); t.text("inputContent"); t.text("status"); t.text("error");
+      t.integer("createTime"); t.integer("updateTime");
+    });
+    await db.schema.createTable("o_agentStep", (t) => {
+      t.text("id").primary(); t.text("runId"); t.text("stepKey"); t.text("inputHash"); t.text("inputContent"); t.text("output"); t.text("status");
+      t.text("resultRef"); t.text("error"); t.integer("createTime"); t.integer("updateTime");
+      t.unique(["runId", "stepKey"]);
+    });
+    await db.schema.createTable("o_agentSkillSnapshot", (t) => {
+      t.text("runId"); t.text("filePath"); t.text("contentHash"); t.text("content"); t.integer("createTime");
+      t.primary(["runId", "filePath"]);
+    });
+    await db.schema.createTable("o_agentToolCall", (t) => {
+      t.text("id").primary(); t.text("runId"); t.text("stepKey"); t.text("toolName"); t.text("operationKey");
+      t.text("inputHash"); t.text("inputJson"); t.text("outputJson"); t.integer("sideEffect");
+      t.text("status"); t.text("error"); t.integer("createTime"); t.integer("updateTime");
+    });
+    const store = new TaskStore(db);
+    await store.begin({
+      requestId: "request-004",
+      agentType: "productionAgent",
+      projectId: 1,
+      episodesId: 2,
+      isolationKey: "1:productionAgent:2",
+      content: "生成分镜",
+    });
+    const stepKey = TaskStore.makeStepKey("productionAgent:storyboardPanelAgent", "x");
+    await store.beginStep("request-004", stepKey, "x");
+    await db("o_agentToolCall").insert({
+      id: "call-1",
+      runId: "request-004",
+      stepKey,
+      toolName: "add_flowData_storyboard",
+      operationKey: "op",
+      inputHash: "hash",
+      inputJson: "{}",
+      sideEffect: 1,
+      status: "reconciling",
+      createTime: Date.now(),
+      updateTime: Date.now(),
+    });
+    await assert.rejects(() => store.finishStep("request-004", stepKey, "message:x"), /写工具调用未核对/);
+  } finally {
+    await db.destroy();
+  }
+});
