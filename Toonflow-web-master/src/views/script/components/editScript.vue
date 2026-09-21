@@ -133,6 +133,7 @@ async function onConfirm() {
       .assets-list {
         display: flex;
         flex-wrap: wrap;
+        gap: 8px;
       }
       .assets-empty {
         font-size: 13px;
