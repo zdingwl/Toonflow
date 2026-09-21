@@ -8,6 +8,7 @@ import ResTool from "@/socket/resTool";
 import * as fs from "fs";
 import path from "path";
 import { TaskStore } from "@/utils/agent/runtime/taskStore";
+import { wrapAgentTools } from "@/utils/agent/runtime/toolExecutor";
 import { buildMemoryPrompt } from "@/utils/agent/contextManager";
 import {
   extractScriptItem,
@@ -65,8 +66,10 @@ export async function runDecisionAI(ctx: AgentContext) {
     ],
     abortSignal,
     tools: {
-      ...memory.getTools(),
-      ...useTools({ resTool: ctx.resTool, msg: ctx.msg }),
+      ...wrapAgentTools(
+        { ...memory.getTools(), ...useTools({ resTool: ctx.resTool, msg: ctx.msg }) },
+        { db: u.db, runId: ctx.runId },
+      ),
       ...createSubAgent(ctx),
     },
     onFinish: async (completion) => {
@@ -129,7 +132,10 @@ function createSubAgent(parentCtx: AgentContext) {
         system,
         messages: messages ?? [{ role: "user", content: prompt }],
         abortSignal,
-        tools: { ...extraTools, ...useTools({ resTool, msg: subMsg }) },
+        tools: {
+          ...extraTools,
+          ...wrapAgentTools(useTools({ resTool, msg: subMsg }), { db: u.db, runId: parentCtx.runId }),
+        },
       });
 
       const fullResponse = await consumeFullStream(fullStream, subMsg);
