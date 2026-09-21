@@ -31,6 +31,20 @@ function parseStored(value: string | null | undefined): unknown {
   }
 }
 
+function normalizeToolInput(toolName: string, value: any): any {
+  if (
+    (toolName === "generate_deriveAsset" || toolName === "generate_storyboard") &&
+    value &&
+    typeof value === "object" &&
+    !Array.isArray(value) &&
+    Array.isArray(value.ids)
+  ) {
+    const ids = [...new Set(value.ids.map(Number).filter(Number.isSafeInteger))].sort((a, b) => a - b);
+    return { ...value, ids };
+  }
+  return value;
+}
+
 export function wrapAgentTools(
   tools: Record<string, ToolRecord>,
   options: {
@@ -52,7 +66,8 @@ export function wrapAgentTools(
           ...definition,
           execute: async (...args: any[]) => {
             const sideEffect = sideEffects.has(toolName);
-            let input = args[0];
+            let input = normalizeToolInput(toolName, args[0]);
+            args[0] = input;
             if (
               sideEffect &&
               REQUEST_ID_TOOLS.has(toolName) &&
