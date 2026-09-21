@@ -133,7 +133,7 @@ export default (nsp: Namespace) => {
     });
 
     socket.on("agent:resolve-step", async (
-      data: { runId: string; stepKey: string; resolution: "completed" | "failed" | "retryable"; resultRef?: string; error?: string },
+      data: { runId: string; stepKey: string; resolution: "completed" | "failed" | "retryable" | "cancelled"; resultRef?: string; error?: string },
       callback,
     ) => {
       try {
