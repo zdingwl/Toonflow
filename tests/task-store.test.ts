@@ -64,11 +64,27 @@ test("任务状态、步骤缓存与恢复持久化，重复请求不能重复�
       toolCalls: [],
     });
     assert.equal((await store.begin(input)).status, "completed");
+    await db("o_agentToolCall").insert({
+      id: "decision-call",
+      runId: "request-001",
+      stepKey: null,
+      toolName: "add_flowData_storyboard",
+      operationKey: "decision-op",
+      inputHash: "decision-hash",
+      inputJson: JSON.stringify({ requestId: "agent_completed_write" }),
+      outputJson: JSON.stringify({ success: true }),
+      sideEffect: 1,
+      status: "completed",
+      createTime: Date.now(),
+      updateTime: Date.now(),
+    });
     const resumePrompt = await store.buildResumePrompt("request-001");
     assert.match(resumePrompt, /Agent Runtime 任务检查点/);
     assert.match(resumePrompt, /productionAgent:directorPlanAgent/);
     assert.match(resumePrompt, /completed/);
     assert.match(resumePrompt, /禁止再次派发/);
+    assert.match(resumePrompt, /add_flowData_storyboard/);
+    assert.match(resumePrompt, /decision-level/);
 
     const skillFile = path.join(os.tmpdir(), `toonflow-skill-${randomUUID()}.md`);
     try {
