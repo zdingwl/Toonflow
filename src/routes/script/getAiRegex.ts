@@ -29,12 +29,22 @@ function normalizeAiRegex(text: string, sample: string): string {
     throw new Error("AI返回的正则语法不合法，请重试或手动输入");
   }
   let found = false;
+  const seenEpisodeNumbers = new Set<string>();
   for (const match of sample.matchAll(regex)) {
-    if (!match[0] || match[0].includes("\n") ||
+    // 拆集器固定约定：match[1] 是集数，match[2] 是标题。额外捕获组会让模型返回的正则
+    // 看似可匹配、实际却把标题错位，因此必须严格限制为两个捕获组。
+    if (match.length !== 3 ||
+      !match[0] ||
+      match[0].includes("\n") ||
       !/^[0-9０-９零〇一二三四五六七八九十百千万两]+$/.test(match[1]?.trim() ?? "") ||
       match[2] === undefined) {
-      throw new Error("AI返回的正则无法正确提取独立集标题行，请重试或手动输入");
+      throw new Error("AI返回的正则必须且只能包含两个捕获组：第1组为集数、第2组为标题；请重试或手动输入");
     }
+    const episodeNumber = match[1].trim();
+    if (seenEpisodeNumbers.has(episodeNumber)) {
+      throw new Error(`AI返回的正则在样本中重复匹配第${episodeNumber}集，可能把结尾字幕或正文当成集标题；请重试或手动输入`);
+    }
+    seenEpisodeNumbers.add(episodeNumber);
     found = true;
   }
   if (!found) throw new Error("AI返回的正则未匹配到样本中的集标题，请检查剧本格式");
@@ -51,7 +61,7 @@ export default router.post(
     // 匹配数量无法证明拆集正确：即使默认规则已匹配多集，用户点击 AI 解析时也必须真正分析格式。
     const systemPrompt = String.raw`你是一个正则表达式专家。用户提供的文本包含剧本片名、说明、正文及可能的集标题。请识别真正的每集标题行的格式，只返回 JavaScript 正则表达式。
 要求：
-1. 第一个捕获组只匹配集数（阿拉伯数字或中文数字）；第二个捕获组匹配该集标题，标题可为空。
+1. 第一个捕获组只匹配集数（阿拉伯数字或中文数字）；第二个捕获组匹配该集标题，标题可为空。整个正则必须且只能有这两个捕获组，其他辅助分组一律使用 (?:...) 非捕获组。
 2. 必须用 ^ 锚定标题行首，以 m 标志逐行匹配；行首允许用 [ \t]* 匹配空格，但不能用 \s* 跨行吞掉正文。只匹配真正的集标题，不得把片名候选、正文、对白或场次编号当作集标题。
 3. 只匹配单行的集标题，不得跨行吞掉正文。返回格式如：/^[ \t]*第[ \t]*([0-9一二三四五六七八九十百千万]+)[ \t]*集[ \t]*([^\n\r]*)/gm。若剧本使用其他格式，请根据原文调整，不能套用示例。
 4. 只返回正则表达式本身，不要说明、引号或 Markdown；如果样本中没有明显的分集标题，返回空字符串。`;
