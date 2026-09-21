@@ -6,6 +6,7 @@ import { validateFields } from "@/middleware/middleware";
 import { useSkill } from "@/utils/agent/skillsTools";
 import { tool, jsonSchema } from "ai";
 import { o_script } from "@/types/database";
+import { normalizeScriptIds } from "@/utils/scriptAssetIds";
 
 const router = express.Router();
 
@@ -85,12 +86,30 @@ export default router.post(
       const { batchScriptIds, newAssets, existingRefs } = result;
       if (!newAssets.length && !existingRefs.length) return;
 
+      const allowedScriptIds = new Set(batchScriptIds);
+      const safeNewAssets = newAssets
+        .map((asset) => ({
+          ...asset,
+          scriptIds: normalizeScriptIds((asset as { scriptIds?: unknown }).scriptIds, allowedScriptIds),
+        }))
+        .filter((asset) => asset.scriptIds.length > 0);
+      const safeExistingRefs = existingRefs
+        .map((ref) => ({
+          ...ref,
+          scriptIds: normalizeScriptIds((ref as { scriptIds?: unknown }).scriptIds, allowedScriptIds),
+        }))
+        .filter((ref) => ref.scriptIds.length > 0);
+
+      if (!safeNewAssets.length && !safeExistingRefs.length) {
+        throw new Error("AI 返回的资产关联剧本ID无效：scriptIds 必须引用当前批次中的剧本ID");
+      }
+
       // 查询已有资产
       const existingAssets = await u.db("o_assets").where("projectId", projectId).select("id", "name");
       const existingMap = new Map(existingAssets.map((a) => [a.name!, a.id!]));
 
       // 插入新资产（不在已有列表中的）
-      const toInsert = newAssets.filter((asset) => !existingMap.has(asset.name));
+      const toInsert = safeNewAssets.filter((asset) => !existingMap.has(asset.name));
       if (toInsert.length) {
         await u.db("o_assets").insert(
           toInsert.map((asset) => ({
@@ -111,7 +130,7 @@ export default router.post(
       const scriptAssetRows: { scriptId: number; assetId: number }[] = [];
 
       // 新资产的关联
-      for (const asset of newAssets) {
+      for (const asset of safeNewAssets) {
         const assetId = nameToId.get(asset.name);
         if (assetId) {
           for (const sid of asset.scriptIds) {
@@ -121,7 +140,7 @@ export default router.post(
       }
 
       // 已有资产的关联
-      for (const ref of existingRefs) {
+      for (const ref of safeExistingRefs) {
         const assetId = nameToId.get(ref.name);
         if (assetId) {
           for (const sid of ref.scriptIds) {
