@@ -1,4 +1,5 @@
 import express from "express";
+import { createHash } from "node:crypto";
 import u from "@/utils";
 import { z } from "zod";
 import { error, success } from "@/lib/responseFormat";
@@ -23,15 +24,41 @@ export default router.post(
     ),
     scriptId: z.number(),
     projectId: z.number(),
+    // 可选：同一个业务写入操作的重试必须复用相同的 requestId；旧客户端无需提供。
+    requestId: z.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional(),
   }),
   async (req, res) => {
-    const { data, scriptId, projectId } = req.body;
+    const { data, scriptId, projectId, requestId } = req.body;
     if (!data.length) return res.status(400).send(error("数据不能为空"));
+    const requestKey = requestId ? `storyboardWrite:${requestId}` : null;
+    const payloadHash = requestKey ? createHash("sha256").update(JSON.stringify(data)).digest("hex") : null;
 
     try {
       const { stored, createdIds } = await u.db.transaction(async (trx) => {
         const script = await trx("o_script").where({ id: scriptId, projectId }).first();
         if (!script) throw new Error("剧本不属于当前项目，分镜未写入");
+
+        if (requestKey) {
+          const previous = await trx("o_agentWorkData")
+            .where({ projectId, episodesId: scriptId, key: requestKey })
+            .first();
+          if (previous) {
+            const prior = JSON.parse(previous.data ?? "{}");
+            if (prior.payloadHash !== payloadHash || !Array.isArray(prior.createdIds) || prior.createdIds.length !== data.length) {
+              throw new Error("相同 requestId 对应不同的分镜内容，已拒绝重复提交");
+            }
+            const createdIds: number[] = prior.createdIds;
+            const persisted = await trx("o_storyboard")
+              .where({ scriptId, projectId })
+              .whereIn("id", createdIds)
+              .select("id");
+            if (persisted.length !== createdIds.length) {
+              throw new Error("原请求的部分分镜已不存在，不能作为成功的重试返回");
+            }
+            const stored = await trx("o_storyboard").where({ scriptId, projectId });
+            return { stored, createdIds };
+          }
+        }
 
         // 在新增分镜之前验证全部引用资产，避免写入一半才发现资产 ID 无效。
         const assetIds: number[] = [...new Set<number>(data.flatMap((item: any) => item.associateAssetsIds))];
@@ -97,6 +124,15 @@ export default router.post(
         const stored = await trx("o_storyboard").where({ scriptId, projectId });
         if (stored.length !== lastStoryboard.length || stored.some((item: any) => !item.trackId)) {
           throw new Error("分镜分组保存不完整");
+        }
+        if (requestKey) {
+          // 操作回执与分镜写入使用同一事务；回执丢失后以同一 requestId 可安全读取原始 ID。
+          await trx("o_agentWorkData").insert({
+            projectId,
+            episodesId: scriptId,
+            key: requestKey,
+            data: JSON.stringify({ payloadHash, createdIds }),
+          });
         }
         return { stored, createdIds };
       });
