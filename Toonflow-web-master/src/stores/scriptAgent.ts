@@ -17,6 +17,31 @@ function makeScriptAgentStore(projectId: string) {
           script: [],
         });
 
+        // 将每次保存的工作区快照按顺序提交，避免较早的异步请求覆盖较新的剧本。
+        let saveQueue: Promise<void> = Promise.resolve();
+        let lastQueuedSnapshot = "";
+
+        async function setPlanData() {
+          const snapshot = JSON.stringify(planData.value);
+          if (snapshot === lastQueuedSnapshot) return saveQueue;
+          lastQueuedSnapshot = snapshot;
+          const currentSave = saveQueue.then(async () => {
+            const response = await axios.post("/scriptAgent/setPlanData", {
+              projectId: projectId,
+              agentType: "scriptAgent",
+              data: JSON.parse(snapshot),
+            });
+            if (response?.code !== 200) throw new Error(response?.message || "剧本保存未得到成功回执");
+          });
+          saveQueue = currentSave.then(
+            () => undefined,
+            () => {
+              if (lastQueuedSnapshot === snapshot) lastQueuedSnapshot = "";
+            },
+          );
+          return currentSave;
+        }
+
         const { connected, messages, chat, stopGenerate, socket, status, disconnect, connect } = useChat({
           url: `${settingStore().baseUrl}/socket/scriptAgent`,
           auth: () => ({
@@ -48,7 +73,10 @@ function makeScriptAgentStore(projectId: string) {
               }
             }
             if (status === "complete") {
-              setPlanData();
+              setPlanData().catch((error) => {
+                console.error("剧本工作区保存失败", error);
+                window.$message.error("剧本工作区保存失败，请检查后端状态并重试保存");
+              });
             }
           },
           autoConnect: false,
@@ -65,10 +93,6 @@ function makeScriptAgentStore(projectId: string) {
           },
           { immediate: true },
         );
-
-        async function setPlanData() {
-          await axios.post("/scriptAgent/setPlanData", { projectId: projectId, agentType: "scriptAgent", data: planData.value });
-        }
 
         const thinkLevel = ref(0);
 
