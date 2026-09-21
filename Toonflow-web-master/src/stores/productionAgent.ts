@@ -193,6 +193,10 @@ function makeProductionAgentStore(projectId: string) {
             callback({ success: true, message: storyData });
           });
           s.on("addStoryboard", async (data, callback) => {
+            const requestId =
+              typeof data.requestId === "string" && /^[a-zA-Z0-9_-]{8,128}$/.test(data.requestId)
+                ? data.requestId
+                : `sb_${Date.now()}_${Math.random().toString(36).slice(2)}`;
             const insertVal = {
               prompt: data.prompt || "",
               duration: Number(data.duration) || 0,
@@ -207,9 +211,19 @@ function makeProductionAgentStore(projectId: string) {
               associateAssetsIds: data.associateAssetsIds || [],
             };
             flowData.value.storyboard.push(insertVal);
-            await addStoryboardInfo([insertVal]);
-            throttledFn();
-            callback({ success: true, message: $t("storyboard.assets.derivativeAddSuccess") });
+            // 保留本次新增镜头的对象引用；不能根据 prompt/时长/文案匹配，否则合法的相同镜头会被误合并。
+            const pending = flowData.value.storyboard[flowData.value.storyboard.length - 1];
+            try {
+              await addStoryboardInfo([insertVal], [pending], requestId);
+              throttledFn();
+              callback({ success: true, message: $t("storyboard.assets.derivativeAddSuccess"), requestId, id: pending.id });
+            } catch (reason) {
+              // HTTP 回执可能在数据库提交后丢失；移除未经确认的本地条目，不盲目重试插入。
+              const index = flowData.value.storyboard.indexOf(pending);
+              if (index !== -1 && !pending.id) flowData.value.storyboard.splice(index, 1);
+              const message = reason instanceof Error ? reason.message : "分镜保存失败";
+              callback({ success: false, message, requestId });
+            }
           });
         }
       },
@@ -450,21 +464,34 @@ function makeProductionAgentStore(projectId: string) {
       if (!connected.value) connect();
       socket.value!.emit("updateContext", ctx);
     }
-    async function addStoryboardInfo(items: any[]) {
-      const { data } = await axios.post("/production/storyboard/batchAddStoryboardInfo", {
+    async function addStoryboardInfo(items: any[], pendingItems: Storyboard[], requestId: string) {
+      // Axios 响应拦截器返回响应体而不是 AxiosResponse，使用实际接口形状检查回执。
+      const response = (await axios.post("/production/storyboard/batchAddStoryboardInfo", {
         scriptId: episodesId.value,
         data: items,
         projectId: projectId,
-      });
-
-      flowData.value.storyboard.forEach((item) => {
-        const updated = data.find((d: Storyboard) => d.prompt == item.prompt && d.duration == item.duration && d.videoDesc == item.videoDesc);
-        if (updated) {
-          item.id = updated.id;
-          item.trackId = updated.trackId;
-          item.src = updated.src;
-          item.state = updated.state;
-          item.associateAssetsIds = updated.associateAssetsIds;
+        requestId,
+      })) as unknown as { code: number; message?: string; data: Storyboard[]; createdIds?: number[] };
+      if (response?.code !== 200 || !Array.isArray(response.data) || !Array.isArray(response.createdIds) || response.createdIds.length !== items.length) {
+        throw new Error(response?.message ?? "分镜保存回执缺少本批镜头 ID");
+      }
+      const persisted = new Map(response.data.map((item) => [item.id, item]));
+      // 先验证整批映射，再修改本地数据；相同文案和时长的不同镜头仍各自保留自己的 ID。
+      const saved = response.createdIds.map((id) => persisted.get(id));
+      if (saved.some((item) => !item)) throw new Error("分镜保存回执与数据库记录不一致");
+      saved.forEach((item, index) => {
+        const target = pendingItems[index];
+        const record = item!;
+        const duplicate = flowData.value.storyboard.find((existing) => existing.id === record.id && existing !== target);
+        if (duplicate) {
+          const position = flowData.value.storyboard.indexOf(target);
+          if (position !== -1) flowData.value.storyboard.splice(position, 1);
+        } else {
+          target.id = record.id;
+          target.trackId = record.trackId;
+          target.src = record.src;
+          target.state = record.state;
+          target.associateAssetsIds = record.associateAssetsIds;
         }
       });
     }
