@@ -32,6 +32,6 @@ jobs:
           node-version: "24"
           cache: yarn
       - name: 安装检查所需依赖
-        run: yarn install --frozen-lockfile --ignore-scripts
+        run: yarn install --frozen-lockfile
       - name: 运行 Agent、分镜及剧本解析回归检查
         run: yarn test:agent
