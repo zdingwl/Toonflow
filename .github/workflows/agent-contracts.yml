@@ -34,4 +34,4 @@ jobs:
       - name: 安装检查所需依赖
         run: yarn install --frozen-lockfile --ignore-scripts
       - name: 运行 Agent、分镜及剧本解析回归检查
-        run: node --test tests/*.test.mjs
+        run: yarn test:agent
