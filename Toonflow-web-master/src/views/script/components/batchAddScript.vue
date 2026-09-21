@@ -72,13 +72,16 @@
                   </t-tooltip>
                 </template>
               </t-table>
-              <div class="selectedInfo">{{ $t("workbench.novel.import.selectedInfo", { count: selectedTextLength }) }}</div>
+              <div class="selectedInfo">{{ $t("workbench.novel.import.selectedInfo", { count: selectedTextLength }) }}（每集上限 {{ otherSetting.scriptEpisodeLength }} 字，按单集计算）</div>
+              <div v-if="selectedOversizedRows.length" role="alert" class="episodeLengthError">
+                以下已选剧集超过单集 {{ otherSetting.scriptEpisodeLength }} 字限制：{{ selectedOversizedRows.map((item) => `第${item.index}集（${item.scriptData.length}字）`).join('、') }}。请调整单集字数设置或取消选择超限剧集。
+              </div>
               <div style="margin-top: 16px; text-align: right">
                 <t-button variant="outline" @click="activeKey = 'To1'">{{ $t("workbench.novel.import.prevStep") }}</t-button>
                 <t-button
                   theme="primary"
                   style="margin-left: 10px"
-                  :disabled="!selectedRows.length"
+                  :disabled="!selectedRows.length || !!selectedOversizedRows.length"
                   :loading="nextLoading"
                   @click="keep">
                   保存
@@ -99,7 +102,9 @@ import parseScript from "@/utils/parseScript";
 import mammoth from "mammoth";
 import type { UploadFile, PrimaryTableCol, TableRowData } from "tdesign-vue-next";
 import projectStore from "@/stores/project";
+import settingStore from "@/stores/setting";
 const { project } = storeToRefs(projectStore());
+const { otherSetting } = storeToRefs(settingStore());
 interface ChapterItem {
   index: number;
   scriptName: string;
@@ -160,8 +165,10 @@ const tableData = computed<ChapterItem[]>(() => {
 // 选中的行数据
 const selectedRows = computed(() => tableData.value.filter((item) => selectedRowKeys.value.includes(item.index)));
 
-// 已选文本总长度
+// 已选文本总长度（仅展示，不作为单集字数的比较对象）
 const selectedTextLength = computed(() => selectedRows.value.reduce((sum, item) => sum + item.scriptData.length, 0));
+// 必须逐集校验：多集总字数不应触发单集的字数限制。
+const selectedOversizedRows = computed(() => selectedRows.value.filter((item) => item.scriptData.length > otherSetting.value.scriptEpisodeLength));
 
 // 触发上传
 function triggerUpload() {
@@ -234,6 +241,11 @@ async function keep() {
   nextLoading.value = true;
   if (!selectedRows.value.length) {
     window.$message.warning($t("workbench.script.import.msg.selectChapters"));
+    nextLoading.value = false;
+    return;
+  }
+  if (selectedOversizedRows.value.length) {
+    window.$message.warning(`已选剧集中有 ${selectedOversizedRows.value.length} 集超过每集 ${otherSetting.value.scriptEpisodeLength} 字限制，请先处理超限剧集`);
     nextLoading.value = false;
     return;
   }
@@ -351,6 +363,12 @@ async function getAiRegex() {
 }
 .aiRegexError {
   margin-top: 6px;
+  color: var(--td-error-color);
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.episodeLengthError {
   color: var(--td-error-color);
   font-size: 12px;
   line-height: 1.5;
