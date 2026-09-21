@@ -28,12 +28,13 @@ instance.interceptors.response.use(
       router.push("/login");
       MessagePlugin.error(window.$t("common.sessionExpired"));
     }
-    if (error.message.includes("Network Error") || error.response.data?.message === "Network Error") {
+    // 超时、DNS 或断网时 Axios 可能没有 response，不能在错误处理器中再次抛 TypeError。
+    if (error.message?.includes("Network Error") || error.response?.data?.message === "Network Error") {
       NotifyPlugin.error({
         title: "Network Error",
         closeBtn: true,
         duration: 3000, // 不自动关闭，让用户有时间看
-        className: "customNotifyFull", // 自定义类名
+        className: "customNotifyFull",
         content: () =>
           h("div", [
             h("div", { style: { marginBottom: "8px" } }, "网络连接失败，请依次尝试："),
