@@ -49,6 +49,56 @@ export default (nsp: Namespace) => {
       thinlLevel: 0,
     };
 
+    const scope = () => ({
+      agentType: "productionAgent" as const,
+      projectId: Number(resTool.data.projectId),
+      episodesId: Number(resTool.data.scriptId),
+      isolationKey,
+    });
+
+    const ensureRunScope = async (runId: string) => {
+      const run = await taskStore.getRun(runId);
+      if (
+        run.agentType !== "productionAgent" ||
+        Number(run.projectId) !== Number(resTool.data.projectId) ||
+        Number(run.episodesId) !== Number(resTool.data.scriptId) ||
+        run.isolationKey !== isolationKey
+      ) throw new Error("任务不属于当前项目、剧集或 Agent 上下文");
+      return run;
+    };
+
+    const executeRun = async (runId: string, content: string, controller: AbortController) => {
+      const msg = resTool.newMessage("assistant", "视频策划");
+      const ctx: agent.AgentContext = {
+        runId,
+        socket,
+        isolationKey,
+        text: content,
+        userMessageTime: new Date(msg.datetime).getTime() - 1,
+        abortSignal: controller.signal,
+        resTool,
+        msg,
+        thinkConfig,
+      };
+      activeRunId = runId;
+      try {
+        await agent.runDecisionAI(ctx);
+        await taskStore.finish(runId, controller.signal.aborted ? "reconciling" : "completed");
+      } catch (err: any) {
+        await taskStore.finish(runId, controller.signal.aborted ? "reconciling" : "failed", u.error(err).message);
+        if (err.name !== "AbortError" && !controller.signal.aborted) {
+          const message = u.error(err).message;
+          console.error("[productionAgent] chat error:", message);
+          ctx.msg.error(message);
+        }
+      } finally {
+        if (abortController === controller) {
+          abortController = null;
+          activeRunId = null;
+        }
+      }
+    };
+
     socket.on("agent:runs", async (_: unknown, callback) => {
       try {
         callback?.({ success: true, runs: await taskStore.list("productionAgent", Number(resTool.data.projectId), Number(resTool.data.scriptId)) });
@@ -57,7 +107,34 @@ export default (nsp: Namespace) => {
       }
     });
 
+    socket.on("agent:reconcile", async (data: { runId: string }, callback) => {
+      try {
+        await ensureRunScope(data.runId);
+        callback?.({ success: true, run: await taskStore.reconcile(data.runId) });
+      } catch (error) {
+        callback?.({ success: false, error: u.error(error).message });
+      }
+    });
+
+    socket.on("agent:resume", async (data: { runId: string }, callback) => {
+      try {
+        if (activeRunId || abortController) throw new Error("当前已有任务正在执行，请先停止后再恢复");
+        const resumed = await taskStore.resume(data.runId, scope());
+        const controller = new AbortController();
+        abortController = controller;
+        socket.emit("agent:run", { id: resumed.id, status: "running", duplicate: false, resumed: true });
+        callback?.({ success: true, runId: resumed.id });
+        void executeRun(resumed.id, resumed.content, controller);
+      } catch (error) {
+        callback?.({ success: false, error: u.error(error).message });
+      }
+    });
+
     socket.on("updateContext", (data: { isolationKey: string; projectId: number; scriptId: number }, callback) => {
+      if (activeRunId || abortController) {
+        callback?.({ success: false, error: "当前任务执行中，不能切换剧集上下文" });
+        return;
+      }
       isolationKey = data.isolationKey;
       resTool = new ResTool(socket, {
         projectId: data.projectId,
@@ -73,45 +150,23 @@ export default (nsp: Namespace) => {
       const interruptedRunId = activeRunId;
       abortController = new AbortController();
       const currentController = abortController;
-      let runId: string | null = null;
-
-      const msg = resTool.newMessage("assistant", "视频策划");
-      const ctx: agent.AgentContext = {
-        socket,
-        isolationKey,
-        text: content,
-        userMessageTime: new Date(msg.datetime).getTime() - 1,
-        abortSignal: currentController.signal,
-        resTool,
-        msg,
-        thinkConfig,
-      };
 
       try {
         if (interruptedRunId) await taskStore.finish(interruptedRunId, "reconciling", "被新请求中断，需核对已完成结果");
-        const run = await taskStore.begin({ requestId: data.requestId, agentType: "productionAgent", projectId: Number(resTool.data.projectId), episodesId: Number(resTool.data.scriptId), isolationKey, content });
+        const run = await taskStore.begin({ requestId: data.requestId, ...scope(), content });
         socket.emit("agent:run", run);
         if (run.duplicate) {
+          const msg = resTool.newMessage("assistant", "视频策划");
           msg.error(`该请求已存在，当前状态：${run.status}`);
+          if (abortController === currentController) abortController = null;
           return;
         }
-        runId = run.id;
-        activeRunId = runId;
-        ctx.runId = runId;
-        await agent.runDecisionAI(ctx);
-        await taskStore.finish(runId, currentController.signal.aborted ? "reconciling" : "completed");
+        await executeRun(run.id, content, currentController);
       } catch (err: any) {
-        if (runId) await taskStore.finish(runId, currentController.signal.aborted ? "reconciling" : "failed", u.error(err).message);
-        if (err.name !== "AbortError" && !currentController.signal.aborted) {
-          const message = u.error(err).message;
-          console.error("[productionAgent] chat error:", message);
-          ctx.msg.error(message);
-        }
-      } finally {
-        if (abortController === currentController) {
-          abortController = null;
-          activeRunId = null;
-        }
+        if (abortController === currentController) abortController = null;
+        console.error("[productionAgent] task start error:", u.error(err).message);
+        const msg = resTool.newMessage("assistant", "视频策划");
+        msg.error(u.error(err).message);
       }
     });
 
