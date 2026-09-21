@@ -129,9 +129,17 @@ export class TaskStore {
   }
 
   async finishStep(runId: string, stepKey: string, resultRef: string): Promise<void> {
-    const count = await this.db("o_agentStep").where({ runId, stepKey, status: "running" })
-      .update({ status: "completed", resultRef, error: null, updateTime: Date.now() });
-    if (count !== 1) throw new Error(`步骤 ${stepKey} 完成状态未能保存`);
+    await this.db.transaction(async (trx) => {
+      const unresolvedTools = await trx("o_agentToolCall")
+        .where({ runId, stepKey, sideEffect: 1 })
+        .whereIn("status", ["running", "reconciling", "failed", "retryable"]);
+      if (unresolvedTools.length) {
+        throw new Error(`步骤 ${stepKey} 仍有 ${unresolvedTools.length} 个写工具调用未核对，不能标记完成`);
+      }
+      const count = await trx("o_agentStep").where({ runId, stepKey, status: "running" })
+        .update({ status: "completed", resultRef, error: null, updateTime: Date.now() });
+      if (count !== 1) throw new Error(`步骤 ${stepKey} 完成状态未能保存`);
+    });
   }
 
   async failStep(runId: string, stepKey: string, error: string): Promise<void> {
