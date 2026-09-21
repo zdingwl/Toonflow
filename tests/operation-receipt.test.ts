@@ -48,3 +48,32 @@ test("相同 requestId 的操作只执行一次，不同输入会被拒绝", asy
     await db.destroy();
   }
 });
+
+
+test("副作用创建失败时回执事务整体回滚，后续相同 requestId 可重新执行", async () => {
+  const db = knex({ client: "better-sqlite3", connection: { filename: ":memory:" }, useNullAsDefault: true });
+  try {
+    await db.schema.createTable("o_agentWorkData", (table) => {
+      table.integer("id").primary();
+      table.integer("projectId");
+      table.integer("episodesId");
+      table.string("key");
+      table.text("data");
+      table.integer("createTime");
+      table.integer("updateTime");
+    });
+    const scope = { projectId: 5, episodesId: 6 };
+    await assert.rejects(
+      () => withOperationReceipt(db, scope, "storyboard-generate", "request_fail", { ids: [1] }, async () => {
+        throw new Error("模拟事务失败");
+      }),
+      /模拟事务失败/,
+    );
+    assert.equal(await getOperationReceipt(db, scope, "storyboard-generate", "request_fail"), null);
+    const retry = await withOperationReceipt(db, scope, "storyboard-generate", "request_fail", { ids: [1] }, async () => ({ ok: true }));
+    assert.equal(retry.duplicate, false);
+    assert.deepEqual(retry.receipt.data, { ok: true });
+  } finally {
+    await db.destroy();
+  }
+});
