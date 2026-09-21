@@ -13,11 +13,13 @@ test("修改过的 Agent、保存接口与前端 Store TypeScript 文件无语�
   for (const file of [
     "src/utils/ai.ts",
     "src/agents/scriptAgent/tools.ts",
+    "src/agents/productionAgent/tools.ts",
     "src/utils/agent/skillsTools.ts",
     "src/routes/production/storyboard/batchAddStoryboardInfo.ts",
     "src/routes/production/saveFlowData.ts",
     "src/routes/scriptAgent/getPlanData.ts",
     "src/routes/scriptAgent/setPlanData.ts",
+    "Toonflow-web-master/src/stores/productionAgent.ts",
     "Toonflow-web-master/src/stores/scriptAgent.ts",
   ]) {
     const result = ts.transpileModule(source(file), {
