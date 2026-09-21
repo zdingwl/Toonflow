@@ -9,6 +9,8 @@ test("Embedding 配置按数据库 key/value 行读取并拒绝无效路径", ()
   ]);
   assert.deepEqual(settings, { modelOnnxFile: ["all-MiniLM-L6-v2", "onnx", "model_fp16.onnx"], modelDtype: "fp16" });
   assert.throws(() => parseEmbeddingConfig([{ key: "modelOnnxFile", value: JSON.stringify(["..", "onnx", "model_fp16.onnx"]) }]));
+  assert.equal(parseEmbeddingConfig([{ key: "modelDtype", value: "q4f16" }]).modelDtype, "q4f16");
+  assert.equal(parseEmbeddingConfig([{ key: "modelDtype", value: "auto" }]).modelDtype, "auto");
   assert.throws(() => parseEmbeddingConfig([{ key: "modelDtype", value: "invalid" }]));
 });
 
