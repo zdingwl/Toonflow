@@ -181,11 +181,43 @@ ${skillEntries}
 </available_skills>`;
 }
 
+/**
+ * 仅根据本次 Agent 已选中的画风/题材导演技能发现参考文件。
+ * 列出路径而不提前读取正文，避免把其他画风的大量提示词注入模型上下文。
+ * 保留仓库既有的 driector_skills 拼写，避免改动现有文件目录。
+ */
+function discoverSelectedStyleResources(mainSkills: SkillPaths["mainSkill"], skillsRootDir: string): string[] {
+  const resources = new Set<string>();
+  const addFile = (filePath: string) => {
+    if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+      resources.add(toUnixPath(path.relative(skillsRootDir, filePath)));
+    }
+  };
+  for (const skill of mainSkills) {
+    const relativeSkill = toUnixPath(path.relative(skillsRootDir, path.resolve(skill.path)));
+    const match = relativeSkill.match(/^(art_skills|story_skills)\/([^/]+)\/driector_skills\/[^/]+\.md$/);
+    if (!match) continue;
+    const [, category, selectedName] = match;
+    const selectedDir = path.join(skillsRootDir, category, selectedName);
+    addFile(path.join(selectedDir, "README.md"));
+    if (category !== "art_skills") continue;
+    addFile(path.join(selectedDir, "prefix.md"));
+    const artPromptDir = path.join(selectedDir, "art_prompt");
+    if (!fs.existsSync(artPromptDir) || !fs.statSync(artPromptDir).isDirectory()) continue;
+    for (const entry of fs.readdirSync(artPromptDir, { withFileTypes: true })) {
+      if (entry.isFile() && entry.name.endsWith(".md")) addFile(path.join(artPromptDir, entry.name));
+    }
+  }
+  return [...resources].sort();
+}
+
 export function createSkillTools(skills: { name: string; description: string }[], skillPaths: SkillPaths, rootDir: string = getPath("skills")) {
   const activated = new Set<string>(); // 仅记录成功加载的技能
   const skillsRootDir = path.resolve(rootDir);
   const skillNames = skills.map((s) => s.name);
   const skillMap = new Map(skillPaths.mainSkill.map((s) => [s.name, s]));
+  const selectedStyleResources = discoverSelectedStyleResources(skillPaths.mainSkill, skillsRootDir);
+  let selectedStyleResourcesAnnounced = false;
   let tertiaryResourcesAnnounced = false;
   return {
     activate_skill: tool({
@@ -193,7 +225,7 @@ export function createSkillTools(skills: { name: string; description: string }[]
       inputSchema: jsonSchema<{ name: string }>(
         z
           .object({
-            name: z.enum(skillNames as [string, ...string[]]).describe("要激活的技能名称"),
+            name: (skillNames.length ? z.enum(skillNames as [string, ...string[]]) : z.string()).describe("要激活的技能名称"),
           })
           .toJSONSchema(),
       ),
@@ -222,14 +254,19 @@ export function createSkillTools(skills: { name: string; description: string }[]
         let content = `<skill_content name="${name}">\n`;
         content += body + "\n\n";
         content += "使用 read_skill_file 工具读取资源文件。\n";
-        if (skillPaths.secondarySkills.length > 0) {
+        const resourcePaths = [
+          ...skillPaths.secondarySkills,
+          ...(selectedStyleResourcesAnnounced ? [] : selectedStyleResources),
+        ];
+        if (resourcePaths.length > 0) {
           content += "\n<skill_resources>\n";
-          for (const resourcePath of skillPaths.secondarySkills) {
+          for (const resourcePath of new Set(resourcePaths)) {
             content += `  <file>${resourcePath}</file>\n`;
           }
           content += "</skill_resources>\n";
         }
         content += "</skill_content>";
+        selectedStyleResourcesAnnounced = true;
         activated.add(name);
         console.log(`⚡[主技能] ✓ 技能 "${name}" 已激活`);
         return { content };
