@@ -231,3 +231,69 @@ test("步骤存在未核对写工具时不能标记完成", async () => {
     await db.destroy();
   }
 });
+
+
+test("已核对为 cancelled 的步骤和写工具是终态，不阻塞任务完成", async () => {
+  const db = knex({ client: "better-sqlite3", connection: { filename: ":memory:" }, useNullAsDefault: true });
+  try {
+    await db.schema.createTable("o_agentRun", (t) => {
+      t.text("id").primary(); t.text("agentType"); t.integer("projectId"); t.integer("episodesId");
+      t.text("isolationKey"); t.text("inputHash"); t.text("inputContent"); t.text("status"); t.text("error");
+      t.integer("createTime"); t.integer("updateTime");
+    });
+    await db.schema.createTable("o_agentStep", (t) => {
+      t.text("id").primary(); t.text("runId"); t.text("stepKey"); t.text("inputHash"); t.text("inputContent"); t.text("output"); t.text("status");
+      t.text("resultRef"); t.text("error"); t.integer("createTime"); t.integer("updateTime");
+      t.unique(["runId", "stepKey"]);
+    });
+    await db.schema.createTable("o_agentSkillSnapshot", (t) => {
+      t.text("runId"); t.text("filePath"); t.text("contentHash"); t.text("content"); t.integer("createTime");
+      t.primary(["runId", "filePath"]);
+    });
+    await db.schema.createTable("o_agentToolCall", (t) => {
+      t.text("id").primary(); t.text("runId"); t.text("stepKey"); t.text("toolName"); t.text("operationKey");
+      t.text("inputHash"); t.text("inputJson"); t.text("outputJson"); t.integer("sideEffect");
+      t.text("status"); t.text("error"); t.integer("createTime"); t.integer("updateTime");
+    });
+
+    const store = new TaskStore(db);
+    await store.begin({
+      requestId: "request-cancelled",
+      agentType: "productionAgent",
+      projectId: 4,
+      episodesId: 5,
+      isolationKey: "4:productionAgent:5",
+      content: "测试取消恢复项",
+    });
+    const stepKey = TaskStore.makeStepKey("productionAgent:storyboardPanelAgent", "cancel-me");
+    await store.beginStep("request-cancelled", stepKey, "cancel-me");
+    await store.markStepReconciling("request-cancelled", stepKey, "待核对");
+    await store.resolveStep("request-cancelled", stepKey, "cancelled");
+
+    await db("o_agentToolCall").insert({
+      id: "cancelled-tool",
+      runId: "request-cancelled",
+      stepKey: null,
+      toolName: "generate_storyboard",
+      operationKey: "cancelled-op",
+      inputHash: "hash",
+      inputJson: "{}",
+      sideEffect: 1,
+      status: "reconciling",
+      createTime: Date.now(),
+      updateTime: Date.now(),
+    });
+    await store.resolveToolCall("request-cancelled", "cancelled-tool", "cancelled");
+    await store.finish("request-cancelled", "completed");
+
+    const state = await store.reconcile("request-cancelled");
+    assert.equal(state.status, "completed");
+    assert.equal(state.steps[0].status, "cancelled");
+    assert.equal(state.toolCalls[0].status, "cancelled");
+    const prompt = await store.buildResumePrompt("request-cancelled");
+    assert.match(prompt, /cancelled/);
+    assert.match(prompt, /不得自动重放/);
+  } finally {
+    await db.destroy();
+  }
+});
