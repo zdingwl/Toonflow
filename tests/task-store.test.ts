@@ -112,6 +112,12 @@ test("存在待核对步骤时拒绝自动恢复", async () => {
       () => store.resume("request-002", { agentType: "scriptAgent", projectId: 8, isolationKey: "8:scriptAgent" }),
       /需要核对/,
     );
+    await store.resolveStep("request-002", stepKey, "retryable");
+    assert.deepEqual(
+      await store.resume("request-002", { agentType: "scriptAgent", projectId: 8, isolationKey: "8:scriptAgent" }),
+      { id: "request-002", content: "生成剧本" },
+    );
+    assert.deepEqual(await store.beginStep("request-002", stepKey, "episode-1"), { cached: false });
   } finally {
     await db.destroy();
   }
