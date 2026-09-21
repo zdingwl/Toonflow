@@ -267,7 +267,7 @@ export default (toolCpnfig: ToolConfig) => {
       },
     }),
     add_flowData_storyboard: tool({
-      description: "新增分镜面板到工作区",
+      description: "新增分镜面板到工作区。重试同一镜头时必须复用原 requestId；不同镜头须使用不同 requestId。",
       inputSchema: jsonSchema<{
         videoDesc: string;
         prompt: string | null;
@@ -275,6 +275,7 @@ export default (toolCpnfig: ToolConfig) => {
         duration: number;
         associateAssetsIds: number[] | null;
         shouldGenerateImage: string;
+        requestId?: string;
       }>(
         z
           .object({
@@ -284,6 +285,7 @@ export default (toolCpnfig: ToolConfig) => {
             duration: z.number().describe("视频推荐时间"),
             associateAssetsIds: z.array(z.number()).nullable().describe("该分镜所需的资产ID列表"),
             shouldGenerateImage: z.enum(["true", "false"]).describe("是否需要生成分镜图片"),
+            requestId: z.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional().describe("可选操作标识；首次调用可省略。超时或失败后重试相同镜头时，必须复用上次错误消息中的 requestId，不可重新生成新标识。"),
           })
           .toJSONSchema(),
       ),
@@ -296,6 +298,7 @@ export default (toolCpnfig: ToolConfig) => {
           duration: raw.duration,
           associateAssetsIds: raw.associateAssetsIds ?? [],
           shouldGenerateImage: raw.shouldGenerateImage,
+          requestId: raw.requestId ?? `sb_${Date.now()}_${Math.random().toString(36).slice(2)}`,
         };
         try {
           // 分镜写入是前置数据操作，不同于图片生成：必须收到前端确认后才向 Agent 报告成功。
@@ -306,7 +309,7 @@ export default (toolCpnfig: ToolConfig) => {
                 socket.emit("addStoryboard", { ...data }, (ack: any) => {
                   clearTimeout(timeout);
                   if (ack === false || ack?.success === false || ack?.error) {
-                    reject(new Error(ack?.error ?? "分镜写入失败"));
+                    reject(new Error(ack?.error ?? ack?.message ?? "分镜写入失败"));
                     return;
                   }
                   resolve(ack);
@@ -318,10 +321,11 @@ export default (toolCpnfig: ToolConfig) => {
           thinking.complete();
           return res ?? true;
         } catch (error) {
-          thinking.appendText("分镜写入失败:\n" + u.error(error).message);
+          const detail = `${u.error(error).message}；同一镜头如需重试，请使用 requestId=${data.requestId} 并保持其他参数不变`;
+          thinking.appendText("分镜写入失败:\n" + detail);
           thinking.updateTitle("新增分镜失败");
           thinking.complete();
-          throw error;
+          throw new Error(detail);
         }
       },
     }),
