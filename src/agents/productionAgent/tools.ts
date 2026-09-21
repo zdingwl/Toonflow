@@ -88,29 +88,57 @@ export default (toolCpnfig: ToolConfig) => {
   const { resTool, toolsNames, msg } = toolCpnfig;
   const { socket } = resTool;
   const socketQueue = createSocketQueue(800);
-  const workMap: Record<any, any> = {};
   const tools: Record<string, Tool> = {
     get_flowData: tool({
-      description: "获取工作区数据",
-      inputSchema: jsonSchema<{ key: keyof FlowData }>(
+      description: "获取工作区数据；不传 offset/limit 时返回完整原始数据。长文本可选用 offset/limit 按字符分段，数组按条目分段，返回 data、total、nextOffset。",
+      inputSchema: jsonSchema<{ key: keyof FlowData; offset?: number; limit?: number }>(
         z
           .object({
             key: keySchema.describe("数据key"),
+            offset: z.number().int().min(0).optional().describe("可选分段起点，从0开始；文本按字符、数组按条目计数"),
+            limit: z.number().int().min(1).max(12000).optional().describe("可选分段长度，默认文本6000字符、数组10条；不传 offset/limit 时返回完整数据"),
           })
           .toJSONSchema(),
       ),
-      execute: async ({ key }) => {
+      execute: async ({ key, offset, limit }) => {
         const thinking = msg.thinking(`正在获取${flowDataKeyLabels[key]}工作区数据...`);
-        const flowData: FlowData = await new Promise((resolve) => socket.emit("getFlowData", { key }, (res: any) => resolve(res)));
-        thinking.appendText(`获取到${flowDataKeyLabels[key]}:\n` + JSON.stringify(flowData[key], null, 2));
-        thinking.updateTitle(`获取${flowDataKeyLabels[key]}完成`);
-        thinking.complete();
-        if (workMap[key] && JSON.stringify(workMap[key]) === JSON.stringify(flowData[key])) {
-          console.info(`[tools] get_flowData: ${flowDataKeyLabels[key]}数据未变化，无需更新`);
-          return `${flowDataKeyLabels[key]}数据未变化，无需更新`;
+        try {
+          const flowData: FlowData = await new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => reject(new Error(`获取${flowDataKeyLabels[key]}超时，未收到工作区响应`)), 60000);
+            socket.emit("getFlowData", { key }, (res: any) => {
+              clearTimeout(timeout);
+              if (!res || typeof res !== "object" || res.error || !(key in res)) {
+                reject(new Error(res?.error ?? `工作区未返回${flowDataKeyLabels[key]}数据`));
+                return;
+              }
+              resolve(res);
+            });
+          });
+          const value = flowData[key];
+          // 只有显式传入分段参数才改变返回形状；原有 Agent 调用保持原始值类型。
+          const useChunk = offset !== undefined || limit !== undefined;
+          let result: unknown = value;
+          if (useChunk && (typeof value === "string" || Array.isArray(value))) {
+            const start = offset ?? 0;
+            const count = limit ?? (typeof value === "string" ? 6000 : 10);
+            const end = Math.min(start + count, value.length);
+            result = {
+              data: value.slice(start, end),
+              offset: start,
+              total: value.length,
+              nextOffset: end < value.length ? end : null,
+            };
+          }
+          thinking.appendText(`获取到${flowDataKeyLabels[key]}:\n` + JSON.stringify(result, null, 2));
+          thinking.updateTitle(`获取${flowDataKeyLabels[key]}完成`);
+          thinking.complete();
+          return result;
+        } catch (error) {
+          thinking.appendText(`读取失败: ${u.error(error).message}`);
+          thinking.updateTitle(`获取${flowDataKeyLabels[key]}失败`);
+          thinking.complete();
+          throw error;
         }
-        workMap[key] = flowData[key];
-        return flowData[key];
       },
     }),
     add_deriveAsset: tool({
