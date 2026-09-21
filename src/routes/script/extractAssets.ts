@@ -3,7 +3,7 @@ import u from "@/utils";
 import { z } from "zod";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
-import { tool, jsonSchema } from "ai";
+import { tool, jsonSchema, stepCountIs } from "ai";
 import { o_script } from "@/types/database";
 import { normalizeScriptIds } from "@/utils/scriptAssetIds";
 
@@ -243,6 +243,7 @@ export default router.post(
               ],
               tools: { resultTool },
               toolChoice: { type: "tool", toolName: "resultTool" },
+              stopWhen: stepCountIs(1),
             });
           };
 
@@ -265,6 +266,7 @@ export default router.post(
               ],
               tools: { resultTool },
               toolChoice: { type: "tool", toolName: "resultTool" },
+              stopWhen: stepCountIs(1),
             });
           }
 
