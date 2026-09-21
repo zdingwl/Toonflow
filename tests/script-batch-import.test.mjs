@@ -8,12 +8,37 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 const component = readFileSync(new URL("../Toonflow-web-master/src/views/script/components/batchAddScript.vue", import.meta.url), "utf8");
 const route = readFileSync(new URL("../src/routes/script/batchAddScript.ts", import.meta.url), "utf8");
 const server = readFileSync(new URL("../src/app.ts", import.meta.url), "utf8");
+const add = readFileSync(new URL("../Toonflow-web-master/src/views/script/components/addScript.vue", import.meta.url), "utf8");
+const edit = readFileSync(new URL("../Toonflow-web-master/src/views/script/components/editScript.vue", import.meta.url), "utf8");
+const addRoute = readFileSync(new URL("../src/routes/script/addScript.ts", import.meta.url), "utf8");
+const editRoute = readFileSync(new URL("../src/routes/script/updateScript.ts", import.meta.url), "utf8");
 
 test("批量导入只要求勾选剧集，不按所有剧集的总字数禁用保存", () => {
   const saveButton = component.match(/<t-button\s+theme="primary"\s+style="margin-left: 10px"\s+:disabled="([^"]+)"\s+:loading="nextLoading"\s+@click="keep">\s*保存\s*<\/t-button>/)?.[1];
   assert.equal(saveButton, "!selectedRows.length");
   assert.doesNotMatch(component, /selectedTextLength\s*>\s*otherSetting\.scriptEpisodeLength/);
   assert.match(component, /selectedTextLength\s*=\s*computed\(/, "仍展示已选字数");
+});
+
+test("新建和编辑剧本支持超过 5000 字并保留正文必填校验", () => {
+  assert.doesNotMatch(add, /scriptEpisodeLength/);
+  assert.doesNotMatch(edit, /scriptEpisodeLength/);
+  assert.match(add, /<t-button theme="primary" :loading="keepLoading" @click="handleConfirm">/);
+  assert.match(edit, /style="margin-left: 10px"\s+@click="onConfirm">/);
+  assert.match(add, /if \(!scriptData\.value\.trim\(\)\)/);
+  assert.match(add, /if \(!scriptName\.value\.trim\(\)\)/);
+  assert.match(add, /scriptData\.length\s*\}\}\s*\{\{ \$t\("workbench\.novel\.import\.chars"\)/);
+  assert.match(edit, /props\.item\.content\.length\s*\}\}\s*\{\{ \$t\("workbench\.novel\.import\.chars"\)/);
+});
+
+test("新增、编辑及批量保存接口均不截断剧本正文", () => {
+  assert.match(addRoute, /content:\s*z\.string\(\)/);
+  assert.match(editRoute, /content:\s*z\.string\(\)/);
+  assert.match(route, /scriptData:\s*z\.string\(\)/);
+  assert.match(addRoute, /content,\s*projectId,/);
+  assert.match(editRoute, /name,\s*content,/);
+  assert.match(route, /content:\s*i\.scriptData/);
+  assert.match(server, /express\.json\(\{\s*limit:\s*"100mb"\s*\}\)/);
 });
 
 test("批量保存接口接收多集完整文本，服务端 JSON 容量大于单次选中剧本", () => {
