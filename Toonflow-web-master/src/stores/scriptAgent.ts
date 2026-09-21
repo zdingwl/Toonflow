@@ -56,29 +56,8 @@ function makeScriptAgentStore(projectId: string) {
             { tag: "scriptItem", keepInMessage: false },
           ],
           onXmlTag: (data) => {
-            const { tag, value, children, status, attrs } = data;
-            if (tag === "storySkeleton") {
-              planData.value.storySkeleton = value;
-            } else if (tag === "adaptationStrategy") {
-              planData.value.adaptationStrategy = value;
-            } else if (tag === "scriptItem") {
-              const name = attrs.name ?? "";
-              const content = value;
-              if (name) {
-                const existingIndex = planData.value.script.findIndex((s) => s.name === name);
-                if (existingIndex !== -1) {
-                  planData.value.script[existingIndex].content = content;
-                } else {
-                  planData.value.script.push({ name, content });
-                }
-              }
-            }
-            if (status === "complete") {
-              setPlanData().catch((error) => {
-                console.error("剧本工作区保存失败", error);
-                window.$message.error("剧本工作区保存失败，请检查后端状态并重试保存");
-              });
-            }
+            // Agent 产物先由后端校验、事务写入并读回确认；这里只等待 committed 回执。
+            if (["storySkeleton", "adaptationStrategy", "scriptItem"].includes(data.tag)) return;
           },
           autoConnect: false,
         });
@@ -87,6 +66,18 @@ function makeScriptAgentStore(projectId: string) {
           socket,
           (s) => {
             if (s) {
+              s.on("scriptWorkspace:committed", (payload: any) => {
+                if (payload?.type === "storySkeleton") {
+                  planData.value.storySkeleton = payload.value ?? "";
+                } else if (payload?.type === "adaptationStrategy") {
+                  planData.value.adaptationStrategy = payload.value ?? "";
+                } else if (payload?.type === "scriptItem" && payload.name) {
+                  const existingIndex = planData.value.script.findIndex((item) => item.name === payload.name);
+                  const next = { id: payload.id, name: payload.name, content: payload.content ?? "" };
+                  if (existingIndex === -1) planData.value.script.push(next);
+                  else planData.value.script[existingIndex] = next;
+                }
+              });
               s.on("getPlanData", (_, callback) => {
                 callback(planData.value);
               });
