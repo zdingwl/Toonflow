@@ -14,6 +14,7 @@ test("修改过的 Agent、保存接口与前端 Store TypeScript 文件无语�
     "src/utils/ai.ts",
     "src/agents/scriptAgent/tools.ts",
     "src/agents/productionAgent/tools.ts",
+    "src/utils/storyboardScenes.ts",
     "src/utils/agent/skillsTools.ts",
     "src/routes/production/storyboard/batchAddStoryboardInfo.ts",
     "src/routes/production/saveFlowData.ts",
@@ -55,12 +56,22 @@ test("剧本子任务只注入一对 scriptItem 标签", () => {
   assert.equal((format.match(/<\/scriptItem>/g) ?? []).length, 1);
 });
 
-test("分镜表提示词保持单标签写入并允许输出前补读", () => {
+test("分镜 Skill 允许短篇单标签与长篇单场标签，缺场不能报告完成", () => {
   const skill = source("data/skills/production_execution_storyboard_table.md");
-  assert.match(skill, /唯一一对.*storyboardTable/);
   assert.match(skill, /其他场景不得凭此虚构人物/);
-  assert.match(skill, /正式输出 XML 前按需读取/);
+  assert.match(skill, /<storyboardTable scene="N" total="M" task="storyboard_run_01">/);
+  assert.match(skill, /一次子 Agent 调用\*\*只处理一场/);
+  assert.match(skill, /缺失场次/);
+  assert.match(skill, /旧版整表模式/);
   assert.doesNotMatch(skill, /此后严禁再调用任何 `get_flowData`/);
+});
+
+test("前端只接收分场完成事件，并将场次独立提交给后端", () => {
+  const client = source("Toonflow-web-master/src/stores/productionAgent.ts");
+  assert.match(client, /if \(status !== "complete"\) return/);
+  assert.match(client, /scene: \{ taskId, index: scene, total, content: value \}/);
+  assert.match(client, /sceneReceipts\.set\(key, write\)/);
+  assert.match(client, /storyboardTableProgress = response\.data\.storyboardTableProgress/);
 });
 
 test("章节校验不读取整章小说正文", () => {
@@ -87,7 +98,7 @@ test("制作工作区保存先校验分镜归属，事务内读回数据后才�
   assert.match(route, /await u\.db\.transaction\(async \(trx\) =>/);
   assert.match(route, /where\(\{ id: item\.id, projectId, scriptId: episodesId \}\)/);
   assert.match(route, /key: "productionAgent"/);
-  assert.match(route, /saved\.data !== serialized/);
+  assert.match(route, /saved\.data !== payload/);
   assert.match(route, /工作区数据写入校验失败/);
 });
 
