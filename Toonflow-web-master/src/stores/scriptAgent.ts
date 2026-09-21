@@ -110,7 +110,7 @@ function makeScriptAgentStore(projectId: string) {
         const resolveRunStep = (
           runId: string,
           stepKey: string,
-          resolution: "completed" | "failed" | "retryable",
+          resolution: "completed" | "failed" | "retryable" | "cancelled",
           resultRef?: string,
           error?: string,
         ) => emitAck<{ success: true; run: any }>("agent:resolve-step", { runId, stepKey, resolution, resultRef, error });
