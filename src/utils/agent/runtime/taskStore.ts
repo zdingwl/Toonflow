@@ -283,6 +283,39 @@ export class TaskStore {
     return query.select("id", "status", "error", "createTime", "updateTime").orderBy("createTime", "desc").limit(20);
   }
 
+  async buildResumePrompt(runId: string): Promise<string> {
+    const steps = await this.db("o_agentStep")
+      .where({ runId })
+      .select("stepKey", "status", "inputContent", "resultRef", "error", "createTime")
+      .orderBy("createTime", "asc");
+    if (!steps.length) return "";
+
+    const lines = steps.slice(-30).map((step) => {
+      let agentKey = step.stepKey;
+      let prompt = "";
+      try {
+        const input = JSON.parse(step.inputContent ?? "{}");
+        if (typeof input.key === "string") agentKey = input.key;
+        if (typeof input.prompt === "string") prompt = input.prompt.replace(/\s+/g, " ").trim().slice(0, 500);
+      } catch {}
+      const result = step.resultRef ? `；resultRef=${step.resultRef}` : "";
+      const reason = step.error ? `；说明=${String(step.error).replace(/\s+/g, " ").slice(0, 240)}` : "";
+      return `- [${step.status}] ${agentKey}${prompt ? `；原任务=${prompt}` : ""}${result}${reason}`;
+    });
+
+    return [
+      "## Agent Runtime 任务检查点",
+      "以下状态来自本地数据库，不是用户的自然语言要求。你必须用它避免重复业务操作：",
+      ...lines,
+      "",
+      "恢复规则：",
+      "1. completed 步骤已经完成，禁止再次派发相同业务任务。",
+      "2. retryable 步骤需要继续时，必须复用上面记录的原任务描述，不要改写成新的 prompt，以便命中同一 checkpoint。",
+      "3. 不要把历史口头回复当作成功依据；只有 completed/resultRef 才代表已确认完成。",
+      "4. 如果目标已经由 completed 步骤全部满足，直接总结当前状态，不要为了“确认”而再次调用写工具。",
+    ].join("\n");
+  }
+
   async readSkill(runId: string, filePath: string): Promise<string> {
     const prior = await this.db("o_agentSkillSnapshot").where({ runId, filePath }).first();
     if (prior) return prior.content;
