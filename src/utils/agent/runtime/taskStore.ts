@@ -3,8 +3,8 @@ import type { Knex } from "knex";
 import { readFile } from "node:fs/promises";
 
 export type RunStatus = "running" | "completed" | "failed" | "reconciling";
-export type StepStatus = RunStatus | "retryable";
-export type ToolCallStatus = "running" | "completed" | "failed" | "reconciling" | "retryable";
+export type StepStatus = RunStatus | "retryable" | "cancelled";
+export type ToolCallStatus = "running" | "completed" | "failed" | "reconciling" | "retryable" | "cancelled";
 
 export type RunScope = {
   agentType: "scriptAgent" | "productionAgent";
@@ -156,7 +156,7 @@ export class TaskStore {
   async resolveStep(
     runId: string,
     stepKey: string,
-    resolution: "completed" | "failed" | "retryable",
+    resolution: "completed" | "failed" | "retryable" | "cancelled",
     resultRef?: string,
     error?: string,
   ): Promise<void> {
@@ -164,7 +164,15 @@ export class TaskStore {
       .update({
         status: resolution,
         resultRef: resolution === "completed" ? resultRef ?? null : null,
-        error: resolution === "completed" ? null : error ?? (resolution === "retryable" ? "已核对，可安全重试" : "已核对为失败"),
+        error:
+          resolution === "completed"
+            ? null
+            : error ??
+              (resolution === "retryable"
+                ? "已核对，可安全重试"
+                : resolution === "cancelled"
+                  ? "已核对并取消该步骤"
+                  : "已核对为失败"),
         updateTime: Date.now(),
       });
     if (count !== 1) throw new Error(`步骤 ${stepKey} 不在可核对状态`);
@@ -173,7 +181,7 @@ export class TaskStore {
   async resolveToolCall(
     runId: string,
     id: string,
-    resolution: "completed" | "retryable",
+    resolution: "completed" | "retryable" | "cancelled",
     output?: unknown,
     error?: string,
   ): Promise<void> {
@@ -183,7 +191,10 @@ export class TaskStore {
       .update({
         status: resolution,
         outputJson: resolution === "completed" ? JSON.stringify(output ?? null) : null,
-        error: resolution === "completed" ? null : error ?? "已核对，可安全重试",
+        error:
+          resolution === "completed"
+            ? null
+            : error ?? (resolution === "retryable" ? "已核对，可安全重试" : "已核对并取消该写工具调用"),
         updateTime: Date.now(),
       });
     if (count !== 1) throw new Error("工具调用不在可核对状态");
@@ -329,7 +340,7 @@ export class TaskStore {
       ...(toolLines.length ? ["### 写工具调用", ...toolLines] : []),
       "",
       "恢复规则：",
-      "1. completed 步骤和 completed 写工具已经完成，禁止再次派发相同业务操作。",
+      "1. completed 步骤和 completed 写工具已经完成，禁止再次派发相同业务操作；cancelled 表示已人工确认不再继续，也不得自动重放。",
       "2. retryable 步骤需要继续时，必须复用上面记录的原任务描述，不要改写成新的 prompt，以便命中同一 checkpoint。",
       "3. 不要把历史口头回复当作成功依据；只有 completed/resultRef 或 completed 工具回执才代表已确认完成。",
       "4. decision-level 的 completed 写工具同样不得重复调用。",
