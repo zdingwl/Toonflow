@@ -1,0 +1,32 @@
+name: Agent 与分镜协议检查
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/agent-contracts.yml"
+      - "src/agents/**"
+      - "src/routes/production/**"
+      - "src/routes/scriptAgent/**"
+      - "src/utils/storyboardScenes.ts"
+      - "src/utils/ai.ts"
+      - "src/utils/agent/**"
+      - "Toonflow-web-master/src/stores/**"
+      - "Toonflow-web-master/src/utils/useChat.ts"
+      - "data/skills/**"
+      - "tests/**"
+  workflow_dispatch:
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: yarn
+      - name: 安装检查所需依赖
+        run: yarn install --frozen-lockfile --ignore-scripts
+      - name: 运行 Agent、分镜及 XML 回归检查
+        run: node --test tests/*.test.mjs
