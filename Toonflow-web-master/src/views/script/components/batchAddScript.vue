@@ -16,6 +16,7 @@
                 :tips="regexError || undefined" />
               <t-button :loading="aiRegexLoading" @click="getAiRegex">{{ $t("workbench.script.import.getAiRegex") }}</t-button>
             </div>
+            <div v-if="aiRegexError" role="alert" class="aiRegexError">{{ aiRegexError }}</div>
             <div class="uploadArea" @click="triggerUpload" @dragover.prevent @drop.prevent="handleDrop">
               <t-upload
                 ref="uploadRef"
@@ -116,6 +117,7 @@ const selectedRowKeys = ref<number[]>([]);
 const nextLoading = ref(false);
 const customRegStr = ref("");
 const regexError = ref("");
+const aiRegexError = ref("");
 const aiRegexLoading = ref(false);
 
 // 验证正则合法性
@@ -255,6 +257,7 @@ watch(purgeNovelShow, (newVal) => {
     activeKey.value = "To1";
     customRegStr.value = "";
     regexError.value = "";
+    aiRegexError.value = "";
   }
 });
 
@@ -272,20 +275,29 @@ function getEpisodeRegexSample(text: string): string {
   return [windowFromLine(0, 2600), windowFromLine(Math.floor(text.length / 2), 1500), windowFromLine(text.length - 1500, 1500)].join("\n");
 }
 
+function getAiRegexErrorMessage(reason: unknown): string {
+  const response = reason as { message?: unknown; data?: { message?: unknown }; response?: { data?: { message?: unknown } } } | null;
+  for (const candidate of [response?.message, response?.data?.message, response?.response?.data?.message]) {
+    if (typeof candidate === "string" && candidate.trim()) return candidate.trim();
+  }
+  return "AI解析正则失败：未收到可读的错误信息，请检查通用AI模型配置及网络连接";
+}
+
 async function getAiRegex() {
   if (!content.value.trim()) {
     window.$message.warning($t("workbench.script.import.msg.selectChapters"));
     return;
   }
   const sample = getEpisodeRegexSample(content.value);
+  aiRegexError.value = "";
   aiRegexLoading.value = true;
   try {
     const { data } = await axios.post("/script/getAiRegex", { content: sample });
-    if (data) {
-      customRegStr.value = data;
-    }
+    if (typeof data !== "string" || !data.trim()) throw new Error("AI未返回有效的拆集正则，请检查通用AI模型配置或重试");
+    customRegStr.value = data;
   } catch (e) {
-    window.$message.error((e as Error).message);
+    aiRegexError.value = getAiRegexErrorMessage(e);
+    window.$message.error(aiRegexError.value);
   } finally {
     aiRegexLoading.value = false;
   }
@@ -317,7 +329,8 @@ async function getAiRegex() {
       }
 
       .uploadHint {
-        margin: 0;
+        font-size: 12px;
+        color: var(--td-text-color-placeholder);
       }
     }
     .to2Box {
@@ -336,6 +349,13 @@ async function getAiRegex() {
       }
     }
   }
+}
+.aiRegexError {
+  margin-top: 6px;
+  color: var(--td-error-color);
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 .ellipsisText {
   overflow: hidden;
