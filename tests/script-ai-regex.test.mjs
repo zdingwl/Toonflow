@@ -95,6 +95,20 @@ test("AI 正则拒绝同一集号在样本中重复命中，避免把结尾字�
   assert.match(result.body.message, /重复匹配|结尾字幕/);
 });
 
+test("任何来源的错误拆集正则都必须在第一步被拦截，不能继续显示成 62 集", () => {
+  const declaration = frontend.match(/function validateEpisodeSequence\(episodes: Array<\{ index: number \}>\): string \| null \{[\s\S]*?\n\}/)?.[0];
+  assert.ok(declaration, "必须有统一的分集语义校验");
+  const js = ts.transpileModule(declaration, { fileName: "validate.ts", compilerOptions }).outputText;
+  const validate = new Function(`${js}\nreturn validateEpisodeSequence;`)();
+
+  assert.equal(validate([{ index: 1 }, { index: 2 }, { index: 3 }]), null);
+  assert.match(validate([{ index: 1 }, { index: 1 }, { index: 2 }]), /重复集号/);
+  assert.match(validate([{ index: 1 }, { index: 3 }]), /不连续集号/);
+  assert.match(frontend, /const semanticError = customRegStr\.value\.trim\(\) \? validateEpisodeSequence\(episodes\) : null/);
+  assert.match(frontend, /if \(semanticError\) return \{ rows: \[\], error: semanticError \}/);
+  assert.match(frontend, /:disabled="!content \|\| !tableData\.length \|\| !!effectiveRegexError"/);
+});
+
 test("前端必须先用完整剧本验证 AI 正则，再允许覆盖当前规则", () => {
   assert.match(frontend, /function validateAiRegexAgainstFullText\(regexText: string\)/);
   assert.match(frontend, /duplicates\.size/);
