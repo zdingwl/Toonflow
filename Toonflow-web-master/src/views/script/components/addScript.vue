@@ -10,7 +10,7 @@
       <div class="data">
         <div class="section name">
           <span class="section-label">{{ $t("workbench.script.add.scriptName") }}</span>
-          <t-input v-model="scriptName" :placeholder="$t('workbench.script.add.scriptNamePh')" />
+          <t-input v-model="scriptName" :placeholder="$t("workbench.script.add.scriptNamePh")" />
         </div>
 
         <div class="section upload">
@@ -39,7 +39,7 @@
             :placeholder="$t('workbench.script.add.scriptContentPh')"
             name="description"
             :autosize="{ minRows: 12, maxRows: 12 }" />
-          <div class="scriptLen">{{ scriptData.length }} {{ $t("workbench.novel.import.chars") }}</div>
+          <div class="scriptLen">{{ scriptData.length }}/{{ otherSetting.scriptEpisodeLength }}</div>
         </div>
 
         <div class="section assets-section">
@@ -61,7 +61,7 @@
       <template #footer>
         <div class="dialog-footer">
           <t-button theme="default" @click="handleCancel">{{ $t("workbench.script.add.cancel") }}</t-button>
-          <t-button theme="primary" :loading="keepLoading" @click="handleConfirm">
+          <t-button theme="primary" :loading="keepLoading" :disabled="scriptData.length > otherSetting.scriptEpisodeLength" @click="handleConfirm">
             {{ $t("workbench.script.add.confirm") }}
           </t-button>
         </div>
@@ -77,6 +77,8 @@ import type { UploadFile } from "tdesign-vue-next";
 import axios from "@/utils/axios";
 import projectStore from "@/stores/project";
 import openAssetsSelector from "@/utils/assetsCheck";
+import settingStore from "@/stores/setting";
+const { otherSetting } = storeToRefs(settingStore());
 const { project } = storeToRefs(projectStore());
 
 const addScriptShow = defineModel<boolean>({
@@ -202,6 +204,10 @@ async function handleConfirm(): Promise<void> {
     window.$message.warning($t("workbench.script.add.msg.enterName"));
     return;
   }
+  if (scriptData.value.length > otherSetting.value.scriptEpisodeLength) {
+    window.$message.warning(`单集剧本不能超过 ${otherSetting.value.scriptEpisodeLength} 字，请调整单集字数设置或缩短本集内容`);
+    return;
+  }
   keepLoading.value = true;
   try {
     await axios.post("/script/addScript", {
@@ -252,7 +258,7 @@ $line-height: 28px;
 
     .section {
       display: flex;
-      flex-direction: column;
+    flex-direction: column;
       gap: 8px;
       .scriptLen {
         text-align: right;
