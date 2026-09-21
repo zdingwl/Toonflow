@@ -41,6 +41,10 @@ export default async (knex: Knex): Promise<void> => {
   if (await knex.schema.hasTable("o_memoryJob")) {
     await knex("o_memoryJob").where("status", "running").update({ status: "pending", updateTime: Date.now() });
   }
+  if (await knex.schema.hasTable("o_agentToolCall")) {
+    // 工具运行中退出时无法证明写操作是否已经生效；统一进入待核对状态，禁止自动重复执行。
+    await knex("o_agentToolCall").where("status", "running").update({ status: "reconciling", updateTime: Date.now() });
+  }
   //矫正因软件异常退出导致的状态不一致问题
   await db("o_novel").where("eventState", 0).update({
     eventState: -1,
