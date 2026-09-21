@@ -34,7 +34,9 @@ export default router.post(
         const script = await trx("o_script").where({ id: episodesId, projectId }).first();
         if (!script) throw new Error("当前项目不存在该集剧本");
         const existing = await trx("o_agentWorkData").where(scope).first();
-        const storedData = existing ? JSON.parse(existing.data || "{}") : {};
+        const storedData = existing ? JSON.parse(existing.data || "{}") : {
+          script: script.content ?? "", scriptPlan: "", assets: [], storyboardTable: "", storyboard: [], workbench: { videoList: [] },
+        };
         let nextData: any;
         let sceneResult: ReturnType<typeof mergeStoryboardScene> | undefined;
 
