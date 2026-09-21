@@ -87,6 +87,7 @@ export default async (knex: Knex): Promise<void> => {
       { key: "memoryRerankerUrl", value: "http://127.0.0.1:11435/rerank" },
       { key: "memoryRerankerModel", value: "Qwen3-Reranker-4B" },
       { key: "memoryRerankerCandidates", value: "24" },
+      { key: "memoryVectorScanPageSize", value: "256" },
     ]).onConflict("key").ignore();
   }
   await addColumn("o_prompt", "useData", "text");
