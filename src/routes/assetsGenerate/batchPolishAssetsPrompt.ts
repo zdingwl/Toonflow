@@ -4,6 +4,7 @@ import pLimit from "p-limit";
 import * as zod from "zod";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
+import { buildAssetPromptSystemPrompt, buildAssetPromptUserPrompt, type AssetPromptType } from "@/utils/assetPrompt";
 const router = express.Router();
 interface OutlineItem {
   description: string;
@@ -61,13 +62,14 @@ export default router.post(
 
     const getTypeConfig = (
       isDerivative: boolean,
-    ): Record<string, { promptKey: string; itemType: ItemType; label: string; nameLabel: string; visualManual: string }> => ({
+    ): Record<string, { promptKey: string; itemType: ItemType; label: string; nameLabel: string; visualManual: string; assetType: AssetPromptType }> => ({
       role: {
         promptKey: "role-polish",
         itemType: "characters",
         label: "角色标准四视图",
         nameLabel: "角色",
         visualManual: isDerivative ? "art_character_derivative" : "art_character",
+        assetType: "role",
       },
       scene: {
         promptKey: "scene-polish",
@@ -75,6 +77,7 @@ export default router.post(
         label: "场景图",
         nameLabel: "场景",
         visualManual: isDerivative ? "art_scene_derivative" : "art_scene",
+        assetType: "scene",
       },
       tool: {
         promptKey: "tool-polish",
@@ -82,6 +85,7 @@ export default router.post(
         label: "道具图",
         nameLabel: "道具",
         visualManual: isDerivative ? "art_prop_derivative" : "art_prop",
+        assetType: "tool",
       },
     });
 
@@ -100,18 +104,14 @@ export default router.post(
           await u.db("o_assets").where("id", item.assetsId).update({ promptState: "生成失败", promptErrorReason: "视觉手册未定义" });
           return;
         }
-        const systemPrompt = visualManual;
+        const systemPrompt = buildAssetPromptSystemPrompt(visualManual, config.assetType, otherTextPrompt);
         try {
           const { _output } = (await u.Ai.Text("universalAi").invoke({
-            system: systemPrompt + "\n" + otherTextPrompt,
+            system: systemPrompt,
             messages: [
               {
                 role: "user",
-                content: `
-                    **基础参数：**
-      **${config.nameLabel}设定：**
-      - ${config.nameLabel}名称:${item.name},
-      - ${config.nameLabel}描述:${item.describe},`,
+                content: buildAssetPromptUserPrompt(config.nameLabel, item.name, item.describe),
               },
             ],
           })) as any;
