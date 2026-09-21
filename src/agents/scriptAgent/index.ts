@@ -40,7 +40,9 @@ export async function runDecisionAI(ctx: AgentContext) {
   await memory.add("user", text, { createTime: userMessageTime });
 
   const skill = path.join(u.getPath("skills"), "script_agent_decision.md");
-  const prompt = ctx.runId ? await new TaskStore(u.db).readSkill(ctx.runId, skill) : await fs.promises.readFile(skill, "utf-8");
+  const taskStore = ctx.runId ? new TaskStore(u.db) : null;
+  const prompt = taskStore ? await taskStore.readSkill(ctx.runId!, skill) : await fs.promises.readFile(skill, "utf-8");
+  const checkpoint = taskStore ? await taskStore.buildResumePrompt(ctx.runId!) : "";
 
   const budgetRow = await u.db("o_setting").where({ key: "memoryContextTokenBudget" }).select("value").first();
   const configuredBudget = Number(budgetRow?.value);
@@ -63,8 +65,11 @@ export async function runDecisionAI(ctx: AgentContext) {
 
   const { fullStream } = await u.Ai.Text("scriptAgent:decisionAgent", ctx.thinkConfig.think, ctx.thinkConfig.thinlLevel).stream({
     messages: [
-      { role: "system", content: prompt },
-      { role: "assistant", content: projectInfo + "\n" + mem },
+      {
+        role: "system",
+        content: prompt + (checkpoint ? "\n\n恢复任务时必须遵守 assistant 消息中的 Agent Runtime 任务检查点，不得重复已完成业务步骤。" : ""),
+      },
+      { role: "assistant", content: [projectInfo, mem, checkpoint].filter(Boolean).join("\n\n") },
       { role: "user", content: text },
     ],
     abortSignal,
