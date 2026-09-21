@@ -77,7 +77,7 @@
                 <t-button
                   theme="primary"
                   style="margin-left: 10px"
-                  :disabled="selectedTextLength > otherSetting.scriptEpisodeLength"
+                  :disabled="!selectedRows.length"
                   :loading="nextLoading"
                   @click="keep">
                   保存
@@ -92,8 +92,6 @@
 </template>
 
 <script setup lang="ts">
-import settingStore from "@/stores/setting";
-const { otherSetting } = storeToRefs(settingStore());
 import { LoadingPlugin } from "tdesign-vue-next";
 import axios from "@/utils/axios";
 import parseScript from "@/utils/parseScript";
@@ -302,19 +300,19 @@ async function getAiRegex() {
       padding: 38px 16px;
       border: 2px dashed #969494;
       border-radius: 8px;
-      text-align: center;
+      transition: border-color 0.2s;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: border-color 0.2s;
       &:hover {
         border-color: #000000;
       }
 
       .dragIcon {
-        margin-bottom: 12px;
+        margin-top: 0;
+        i-upload-one { color: var(--td-brand-color); }
       }
 
       .uploadText {
-        font-size: 14px;
         margin: 0 0 8px;
       }
 
@@ -331,7 +329,7 @@ async function getAiRegex() {
         margin-bottom: 8px;
       }
       .footerInfo {
-        font-size: 12px;
+        margin-top: 8px;
         .tips.warn {
           margin-left: 8px;
         }
