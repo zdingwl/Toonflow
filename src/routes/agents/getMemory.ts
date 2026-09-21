@@ -30,6 +30,9 @@ function sanitizeContent(content: any, hiddenTags: string[]): any | null {
     const data = stripHiddenXml(content.data, hiddenTags).trim();
     return data ? { ...content, data } : null;
   }
+  if (content.type === "thinking") {
+    return { ...content, ext: { collapsed: true, ...(content.ext ?? {}) } };
+  }
   if (content.type === "reasoning" && Array.isArray(content.data)) {
     const data = content.data.map((item: any) => sanitizeContent(item, hiddenTags)).filter(Boolean);
     return data.length ? { ...content, data } : null;
