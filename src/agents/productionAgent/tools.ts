@@ -3,6 +3,7 @@ import { z } from "zod";
 import _ from "lodash";
 import ResTool from "@/socket/resTool";
 import u from "@/utils";
+import { createHash, randomUUID } from "node:crypto";
 
 const deriveAssetSchema = z.object({
   id: z.number().describe("衍生资产ID,如果新增则为空"),
@@ -142,82 +143,198 @@ export default (toolCpnfig: ToolConfig) => {
       },
     }),
     add_deriveAsset: tool({
-      description: "新增或更新衍生资产",
-      inputSchema: jsonSchema<{ assetsId: number; id: number | null; name: string; desc: string }>(
+      description: "新增或更新衍生资产。写入使用 requestId 事务回执；重试同一操作必须复用相同 requestId。",
+      inputSchema: jsonSchema<{ assetsId: number; id: number | null; name: string; desc: string; requestId?: string }>(
         z
           .object({
             assetsId: z.number().describe("关联的资产ID"),
             id: z.number().nullable().describe("衍生资产ID,如果新增则为空"),
             name: z.string().describe("衍生资产名称"),
             desc: z.string().describe("衍生资产描述"),
+            requestId: z.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional()
+              .describe("可选操作标识；失败重试必须复用错误信息中的 requestId"),
           })
           .toJSONSchema(),
       ),
       execute: async (raw) => {
         const idRaw = raw.id as unknown;
         const normalizedId = idRaw === "null" || idRaw === "" || idRaw === undefined ? null : (idRaw as number | null);
-        const deriveAsset = { ...raw, id: normalizedId };
+        const requestId = raw.requestId ?? `da_${randomUUID()}`;
         const thinking = msg.thinking("正在操作资产...");
         const { projectId, scriptId } = resTool.data;
-        const startTime = Date.now();
-        const parentAssets = await u.db("o_assets").where({ id: deriveAsset.assetsId, projectId }).select("id", "type").first();
-        if (!parentAssets) return "关联的资产不存在";
-        if (deriveAsset.id) {
-          const existing = await u.db("o_assets").where({ id: deriveAsset.id, projectId, assetsId: deriveAsset.assetsId }).first();
-          if (!existing) throw new Error("衍生资产不属于当前项目或指定的父资产");
-        }
-        const data = {
-          id: deriveAsset.id ?? undefined,
-          assetsId: deriveAsset.assetsId,
-          projectId,
-          name: deriveAsset.name,
-          type: parentAssets.type,
-          describe: deriveAsset.desc,
-          startTime,
-        };
-        if (deriveAsset.id) {
-          await u.db("o_assets").where({ id: deriveAsset.id, projectId, assetsId: deriveAsset.assetsId }).update(data);
-          thinking.appendText(`已更新衍生资产，ID: ${deriveAsset.id}\n`);
-        } else {
-          const insertedId = await u.db.transaction(async (trx) => {
-            const [id] = await trx("o_assets").insert(data);
-            await trx("o_scriptAssets").insert({ scriptId, assetId: id });
-            return id;
+        const payload = { assetsId: raw.assetsId, id: normalizedId, name: raw.name, desc: raw.desc };
+        const payloadHash = createHash("sha256").update(JSON.stringify(payload)).digest("hex");
+        const receiptKey = `deriveAssetWrite:${requestId}`;
+
+        try {
+          const committed = await u.db.transaction(async (trx) => {
+            const priorReceipt = await trx("o_agentWorkData")
+              .where({ projectId, episodesId: scriptId, key: receiptKey })
+              .select("data")
+              .first();
+            if (priorReceipt?.data) {
+              const prior = JSON.parse(priorReceipt.data);
+              if (prior.payloadHash !== payloadHash || !Number.isSafeInteger(Number(prior.assetId))) {
+                throw new Error("相同 requestId 对应不同的衍生资产写入内容");
+              }
+              const existing = await trx("o_assets").where({ id: Number(prior.assetId), projectId, assetsId: raw.assetsId }).first();
+              const linked = await trx("o_scriptAssets").where({ scriptId, assetId: Number(prior.assetId) }).first();
+              if (!existing || !linked || existing.name !== raw.name || (existing.describe ?? "") !== raw.desc) {
+                throw new Error("衍生资产写入回执与当前数据库状态不一致");
+              }
+              return { asset: existing, reused: true };
+            }
+
+            const parent = await trx("o_assets").where({ id: raw.assetsId, projectId }).select("id", "type").first();
+            if (!parent) throw new Error("关联的资产不存在");
+
+            let assetId = normalizedId;
+            if (assetId) {
+              const existing = await trx("o_assets").where({ id: assetId, projectId, assetsId: raw.assetsId }).first();
+              const linked = await trx("o_scriptAssets").where({ scriptId, assetId }).first();
+              if (!existing || !linked) throw new Error("衍生资产不属于当前项目、剧集或指定的父资产");
+              const updated = await trx("o_assets").where({ id: assetId, projectId, assetsId: raw.assetsId }).update({
+                name: raw.name,
+                type: parent.type,
+                describe: raw.desc,
+                startTime: Date.now(),
+              });
+              if (updated !== 1) throw new Error("衍生资产更新失败");
+            } else {
+              const [insertedId] = await trx("o_assets").insert({
+                assetsId: raw.assetsId,
+                projectId,
+                name: raw.name,
+                type: parent.type,
+                describe: raw.desc,
+                startTime: Date.now(),
+              });
+              assetId = Number(insertedId);
+              await trx("o_scriptAssets").insert({ scriptId, assetId });
+            }
+
+            const saved = await trx("o_assets").where({ id: assetId, projectId, assetsId: raw.assetsId }).first();
+            const linked = await trx("o_scriptAssets").where({ scriptId, assetId }).first();
+            if (!saved || !linked || saved.name !== raw.name || (saved.describe ?? "") !== raw.desc) {
+              throw new Error("衍生资产写入后校验失败");
+            }
+            await trx("o_agentWorkData").insert({
+              projectId,
+              episodesId: scriptId,
+              key: receiptKey,
+              data: JSON.stringify({ payloadHash, assetId, assetsId: raw.assetsId, action: "upsert" }),
+            });
+            return { asset: saved, reused: false };
           });
-          data.id = insertedId;
-          thinking.appendText(`已新增衍生资产，ID: ${insertedId}\n`);
+
+          const data = {
+            id: Number(committed.asset.id),
+            assetsId: raw.assetsId,
+            projectId,
+            name: committed.asset.name,
+            type: committed.asset.type,
+            describe: committed.asset.describe,
+            startTime: committed.asset.startTime,
+          };
+          const ack = await new Promise<any>((resolve, reject) => {
+            const timeout = setTimeout(() => reject(new Error("衍生资产已写入数据库，但前端同步回执超时")), 30000);
+            socket.emit("addDeriveAsset", data, (response: any) => {
+              clearTimeout(timeout);
+              if (response === false || response?.success === false || response?.error) {
+                reject(new Error(response?.error ?? response?.message ?? "前端同步衍生资产失败"));
+                return;
+              }
+              resolve(response);
+            });
+          });
+          thinking.appendText(`${committed.reused ? "已复用" : "已提交"}衍生资产，ID: ${data.id}\n`);
+          thinking.updateTitle("资产操作完成");
+          thinking.complete();
+          return { success: true, requestId, id: data.id, reused: committed.reused, ack };
+        } catch (error) {
+          const detail = `${u.error(error).message}；同一操作如需重试，请复用 requestId=${requestId}`;
+          thinking.appendText("资产写入失败:\n" + detail);
+          thinking.updateTitle("资产操作失败");
+          thinking.complete();
+          throw new Error(detail);
         }
-        const res = await new Promise((resolve) => socket.emit("addDeriveAsset", data, (res: any) => resolve(res)));
-        thinking.updateTitle("资产操作完成");
-        thinking.complete();
-        return res ?? "操作成功";
       },
     }),
     del_deriveAsset: tool({
-      description: "删除衍生资产",
-      inputSchema: jsonSchema<{ assetsId: number; id: number }>(
+      description: "删除衍生资产。删除与 requestId 回执在同一事务；失败重试必须复用相同 requestId。",
+      inputSchema: jsonSchema<{ assetsId: number; id: number; requestId?: string }>(
         z
           .object({
             assetsId: z.number().describe("关联的资产ID"),
             id: z.number().describe("衍生资产ID"),
+            requestId: z.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional()
+              .describe("可选操作标识；失败重试必须复用错误信息中的 requestId"),
           })
           .toJSONSchema(),
       ),
-      execute: async ({ assetsId, id }) => {
+      execute: async ({ assetsId, id, requestId: rawRequestId }) => {
         const thinking = msg.thinking("正在操作资产...");
         const { scriptId, projectId } = resTool.data;
-        await u.db.transaction(async (trx) => {
-          const linked = await trx("o_scriptAssets").where({ scriptId, assetId: id }).first();
-          const asset = await trx("o_assets").where({ id, projectId, assetsId }).first();
-          if (!linked || !asset) throw new Error("衍生资产不属于当前项目或剧集");
-          await trx("o_scriptAssets").where({ scriptId, assetId: id }).del();
-          await trx("o_assets").where({ id, projectId, assetsId }).del();
-        });
-        thinking.appendText(`已删除衍生资产，ID: ${id}\n`);
-        const res = await new Promise((resolve) => socket.emit("delDeriveAsset", { assetsId, id }, (res: any) => resolve(res)));
-        thinking.updateTitle("资产操作完成");
-        thinking.complete();
-        return res ?? "删除成功";
+        const requestId = rawRequestId ?? `dd_${randomUUID()}`;
+        const payloadHash = createHash("sha256").update(JSON.stringify({ assetsId, id })).digest("hex");
+        const receiptKey = `deriveAssetDelete:${requestId}`;
+
+        try {
+          const reused = await u.db.transaction(async (trx) => {
+            const priorReceipt = await trx("o_agentWorkData")
+              .where({ projectId, episodesId: scriptId, key: receiptKey })
+              .select("data")
+              .first();
+            if (priorReceipt?.data) {
+              const prior = JSON.parse(priorReceipt.data);
+              if (prior.payloadHash !== payloadHash || Number(prior.assetId) !== id) {
+                throw new Error("相同 requestId 对应不同的衍生资产删除内容");
+              }
+              const asset = await trx("o_assets").where({ id, projectId, assetsId }).first();
+              const linked = await trx("o_scriptAssets").where({ scriptId, assetId: id }).first();
+              if (asset || linked) throw new Error("删除回执存在，但当前数据库仍存在该衍生资产或剧集关联");
+              return true;
+            }
+
+            const linked = await trx("o_scriptAssets").where({ scriptId, assetId: id }).first();
+            const asset = await trx("o_assets").where({ id, projectId, assetsId }).first();
+            if (!linked || !asset) throw new Error("衍生资产不属于当前项目或剧集");
+            await trx("o_scriptAssets").where({ scriptId, assetId: id }).del();
+            await trx("o_assets").where({ id, projectId, assetsId }).del();
+            const remainingAsset = await trx("o_assets").where({ id, projectId }).first();
+            const remainingLink = await trx("o_scriptAssets").where({ scriptId, assetId: id }).first();
+            if (remainingAsset || remainingLink) throw new Error("衍生资产删除后校验失败");
+            await trx("o_agentWorkData").insert({
+              projectId,
+              episodesId: scriptId,
+              key: receiptKey,
+              data: JSON.stringify({ payloadHash, assetId: id, assetsId, action: "delete" }),
+            });
+            return false;
+          });
+
+          const ack = await new Promise<any>((resolve, reject) => {
+            const timeout = setTimeout(() => reject(new Error("衍生资产已从数据库删除，但前端同步回执超时")), 30000);
+            socket.emit("delDeriveAsset", { assetsId, id }, (response: any) => {
+              clearTimeout(timeout);
+              if (response === false || response?.success === false || response?.error) {
+                reject(new Error(response?.error ?? response?.message ?? "前端同步删除失败"));
+                return;
+              }
+              resolve(response);
+            });
+          });
+          thinking.appendText(`${reused ? "已复用删除回执" : "已删除"}衍生资产，ID: ${id}\n`);
+          thinking.updateTitle("资产操作完成");
+          thinking.complete();
+          return { success: true, requestId, id, reused, ack };
+        } catch (error) {
+          const detail = `${u.error(error).message}；同一删除操作如需重试，请复用 requestId=${requestId}`;
+          thinking.appendText("资产删除失败:\n" + detail);
+          thinking.updateTitle("资产操作失败");
+          thinking.complete();
+          throw new Error(detail);
+        }
       },
     }),
     generate_deriveAsset: tool({
