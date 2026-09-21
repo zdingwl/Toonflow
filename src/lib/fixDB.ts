@@ -68,6 +68,10 @@ export default async (knex: Knex): Promise<void> => {
   });
 
   // 添加新字段
+  await addColumn("o_agentRun", "inputContent", "text");
+  await addColumn("o_agentStep", "inputHash", "text");
+  await addColumn("o_agentStep", "inputContent", "text");
+  await addColumn("o_agentStep", "output", "text");
   await addColumn("o_prompt", "useData", "text");
   // 添加新字段
   await addColumn("o_agentDeploy", "type", "string");
