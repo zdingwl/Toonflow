@@ -80,8 +80,6 @@ function createSubAgent(parentCtx: AgentContext) {
   const memory = new Memory("scriptAgent", parentCtx.isolationKey);
   const taskStore = new TaskStore(u.db);
   const readSkill = (filePath: string) => parentCtx.runId ? taskStore.readSkill(parentCtx.runId, filePath) : fs.promises.readFile(filePath, "utf-8");
-  let stepNumber = 0;
-
   async function runAgent({
     key,
     prompt,
@@ -99,34 +97,39 @@ function createSubAgent(parentCtx: AgentContext) {
     tools?: Record<string, any>;
     messages?: { role: "user" | "assistant" | "system"; content: string }[];
   }) {
-    const stepKey = `${key}:${++stepNumber}`;
-    if (parentCtx.runId) await taskStore.startStep(parentCtx.runId, stepKey);
-    try {
-    parentCtx.msg.complete();
-    const subMsg = resTool.newMessage("assistant", name);
-
-    const { fullStream } = await u.Ai.Text(key, parentCtx.thinkConfig.think, parentCtx.thinkConfig.thinlLevel).stream({
-      system,
-      messages: messages ?? [{ role: "user", content: prompt }],
-      abortSignal,
-      tools: { ...extraTools, ...useTools({ resTool, msg: subMsg }) },
-    });
-
-    const fullResponse = await consumeFullStream(fullStream, subMsg);
-
-    if (fullResponse.trim()) {
-      await memory.add(memoryKey, removeAllXmlTags(fullResponse), {
-        name,
-        createTime: new Date(subMsg.datetime).getTime(),
-      });
+    const stepInput = JSON.stringify({ key, prompt, messages: messages ?? null });
+    const stepKey = TaskStore.makeStepKey(key, stepInput);
+    if (parentCtx.runId) {
+      const prior = await taskStore.beginStep(parentCtx.runId, stepKey, stepInput);
+      if (prior.cached) return prior.output ?? "";
     }
+    try {
+      parentCtx.msg.complete();
+      const subMsg = resTool.newMessage("assistant", name);
 
-    if (parentCtx.runId) await taskStore.finishStep(parentCtx.runId, stepKey, `message:${subMsg.id}`);
+      const { fullStream } = await u.Ai.Text(key, parentCtx.thinkConfig.think, parentCtx.thinkConfig.thinlLevel).stream({
+        system,
+        messages: messages ?? [{ role: "user", content: prompt }],
+        abortSignal,
+        tools: { ...extraTools, ...useTools({ resTool, msg: subMsg }) },
+      });
 
-    parentCtx.msg = resTool.newMessage("assistant", "视频策划");
-    return fullResponse;
+      const fullResponse = await consumeFullStream(fullStream, subMsg);
+      if (parentCtx.runId) await taskStore.saveStepOutput(parentCtx.runId, stepKey, fullResponse);
+
+      if (fullResponse.trim()) {
+        await memory.add(memoryKey, removeAllXmlTags(fullResponse), {
+          name,
+          createTime: new Date(subMsg.datetime).getTime(),
+        });
+      }
+
+      if (parentCtx.runId) await taskStore.finishStep(parentCtx.runId, stepKey, `message:${subMsg.id}`);
+
+      parentCtx.msg = resTool.newMessage("assistant", "视频策划");
+      return fullResponse;
     } catch (error) {
-      if (parentCtx.runId) await taskStore.failStep(parentCtx.runId, stepKey, u.error(error).message);
+      if (parentCtx.runId) await taskStore.markStepReconciling(parentCtx.runId, stepKey, u.error(error).message);
       throw error;
     }
   }
