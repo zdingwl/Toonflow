@@ -31,3 +31,20 @@ test("资产提取入库前必须归一化模型返回的 scriptIds，不能直�
   assert.doesNotMatch(routeSource, /for \(const asset of newAssets\)[\s\S]{0,200}for \(const sid of asset\.scriptIds\)/);
   assert.match(routeSource, /AI 返回的资产关联剧本ID无效/);
 });
+
+
+test("资产批次大小必须就是 groupSize，5 不能膨胀成 25 集", () => {
+  assert.match(routeSource, /export function chunkArray\(arr: number\[\], groupSize: number\): number\[\]\[\]/);
+  assert.match(routeSource, /arr\.slice\(i, i \+ safeGroupSize\)/);
+  assert.doesNotMatch(routeSource, /i \+= 5[\s\S]{0,300}i \+= groupSize/);
+});
+
+test("资产提取必须强制 resultTool，单步结束，并在空结果时自动重试一次", () => {
+  const forcedCalls = routeSource.match(/toolChoice: \{ type: "tool", toolName: "resultTool" \}/g) ?? [];
+  const oneStepStops = routeSource.match(/stopWhen: stepCountIs\(1\)/g) ?? [];
+  assert.equal(forcedCalls.length, 2);
+  assert.equal(oneStepStops.length, 2);
+  assert.match(routeSource, /await invokeExtraction\(\);/);
+  assert.match(routeSource, /AI 连续两次未调用资产结果工具或返回空资产/);
+  assert.doesNotMatch(routeSource, /参考技能 script_assets_extract/);
+});
