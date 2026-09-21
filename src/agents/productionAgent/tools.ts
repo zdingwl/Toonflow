@@ -63,20 +63,24 @@ interface ToolConfig {
   msg: ReturnType<ResTool["newMessage"]>;
 }
 
-/**
- * 串行队列：确保 socket 操作排队执行，避免并发过高导致假死
- * @param delayMs 每个操作之间的最小间隔(ms)
- */
+/** 串行队列：一个请求失败不能让其后的分镜操作全部停在已拒绝的 Promise 上。 */
 function createSocketQueue(delayMs = 800) {
-  let lastPromise: Promise<any> = Promise.resolve();
+  let lastPromise: Promise<unknown> = Promise.resolve();
   return <T>(fn: () => Promise<T>): Promise<T> => {
-    lastPromise = lastPromise.then(
+    const operation = lastPromise.then(
       () =>
         new Promise<T>((resolve, reject) => {
-          setTimeout(() => fn().then(resolve, reject), delayMs);
+          setTimeout(() => {
+            try {
+              Promise.resolve(fn()).then(resolve, reject);
+            } catch (error) {
+              reject(error);
+            }
+          }, delayMs);
         }),
     );
-    return lastPromise;
+    lastPromise = operation.then(() => undefined, () => undefined);
+    return operation;
   };
 }
 
@@ -97,7 +101,6 @@ export default (toolCpnfig: ToolConfig) => {
       ),
       execute: async ({ key }) => {
         const thinking = msg.thinking(`正在获取${flowDataKeyLabels[key]}工作区数据...`);
-
         const flowData: FlowData = await new Promise((resolve) => socket.emit("getFlowData", { key }, (res: any) => resolve(res)));
         thinking.appendText(`获取到${flowDataKeyLabels[key]}:\n` + JSON.stringify(flowData[key], null, 2));
         thinking.updateTitle(`获取${flowDataKeyLabels[key]}完成`);
@@ -123,17 +126,14 @@ export default (toolCpnfig: ToolConfig) => {
           .toJSONSchema(),
       ),
       execute: async (raw) => {
-        // 容错：LLM 偶尔传 "null" 字符串或空串，统一规范为 null
         const idRaw = raw.id as unknown;
         const normalizedId = idRaw === "null" || idRaw === "" || idRaw === undefined ? null : (idRaw as number | null);
         const deriveAsset = { ...raw, id: normalizedId };
-
         const thinking = msg.thinking("正在操作资产...");
         const { projectId, scriptId } = resTool.data;
         const startTime = Date.now();
         const parentAssets = await u.db("o_assets").where("id", deriveAsset.assetsId).select("id", "type").first();
         if (!parentAssets) return "关联的资产不存在";
-
         const data = {
           id: deriveAsset.id ?? undefined,
           assetsId: deriveAsset.assetsId,
@@ -202,7 +202,6 @@ export default (toolCpnfig: ToolConfig) => {
             thinking.updateTitle("衍生资产生成失败");
             thinking.complete();
           });
-
         return "开始生成衍生资产";
       },
     }),
@@ -236,7 +235,6 @@ export default (toolCpnfig: ToolConfig) => {
             thinking.updateTitle("分镜生成失败");
             thinking.complete();
           });
-
         return "开始生成分镜";
       },
     }),
@@ -271,26 +269,32 @@ export default (toolCpnfig: ToolConfig) => {
           associateAssetsIds: raw.associateAssetsIds ?? [],
           shouldGenerateImage: raw.shouldGenerateImage,
         };
-        socketQueue(
-          () =>
-            new Promise((resolve, reject) =>
-              socket.emit("addStoryboard", { ...data }, (res: any) => {
-                if (res?.error) return reject(new Error(res.error));
-                resolve(res);
+        try {
+          // 分镜写入是前置数据操作，不同于图片生成：必须收到前端确认后才向 Agent 报告成功。
+          const res = await socketQueue(
+            () =>
+              new Promise<any>((resolve, reject) => {
+                const timeout = setTimeout(() => reject(new Error("分镜写入超时，未收到前端确认")), 60000);
+                socket.emit("addStoryboard", { ...data }, (ack: any) => {
+                  clearTimeout(timeout);
+                  if (ack === false || ack?.success === false || ack?.error) {
+                    reject(new Error(ack?.error ?? "分镜写入失败"));
+                    return;
+                  }
+                  resolve(ack);
+                });
               }),
-            ),
-        )
-          .then((res) => {
-            thinking.appendText("新增的分镜数据:\n" + JSON.stringify(data, null, 2));
-            thinking.updateTitle("新增分镜成功");
-            thinking.complete();
-          })
-          .catch((e) => {
-            thinking.appendText("新增的分镜数据:\n" + JSON.stringify(data, null, 2));
-            thinking.updateTitle("新增分镜失败");
-            thinking.complete();
-          });
-        return true;
+          );
+          thinking.appendText("新增的分镜数据:\n" + JSON.stringify(data, null, 2));
+          thinking.updateTitle("新增分镜成功");
+          thinking.complete();
+          return res ?? true;
+        } catch (error) {
+          thinking.appendText("分镜写入失败:\n" + u.error(error).message);
+          thinking.updateTitle("新增分镜失败");
+          thinking.complete();
+          throw error;
+        }
       },
     }),
   };
