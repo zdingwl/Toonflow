@@ -329,8 +329,7 @@ async function getAiRegex() {
       }
 
       .uploadHint {
-        font-size: 12px;
-        color: var(--td-text-color-placeholder);
+        margin: 0;
       }
     }
     .to2Box {
