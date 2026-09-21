@@ -24,13 +24,38 @@ test("制作工作区保存及分镜排序在同一事务，并校验真实持�
   assert.match(route, /saved\.data !== serialized/);
 });
 
-test("分镜批量保存使用事务且仅在提交后回填新 ID", () => {
+test("分镜批量写入的请求标识与新 ID 在同一事务中保存", () => {
   const route = source("src/routes/production/storyboard/batchAddStoryboardInfo.ts");
-  const commit = route.indexOf("const { stored, createdIds } = await u.db.transaction(");
-  const result = route.indexOf("data.forEach((item: any, index: number) => { item.id = createdIds[index]; });");
-  assert.ok(commit >= 0 && result > commit);
+  assert.match(route, /requestId: z\.string\(\)\.min\(8\)\.max\(128\)/);
+  assert.match(route, /createHash\("sha256"\)/);
+  assert.match(route, /const \{ stored, createdIds, associationMap \} = await u\.db\.transaction\(/);
+  assert.match(route, /where\(\{ projectId, episodesId: scriptId, key: requestKey \}\)/);
+  assert.match(route, /prior\.payloadHash !== payloadHash/);
+  assert.match(route, /whereIn\("id", createdIds\)/);
+  assert.match(route, /data: JSON\.stringify\(\{ payloadHash, createdIds \}\)/);
+  assert.match(route, /return \{ stored, createdIds, associationMap \}/);
+  assert.match(route, /\.send\(\{ \.\.\.success\(storyboardData\), createdIds \}\)/);
   assert.match(route, /引用资产不属于当前项目或不存在/);
-  assert.match(route, /const stored = await trx\("o_storyboard"\)\.where\(\{ scriptId, projectId \}\)/);
-  assert.match(route, /trackId: item\.trackId/);
   assert.match(route, /Math\.max\(Date\.now\(\), Number\(maxRow\?\.maxId \?\? 0\) \+ 1\)/);
+});
+
+test("分镜前端按新增顺序回填真实 ID，不再依据同文案查找", () => {
+  const client = source("Toonflow-web-master/src/stores/productionAgent.ts");
+  const write = client.split("async function addStoryboardInfo(")[1]?.split("const loadingHistory")[0];
+  assert.ok(write, "分镜写入函数不存在");
+  assert.match(write, /data: items,[\s\S]*?requestId/);
+  assert.match(write, /response\.createdIds\.map\(\(id\) => persisted\.get\(id\)\)/);
+  assert.match(write, /const target = pendingItems\[index\]/);
+  assert.doesNotMatch(write, /\.find\(\(d: Storyboard\) => d\.prompt/);
+  assert.match(client, /callback\(\{ success: false, message, requestId \}\)/);
+});
+
+test("Agent 分镜写入工具可复用 requestId，并把失败后的重试标识传回模型", () => {
+  const tools = source("src/agents/productionAgent/tools.ts");
+  const write = tools.split("add_flowData_storyboard: tool(")[1];
+  assert.ok(write, "分镜写入工具不存在");
+  assert.match(write, /requestId: z\.string\(\)\.min\(8\)\.max\(128\)/);
+  assert.match(write, /requestId: raw\.requestId \?\?/);
+  assert.match(write, /ack\?\.error \?\? ack\?\.message/);
+  assert.match(write, /同一镜头如需重试，请使用 requestId=/);
 });
