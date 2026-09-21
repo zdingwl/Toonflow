@@ -6,6 +6,7 @@ import ResTool from "@/socket/resTool";
 import { TaskStore } from "@/utils/agent/runtime/taskStore";
 import { reconcileDirectorPlanOutput } from "@/agents/productionAgent/directorPlan";
 import { reconcileStoryboardTableOutput } from "@/agents/productionAgent/storyboardTable";
+import { getOperationReceipt } from "@/utils/agent/runtime/operationReceipt";
 
 async function verifyToken(rawToken: string): Promise<Boolean> {
   const setting = await u.db("o_setting").where("key", "tokenKey").select("value").first();
@@ -102,6 +103,29 @@ export default (nsp: Namespace) => {
         }
       }
 
+      // 回执与分镜新增使用同一事务；没有回执就能证明写入未提交，可以安全进入 retryable。
+      state = await taskStore.reconcile(runId);
+      for (const call of state.toolCalls.filter(
+        (item) => item.toolName === "add_flowData_storyboard" && ["reconciling", "failed"].includes(item.status),
+      )) {
+        try {
+          const input = (call.input ?? {}) as Record<string, unknown>;
+          const requestId =
+            (typeof input.requestId === "string" && input.requestId) ||
+            call.error?.match(/requestId=([A-Za-z0-9_-]{8,128})/)?.[1];
+          if (!requestId) continue;
+          const receipt = await u.db("o_agentWorkData")
+            .where({ projectId, episodesId, key: `storyboardWrite:${requestId}` })
+            .select("data")
+            .first();
+          if (!receipt) {
+            await taskStore.resolveToolCall(runId, call.id, "retryable", undefined, "未发现分镜写入事务回执，可安全重试");
+          }
+        } catch (error) {
+          console.warn("[productionAgent] 判断分镜写入重试状态失败:", call.id, u.error(error).message);
+        }
+      }
+
       state = await taskStore.reconcile(runId);
       for (const call of state.toolCalls.filter(
         (item) => ["add_deriveAsset", "del_deriveAsset"].includes(item.toolName) && ["reconciling", "failed"].includes(item.status),
@@ -160,6 +184,69 @@ export default (nsp: Namespace) => {
       }
 
       state = await taskStore.reconcile(runId);
+      for (const call of state.toolCalls.filter(
+        (item) => ["add_deriveAsset", "del_deriveAsset"].includes(item.toolName) && ["reconciling", "failed"].includes(item.status),
+      )) {
+        try {
+          const input = (call.input ?? {}) as Record<string, unknown>;
+          const requestId =
+            (typeof input.requestId === "string" && input.requestId) ||
+            call.error?.match(/requestId=([A-Za-z0-9_-]{8,128})/)?.[1];
+          if (!requestId) continue;
+          const key = call.toolName === "add_deriveAsset"
+            ? `deriveAssetWrite:${requestId}`
+            : `deriveAssetDelete:${requestId}`;
+          const receipt = await u.db("o_agentWorkData").where({ projectId, episodesId, key }).select("data").first();
+          if (!receipt) {
+            await taskStore.resolveToolCall(runId, call.id, "retryable", undefined, "未发现衍生资产事务回执，可安全重试");
+          }
+        } catch (error) {
+          console.warn("[productionAgent] 判断衍生资产重试状态失败:", call.id, u.error(error).message);
+        }
+      }
+
+      state = await taskStore.reconcile(runId);
+      for (const call of state.toolCalls.filter(
+        (item) => ["generate_deriveAsset", "generate_storyboard"].includes(item.toolName) && ["reconciling", "failed"].includes(item.status),
+      )) {
+        try {
+          const input = (call.input ?? {}) as Record<string, unknown>;
+          const requestId =
+            (typeof input.requestId === "string" && input.requestId) ||
+            call.error?.match(/requestId=([A-Za-z0-9_-]{8,128})/)?.[1];
+          if (!requestId) continue;
+          const ids = Array.isArray(input.ids)
+            ? [...new Set(input.ids.map(Number).filter(Number.isSafeInteger))].sort((a, b) => a - b)
+            : [];
+          if (!ids.length) continue;
+
+          const kind = call.toolName === "generate_deriveAsset" ? "asset-generate" : "storyboard-generate";
+          const expectedInput = call.toolName === "generate_deriveAsset"
+            ? { assetIds: ids, projectId, scriptId: episodesId }
+            : { storyboardIds: ids, projectId, scriptId: episodesId, compulsory: false };
+          const receipt = await getOperationReceipt(
+            u.db,
+            { projectId, episodesId },
+            kind,
+            requestId,
+            expectedInput,
+          );
+          if (receipt) {
+            await taskStore.resolveToolCall(runId, call.id, "completed", {
+              success: true,
+              requestId,
+              accepted: true,
+              reconciled: true,
+            });
+          } else {
+            await taskStore.resolveToolCall(runId, call.id, "retryable", undefined, "后端未发现生成任务受理回执，可安全重试");
+          }
+        } catch (error) {
+          console.warn("[productionAgent] 自动核对图片生成请求失败:", call.id, u.error(error).message);
+        }
+      }
+
+      state = await taskStore.reconcile(runId);
       for (const step of state.steps.filter((item) => item.status === "reconciling")) {
         try {
           if (step.stepKey.startsWith("productionAgent:directorPlanAgent:")) {
@@ -187,6 +274,11 @@ export default (nsp: Namespace) => {
           if (sideEffects.every((call) => call.status === "completed") && step.output?.trim()) {
             // 模型完整输出已经落盘，且所有写工具都有成功回执；无需再次运行模型和业务写入。
             await taskStore.resolveStep(runId, step.stepKey, "completed", `recovered:${step.stepKey}`);
+            continue;
+          }
+          if (sideEffects.every((call) => ["completed", "retryable"].includes(call.status))) {
+            // 所有不确定写入都已经核对：completed 会由 ToolExecutor 复用，retryable 才会真正再次执行。
+            await taskStore.resolveStep(runId, step.stepKey, "retryable", undefined, "写工具状态均已核对，可安全恢复模型步骤");
           }
         } catch (error) {
           console.warn("[productionAgent] 自动核对步骤失败:", step.stepKey, u.error(error).message);
