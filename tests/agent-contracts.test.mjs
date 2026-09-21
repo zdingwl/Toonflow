@@ -19,6 +19,9 @@ test("修改过的 Agent、保存接口与前端 Store TypeScript 文件无语�
     "src/utils/agent/runtime/taskStore.ts",
     "src/utils/agent/runtime/toolExecutor.ts",
     "src/utils/agent/runtime/operationReceipt.ts",
+    "src/utils/agent/embeddingConfig.ts",
+    "src/routes/setting/memoryConfig/getMemory.ts",
+    "src/routes/setting/memoryConfig/sureMemory.ts",
     "src/agents/scriptAgent/workspace.ts",
     "src/agents/productionAgent/directorPlan.ts",
     "src/agents/productionAgent/storyboardTable.ts",
@@ -153,4 +156,32 @@ test("资产与分镜图片生成使用 requestId 持久化回执并在重复请
   assert.match(socketRoute, /"generate_deriveAsset"/);
   assert.match(socketRoute, /"generate_storyboard"/);
   assert.match(socketRoute, /后端未发现生成任务受理回执，可安全重试/);
+});
+
+
+test("记忆设置可配置本地 Ollama Embedding、混合召回、Reranker 与 Token 预算", () => {
+  const client = source("Toonflow-web-master/src/components/setting/components/memoryConfig.vue");
+  const getRoute = source("src/routes/setting/memoryConfig/getMemory.ts");
+  const saveRoute = source("src/routes/setting/memoryConfig/sureMemory.ts");
+  const embeddingConfig = source("src/utils/agent/embeddingConfig.ts");
+
+  for (const key of [
+    "embeddingBackend",
+    "ollamaEmbeddingModel",
+    "memoryHybridRetrieval",
+    "memoryRerankerEnabled",
+    "memoryRerankerUrl",
+    "memoryRerankerModel",
+    "memoryRerankerCandidates",
+    "memoryContextTokenBudget",
+    "memoryVectorScanPageSize",
+  ]) {
+    assert.match(client, new RegExp(key));
+    assert.match(getRoute, new RegExp(key));
+    assert.match(saveRoute, new RegExp(key));
+  }
+  assert.match(saveRoute, /disposeEmbedding/);
+  assert.match(client, /qwen3-embedding:4b/);
+  assert.match(client, /Qwen3-Reranker-4B/);
+  assert.match(embeddingConfig, /q4f16/);
 });
