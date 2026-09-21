@@ -12,7 +12,9 @@ export function parseEmbeddingConfig(rows: Array<{ key?: string | null; value?: 
     throw new Error("Embedding 模型路径配置无效");
   }
   const modelDtype = settings.get("modelDtype") || "fp16";
-  if (!["fp32", "fp16", "q8", "q4"].includes(modelDtype)) throw new Error(`Embedding 量化类型无效: ${modelDtype}`);
+  if (!["auto", "fp32", "fp16", "q8", "int8", "uint8", "q4", "bnb4", "q4f16"].includes(modelDtype)) {
+    throw new Error(`Embedding 量化类型无效: ${modelDtype}`);
+  }
   return { modelOnnxFile: modelOnnxFile as [string, "onnx", string], modelDtype };
 }
 
