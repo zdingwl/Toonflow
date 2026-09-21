@@ -1,9 +1,10 @@
 import u from "@/utils";
 import { v4 as uuidv4 } from "uuid";
 import { createHash } from "node:crypto";
-import { getEmbedding, getEmbeddingModelId, cosineSimilarity } from "./embedding";
+import { getEmbedding, getEmbeddingModelId } from "./embedding";
 import { indexMemoryTerms, lexicalCandidates, queueMemoryVector, queueMissingVectors, startMemoryIndex } from "./retrieval/memoryIndex";
 import { getRerankerCandidateLimit, rerankRows } from "./retrieval/reranker";
+import { VectorTopK } from "./retrieval/vectorTopK";
 import type { memories as MemoryRow } from "@/types/database";
 import { tool, jsonSchema } from "ai";
 import { z } from "zod";
@@ -24,21 +25,6 @@ const DEFAULTS: {
   ragLimit: 3, // get()向量相似搜索返回的message条数
   deepRetrieveSummaryLimit: 5, // deepRetrieve()向量召回summary的条数
 };
-
-// ── 向量搜索辅助 ──
-function vectorSearch(rows: MemoryRow[], queryEmbedding: number[], limit: number, lexicalIds = new Set<string>()) {
-  return rows
-    .map((row) => {
-      let emb: number[] = [];
-      try { emb = JSON.parse(row.embedding ?? "[]"); } catch {}
-      const valid = emb.length === queryEmbedding.length && emb.every(Number.isFinite);
-      const lexical = typeof row.id === "string" && lexicalIds.has(row.id);
-      return { ...row, similarity: valid ? cosineSimilarity(queryEmbedding, emb) + (lexical ? 0.08 : 0) : lexical ? 0.08 : -Infinity };
-    })
-    .filter((row) => Number.isFinite(row.similarity))
-    .sort((a, b) => b.similarity - a.similarity)
-    .slice(0, limit);
-}
 
 class Memory {
   private agentType: string;
@@ -96,26 +82,57 @@ class Memory {
       const modelId = await getEmbeddingModelId();
       await queueMissingVectors(this.isolationKey, modelId);
       startMemoryIndex();
+
       const queryEmbedding = await getEmbedding(text, "query");
       const hybrid = await u.db("o_setting").where({ key: "memoryHybridRetrieval" }).select("value").first();
-      const ids = hybrid?.value !== "0" ? await lexicalCandidates(this.isolationKey, text) : null;
-      const query = u.db("memories as m")
-        .join("o_memoryVector as v", "m.id", "v.memoryId")
-        .where({ "m.isolationKey": this.isolationKey, "m.type": type, "v.modelId": modelId })
-        .select("m.*", "v.embedding as indexedEmbedding");
-      const indexed = (await query).map((row: any) => ({ ...row, embedding: row.indexedEmbedding }));
-      // 旧 MiniLM 记忆保留原列；切换模型后不允许混用旧向量。
-      const legacyQuery = u.db("memories").where({ isolationKey: this.isolationKey, type }).whereNotNull("embedding");
-      const legacy = modelId === "all-MiniLM-L6-v2/onnx/model_fp16.onnx:fp16" ? await legacyQuery : [];
-      const seen = new Set(indexed.map((row: any) => row.id));
-      const rows = [...indexed, ...legacy.filter((row: any) => !seen.has(row.id))];
-      if (ids?.length) {
-        const lexical = await u.db("memories").where({ isolationKey: this.isolationKey, type }).whereIn("id", ids);
-        const included = new Set(rows.map((row: any) => row.id));
-        rows.push(...lexical.filter((row: any) => !included.has(row.id)));
-      }
+      const ids = hybrid?.value !== "0" ? await lexicalCandidates(this.isolationKey, text) : [];
+      const lexicalIds = new Set(ids);
       const candidateLimit = await getRerankerCandidateLimit(limit);
-      const candidates = vectorSearch(rows, queryEmbedding, candidateLimit, new Set(ids ?? []));
+      const pageSetting = await u.db("o_setting").where({ key: "memoryVectorScanPageSize" }).select("value").first();
+      const configuredPage = Number(pageSetting?.value);
+      const pageSize = Number.isSafeInteger(configuredPage) ? Math.min(2000, Math.max(64, configuredPage)) : 256;
+      const topK = new VectorTopK<any>(queryEmbedding, candidateLimit, lexicalIds);
+
+      const scan = async (legacyOnly: boolean) => {
+        let cursor = "";
+        for (;;) {
+          const query = u.db("memories as m")
+            .leftJoin("o_memoryVector as v", function () {
+              this.on("m.id", "=", "v.memoryId").andOnVal("v.modelId", "=", modelId);
+            })
+            .where({ "m.isolationKey": this.isolationKey, "m.type": type })
+            .modify((builder) => {
+              if (legacyOnly) builder.whereNull("v.memoryId").whereNotNull("m.embedding");
+              else builder.whereNotNull("v.memoryId");
+              if (cursor) builder.where("m.id", ">", cursor);
+            })
+            .select("m.*", "v.embedding as indexedEmbedding")
+            .orderBy("m.id", "asc")
+            .limit(pageSize);
+          const page = await query;
+          if (!page.length) break;
+          topK.add(page.map((row: any) => ({
+            ...row,
+            embedding: legacyOnly ? row.embedding : row.indexedEmbedding,
+          })));
+          cursor = String(page[page.length - 1].id);
+          if (page.length < pageSize) break;
+        }
+      };
+
+      await scan(false);
+      if (modelId === "all-MiniLM-L6-v2/onnx/model_fp16.onnx:fp16") await scan(true);
+
+      for (let offset = 0; offset < ids.length; offset += pageSize) {
+        const batch = ids.slice(offset, offset + pageSize);
+        if (!batch.length) break;
+        const lexicalRows = await u.db("memories")
+          .where({ isolationKey: this.isolationKey, type })
+          .whereIn("id", batch);
+        topK.add(lexicalRows as any[]);
+      }
+
+      const candidates = topK.values();
       try {
         return await rerankRows(text, candidates, limit);
       } catch (rerankError) {
