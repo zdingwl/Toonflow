@@ -32,6 +32,7 @@ test("修改过的 Agent、保存接口与前端 Store TypeScript 文件无语�
     "src/routes/production/storyboard/batchGenerateImage.ts",
     "src/routes/production/assets/batchGenerateAssetsImage.ts",
     "src/routes/production/saveFlowData.ts",
+    "src/routes/agents/getMemory.ts",
     "src/routes/scriptAgent/getPlanData.ts",
     "src/routes/scriptAgent/setPlanData.ts",
     "Toonflow-web-master/src/stores/productionAgent.ts",
@@ -202,4 +203,35 @@ test("已受理的图片生成在进程重启后只恢复仍为生成中的任�
   assert.match(storyboardRoute, /claimed\.duplicate[\s\S]*state === "生成中"/);
   assert.match(storyboardRoute, /generationIdSet/);
   assert.match(storyboardRoute, /activeStoryboardGenerationRequests\.delete\(generationKey\)/);
+});
+
+
+test("导演计划读取以后端数据库为准，自动保存不会覆盖 Agent 已提交内容", () => {
+  const tools = source("src/agents/productionAgent/tools.ts");
+  const save = source("src/routes/production/saveFlowData.ts");
+  const client = source("Toonflow-web-master/src/stores/productionAgent.ts");
+  const planNode = source("Toonflow-web-master/src/views/production/node/scriptPlan.vue");
+  const tableNode = source("Toonflow-web-master/src/views/production/node/storyboardTable.vue");
+  const production = source("src/agents/productionAgent/index.ts");
+  const history = source("src/routes/agents/getMemory.ts");
+
+  assert.match(tools, /readAuthoritativeTextValue/);
+  assert.match(tools, /key === "scriptPlan" \|\| key === "storyboardTable"/);
+  assert.match(tools, /o_agentWorkData/);
+  assert.match(tools, /key === "script"/);
+  assert.match(tools, /o_script/);
+
+  assert.match(save, /writeFields/);
+  assert.match(save, /if \(!explicitWrites\.has\("scriptPlan"\)\)/);
+  assert.match(save, /nextData\.scriptPlan = storedData\.scriptPlan/);
+  assert.match(save, /nextData\.script = script\.content/);
+
+  assert.match(client, /writeFields: Array<"scriptPlan" \| "storyboardTable">/);
+  assert.match(client, /Number\(episodesId\.value\) === Number\(savedEpisode\)/);
+  assert.match(planNode, /setFlowData\(undefined, \["scriptPlan"\]\)/);
+  assert.match(tableNode, /setFlowData\(undefined, \["storyboardTable"\]\)/);
+
+  assert.match(production, /导演计划已保存到工作区/);
+  assert.match(production, /const visibleMemory = removeAllXmlTags\(fullResponse\)\.trim\(\)/);
+  assert.match(history, /row\.content\.trim\(\)\.length > 0/);
 });
