@@ -301,6 +301,10 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
             value: 5,
           },
           {
+            key: "memoryContextTokenBudget",
+            value: 2400,
+          },
+          {
             key: "modelOnnxFile",
             value: '["all-MiniLM-L6-v2", "onnx", "model_fp16.onnx"]',
           },
