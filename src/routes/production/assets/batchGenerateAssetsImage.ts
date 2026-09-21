@@ -3,7 +3,7 @@ import u from "@/utils";
 import { z } from "zod";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
-import { withOperationReceipt } from "@/utils/agent/runtime/operationReceipt";
+import { getOperationReceipt, withOperationReceipt } from "@/utils/agent/runtime/operationReceipt";
 
 const router = express.Router();
 
@@ -174,7 +174,27 @@ export default router.post(
     } catch (reason) {
       const message = u.error(reason).message;
       console.error("[assets/batchGenerateAssetsImage]", reason);
-      if (!res.headersSent) return res.status(400).send(error(message));
+      if (res.headersSent) {
+        try {
+          const receipt = await getOperationReceipt<{ imageIdMap: Record<number, number> }>(
+            u.db,
+            { projectId, episodesId: scriptId },
+            "asset-generate",
+            requestId,
+          );
+          const imageIds = Object.values(receipt?.data?.imageIdMap ?? {}).map(Number).filter(Number.isSafeInteger);
+          if (imageIds.length) {
+            await u.db("o_image").whereIn("id", imageIds).where({ state: "生成中" }).update({
+              state: "生成失败",
+              errorReason: `生成任务初始化失败：${message}`,
+            });
+          }
+        } catch (markError) {
+          console.error("[assets/batchGenerateAssetsImage] 标记初始化失败状态失败:", markError);
+        }
+        return;
+      }
+      return res.status(400).send(error(message));
     }
   },
 );
