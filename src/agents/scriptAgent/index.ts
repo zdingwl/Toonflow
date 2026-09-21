@@ -9,6 +9,14 @@ import * as fs from "fs";
 import path from "path";
 import { TaskStore } from "@/utils/agent/runtime/taskStore";
 import { buildMemoryPrompt } from "@/utils/agent/contextManager";
+import {
+  extractScriptItem,
+  extractScriptWorkspaceField,
+  readScriptWorkspaceField,
+  saveScriptItem,
+  saveScriptWorkspaceField,
+  snapshotProjectScripts,
+} from "./workspace";
 
 export interface AgentContext {
   runId?: string;
@@ -106,6 +114,16 @@ function createSubAgent(parentCtx: AgentContext) {
     try {
       parentCtx.msg.complete();
       const subMsg = resTool.newMessage("assistant", name);
+      const projectId = Number(resTool.data.projectId);
+      const isStorySkeleton = key === "scriptAgent:storySkeletonAgent";
+      const isAdaptationStrategy = key === "scriptAgent:adaptationStrategyAgent";
+      const isScript = key === "scriptAgent:scriptAgent";
+      const expectedWorkspaceValue = isStorySkeleton
+        ? await readScriptWorkspaceField(u.db, projectId, "storySkeleton")
+        : isAdaptationStrategy
+          ? await readScriptWorkspaceField(u.db, projectId, "adaptationStrategy")
+          : null;
+      const scriptSnapshot = isScript ? await snapshotProjectScripts(u.db, projectId) : null;
 
       const { fullStream } = await u.Ai.Text(key, parentCtx.thinkConfig.think, parentCtx.thinkConfig.thinlLevel).stream({
         system,
@@ -117,6 +135,25 @@ function createSubAgent(parentCtx: AgentContext) {
       const fullResponse = await consumeFullStream(fullStream, subMsg);
       if (parentCtx.runId) await taskStore.saveStepOutput(parentCtx.runId, stepKey, fullResponse);
 
+      let resultRef = `message:${subMsg.id}`;
+      if (isStorySkeleton) {
+        const value = extractScriptWorkspaceField(fullResponse, "storySkeleton");
+        await saveScriptWorkspaceField(u.db, projectId, "storySkeleton", value, expectedWorkspaceValue ?? "");
+        resTool.socket.emit("scriptWorkspace:committed", { type: "storySkeleton", value });
+        resultRef = `storySkeleton:${projectId}`;
+      } else if (isAdaptationStrategy) {
+        const value = extractScriptWorkspaceField(fullResponse, "adaptationStrategy");
+        await saveScriptWorkspaceField(u.db, projectId, "adaptationStrategy", value, expectedWorkspaceValue ?? "");
+        resTool.socket.emit("scriptWorkspace:committed", { type: "adaptationStrategy", value });
+        resultRef = `adaptationStrategy:${projectId}`;
+      } else if (isScript) {
+        const item = extractScriptItem(fullResponse);
+        const expected = scriptSnapshot?.has(item.name) ? scriptSnapshot.get(item.name)! : null;
+        const scriptId = await saveScriptItem(u.db, projectId, item, expected);
+        resTool.socket.emit("scriptWorkspace:committed", { type: "scriptItem", id: scriptId, ...item });
+        resultRef = `script:${projectId}:${scriptId}`;
+      }
+
       if (fullResponse.trim()) {
         await memory.add(memoryKey, removeAllXmlTags(fullResponse), {
           name,
@@ -124,7 +161,7 @@ function createSubAgent(parentCtx: AgentContext) {
         });
       }
 
-      if (parentCtx.runId) await taskStore.finishStep(parentCtx.runId, stepKey, `message:${subMsg.id}`);
+      if (parentCtx.runId) await taskStore.finishStep(parentCtx.runId, stepKey, resultRef);
 
       parentCtx.msg = resTool.newMessage("assistant", "视频策划");
       return fullResponse;
