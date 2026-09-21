@@ -110,7 +110,7 @@ test("制作工作区保存先校验分镜归属，事务内读回数据后才�
   assert.match(route, /工作区数据写入校验失败/);
 });
 
-test("剧本初始化、写入及前端自动保存具有持久化核对与顺序约束", () => {
+test("剧本初始化、写入及前端提交回执具有持久化核对与顺序约束", () => {
   const init = source("src/routes/scriptAgent/getPlanData.ts");
   const save = source("src/routes/scriptAgent/setPlanData.ts");
   const client = source("Toonflow-web-master/src/stores/scriptAgent.ts");
@@ -120,5 +120,6 @@ test("剧本初始化、写入及前端自动保存具有持久化核对与顺�
   assert.match(save, /剧本正文保存校验失败/);
   assert.match(client, /saveQueue\.then\(async/);
   assert.match(client, /lastQueuedSnapshot/);
-  assert.match(client, /保存失败，请检查后端状态/);
+  assert.match(client, /scriptWorkspace:committed/);
+  assert.match(client, /后端校验、事务写入并读回确认/);
 });
