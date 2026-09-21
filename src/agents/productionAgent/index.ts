@@ -137,7 +137,7 @@ async function createSubAgent(parentCtx: AgentContext) {
           ...extraTools,
           ...wrapAgentTools(
             useTools({ resTool, msg: subMsg }),
-            { db: u.db, runId: parentCtx.runId, sideEffectTools: PRODUCTION_SIDE_EFFECT_TOOLS },
+            { db: u.db, runId: parentCtx.runId, stepKey, sideEffectTools: PRODUCTION_SIDE_EFFECT_TOOLS },
           ),
         },
       });
