@@ -180,6 +180,10 @@ export class AgentChatHistoryStore {
     });
   }
 
+  async flush() {
+    await Promise.all([...this.queues.values()]);
+  }
+
   async list(): Promise<PersistedChatMessage[]> {
     const rows = await this.db("o_agentChatMessage")
       .where({ isolationKey: this.isolationKey })
