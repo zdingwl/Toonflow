@@ -270,6 +270,7 @@ function makeProductionAgentStore(projectId: string) {
       flowData.value = data;
     }
     async function batchGenerateStoryboard(allIds: number[], compulsory: boolean = false, requestId?: string) {
+      const operationId = requestId ?? `storygen_${Date.now()}_${Math.random().toString(36).slice(2)}`;
       try {
         const { data } = await axios.post("/production/storyboard/batchGenerateImage", {
           scriptId: episodesId.value,
@@ -277,7 +278,7 @@ function makeProductionAgentStore(projectId: string) {
           storyboardIds: allIds,
           concurrentCount: settingStore().otherSetting.assetsBatchGenereateSize,
           compulsory,
-          requestId,
+          requestId: operationId,
         });
         if (data) {
           if (flowData.value.storyboard.length === 0) {
@@ -300,6 +301,7 @@ function makeProductionAgentStore(projectId: string) {
       }
     }
     async function batchGenerateAssets(allIds: number[], requestId?: string) {
+      const operationId = requestId ?? `assetgen_${Date.now()}_${Math.random().toString(36).slice(2)}`;
       flowData.value.assets.forEach((asset) => {
         if (asset.derive) {
           asset.derive.forEach((derive) => {
@@ -315,7 +317,7 @@ function makeProductionAgentStore(projectId: string) {
           projectId: projectId,
           scriptId: episodesId.value,
           concurrentCount: settingStore().otherSetting.assetsBatchGenereateSize,
-          requestId,
+          requestId: operationId,
         });
         if (data) {
           data.forEach((record: { id: number; state: "未生成" | "生成中" | "已完成" | "生成失败"; src: string }) => {
@@ -333,6 +335,9 @@ function makeProductionAgentStore(projectId: string) {
         }
         return data;
       } catch (e) {
+        try {
+          await getFlowData();
+        } catch {}
         window.$message.error((e as any)?.message);
         throw e;
       }
