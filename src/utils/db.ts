@@ -42,6 +42,8 @@ const db = knex({
 
 const dbClient = Object.assign(<TName extends TableName>(table: TName) => db<RowType<TName>, RowType<TName>[]>(table), db);
 dbClient.schema = db.schema;
+// Knex 的 transaction 等方法不一定是可枚举自有属性，Object.assign 不会复制。
+dbClient.transaction = db.transaction.bind(db);
 export default dbClient;
 
 export { db };

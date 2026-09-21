@@ -122,7 +122,7 @@ export function parseFrontmatter(content: string): { name: string; description: 
   return { name: result.name, description: result.description };
 }
 
-export async function useSkill(input: SkillInput) {
+export async function useSkill(input: SkillInput, readSnapshot?: (filePath: string) => Promise<string>) {
   const { mainSkill, workspace = [], attachedSkills = [] } = input;
   const rootDir = getPath("skills");
   const normalizedRootDir = path.resolve(rootDir);
@@ -132,7 +132,7 @@ export async function useSkill(input: SkillInput) {
     const skillPath = path.join(rootDir, skill + ".md");
     if (!fs.existsSync(skillPath)) throw new Error(`主技能文件不存在: ${skillPath}`);
     if (!isPathInside(skillPath, normalizedRootDir)) throw new Error(`技能名称无效：检测到路径穿越。${skillPath}`);
-    const content = await fs.promises.readFile(skillPath, "utf-8");
+    const content = readSnapshot ? await readSnapshot(skillPath) : await fs.promises.readFile(skillPath, "utf-8");
     const parsed = parseFrontmatter(content);
     mainSkills.push({ path: skillPath, ...parsed });
   }
@@ -164,7 +164,7 @@ export async function useSkill(input: SkillInput) {
     tertiarySkills: collectMdFiles(attachedSkills, true),
   };
 
-  return { prompt: buildSkillPrompt(mainSkills), tools: createSkillTools(mainSkills, skillPaths), skillPaths };
+  return { prompt: buildSkillPrompt(mainSkills), tools: createSkillTools(mainSkills, skillPaths, rootDir, readSnapshot), skillPaths };
 }
 
 export function buildSkillPrompt(skills: { name: string; description: string }[]): string {
@@ -211,7 +211,7 @@ function discoverSelectedStyleResources(mainSkills: SkillPaths["mainSkill"], ski
   return [...resources].sort();
 }
 
-export function createSkillTools(skills: { name: string; description: string }[], skillPaths: SkillPaths, rootDir: string = getPath("skills")) {
+export function createSkillTools(skills: { name: string; description: string }[], skillPaths: SkillPaths, rootDir: string = getPath("skills"), readSnapshot?: (filePath: string) => Promise<string>) {
   const activated = new Set<string>(); // 仅记录成功加载的技能
   const skillsRootDir = path.resolve(rootDir);
   const skillNames = skills.map((s) => s.name);
@@ -242,7 +242,7 @@ export function createSkillTools(skills: { name: string; description: string }[]
           if (!stat.isFile() || stat.size > MAX_SKILL_FILE_BYTES) {
             return { error: `技能文件无效或超过大小限制: ${matched.path}` };
           }
-          raw = await fs.promises.readFile(matched.path, "utf-8");
+          raw = readSnapshot ? await readSnapshot(matched.path) : await fs.promises.readFile(matched.path, "utf-8");
           console.log(`⚡[主技能] ✓ 已读取主技能文件： ${matched.path}（${raw.length} 字符）`);
         } catch (error) {
           console.error(`⚡[主技能] ✗ 技能读取失败：${matched.path}`, error);
@@ -302,7 +302,7 @@ export function createSkillTools(skills: { name: string; description: string }[]
           if (!stat.isFile() || stat.size > MAX_SKILL_FILE_BYTES) {
             return { error: `技能资源无效或超过大小限制: ${filePath}` };
           }
-          body = await fs.promises.readFile(realFile, "utf-8");
+          body = readSnapshot ? await readSnapshot(realFile) : await fs.promises.readFile(realFile, "utf-8");
           console.log(`📖[技法文件] ✓ 已读取文件： ${filePath}（${body.length} 字符）`);
         } catch (error) {
           console.error(`📖[技法文件] ✗ 读取失败：${filePath}`, error);

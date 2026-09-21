@@ -1025,6 +1025,84 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
       },
     },
     {
+      name: "o_memoryVector",
+      builder: (table) => {
+        table.text("memoryId").notNullable();
+        table.text("modelId").notNullable();
+        table.text("embedding").notNullable();
+        table.integer("dimension").notNullable();
+        table.integer("createTime").notNullable();
+        table.primary(["memoryId", "modelId"]);
+        table.index(["modelId"]);
+      },
+    },
+    {
+      name: "o_memoryJob",
+      builder: (table) => {
+        table.text("id").notNullable().primary();
+        table.text("memoryId").notNullable();
+        table.text("modelId").notNullable();
+        table.text("status").notNullable();
+        table.text("error");
+        table.integer("attempts").notNullable().defaultTo(0);
+        table.integer("retryAt").notNullable().defaultTo(0);
+        table.integer("updateTime").notNullable();
+        table.unique(["memoryId", "modelId"]);
+        table.index(["status", "retryAt"]);
+      },
+    },
+    {
+      name: "o_memoryTerm",
+      builder: (table) => {
+        table.text("memoryId").notNullable();
+        table.text("isolationKey").notNullable();
+        table.text("term").notNullable();
+        table.primary(["memoryId", "term"]);
+        table.index(["isolationKey", "term"]);
+      },
+    },
+    {
+      name: "o_agentRun",
+      builder: (table) => {
+        table.text("id").notNullable().primary();
+        table.text("agentType").notNullable();
+        table.integer("projectId").notNullable();
+        table.integer("episodesId");
+        table.text("isolationKey").notNullable();
+        table.text("inputHash").notNullable();
+        table.text("status").notNullable();
+        table.text("error");
+        table.integer("createTime").notNullable();
+        table.integer("updateTime").notNullable();
+        table.index(["projectId", "episodesId", "status"]);
+      },
+    },
+    {
+      name: "o_agentStep",
+      builder: (table) => {
+        table.text("id").notNullable().primary();
+        table.text("runId").notNullable();
+        table.text("stepKey").notNullable();
+        table.text("status").notNullable();
+        table.text("resultRef");
+        table.text("error");
+        table.integer("createTime").notNullable();
+        table.integer("updateTime").notNullable();
+        table.unique(["runId", "stepKey"]);
+      },
+    },
+    {
+      name: "o_agentSkillSnapshot",
+      builder: (table) => {
+        table.text("runId").notNullable();
+        table.text("filePath").notNullable();
+        table.text("contentHash").notNullable();
+        table.text("content").notNullable();
+        table.integer("createTime").notNullable();
+        table.primary(["runId", "filePath"]);
+      },
+    },
+    {
       name: "o_assetsRole2Audio",
       builder: (table) => {
         table.integer("assetsRoleId").notNullable();

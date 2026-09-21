@@ -7,8 +7,11 @@ import useTools from "@/agents/scriptAgent/tools";
 import ResTool from "@/socket/resTool";
 import * as fs from "fs";
 import path from "path";
+import { TaskStore } from "@/utils/agent/runtime/taskStore";
+import { buildMemoryPrompt } from "@/utils/agent/contextManager";
 
 export interface AgentContext {
+  runId?: string;
   socket: Socket;
   isolationKey: string;
   text: string;
@@ -22,31 +25,15 @@ export interface AgentContext {
   };
 }
 
-function buildMemPrompt(mem: Awaited<ReturnType<Memory["get"]>>): string {
-  let memoryContext = "";
-  if (mem.rag.length) {
-    memoryContext += `[相关记忆]\n${mem.rag.map((r) => r.content).join("\n")}`;
-  }
-  if (mem.summaries.length) {
-    if (memoryContext) memoryContext += "\n\n";
-    memoryContext += `[历史摘要]\n${mem.summaries.map((s, i) => `${i + 1}. ${s.content}`).join("\n")}`;
-  }
-  if (mem.shortTerm.length) {
-    if (memoryContext) memoryContext += "\n\n";
-    memoryContext += `[近期对话]\n${mem.shortTerm.map((m) => `${m.role}: ${m.content}`).join("\n")}`;
-  }
-  return `## Memory\n以下是你对用户的记忆，可作为参考但不要主动提及：\n${memoryContext}`;
-}
-
 export async function runDecisionAI(ctx: AgentContext) {
   const { isolationKey, text, userMessageTime, abortSignal, resTool } = ctx;
   const memory = new Memory("scriptAgent", isolationKey);
   await memory.add("user", text, { createTime: userMessageTime });
 
   const skill = path.join(u.getPath("skills"), "script_agent_decision.md");
-  const prompt = await fs.promises.readFile(skill, "utf-8");
+  const prompt = ctx.runId ? await new TaskStore(u.db).readSkill(ctx.runId, skill) : await fs.promises.readFile(skill, "utf-8");
 
-  const mem = buildMemPrompt(await memory.get(text));
+  const mem = buildMemoryPrompt(await memory.get(text));
 
   const projectData = await u.db("o_project").where("id", resTool.data.projectId).first();
 
@@ -91,6 +78,9 @@ export async function runDecisionAI(ctx: AgentContext) {
 function createSubAgent(parentCtx: AgentContext) {
   const { resTool, abortSignal } = parentCtx;
   const memory = new Memory("scriptAgent", parentCtx.isolationKey);
+  const taskStore = new TaskStore(u.db);
+  const readSkill = (filePath: string) => parentCtx.runId ? taskStore.readSkill(parentCtx.runId, filePath) : fs.promises.readFile(filePath, "utf-8");
+  let stepNumber = 0;
 
   async function runAgent({
     key,
@@ -109,6 +99,9 @@ function createSubAgent(parentCtx: AgentContext) {
     tools?: Record<string, any>;
     messages?: { role: "user" | "assistant" | "system"; content: string }[];
   }) {
+    const stepKey = `${key}:${++stepNumber}`;
+    if (parentCtx.runId) await taskStore.startStep(parentCtx.runId, stepKey);
+    try {
     parentCtx.msg.complete();
     const subMsg = resTool.newMessage("assistant", name);
 
@@ -128,8 +121,14 @@ function createSubAgent(parentCtx: AgentContext) {
       });
     }
 
+    if (parentCtx.runId) await taskStore.finishStep(parentCtx.runId, stepKey, `message:${subMsg.id}`);
+
     parentCtx.msg = resTool.newMessage("assistant", "视频策划");
     return fullResponse;
+    } catch (error) {
+      if (parentCtx.runId) await taskStore.failStep(parentCtx.runId, stepKey, u.error(error).message);
+      throw error;
+    }
   }
 
   const promptInput = z
@@ -143,7 +142,7 @@ function createSubAgent(parentCtx: AgentContext) {
     inputSchema: jsonSchema<{ prompt: string }>(promptInput),
     execute: async ({ prompt }) => {
       const skill = path.join(u.getPath("skills"), "script_execution_skeleton.md");
-      const systemPrompt = await fs.promises.readFile(skill, "utf-8");
+      const systemPrompt = await readSkill(skill);
 
       const formatPrompt = "\n你必须使用如下XML格式写入工作区：\n<storySkeleton>故事骨架内容</storySkeleton>";
 
@@ -163,7 +162,7 @@ function createSubAgent(parentCtx: AgentContext) {
     inputSchema: jsonSchema<{ prompt: string }>(promptInput),
     execute: async ({ prompt }) => {
       const skill = path.join(u.getPath("skills"), "script_execution_adaptation.md");
-      const systemPrompt = await fs.promises.readFile(skill, "utf-8");
+      const systemPrompt = await readSkill(skill);
 
       const formatPrompt = "\n你必须使用如下XML格式写入工作区：\n<adaptationStrategy>改编策略内容</adaptationStrategy>";
 
@@ -183,7 +182,7 @@ function createSubAgent(parentCtx: AgentContext) {
     inputSchema: jsonSchema<{ prompt: string }>(promptInput),
     execute: async ({ prompt }) => {
       const skill = path.join(u.getPath("skills"), "script_execution_script.md");
-      const systemPrompt = await fs.promises.readFile(skill, "utf-8");
+      const systemPrompt = await readSkill(skill);
 
       const scriptList = await u.db("o_script").where("projectId", resTool.data.projectId).select("id", "name");
       const scriptPrompt = ["## 可用剧本(ID:名称)", scriptList.map((s: any) => `${s.id}:${(s.name || "").replace(/[,:]/g, "")}`).join(","), ""].join(
@@ -213,7 +212,7 @@ function createSubAgent(parentCtx: AgentContext) {
     inputSchema: jsonSchema<{ prompt: string }>(promptInput),
     execute: async ({ prompt }) => {
       const skill = path.join(u.getPath("skills"), "script_agent_supervision.md");
-      const systemPrompt = await fs.promises.readFile(skill, "utf-8");
+      const systemPrompt = await readSkill(skill);
 
       return runAgent({
         key: "scriptAgent:supervisionAgent",

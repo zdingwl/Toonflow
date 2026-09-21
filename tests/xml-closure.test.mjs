@@ -34,13 +34,14 @@ function createHarness() {
     (name) => {
       if (name === "vue") return fakeVue;
       if (name === "socket.io-client") return { io: () => socket };
+      if (name === "uuid") return { v4: () => "test-request-id" };
       throw new Error(`Unexpected import: ${name}`);
     }, module, exports, { getItem: () => null },
   );
   const received = [];
   const chat = module.exports.useChat({ url: "ws://localhost", xmlTags: ["storyboardTable"], autoConnect: false, manageLifecycle: false, onXmlTag: (event) => received.push(event) });
   chat.connect();
-  return { handlers, received };
+  return { handlers, received, chat };
 }
 
 const emitMessage = (handlers, id, text, status = "streaming") => handlers.get("message")({
@@ -63,4 +64,12 @@ test("真实闭合的 storyboardTable 才报告 complete，且返回已闭合标
   assert.equal(received.at(-1)?.status, "complete");
   assert.equal(received.at(-1)?.attrs.scene, "1");
   assert.equal(received.at(-1)?.value, "## 场1：测试");
+});
+
+test("Agent 错误消息显示服务端具体原因", () => {
+  const { handlers, chat } = createHarness();
+  emitMessage(handlers, "failed", "");
+  handlers.get("message:update")({ id: "failed", status: "error", ext: { error: "导演计划输出不完整" } });
+  const failed = chat.messages.value.find((item) => item.id === "failed");
+  assert.equal(failed.content.at(-1).data, "导演计划输出不完整");
 });

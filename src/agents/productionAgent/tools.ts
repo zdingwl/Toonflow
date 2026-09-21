@@ -160,8 +160,12 @@ export default (toolCpnfig: ToolConfig) => {
         const thinking = msg.thinking("正在操作资产...");
         const { projectId, scriptId } = resTool.data;
         const startTime = Date.now();
-        const parentAssets = await u.db("o_assets").where("id", deriveAsset.assetsId).select("id", "type").first();
+        const parentAssets = await u.db("o_assets").where({ id: deriveAsset.assetsId, projectId }).select("id", "type").first();
         if (!parentAssets) return "关联的资产不存在";
+        if (deriveAsset.id) {
+          const existing = await u.db("o_assets").where({ id: deriveAsset.id, projectId, assetsId: deriveAsset.assetsId }).first();
+          if (!existing) throw new Error("衍生资产不属于当前项目或指定的父资产");
+        }
         const data = {
           id: deriveAsset.id ?? undefined,
           assetsId: deriveAsset.assetsId,
@@ -172,12 +176,15 @@ export default (toolCpnfig: ToolConfig) => {
           startTime,
         };
         if (deriveAsset.id) {
-          await u.db("o_assets").where("id", deriveAsset.id).update(data);
+          await u.db("o_assets").where({ id: deriveAsset.id, projectId, assetsId: deriveAsset.assetsId }).update(data);
           thinking.appendText(`已更新衍生资产，ID: ${deriveAsset.id}\n`);
         } else {
-          const [insertedId] = await u.db("o_assets").insert(data);
+          const insertedId = await u.db.transaction(async (trx) => {
+            const [id] = await trx("o_assets").insert(data);
+            await trx("o_scriptAssets").insert({ scriptId, assetId: id });
+            return id;
+          });
           data.id = insertedId;
-          await u.db("o_scriptAssets").insert({ scriptId, assetId: insertedId });
           thinking.appendText(`已新增衍生资产，ID: ${insertedId}\n`);
         }
         const res = await new Promise((resolve) => socket.emit("addDeriveAsset", data, (res: any) => resolve(res)));
@@ -198,9 +205,14 @@ export default (toolCpnfig: ToolConfig) => {
       ),
       execute: async ({ assetsId, id }) => {
         const thinking = msg.thinking("正在操作资产...");
-        const { scriptId } = resTool.data;
-        await u.db("o_assets").where("id", id).del();
-        await u.db("o_scriptAssets").where({ scriptId, assetId: id }).del();
+        const { scriptId, projectId } = resTool.data;
+        await u.db.transaction(async (trx) => {
+          const linked = await trx("o_scriptAssets").where({ scriptId, assetId: id }).first();
+          const asset = await trx("o_assets").where({ id, projectId, assetsId }).first();
+          if (!linked || !asset) throw new Error("衍生资产不属于当前项目或剧集");
+          await trx("o_scriptAssets").where({ scriptId, assetId: id }).del();
+          await trx("o_assets").where({ id, projectId, assetsId }).del();
+        });
         thinking.appendText(`已删除衍生资产，ID: ${id}\n`);
         const res = await new Promise((resolve) => socket.emit("delDeriveAsset", { assetsId, id }, (res: any) => resolve(res)));
         thinking.updateTitle("资产操作完成");
@@ -219,18 +231,24 @@ export default (toolCpnfig: ToolConfig) => {
       ),
       execute: async ({ ids }) => {
         const thinking = msg.thinking("正在生成衍生资产...");
-        new Promise((resolve) => socket.emit("generateDeriveAsset", { ids }, (res: any) => resolve(res)))
-          .then((res) => {
-            thinking.appendText(`已生成衍生资产，ID: ${JSON.stringify(res, null, 2)}\n`);
-            thinking.updateTitle("衍生资产开始完成");
-            thinking.complete();
-          })
-          .catch((e) => {
-            thinking.appendText("衍生资产生成失败:\n" + u.error(e).message);
-            thinking.updateTitle("衍生资产生成失败");
-            thinking.complete();
+        try {
+          const res = await new Promise<any>((resolve, reject) => {
+            const timeout = setTimeout(() => reject(new Error("衍生资产生成请求超时")), 60000);
+            socket.emit("generateDeriveAsset", { ids }, (ack: any) => {
+              clearTimeout(timeout);
+              if (ack === false || ack?.error || ack?.success === false) reject(new Error(ack?.error ?? "衍生资产生成失败"));
+              else resolve(ack);
+            });
           });
-        return "开始生成衍生资产";
+          thinking.appendText(`生成请求已确认，ID: ${JSON.stringify(res, null, 2)}\n`);
+          thinking.updateTitle("衍生资产生成请求已确认");
+          thinking.complete();
+          return res ?? "生成请求已确认";
+        } catch (error) {
+          thinking.updateTitle("衍生资产生成失败");
+          thinking.complete();
+          throw error;
+        }
       },
     }),
     generate_storyboard: tool({
@@ -244,26 +262,29 @@ export default (toolCpnfig: ToolConfig) => {
       ),
       execute: async ({ ids }) => {
         const thinking = msg.thinking("正在生成分镜...");
-        socketQueue(
+        try {
+          const res = await socketQueue(
           () =>
             new Promise((resolve, reject) =>
-              socket.emit("generateStoryboard", { ids }, (res: any) => {
-                if (res?.error) return reject(new Error(res.error));
-                resolve(res);
-              }),
+              {
+                const timeout = setTimeout(() => reject(new Error("分镜生成请求超时")), 60000);
+                socket.emit("generateStoryboard", { ids }, (res: any) => {
+                  clearTimeout(timeout);
+                  if (res?.error || res?.success === false) return reject(new Error(res?.error ?? "分镜生成失败"));
+                  resolve(res);
+                });
+              },
             ),
-        )
-          .then((res) => {
-            thinking.appendText("生成的分镜数据:\n" + JSON.stringify(res, null, 2));
-            thinking.updateTitle("分镜生成完成");
-            thinking.complete();
-          })
-          .catch((e) => {
-            thinking.appendText("分镜生成失败:\n" + u.error(e).message);
-            thinking.updateTitle("分镜生成失败");
-            thinking.complete();
-          });
-        return "开始生成分镜";
+          );
+          thinking.appendText("分镜生成请求已确认:\n" + JSON.stringify(res, null, 2));
+          thinking.updateTitle("分镜生成请求已确认");
+          thinking.complete();
+          return res ?? "生成请求已确认";
+        } catch (error) {
+          thinking.updateTitle("分镜生成失败");
+          thinking.complete();
+          throw error;
+        }
       },
     }),
     add_flowData_storyboard: tool({

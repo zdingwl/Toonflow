@@ -35,7 +35,7 @@ test("修改过的 Agent、保存接口与前端 Store TypeScript 文件无语�
 
 test("分段读取兼容旧版完整字符串并能续读到末尾", () => {
   const code = source("src/agents/scriptAgent/tools.ts");
-  const declaration = code.match(/function optionalTextChunk\([\s\S]*?\n}\n/);
+  const declaration = code.match(/function optionalTextChunk\([\s\S]*?\r?\n}\r?\n/);
   assert.ok(declaration, "缺少 optionalTextChunk 实现");
   const js = ts.transpileModule(declaration[0], {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },

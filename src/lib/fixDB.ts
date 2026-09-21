@@ -31,6 +31,16 @@ export default async (knex: Knex): Promise<void> => {
       });
     }
   };
+  // 进程退出时无法判断模型调用或业务写入是否完成；先核对结果，不能盲目重跑。
+  if (await knex.schema.hasTable("o_agentRun")) {
+    await knex("o_agentRun").where("status", "running").update({ status: "reconciling", updateTime: Date.now() });
+  }
+  if (await knex.schema.hasTable("o_agentStep")) {
+    await knex("o_agentStep").where("status", "running").update({ status: "reconciling", updateTime: Date.now() });
+  }
+  if (await knex.schema.hasTable("o_memoryJob")) {
+    await knex("o_memoryJob").where("status", "running").update({ status: "pending", updateTime: Date.now() });
+  }
   //矫正因软件异常退出导致的状态不一致问题
   await db("o_novel").where("eventState", 0).update({
     eventState: -1,

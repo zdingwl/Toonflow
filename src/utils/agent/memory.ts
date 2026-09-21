@@ -1,6 +1,8 @@
 import u from "@/utils";
 import { v4 as uuidv4 } from "uuid";
-import { getEmbedding, cosineSimilarity } from "./embedding";
+import { createHash } from "node:crypto";
+import { getEmbedding, getEmbeddingModelId, cosineSimilarity } from "./embedding";
+import { indexMemoryTerms, lexicalCandidates, queueMemoryVector, queueMissingVectors, startMemoryIndex } from "./retrieval/memoryIndex";
 import type { memories as MemoryRow } from "@/types/database";
 import { tool, jsonSchema } from "ai";
 import { z } from "zod";
@@ -23,12 +25,16 @@ const DEFAULTS: {
 };
 
 // ── 向量搜索辅助 ──
-function vectorSearch(rows: MemoryRow[], queryEmbedding: number[], limit: number) {
+function vectorSearch(rows: MemoryRow[], queryEmbedding: number[], limit: number, lexicalIds = new Set<string>()) {
   return rows
     .map((row) => {
-      const emb: number[] = JSON.parse(row.embedding ?? "[]");
-      return { ...row, similarity: cosineSimilarity(queryEmbedding, emb) };
+      let emb: number[] = [];
+      try { emb = JSON.parse(row.embedding ?? "[]"); } catch {}
+      const valid = emb.length === queryEmbedding.length && emb.every(Number.isFinite);
+      const lexical = typeof row.id === "string" && lexicalIds.has(row.id);
+      return { ...row, similarity: valid ? cosineSimilarity(queryEmbedding, emb) + (lexical ? 0.08 : 0) : lexical ? 0.08 : -Infinity };
     })
+    .filter((row) => Number.isFinite(row.similarity))
     .sort((a, b) => b.similarity - a.similarity)
     .slice(0, limit);
 }
@@ -83,10 +89,68 @@ class Memory {
     return result;
   }
 
-  async add(role: string = "user", content: string, options?: { name?: string; createTime?: number }) {
+  private async search(type: "message" | "summary", text: string, limit: number) {
+    if (limit <= 0) return [];
+    try {
+      const modelId = await getEmbeddingModelId();
+      await queueMissingVectors(this.isolationKey, modelId);
+      startMemoryIndex();
+      const queryEmbedding = await getEmbedding(text, "query");
+      const hybrid = await u.db("o_setting").where({ key: "memoryHybridRetrieval" }).select("value").first();
+      const ids = hybrid?.value !== "0" ? await lexicalCandidates(this.isolationKey, text) : null;
+      const query = u.db("memories as m")
+        .join("o_memoryVector as v", "m.id", "v.memoryId")
+        .where({ "m.isolationKey": this.isolationKey, "m.type": type, "v.modelId": modelId })
+        .select("m.*", "v.embedding as indexedEmbedding");
+      const indexed = (await query).map((row: any) => ({ ...row, embedding: row.indexedEmbedding }));
+      // 旧 MiniLM 记忆保留原列；切换模型后不允许混用旧向量。
+      const legacyQuery = u.db("memories").where({ isolationKey: this.isolationKey, type }).whereNotNull("embedding");
+      const legacy = modelId === "all-MiniLM-L6-v2/onnx/model_fp16.onnx:fp16" ? await legacyQuery : [];
+      const seen = new Set(indexed.map((row: any) => row.id));
+      const rows = [...indexed, ...legacy.filter((row: any) => !seen.has(row.id))];
+      if (ids?.length) {
+        const lexical = await u.db("memories").where({ isolationKey: this.isolationKey, type }).whereIn("id", ids);
+        const included = new Set(rows.map((row: any) => row.id));
+        rows.push(...lexical.filter((row: any) => !included.has(row.id)));
+      }
+      return vectorSearch(rows, queryEmbedding, limit, new Set(ids ?? []));
+    } catch (error) {
+      console.error("[Memory] 检索降级:", error instanceof Error ? error.message : error);
+      try {
+        const ids = await lexicalCandidates(this.isolationKey, text, limit);
+        if (!ids.length) return [];
+        const rows = await u.db("memories").where({ isolationKey: this.isolationKey, type }).whereIn("id", ids);
+        const byId = new Map(rows.map((row) => [row.id, row]));
+        return ids.map((id) => byId.get(id)).filter((row): row is NonNullable<typeof row> => !!row)
+          .map((row) => ({ ...row, similarity: 0 })).slice(0, limit);
+      } catch {
+        return [];
+      }
+    }
+  }
+
+  private async summarizePending() {
     const { messagesPerSummary } = await this.getConfigData({ messagesPerSummary: DEFAULTS.messagesPerSummary });
+    const count = Math.max(2, Number(messagesPerSummary));
+    const batch = await u.db("memories").where({ isolationKey: this.isolationKey, type: "message", summarized: 0 })
+      .orderBy("createTime", "asc").limit(count);
+    if (batch.length < count) return;
+    const batchIds = batch.map((row) => row.id).filter((id): id is string => typeof id === "string");
+    const summaryId = createHash("sha256").update(`${this.isolationKey}:${batchIds.join(",")}`).digest("hex");
+    const summaryContent = await this.generateSummary(batch.map((row) => row.content));
+    await u.db.transaction(async (trx) => {
+      await trx("memories").insert({
+        id: summaryId, isolationKey: this.isolationKey, type: "summary", content: summaryContent,
+        embedding: null, relatedMessageIds: JSON.stringify(batchIds), summarized: 0, createTime: Date.now(),
+      }).onConflict("id").ignore();
+      await trx("memories").whereIn("id", batchIds).update({ summarized: 1 });
+    });
+    await indexMemoryTerms(summaryId, this.isolationKey, summaryContent);
+    try { await queueMemoryVector(summaryId, await getEmbeddingModelId()); startMemoryIndex(); } catch {}
+  }
+
+  async add(role: string = "user", content: string, options?: { name?: string; createTime?: number }) {
     const id = uuidv4();
-    const embedding = await getEmbedding(content);
     const isolationKey = this.isolationKey;
 
     await u.db("memories").insert({
@@ -96,38 +160,19 @@ class Memory {
       role,
       name: options?.name,
       content,
-      embedding: JSON.stringify(embedding),
+      embedding: null,
       relatedMessageIds: null,
       summarized: 0,
       createTime: options?.createTime ?? Date.now(),
     } as any);
 
-    // 检查未总结消息数量
-    const unsummarized = await u.db("memories").where({ isolationKey, type: "message", summarized: 0 }).orderBy("createTime", "asc");
-
-    if (unsummarized.length >= Number(messagesPerSummary)) {
-      const batch = unsummarized.slice(0, Number(messagesPerSummary));
-      const batchIds = batch.map((m) => m.id);
-      const batchContents = batch.map((m) => m.content);
-
-      const summaryContent = await this.generateSummary(batchContents);
-      const summaryEmbedding = await getEmbedding(summaryContent);
-      const summaryId = uuidv4();
-
-      await u.db("memories").insert({
-        id: summaryId,
-        isolationKey,
-        type: "summary",
-        content: summaryContent,
-        embedding: JSON.stringify(summaryEmbedding),
-        relatedMessageIds: JSON.stringify(batchIds),
-        summarized: 0,
-        createTime: Date.now(),
-      } as any);
-
-      // 标记已总结
-      await u.db("memories").whereIn("id", batchIds).update({ summarized: 1 });
-    }
+    void (async () => {
+      await indexMemoryTerms(id, isolationKey, content);
+      await this.summarizePending();
+      const modelId = await getEmbeddingModelId();
+      await queueMemoryVector(id, modelId);
+      startMemoryIndex();
+    })().catch((error) => console.error("[Memory] 后台索引失败:", error instanceof Error ? error.message : error));
   }
 
   async get(text: string) {
@@ -151,9 +196,7 @@ class Memory {
     summaries.reverse();
 
     // rag: 向量搜索所有 messages
-    const queryEmbedding = await getEmbedding(text);
-    const allMessages = await u.db("memories").where({ isolationKey, type: "message" });
-    const ragResults = vectorSearch(allMessages, queryEmbedding, Number(ragLimit));
+    const ragResults = await this.search("message", text, Number(ragLimit));
 
     return {
       shortTerm: shortTerm.map((m: any) => ({ id: m.id, role: m.role, name: m.name, content: m.content, createTime: m.createTime })),
@@ -172,9 +215,7 @@ class Memory {
 
     const isolationKey = this.isolationKey;
     // 步骤1: 向量搜索 summary
-    const queryEmbedding = await getEmbedding(keyword);
-    const allSummaries = await u.db("memories").where({ isolationKey, type: "summary" });
-    const topSummaries = vectorSearch(allSummaries, queryEmbedding, Number(deepRetrieveSummaryLimit));
+    const topSummaries = await this.search("summary", keyword, Number(deepRetrieveSummaryLimit));
 
     if (topSummaries.length === 0) return [];
 

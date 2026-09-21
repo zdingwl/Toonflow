@@ -2,6 +2,7 @@
 import { ref, shallowRef, onMounted, onUnmounted, computed } from "vue";
 import { io, Socket } from "socket.io-client";
 import type { ChatMessagesData, AIMessage, UserMessage, AIMessageContent, ChatMessageStatus } from "@tdesign-vue-next/chat";
+import { v4 as uuidv4 } from "uuid";
 
 export interface MessageEvent {
   id: string;
@@ -58,7 +59,7 @@ export interface XmlTagOption {
 }
 
 export interface ChatSocketEvents {
-  chat: { content: string; attachments?: any[] };
+  chat: { content: string; attachments?: any[]; requestId?: string };
   stop: { messageId: string };
   regenerate: { messageId: string };
   message: MessageEvent;
@@ -358,6 +359,14 @@ export function useChat(options: UseChatOptions) {
       if (!msg) return;
       if (data.status) msg.status = data.status;
       if (data.ext) msg.ext = { ...msg.ext, ...data.ext };
+      if (data.status === "error" && typeof data.ext?.error === "string" && data.ext.error.trim() && msg.role === "assistant") {
+        const aiMessage = msg as AIMessage;
+        const detail = data.ext.error.trim();
+        if (!aiMessage.content?.some((item) => item.type === "text" && item.data === detail)) {
+          aiMessage.content ??= [];
+          aiMessage.content.push({ id: `error_${data.id}`, type: "text", data: detail, status: "complete" });
+        }
+      }
       if (data.status) syncMessageXmlData(data.id, msg, data.status);
       if (data.status === "complete" && isEmptyMessageContent(msg)) {
         removeMessage(data.id);
@@ -475,8 +484,9 @@ export function useChat(options: UseChatOptions) {
 
   const chat = (content: string, attachments?: any[]) => {
     if (!content.trim() && !attachments?.length) return false;
+    const requestId = uuidv4();
     const userMessage: UserMessage = {
-      id: `user_${Date.now()}`,
+      id: `user_${requestId}`,
       role: "user",
       status: "complete",
       datetime: new Date().toISOString(),
@@ -486,7 +496,7 @@ export function useChat(options: UseChatOptions) {
       userMessage.content.push({ type: "attachment", data: attachments, status: "complete" });
     }
     messages.value.push(userMessage);
-    return emit("chat", { content, attachments });
+    return emit("chat", { content, attachments, requestId });
   };
 
   const stopGenerate = (messageId?: string) => {

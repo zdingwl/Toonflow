@@ -61,7 +61,8 @@ function makeProductionAgentStore(projectId: string) {
         if (tag === "script") {
           flowData.value.script = value ?? "";
         } else if (tag === "scriptPlan") {
-          flowData.value.scriptPlan = value ?? "";
+          // 导演计划由后端校验并写入数据库，收到提交回执后才更新工作区。
+          return;
         } else if (tag === "storyboardTable") {
           if (attrs.scene !== undefined || attrs.total !== undefined || attrs.task !== undefined) {
             // 分段 XML 在未闭合时绝不改动工作区；旧版无属性的整表输出保持兼容。
@@ -118,6 +119,9 @@ function makeProductionAgentStore(projectId: string) {
       socket,
       (s) => {
         if (s) {
+          s.on("scriptPlan:committed", ({ episodesId: savedEpisode, plan }: { episodesId: number; plan: string }) => {
+            if (episodesId.value === savedEpisode) flowData.value.scriptPlan = plan;
+          });
           s.on("connect", () => {
             getHistory();
           });
