@@ -4,8 +4,18 @@ import { z } from "zod";
 import { success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { disposeEmbedding } from "@/utils/agent/embedding";
+import { getOllamaModelDigest } from "@/utils/agent/retrieval/ollamaEmbedding";
 
 const router = express.Router();
+
+const localRerankerUrl = z.string().url().max(256).refine((value) => {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" && ["127.0.0.1", "localhost", "::1"].includes(url.hostname);
+  } catch {
+    return false;
+  }
+}, "Reranker 只允许使用本机 HTTP 地址");
 
 export default router.post(
   "/",
@@ -22,7 +32,7 @@ export default router.post(
     ollamaEmbeddingModel: z.string().min(1).max(128).regex(/^[A-Za-z0-9][A-Za-z0-9._:/-]*$/).optional(),
     memoryHybridRetrieval: z.boolean().optional(),
     memoryRerankerEnabled: z.boolean().optional(),
-    memoryRerankerUrl: z.string().url().max(256).optional(),
+    memoryRerankerUrl: localRerankerUrl.optional(),
     memoryRerankerModel: z.string().min(1).max(128).regex(/^[A-Za-z0-9][A-Za-z0-9._:/-]*$/).optional(),
     memoryRerankerCandidates: z.number().int().min(8).max(100).optional(),
     memoryContextTokenBudget: z.number().int().min(400).max(32768).optional(),
@@ -30,6 +40,10 @@ export default router.post(
   }),
   async (req, res) => {
     const body = req.body as Record<string, unknown>;
+    if (body.embeddingBackend === "ollama") {
+      await getOllamaModelDigest(String(body.ollamaEmbeddingModel ?? "qwen3-embedding:4b"));
+    }
+
     const settings: Record<string, string> = {
       messagesPerSummary: String(body.messagesPerSummary),
       shortTermLimit: String(body.shortTermLimit),
