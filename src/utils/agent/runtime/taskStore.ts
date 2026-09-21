@@ -156,7 +156,7 @@ export class TaskStore {
         run.isolationKey !== scope.isolationKey
       ) throw new Error("任务不属于当前项目或 Agent 上下文");
       if (!["reconciling", "failed"].includes(run.status)) throw new Error(`任务当前状态为 ${run.status}，不能恢复`);
-      const unresolved = await trx("o_agentStep").where({ runId }).whereIn("status", ["running", "reconciling"]);
+      const unresolved = await trx("o_agentStep").where({ runId }).whereIn("status", ["running", "reconciling", "failed"]);
       if (unresolved.length) {
         throw new Error(`仍有 ${unresolved.length} 个步骤需要核对，不能自动恢复`);
       }
