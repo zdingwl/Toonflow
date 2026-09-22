@@ -228,7 +228,11 @@ function referenceList2imageBase642(id: string, input: any) {
   return input;
 }
 
-export type ReferenceMeta = { label?: string; prompt?: string; sourceType?: string };\nexport type ReferenceList =\n  | ({ type: "image"; base64: string } & ReferenceMeta)\n  | ({ type: "audio"; base64: string } & ReferenceMeta)\n  | ({ type: "video"; base64: string } & ReferenceMeta);
+export type ReferenceMeta = { label?: string; prompt?: string; sourceType?: string };
+export type ReferenceList =
+  | ({ type: "image"; base64: string } & ReferenceMeta)
+  | ({ type: "audio"; base64: string } & ReferenceMeta)
+  | ({ type: "video"; base64: string } & ReferenceMeta);
 
 interface ImageConfig {
   prompt: string;
