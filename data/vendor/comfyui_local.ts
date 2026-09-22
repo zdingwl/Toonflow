@@ -11,7 +11,7 @@ type VideoModel = {
 type VideoConfig = {
   prompt: string; duration: number; resolution: string; aspectRatio: string;
   mode: string | string[]; audio?: boolean;
-  referenceList?: { type: "image" | "video" | "audio"; base64: string }[];
+  referenceList?: { type: "image" | "video" | "audio"; base64: string; label?: string; prompt?: string; sourceType?: string }[];
 };
 type InputTarget = { node: string; input: string };
 type WorkflowMapping = {
@@ -27,9 +27,9 @@ declare const Buffer: any;
 declare const pollTask: (fn: () => Promise<{ completed: boolean; data?: string; error?: string }>, interval?: number, timeout?: number) => Promise<{ completed: boolean; data?: string; error?: string }>;
 
 const vendor = {
-  id: "comfyui_local", version: "1.2", author: "Local ComfyUI",
+  id: "comfyui_local", version: "1.3", author: "Local ComfyUI",
   name: "本机 ComfyUI（FLUX + MiniMax H3）",
-  description: "FLUX 图片走 ComfyUI；MiniMax H3 视频默认直连 ComfyUI 原生 Ref2VA/FL2VA 节点图，无须工作流 JSON 或 DramaClaw。可选自定义工作流和旧网关。",
+  description: "FLUX 图片走 ComfyUI；MiniMax H3 视频默认直连原生 Ref2VA/FL2VA，并按 <Picture N> 严格绑定参考图。无须 DramaClaw；仍支持自定义工作流。",
   inputs: [
     { key: "baseUrl", label: "ComfyUI 地址", type: "url", required: true, placeholder: "http://127.0.0.1:8188" },
     { key: "checkpoint", label: "FLUX Checkpoint", type: "text", required: true, placeholder: "Flux\\flux1-schnell-fp8-with_clip_vae.safetensors" },
@@ -170,6 +170,39 @@ function sizeForVideo(resolution: string, ratio: string) {
     : { width: shortSide, height: Math.max(32, Math.floor(shortSide * h / w / 32) * 32) };
 }
 
+function referenceLabel(ref: NonNullable<VideoConfig["referenceList"]>[number], index: number): string {
+  const preferred = typeof ref.label === "string" && ref.label.trim()
+    ? ref.label.trim()
+    : (typeof ref.prompt === "string" ? ref.prompt.trim() : "");
+  const clean = preferred.replace(/\s+/g, " ").replace(/[<>]/g, "").trim();
+  return clean ? clean.slice(0, 120) : `参考图 ${index + 1}`;
+}
+
+function compileReferencePrompt(config: VideoConfig): string {
+  const refs = (config.referenceList || []).filter(item => item.type === "image");
+  if (!refs.length) return config.prompt;
+
+  const exactTags = refs.map((_, index) => `<Picture ${index + 1}>`);
+  const hasAllTags = exactTags.every(tag => config.prompt.includes(tag));
+  if (hasAllTags) return config.prompt;
+
+  const bindings = refs.map((ref, index) => {
+    const tag = exactTags[index];
+    return `${tag} = ${referenceLabel(ref, index)}。必须把该图作为权威视觉参考。`;
+  });
+
+  return [
+    "【MiniMax H3 多图参考绑定｜最高优先级】",
+    ...bindings,
+    "严格按照上述 Picture 编号与传入图片的顺序一一对应。",
+    "保持参考主体的身份与视觉设计连续：人物脸型与五官、年龄感、发型发色、肤色、体型比例、服装与关键配饰不得无故变化；场景和道具参考保持其核心结构与设计。",
+    "允许改变动作、表情、镜头角度和构图，但不得忽略参考图、替换主体、混合不同人物特征或擅自重新设计。",
+    "",
+    "【场景与动作指令】",
+    config.prompt,
+  ].join("\n");
+}
+
 // Same native MiniMax H3 FL2VA/Ref2VA node contract as ai-drama-studio backend/app/p16/provider.py.
 function nativeH3Graph(config: VideoConfig, uploaded: string[], info: Record<string, any>): Record<string, any> {
   const referenceMode = uploaded.length > 0;
@@ -199,7 +232,7 @@ function nativeH3Graph(config: VideoConfig, uploaded: string[], info: Record<str
     "4": { class_type: "VAELoader", inputs: { vae_name: audioVae } },
     "5": { class_type: referenceMode ? "MiniMaxH3ReferenceToVideo" : "MiniMaxH3ImageToVideo", inputs: {
       clip: ["2", 0], vae: ["3", 0], ...(referenceMode ? { audio_vae: ["4", 0], ref_image_size: "match" } : {}),
-      prompt: config.prompt, width, height, length,
+      prompt: compileReferencePrompt(config), width, height, length,
     } },
     "6": { class_type: "RandomNoise", inputs: { noise_seed: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) } },
     "7": { class_type: "BasicGuider", inputs: { model: ["1", 0], conditioning: ["5", 0] } },
@@ -234,7 +267,7 @@ function customGraph(config: VideoConfig, uploaded: string[]) {
     if (!node?.inputs || !Object.prototype.hasOwnProperty.call(node.inputs, target?.input)) throw new Error(`工作流节点映射无效：${target?.node}.${target?.input}`);
     node.inputs[target.input] = value;
   };
-  write(map.prompt, config.prompt);
+  write(map.prompt, compileReferencePrompt(config));
   if (uploaded.length > (map.images || []).length) throw new Error(`工作流仅映射 ${(map.images || []).length} 张参考图，实际输入 ${uploaded.length} 张`);
   uploaded.forEach((filename, index) => write((map.images || [])[index], filename));
   if (map.duration) write(map.duration, config.duration);
