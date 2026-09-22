@@ -5,6 +5,10 @@ export interface StoryboardTableProgress {
   revision: number;
   scenes: Record<string, string>;
   complete: boolean;
+  sourceHash?: string;
+  planHash?: string;
+  lastValidatedScene?: number;
+  updatedAt?: number;
 }
 
 export function renderStoryboardScenes(scenes: Record<string, string>): string {
@@ -49,7 +53,7 @@ export function mergeStoryboardScene(
   const missingScenes = Array.from({ length: total }, (_, i) => i + 1).filter((number) => !scenes[String(number)]);
   return {
     storyboardTable: renderStoryboardScenes(scenes),
-    storyboardTableProgress: { taskId, total, scenes, revision: (previous?.revision ?? 0) + (changed ? 1 : 0), complete: missingScenes.length === 0 },
+    storyboardTableProgress: { ...previous, taskId, total, scenes, revision: (previous?.revision ?? 0) + (changed ? 1 : 0), complete: missingScenes.length === 0 },
     savedScenes,
     missingScenes,
   };
