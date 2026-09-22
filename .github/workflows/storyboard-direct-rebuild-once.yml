@@ -20,6 +20,17 @@ jobs:
           cache: yarn
       - name: Apply guarded socket and generation changes
         run: python3 scripts/apply-deterministic-storyboard-rebuild.py
+      - name: Support Chinese scene-count numerals in explicit rebuild command
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('src/agents/productionAgent/storyboardRebuildDispatch.ts')
+          text = p.read_text(encoding='utf-8')
+          old = r'(?:全部|整集|所有|\d+场|全部\d+场)?'
+          new = r'(?:全部|整集|所有|[一二三四五六七八九十百\d]+场|全部[一二三四五六七八九十百\d]+场)?'
+          if text.count(old) != 1: raise RuntimeError('Rebuild intent anchor changed')
+          p.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Verify TypeScript syntax in touched files
