@@ -37,6 +37,7 @@ export default function runCode(code: string, vendor?: Record<string, any>) {
     exports,
     axios,
     FormData,
+    Buffer,
     logger,
     jsonwebtoken,
     crypto,
@@ -108,9 +109,6 @@ export async function pollTask(
 
 /**
  * 将多张图片横向拼接为一张，并确保输出大小不超过指定限制
- * @param imageBase64List - base64编码的图片数组
- * @param maxSize - 最大输出大小，支持格式如 "10mb", "5MB", "1024kb" 等
- * @returns 拼接后的图片base64字符串
  */
 export async function mergeImages(imageBase64List: string[], maxSize = "10mb"): Promise<string> {
   if (imageBase64List.length === 0) {
@@ -129,19 +127,16 @@ export async function mergeImages(imageBase64List: string[], maxSize = "10mb"): 
   });
   const totalWidth = imageWidths.reduce((sum, w) => sum + w, 0);
 
-  // 拼接图片
-  const resizedImages = await Promise.all(
-    imageBuffers.map(async (buffer, index) => {
-      return sharp(buffer).resize(imageWidths[index], maxHeight, { fit: "cover" }).toBuffer();
-    }),
-  );
-
   let currentX = 0;
-  const compositeInputs = resizedImages.map((buffer, index) => {
-    const input = { input: buffer, left: currentX, top: 0 };
-    currentX += imageWidths[index];
-    return input;
+  const compositeInputs = imageWidths.map((imageWidth, index) => {
+    const input = imageBuffers[index];
+    const left = currentX;
+    currentX += imageWidth;
+    return { input, left, top: 0 };
   });
+  // 将每张图缩放到最大高度后再横向合并
+  const resizedImages = await Promise.all(imageBuffers.map((buffer, index) => sharp(buffer).resize(imageWidths[index], maxHeight, { fit: "cover" }).toBuffer()));
+  const finalInputs = compositeInputs.map((item, index) => ({ ...item, input: resizedImages[index] }));
 
   const mergedBuffer = await sharp({
     create: {
@@ -151,7 +146,7 @@ export async function mergeImages(imageBase64List: string[], maxSize = "10mb"): 
       background: { r: 255, g: 255, b: 255, alpha: 1 },
     },
   })
-    .composite(compositeInputs)
+    .composite(finalInputs)
     .jpeg({ quality: 90 })
     .toBuffer();
 
@@ -161,7 +156,7 @@ export async function mergeImages(imageBase64List: string[], maxSize = "10mb"): 
 }
 
 /**
- * 解析大小字符串为字节数
+ * 解析大小字符串
  */
 function parseSize(size: string): number {
   const match = size.toLowerCase().match(/^(\d+(?:\.\d+)?)\s*(kb|mb|gb|b)?$/);
@@ -179,17 +174,11 @@ function parseSize(size: string): number {
   return Math.floor(value * multipliers[unit]);
 }
 
-/**
- * 将base64字符串转换为Buffer
- */
 function base64ToBuffer(base64: string): Buffer {
   const base64Data = base64.replace(/^data:image\/\w+;base64,/, "");
   return Buffer.from(base64Data, "base64");
 }
 
-/**
- * 压缩Buffer到指定大小以内
- */
 async function compressToSize(imageBuffer: Buffer, maxBytes: number, originalWidth: number, originalHeight: number): Promise<Buffer> {
   let quality = 90;
   let scale = 1;
