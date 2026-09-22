@@ -290,14 +290,23 @@ function batchGenText() {
 function getTrackUploadInfo(track: TrackItem, filterEmpty = false) {
   const activeTrackId = trackList.value[activeTrackIndex.value]?.id;
 
+  const serialize = (item: UploadItem | TrackMedia) => ({
+    id: item.id,
+    sources: (item.sources ?? "storyboard") as string,
+    reference: Boolean(item.src),
+    slotType: item.slotType,
+    fileType: item.fileType,
+    prompt: item.prompt,
+    type:
+      item.slotType ??
+      (item.fileType === "audio" ? "audioReference" : item.fileType === "video" ? "videoReference" : "imageReference"),
+  });
+
   if (track.id === activeTrackId) {
     const items = props.imageList as UploadItem[];
-    return (filterEmpty ? items.filter((item) => Boolean(item.src)) : items).map(({ id, sources }) => ({
-      id,
-      sources: (sources ?? "storyboard") as string,
-    }));
+    return (filterEmpty ? items.filter((item) => Boolean(item.src)) : items).map(serialize);
   }
-  return track.medias.filter((m) => !filterEmpty || Boolean(m.src)).map(({ id, sources }) => ({ id, sources: (sources ?? "storyboard") as string }));
+  return track.medias.filter((m) => !filterEmpty || Boolean(m.src)).map(serialize);
 }
 const generateVideoLoad = ref(false);
 /** 批量为已勾选轨道生成视频 */
