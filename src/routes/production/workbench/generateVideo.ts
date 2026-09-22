@@ -54,7 +54,7 @@ export default router.post(
       uploadData.map(async (item: UploadItem) => {
         if (item.sources === "storyboard") {
           const filePath = await u.db("o_storyboard").where("id", item.id).select("filePath").first();
-          return { path: filePath?.filePath, sources: "storyBoard" };
+          return { path: filePath?.filePath, sources: "storyBoard", referenceType: item.type, label: item.label, prompt: item.prompt };
         }
         if (item.sources === "assets") {
           const filePath = await u
@@ -63,7 +63,7 @@ export default router.post(
             .leftJoin("o_image", "o_assets.imageId", "o_image.id")
             .select("o_image.filePath", "o_image.type")
             .first();
-          return { path: filePath?.filePath, sources: filePath.type };
+          return { path: filePath?.filePath, sources: filePath.type, referenceType: item.type, label: item.label, prompt: item.prompt };
         }
       }),
     );
@@ -71,7 +71,7 @@ export default router.post(
     const base64 = await Promise.all(
       images.map(async (item) => {
         if (!item) return null;
-        return { base64: await u.oss.getImageBase64(item.path), type: item.sources == "audio" ? "audio" : "image" };
+        const type = item.referenceType === "audioReference" ? "audio" : item.referenceType === "videoReference" ? "video" : "image";\n          return { base64: await u.oss.getImageBase64(item.path), type, label: item.label, prompt: item.prompt, sourceType: item.sources };
       }),
     );
     //新增
