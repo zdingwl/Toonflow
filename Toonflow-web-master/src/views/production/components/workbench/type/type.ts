@@ -7,6 +7,7 @@ interface UploadItemBase {
   id: number | null;
   src?: string;
   prompt?: string;
+  slotType?: Type;
 }
 
 interface UploadItemStoryboard extends UploadItemBase {
