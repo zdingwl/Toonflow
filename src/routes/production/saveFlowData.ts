@@ -42,7 +42,7 @@ export default router.post(
         let sceneResult: ReturnType<typeof mergeStoryboardScene> | undefined;
 
         if (scene) {
-          // 单场与其进度写入同一事务；在没有对应 XML 闭合回执前，调用方不能提交单场。
+          // 兼容旧版逐场入口；Agent 生成 XML 只允许走后端权威提交。
           sceneResult = mergeStoryboardScene(
             storedData.storyboardTable ?? "",
             storedData.storyboardTableProgress as StoryboardTableProgress | undefined,
@@ -52,12 +52,15 @@ export default router.post(
         } else {
           const explicitWrites = new Set<string>(writeFields);
           const explicitStoryboardTable = explicitWrites.has("storyboardTable") || data.resetStoryboardTable === true;
-          nextData = { ...storedData, ...data };
-
-          // script 始终以 o_script 为准，浏览器快照不能覆盖后端剧本正文。
+          // 工作区浏览器快照绝不具备修改后端修订历史/审批元数据的权限。
+          // 不能先合并客户端再依赖其携带的旧 history，否则会覆盖刚刚完成的 Agent 修订。
+          const clientData = { ...data };
+          delete clientData.storyboardRevisionHistory;
+          delete clientData.storyboardAuditHistory;
+          delete clientData.storyboardApproval;
+          delete clientData.storyboardSceneAudits;
+          nextData = { ...storedData, ...clientData };
           nextData.script = script.content ?? "";
-
-          // 导演计划由后端 Agent 提交；普通自动保存不得用过期浏览器快照覆盖。
           if (!explicitWrites.has("scriptPlan")) {
             nextData.scriptPlan = storedData.scriptPlan ?? "";
           }
@@ -70,23 +73,20 @@ export default router.post(
             else delete nextData.storyboardTableProgress;
           } else if (previous) {
             if (nextData.resetStoryboardTable === true && incoming?.revision !== previous.revision) {
-              // 旧版整表的延迟保存可能晚于新场次提交；绝不允许旧快照自动清空较新的进度。
               throw new Error("已有逐场分镜进度，整表覆盖前请先显式清空或完成当前任务");
             }
             if (incoming?.revision !== previous.revision || incoming?.taskId !== previous.taskId) {
               nextData.storyboardTable = storedData.storyboardTable;
               nextData.storyboardTableProgress = previous;
             } else if (nextData.storyboardTable !== storedData.storyboardTable) {
-              // 当前版本的人工编辑可以保存，但随即停止自动合并，保护手动调整的内容。
+              // 人工整表编辑不经逐场修订事务，必须取消旧进度，避免假装逐场快照仍有效。
               delete nextData.storyboardTableProgress;
             }
           } else if (incoming) {
-            // 旧客户端快照不能恢复一个已经被清空或人工修改的旧任务进度。
             nextData.storyboardTable = storedData.storyboardTable;
             delete nextData.storyboardTableProgress;
           }
           delete nextData.resetStoryboardTable;
-          // 保留旧有排序行为，但写入前校验每个 ID 的项目和剧本归属。
           if (Array.isArray(data.storyboard) && data.storyboard.length && data.storyboard.every((item: any) => item.id)) {
             for (const [index, item] of data.storyboard.entries()) {
               const updated = await trx("o_storyboard")
@@ -98,8 +98,10 @@ export default router.post(
         }
         const payload = JSON.stringify(nextData);
         if (existing) {
-          const updated = await trx("o_agentWorkData").where(scope).update({ data: payload });
-          if (updated !== 1) throw new Error("工作区记录更新失败");
+          // 使用原始数据库快照作 CAS；与 Agent 修订事务竞争时拒绝旧快照覆盖。
+          const updated = await trx("o_agentWorkData")
+            .where({ id: existing.id, data: existing.data }).update({ data: payload });
+          if (updated !== 1) throw new Error("保存期间工作区版本已变化，请重新加载后重试");
         } else {
           await trx("o_agentWorkData").insert({ ...scope, data: payload });
         }
