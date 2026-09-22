@@ -47,6 +47,9 @@ export default router.post(
             ...storyboard,
             associateAssetsIds,
             _type: "storyboard", // 标记类型，便于后续区分
+            _reference: item.reference !== false,
+            _slotType: item.slotType,
+            _fileType: item.fileType,
           };
         }
         if (item.sources === "assets") {
@@ -60,6 +63,9 @@ export default router.post(
           return {
             ...assetsData,
             _type: "assets", // 标记类型
+            _reference: item.reference !== false,
+            _slotType: item.slotType,
+            _fileType: item.fileType,
           };
         }
       }),
@@ -132,7 +138,10 @@ export default router.post(
 
       let fileName: string | null = null;
 
-      if (modelLower.includes("wan") && modelLower.includes("2.6")) {
+      if (modelLower.includes("minimax") && modelLower.includes("h3")) {
+        // MiniMax H3 / local Ref2VA => dedicated ordered <Picture N> prompt skill
+        fileName = "minimaxH3Multi-referenceMode.md";
+      } else if (modelLower.includes("wan") && modelLower.includes("2.6")) {
         // wan2.6 系列 => 单图首尾帧模式
         fileName = "wan2.6Single-imageFirstFrameMode.md";
       } else if (/seedance.*2[.\-]0/i.test(modelData)) {
