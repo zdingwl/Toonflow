@@ -19,6 +19,10 @@ export default router.post(
           z.object({
             id: z.number(),
             sources: z.string(),
+            reference: z.boolean().optional(),
+            slotType: z.string().optional(),
+            fileType: z.string().optional(),
+            prompt: z.string().optional(),
           }),
         ),
       }),
@@ -55,7 +59,10 @@ export default router.post(
 
         let fileName: string | null = null;
 
-        if (modelLower.includes("wan") && modelLower.includes("2.6")) {
+        if (modelLower.includes("minimax") && modelLower.includes("h3")) {
+          // MiniMax H3 / local Ref2VA => dedicated ordered <Picture N> prompt skill
+          fileName = "minimaxH3Multi-referenceMode.md";
+        } else if (modelLower.includes("wan") && modelLower.includes("2.6")) {
           // wan2.6 系列 => 单图首尾帧模式
           fileName = "wan2.6Single-imageFirstFrameMode.md";
         } else if (/seedance.*2[.\-]0/i.test(modelLower)) {
@@ -98,17 +105,17 @@ export default router.post(
         .update({ state: "生成中" });
       // 并发控制：每个 track 独立走 查询→拼装→AI调用→更新 流程
       const limit = pLimit(concurrentCount ?? 5);
-      const tasks = trackData.map((track: { trackId: number; info: { id: number; sources: string }[] }) =>
+      const tasks = trackData.map((track: { trackId: number; info: { id: number; sources: string; reference?: boolean; slotType?: string; fileType?: string; prompt?: string }[] }) =>
         limit(async () => {
           // 查询参数
           const images = await Promise.all(
-            track.info.map(async (item: { id: number; sources: string }) => {
+            track.info.map(async (item: { id: number; sources: string; reference?: boolean; slotType?: string; fileType?: string; prompt?: string }) => {
               if (item.sources === "storyboard") {
                 // 查询分镜主信息
                 const storyboard = await u
                   .db("o_storyboard")
                   .where("o_storyboard.id", item.id)
-                  .select("videoDesc", "prompt", "track", "duration", "shouldGenerateImage")
+                  .select("id", "videoDesc", "prompt", "track", "duration", "shouldGenerateImage", "filePath")
                   .first();
                 // 查询分镜关联的资产ID
                 const assetRows = await u.db("o_assets2Storyboard").where("storyboardId", item.id).orderBy("rowid").select("assetId");
@@ -117,6 +124,9 @@ export default router.post(
                   ...storyboard,
                   associateAssetsIds,
                   _type: "storyboard",
+                  _reference: item.reference !== false,
+                  _slotType: item.slotType,
+                  _fileType: item.fileType,
                 };
               }
               if (item.sources === "assets") {
@@ -130,6 +140,9 @@ export default router.post(
                 return {
                   ...assetsData,
                   _type: "assets",
+                  _reference: item.reference !== false,
+                  _slotType: item.slotType,
+                  _fileType: item.fileType,
                 };
               }
             }),
@@ -146,6 +159,9 @@ export default router.post(
                 type: item.type,
                 name: item.name,
                 filePath: item.filePath,
+                _reference: item._reference,
+                _slotType: item._slotType,
+                _fileType: item._fileType,
               });
             if (item._type === "storyboard")
               storyboard.push({
@@ -155,11 +171,30 @@ export default router.post(
                 duration: item.duration,
                 associateAssetsIds: item.associateAssetsIds,
                 shouldGenerateImage: item.shouldGenerateImage,
+                id: item.id,
+                filePath: item.filePath,
+                _reference: item._reference,
+                _slotType: item._slotType,
+                _fileType: item._fileType,
               });
           }
 
-          const content = `
+          const referenceSlotItems = images
+      .filter((item: any) => item && item._reference !== false && item.filePath)
+      .map((item: any, index: number) => {
+        const slot = index + 1;
+        const sources = item._type === "assets" ? "assets" : "storyboard";
+        const type = item._type === "assets" ? String(item.type || "asset") : "storyboard";
+        const name = item._type === "assets" ? String(item.name || `资产${item.id}`) : `分镜图${item.id}`;
+        const safeName = name.replace(/[<>&"']/g, (ch: string) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&apos;" }[ch] || ch));
+        return `<reference slot="${slot}" sources="${sources}" id="${item.id}" type="${type}" name="${safeName}" />`;
+      });
+    const referenceSlots = `<referenceSlots>\n${referenceSlotItems.join("\n")}\n</referenceSlots>`;
+
+    const content = `
           **模型名称**：${modelData},
+          **参考素材槽位（严格按实际视频上传顺序，MiniMax H3 的 <Picture N> 必须与 slot N 一致）**：
+          ${referenceSlots},
           **资产信息**（角色、场景、道具、音频):${assets
             .filter((i: any) => i.filePath)
             .map((i: any) => `[${i.id},${i.type},${i.name}]`)
