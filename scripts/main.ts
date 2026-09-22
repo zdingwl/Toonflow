@@ -60,6 +60,10 @@ function initializeData(): void {
 
   for (const dir of TARGET_ENTRIES) {
     const targetDir = path.join(destDir, dir);
+    if (MERGE_ENTRIES.has(dir)) {
+      copyDir(path.join(srcDir, dir), targetDir);
+      continue;
+    }
     // 运行时代码必须始终与当前安装包一致；用户可修改的数据目录仍沿用版本升级时替换的旧逻辑。
     if (shouldForceReplace || RUNTIME_ENTRIES.has(dir)) {
       fs.rmSync(targetDir, { recursive: true, force: true });
