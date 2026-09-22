@@ -127,16 +127,15 @@ export async function mergeImages(imageBase64List: string[], maxSize = "10mb"): 
   });
   const totalWidth = imageWidths.reduce((sum, w) => sum + w, 0);
 
-  let currentX = 0;
-  const compositeInputs = imageWidths.map((imageWidth, index) => {
-    const input = imageBuffers[index];
-    const left = currentX;
-    currentX += imageWidth;
-    return { input, left, top: 0 };
-  });
-  // 将每张图缩放到最大高度后再横向合并
+  // 将每张图缩放到最大高度
   const resizedImages = await Promise.all(imageBuffers.map((buffer, index) => sharp(buffer).resize(imageWidths[index], maxHeight, { fit: "cover" }).toBuffer()));
-  const finalInputs = compositeInputs.map((item, index) => ({ ...item, input: resizedImages[index] }));
+
+  let currentX = 0;
+  const compositeInputs = resizedImages.map((buffer, index) => {
+    const input = { input: buffer, left: currentX, top: 0 };
+    currentX += imageWidths[index];
+    return input;
+  });
 
   const mergedBuffer = await sharp({
     create: {
@@ -146,7 +145,7 @@ export async function mergeImages(imageBase64List: string[], maxSize = "10mb"): 
       background: { r: 255, g: 255, b: 255, alpha: 1 },
     },
   })
-    .composite(finalInputs)
+    .composite(compositeInputs)
     .jpeg({ quality: 90 })
     .toBuffer();
 
@@ -174,6 +173,9 @@ function parseSize(size: string): number {
   return Math.floor(value * multipliers[unit]);
 }
 
+/**
+ * 将 base64 转换为 Buffer
+ */
 function base64ToBuffer(base64: string): Buffer {
   const base64Data = base64.replace(/^data:image\/\w+;base64,/, "");
   return Buffer.from(base64Data, "base64");
