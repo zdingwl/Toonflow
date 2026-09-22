@@ -57,7 +57,7 @@ export default router.post(
 
     // 为每个 track 预处理数据并插入数据库，返回任务列表
     const tasks = await Promise.all(
-      (trackData as { uploadData: { id: number; sources: string }[]; trackId: number; prompt: string; duration: number }[]).map(async (track) => {
+      (trackData as { uploadData: UploadItem[]; trackId: number; prompt: string; duration: number }[]).map(async (track) => {
         const { uploadData, trackId, prompt, duration } = track;
 
         // 查询出图片数据
@@ -65,7 +65,7 @@ export default router.post(
           uploadData.map(async (item) => {
             if (item.sources === "storyboard") {
               const filePath = await u.db("o_storyboard").where("id", item.id).select("filePath").first();
-              return { path: filePath?.filePath, sources: "storyBoard" };
+              return { path: filePath?.filePath, sources: "storyBoard", referenceType: item.type, label: item.label, prompt: item.prompt };
             }
             if (item.sources === "assets") {
               const filePath = await u
@@ -74,7 +74,7 @@ export default router.post(
                 .leftJoin("o_image", "o_assets.imageId", "o_image.id")
                 .select("o_image.filePath", "o_image.type")
                 .first();
-              return { path: filePath?.filePath, sources: filePath.type };
+              return { path: filePath?.filePath, sources: filePath.type, referenceType: item.type, label: item.label, prompt: item.prompt };
             }
           }),
         );
@@ -99,7 +99,7 @@ export default router.post(
       const base64 = await Promise.all(
         images.map(async (item) => {
           if (!item) return null;
-          return { base64: await u.oss.getImageBase64(item.path), type: item.sources == "audio" ? "audio" : "image" };
+          const type = item.referenceType === "audioReference" ? "audio" : item.referenceType === "videoReference" ? "video" : "image";\n          return { base64: await u.oss.getImageBase64(item.path), type, label: item.label, prompt: item.prompt, sourceType: item.sources };
         }),
       );
       const relatedObjects = { projectId, videoId, scriptId, type: "视频" };
