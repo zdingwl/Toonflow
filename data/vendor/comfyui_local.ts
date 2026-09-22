@@ -27,7 +27,7 @@ declare const Buffer: any;
 declare const pollTask: (fn: () => Promise<{ completed: boolean; data?: string; error?: string }>, interval?: number, timeout?: number) => Promise<{ completed: boolean; data?: string; error?: string }>;
 
 const vendor = {
-  id: "comfyui_local", version: "1.3", author: "Local ComfyUI",
+  id: "comfyui_local", version: "1.4", author: "Local ComfyUI",
   name: "本机 ComfyUI（FLUX + MiniMax H3）",
   description: "FLUX 图片走 ComfyUI；MiniMax H3 视频默认直连原生 Ref2VA/FL2VA，并按 <Picture N> 严格绑定参考图。无须 DramaClaw；仍支持自定义工作流。",
   inputs: [
@@ -182,17 +182,39 @@ function compileReferencePrompt(config: VideoConfig): string {
   const refs = (config.referenceList || []).filter(item => item.type === "image");
   if (!refs.length) return config.prompt;
 
-  const exactTags = refs.map((_, index) => `<Picture ${index + 1}>`);
-  const hasAllTags = exactTags.every(tag => config.prompt.includes(tag));
-  if (hasAllTags) return config.prompt;
+  const expected = refs.map((_, index) => index + 1);
+  const rawTags = config.prompt.match(/<Picture\s*\d+\s*>/gi) || [];
 
+  // A dedicated H3 Prompt Skill owns Picture semantics. If it emitted any Picture tags,
+  // fail closed unless they exactly match Runtime reference slots 1..N.
+  if (rawTags.length) {
+    const numbers = rawTags
+      .map(tag => Number((tag.match(/\d+/) || [""])[0]))
+      .filter(value => Number.isInteger(value));
+    const unique = Array.from(new Set(numbers)).sort((a, b) => a - b);
+    const invalidSyntax = rawTags.some(tag => {
+      const n = Number((tag.match(/\d+/) || [""])[0]);
+      return tag !== `<Picture ${n}>`;
+    });
+    const matches = unique.length === expected.length && expected.every((value, index) => unique[index] === value);
+    if (invalidSyntax || !matches) {
+      throw new Error(
+        `MiniMax H3 Picture 槽位与实际参考图不一致：实际参考图 ${refs.length} 张，提示词引用 [${unique.join(", ")}]。请重新生成 H3 专属提示词，确保使用连续的 <Picture 1>..<Picture ${refs.length}>。`,
+      );
+    }
+    return config.prompt;
+  }
+
+  // Backward-compatible guard for old/manual prompts. Normal production prompts should already
+  // come from minimaxH3Multi-referenceMode.md and therefore never need this branch.
+  const exactTags = refs.map((_, index) => `<Picture ${index + 1}>`);
   const bindings = refs.map((ref, index) => {
     const tag = exactTags[index];
     return `${tag} = ${referenceLabel(ref, index)}。必须把该图作为权威视觉参考。`;
   });
 
   return [
-    "【MiniMax H3 多图参考绑定｜最高优先级】",
+    "【MiniMax H3 多图参考绑定｜兼容回退】",
     ...bindings,
     "严格按照上述 Picture 编号与传入图片的顺序一一对应。",
     "保持参考主体的身份与视觉设计连续：人物脸型与五官、年龄感、发型发色、肤色、体型比例、服装与关键配饰不得无故变化；场景和道具参考保持其核心结构与设计。",
