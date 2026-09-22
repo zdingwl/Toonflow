@@ -5,6 +5,7 @@ import { readStoryboardProgress } from "./storyboardProgress";
 import { readStoryboardTableSnapshot, extractStoryboardTable } from "./storyboardTable";
 import { reviseStoryboardScene, storyboardSceneHash } from "./storyboardRevision";
 import { extractSourceScene } from "./storyboardValidator";
+import { getStoryboardRebuildContext, rebuildStoryboardTask } from "./storyboardRebuild";
 
 export type StoryboardRevisionGenerateInput = {
   instruction: string;
@@ -15,7 +16,11 @@ export type StoryboardRevisionGenerateInput = {
   sourceScene?: string;
 };
 
-/** Revision is NOT a missing-scene generation. It must replace an existing, version-pinned scene. */
+/**
+ * A scene revision and an explicitly authorized whole-table rebuild are
+ * different operations. A rebuild archives the old draft and initializes an
+ * entirely new, plan-pinned task; it does not silently overwrite old scenes.
+ */
 export function createStoryboardRevisionTool(options: {
   db: Knex;
   projectId: number;
@@ -25,16 +30,57 @@ export function createStoryboardRevisionTool(options: {
   notify: (payload: { episodesId: number; storyboardTable: string; storyboardTableProgress: unknown }) => void;
 }) {
   return tool({
-    description: "执行导演修订已保存的指定分镜场次（非重新审核、非补缺场）；锁定数据库版本，生成新稿，事务提交并读回。每次只修订一场；确认已实际变更后才能复审。",
-    inputSchema: jsonSchema<{ scene: number; instruction: string }>(
-      z.object({
-        scene: z.number().int().min(1).max(1000).describe("要修订的已保存场次编号；根据监制报告选择具体场次"),
-        instruction: z.string().min(1).max(2000).describe("本场要解决的已确认审核问题与用户最新约束；不能仅写再次审核"),
-      }).toJSONSchema(),
-    ),
-    execute: async ({ scene, instruction }) => {
+    description: "修订已有分镜场次。若用户明确要求以最新导演计划重新构建全部场次且旧任务发生计划冲突，可使用 rebuild=true、scene=0、confirmation=REBUILD_LATEST_PLAN 先归档旧稿并初始化全新任务；然后必须调用 run_sub_agent_storyboard_table 从第1场生成。禁止把 PLAN_CHANGED 当作已保存0场。普通单场修改必须使用 scene>=1。",
+    inputSchema: jsonSchema<{
+      scene: number;
+      instruction: string;
+      rebuild?: boolean;
+      total?: number;
+      confirmation?: "REBUILD_LATEST_PLAN";
+    }>(z.object({
+      scene: z.number().int().min(0).max(1000).describe("普通修订传已保存场次1..M；整集重建传0"),
+      instruction: z.string().min(1).max(2000).describe("用户已确认的具体修订要求；重建时必须明确说明以最新导演计划重新构建"),
+      rebuild: z.boolean().optional().describe("仅当用户明确授权作废旧任务并按最新导演计划全剧重建时设为true"),
+      total: z.number().int().min(1).max(1000).optional().describe("重建时必须传最新导演计划总场数"),
+      confirmation: z.literal("REBUILD_LATEST_PLAN").optional().describe("用户明确要求重建时才可提供本确认值"),
+    }).toJSONSchema()),
+    execute: async ({ scene, instruction, rebuild, total, confirmation }) => {
       const { db, projectId, episodesId, abortSignal } = options;
-      if (abortSignal?.aborted) throw new Error("用户已停止分镜修订");
+      if (abortSignal?.aborted) throw new Error("用户已停止分镜任务");
+      if (rebuild) {
+        if (scene !== 0 || confirmation !== "REBUILD_LATEST_PLAN" || !total ||
+            !/重新(?:构建|生成|制作)|重建|从头生成/.test(instruction) ||
+            !/最新导演计划|最新导演规划|当前导演计划/.test(instruction)) {
+          throw new Error("重建必须明确指定最新导演计划、总场数和用户确认；不能凭监制建议清空旧任务");
+        }
+        const context = await getStoryboardRebuildContext(db, projectId, episodesId);
+        if (!context.taskId || !context.exists || context.actualSavedScenes === null) {
+          throw new Error("旧任务缺失或其正文与进度不一致，不能自动重建；请先核对数据库");
+        }
+        const rebuilt = await rebuildStoryboardTask(db, {
+          projectId, episodesId, expectedTaskId: context.taskId,
+          expectedRevision: context.revision, expectedPlanHash: context.currentPlanHash,
+          total, reason: instruction,
+        });
+        options.notify({
+          episodesId, storyboardTable: rebuilt.storyboardTable,
+          storyboardTableProgress: rebuilt.storyboardTableProgress,
+        });
+        return {
+          rebuildInitialized: true,
+          archivedTaskId: rebuilt.archivedTaskId,
+          archivedRevision: rebuilt.archivedRevision,
+          archivedSavedScenes: rebuilt.archivedSavedScenes,
+          archivedSceneCount: rebuilt.archivedSceneCount,
+          archiveId: rebuilt.archiveId,
+          taskId: rebuilt.taskId, total: rebuilt.total, nextScene: 1,
+          savedScenes: rebuilt.savedScenes, missingScenes: rebuilt.missingScenes,
+          complete: false,
+          nextAction: "run_sub_agent_storyboard_table",
+          message: `旧任务已有${rebuilt.archivedSceneCount}场，已完整归档。新任务已绑定最新导演计划；请立即调用 run_sub_agent_storyboard_table，以 scope=full、total=${rebuilt.total} 从第1场逐场重建。尚未生成任何新场次。`,
+        };
+      }
+      if (scene < 1) throw new Error("普通修订必须指定已保存场次；整集重建需显式确认");
       const before = await readStoryboardProgress(db, projectId, episodesId);
       if (!before.valid || before.mode !== "scene" || !before.taskId || !before.total) {
         throw new Error(before.conflict?.message ?? "当前分镜不是可安全修订的逐场任务，请先核对进度");
