@@ -47,3 +47,10 @@
 ## DramaClaw 旧协议
 
 只在实际部署网关时显式填写 `videoBackend=gateway` 和对应的 `gatewayUrl` / `gatewayApiKey`。不能把 ComfyUI 的 8188 端口直接填入 DramaClaw `/v1/video/generations` 接口。
+
+## MiniMax H3 参考图优先级
+
+- 角色、场景、道具资产图会作为 Ref2VA 的 `<Picture N>` 参考图上传。
+- 角色资产始终排在场景/道具之前，以提高人物身份稳定性。
+- 分镜图 **不会** 上传到 Ref2VA；它只作为提示词中的构图、站位、景别、动作和空间关系指导，避免分镜图中的人物外观覆盖角色资产身份。
+- H3 专属提示词中的 `<Picture 1>..<Picture N>` 必须与实际上传参考图数量严格一致；旧提示词若仍引用已移除的 storyboard Picture，需要重新点击“生成提示词”。
