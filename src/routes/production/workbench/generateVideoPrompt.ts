@@ -75,7 +75,7 @@ export default router.post(
             .db("o_assets")
             .leftJoin("o_image", "o_image.id", "o_assets.imageId")
             .where("o_assets.id", item.id)
-            .select("o_assets.id", "o_assets.type", "o_assets.name", "o_image.filePath")
+            .select("o_assets.id", "o_assets.type", "o_assets.name", "o_assets.describe", "o_assets.prompt as assetPrompt", "o_image.filePath")
             .first();
           return {
             ...assetsData,
@@ -98,6 +98,8 @@ export default router.post(
           id: item.id,
           type: item.type,
           name: item.name,
+          describe: item.describe,
+          assetPrompt: item.assetPrompt,
           filePath: item.filePath,
           _reference: item._reference,
           _slotType: item._slotType,
@@ -135,6 +137,7 @@ export default router.post(
     const modelLower = (modelData ?? "").toLowerCase();
     const h3PromptMode = isMiniMaxH3(modelData ?? "");
     const projectData = await u.db("o_project").select("*").where({ id: projectId }).first();
+    const videoTrackData = await u.db("o_videoTrack").select("duration").where({ id: trackId }).first();
     const videoPrompt = await u.db("o_prompt").where("type", "videoPromptGeneration").first();
     let videoPromptGeneration = "" as string | undefined;
 
@@ -239,10 +242,36 @@ export default router.post(
       ? `\n**分镜构图指导（仅文本指导，禁止生成新的 <Picture N>，禁止覆盖角色身份）**：\n${storyboardGuidance}\n`
       : "";
 
+    const storyboardDuration = storyboard.reduce(
+      (total: number, item: any) => total + (Number.parseFloat(String(item.duration || 0)) || 0),
+      0,
+    );
+    const rawTargetDuration = Number(videoTrackData?.duration) || storyboardDuration || 5;
+    const targetDuration = Math.max(4, Math.min(15, Math.round(rawTargetDuration)));
+
+    const assetDefinitionItems = h3PromptMode
+      ? pictureSourceItems.map((item: any, index: number) => {
+          const picture = `<Picture ${index + 1}>`;
+          const type = escapeXmlAttr(item.type || "asset");
+          const name = escapeXmlAttr(item.name || `资产${item.id}`);
+          return [
+            `<asset picture="${picture}" type="${type}" name="${name}">`,
+            `describe=${JSON.stringify(item.describe || "")}`,
+            `visualPrompt=${JSON.stringify(item.assetPrompt || "")}`,
+            "</asset>",
+          ].join("\n");
+        })
+      : [];
+    const assetDefinitions = h3PromptMode
+      ? `<assetDefinitions>\n${assetDefinitionItems.join("\n")}\n</assetDefinitions>`
+      : "";
+
     const content = `
           **模型名称**：${modelData},
+          **目标时长 target_duration**：${targetDuration}s,
           ${referenceHeading}：
           ${referenceSlots},
+          ${h3PromptMode ? `\n**资产视觉定义**：\n${assetDefinitions}\n` : ""}
           ${storyboardHeading}
           **资产信息**（角色、场景、道具、音频):${assets
             .filter((i) => i.filePath)
