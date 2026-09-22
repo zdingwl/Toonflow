@@ -53,17 +53,29 @@ export default router.post(
     const images = await Promise.all(
       uploadData.map(async (item: UploadItem) => {
         if (item.sources === "storyboard") {
-          const filePath = await u.db("o_storyboard").where("id", item.id).select("filePath").first();
-          return { path: filePath?.filePath, sources: "storyBoard", referenceType: item.type, label: item.label, prompt: item.prompt };
+          const filePath = await u.db("o_storyboard").where("id", item.id).select("filePath", "prompt").first();
+          return {
+            path: filePath?.filePath,
+            sources: "storyBoard",
+            referenceType: item.type,
+            label: item.label || `分镜图${item.id}`,
+            prompt: item.prompt || filePath?.prompt,
+          };
         }
         if (item.sources === "assets") {
           const filePath = await u
             .db("o_assets")
             .where("o_assets.id", item.id)
             .leftJoin("o_image", "o_assets.imageId", "o_image.id")
-            .select("o_image.filePath", "o_image.type")
+            .select("o_image.filePath", "o_image.type", "o_assets.name", "o_assets.prompt")
             .first();
-          return { path: filePath?.filePath, sources: filePath.type, referenceType: item.type, label: item.label, prompt: item.prompt };
+          return {
+            path: filePath?.filePath,
+            sources: filePath.type,
+            referenceType: item.type,
+            label: item.label || filePath?.name,
+            prompt: item.prompt || filePath?.prompt,
+          };
         }
       }),
     );
