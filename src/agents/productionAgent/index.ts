@@ -151,6 +151,8 @@ async function createSubAgent(parentCtx: AgentContext) {
         }
       } else if (isStoryboardTable) {
         try {
+          // An interrupted old model response must never be committed after task replacement.
+          if (abortSignal?.aborted) throw new Error("分镜任务已中断，旧模型输出未提交");
           const parsed = extractStoryboardTable(fullResponse);
           if (expectedScene) {
             if (parsed.mode !== "scene" || parsed.scene !== expectedScene.scene || parsed.total !== expectedScene.total || parsed.taskId !== expectedScene.taskId) {
@@ -398,6 +400,31 @@ async function createSubAgent(parentCtx: AgentContext) {
     run_sub_agent_storyboard_revise,
     run_sub_agent_supervision,
   };
+}
+
+/** Invoke the established backend-controlled scene runner directly, without asking the
+ * decision model to choose whether to call the generation tool after a rebuild. */
+export async function generateRebuiltStoryboard(ctx: AgentContext, total: number, expectedTaskId: string) {
+  if (ctx.abortSignal?.aborted) throw new Error("分镜重建已停止，已提交场次保留");
+  const projectId = Number(ctx.resTool.data.projectId);
+  const episodesId = Number(ctx.resTool.data.scriptId);
+  const current = await readStoryboardProgress(u.db, projectId, episodesId);
+  if (!current.valid || current.taskId !== expectedTaskId || current.total !== total) {
+    throw new Error("新分镜任务的数据库状态与重建回执不一致，停止生成以保护已有数据");
+  }
+  const subAgents = await createSubAgent(ctx);
+  const execute = subAgents.run_sub_agent_storyboard_table.execute;
+  if (typeof execute !== "function") throw new Error("分镜逐场生成工具尚未注册，未执行重建生成");
+  const result = await (execute as (...args: any[]) => Promise<any>)(
+    { prompt: "按最新导演计划生成全部分镜，遵守本集现有制作要求", total, scope: "full" },
+    { toolCallId: `backend-rebuild-${ctx.runId ?? expectedTaskId}`, messages: [], abortSignal: ctx.abortSignal },
+  );
+  const verified = await readStoryboardProgress(u.db, projectId, episodesId);
+  if (!verified.valid || verified.taskId !== expectedTaskId || verified.total !== total ||
+      !verified.complete || verified.savedScenes.length !== total || result?.complete !== true) {
+    throw new Error(`重建生成尚未完成，当前保存场次：${verified.savedScenes.join(",") || "无"}；不能报告整集完成`);
+  }
+  return verified;
 }
 
 async function createArtSkills(artName: string, storyName: string, readSkill: (filePath: string) => Promise<string>) {

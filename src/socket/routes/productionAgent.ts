@@ -8,6 +8,8 @@ import { TaskStore } from "@/utils/agent/runtime/taskStore";
 import { reconcileDirectorPlanOutput } from "@/agents/productionAgent/directorPlan";
 import { reconcileStoryboardTableOutput } from "@/agents/productionAgent/storyboardTable";
 import { getOperationReceipt } from "@/utils/agent/runtime/operationReceipt";
+import { isExplicitStoryboardRebuildRequest, prepareAuthorizedStoryboardRebuild } from "@/agents/productionAgent/storyboardRebuildDispatch";
+import { readStoryboardTableSnapshot } from "@/agents/productionAgent/storyboardTable";
 
 async function verifyToken(rawToken: string): Promise<Boolean> {
   const setting = await u.db("o_setting").where("key", "tokenKey").select("value").first();
@@ -312,7 +314,37 @@ export default (nsp: Namespace) => {
       };
       activeRunId = runId;
       try {
-        await agent.runDecisionAI(ctx);
+        if (isExplicitStoryboardRebuildRequest(content)) {
+          // User authorization is handled deterministically here, not via the decision model.
+          // The database service verifies the old task and atomically archives it before reset.
+          const projectId = Number(resTool.data.projectId);
+          const episodesId = Number(resTool.data.scriptId);
+          const prepared = await prepareAuthorizedStoryboardRebuild(
+            u.db, projectId, episodesId, content, controller.signal,
+          );
+          const snapshot = await readStoryboardTableSnapshot(u.db, projectId, episodesId);
+          if (snapshot.storyboardTableProgress?.taskId !== prepared.taskId) {
+            throw new Error("重建初始化回执与数据库任务不一致，停止逐场生成");
+          }
+          socket.emit("storyboardTable:committed", {
+            episodesId, storyboardTable: snapshot.storyboardTable,
+            storyboardTableProgress: snapshot.storyboardTableProgress,
+            savedScenes: Object.keys(snapshot.storyboardTableProgress.scenes).map(Number).sort((a, b) => a - b),
+            missingScenes: Array.from({ length: prepared.total }, (_, i) => i + 1)
+              .filter((n) => !snapshot.storyboardTableProgress?.scenes[String(n)]),
+          });
+          const initMessage = resTool.newMessage("assistant", "视频策划");
+          initMessage.text(`旧任务实际保存${prepared.archivedSceneCount}场，已归档（归档ID：${prepared.archiveId ?? "既有归档"}）。` +
+            `新任务ID：${prepared.taskId}；${prepared.newlyInitialized ? "初始化完成" : "恢复已有新任务"}，现在由后端直接开始逐场生成。`).complete();
+          initMessage.complete();
+          const verified = await agent.generateRebuiltStoryboard(ctx, prepared.total, prepared.taskId);
+          const done = resTool.newMessage("assistant", "视频策划");
+          done.text(`新任务${verified.taskId}已从数据库核对保存${verified.savedScenes.length}/${verified.total}场。` +
+            "结构化分镜已生成；内容覆盖、节奏和制作质量仍须监制复核。").complete();
+          done.complete();
+        } else {
+          await agent.runDecisionAI(ctx);
+        }
         await taskStore.finish(runId, controller.signal.aborted ? "reconciling" : "completed");
       } catch (err: any) {
         await taskStore.finish(runId, controller.signal.aborted ? "reconciling" : "failed", u.error(err).message);

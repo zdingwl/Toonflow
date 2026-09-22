@@ -6,7 +6,7 @@ import { getStoryboardRebuildContext, rebuildStoryboardTask } from "./storyboard
 export function isExplicitStoryboardRebuildRequest(input: string): boolean {
   const text = input.trim().replace(/[\s，。！!？?、]/g, "");
   if (/^(重新构建|重新生成分镜(?:表)?|重新构建分镜(?:表)?|重建分镜(?:表)?|重新制作分镜(?:表)?)$/.test(text)) return true;
-  return /^(?:请)?(?:以|按)(?:当前|最新)导演(?:计划|规划)(?:为准)?(?:重新构建|重新生成|重建)(?:全部|整集|所有|\d+场|全部\d+场)?分镜(?:表)?$/.test(text);
+  return /^(?:请)?(?:以|按)(?:当前|最新)导演(?:计划|规划)(?:为准)?(?:重新构建|重新生成|重建)(?:全部|整集|所有|[一二三四五六七八九十百\d]+场|全部[一二三四五六七八九十百\d]+场)?分镜(?:表)?$/.test(text);
 }
 
 /** Never infer total or saved-scene count from a model's prose or an invalid progress fallback. */
