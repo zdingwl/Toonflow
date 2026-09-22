@@ -99,7 +99,8 @@ export default router.post(
       const base64 = await Promise.all(
         images.map(async (item) => {
           if (!item) return null;
-          const type = item.referenceType === "audioReference" ? "audio" : item.referenceType === "videoReference" ? "video" : "image";\n          return { base64: await u.oss.getImageBase64(item.path), type, label: item.label, prompt: item.prompt, sourceType: item.sources };
+          const type = item.referenceType === "audioReference" ? "audio" : item.referenceType === "videoReference" ? "video" : "image";
+          return { base64: await u.oss.getImageBase64(item.path), type, label: item.label, prompt: item.prompt, sourceType: item.sources };
         }),
       );
       const relatedObjects = { projectId, videoId, scriptId, type: "视频" };
