@@ -11,7 +11,7 @@ type VideoModel = {
 type VideoConfig = {
   prompt: string; duration: number; resolution: string; aspectRatio: string;
   mode: string | string[]; audio?: boolean;
-  referenceList?: { type: "image" | "video" | "audio"; base64: string; label?: string; prompt?: string; sourceType?: string }[];
+  referenceList?: { type: "image" | "video" | "audio"; base64: string; label?: string; prompt?: string; sourceType?: string; assetType?: string }[];
 };
 type InputTarget = { node: string; input: string };
 type WorkflowMapping = {
@@ -27,9 +27,9 @@ declare const Buffer: any;
 declare const pollTask: (fn: () => Promise<{ completed: boolean; data?: string; error?: string }>, interval?: number, timeout?: number) => Promise<{ completed: boolean; data?: string; error?: string }>;
 
 const vendor = {
-  id: "comfyui_local", version: "1.4", author: "Local ComfyUI",
+  id: "comfyui_local", version: "1.5", author: "Local ComfyUI",
   name: "本机 ComfyUI（FLUX + MiniMax H3）",
-  description: "FLUX 图片走 ComfyUI；MiniMax H3 视频默认直连原生 Ref2VA/FL2VA，并按 <Picture N> 严格绑定参考图。无须 DramaClaw；仍支持自定义工作流。",
+  description: "FLUX 图片走 ComfyUI；MiniMax H3 视频直连原生 Ref2VA/FL2VA。角色/场景/道具资产作为 <Picture N>，分镜图仅作文本构图指导，避免覆盖人物身份。",
   inputs: [
     { key: "baseUrl", label: "ComfyUI 地址", type: "url", required: true, placeholder: "http://127.0.0.1:8188" },
     { key: "checkpoint", label: "FLUX Checkpoint", type: "text", required: true, placeholder: "Flux\\flux1-schnell-fp8-with_clip_vae.safetensors" },
@@ -178,6 +178,21 @@ function referenceLabel(ref: NonNullable<VideoConfig["referenceList"]>[number], 
   return clean ? clean.slice(0, 120) : `参考图 ${index + 1}`;
 }
 
+function h3ReferenceRank(ref: NonNullable<VideoConfig["referenceList"]>[number]): number {
+  const type = String(ref.assetType || "").toLowerCase();
+  if (type === "role" || type === "character") return 0;
+  if (type === "scene" || type === "environment") return 1;
+  if (type === "tool" || type === "prop" || type === "creature") return 2;
+  return 3;
+}
+
+function prepareH3Config(config: VideoConfig): VideoConfig {
+  const refs = (config.referenceList || [])
+    .filter((item) => !/^storyboard$/i.test(String(item.sourceType || "")))
+    .sort((a, b) => h3ReferenceRank(a) - h3ReferenceRank(b));
+  return { ...config, referenceList: refs };
+}
+
 function compileReferencePrompt(config: VideoConfig): string {
   const refs = (config.referenceList || []).filter(item => item.type === "image");
   if (!refs.length) return config.prompt;
@@ -319,7 +334,10 @@ function findVideo(task: any, outputNode?: string): any {
 }
 
 async function comfyVideoRequest(config: VideoConfig): Promise<string> {
-  const refs = config.referenceList || [];
+  // Defense in depth: even an older frontend/backend may still send storyboard images.
+  // Never feed them into Ref2VA; they are composition guidance only and can otherwise override faces.
+  const runtimeConfig = prepareH3Config(config);
+  const refs = runtimeConfig.referenceList || [];
   if (refs.some(item => item.type !== "image")) throw new Error("ComfyUI 原生 H3 直连仅接收参考图片；不能静默忽略视频或音频参考素材");
   if (refs.length > 9) throw new Error("MiniMax H3 最多接收 9 张参考图片");
   const custom = !!(vendor.inputValues.workflowApi?.trim() || vendor.inputValues.workflowMapping?.trim());
@@ -327,8 +345,8 @@ async function comfyVideoRequest(config: VideoConfig): Promise<string> {
   const uploaded: string[] = [];
   for (let i = 0; i < refs.length; i++) uploaded.push(await uploadImage(refs[i].base64, i));
   const { graph, outputNode } = custom
-    ? customGraph(config, uploaded)
-    : { graph: nativeH3Graph(config, uploaded, info!), outputNode: "14" };
+    ? customGraph(runtimeConfig, uploaded)
+    : { graph: nativeH3Graph(runtimeConfig, uploaded, info!), outputNode: "14" };
   let promptId: string;
   try {
     const response = await axios.post(`${baseUrl()}/prompt`, { prompt: graph, client_id: "toonflow-h3" }, { timeout: 60000, proxy: false, maxBodyLength: Infinity });
