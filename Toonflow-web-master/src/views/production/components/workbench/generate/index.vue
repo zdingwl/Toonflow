@@ -303,9 +303,17 @@ async function genText() {
   if (track.id == null || track.state === "生成中") return;
   let info: { id: number; sources: string }[] = [];
   const currentTrackId = track.id;
-  const rawMedias = (track.medias ?? []) as UploadItem[];
+  // Use the exact same ordered list as video generation. H3 <Picture N> must match Runtime ref_image_N.
+  const rawMedias = imageList.value as UploadItem[];
   if (modelParmas.value.mode == "text") {
-    info = rawMedias.map(({ id, sources }) => ({ id: id!, sources }));
+    info = rawMedias.map((item) => ({
+      id: item.id!,
+      sources: item.sources,
+      reference: Boolean(item.src),
+      slotType: item.slotType,
+      fileType: item.fileType,
+      prompt: item.prompt,
+    }));
   } else {
     const frameMode = ["startEndRequired", "endFrameOptional", "startFrameOptional"];
     const preSliced = frameMode.includes(modelParmas.value.mode)
@@ -313,7 +321,16 @@ async function genText() {
       : modelParmas.value.mode === "singleImage"
         ? rawMedias.slice(0, 1)
         : rawMedias;
-    const filtered = preSliced.filter((item) => typeof item.id === "number" && !isNaN(item.id)).map(({ id, sources }) => ({ id: id!, sources }));
+    const filtered = preSliced
+      .filter((item) => typeof item.id === "number" && !isNaN(item.id))
+      .map((item) => ({
+        id: item.id!,
+        sources: item.sources,
+        reference: Boolean(item.src),
+        slotType: item.slotType,
+        fileType: item.fileType,
+        prompt: item.prompt,
+      }));
     if (frameMode.includes(modelParmas.value.mode)) info = filtered.slice(0, 2);
     else if (modelParmas.value.mode === "singleImage") info = filtered.slice(0, 1);
     else info = filtered;
@@ -406,7 +423,15 @@ async function generateVideo() {
                       : imageList.value;
                   const filtered = preSliced
                     .filter((item) => Boolean(item.src) && typeof item.id === "number" && !isNaN(item.id))
-                    .map(({ id, sources }) => ({ id, sources }));
+                    .map((item) => ({
+                      id: item.id,
+                      sources: item.sources,
+                      type:
+                        item.slotType ??
+                        (item.fileType === "audio" ? "audioReference" : item.fileType === "video" ? "videoReference" : "imageReference"),
+                      fileType: item.fileType,
+                      prompt: item.prompt,
+                    }));
                   if (frameMode.includes(modelParmas.value.mode)) return filtered.slice(0, 2);
                   if (modelParmas.value.mode === "singleImage") return filtered.slice(0, 1);
                   return filtered;
