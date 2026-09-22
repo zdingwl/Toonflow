@@ -15,6 +15,9 @@ import {
   readStoryboardTableSnapshot,
 } from "./storyboardTable";
 import { TaskStore } from "@/utils/agent/runtime/taskStore";
+import { readStoryboardProgress } from "./storyboardProgress";
+import { runStoryboardTask } from "./storyboardTaskRunner";
+import { extractSourceScene, validateStoryboardScene } from "./storyboardValidator";
 import { wrapAgentTools } from "@/utils/agent/runtime/toolExecutor";
 import { buildMemoryPrompt } from "@/utils/agent/contextManager";
 
@@ -116,6 +119,7 @@ async function createSubAgent(parentCtx: AgentContext) {
     memoryKey,
     tools: extraTools,
     messages,
+    expectedScene,
   }: {
     key: `${string}:${string}`;
     prompt: string;
@@ -124,8 +128,9 @@ async function createSubAgent(parentCtx: AgentContext) {
     memoryKey: string;
     tools?: Record<string, any>;
     messages?: { role: "user" | "assistant" | "system"; content: string }[];
+    expectedScene?: { scene: number; total: number; taskId: string; sourceScene?: string };
   }) {
-    const stepInput = JSON.stringify({ key, prompt, messages: messages ?? null });
+    const stepInput = JSON.stringify({ key, prompt, messages: messages ?? null, expectedScene: expectedScene ?? null });
     const stepKey = TaskStore.makeStepKey(key, stepInput);
     if (parentCtx.runId) {
       const prior = await taskStore.beginStep(parentCtx.runId, stepKey, stepInput);
@@ -176,6 +181,17 @@ async function createSubAgent(parentCtx: AgentContext) {
       } else if (isStoryboardTable) {
         try {
           const parsed = extractStoryboardTable(fullResponse);
+          if (expectedScene) {
+            if (parsed.mode !== "scene" || parsed.scene !== expectedScene.scene ||
+                parsed.total !== expectedScene.total || parsed.taskId !== expectedScene.taskId) {
+              throw new Error(`当前只允许输出第${expectedScene.scene}场及固定 task/total，拒绝其他场次或整表`);
+            }
+            const validation = validateStoryboardScene(parsed.scene, parsed.content, expectedScene.sourceScene);
+            if (!validation.valid) throw new Error(`第${parsed.scene}场内容校验失败：${validation.errors.join("；")}`);
+            if (!validation.coverageVerified) {
+              subMsg.text(`第${parsed.scene}场通过结构校验；原剧本逐项覆盖尚待人工或后续核验。`).complete();
+            }
+          }
           const committed = await commitStoryboardTableOutput(
             u.db,
             scope.projectId,
@@ -371,25 +387,77 @@ async function createSubAgent(parentCtx: AgentContext) {
   });
 
   const run_sub_agent_storyboard_table = tool({
-    description: "运行执行subAgent来完成分镜表构建相关任务",
-    inputSchema: jsonSchema<{ prompt: string }>(promptInput),
-    execute: async ({ prompt }) => {
+    description: "由后端控制分镜逐场生成、事务提交和中断恢复。整集使用 scope=full；明确只写一场时使用 scope=single。",
+    inputSchema: jsonSchema<{ prompt: string; total?: number; scope?: "full" | "single" }>(
+      z.object({
+        prompt: z.string().min(1).describe("本次分镜创作要求"),
+        total: z.number().int().min(1).max(1000).optional().describe("首次生成时的总场数，应与已确认导演计划一致；恢复时沿用数据库总数"),
+        scope: z.enum(["full", "single"]).optional().describe("整集逐场完成或明确只处理下一缺失场"),
+      }).toJSONSchema(),
+    ),
+    execute: async ({ prompt, total: requestedTotal, scope: requestedScope }) => {
       const productionSkills = await loadProductionSkills();
       const skill = path.join(u.getPath("skills"), "production_execution_storyboard_table.md");
       const systemPrompt = await readSkill(skill);
-      const addPrompt = "\n你必须使用如下XML格式写入工作区：\n```\n<storyboardTable>内容</storyboardTable>\n```";
-      return runAgent({
-        key: "productionAgent:storyboardTableAgent",
-        prompt,
-        system: systemPrompt + addPrompt,
-        name: "执行导演",
-        memoryKey: "assistant:execution",
-        messages: [
-          { role: "assistant", content: productionSkills.prompt + `\n${modelInfo}` },
-          { role: "user", content: prompt + addPrompt },
-        ],
-        tools: { ...productionSkills.tools },
+      const projectId = Number(resTool.data.projectId);
+      const episodesId = Number(resTool.data.scriptId);
+      const progress = await readStoryboardProgress(u.db, projectId, episodesId);
+      if (!progress.valid) throw new Error(progress.conflict?.message ?? "分镜进度异常，请先核对现有数据");
+      const scriptRow = await u.db("o_script").where({ id: episodesId, projectId }).select("content").first();
+      const workspace = await u.db("o_agentWorkData").where({ projectId, episodesId, key: "productionAgent" }).select("data").first();
+      const plan = workspace?.data ? (JSON.parse(workspace.data).scriptPlan ?? "") : "";
+      const declaredTotal = String(plan).match(/共规划\s*(\d+)\s*个?场/);
+      const planHeadings = [...String(plan).matchAll(/^\s*(?:\d+[.、]\s*)?场\s*(\d+)\s*[：:]/gm)].map((m) => Number(m[1]));
+      const planTotal = declaredTotal ? Number(declaredTotal[1]) :
+        (planHeadings.length && planHeadings.every((n, i) => n === i + 1) ? planHeadings.length : undefined);
+      const total = progress.total ?? requestedTotal ?? planTotal;
+      if (!total || !Number.isSafeInteger(total) || total > 1000) {
+        throw new Error("无法从已有进度或导演计划确定总场数，请先核对导演计划");
+      }
+      if (requestedTotal !== undefined && requestedTotal !== total) throw new Error("输入总场数与已保存进度不一致");
+      if (planTotal !== undefined && planTotal !== total) throw new Error("导演计划总场数与分镜任务不一致");
+      const sourceScript = String(scriptRow?.content ?? "");
+      const stage = await runStoryboardTask({
+        db: u.db,
+        projectId,
+        episodesId,
+        total,
+        maxScenes: requestedScope === "single" ? 1 : total,
+        maxAttemptsPerScene: 1, // 未能核对的 Step 不能在同一 Run 中盲目重放。
+        abortSignal,
+        generate: async ({ scene, taskId, total }) => {
+          const sourceScene = extractSourceScene(sourceScript, scene);
+          const before = await readStoryboardTableSnapshot(u.db, projectId, episodesId);
+          const previous = before.storyboardTableProgress?.scenes[String(scene - 1)]?.slice(-800) ?? "";
+          const protocol = `\n【后端固定任务协议】只处理第${scene}场，共${total}场，task=${taskId}。` +
+            `必须仅输出一份完整闭合的 <storyboardTable scene="${scene}" total="${total}" task="${taskId}">该场完整Markdown</storyboardTable>；` +
+            `不要生成其他场次，不要自行变更 task/total。\n` +
+            (sourceScene ? `本场原剧本（必须完整覆盖）：\n${sourceScene}\n` :
+              `当前剧本未识别到明确的第${scene}场边界；先调用 get_flowData(script) 定位本场，不得凭空补剧情。\n`) +
+            (previous ? `上一场末尾连续性参考：\n${previous}\n` : "") +
+            `创作要求：${prompt}`;
+          await runAgent({
+            key: "productionAgent:storyboardTableAgent",
+            prompt: protocol,
+            system: systemPrompt,
+            name: "执行导演",
+            memoryKey: "assistant:execution",
+            expectedScene: { scene, total, taskId, sourceScene },
+            messages: [
+              { role: "assistant", content: productionSkills.prompt + `\n${modelInfo}` },
+              { role: "user", content: protocol },
+            ],
+            tools: { ...productionSkills.tools },
+          });
+        },
       });
+      return {
+        taskId: stage.taskId, total: stage.total, savedScenes: stage.savedScenes,
+        missingScenes: stage.missingScenes, nextScene: stage.nextScene,
+        complete: stage.complete,
+        message: stage.complete ? "分镜表全部场次已事务提交；原剧本覆盖仍须逐场核验。" :
+          "本次场次已保存；仍有缺失场次，不能宣称整集完成。",
+      };
     },
   });
 

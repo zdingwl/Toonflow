@@ -1,4 +1,5 @@
 import type { Knex } from "knex";
+import { hashStoryboardSource } from "./storyboardProgress";
 import { mergeStoryboardScene, renderStoryboardScenes, type StoryboardTableProgress } from "@/utils/storyboardScenes";
 
 export type StoryboardTableOutput =
@@ -134,6 +135,16 @@ export async function commitStoryboardTableOutput(
     const currentProgress = data.storyboardTableProgress as StoryboardTableProgress | undefined;
 
     if (output.mode === "scene") {
+      const script = await trx("o_script").where({ id: episodesId, projectId }).select("content").first();
+      if (!script) throw new Error("当前项目不存在该集剧本");
+      const sourceHash = hashStoryboardSource(script.content ?? "");
+      const planHash = hashStoryboardSource(typeof data.scriptPlan === "string" ? data.scriptPlan : "");
+      if (currentProgress?.sourceHash && currentProgress.sourceHash !== sourceHash) {
+        throw new Error("剧本自分镜任务开始后已修改，不能继续混写旧任务");
+      }
+      if (currentProgress?.planHash && currentProgress.planHash !== planHash) {
+        throw new Error("导演计划自分镜任务开始后已修改，不能继续混写旧任务");
+      }
       const merged = mergeStoryboardScene(
         currentTable,
         currentProgress,
@@ -145,12 +156,17 @@ export async function commitStoryboardTableOutput(
       const nextData = {
         ...data,
         storyboardTable: merged.storyboardTable,
-        storyboardTableProgress: merged.storyboardTableProgress,
+        storyboardTableProgress: {
+          ...merged.storyboardTableProgress,
+          sourceHash: currentProgress?.sourceHash ?? sourceHash,
+          planHash: currentProgress?.planHash ?? planHash,
+        },
       };
       await writeStoredData(trx, scope, row, nextData);
       return {
         resultRef: `storyboardTable:${projectId}:${episodesId}:scene:${output.scene}`,
         ...merged,
+        storyboardTableProgress: nextData.storyboardTableProgress,
       };
     }
 

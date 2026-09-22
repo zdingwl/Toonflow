@@ -38,9 +38,6 @@ function makeProductionAgentStore(projectId: string) {
     });
 
     const episodesId = ref<number>();
-    // useChat 对已闭合的 XML 可能多次触发 complete；同一消息/场次只发送一次保存请求。
-    const sceneReceipts = new Map<string, Promise<void>>();
-
     const { connected, messages, chat, stopGenerate, socket, status, reconnect, connect, disconnect } = useChat({
       url: `${settingStore().baseUrl}/socket/productionAgent`,
       auth: () => ({
@@ -64,40 +61,10 @@ function makeProductionAgentStore(projectId: string) {
           // 导演计划由后端校验并写入数据库，收到提交回执后才更新工作区。
           return;
         } else if (tag === "storyboardTable") {
-          if (attrs.scene !== undefined || attrs.total !== undefined || attrs.task !== undefined) {
-            // 分段 XML 在未闭合时绝不改动工作区；旧版无属性的整表输出保持兼容。
-            if (status !== "complete") return;
-            const episode = episodesId.value;
-            const scene = Number(attrs.scene);
-            const total = Number(attrs.total);
-            const taskId = attrs.task ?? "";
-            const key = `${episode}:${data.messageId}:${data.contentId}:${scene}`;
-            if (!sceneReceipts.has(key)) {
-              const write = (async () => {
-                if (!episode || !Number.isSafeInteger(scene) || !Number.isSafeInteger(total)) throw new Error("分镜段落缺少有效场次和总场次数");
-                const response = (await axios.post("/production/saveFlowData", {
-                  projectId: Number(projectId),
-                  episodesId: episode,
-                  scene: { taskId, index: scene, total, content: value },
-                })) as unknown as { code: number; message?: string; data?: { storyboardTable: string; storyboardTableProgress: unknown; savedScenes: number[]; missingScenes: number[] } };
-                if (response?.code !== 200 || !response.data) throw new Error(response?.message ?? "分镜单场保存失败");
-                if (episodesId.value === episode) {
-                  flowData.value.storyboardTable = response.data.storyboardTable;
-                  (flowData.value as any).storyboardTableProgress = response.data.storyboardTableProgress;
-                }
-              })();
-              sceneReceipts.set(key, write);
-              void write.catch((reason) => {
-                sceneReceipts.delete(key);
-                window.$message.error(reason instanceof Error ? reason.message : "分镜单场保存失败");
-              });
-            }
-            return;
-          }
-          // 原有完整 XML：未闭合的长表不保存；闭合后继续走原有整表写入流程。
-          if (status !== "complete") return;
-          flowData.value.storyboardTable = value ?? "";
-          (flowData.value as any).resetStoryboardTable = true;
+          // Agent XML is only a stream preview; the backend is the sole writer.
+          // Never write a scene (or a full table) from a browser completion event.
+          // The storyboardTable:committed handler below updates the workspace.
+          return;
         }
         if (status == "complete") {
           throttledFn();

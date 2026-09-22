@@ -4,6 +4,7 @@ import _ from "lodash";
 import ResTool from "@/socket/resTool";
 import u from "@/utils";
 import { createHash, randomUUID } from "node:crypto";
+import { readStoryboardProgress } from "./storyboardProgress";
 
 const deriveAssetSchema = z.object({
   id: z.number().describe("衍生资产ID,如果新增则为空"),
@@ -120,6 +121,18 @@ export default (toolCpnfig: ToolConfig) => {
   const { socket } = resTool;
   const socketQueue = createSocketQueue(800);
   const tools: Record<string, Tool> = {
+    get_storyboard_progress: tool({
+      description: "只读：从数据库获取分镜任务 taskId、total、revision、已保存/缺失场次和下一场；不要从 Markdown 查找 XML task 属性。",
+      inputSchema: jsonSchema(z.object({}).toJSONSchema()),
+      execute: async () => {
+        const progress = await readStoryboardProgress(u.db, Number(resTool.data.projectId), Number(resTool.data.scriptId));
+        const thinking = msg.thinking("正在核对分镜表数据库进度...");
+        thinking.appendText(JSON.stringify(progress));
+        thinking.updateTitle(progress.valid ? "分镜任务进度核对完成" : "分镜任务进度冲突");
+        thinking.complete();
+        return progress;
+      },
+    }),
     get_flowData: tool({
       description: "获取工作区数据；script/scriptPlan/storyboardTable 直接读取后端数据库真实值，避免浏览器缓存导致误判。其他字段保持兼容读取。长文本可选 offset/limit 分段。",
       inputSchema: jsonSchema<{ key: keyof FlowData; offset?: number; limit?: number }>(
