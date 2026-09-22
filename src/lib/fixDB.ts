@@ -222,6 +222,10 @@ export default async (knex: Knex): Promise<void> => {
   if (Number(toonflowVer) < 3.2) {
     u.vendor.writeCode("toonflow", vendorData["toonflow.ts"]);
   }
+  const comfyuiLocalVer = await u.vendor.getVendor("comfyui_local").version;
+  if (Number(comfyuiLocalVer) < 1.3) {
+    u.vendor.writeCode("comfyui_local", vendorData["comfyui_local.ts"]);
+  }
 };
 
 async function tempOnsert(tsCode: string) {
