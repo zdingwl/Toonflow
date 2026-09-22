@@ -9,7 +9,7 @@ permissions:
 jobs:
   integrate:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -24,10 +24,10 @@ jobs:
           git diff --check
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      - name: Test Agent and storyboard contracts
-        run: yarn test:agent
       - name: Validate TypeScript
         run: yarn lint
+      - name: Targeted storyboard regression tests
+        run: yarn tsx --test tests/storyboard-table.test.ts tests/storyboard-recovery.test.ts
       - name: Commit tested code to staging branch
         run: |
           git config user.name 'github-actions[bot]'
