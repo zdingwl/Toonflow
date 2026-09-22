@@ -14,9 +14,9 @@ export type StoryboardRebuildRequest = {
 };
 
 /**
- * Explicitly supersede a coherent old scene task when the source/plan changes.
- * A PLAN_CHANGED status is not an empty task: keep every old scene and the
- * exact old progress as an immutable archive before initializing the new task.
+ * Supersede a coherent old scene task only when the user expressly requests a rebuild.
+ * PLAN_CHANGED is not an empty task. Archive the exact old text and progress before
+ * establishing the new task on the latest plan. All changes share one transaction.
  */
 export async function rebuildStoryboardTask(db: Knex, request: StoryboardRebuildRequest) {
   const { projectId, episodesId, expectedTaskId, expectedRevision, expectedPlanHash, total, reason } = request;
@@ -35,11 +35,11 @@ export async function rebuildStoryboardTask(db: Knex, request: StoryboardRebuild
     const data = JSON.parse(row.data);
     const table = typeof data.storyboardTable === "string" ? data.storyboardTable : "";
     const previous = data.storyboardTableProgress as StoryboardTableProgress | undefined;
-    // Ignore source/plan hashes ONLY for the integrity check of the old snapshot.
-    // The current plan is intentionally different, while table/progress must still agree.
+    // The old source/plan may have changed; validate its saved table and progress
+    // without comparing them to the current plan, but never ignore content mismatch.
     const coherent = inspectStoryboardProgress(table, previous);
     if (!coherent.valid || coherent.mode !== "scene" || !previous) {
-      throw new Error(coherent.conflict?.message ?? "旧任务正文与进度不一致，不能自动重建");
+      throw new Error(`旧任务正文与进度不一致，不能自动重建：${coherent.conflict?.message ?? "旧任务进度不可核验"}`);
     }
     if (previous.taskId !== expectedTaskId || previous.revision !== expectedRevision) {
       throw new Error("旧任务或版本已变化，请重新读取进度后再重建");
@@ -73,24 +73,34 @@ export async function rebuildStoryboardTask(db: Knex, request: StoryboardRebuild
       storyboardTableProgress: nextProgress,
       storyboardTaskArchives: [...(Array.isArray(data.storyboardTaskArchives) ? data.storyboardTaskArchives : []), archive],
     };
-    // Never overwrite a concurrent Agent scene commit or an explicit manual edit.
+    // Keep an independent archive record: future browser snapshots or manual
+    // workspace edits cannot delete the only copy of the old draft.
+    const archiveKey = `storyboardTaskArchive:${archiveId}`;
+    await trx("o_agentWorkData").insert({
+      projectId, episodesId, key: archiveKey, data: JSON.stringify(archive),
+    });
+    // CAS: concurrent Agent commits or manual edits invalidate the rebuild.
     const payload = JSON.stringify(nextData);
     const affected = await trx("o_agentWorkData").where({ id: row.id, data: row.data }).update({ data: payload });
     if (affected !== 1) throw new Error("重建时工作区发生变化，旧任务未作废");
     const saved = await trx("o_agentWorkData").where({ id: row.id }).select("data").first();
-    if (!saved || saved.data !== payload) throw new Error("新分镜任务写入后读回校验失败");
+    const savedArchive = await trx("o_agentWorkData")
+      .where({ projectId, episodesId, key: archiveKey }).select("data").first();
+    if (!saved || saved.data !== payload || savedArchive?.data !== JSON.stringify(archive)) {
+      throw new Error("旧稿归档或新分镜任务写入后读回校验失败");
+    }
     return {
       archiveId, archivedTaskId: previous.taskId, archivedRevision: previous.revision,
       archivedSavedScenes: savedScenes, archivedSceneCount: savedScenes.length,
       taskId: newTaskId, total, revision: 0, savedScenes: [] as number[],
       missingScenes: Array.from({ length: total }, (_, i) => i + 1), nextScene: 1,
       storyboardTable: "", storyboardTableProgress: nextProgress,
-      note: "旧任务及全部已保存场次已归档；新任务使用最新导演计划，从第1场开始。",
+      note: "旧任务及全部已保存场次已独立归档；新任务使用最新导演计划，从第1场开始。",
     };
   });
 }
 
-/** This read is independent of the PLAN_CHANGED flag's deliberately empty fallback. */
+/** Resolve the real scene count even when a mismatched plan marks a task invalid. */
 export async function getStoryboardRebuildContext(db: Knex, projectId: number, episodesId: number) {
   const progress = await readStoryboardProgress(db, projectId, episodesId);
   const row = await db("o_agentWorkData")
