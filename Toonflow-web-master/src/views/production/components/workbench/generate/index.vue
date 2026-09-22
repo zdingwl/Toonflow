@@ -301,7 +301,14 @@ function handlePromptBlur() {
 async function genText() {
   const track = currentTrack.value;
   if (track.id == null || track.state === "生成中") return;
-  let info: { id: number; sources: string }[] = [];
+  let info: {
+    id: number;
+    sources: string;
+    reference?: boolean;
+    slotType?: Type;
+    fileType?: "image" | "video" | "audio";
+    prompt?: string;
+  }[] = [];
   const currentTrackId = track.id;
   // Use the exact same ordered list as video generation. H3 <Picture N> must match Runtime ref_image_N.
   const rawMedias = imageList.value as UploadItem[];
