@@ -52,13 +52,14 @@ export default router.post(
         } else {
           const explicitWrites = new Set<string>(writeFields);
           const explicitStoryboardTable = explicitWrites.has("storyboardTable") || data.resetStoryboardTable === true;
-          // 工作区浏览器快照绝不具备修改后端修订历史/审批元数据的权限。
-          // 不能先合并客户端再依赖其携带的旧 history，否则会覆盖刚刚完成的 Agent 修订。
+          // Agent 的旧稿、修订历史及审核元数据均属于后端专有字段。
+          // 浏览器在重建前取得的过期快照不可覆盖新归档或刚创建的任务进度。
           const clientData = { ...data };
           delete clientData.storyboardRevisionHistory;
           delete clientData.storyboardAuditHistory;
           delete clientData.storyboardApproval;
           delete clientData.storyboardSceneAudits;
+          delete clientData.storyboardTaskArchives;
           nextData = { ...storedData, ...clientData };
           nextData.script = script.content ?? "";
           if (!explicitWrites.has("scriptPlan")) {
