@@ -7,6 +7,23 @@ import fs from "fs/promises";
 import path from "path";
 const router = express.Router();
 
+function isMiniMaxH3(modelName: string): boolean {
+  const value = String(modelName || "").toLowerCase();
+  return value.includes("minimax") && value.includes("h3");
+}
+
+function h3AssetRank(item: any): number {
+  const type = String(item?.type || "").toLowerCase();
+  if (type === "role" || type === "character") return 0;
+  if (type === "scene" || type === "environment") return 1;
+  if (type === "tool" || type === "prop" || type === "creature") return 2;
+  return 3;
+}
+
+function escapeXmlAttr(value: unknown): string {
+  return String(value ?? "").replace(/[<>&"']/g, (ch) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&apos;" })[ch] || ch);
+}
+
 export default router.post(
   "/",
   validateFields({
@@ -115,6 +132,8 @@ export default router.post(
     });
 
     const [id, modelData] = model.split(/:(.+)/);
+    const modelLower = (modelData ?? "").toLowerCase();
+    const h3PromptMode = isMiniMaxH3(modelData ?? "");
     const projectData = await u.db("o_project").select("*").where({ id: projectId }).first();
     const videoPrompt = await u.db("o_prompt").where("type", "videoPromptGeneration").first();
     let videoPromptGeneration = "" as string | undefined;
@@ -134,7 +153,6 @@ export default router.post(
     if (!videoPromptGeneration) {
       const modelPromptRoot = u.getPath(["modelPrompt"]);
       const videoPromptDir = path.join(modelPromptRoot, "video");
-      const modelLower = (modelData ?? "").toLowerCase();
 
       let fileName: string | null = null;
 
@@ -176,23 +194,56 @@ export default router.post(
     const artStyle = projectData?.artStyle || "无";
 
     const visualManual = u.getArtPrompt(artStyle, "art_skills", "art_storyboard_video");
-    const referenceSlotItems = images
-      .filter((item: any) => item && item._reference !== false && item.filePath)
-      .map((item: any, index: number) => {
-        const slot = index + 1;
-        const sources = item._type === "assets" ? "assets" : "storyboard";
-        const type = item._type === "assets" ? String(item.type || "asset") : "storyboard";
-        const name = item._type === "assets" ? String(item.name || `资产${item.id}`) : `分镜图${item.id}`;
-        const safeName = name.replace(/[<>&"']/g, (ch: string) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&apos;" }[ch] || ch));
-        return `<reference slot="${slot}" sources="${sources}" id="${item.id}" type="${type}" name="${safeName}" />`;
-      });
+
+    // H3 Picture slots must describe only the images that will actually be uploaded to Ref2VA.
+    // Storyboard images remain available as text-only composition guidance so they cannot override face identity.
+    const pictureSourceItems = h3PromptMode
+      ? images
+          .filter(
+            (item: any) =>
+              item &&
+              item._type === "assets" &&
+              item._reference !== false &&
+              item.filePath &&
+              item._fileType !== "audio" &&
+              item._fileType !== "video",
+          )
+          .sort((a: any, b: any) => h3AssetRank(a) - h3AssetRank(b))
+      : images.filter((item: any) => item && item._reference !== false && item.filePath);
+
+    const referenceSlotItems = pictureSourceItems.map((item: any, index: number) => {
+      const slot = index + 1;
+      const sources = item._type === "assets" ? "assets" : "storyboard";
+      const type = item._type === "assets" ? String(item.type || "asset") : "storyboard";
+      const name = item._type === "assets" ? String(item.name || `资产${item.id}`) : `分镜图${item.id}`;
+      return `<reference slot="${slot}" sources="${sources}" id="${item.id}" type="${escapeXmlAttr(type)}" name="${escapeXmlAttr(name)}" />`;
+    });
     const referenceSlots = `<referenceSlots>\n${referenceSlotItems.join("\n")}\n</referenceSlots>`;
+
+    const storyboardGuideItems = h3PromptMode
+      ? images.filter((item: any) => item && item._type === "storyboard" && item._reference !== false)
+      : [];
+    const storyboardGuidance = h3PromptMode
+      ? `<storyboardGuidance>\n${storyboardGuideItems
+          .map(
+            (item: any, index: number) =>
+              `<storyboard index="${index + 1}" id="${item.id}">\nvideoDesc=${JSON.stringify(item.videoDesc || "")}\nimagePrompt=${JSON.stringify(item.prompt || "")}\n</storyboard>`,
+          )
+          .join("\n")}\n</storyboardGuidance>`
+      : "";
+
+    const referenceHeading = h3PromptMode
+      ? "**MiniMax H3 实际 Picture 槽位（仅以下素材会上传到 Ref2VA；<Picture N> 必须严格对应 slot N）**"
+      : "**参考素材槽位**";
+    const storyboardHeading = h3PromptMode
+      ? `\n**分镜构图指导（仅文本指导，禁止生成新的 <Picture N>，禁止覆盖角色身份）**：\n${storyboardGuidance}\n`
+      : "";
 
     const content = `
           **模型名称**：${modelData},
-          **参考素材槽位（严格按实际视频上传顺序，MiniMax H3 的 <Picture N> 必须与 slot N 一致）**：
+          ${referenceHeading}：
           ${referenceSlots},
-
+          ${storyboardHeading}
           **资产信息**（角色、场景、道具、音频):${assets
             .filter((i) => i.filePath)
             .map((i) => `[${i.id},${i.type},${i.name} ${assetsAudioRecord[i.id] ? `audio:${assetsAudioRecord[i.id]}` : ""} ] `)
