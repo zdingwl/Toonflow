@@ -4,6 +4,7 @@ on:
     branches: [agent/storyboard-recovery-20260922]
     paths:
       - scripts/apply_storyboard_upgrade.py
+      - .github/workflows/storyboard-upgrade-once.yml
 permissions:
   contents: write
 jobs:
