@@ -1,32 +1,34 @@
-# 在 Toonflow 中直接调用 ComfyUI 视频工作流
+# Toonflow 本机 MiniMax H3 视频直连（ComfyUI）
 
-此文档对应 `data/vendor/comfyui_local.ts` 1.1 版。此供应商保留原 FLUX 图片功能，将 **视频默认后端** 改为 `comfyui`；旧网关可通过 `videoBackend=gateway` 显式使用。
+对应 `data/vendor/comfyui_local.ts` 1.2 版。此实现参照 `zdingwl/ai-drama-studio` 的 `backend/app/p16/provider.py` 中 `LocalComfyUIH3Provider.workflow_payload`、`readiness`、参考图上传以及 SaveVideo 结果读取流程。
 
-## 先决条件
+## 不再需要 DramaClaw 或手动导出工作流
 
-1. 在 ComfyUI 中运行一个已验证成功、能够输出 MP4/WebM/MOV/MKV 的视频工作流；默认服务地址为 `http://127.0.0.1:8188`。
-2. 从 **ComfyUI 的 API Format** 导出 JSON。普通画布格式 JSON（`nodes`/`links`）不能直接提交 `/prompt`。
-3. 检查工作流实际支持几张图片以及输出节点。不要按模型名称猜测节点 ID，也不要假定该工作流支持视频/音频参考或可动态更改时长与分辨率。
-4. Windows 安装版的供应商脚本位于本机用户数据目录并持久化；**GitHub 上的 `data/vendor/comfyui_local.ts` 更新不会自动更新已安装版本中的脚本或后台程序**。若要使用本次代码，需安装包含本次提交的新版 Windows 后端，并将新版供应商代码与配置同步到安装版；先备份现有供应商及配置。新版脚本使用 `Buffer` 上传素材，旧版后端的 `src/utils/vm.ts` 若未提供 `Buffer` 将无法上传图片。
+默认 `videoBackend=comfyui`，且 `workflowApi` 与 `workflowMapping` 均留空时，Toonflow 自动构造 ComfyUI 原生 MiniMax H3 节点图：没有参考图时走 `MiniMaxH3ImageToVideo` + FL2VA；有参考图时走 `MiniMaxH3ReferenceToVideo` + Ref2VA。参考图片先通过 `/upload/image` 上传，按 `ref_image_0..N` 关联 `LoadImage` 节点，调用 `/prompt`，轮询 `/history/{prompt_id}`，从 `SaveVideo` 节点读取 MP4 信息并通过 `/view` 下载。原生图会同时通过视频/音频 VAE 解码，`CreateVideo` 组合为 24fps 的 MP4；不以 `config.audio=false` 为由静默移除原生音轨。
 
-## 供应商配置
+**这要求运行中的 ComfyUI 已安装相应原生 H3 节点、模型文件以及 GPU 环境；模型昵称 `minimaxh3` 并不能证明这些节点均已安装。** Toonflow 会在生成前检查 `/system_stats`、`/object_info` 和当前任务用到的模型文件。ComfyUI 中只有第三方自定义 H3 工作流而没有上述原生节点时，仍需选择自定义工作流适配方式，不能直接使用默认节点图。
 
-在更新后的供应商中设置：
+## 模型服务配置
 
-- `baseUrl`：ComfyUI 实际地址，例如 `http://127.0.0.1:8188`。
-- `videoBackend`：填写 `comfyui`。
-- `workflowApi`：完整的 ComfyUI **API 格式**工作流 JSON，压缩为一行后粘贴到设置字段。保留实际工作流的模型路径与固定参数。
-- `workflowMapping`：工作流节点映射 JSON；根据上面工作流中的真实节点 ID 与输入键填写。
+在模型服务里选择 `本机 ComfyUI（FLUX + MiniMax H3）`，设置 `baseUrl=http://127.0.0.1:8188`、`videoBackend=comfyui`，将 `workflowApi` 和 `workflowMapping` **同时留空**。默认模型文件名参照 ai-drama-studio 的 P16 配置：
 
-示意映射（`NODE_ID`、`INPUT_NAME` 都是占位符，**不能直接照抄使用**）：
+- `h3Unet=minimax_h3_fl2va_pruned_int8_convrot.safetensors`
+- `h3RefUnet=minimax_h3_ref2va_pruned_int8_convrot.safetensors`
+- `h3Clip=qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors`
+- `h3VideoVae=minimax_h3_video_vae_fp16.safetensors`
+- `h3AudioVae=minimax_h3_audio_vae_fp32.safetensors`
+- `h3Steps=20`
+
+如果实际 ComfyUI `/object_info` 中的模型文件名或路径不同，应填写原样文件名；不要重命名模型文件以迁就默认值。原生图使用 24fps 与 `17k+5` 帧数网格，根据 Toonflow 传入的 480p/720p 和宽高比生成尺寸。输出尺寸和可用时长仍受本机模型、显存及节点限制。
+
+## 兼容已有自定义视频工作流
+
+如果 `workflowApi` 和 `workflowMapping` **均非空**，继续使用 1.1 版的自定义 API 格式 JSON / 节点映射路径。两项只填一项会明确报错。自定义工作流可用以下映射格式：
 
 ```json
 {
   "prompt": {"node": "PROMPT_NODE_ID", "input": "text"},
-  "images": [
-    {"node": "IMAGE_NODE_ID_1", "input": "image"},
-    {"node": "IMAGE_NODE_ID_2", "input": "image"}
-  ],
+  "images": [{"node": "IMAGE_LOAD_NODE_ID", "input": "image"}],
   "frames": {"node": "FRAMES_NODE_ID", "input": "length", "fps": 24},
   "width": {"node": "SIZE_NODE_ID", "input": "width"},
   "height": {"node": "SIZE_NODE_ID", "input": "height"},
@@ -34,24 +36,14 @@
 }
 ```
 
-映射规则：
+示例节点 ID 均为占位符，必须替换为导出工作流中的真实节点。自定义工作流的参考图槽位和音频支持由其实际节点结构决定。
 
-- `prompt` 必填，映射到能够接收提示词字符串的节点输入。
-- `images` 可选，按 Toonflow 传入素材顺序映射到 ComfyUI 可接收上传文件名的图片加载节点；当前最多 9 张。若工作流仅支持 2 张，就只配置 2 个映射槽，超过时会明确报错。未上传的槽位保留 API 模板里的原始值；如工作流不允许缺少素材，应先填写全部必需素材。当前直连不支持视频/音频参考。
-- `frames` 可选；仅当节点输入表示 **帧数** 时使用，计算 `round(视频秒数 × fps)`。`fps` 必须填写工作流实际帧率。若工作流使用秒数输入，改填 `duration` 而不是 `frames`。
-- `width`、`height` 可选；填写后，根据 Toonflow 分辨率与画面比例计算成 8 的倍数。若模型只支持固定尺寸，请不要映射，改用工作流固定参数。
-- `outputNode` 可选，用于在多个输出节点中指定包含视频文件信息的节点。默认查找所有输出节点的 `videos`、`gifs`、`files`、`images` 列表，并寻找 `.mp4`、`.webm`、`.mov` 或 `.mkv` 文件。特殊自定义输出结构需要另行适配。
-- 音频生成功能在当前直连模式中关闭；请在 Toonflow 中选择无音频。
+## Windows 安装版特别说明
 
-## 请求流程
+**GitHub 上的源码提交不会自动更新 Windows 已安装程序或其持久化供应商脚本。** 本仓库 `src/utils/vendor.ts` 会从本机用户数据目录读取供应商脚本；要让修复进入正在使用的 Windows 安装版，需要部署包含本次改动的新版软件，或在模型服务的「编辑代码」中用新版供应商完整代码替换该供应商的旧版脚本，并保存。请先备份旧代码和供应商配置。参考图上传依赖 `src/utils/vm.ts` 中为沙盒暴露的 `Buffer`：如果 Windows 旧安装包没有此后端改动，即使更新供应商代码也无法上传参考图，需要重构建/安装含新版后端的软件。生成前须确认真实 ComfyUI 8188 服务在线。
 
-1. 验证工作流及映射 JSON；先验证视频输入类型和映射槽数。
-2. 如使用图片参考，通过 `POST /upload/image` 上传 PNG/JPEG/WebP 图片，将返回的文件名填入所映射的节点。
-3. 通过 `POST /prompt` 提交工作流；通过 `GET /history/{prompt_id}` 轮询状态（最多 30 分钟）。
-4. 从输出节点提取视频文件，返回 `GET /view?filename=...&subfolder=...&type=...` 地址，交给 Toonflow 原有视频保存流程下载保存。
+当前仓库更新仅完成实现和代码提交；未在用户的 Windows + ComfyUI 实机环境上验证生成成功。
 
-若请求失败，错误会指明素材上传、任务提交或轮询阶段，并包含本机地址及请求错误代码。请检查 ComfyUI 后端控制台日志与对应的工作流节点报错。
+## DramaClaw 旧协议
 
-## 旧网关兼容
-
-如仍需调用 DramaClaw，将 `videoBackend` 设置为 `gateway`，并配置正确的 `gatewayUrl` 与 `gatewayApiKey`。它与 ComfyUI 工作流直连是两种不同的协议，**不能只把 `gatewayUrl` 改成 `http://127.0.0.1:8188`**。
+只在实际部署网关时显式填写 `videoBackend=gateway` 和对应的 `gatewayUrl` / `gatewayApiKey`。不能把 ComfyUI 的 8188 端口直接填入 DramaClaw `/v1/video/generations` 接口。
