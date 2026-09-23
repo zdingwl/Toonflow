@@ -238,9 +238,9 @@ var init_serialize_error = __esm({
     toJsonWasCalled = /* @__PURE__ */ new WeakSet();
     toJSON = (from) => {
       toJsonWasCalled.add(from);
-      const json4 = from.toJSON();
+      const json5 = from.toJSON();
       toJsonWasCalled.delete(from);
-      return json4;
+      return json5;
     };
     newError = (name28) => {
       if (name28 === "NonError") {
@@ -16056,11 +16056,11 @@ var require_json = __commonJS({
     var debug = require_src()("body-parser:json");
     var read = require_read();
     var { normalizeOptions } = require_utils();
-    module2.exports = json4;
+    module2.exports = json5;
     var FIRST_CHAR_REGEXP = /^[\x20\x09\x0a\x0d]*([^\x20\x09\x0a\x0d])/;
     var JSON_SYNTAX_CHAR = "#";
     var JSON_SYNTAX_REGEXP = /#+/g;
-    function json4(options) {
+    function json5(options) {
       const normalizedOptions = normalizeOptions(options, "application/json");
       var reviver = options?.reviver;
       var strict = options?.strict !== false;
@@ -20936,16 +20936,16 @@ var require_router = __commonJS({
         return new Router(options);
       }
       const opts = options || {};
-      function router170(req, res, next) {
-        router170.handle(req, res, next);
+      function router172(req, res, next) {
+        router172.handle(req, res, next);
       }
-      Object.setPrototypeOf(router170, this);
-      router170.caseSensitive = opts.caseSensitive;
-      router170.mergeParams = opts.mergeParams;
-      router170.params = {};
-      router170.strict = opts.strict;
-      router170.stack = [];
-      return router170;
+      Object.setPrototypeOf(router172, this);
+      router172.caseSensitive = opts.caseSensitive;
+      router172.mergeParams = opts.mergeParams;
+      router172.params = {};
+      router172.strict = opts.strict;
+      router172.stack = [];
+      return router172;
     }
     Router.prototype = function() {
     };
@@ -21333,7 +21333,7 @@ var require_application = __commonJS({
     var app2 = exports2 = module2.exports = {};
     var trustProxyDefaultSymbol = "@@symbol:trust_proxy_default";
     app2.init = function init() {
-      var router170 = null;
+      var router172 = null;
       this.cache = /* @__PURE__ */ Object.create(null);
       this.engines = /* @__PURE__ */ Object.create(null);
       this.settings = /* @__PURE__ */ Object.create(null);
@@ -21342,13 +21342,13 @@ var require_application = __commonJS({
         configurable: true,
         enumerable: true,
         get: function getrouter() {
-          if (router170 === null) {
-            router170 = new Router({
+          if (router172 === null) {
+            router172 = new Router({
               caseSensitive: this.enabled("case sensitive routing"),
               strict: this.enabled("strict routing")
             });
           }
-          return router170;
+          return router172;
         }
       });
     };
@@ -21419,15 +21419,15 @@ var require_application = __commonJS({
       if (fns.length === 0) {
         throw new TypeError("app.use() requires a middleware function");
       }
-      var router170 = this.router;
+      var router172 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router170.use(path34, fn2);
+          return router172.use(path34, fn2);
         }
         debug(".use app under %s", path34);
         fn2.mountpath = path34;
         fn2.parent = this;
-        router170.use(path34, function mounted_app(req, res, next) {
+        router172.use(path34, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -23497,7 +23497,7 @@ var require_response = __commonJS({
       }
       return this;
     };
-    res.json = function json4(obj) {
+    res.json = function json5(obj) {
       var app2 = this.app;
       var escape2 = app2.get("json escape");
       var replacer = app2.get("json replacer");
@@ -23822,9 +23822,9 @@ var require_response = __commonJS({
       file3.pipe(res2);
     }
     function stringify2(value, replacer, spaces, escape2) {
-      var json4 = replacer || spaces ? JSON.stringify(value, replacer, spaces) : JSON.stringify(value);
-      if (escape2 && typeof json4 === "string") {
-        json4 = json4.replace(/[<>&]/g, function(c) {
+      var json5 = replacer || spaces ? JSON.stringify(value, replacer, spaces) : JSON.stringify(value);
+      if (escape2 && typeof json5 === "string") {
+        json5 = json5.replace(/[<>&]/g, function(c) {
           switch (c.charCodeAt(0)) {
             case 60:
               return "\\u003c";
@@ -23838,7 +23838,7 @@ var require_response = __commonJS({
           }
         });
       }
-      return json4;
+      return json5;
     }
   }
 });
@@ -37286,7 +37286,7 @@ var require_websocket2 = __commonJS({
     var http4 = require("http");
     var net = require("net");
     var tls = require("tls");
-    var { randomBytes, createHash: createHash2 } = require("crypto");
+    var { randomBytes, createHash: createHash9 } = require("crypto");
     var { Duplex, Readable: Readable2 } = require("stream");
     var { URL: URL2 } = require("url");
     var PerMessageDeflate = require_permessage_deflate();
@@ -37943,7 +37943,7 @@ var require_websocket2 = __commonJS({
           abortHandshake(websocket, socket, "Invalid Upgrade header");
           return;
         }
-        const digest = createHash2("sha1").update(key + GUID).digest("base64");
+        const digest = createHash9("sha1").update(key + GUID).digest("base64");
         if (res.headers["sec-websocket-accept"] !== digest) {
           abortHandshake(websocket, socket, "Invalid Sec-WebSocket-Accept header");
           return;
@@ -38310,7 +38310,7 @@ var require_websocket_server = __commonJS({
     var EventEmitter3 = require("events");
     var http4 = require("http");
     var { Duplex } = require("stream");
-    var { createHash: createHash2 } = require("crypto");
+    var { createHash: createHash9 } = require("crypto");
     var extension = require_extension();
     var PerMessageDeflate = require_permessage_deflate();
     var subprotocol = require_subprotocol();
@@ -38607,7 +38607,7 @@ var require_websocket_server = __commonJS({
           );
         }
         if (this._state > RUNNING) return abortHandshake(socket, 503);
-        const digest = createHash2("sha1").update(key + GUID).digest("base64");
+        const digest = createHash9("sha1").update(key + GUID).digest("base64");
         const headers = [
           "HTTP/1.1 101 Switching Protocols",
           "Upgrade: websocket",
@@ -47436,7 +47436,7 @@ var require_websocket4 = __commonJS({
     var http4 = require("http");
     var net = require("net");
     var tls = require("tls");
-    var { randomBytes, createHash: createHash2 } = require("crypto");
+    var { randomBytes, createHash: createHash9 } = require("crypto");
     var { Readable: Readable2 } = require("stream");
     var { URL: URL2 } = require("url");
     var PerMessageDeflate = require_permessage_deflate2();
@@ -48010,7 +48010,7 @@ var require_websocket4 = __commonJS({
           abortHandshake(websocket, socket, "Invalid Upgrade header");
           return;
         }
-        const digest = createHash2("sha1").update(key + GUID).digest("base64");
+        const digest = createHash9("sha1").update(key + GUID).digest("base64");
         if (res.headers["sec-websocket-accept"] !== digest) {
           abortHandshake(websocket, socket, "Invalid Sec-WebSocket-Accept header");
           return;
@@ -48318,7 +48318,7 @@ var require_websocket_server2 = __commonJS({
     var https2 = require("https");
     var net = require("net");
     var tls = require("tls");
-    var { createHash: createHash2 } = require("crypto");
+    var { createHash: createHash9 } = require("crypto");
     var PerMessageDeflate = require_permessage_deflate2();
     var WebSocket = require_websocket4();
     var { format, parse: parse4 } = require_extension2();
@@ -48539,7 +48539,7 @@ var require_websocket_server2 = __commonJS({
           );
         }
         if (this._state > RUNNING) return abortHandshake(socket, 503);
-        const digest = createHash2("sha1").update(key + GUID).digest("base64");
+        const digest = createHash9("sha1").update(key + GUID).digest("base64");
         const headers = [
           "HTTP/1.1 101 Switching Protocols",
           "Upgrade: websocket",
@@ -48834,8 +48834,8 @@ var require_lib4 = __commonJS({
         getWss: function getWss() {
           return wsServer;
         },
-        applyTo: function applyTo(router170) {
-          (0, _addWsMethod2.default)(router170);
+        applyTo: function applyTo(router172) {
+          (0, _addWsMethod2.default)(router172);
         }
       };
     }
@@ -54092,10 +54092,10 @@ var require_queue = __commonJS({
   "node_modules/fastq/queue.js"(exports2, module2) {
     "use strict";
     var reusify = require_reusify();
-    function fastqueue(context2, worker, _concurrency) {
+    function fastqueue(context2, worker2, _concurrency) {
       if (typeof context2 === "function") {
-        _concurrency = worker;
-        worker = context2;
+        _concurrency = worker2;
+        worker2 = context2;
         context2 = null;
       }
       if (!(_concurrency >= 1)) {
@@ -54197,7 +54197,7 @@ var require_queue = __commonJS({
           }
         } else {
           _running++;
-          worker.call(context2, current.value, current.worked);
+          worker2.call(context2, current.value, current.worked);
         }
       }
       function unshift(value, done) {
@@ -54218,7 +54218,7 @@ var require_queue = __commonJS({
           }
         } else {
           _running++;
-          worker.call(context2, current.value, current.worked);
+          worker2.call(context2, current.value, current.worked);
         }
       }
       function release(holder) {
@@ -54233,7 +54233,7 @@ var require_queue = __commonJS({
             }
             queueHead = next.next;
             next.next = null;
-            worker.call(context2, next.value, next.worked);
+            worker2.call(context2, next.value, next.worked);
             if (queueTail === null) {
               self2.empty();
             }
@@ -54304,14 +54304,14 @@ var require_queue = __commonJS({
         self2.release(self2);
       };
     }
-    function queueAsPromised(context2, worker, _concurrency) {
+    function queueAsPromised(context2, worker2, _concurrency) {
       if (typeof context2 === "function") {
-        _concurrency = worker;
-        worker = context2;
+        _concurrency = worker2;
+        worker2 = context2;
         context2 = null;
       }
       function asyncWrapper(arg, cb) {
-        worker.call(this, arg).then(function(res) {
+        worker2.call(this, arg).then(function(res) {
           cb(null, res);
         }, cb);
       }
@@ -60531,7 +60531,7 @@ var require_fs5 = __commonJS({
     var path34 = require("path");
     var { promisify } = require("util");
     var stat = promisify(fs36.stat);
-    var readFile3 = promisify(fs36.readFile);
+    var readFile4 = promisify(fs36.readFile);
     var writeFile3 = promisify(fs36.writeFile);
     var readdir = promisify(fs36.readdir);
     var mkdir = promisify(fs36.mkdir);
@@ -60571,7 +60571,7 @@ var require_fs5 = __commonJS({
       existsSync: existsSync4,
       stat,
       readdir,
-      readFile: readFile3,
+      readFile: readFile4,
       writeFile: writeFile3,
       createTemp,
       ensureDirectoryExists,
@@ -60585,13 +60585,13 @@ var require_template2 = __commonJS({
   "node_modules/knex/lib/migrations/util/template.js"(exports2, module2) {
     "use strict";
     var template = require_template();
-    var { readFile: readFile3, writeFile: writeFile3 } = require_fs5();
+    var { readFile: readFile4, writeFile: writeFile3 } = require_fs5();
     var jsSourceTemplate = (content, options) => template(content, {
       interpolate: /<%=([\s\S]+?)%>/g,
       ...options
     });
     var jsFileTemplate = async (filePath, options) => {
-      const contentBuffer = await readFile3(filePath);
+      const contentBuffer = await readFile4(filePath);
       return jsSourceTemplate(contentBuffer.toString(), options);
     };
     var writeJsFileUsingTemplate = async (targetFilePath, sourceFilePath, options, variables) => writeFile3(
@@ -61420,7 +61420,7 @@ var require_async7 = __commonJS({
     "use strict";
     var path34 = require("path");
     var { promisify } = require("util");
-    var readFile3 = promisify(require("fs").readFile);
+    var readFile4 = promisify(require("fs").readFile);
     var isNodeModules = require_is_node_modules();
     var resultsCache = require_cache();
     var promiseCache = /* @__PURE__ */ new Map();
@@ -61429,7 +61429,7 @@ var require_async7 = __commonJS({
         return "commonjs";
       }
       try {
-        return JSON.parse(await readFile3(path34.resolve(directory, "package.json"))).type || "commonjs";
+        return JSON.parse(await readFile4(path34.resolve(directory, "package.json"))).type || "commonjs";
       } catch (_) {
       }
       const parent = path34.dirname(directory);
@@ -80356,35 +80356,122 @@ var init_dist_node = __esm({
   }
 });
 
+// src/utils/agent/embeddingConfig.ts
+function parseEmbeddingConfig(rows) {
+  const settings = new Map(rows.map((row) => [row.key, row.value]));
+  const rawPath = settings.get("modelOnnxFile");
+  const modelOnnxFile = rawPath ? JSON.parse(rawPath) : ["all-MiniLM-L6-v2", "onnx", "model_fp16.onnx"];
+  if (!Array.isArray(modelOnnxFile) || modelOnnxFile.length !== 3 || !modelOnnxFile.every((part) => typeof part === "string" && part.length > 0 && part !== "." && part !== ".." && !/[\\/]/.test(part)) || modelOnnxFile[1] !== "onnx" || !modelOnnxFile[2].endsWith(".onnx")) {
+    throw new Error("Embedding \u6A21\u578B\u8DEF\u5F84\u914D\u7F6E\u65E0\u6548");
+  }
+  const modelDtype = settings.get("modelDtype") || "fp16";
+  if (!["auto", "fp32", "fp16", "q8", "int8", "uint8", "q4", "bnb4", "q4f16"].includes(modelDtype)) {
+    throw new Error(`Embedding \u91CF\u5316\u7C7B\u578B\u65E0\u6548: ${modelDtype}`);
+  }
+  return { modelOnnxFile, modelDtype };
+}
+function parseEmbeddingBackend(rows) {
+  const settings = new Map(rows.map((row) => [row.key, row.value]));
+  const backend = settings.get("embeddingBackend") || "onnx";
+  if (backend !== "onnx" && backend !== "ollama") throw new Error("Embedding \u540E\u7AEF\u914D\u7F6E\u65E0\u6548");
+  const model = settings.get("ollamaEmbeddingModel") || "qwen3-embedding:4b";
+  if (!/^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$/.test(model)) throw new Error("Ollama Embedding \u6A21\u578B\u540D\u65E0\u6548");
+  return { backend, model };
+}
+var init_embeddingConfig = __esm({
+  "src/utils/agent/embeddingConfig.ts"() {
+    "use strict";
+  }
+});
+
+// src/utils/agent/retrieval/ollamaEmbedding.ts
+async function getOllamaModelDigest(model, fetcher = fetch) {
+  const response = await fetcher(`${OLLAMA_URL}/api/tags`, { signal: AbortSignal.timeout(1e4) });
+  if (!response.ok) throw new Error(`Ollama \u6A21\u578B\u67E5\u8BE2\u5931\u8D25: HTTP ${response.status}`);
+  const tags = await response.json();
+  const installed = tags.models?.find((item) => item.name === model);
+  if (!installed?.digest) throw new Error(`\u672C\u5730 Ollama \u6A21\u578B\u672A\u5B89\u88C5: ${model}`);
+  return installed.digest;
+}
+async function embedWithOllama(model, text2, purpose, fetcher = fetch) {
+  const input = purpose === "query" ? `Instruct: Retrieve relevant memories that answer the user's question
+Query:${text2}` : text2;
+  const response = await fetcher(`${OLLAMA_URL}/api/embed`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    signal: AbortSignal.timeout(12e4),
+    body: JSON.stringify({ model, input, truncate: false, keep_alive: "1m" })
+  });
+  const body = await response.json();
+  if (!response.ok || !Array.isArray(body.embeddings?.[0])) throw new Error(body.error || `Ollama Embedding \u5931\u8D25: HTTP ${response.status}`);
+  const vector = body.embeddings[0];
+  if (!vector.length || !vector.every(Number.isFinite)) throw new Error("Ollama \u8FD4\u56DE\u65E0\u6548\u5411\u91CF");
+  const norm = Math.hypot(...vector);
+  if (!Number.isFinite(norm) || norm === 0) throw new Error("Ollama \u8FD4\u56DE\u96F6\u5411\u91CF");
+  return vector.map((value) => value / norm);
+}
+var OLLAMA_URL;
+var init_ollamaEmbedding = __esm({
+  "src/utils/agent/retrieval/ollamaEmbedding.ts"() {
+    "use strict";
+    OLLAMA_URL = "http://127.0.0.1:11434";
+  }
+});
+
 // src/utils/agent/embedding.ts
 async function initEmbedding() {
-  if (extractor) return;
-  const modelConfigData = await db_default("o_setting").whereIn("key", ["modelOnnxFile", "modelDtype"]);
-  const modelObj = {};
-  Object.entries(modelConfigData).forEach(([key, value]) => {
-    modelObj[key] = value;
-  });
-  let modelOnnxFile = modelObj?.modelOnnxFile ? JSON.parse(modelObj.modelOnnxFile) : ["all-MiniLM-L6-v2", "onnx", "model_fp16.onnx"];
-  let modelDtype = modelObj?.modelDtype ?? "fp16";
-  const onnxPath = import_path3.default.join(getPath_default("models"), ...modelOnnxFile);
-  if (!import_fs.default.existsSync(onnxPath)) {
-    throw new Error(`Embedding \u6A21\u578B\u6587\u4EF6\u4E0D\u5B58\u5728: ${onnxPath}`);
+  if (loadedModelId) return;
+  if (!loading) {
+    loading = (async () => {
+      const rows = await db_default("o_setting").whereIn("key", ["modelOnnxFile", "modelDtype", "embeddingBackend", "ollamaEmbeddingModel"]).select("key", "value");
+      const selected = parseEmbeddingBackend(rows);
+      if (selected.backend === "ollama") {
+        const digest = await getOllamaModelDigest(selected.model);
+        activeBackend = "ollama";
+        ollamaModel = selected.model;
+        loadedModelId = `ollama:${selected.model}:${digest}`;
+        return;
+      }
+      const { modelOnnxFile, modelDtype } = parseEmbeddingConfig(rows);
+      const onnxPath = import_path3.default.join(getPath_default("models"), ...modelOnnxFile);
+      if (!import_fs.default.existsSync(onnxPath)) throw new Error(`Embedding \u6A21\u578B\u6587\u4EF6\u4E0D\u5B58\u5728: ${onnxPath}`);
+      import_transformers.env.allowRemoteModels = false;
+      import_transformers.env.allowLocalModels = true;
+      import_transformers.env.localModelPath = getPath_default("models").replace(/\\/g, "/") + "/";
+      extractor = await (0, import_transformers.pipeline)("feature-extraction", modelOnnxFile[0], { dtype: modelDtype });
+      loadedModelId = `${modelOnnxFile.join("/")}:${modelDtype}`;
+      activeBackend = "onnx";
+    })().finally(() => {
+      loading = null;
+    });
   }
-  import_transformers.env.allowRemoteModels = false;
-  import_transformers.env.allowLocalModels = true;
-  import_transformers.env.localModelPath = getPath_default("models").replace(/\\/g, "/") + "/";
-  const modelFolder = modelOnnxFile[0];
-  extractor = await (0, import_transformers.pipeline)("feature-extraction", modelFolder, { dtype: modelDtype });
+  await loading;
 }
-async function getEmbedding(text2) {
-  if (!extractor) await initEmbedding();
+async function getEmbedding(text2, purpose = "document") {
+  if (!loadedModelId) await initEmbedding();
+  if (activeBackend === "ollama") {
+    return embedWithOllama(ollamaModel, text2, purpose);
+  }
   const output = await extractor(text2, { pooling: "mean", normalize: true });
   return Array.from(output.data);
+}
+async function getEmbeddingModelId() {
+  if (!loadedModelId) await initEmbedding();
+  if (!loadedModelId) throw new Error("Embedding \u6A21\u578B\u5C1A\u672A\u52A0\u8F7D");
+  return loadedModelId;
 }
 function cosineSimilarity(a, b) {
   return a.reduce((dot, v, i) => dot + v * b[i], 0);
 }
-var import_transformers, import_path3, import_fs, extractor;
+async function disposeEmbedding() {
+  if (loading) await loading;
+  await extractor?.dispose?.();
+  extractor = null;
+  loadedModelId = null;
+  activeBackend = null;
+  ollamaModel = null;
+}
+var import_transformers, import_path3, import_fs, extractor, loading, loadedModelId, activeBackend, ollamaModel;
 var init_embedding = __esm({
   "src/utils/agent/embedding.ts"() {
     "use strict";
@@ -80393,7 +80480,13 @@ var init_embedding = __esm({
     import_fs = __toESM(require("fs"));
     init_getPath();
     init_db();
+    init_embeddingConfig();
+    init_ollamaEmbedding();
     extractor = null;
+    loading = null;
+    loadedModelId = null;
+    activeBackend = null;
+    ollamaModel = null;
   }
 });
 
@@ -80698,12 +80791,48 @@ var init_initDB = __esm({
                 value: 5
               },
               {
+                key: "memoryContextTokenBudget",
+                value: 2400
+              },
+              {
                 key: "modelOnnxFile",
                 value: '["all-MiniLM-L6-v2", "onnx", "model_fp16.onnx"]'
               },
               {
                 key: "modelDtype",
                 value: "fp16"
+              },
+              {
+                key: "embeddingBackend",
+                value: "onnx"
+              },
+              {
+                key: "ollamaEmbeddingModel",
+                value: "qwen3-embedding:4b"
+              },
+              {
+                key: "memoryHybridRetrieval",
+                value: "1"
+              },
+              {
+                key: "memoryRerankerEnabled",
+                value: "0"
+              },
+              {
+                key: "memoryRerankerUrl",
+                value: "http://127.0.0.1:11435/rerank"
+              },
+              {
+                key: "memoryRerankerModel",
+                value: "Qwen3-Reranker-4B"
+              },
+              {
+                key: "memoryRerankerCandidates",
+                value: "24"
+              },
+              {
+                key: "memoryVectorScanPageSize",
+                value: "256"
               },
               {
                 key: "switchAiDevTool",
@@ -82095,6 +82224,22 @@ A medium tracking shot follows the woman from behind as she ascends and approach
         },
         //记忆表（message=原始消息, summary=压缩摘要）
         {
+          name: "o_agentChatMessage",
+          builder: (table) => {
+            table.text("id").notNullable().primary();
+            table.text("isolationKey").notNullable();
+            table.text("role").notNullable();
+            table.text("name");
+            table.text("status").notNullable();
+            table.text("datetime").notNullable();
+            table.text("contentJson").notNullable();
+            table.text("extJson");
+            table.integer("createTime").notNullable();
+            table.integer("updateTime").notNullable();
+            table.index(["isolationKey", "createTime"]);
+          }
+        },
+        {
           name: "memories",
           builder: (table) => {
             table.text("id").notNullable();
@@ -82110,6 +82255,108 @@ A medium tracking shot follows the woman from behind as she ascends and approach
             table.primary(["id"]);
             table.index(["isolationKey", "type"]);
             table.index(["isolationKey", "summarized"]);
+          }
+        },
+        {
+          name: "o_memoryVector",
+          builder: (table) => {
+            table.text("memoryId").notNullable();
+            table.text("modelId").notNullable();
+            table.text("embedding").notNullable();
+            table.integer("dimension").notNullable();
+            table.integer("createTime").notNullable();
+            table.primary(["memoryId", "modelId"]);
+            table.index(["modelId"]);
+          }
+        },
+        {
+          name: "o_memoryJob",
+          builder: (table) => {
+            table.text("id").notNullable().primary();
+            table.text("memoryId").notNullable();
+            table.text("modelId").notNullable();
+            table.text("status").notNullable();
+            table.text("error");
+            table.integer("attempts").notNullable().defaultTo(0);
+            table.integer("retryAt").notNullable().defaultTo(0);
+            table.integer("updateTime").notNullable();
+            table.unique(["memoryId", "modelId"]);
+            table.index(["status", "retryAt"]);
+          }
+        },
+        {
+          name: "o_memoryTerm",
+          builder: (table) => {
+            table.text("memoryId").notNullable();
+            table.text("isolationKey").notNullable();
+            table.text("term").notNullable();
+            table.primary(["memoryId", "term"]);
+            table.index(["isolationKey", "term"]);
+          }
+        },
+        {
+          name: "o_agentRun",
+          builder: (table) => {
+            table.text("id").notNullable().primary();
+            table.text("agentType").notNullable();
+            table.integer("projectId").notNullable();
+            table.integer("episodesId");
+            table.text("isolationKey").notNullable();
+            table.text("inputHash").notNullable();
+            table.text("inputContent");
+            table.text("status").notNullable();
+            table.text("error");
+            table.integer("createTime").notNullable();
+            table.integer("updateTime").notNullable();
+            table.index(["projectId", "episodesId", "status"]);
+          }
+        },
+        {
+          name: "o_agentStep",
+          builder: (table) => {
+            table.text("id").notNullable().primary();
+            table.text("runId").notNullable();
+            table.text("stepKey").notNullable();
+            table.text("inputHash");
+            table.text("inputContent");
+            table.text("output");
+            table.text("status").notNullable();
+            table.text("resultRef");
+            table.text("error");
+            table.integer("createTime").notNullable();
+            table.integer("updateTime").notNullable();
+            table.unique(["runId", "stepKey"]);
+          }
+        },
+        {
+          name: "o_agentToolCall",
+          builder: (table) => {
+            table.text("id").notNullable().primary();
+            table.text("runId").notNullable();
+            table.text("stepKey");
+            table.text("toolName").notNullable();
+            table.text("operationKey").unique();
+            table.text("inputHash").notNullable();
+            table.text("inputJson").notNullable();
+            table.text("outputJson");
+            table.integer("sideEffect").notNullable().defaultTo(0);
+            table.text("status").notNullable();
+            table.text("error");
+            table.integer("createTime").notNullable();
+            table.integer("updateTime").notNullable();
+            table.index(["runId", "status"]);
+            table.index(["toolName", "status"]);
+          }
+        },
+        {
+          name: "o_agentSkillSnapshot",
+          builder: (table) => {
+            table.text("runId").notNullable();
+            table.text("filePath").notNullable();
+            table.text("contentHash").notNullable();
+            table.text("content").notNullable();
+            table.integer("createTime").notNullable();
+            table.primary(["runId", "filePath"]);
           }
         },
         {
@@ -105752,7 +105999,8 @@ var init_vendor = __esm({
       "toonflow.ts": '/**\r\n * Toonflow\u5B98\u65B9\u4E2D\u8F6C\u5E73\u53F0 \u4F9B\u5E94\u5546\u9002\u914D\r\n * @version 3.0\r\n */\r\n\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\n\r\ntype VideoMode =\r\n  | "singleImage"\r\n  | "startEndRequired"\r\n  | "endFrameOptional"\r\n  | "startFrameOptional"\r\n  | "text"\r\n  | (`videoReference:${number}` | `imageReference:${number}` | `audioReference:${number}`)[];\r\n\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\n\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\n\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\n\r\ninterface VendorConfig {\r\n  id: string;\r\n  version: string;\r\n  name: string;\r\n  author: string;\r\n  description?: string;\r\n  icon?: string;\r\n  inputs: { key: string; label: string; type: "text" | "password" | "url"; required: boolean; placeholder?: string }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\n\r\ntype ReferenceList =\r\n  | { type: "image"; sourceType: "base64"; base64: string }\r\n  | { type: "audio"; sourceType: "base64"; base64: string }\r\n  | { type: "video"; sourceType: "base64"; base64: string };\r\n\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  referenceList?: Extract<ReferenceList, { type: "image" }>[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  referenceList?: ReferenceList[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n  referenceList?: Extract<ReferenceList, { type: "audio" }>[];\r\n}\r\n\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\n\r\ndeclare const axios: any;\r\ndeclare const logger: (msg: string) => void;\r\ndeclare const jsonwebtoken: any;\r\ndeclare const zipImage: (base64: string, size: number) => Promise<string>;\r\ndeclare const zipImageResolution: (base64: string, w: number, h: number) => Promise<string>;\r\ndeclare const mergeImages: (base64Arr: string[], maxSize?: string) => Promise<string>;\r\ndeclare const urlToBase64: (url: string) => Promise<string>;\r\ndeclare const pollTask: (fn: () => Promise<PollResult>, interval?: number, timeout?: number) => Promise<PollResult>;\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;\r\n  checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;\r\n  updateVendor?: () => Promise<string>;\r\n};\r\n\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\n\r\nconst vendor: VendorConfig = {\r\n  id: "toonflow",\r\n  version: "3.2",\r\n  author: "Toonflow",\r\n  name: "Toonflow\u5B98\u65B9\u4E2D\u8F6C\u5E73\u53F0",\r\n  description:\r\n    "## Toonflow\u5B98\u65B9\u4E2D\u8F6C\u5E73\u53F0\\n\\nToonflow\u5B98\u65B9\u4E2D\u8F6C\u5E73\u53F0\uFF0C\u63D0\u4F9B**\u6587\u672C\u3001\u56FE\u50CF\u3001\u89C6\u9891\u3001\u97F3\u9891**\u7B49\u591A\u6A21\u6001\u751F\u6210\u80FD\u529B\u7684\u4E2D\u8F6C\u670D\u52A1\uFF0C\u652F\u6301\u63A5\u5165\u591A\u4E2A\u5927\u6A21\u578B\u4F9B\u5E94\u5546\uFF0C\u65B9\u4FBF\u7528\u6237\u7EDF\u4E00\u7BA1\u7406\u548C\u8C03\u7528\u4E0D\u540C\u4F9B\u5E94\u5546\u7684\u751F\u6210\u80FD\u529B\u3002\\n\\n\u{1F517} [\u524D\u5F80\u4E2D\u8F6C\u5E73\u53F0](https://api.toonflow.net/)\\n\\n\u5982\u679C\u8FD9\u4E2A\u9879\u76EE\u5BF9\u4F60\u6709\u5E2E\u52A9\uFF0C\u53EF\u4EE5\u8003\u8651\u652F\u6301\u4E00\u4E0B\u6211\u4EEC\u7684\u5F00\u53D1\u5DE5\u4F5C \u2615",\r\n  icon: "",\r\n  inputs: [{ key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true }],\r\n  inputValues: {\r\n    apiKey: "",\r\n    baseUrl: "https://api.toonflow.net/v1",\r\n  },\r\n  models: [\r\n    {\r\n      name: "Seedance-2.0 (\u652F\u6301\u771F\u4EBA)",\r\n      modelName: "Seedance 2.0",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional", ["imageReference:9", "videoReference:3", "audioReference:3"]],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p"] }],\r\n    },\r\n    {\r\n      name: "Seedance 2.0 fast (\u652F\u6301\u771F\u4EBA)",\r\n      modelName: "Seedance 2.0 fast",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional", ["imageReference:9", "videoReference:3", "audioReference:3"]],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p"] }],\r\n    },\r\n    {\r\n      name: "Wan2.6",\r\n      type: "video",\r\n      modelName: "wan2.6",\r\n      mode: ["singleImage"],\r\n      durationResolutionMap: [{ duration: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["720p", "1080p"] }],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "Seedance 1.5 Pro",\r\n      type: "video",\r\n      modelName: "doubao-seedance-1-5-pro",\r\n      mode: ["text", "endFrameOptional"],\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12], resolution: ["480p", "720p", "1080p"] }],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "ViduQ3 pro",\r\n      type: "video",\r\n      modelName: "ViduQ3-pro",\r\n      mode: ["singleImage", "startEndRequired"],\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], resolution: ["540p", "720p", "1080p"] }],\r\n      audio: false,\r\n    },\r\n    {\r\n      name: "Kling-Video-O1",\r\n      modelName: "Kling-Video-O1",\r\n      type: "video",\r\n      mode: ["startFrameOptional", ["imageReference:7", "videoReference:1"]],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [5, 10, 15], resolution: ["720p", "1080p"] }],\r\n    },\r\n    {\r\n      name: "Kling-V3-Omni",\r\n      modelName: "Kling-V3-Omni",\r\n      type: "video",\r\n      mode: ["startFrameOptional", ["imageReference:7", "videoReference:1"]],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [5, 10, 15], resolution: ["720p", "1080p"] }],\r\n    },\r\n    {\r\n      name: "Doubao Seedream 5.0 Lite",\r\n      type: "image",\r\n      modelName: "doubao-seedream-5.0-Lite",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "Doubao Seedream 4.5",\r\n      type: "image",\r\n      modelName: "doubao-seedream-4-5",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "\u5168\u80FD\u56FE\u7247G-2.0",\r\n      type: "image",\r\n      modelName: "\u5168\u80FD\u56FE\u7247G-2.0",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    // { name: "DeepSeek v4 pro", modelName: "deepseek-v4-pro", type: "text", think: false },\r\n  ],\r\n};\r\n\r\n// ============================================================\r\n// \u8F85\u52A9\u5DE5\u5177\r\n// ============================================================\r\n\r\n// \u4ECE markdown \u5185\u5BB9\u4E2D\u63D0\u53D6\u7B2C\u4E00\u5F20\u56FE\u7247\r\nfunction extractFirstImageFromMd(content: string) {\r\n  const regex = /!\\[([^\\]]*)\\]\\((data:image\\/[^;]+;base64,[A-Za-z0-9+/=]+|https?:\\/\\/[^\\s)]+|\\/\\/[^\\s)]+|[^\\s)]+)\\)/;\r\n  const match = content.match(regex);\r\n  if (!match) return null;\r\n  const raw = match[2].trim();\r\n  const url = raw.startsWith("data:") ? raw : raw.split(/\\s+/)[0];\r\n  return { alt: match[1], url, type: url.startsWith("data:image") ? "base64" : "url" };\r\n}\r\n\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\n\r\nconst textRequest = (model: TextModel, think: boolean, thinkLevel: 0 | 1 | 2 | 3) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  const lowerName = model.modelName.toLowerCase();\r\n  if (lowerName.includes("deepseek")) {\r\n    logger("\u4F7F\u7528deepseek");\r\n    // DeepSeek \u601D\u8003\u5F3A\u5EA6\u4EC5\u652F\u6301 high / max\uFF08low\u3001medium \u4F1A\u88AB\u6620\u5C04\u4E3A high\uFF0Cxhigh \u4F1A\u88AB\u6620\u5C04\u4E3A max\uFF09\r\n    // thinkLevel: 0/1/2 \u2192 high, 3 \u2192 max\r\n    const effortMap: Record<0 | 1 | 2 | 3, "high" | "max"> = {\r\n      0: "high",\r\n      1: "high",\r\n      2: "high",\r\n      3: "max",\r\n    };\r\n\r\n    const enableThinking = model.think && think;\r\n    const extraBody: Record<string, any> = {\r\n      thinking: { type: enableThinking ? "enabled" : "disabled" },\r\n    };\r\n    if (enableThinking) {\r\n      extraBody.reasoning_effort = effortMap[thinkLevel];\r\n    }\r\n\r\n    return createDeepSeek({\r\n      baseURL: vendor.inputValues.baseUrl,\r\n      apiKey,\r\n      extraBody,\r\n    }).chat(model.modelName);\r\n  }\r\n  return createOpenAI({ baseURL: vendor.inputValues.baseUrl, apiKey }).chat(model.modelName);\r\n};\r\n\r\nconst imageRequest = async (config: ImageConfig, model: ImageModel): Promise<string> => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  const baseUrl = vendor.inputValues.baseUrl;\r\n  const lowerName = model.modelName.toLowerCase();\r\n  const imageBase64List = (config.referenceList ?? []).map((r) => r.base64).filter(Boolean);\r\n\r\n  // Gemini / nano \u7CFB\u6A21\u578B\uFF1A\u8D70 chat/completions \u63A5\u53E3\uFF0C\u4ECE\u8FD4\u56DE\u7684 markdown \u4E2D\u63D0\u53D6\u56FE\u7247\r\n  if (lowerName.includes("gemini") || lowerName.includes("nano")) {\r\n    const imageConfigGoogle: Record<string, string> = {\r\n      aspect_ratio: config.aspectRatio,\r\n      image_size: config.size,\r\n    };\r\n    const messages: any[] = [];\r\n    if (imageBase64List.length) {\r\n      messages.push({\r\n        role: "user",\r\n        content: imageBase64List.map((b) => ({ type: "image_url", image_url: { url: b } })),\r\n      });\r\n    }\r\n    messages.push({ role: "user", content: config.prompt + "\u8BF7\u76F4\u63A5\u8F93\u51FA\u56FE\u7247" });\r\n    const body = {\r\n      model: model.modelName,\r\n      messages,\r\n      extra_body: { google: { image_config: imageConfigGoogle } },\r\n    };\r\n    logger(`[imageRequest] \u4F7F\u7528 gemini \u9002\u914D\u5668\uFF0C\u6A21\u578B: ${model.modelName}`);\r\n    const response = await fetch(`${baseUrl}/chat/completions`, {\r\n      method: "POST",\r\n      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n      body: JSON.stringify(body),\r\n    });\r\n    if (!response.ok) {\r\n      const errorText = await response.text();\r\n      throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${response.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n    }\r\n    const data = await response.json();\r\n    const imageResult = extractFirstImageFromMd(data.choices[0].message.content);\r\n    if (!imageResult) throw new Error("\u672A\u80FD\u4ECE\u54CD\u5E94\u4E2D\u63D0\u53D6\u56FE\u7247");\r\n    if (imageResult.type === "base64") return imageResult.url;\r\n    return await urlToBase64(imageResult.url);\r\n  }\r\n\r\n  // \u8C46\u5305 / seedream \u7CFB\u6A21\u578B\uFF1A\u8D70 images/generations \u63A5\u53E3\r\n  if (lowerName.includes("doubao") || lowerName.includes("seedream")) {\r\n    const effectiveSize = config.size === "1K" ? "2K" : config.size;\r\n    const sizeMap: Record<string, Record<string, string>> = {\r\n      "16:9": { "2K": "2848x1600", "4K": "4096x2304" },\r\n      "9:16": { "2K": "1600x2848", "4K": "2304x4096" },\r\n    };\r\n    const resolvedSize = sizeMap[config.aspectRatio]?.[effectiveSize];\r\n    const body: Record<string, any> = {\r\n      model: model.modelName,\r\n      prompt: config.prompt,\r\n      size: resolvedSize,\r\n      metadata: {\r\n        response_format: "url",\r\n        sequential_image_generation: "disabled",\r\n        stream: false,\r\n        watermark: false,\r\n      },\r\n      ...(imageBase64List.length && { images: imageBase64List }),\r\n    };\r\n    logger(`[imageRequest] \u4F7F\u7528 doubao \u9002\u914D\u5668\uFF0C\u6A21\u578B: ${model.modelName}`);\r\n    const response = await fetch(`${baseUrl}/image/generateImage`, {\r\n      method: "POST",\r\n      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n      body: JSON.stringify(body),\r\n    });\r\n    if (!response.ok) {\r\n      const errorText = await response.text();\r\n      throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${response.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n    }\r\n    const data = await response.json();\r\n    const taskId = data.data;\r\n    logger(`[imageRequest] \u4EFB\u52A1ID: ${taskId}`);\r\n    const res = await pollTask(async () => {\r\n      const queryResponse = await fetch(`${baseUrl}/image/getImageStatus`, {\r\n        method: "POST",\r\n        headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n        body: JSON.stringify({\r\n          taskICode: taskId,\r\n        }),\r\n      });\r\n      if (!queryResponse.ok) {\r\n        const errorText = await queryResponse.text();\r\n        throw new Error(`\u8F6E\u8BE2\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${queryResponse.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n      }\r\n      const queryData = await queryResponse.json();\r\n      logger(queryData);\r\n      const status = queryData?.status ?? queryData?.data?.status;\r\n      logger(status);\r\n      switch (status) {\r\n        case "success":\r\n          return { completed: true, data: queryData.data.data };\r\n        case "failed":\r\n          return { completed: true, error: queryData?.data?.failReason ?? "\u89C6\u9891\u751F\u6210\u5931\u8D25" };\r\n        default:\r\n          return { completed: false };\r\n      }\r\n    });\r\n    return res.data!;\r\n  }\r\n  if (lowerName.includes("gpt") || lowerName.includes("\u5168\u80FD\u56FE\u7247")) {\r\n    const normalizedSize = config.size === "1K" ? "1k" : config.size === "2K" ? "2k" : config.size === "4K" ? "4k" : config.size;\r\n    const body: Record<string, any> = {\r\n      model: model.modelName,\r\n      prompt: config.prompt,\r\n      size: normalizedSize,\r\n      ...(imageBase64List.length && { images: imageBase64List }),\r\n      metadata: {\r\n        aspectRatio: config.aspectRatio,\r\n      },\r\n    };\r\n    logger(`[imageRequest] \u4F7F\u7528 doubao \u9002\u914D\u5668\uFF0C\u6A21\u578B: ${model.modelName}`);\r\n    const response = await fetch(`${baseUrl}/image/generateImage`, {\r\n      method: "POST",\r\n      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n      body: JSON.stringify(body),\r\n    });\r\n    if (!response.ok) {\r\n      const errorText = await response.text();\r\n      throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${response.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n    }\r\n    const data = await response.json();\r\n    const taskId = data.data;\r\n    logger(`[imageRequest] \u4EFB\u52A1ID: ${taskId}`);\r\n    const res = await pollTask(async () => {\r\n      const queryResponse = await fetch(`${baseUrl}/image/getImageStatus`, {\r\n        method: "POST",\r\n        headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n        body: JSON.stringify({\r\n          taskICode: taskId,\r\n        }),\r\n      });\r\n      if (!queryResponse.ok) {\r\n        const errorText = await queryResponse.text();\r\n        throw new Error(`\u8F6E\u8BE2\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${queryResponse.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n      }\r\n      const queryData = await queryResponse.json();\r\n      logger(queryData);\r\n      const status = queryData?.status ?? queryData?.data?.status;\r\n      logger(status);\r\n      switch (status) {\r\n        case "success":\r\n          return { completed: true, data: queryData.data.data };\r\n        case "failed":\r\n          return { completed: true, error: queryData?.data?.failReason ?? "\u89C6\u9891\u751F\u6210\u5931\u8D25" };\r\n        default:\r\n          return { completed: false };\r\n      }\r\n    });\r\n    return res.data!;\r\n  }\r\n\r\n  throw new Error(`\u4E0D\u652F\u6301\u7684\u56FE\u50CF\u6A21\u578B: ${model.modelName}`);\r\n};\r\n\r\nconst videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  const baseUrl = vendor.inputValues.baseUrl;\r\n  const lowerName = model.modelName.toLowerCase();\r\n\r\n  // \u5F53\u524D\u6FC0\u6D3B\u7684\u5355\u4E00 VideoMode\uFF08\u53D6\u7B2C\u4E00\u4E2A\u975E\u6570\u7EC4\u6A21\u5F0F\uFF0C\u6216\u6570\u7EC4\u6A21\u5F0F\uFF09\r\n  const activeMode = config.mode as string | string[];\r\n  const imageRefs = (config.referenceList ?? []).filter((r) => r.type === "image").map((r) => r.base64);\r\n  const videoRefs = (config.referenceList ?? []).filter((r) => r.type === "video").map((r) => r.base64);\r\n  const audioRefs = (config.referenceList ?? []).filter((r) => r.type === "audio").map((r) => r.base64);\r\n  if (imageRefs && imageRefs.length) {\r\n    for (const item of imageRefs) {\r\n      await zipImage(item, 3 * 1024 * 104);\r\n    }\r\n  }\r\n  // \u6784\u5EFA\u6A21\u578B\u4E13\u5C5E metadata\r\n  let metadata: Record<string, any> = {};\r\n\r\n  if (lowerName.includes("wan")) {\r\n    // \u4E07\u8C61\u7CFB\u5217\r\n    if ((activeMode === "startEndRequired" || activeMode === "endFrameOptional" || activeMode === "startFrameOptional") && imageRefs.length >= 2) {\r\n      if (imageRefs[0]) metadata.first_frame_url = imageRefs[0];\r\n      if (imageRefs[1]) metadata.last_frame_url = imageRefs[1];\r\n    } else if (imageRefs.length) {\r\n      metadata.img_url = imageRefs[0];\r\n    }\r\n    if (typeof config.audio === "boolean") metadata.audio = config.audio;\r\n\r\n    const body: Record<string, any> = {\r\n      model: model.modelName,\r\n      prompt: config.prompt,\r\n      duration: config.duration,\r\n      resolution: config.resolution,\r\n      images: imageRefs,\r\n      metadata,\r\n    };\r\n    logger(`[videoRequest] \u63D0\u4EA4\u4E07\u8C61\u89C6\u9891\u4EFB\u52A1\uFF0C\u6A21\u578B: ${model.modelName}`);\r\n    const response = await fetch(`${baseUrl}/video/generateVideo`, {\r\n      method: "POST",\r\n      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n      body: JSON.stringify(body),\r\n    });\r\n    if (!response.ok) {\r\n      const errorText = await response.text();\r\n      throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${response.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n    }\r\n    const data = await response.json();\r\n    const taskId = data.data;\r\n    logger(`[videoRequest] \u4E07\u8C61\u4EFB\u52A1ID: ${taskId}`);\r\n    const res = await pollTask(async () => {\r\n      const queryResponse = await fetch(`${baseUrl}/video/getVideoStatus`, {\r\n        method: "POST",\r\n        headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n        body: JSON.stringify({\r\n          taskICode: taskId,\r\n        }),\r\n      });\r\n      if (!queryResponse.ok) {\r\n        const errorText = await queryResponse.text();\r\n        throw new Error(`\u8F6E\u8BE2\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${queryResponse.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n      }\r\n      const queryData = await queryResponse.json();\r\n      logger(queryData);\r\n      const status = queryData?.status ?? queryData?.data?.status;\r\n      logger(status);\r\n      switch (status) {\r\n        case "completed":\r\n        case "SUCCESS":\r\n        case "success":\r\n          return { completed: true, data: queryData.data.data };\r\n        case "FAILURE":\r\n        case "failed":\r\n          return { completed: true, error: queryData?.data?.failReason ?? "\u89C6\u9891\u751F\u6210\u5931\u8D25" };\r\n        default:\r\n          return { completed: false };\r\n      }\r\n    });\r\n    if (res.error) throw new Error(res.error);\r\n    return res.data!;\r\n  }\r\n\r\n  if (lowerName.includes("doubao") || lowerName.includes("seedance")) {\r\n    // \u8C46\u5305/Seedance \u7CFB\u5217\r\n    metadata = {\r\n      ...(typeof config.audio === "boolean" && { generate_audio: config.audio }),\r\n      ratio: config.aspectRatio,\r\n      references: [],\r\n      resolution: config.resolution,\r\n    };\r\n    if (Array.isArray(activeMode)) {\r\n      // \u591A\u53C2\u8003\u6A21\u5F0F\r\n      imageRefs.forEach((item) => {\r\n        metadata.references.push({\r\n          role: "reference_image",\r\n          type: "image_url",\r\n          image_url: {\r\n            url: item,\r\n          },\r\n        });\r\n      });\r\n      videoRefs.forEach((item) => {\r\n        metadata.references.push({\r\n          role: "reference_video",\r\n          type: "video_url",\r\n          video_url: {\r\n            url: item,\r\n          },\r\n        });\r\n      });\r\n      audioRefs.forEach((item) => {\r\n        metadata.references.push({\r\n          role: "reference_audio",\r\n          type: "audio_url",\r\n          audio_url: {\r\n            url: item,\r\n          },\r\n        });\r\n      });\r\n    } else if (activeMode === "startEndRequired" || activeMode === "endFrameOptional" || activeMode === "startFrameOptional") {\r\n      imageRefs.forEach((item, i) => {\r\n        metadata.references.push({\r\n          type: "image_url",\r\n          image_url: {\r\n            url: item,\r\n          },\r\n          role: i == 0 ? "first_frame" : "last_frame",\r\n        });\r\n      });\r\n    } else if (activeMode === "singleImage") {\r\n      imageRefs.forEach((item, i) => {\r\n        metadata.references.push({\r\n          role: "reference_image",\r\n          type: "image_url",\r\n          image_url: {\r\n            url: item,\r\n          },\r\n        });\r\n      });\r\n    }\r\n  } else if (lowerName.includes("vidu")) {\r\n    // Vidu \u7CFB\u5217\r\n    metadata = {\r\n      aspect_ratio: config.aspectRatio,\r\n      audio: config.audio ?? false,\r\n      off_peak: false,\r\n    };\r\n  } else if (lowerName.includes("kling")) {\r\n    const videoRefs = (config.referenceList ?? []).filter((r) => r.type === "video").map((r) => ({ video_url: r.base64 }));\r\n\r\n    metadata = {\r\n      aspect_ratio: config.aspectRatio,\r\n      sound: typeof config?.audio == "boolean" ? (config?.audio ? "on" : "off") : "off",\r\n      video_list: videoRefs,\r\n      image_list: [],\r\n    };\r\n\r\n    // \u56FE\u7247\u6709\u6548\u6027\u68C0\u67E5\u51FD\u6570\r\n    const isValidImage = (imageUrl: any) => {\r\n      return imageUrl && typeof imageUrl === "string" && imageUrl.trim().length > 0;\r\n    };\r\n\r\n    if (activeMode === "singleImage") {\r\n      if (lowerName.includes("omni") || lowerName.includes("o1")) {\r\n        // \u53EA\u5728\u56FE\u7247\u6709\u6548\u65F6\u624D\u6DFB\u52A0\r\n        if (isValidImage(imageRefs[0])) {\r\n          metadata.image_list = [{ image_url: imageRefs[0] }];\r\n        }\r\n      } else {\r\n        if (isValidImage(imageRefs[0])) {\r\n          metadata.image = imageRefs[0];\r\n        }\r\n      }\r\n    } else if (activeMode === "startEndRequired" || activeMode === "endFrameOptional" || activeMode === "startFrameOptional") {\r\n      if (lowerName.includes("omni") || lowerName.includes("o1")) {\r\n        imageRefs.forEach((item, index) => {\r\n          if (isValidImage(item)) {\r\n            if (!metadata.image_list || !Array.isArray(metadata.image_list)) metadata.image_list = [];\r\n            metadata.image_list.push({\r\n              image_url: item,\r\n              type: index == 0 ? "first_frame" : "end_frame",\r\n            });\r\n          }\r\n        });\r\n      } else {\r\n        if (isValidImage(imageRefs[0])) {\r\n          metadata.image_tail = imageRefs[0];\r\n        }\r\n      }\r\n    } else if (Array.isArray(activeMode)) {\r\n      imageRefs.forEach((item) => {\r\n        if (isValidImage(item)) {\r\n          if (!metadata.image_list || !Array.isArray(metadata.image_list)) metadata.image_list = [];\r\n          metadata.image_list.push({\r\n            image_url: item,\r\n          });\r\n        }\r\n      });\r\n    }\r\n  } else if (lowerName.includes("grok")) {\r\n    metadata = {\r\n      aspectRatio: config.aspectRatio,\r\n    };\r\n  }\r\n\r\n  // \u516C\u5171\u8BF7\u6C42\u4F53\uFF08\u975E\u4E07\u8C61\u901A\u7528\u8DEF\u5F84\uFF09\r\n  const publicBody: Record<string, any> = {\r\n    model: model.modelName,\r\n    ...(imageRefs.length && lowerName.includes("vidu") ? { images: imageRefs } : {}),\r\n    prompt: config.prompt,\r\n    duration: config.duration,\r\n    resolution: config.resolution,\r\n    metadata,\r\n  };\r\n\r\n  logger(`[videoRequest] \u63D0\u4EA4\u89C6\u9891\u4EFB\u52A1\uFF0C\u6A21\u578B: ${model.modelName}`);\r\n  const response = await fetch(`${baseUrl}/video/generateVideo`, {\r\n    method: "POST",\r\n    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n    body: JSON.stringify(publicBody),\r\n  });\r\n  if (!response.ok) {\r\n    const errorText = await response.text();\r\n    throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${response.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n  }\r\n  const data = await response.json();\r\n  const taskId = data.data;\r\n  logger(`[videoRequest] \u4EFB\u52A1ID: ${taskId}`);\r\n\r\n  const res = await pollTask(async () => {\r\n    const queryResponse = await fetch(`${baseUrl}/video/getVideoStatus`, {\r\n      method: "POST",\r\n      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n      body: JSON.stringify({\r\n        taskICode: taskId,\r\n      }),\r\n    });\r\n    if (!queryResponse.ok) {\r\n      const errorText = await queryResponse.text();\r\n      throw new Error(`\u8F6E\u8BE2\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${queryResponse.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n    }\r\n    const queryData = await queryResponse.json();\r\n    logger(queryData);\r\n    const status = queryData?.status ?? queryData?.data?.status;\r\n    switch (status) {\r\n      case "completed":\r\n      case "SUCCESS":\r\n      case "success":\r\n        return { completed: true, data: queryData.data.data };\r\n      case "FAILURE":\r\n      case "failed":\r\n        return { completed: true, error: queryData?.data?.failReason ?? "\u89C6\u9891\u751F\u6210\u5931\u8D25" };\r\n      default:\r\n        return { completed: false };\r\n    }\r\n  });\r\n\r\n  if (res.error) throw new Error(res.error);\r\n  return await urlToBase64(res.data!);\r\n};\r\n\r\nconst ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst checkForUpdates = async (): Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }> => {\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  const baseUrl = vendor.inputValues.baseUrl;\r\n  const res = await fetch(`${baseUrl}/vendor/vendorCheck`, {\r\n    method: "POST",\r\n    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n    body: JSON.stringify({\r\n      version: vendor.version,\r\n    }),\r\n  });\r\n  if (!res.ok) {\r\n    const errorReason = await res.text();\r\n    throw new Error(`\u68C0\u67E5\u66F4\u65B0\u5931\u8D25\uFF0C${errorReason}`);\r\n  }\r\n  const { data } = await res.json();\r\n  if (data?.hasUpdate && data?.latestVersion) {\r\n    return {\r\n      hasUpdate: data?.hasUpdate ?? false,\r\n      latestVersion: data?.latestVersion ?? null,\r\n      notice: data?.notice ? data?.notice : "\u4F5C\u8005\u6709\u70B9\u61D2\uFF0C\u6CA1\u6709\u586B\u5199\u66F4\u65B0\u5185\u5BB9",\r\n    };\r\n  }\r\n  return { hasUpdate: false, latestVersion: "", notice: "" };\r\n};\r\n\r\nconst updateVendor = async (): Promise<string> => {\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n  const baseUrl = vendor.inputValues.baseUrl;\r\n  const response = await fetch(`${baseUrl}/vendor/downloadVendor`, {\r\n    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },\r\n  });\r\n  if (!response.ok) {\r\n    const errorReason = await response.text();\r\n    throw new Error(`\u8BF7\u6C42\u5931\u8D25: ${response.status} ${errorReason}`);\r\n  }\r\n  const { data } = await response.json();\r\n  logger(data);\r\n  return data;\r\n};\r\n\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\n\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\nexports.checkForUpdates = checkForUpdates;\r\nexports.updateVendor = updateVendor;\r\n\r\nexport {};\r\n',
       "vidu.ts": '//\u5982\u9700\u9065\u6D4BAI\u8BF7\u4F7F\u7528\u5728toonflow\u5B89\u88C5\u76EE\u5F55\u8FD0\u884Cnpx @ai-sdk/devtools \uFF08\u8981\u6C42\u5728\u5176\u4ED6\u8BBE\u7F6E\u4E2D\u6253\u5F00\u9065\u6D4B\u529F\u80FD\uFF0C\u4E14toonflow\u6709\u6743\u9650\u5728\u5B89\u88C5\u76EE\u5F55\u521B\u5EFA.devtools\u6587\u4EF6\u5939\uFF09\r\n// ==================== \u7C7B\u578B\u5B9A\u4E49 ====================\r\n// \u6587\u672C\u6A21\u578B\r\ninterface TextModel {\r\n  name: string; // \u663E\u793A\u540D\u79F0\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean; // \u524D\u7AEF\u663E\u793A\u7528\r\n}\r\n\r\n// \u56FE\u50CF\u6A21\u578B\r\ninterface ImageModel {\r\n  name: string; // \u663E\u793A\u540D\u79F0\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string; // \u5173\u8054\u6280\u80FD\uFF0C\u591A\u4E2A\u6280\u80FD\u7528\u9017\u53F7\u5206\u9694\r\n}\r\n// \u89C6\u9891\u6A21\u578B\r\ninterface VideoModel {\r\n  name: string; // \u663E\u793A\u540D\u79F0\r\n  modelName: string; //\u5168\u5C40\u552F\u4E00\r\n  type: "video";\r\n  mode: (\r\n    | "singleImage" // \u5355\u56FE\r\n    | "startEndRequired" // \u9996\u5C3E\u5E27\uFF08\u4E24\u5F20\u90FD\u5F97\u6709\uFF09\r\n    | "endFrameOptional" // \u9996\u5C3E\u5E27\uFF08\u5C3E\u5E27\u53EF\u9009\uFF09\r\n    | "startFrameOptional" // \u9996\u5C3E\u5E27\uFF08\u9996\u5E27\u53EF\u9009\uFF09\r\n    | "text" // \u6587\u672C\u751F\u89C6\u9891\r\n    | ("videoReference" | "imageReference" | "audioReference" | "textReference")[] // \u6DF7\u5408\u53C2\u8003\r\n  )[];\r\n  associationSkills?: string; // \u5173\u8054\u6280\u80FD\uFF0C\u591A\u4E2A\u6280\u80FD\u7528\u9017\u53F7\u5206\u9694\r\n  audio: "optional" | false | true; // \u97F3\u9891\u914D\u7F6E\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string; // \u663E\u793A\u540D\u79F0\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: {\r\n    title: string; //\u663E\u793A\u540D\u79F0\r\n    voice: string; //\u8BF4\u8BDD\u4EBA\r\n  }[];\r\n}\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\ninterface VendorConfig {\r\n  id: string; //\u4F9B\u5E94\u5546\u552F\u4E00\u6807\u8BC6\uFF0C\u5FC5\u987B\u5168\u5C40\u552F\u4E00\r\n  author: string;\r\n  description?: string; //md5\u683C\u5F0F\r\n  name: string;\r\n  icon?: string; //\u4EC5\u652F\u6301base64\u683C\u5F0F\r\n  inputs: {\r\n    key: string;\r\n    label: string;\r\n    type: "text" | "password" | "url";\r\n    required: boolean;\r\n    placeholder?: string;\r\n  }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel)[];\r\n}\r\n// ==================== \u5168\u5C40\u5DE5\u5177\u51FD\u6570 ====================\r\n//Axios\u5B9E\u4F8B\r\n//\u538B\u7F29\u56FE\u7247\u5927\u5C0F(1MB = 1 * 1024 * 1024)\r\ndeclare const zipImage: (completeBase64: string, size: number) => Promise<string>;\r\n//\u538B\u7F29\u56FE\u7247\u5206\u8FA8\u7387\r\ndeclare const zipImageResolution: (completeBase64: string, width: number, height: number) => Promise<string>;\r\n//\u591A\u56FE\u62FC\u63A5\u4E58\u5355\u56FE maxSize  \u6700\u5927\u8F93\u51FA\u5927\u5C0F\uFF0C\u9ED8\u8BA4\u4E3A 10mb\r\ndeclare const mergeImages: (completeBase64: string[], maxSize?: string) => Promise<string>;\r\n//Url\u8F6CBase64\r\ndeclare const urlToBase64: (url: string) => Promise<string>;\r\n//\u8F6E\u8BE2\u51FD\u6570\r\ndeclare const pollTask: (\r\n  fn: () => Promise<{ completed: boolean; data?: string; error?: string }>,\r\n  interval?: number,\r\n  timeout?: number,\r\n) => Promise<{ completed: boolean; data?: string; error?: string }>;\r\ndeclare const axios: any;\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const logger: (logstring: string) => void;\r\ndeclare const jsonwebtoken: any;\r\n// ==================== \u4F9B\u5E94\u5546\u6570\u636E ====================\r\nconst vendor: VendorConfig = {\r\n  id: "vidu",\r\n  author: "\u642C\u7816\u7684Coder",\r\n  description:\r\n    "Vidu \u5B98\u65B9\u89C6\u9891\u751F\u6210\u5E73\u53F0\u3002 [\u524D\u5F80\u5E73\u53F0](https://platform.vidu.cn/login/)",\r\n  name: "Vidu \u5F00\u653E\u5E73\u53F0",\r\n  inputs: [\r\n    { key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true, placeholder: "\u8BF7\u5230Vidu\u5B98\u65B9\u7533\u8BF7" },\r\n    { key: "baseUrl", label: "\u63A5\u53E3\u8DEF\u5F84", type: "url", required: true, placeholder: "https://api.vidu.cn/ent/v2" },\r\n  ],\r\n  inputValues: {\r\n    apiKey: "",\r\n    baseUrl: "https://api.vidu.cn/ent/v2",\r\n  },\r\n  models: [\r\n    {\r\n      name: "ViduQ3 turbo",\r\n      type: "video",\r\n      modelName: "ViduQ3-turbo",\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], resolution: ["540p", "720p", "1080p"] }],\r\n      mode: ["singleImage", "startEndRequired", "text"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "ViduQ3 pro",\r\n      type: "video",\r\n      modelName: "ViduQ3-pro",\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], resolution: ["540p", "720p", "1080p"] }],\r\n      mode: ["singleImage", "startEndRequired", "text"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "ViduQ2 pro fast",\r\n      type: "video",\r\n      modelName: "ViduQ2-pro-fast",\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], resolution: ["720p", "1080p"] }],\r\n      mode: ["singleImage", "startEndRequired"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "viduQ2 turbo",\r\n      type: "video",\r\n      modelName: "ViduQ2-turbo",\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], resolution: ["540p", "720p", "1080p"] }],\r\n      mode: ["singleImage", "startEndRequired"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "ViduQ2 pro",\r\n      type: "video",\r\n      modelName: "ViduQ2-pro",\r\n      durationResolutionMap: [{ duration: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], resolution: ["540p", "720p", "1080p"] }],\r\n      mode: ["singleImage", "startEndRequired"], //\u53C2\u8003\u751F\u89C6\u9891\u65E0\u6709\u6548\u8BBE\u7F6E\u503C\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "ViduQ2",\r\n      type: "video",\r\n      modelName: "ViduQ2",\r\n      durationResolutionMap: [{ duration: [5], resolution: ["1080p"] }],\r\n      mode: ["text"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "ViduQ1",\r\n      type: "video",\r\n      modelName: "ViduQ1",\r\n      durationResolutionMap: [{ duration: [5], resolution: ["1080p"] }],\r\n      mode: ["singleImage", "startEndRequired", "text"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "ViduQ1 classic",\r\n      type: "video",\r\n      modelName: "viduQ1-classic",\r\n      durationResolutionMap: [{ duration: [5], resolution: ["1080p"] }],\r\n      mode: ["singleImage", "startEndRequired"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "Vidu2.0",\r\n      type: "video",\r\n      modelName: "vidu2.0",\r\n      durationResolutionMap: [{ duration: [4, 8], resolution: ["360p", "720p", "1080p"] }],\r\n      mode: ["singleImage", "startEndRequired"],\r\n      audio: true,\r\n    },\r\n    {\r\n      name: "viduq1 for image",\r\n      type: "image",\r\n      modelName: "viduq1",\r\n      mode: ["text"],\r\n    },\r\n    {\r\n      name: "viduq2 for image",\r\n      type: "image",\r\n      modelName: "viduq2",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n  ],\r\n};\r\nexports.vendor = vendor;\r\n\r\n// ==================== \u9002\u914D\u5668\u51FD\u6570 ====================\r\n\r\n// \u6587\u672C\u8BF7\u6C42\u51FD\u6570\r\nconst textRequest: (textModel: TextModel) => { url: string; model: string } = (textModel) => {\r\n  throw new Error("\u5F53\u524D\u4F9B\u5E94\u5546\u4EC5\u652F\u6301\u89C6\u9891\u5927\u6A21\u578B\uFF0C\u8C22\u8C22\uFF01");\r\n};\r\nexports.textRequest = textRequest;\r\n\r\n//\u56FE\u7247\u8BF7\u6C42\u51FD\u6570\r\ninterface ImageConfig {\r\n  prompt: string; //\u56FE\u7247\u63D0\u793A\u8BCD\r\n  imageBase64: string[]; //\u8F93\u5165\u7684\u56FE\u7247\u63D0\u793A\u8BCD\r\n  size: "1K" | "2K" | "4K"; // \u56FE\u7247\u5C3A\u5BF8\r\n  aspectRatio: `${number}:${number}`; // \u957F\u5BBD\u6BD4\r\n}\r\nconst imageRequest = async (imageConfig: ImageConfig, imageModel: ImageModel) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace("Token ", "");\r\n\r\n  const size = imageConfig.size === "1K" ? "2K" : imageConfig.size;\r\n  const sizeMap: Record<string, Record<string, string>> = {\r\n    "16:9": {\r\n      "1k": "1920x1080",\r\n      "2K": "2848x1600",\r\n      "4K": "4096x2304",\r\n    },\r\n    "9:16": {\r\n      "1k": "1920x1080",\r\n      "2K": "1600x2848",\r\n      "4K": "2304x4096",\r\n    },\r\n  };\r\n\r\n  const body: Record<string, any> = {\r\n    model: imageModel.modelName,\r\n    prompt: imageConfig.prompt,\r\n    aspect_ratio: sizeMap[imageConfig.aspectRatio][size],\r\n    seed: 0,\r\n    resolution: size,\r\n    ...(imageConfig.imageBase64 && { image: imageConfig.imageBase64 }),\r\n  };\r\n\r\n  const createImageUrl = vendor.inputValues.baseUrl + "/reference2image";\r\n  const response = await fetch(createImageUrl, {\r\n    method: "POST",\r\n    headers: { Authorization: `Token ${apiKey}`, "Content-Type": "application/json" },\r\n    body: JSON.stringify(body),\r\n  });\r\n  if (!response.ok) {\r\n    const errorText = await response.text(); // \u83B7\u53D6\u9519\u8BEF\u4FE1\u606F\r\n    console.error("\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801:", response.status, ", \u9519\u8BEF\u4FE1\u606F:", errorText);\r\n    throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${response.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n  }\r\n  const data = await response.json();\r\n  const res = await checkTaskResult(data.task_id);\r\n  if (!res.data) {\r\n    throw new Error("\u56FE\u7247\u672A\u80FD\u751F\u6210");\r\n  }\r\n  const list = JSON.parse(JSON.stringify(res.data));\r\n  return list[0].url;\r\n};\r\nexports.imageRequest = imageRequest;\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  imageBase64?: string[];\r\n  audio?: boolean;\r\n  mode:\r\n    | "singleImage" // \u5355\u56FE\r\n    | "multiImage" // \u591A\u56FE\u6A21\u5F0F\r\n    | "gridImage" // \u7F51\u683C\u5355\u56FE\uFF08\u4F20\u5165\u4E00\u5F20\u56FE\u7247\uFF0C\u4F46\u8BE5\u56FE\u7247\u662F\u7F51\u683C\u56FE\uFF09\r\n    | "startEndRequired" // \u9996\u5C3E\u5E27\uFF08\u4E24\u5F20\u90FD\u5F97\u6709\uFF09\r\n    | "endFrameOptional" // \u9996\u5C3E\u5E27\uFF08\u5C3E\u5E27\u53EF\u9009\uFF09\r\n    | "startFrameOptional" // \u9996\u5C3E\u5E27\uFF08\u9996\u5E27\u53EF\u9009\uFF09\r\n    | "text" // \u6587\u672C\u751F\u89C6\u9891\r\n    | ("video" | "image" | "audio" | "text")[]; // \u6DF7\u5408\u53C2\u8003\r\n}\r\n\r\n// \u6784\u5EFA \u5404\u4E2A\u5E73\u53F0\u7684metadata\u53C2\u6570\r\n\r\nconst buildViduMetadata = (videoConfig: VideoConfig) => ({\r\n  aspect_ratio: videoConfig.aspectRatio,\r\n  audio: videoConfig.audio ?? false,\r\n  off_peak: false,\r\n});\r\n\r\ntype MetadataBuilder = (config: VideoConfig) => Record<string, any>;\r\nconst METADATA_BUILDERS: Array<[string, MetadataBuilder]> = [["vidu", buildViduMetadata]];\r\nconst buildModelMetadata = (modelName: string, videoConfig: VideoConfig) => {\r\n  const lowerName = modelName.toLowerCase();\r\n  const match = METADATA_BUILDERS.find(([key]) => lowerName.includes(key));\r\n  return match ? match[1](videoConfig) : {};\r\n};\r\n// \u68C0\u67E5\u751F\u6210\u7269\u7ED3\u679C\r\nconst checkTaskResult = async (taskId: string) => {\r\n  const queryUrl = vendor.inputValues.baseUrl + "/tasks/{id}/creations";\r\n  const apiKey = vendor.inputValues.apiKey;\r\n  const res = await pollTask(async () => {\r\n    const queryResponse = await fetch(queryUrl.replace("{id}", taskId), {\r\n      method: "GET",\r\n      headers: { Authorization: `Token ${apiKey}`, "Content-Type": "application/json" },\r\n    });\r\n    if (!queryResponse.ok) {\r\n      const errorText = await queryResponse.text(); // \u83B7\u53D6\u9519\u8BEF\u4FE1\u606F\r\n      console.error("\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801:", queryResponse.status, ", \u9519\u8BEF\u4FE1\u606F:", errorText);\r\n      throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${queryResponse.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n    }\r\n    const queryData = await queryResponse.json();\r\n    const status = queryData?.state ?? queryData?.data?.state;\r\n    const fail_reason = queryData?.data?.err_code ?? queryData?.data;\r\n    switch (status) {\r\n      case "completed":\r\n      case "SUCCESS":\r\n      case "success":\r\n        return { completed: true, data: queryData.creations };\r\n      case "FAILURE":\r\n      case "failed":\r\n        return { completed: false, error: fail_reason || "\u751F\u6210\u5931\u8D25" };\r\n      default:\r\n        return { completed: false };\r\n    }\r\n  });\r\n  if (res.error) throw new Error(res.error);\r\n  return res;\r\n};\r\n\r\nconst videoRequest = async (videoConfig: VideoConfig, videoModel: VideoModel) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace("Token ", "");\r\n\r\n  // \u6784\u5EFA\u6BCF\u4E2A\u6A21\u578B\u5BF9\u5E94\u7684\u9644\u52A0\u53C2\u6570\r\n  const metadata = buildModelMetadata(videoModel.modelName, videoConfig);\r\n\r\n  //\u516C\u5171\u8BF7\u6C42\u53C2\u6570\r\n  const publicBody = {\r\n    model: videoModel.modelName,\r\n    ...(videoConfig.imageBase64 && videoConfig.imageBase64.length ? { images: videoConfig.imageBase64 } : {}),\r\n    prompt: videoConfig.prompt,\r\n    size: videoConfig.resolution,\r\n    duration: videoConfig.duration,\r\n    metadata: metadata,\r\n  };\r\n\r\n  const requestUrl = vendor.inputValues.baseUrl + "/start-end2video";\r\n  const response = await fetch(requestUrl, {\r\n    method: "POST",\r\n    headers: { Authorization: `Token ${apiKey}`, "Content-Type": "application/json" },\r\n    body: JSON.stringify(publicBody),\r\n  });\r\n  if (!response.ok) {\r\n    const errorText = await response.text(); // \u83B7\u53D6\u9519\u8BEF\u4FE1\u606F\r\n    console.error("\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801:", response.status, ", \u9519\u8BEF\u4FE1\u606F:", errorText);\r\n    throw new Error(`\u8BF7\u6C42\u5931\u8D25\uFF0C\u72B6\u6001\u7801: ${response.status}, \u9519\u8BEF\u4FE1\u606F: ${errorText}`);\r\n  }\r\n  const data = await response.json();\r\n  const taskId = data.id;\r\n  const result = await checkTaskResult(taskId);\r\n  return result.data;\r\n};\r\nexports.videoRequest = videoRequest;\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n}\r\nconst ttsRequest = async (ttsConfig: TTSConfig, ttsModel: TTSModel) => {\r\n  throw new Error("Vidu \u6682\u4E0D\u652F\u6301\u8BED\u97F3\u5408\u6210\uFF08TTS\uFF09");\r\n};\r\n',
       "volcengine.ts": '/**\r\n * Toonflow AI\u4F9B\u5E94\u5546\u6A21\u677F - \u706B\u5C71\u5F15\u64CE(\u8C46\u5305)\r\n * @version 2.0\r\n */\r\n\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\n\r\ntype VideoMode =\r\n  | "singleImage"\r\n  | "startEndRequired"\r\n  | "endFrameOptional"\r\n  | "startFrameOptional"\r\n  | "text"\r\n  | (`videoReference:${number}` | `imageReference:${number}` | `audioReference:${number}`)[];\r\n\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\n\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\n\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\n\r\ninterface VendorConfig {\r\n  id: string;\r\n  version: string;\r\n  name: string;\r\n  author: string;\r\n  description?: string;\r\n  icon?: string;\r\n  inputs: { key: string; label: string; type: "text" | "password" | "url"; required: boolean; placeholder?: string }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\n\r\ntype ReferenceList =\r\n  | { type: "image"; sourceType: "base64"; base64: string }\r\n  | { type: "audio"; sourceType: "base64"; base64: string }\r\n  | { type: "video"; sourceType: "base64"; base64: string };\r\n\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  referenceList?: Extract<ReferenceList, { type: "image" }>[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  referenceList?: ReferenceList[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n  referenceList?: Extract<ReferenceList, { type: "audio" }>[];\r\n}\r\n\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\n\r\ndeclare const axios: any;\r\ndeclare const logger: (msg: string) => void;\r\ndeclare const jsonwebtoken: any;\r\ndeclare const zipImage: (base64: string, size: number) => Promise<string>;\r\ndeclare const zipImageResolution: (base64: string, w: number, h: number) => Promise<string>;\r\ndeclare const mergeImages: (base64Arr: string[], maxSize?: string) => Promise<string>;\r\ndeclare const urlToBase64: (url: string) => Promise<string>;\r\ndeclare const pollTask: (fn: () => Promise<PollResult>, interval?: number, timeout?: number) => Promise<PollResult>;\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;\r\n  checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;\r\n  updateVendor?: () => Promise<string>;\r\n};\r\n\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\n\r\nconst vendor: VendorConfig = {\r\n  id: "volcengine",\r\n  version: "2.4",\r\n  author: "leeqi",\r\n  name: "\u706B\u5C71\u5F15\u64CE(\u8C46\u5305)",\r\n  description: "\u706B\u5C71\u5F15\u64CE\u8C46\u5305\u5927\u6A21\u578B\uFF0C\u652F\u6301\u6587\u672C\u3001\u56FE\u7247\u751F\u6210\u3001\u89C6\u9891\u751F\u6210\u7B49\u80FD\u529B\u3002\\n\\n\u9700\u8981\u5728[\u706B\u5C71\u5F15\u64CE\u63A7\u5236\u53F0](https://console.volcengine.com/ark)\u83B7\u53D6API\u5BC6\u94A5\u3002",\r\n  icon: "",\r\n  inputs: [\r\n    { key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true, placeholder: "\u706B\u5C71\u5F15\u64CEAPI Key" },\r\n    { key: "baseUrl", label: "\u8BF7\u6C42\u5730\u5740", type: "url", required: true, placeholder: "\u4EE5v3\u7ED3\u675F\uFF0C\u793A\u4F8B\uFF1Ahttps://ark.cn-beijing.volces.com/api/v3" },\r\n  ],\r\n  inputValues: {\r\n    apiKey: "",\r\n    baseUrl: "https://ark.cn-beijing.volces.com/api/v3",\r\n  },\r\n  models: [\r\n    // ===================== \u6587\u672C\u6A21\u578B - \u63A8\u8350 =====================\r\n    { name: "Doubao-Seed-2.0-Pro", modelName: "doubao-seed-2-0-pro-260215", type: "text", think: true },\r\n    { name: "Doubao-Seed-2.0-Lite", modelName: "doubao-seed-2-0-lite-260215", type: "text", think: true },\r\n    { name: "Doubao-Seed-2.0-Mini", modelName: "doubao-seed-2-0-mini-260215", type: "text", think: true },\r\n    { name: "Doubao-Seed-2.0-Code-Preview", modelName: "doubao-seed-2-0-code-preview-260215", type: "text", think: true },\r\n    { name: "Doubao-Seed-Character", modelName: "doubao-seed-character-251128", type: "text", think: false },\r\n    // ===================== \u6587\u672C\u6A21\u578B - \u5F80\u671F =====================\r\n    { name: "Doubao-Seed-1.8", modelName: "doubao-seed-1-8-251228", type: "text", think: true },\r\n    { name: "Doubao-Seed-Code-Preview", modelName: "doubao-seed-code-preview-251028", type: "text", think: true },\r\n    { name: "Doubao-Seed-1.6-Lite", modelName: "doubao-seed-1-6-lite-251015", type: "text", think: true },\r\n    { name: "Doubao-Seed-1.6-Flash(0828)", modelName: "doubao-seed-1-6-flash-250828", type: "text", think: true },\r\n    { name: "Doubao-Seed-1.6-Vision", modelName: "doubao-seed-1-6-vision-250815", type: "text", think: true },\r\n    { name: "Doubao-Seed-1.6(1015)", modelName: "doubao-seed-1-6-251015", type: "text", think: true },\r\n    { name: "Doubao-Seed-1.6(0615)", modelName: "doubao-seed-1-6-250615", type: "text", think: true },\r\n    { name: "Doubao-Seed-1.6-Flash(0615)", modelName: "doubao-seed-1-6-flash-250615", type: "text", think: true },\r\n    { name: "Doubao-Seed-Translation", modelName: "doubao-seed-translation-250915", type: "text", think: false },\r\n    { name: "Doubao-1.5-Pro-32K", modelName: "doubao-1-5-pro-32k-250115", type: "text", think: false },\r\n    { name: "Doubao-1.5-Pro-32K-Character(0715)", modelName: "doubao-1-5-pro-32k-character-250715", type: "text", think: false },\r\n    { name: "Doubao-1.5-Pro-32K-Character(0228)", modelName: "doubao-1-5-pro-32k-character-250228", type: "text", think: false },\r\n    { name: "Doubao-1.5-Lite-32K", modelName: "doubao-1-5-lite-32k-250115", type: "text", think: false },\r\n    { name: "Doubao-1.5-Vision-Pro-32K", modelName: "doubao-1-5-vision-pro-32k-250115", type: "text", think: false },\r\n    // ===================== \u6587\u672C\u6A21\u578B - \u7B2C\u4E09\u65B9(\u706B\u5C71\u5F15\u64CE\u6258\u7BA1) =====================\r\n    { name: "GLM-4-7", modelName: "glm-4-7-251222", type: "text", think: true },\r\n    { name: "DeepSeek-V3-2", modelName: "deepseek-v3-2-251201", type: "text", think: true },\r\n    { name: "DeepSeek-V3-1-Terminus", modelName: "deepseek-v3-1-terminus", type: "text", think: true },\r\n    { name: "DeepSeek-V3(0324)", modelName: "deepseek-v3-250324", type: "text", think: false },\r\n    { name: "DeepSeek-R1(0528)", modelName: "deepseek-r1-250528", type: "text", think: true },\r\n    { name: "Qwen3-32B", modelName: "qwen3-32b-20250429", type: "text", think: false },\r\n    { name: "Qwen3-14B", modelName: "qwen3-14b-20250429", type: "text", think: false },\r\n    { name: "Qwen3-8B", modelName: "qwen3-8b-20250429", type: "text", think: false },\r\n    { name: "Qwen3-0.6B", modelName: "qwen3-0-6b-20250429", type: "text", think: false },\r\n    { name: "Qwen2.5-72B", modelName: "qwen2-5-72b-20240919", type: "text", think: false },\r\n    { name: "GLM-4.5-Air", modelName: "glm-4-5-air", type: "text", think: false },\r\n    // ===================== \u56FE\u7247\u751F\u6210\u6A21\u578B =====================\r\n    {\r\n      name: "Seedream-5.0",\r\n      modelName: "doubao-seedream-5-0-260128",\r\n      type: "image",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "Seedream-5.0-Lite",\r\n      modelName: "doubao-seedream-5-0-lite-260128",\r\n      type: "image",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "Seedream-4.5",\r\n      modelName: "doubao-seedream-4-5-251128",\r\n      type: "image",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "Seedream-4.0",\r\n      modelName: "doubao-seedream-4-0-250828",\r\n      type: "image",\r\n      mode: ["text", "singleImage", "multiReference"],\r\n    },\r\n    {\r\n      name: "Seedream-3.0-T2I",\r\n      modelName: "doubao-seedream-3-0-t2i-250415",\r\n      type: "image",\r\n      mode: ["text"],\r\n    },\r\n    // ===================== \u89C6\u9891\u751F\u6210\u6A21\u578B =====================\r\n    {\r\n      name: "Seedance-2.0(\u97F3\u753B\u540C\u751F)",\r\n      modelName: "doubao-seedance-2-0-260128",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional", ["imageReference:9", "videoReference:3", "audioReference:3"]],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-2.0-Fast(\u97F3\u753B\u540C\u751F)",\r\n      modelName: "doubao-seedance-2-0-fast-260128",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional", ["imageReference:9", "videoReference:3", "audioReference:3"]],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-1.5-Pro(\u97F3\u753B\u540C\u751F)",\r\n      modelName: "doubao-seedance-1-5-pro-251215",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional"],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12], resolution: ["480p", "720p", "1080p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-1.0-Pro",\r\n      modelName: "doubao-seedance-1-0-pro-250528",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], resolution: ["480p", "720p", "1080p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-1.0-Pro-Fast",\r\n      modelName: "doubao-seedance-1-0-pro-fast-251015",\r\n      type: "video",\r\n      mode: ["text", "singleImage"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], resolution: ["480p", "720p", "1080p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-1.0-Lite-T2V",\r\n      modelName: "doubao-seedance-1-0-lite-t2v-250428",\r\n      type: "video",\r\n      mode: ["text"],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], resolution: ["480p", "720p", "1080p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-1.0-Lite-I2V",\r\n      modelName: "doubao-seedance-1-0-lite-i2v-250428",\r\n      type: "video",\r\n      mode: ["startFrameOptional", ["imageReference:4"]],\r\n      audio: false,\r\n      durationResolutionMap: [{ duration: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], resolution: ["480p", "720p", "1080p"] }],\r\n    },\r\n  ],\r\n};\r\n\r\n// ============================================================\r\n// \u8F85\u52A9\u5DE5\u5177\r\n// ============================================================\r\n\r\nconst getHeaders = () => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  return {\r\n    "Content-Type": "application/json",\r\n    Authorization: `Bearer ${vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "")}`,\r\n  };\r\n};\r\n\r\nconst getBaseUrl = () => vendor.inputValues.baseUrl.replace(/\\/+$/, "");\r\n\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\n\r\nconst textRequest = (model: TextModel, think: boolean, thinkLevel: 0 | 1 | 2 | 3) => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  const apiKey = vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "");\r\n\r\n  const effortMap: Record<number, string> = {\r\n    0: "minimal",\r\n    1: "low",\r\n    2: "medium",\r\n    3: "high",\r\n  };\r\n\r\n  return createOpenAICompatible({\r\n    name: "volcengine",\r\n    baseURL: getBaseUrl(),\r\n    apiKey,\r\n    fetch: async (url: string, options?: RequestInit) => {\r\n      const rawBody = JSON.parse((options?.body as string) ?? "{}");\r\n      const modifiedBody = {\r\n        ...rawBody,\r\n        thinking: {\r\n          type: "enabled",\r\n        },\r\n        reasoning_effort: effortMap[thinkLevel],\r\n      };\r\n      return await fetch(url, {\r\n        ...options,\r\n        body: JSON.stringify(modifiedBody),\r\n      });\r\n    },\r\n  }).chatModel(model.modelName);\r\n};\r\n\r\nconst imageRequest = async (config: ImageConfig, model: ImageModel): Promise<string> => {\r\n  const baseUrl = getBaseUrl();\r\n  const headers = getHeaders();\r\n\r\n  const body: any = {\r\n    model: model.modelName,\r\n    prompt: config.prompt || "",\r\n    response_format: "url",\r\n    watermark: false,\r\n  };\r\n\r\n  const isOldModel = model.modelName.includes("seedream-3-0");\r\n  const is5Lite = model.modelName.includes("seedream-5-0-lite");\r\n\r\n  // sequential_image_generation \u4EC5 seedream 5.0-lite/4.5/4.0 \u652F\u6301\r\n  if (!isOldModel) {\r\n    body.sequential_image_generation = "disabled";\r\n  }\r\n\r\n  // \u53C2\u8003\u56FE\u7247\uFF1A\u5355\u56FE\u4E3A string\uFF0C\u591A\u56FE\u4E3A array\uFF08seedream-3.0-t2i \u4E0D\u652F\u6301 image \u53C2\u6570\uFF09\r\n  if (!isOldModel && config.referenceList && config.referenceList.length > 0) {\r\n    const images = config.referenceList.map((ref) => ref.base64);\r\n    body.image = images.length === 1 ? images[0] : images;\r\n  }\r\n\r\n  // \u5C3A\u5BF8\u5904\u7406\uFF1A\u4F18\u5148\u4F7F\u7528\u63A8\u8350\u50CF\u7D20\u503C\uFF0C\u672A\u5339\u914D\u5219\u76F4\u63A5\u4F20\u5206\u8FA8\u7387\u5B57\u7B26\u4E32\u8BA9\u6A21\u578B\u81EA\u884C\u51B3\u5B9A\r\n  const [w, h] = config.aspectRatio.split(":").map(Number);\r\n  const sizeTable: Record<string, Record<string, string>> = {\r\n    "1K": {\r\n      "1:1": "1024x1024",\r\n      "4:3": "1152x864",\r\n      "3:4": "864x1152",\r\n      "16:9": "1280x720",\r\n      "9:16": "720x1280",\r\n      "3:2": "1248x832",\r\n      "2:3": "832x1248",\r\n      "21:9": "1512x648",\r\n    },\r\n    "2K": {\r\n      "1:1": "2048x2048",\r\n      "4:3": "2304x1728",\r\n      "3:4": "1728x2304",\r\n      "16:9": "2848x1600",\r\n      "9:16": "1600x2848",\r\n      "3:2": "2496x1664",\r\n      "2:3": "1664x2496",\r\n      "21:9": "3136x1344",\r\n    },\r\n    "4K": {\r\n      "1:1": "4096x4096",\r\n      "4:3": "4704x3520",\r\n      "3:4": "3520x4704",\r\n      "16:9": "5504x3040",\r\n      "9:16": "3040x5504",\r\n      "3:2": "4992x3328",\r\n      "2:3": "3328x4992",\r\n      "21:9": "6240x2656",\r\n    },\r\n  };\r\n\r\n  const sizeKey = config.size || "2K";\r\n  const ratioKey = config.aspectRatio;\r\n  const table = sizeTable[sizeKey];\r\n\r\n  if (table && table[ratioKey]) {\r\n    // \u63A8\u8350\u50CF\u7D20\u503C\u5339\u914D\u5230\u4E86\uFF0C\u4F46\u9700\u8981\u68C0\u67E5\u662F\u5426\u6EE1\u8DB3\u6A21\u578B\u6700\u4F4E\u50CF\u7D20\u8981\u6C42\r\n    const [pw, ph] = table[ratioKey].split("x").map(Number);\r\n    const totalPixels = pw * ph;\r\n    if (isOldModel) {\r\n      // seedream-3.0-t2i: \u50CF\u7D20\u8303\u56F4 [512x512, 2048x2048]\r\n      body.size = table[ratioKey];\r\n    } else if (totalPixels < 3686400) {\r\n      // 1K \u50CF\u7D20\u503C\u4E0D\u6EE1\u8DB3\u65B0\u6A21\u578B\u6700\u4F4E\u8981\u6C42\uFF0C\u76F4\u63A5\u4F20 "2K" \u8BA9\u6A21\u578B\u81EA\u884C\u51B3\u5B9A\r\n      body.size = "2K";\r\n    } else if (is5Lite && totalPixels > 10404496) {\r\n      // seedream-5.0-lite \u6700\u9AD8 10404496\uFF0C4K \u8D85\u9650\uFF0C\u56DE\u9000\u4F20 "2K"\r\n      body.size = "2K";\r\n    } else {\r\n      body.size = table[ratioKey];\r\n    }\r\n  } else if (isOldModel) {\r\n    // seedream-3.0-t2i: \u50CF\u7D20\u8303\u56F4 [512x512, 2048x2048]\uFF0C\u76F4\u63A5\u6309\u6BD4\u4F8B\u8BA1\u7B97\r\n    const base = sizeKey === "1K" ? 1024 : 2048;\r\n    const calcW = Math.min(2048, Math.round(base * Math.sqrt(w / h)));\r\n    const calcH = Math.min(2048, Math.round(base * Math.sqrt(h / w)));\r\n    body.size = `${Math.max(512, calcW)}x${Math.max(512, calcH)}`;\r\n  } else {\r\n    // \u65B0\u6A21\u578B\u672A\u5339\u914D\u63A8\u8350\u503C\u65F6\uFF0C\u76F4\u63A5\u4F20\u5206\u8FA8\u7387\u5B57\u7B26\u4E32\uFF08\u65B9\u5F0F1\uFF09\uFF0C\u7531\u6A21\u578B\u6839\u636E prompt \u81EA\u884C\u51B3\u5B9A\u5C3A\u5BF8\r\n    // seedream 5.0-lite \u652F\u6301 "2K"/"3K"\uFF0Cseedream 4.5 \u652F\u6301 "2K"/"4K"\uFF0Cseedream 4.0 \u652F\u6301 "1K"/"2K"/"4K"\r\n    if (is5Lite) {\r\n      body.size = sizeKey === "4K" ? "3K" : sizeKey === "1K" ? "2K" : sizeKey;\r\n    } else {\r\n      body.size = sizeKey === "1K" ? "2K" : sizeKey;\r\n    }\r\n  }\r\n\r\n  logger(`[\u56FE\u7247\u751F\u6210] \u8BF7\u6C42\u6A21\u578B: ${model.modelName}, \u5C3A\u5BF8: ${body.size}`);\r\n  const res = await fetch(`${baseUrl}/images/generations`, {\r\n    method: "POST",\r\n    headers,\r\n    body: JSON.stringify(body),\r\n  });\r\n  if (!res.ok) {\r\n    const errorText = await res.text();\r\n    throw new Error(`\u56FE\u7247\u751F\u6210\u8BF7\u6C42\u5931\u8D25: ${errorText}`);\r\n  }\r\n  const response = await res.json();\r\n  logger(response);\r\n\r\n  if (response?.error) {\r\n    throw new Error(`\u56FE\u7247\u751F\u6210\u5931\u8D25\uFF1A${response.error.message || response.error.code}`);\r\n  }\r\n\r\n  // \u4ECE data \u6570\u7EC4\u4E2D\u63D0\u53D6\u7B2C\u4E00\u5F20\u6210\u529F\u7684\u56FE\u7247\r\n  if (response?.data && response.data.length > 0) {\r\n    for (const item of response.data) {\r\n      if (item.url) {\r\n        return await urlToBase64(item.url);\r\n      }\r\n      if (item.b64_json) {\r\n        return item.b64_json;\r\n      }\r\n      if (item.error) {\r\n        throw new Error(`\u56FE\u7247\u751F\u6210\u5931\u8D25\uFF1A${item.error.message || item.error.code}`);\r\n      }\r\n    }\r\n  }\r\n\r\n  throw new Error("\u56FE\u7247\u751F\u6210\u5931\u8D25\uFF1A\u672A\u8FD4\u56DE\u6709\u6548\u7ED3\u679C");\r\n};\r\n\r\nconst videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {\r\n  const baseUrl = getBaseUrl();\r\n  const headers = getHeaders();\r\n\r\n  const content: any[] = [];\r\n\r\n  if (config.prompt) {\r\n    content.push({ type: "text", text: config.prompt });\r\n  }\r\n\r\n  if (typeof config.mode === "string") {\r\n    switch (config.mode) {\r\n      case "singleImage": {\r\n        const firstImage = config.referenceList?.find((r) => r.type === "image");\r\n        if (firstImage) {\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: firstImage.base64 },\r\n            role: "first_frame",\r\n          });\r\n        }\r\n        break;\r\n      }\r\n      case "startFrameOptional": {\r\n        const images = config.referenceList?.filter((r) => r.type === "image") ?? [];\r\n        if (images.length > 0) {\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: images[0].base64 },\r\n            role: "first_frame",\r\n          });\r\n          if (images.length > 1) {\r\n            content.push({\r\n              type: "image_url",\r\n              image_url: { url: images[1].base64 },\r\n              role: "last_frame",\r\n            });\r\n          }\r\n        }\r\n        break;\r\n      }\r\n      case "startEndRequired": {\r\n        const images = config.referenceList?.filter((r) => r.type === "image") ?? [];\r\n        if (images.length >= 2) {\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: images[0].base64 },\r\n            role: "first_frame",\r\n          });\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: images[1].base64 },\r\n            role: "last_frame",\r\n          });\r\n        }\r\n        break;\r\n      }\r\n      case "endFrameOptional": {\r\n        const images = config.referenceList?.filter((r) => r.type === "image") ?? [];\r\n        if (images.length > 0) {\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: images[0].base64 },\r\n            role: "first_frame",\r\n          });\r\n          if (images.length > 1) {\r\n            content.push({\r\n              type: "image_url",\r\n              image_url: { url: images[1].base64 },\r\n              role: "last_frame",\r\n            });\r\n          }\r\n        }\r\n        break;\r\n      }\r\n      case "text":\r\n      default:\r\n        break;\r\n    }\r\n  } else if (Array.isArray(config.mode)) {\r\n    // \u591A\u6A21\u6001\u53C2\u8003\u6A21\u5F0F\uFF1A\u6309\u7C7B\u578B\u5206\u522B\u63D0\u53D6\u5E76\u6DFB\u52A0\r\n    const imageRefs = config.referenceList?.filter((r) => r.type === "image") ?? [];\r\n    const videoRefs = config.referenceList?.filter((r) => r.type === "video") ?? [];\r\n    const audioRefs = config.referenceList?.filter((r) => r.type === "audio") ?? [];\r\n\r\n    for (const refDef of config.mode) {\r\n      if (typeof refDef === "string") {\r\n        if (refDef.startsWith("imageReference:")) {\r\n          const maxCount = parseInt(refDef.split(":")[1], 10);\r\n          for (const ref of imageRefs.slice(0, maxCount)) {\r\n            content.push({\r\n              type: "image_url",\r\n              image_url: { url: ref.base64 },\r\n              role: "reference_image",\r\n            });\r\n          }\r\n        } else if (refDef.startsWith("videoReference:")) {\r\n          const maxCount = parseInt(refDef.split(":")[1], 10);\r\n          for (const ref of videoRefs.slice(0, maxCount)) {\r\n            content.push({\r\n              type: "video_url",\r\n              video_url: { url: ref.base64 },\r\n              role: "reference_video",\r\n            });\r\n          }\r\n        } else if (refDef.startsWith("audioReference:")) {\r\n          const maxCount = parseInt(refDef.split(":")[1], 10);\r\n          for (const ref of audioRefs.slice(0, maxCount)) {\r\n            content.push({\r\n              type: "audio_url",\r\n              audio_url: { url: ref.base64 },\r\n              role: "reference_audio",\r\n            });\r\n          }\r\n        }\r\n      }\r\n    }\r\n  }\r\n\r\n  const body: any = {\r\n    model: model.modelName,\r\n    content,\r\n    ratio: config.aspectRatio,\r\n    duration: config.duration,\r\n    resolution: config.resolution || "720p",\r\n    watermark: false,\r\n  };\r\n\r\n  if (model.audio === "optional") {\r\n    body.generate_audio = config.audio !== false;\r\n  } else if (model.audio === true) {\r\n    body.generate_audio = true;\r\n  } else {\r\n    body.generate_audio = false;\r\n  }\r\n\r\n  logger(`[\u89C6\u9891\u751F\u6210] \u63D0\u4EA4\u4EFB\u52A1, \u6A21\u578B: ${model.modelName}, \u65F6\u957F: ${config.duration}s, \u5206\u8FA8\u7387: ${config.resolution}`);\r\n  const res = await fetch(`${baseUrl}/contents/generations/tasks`, {\r\n    method: "POST",\r\n    headers,\r\n    body: JSON.stringify(body),\r\n  });\r\n\r\n  if (!res.ok) {\r\n    const errorText = await res.text();\r\n    throw new Error(`\u89C6\u9891\u751F\u6210\u4EFB\u52A1\u521B\u5EFA\u5931\u8D25: ${errorText}`);\r\n  }\r\n  const createResponse = await res.json();\r\n  logger(createResponse);\r\n  const taskId = createResponse?.id;\r\n\r\n  if (!taskId) {\r\n    throw new Error("\u89C6\u9891\u751F\u6210\u4EFB\u52A1\u521B\u5EFA\u5931\u8D25\uFF1A\u672A\u8FD4\u56DE\u4EFB\u52A1ID");\r\n  }\r\n\r\n  logger(`[\u89C6\u9891\u751F\u6210] \u4EFB\u52A1\u5DF2\u521B\u5EFA, ID: ${taskId}`);\r\n\r\n  const result = await pollTask(\r\n    async (): Promise<PollResult> => {\r\n      const queryRes = await fetch(`${baseUrl}/contents/generations/tasks/${taskId}`, {\r\n        method: "GET",\r\n        headers,\r\n      });\r\n      if (!queryRes.ok) {\r\n        const errorText = await queryRes.text();\r\n        throw new Error(`\u67E5\u8BE2\u89C6\u9891\u751F\u6210\u4EFB\u52A1\u72B6\u6001\u5931\u8D25: ${errorText}`);\r\n      }\r\n      const task = await queryRes.json();\r\n\r\n      logger(`[\u89C6\u9891\u751F\u6210] \u4EFB\u52A1\u72B6\u6001: ${JSON.stringify(task)}`);\r\n\r\n      switch (task.status) {\r\n        case "succeeded":\r\n          if (task.content?.video_url) {\r\n            return { completed: true, data: task.content.video_url };\r\n          }\r\n          return { completed: true, error: "\u4EFB\u52A1\u6210\u529F\u4F46\u672A\u8FD4\u56DE\u89C6\u9891URL" };\r\n        case "failed":\r\n          return { completed: true, error: task.error?.message || "\u89C6\u9891\u751F\u6210\u5931\u8D25" };\r\n        case "expired":\r\n          return { completed: true, error: "\u89C6\u9891\u751F\u6210\u4EFB\u52A1\u8D85\u65F6" };\r\n        case "cancelled":\r\n          return { completed: true, error: "\u89C6\u9891\u751F\u6210\u4EFB\u52A1\u5DF2\u53D6\u6D88" };\r\n        default:\r\n          return { completed: false };\r\n      }\r\n    },\r\n    10000,\r\n    600000 * 3,\r\n  );\r\n\r\n  if (result.error) {\r\n    throw new Error(result.error);\r\n  }\r\n\r\n  return result.data!;\r\n};\r\n\r\nconst ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst checkForUpdates = async (): Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }> => {\r\n  return { hasUpdate: false, latestVersion: "2.0", notice: "" };\r\n};\r\n\r\nconst updateVendor = async (): Promise<string> => {\r\n  return "";\r\n};\r\n\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\n\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\nexports.checkForUpdates = checkForUpdates;\r\nexports.updateVendor = updateVendor;\r\n\r\nexport {};\r\n',
-      "volcengineSd2.ts": '/**\r\n * Toonflow AI\u4F9B\u5E94\u5546\u6A21\u677F - \u706B\u5C71\u5F15\u64CE(\u8C46\u5305)\r\n * @version 2.0\r\n */\r\n\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\n\r\ntype VideoMode =\r\n  | "singleImage"\r\n  | "startEndRequired"\r\n  | "endFrameOptional"\r\n  | "startFrameOptional"\r\n  | "text"\r\n  | (`videoReference:${number}` | `imageReference:${number}` | `audioReference:${number}`)[];\r\n\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\n\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\n\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\n\r\ninterface VendorConfig {\r\n  id: string;\r\n  version: string;\r\n  name: string;\r\n  author: string;\r\n  description?: string;\r\n  icon?: string;\r\n  inputs: { key: string; label: string; type: "text" | "password" | "url"; required: boolean; placeholder?: string }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\n\r\ntype ReferenceList =\r\n  | { type: "image"; sourceType: "base64"; base64: string }\r\n  | { type: "audio"; sourceType: "base64"; base64: string }\r\n  | { type: "video"; sourceType: "base64"; base64: string };\r\n\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  referenceList?: Extract<ReferenceList, { type: "image" }>[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  referenceList?: ReferenceList[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n  referenceList?: Extract<ReferenceList, { type: "audio" }>[];\r\n}\r\n\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\n\r\ndeclare const axios: any;\r\ndeclare const logger: (msg: string) => void;\r\ndeclare const jsonwebtoken: any;\r\ndeclare const zipImage: (base64: string, size: number) => Promise<string>;\r\ndeclare const zipImageResolution: (base64: string, w: number, h: number) => Promise<string>;\r\ndeclare const mergeImages: (base64Arr: string[], maxSize?: string) => Promise<string>;\r\ndeclare const urlToBase64: (url: string) => Promise<string>;\r\ndeclare const pollTask: (fn: () => Promise<PollResult>, interval?: number, timeout?: number) => Promise<PollResult>;\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const crypto: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;\r\n  checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;\r\n  updateVendor?: () => Promise<string>;\r\n};\r\n\r\n// \u5E38\u91CF\u914D\u7F6E\r\nconst SERVICE = "ark";\r\nconst VERSION = "2024-01-01";\r\nconst REGION = "cn-beijing";\r\nconst HOST = "ark.cn-beijing.volcengineapi.com";\r\nconst CONTENT_TYPE = "application/json";\r\nconst SIGNED_HEADERS = "content-type;host;x-content-sha256;x-date";\r\nconst PATH = "/";\r\nconst TIMEOUT = 120_000;\r\n\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\n\r\nconst vendor: VendorConfig = {\r\n  id: "volcengineSd2",\r\n  version: "2.0",\r\n  author: "toonflow",\r\n  name: "\u706B\u5C71\u5F15\u64CEsd2.0\u771F\u4EBA",\r\n  description: "\u706B\u5C71\u5F15\u64CE\u8C46\u5305\u5927\u6A21\u578B\uFF0C\u652F\u6301\u6587\u672C\u3001\u56FE\u7247\u751F\u6210\u3001\u89C6\u9891\u751F\u6210\u7B49\u80FD\u529B\u3002\\n\\n\u9700\u8981\u5728[\u706B\u5C71\u5F15\u64CE\u63A7\u5236\u53F0](https://console.volcengine.com/ark)\u83B7\u53D6API\u5BC6\u94A5\u3002",\r\n  icon: "",\r\n  inputs: [\r\n    { key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true, placeholder: "\u706B\u5C71\u5F15\u64CEAPI Key" },\r\n    { key: "baseUrl", label: "\u8BF7\u6C42\u5730\u5740", type: "url", required: true, placeholder: "\u4EE5v3\u7ED3\u675F\uFF0C\u793A\u4F8B\uFF1Ahttps://ark.cn-beijing.volces.com/api/v3" },\r\n    { key: "ak", label: "\u706B\u5C71 Access Key ID", type: "text", required: true, placeholder: "\u706B\u5C71\u5F15\u64CE/OSS API\u8BBF\u95EE\u5BC6\u94A5" },\r\n    { key: "sk", label: "\u706B\u5C71 Secret Access Key", type: "password", required: true, placeholder: "\u706B\u5C71\u5F15\u64CE/OSS Secret Access Key" },\r\n    { key: "groupId", label: "\u8D44\u4EA7\u7EC4ID", type: "text", required: true, placeholder: "\u706B\u5C71\u5F15\u64CE\u8D44\u4EA7\u7EC4ID" },\r\n    { key: "tosEndpoint", label: "\u706B\u5C71TOS Endpoint", type: "url", required: true, placeholder: "\u5982 tos-cn-beijing.volces.com" },\r\n    { key: "tosBucket", label: "\u706B\u5C71TOS Bucket", type: "text", required: true, placeholder: "Bucket \u540D\u79F0" },\r\n  ],\r\n  inputValues: {\r\n    apiKey: "",\r\n    baseUrl: "https://ark.cn-beijing.volces.com/api/v3",\r\n    ak: "",\r\n    sk: "",\r\n    groupId: "",\r\n    tosEndpoint: "",\r\n    tosBucket: "",\r\n  },\r\n  models: [\r\n    {\r\n      name: "Seedance-2.0(\u97F3\u753B\u540C\u751F)",\r\n      modelName: "doubao-seedance-2-0-260128",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional", ["imageReference:9", "videoReference:3", "audioReference:3"]],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-2.0-Fast(\u97F3\u753B\u540C\u751F)",\r\n      modelName: "doubao-seedance-2-0-fast-260128",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional", ["imageReference:9", "videoReference:3", "audioReference:3"]],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-1.5-Pro(\u97F3\u753B\u540C\u751F)",\r\n      modelName: "doubao-seedance-1-5-pro-251215",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional"],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12], resolution: ["480p", "720p", "1080p"] }],\r\n    },\r\n  ],\r\n};\r\n/** \u7B7E\u540D\u5BC6\u94A5\u6D3E\u751F */\r\nfunction deriveSigningKey(shortDate: string) {\r\n  const kDate = crypto.createHmac("sha256", vendor.inputValues.sk).update(shortDate).digest();\r\n  const kRegion = crypto.createHmac("sha256", kDate).update(REGION).digest();\r\n  const kService = crypto.createHmac("sha256", kRegion).update(SERVICE).digest();\r\n  return crypto.createHmac("sha256", kService).update("request").digest();\r\n}\r\nfunction encodeQueryComponent(str: string): string {\r\n  return encodeURIComponent(str).replace(/!/g, "%21").replace(/\'/g, "%27").replace(/\\(/g, "%28").replace(/\\)/g, "%29").replace(/\\*/g, "%2A");\r\n}\r\nfunction buildQueryString(params: Record<string, string>): string {\r\n  return Object.keys(params)\r\n    .sort()\r\n    .map((key) => {\r\n      const value = params[key];\r\n      return value === "" ? encodeQueryComponent(key) : `${encodeQueryComponent(key)}=${encodeQueryComponent(value)}`;\r\n    })\r\n    .join("&");\r\n}\r\n/**\r\n * \u706B\u5C71\u5F15\u64CE HMAC-SHA256 \u7B7E\u540D\u8BF7\u6C42\r\n * @param action  API Action \u540D\u79F0\r\n * @param body    \u8BF7\u6C42\u4F53\u5BF9\u8C61\uFF08\u81EA\u52A8\u5E8F\u5217\u5316\u4E3A JSON\uFF09\r\n * @param method  HTTP \u65B9\u6CD5\uFF0C\u9ED8\u8BA4 POST\r\n * @param header  \u989D\u5916\u7684\u81EA\u5B9A\u4E49\u8BF7\u6C42\u5934\r\n */\r\nasync function request(\r\n  action: string,\r\n  body: Record<string, unknown>,\r\n  method: "GET" | "POST" = "POST",\r\n  header: Record<string, string> = {},\r\n): Promise<any> {\r\n  const bodyStr = JSON.stringify(body);\r\n\r\n  // \u67E5\u8BE2\u53C2\u6570\uFF08\u6309 key \u6392\u5E8F\uFF09\r\n  const sortedQuery = Object.fromEntries(Object.entries({ Action: action, Version: VERSION }).sort(([a], [b]) => a.localeCompare(b)));\r\n\r\n  // \u65F6\u95F4\u6233 & \u5185\u5BB9\u54C8\u5E0C\r\n  const date = new Date().toISOString().replace(/[-:]/g, "").replace(/\\..+/, "Z");\r\n  const shortDate = date.slice(0, 8);\r\n  const xContentSha256 = crypto.createHash("sha256").update(bodyStr).digest("hex");\r\n\r\n  // \u89C4\u8303\u5316\u8BF7\u6C42\u5B57\u7B26\u4E32\r\n  const queryString = buildQueryString(sortedQuery as Record<string, string>);\r\n  const canonicalRequest = [\r\n    method,\r\n    PATH,\r\n    queryString,\r\n    `content-type:${CONTENT_TYPE}`,\r\n    `host:${HOST}`,\r\n    `x-content-sha256:${xContentSha256}`,\r\n    `x-date:${date}`,\r\n    "",\r\n    SIGNED_HEADERS,\r\n    xContentSha256,\r\n  ].join("\\n");\r\n\r\n  const hashedCanonicalRequest = crypto.createHash("sha256").update(canonicalRequest).digest("hex");\r\n  const credentialScope = `${shortDate}/${REGION}/${SERVICE}/request`;\r\n  const stringToSign = `HMAC-SHA256\\n${date}\\n${credentialScope}\\n${hashedCanonicalRequest}`;\r\n\r\n  // \u8BA1\u7B97\u7B7E\u540D\r\n  const signingKey = deriveSigningKey(shortDate);\r\n  const signature = crypto.createHmac("sha256", signingKey).update(stringToSign).digest("hex");\r\n\r\n  // \u7EC4\u88C5\u8BF7\u6C42\u5934\r\n  const authorization = `HMAC-SHA256 Credential=${vendor.inputValues.ak}/${credentialScope}, SignedHeaders=${SIGNED_HEADERS}, Signature=${signature}`;\r\n  const headers: Record<string, string> = {\r\n    Host: HOST,\r\n    "X-Content-Sha256": xContentSha256,\r\n    "X-Date": date,\r\n    "Content-Type": CONTENT_TYPE,\r\n    Authorization: authorization,\r\n    ...header,\r\n  };\r\n  return fetch(`https://${HOST}${PATH}?${queryString}`, {\r\n    method,\r\n    headers,\r\n    body: bodyStr,\r\n  });\r\n}\r\n\r\n// ============================================================\r\n// \u706B\u5C71\u5F15\u64CE TOS V4 \u7B7E\u540D\u5DE5\u5177\u51FD\u6570\r\n// ============================================================\r\nconst TOS_SIGNING_ALGORITHM = "TOS4-HMAC-SHA256";\r\nfunction getTosRegion(): string {\r\n  const ep = (vendor.inputValues.tosEndpoint || "").trim();\r\n  const match = ep.match(/tos-([^.]+)\\.volces\\.com/);\r\n  return match ? match[1] : "cn-beijing";\r\n}\r\nfunction tosTimestamp(): string {\r\n  return new Date()\r\n    .toISOString()\r\n    .replace(/[-:]/g, "")\r\n    .replace(/\\.\\d{3}Z$/, "Z");\r\n}\r\nfunction tosDateFromTimestamp(ts: string): string {\r\n  return ts.slice(0, 8);\r\n}\r\nfunction tosBucket(): string {\r\n  return (vendor.inputValues.tosBucket || "").trim();\r\n}\r\nfunction tosEndpoint(): string {\r\n  return (vendor.inputValues.tosEndpoint || "").trim();\r\n}\r\nfunction tosAk(): string {\r\n  logger(vendor.inputValues.ak);\r\n\r\n  return (vendor.inputValues.ak || "").trim();\r\n}\r\nfunction tosSk(): string {\r\n  logger(vendor.inputValues.sk);\r\n  return (vendor.inputValues.sk || "").trim();\r\n}\r\nfunction hasCompleteTosConfig(): boolean {\r\n  return Boolean(tosEndpoint() && tosBucket() && tosAk() && tosSk());\r\n}\r\nfunction tosSecurityToken(): string {\r\n  return (vendor.inputValues.securityToken || vendor.inputValues.sessionToken || "").trim();\r\n}\r\nfunction getStorageProvider(): "tos" | "oss" {\r\n  if (hasCompleteTosConfig()) return "tos";\r\n  throw new Error("\u672A\u68C0\u6D4B\u5230\u53EF\u7528\u5BF9\u8C61\u5B58\u50A8\u914D\u7F6E\uFF0C\u8BF7\u586B\u5199\u5B8C\u6574\u7684 TOS \u6216 OSS \u914D\u7F6E");\r\n}\r\nfunction tosUriEncode(str: string, encodeSlash: boolean = false): string {\r\n  const encoded = encodeURIComponent(str).replace(/!/g, "%21").replace(/\'/g, "%27").replace(/\\(/g, "%28").replace(/\\)/g, "%29").replace(/\\*/g, "%2A");\r\n  return encodeSlash ? encoded : encoded.replace(/%2F/gi, "/");\r\n}\r\nfunction tosCanonicalQueryString(params: Record<string, string>): string {\r\n  if (!Object.keys(params).length) return "";\r\n  return Object.keys(params)\r\n    .sort()\r\n    .map((k) => `${tosUriEncode(k, true)}=${tosUriEncode(params[k], true)}`)\r\n    .join("&");\r\n}\r\nfunction tosSigningKey(date: string, region: string, sk: string): Buffer {\r\n  const kDate = crypto.createHmac("sha256", Buffer.from(sk, "utf8")).update(date, "utf8").digest();\r\n\r\n  const kRegion = crypto.createHmac("sha256", kDate).update(region, "utf8").digest();\r\n\r\n  const kService = crypto.createHmac("sha256", kRegion).update("tos", "utf8").digest();\r\n\r\n  return crypto.createHmac("sha256", kService).update("request", "utf8").digest();\r\n}\r\nfunction tosSign(\r\n  method: string,\r\n  objectKey: string,\r\n  queryParams: Record<string, string>,\r\n  headers: Record<string, string>,\r\n  payloadHash: string,\r\n  timestamp: string,\r\n): { authorization: string; canonicalRequest: string; stringToSign: string } {\r\n  const region = getTosRegion();\r\n  const date = tosDateFromTimestamp(timestamp);\r\n  const scope = `${date}/${region}/tos/request`;\r\n  const normalizedHeaders: Record<string, string> = {};\r\n  for (const [k, v] of Object.entries(headers)) {\r\n    normalizedHeaders[k.toLowerCase()] = v.trim();\r\n  }\r\n  const signedHeaderKeys = Object.keys(normalizedHeaders).sort();\r\n  const canonicalHeaders = signedHeaderKeys.map((k) => `${k}:${normalizedHeaders[k]}\\n`).join("");\r\n  const signedHeaders = signedHeaderKeys.join(";");\r\n  const canonicalRequest = [\r\n    method,\r\n    `/${tosUriEncode(objectKey)}`,\r\n    tosCanonicalQueryString(queryParams),\r\n    canonicalHeaders,\r\n    signedHeaders,\r\n    payloadHash,\r\n  ].join("\\n");\r\n  const hashedCanonicalRequest = crypto.createHash("sha256").update(canonicalRequest).digest("hex");\r\n  const stringToSign = [TOS_SIGNING_ALGORITHM, timestamp, scope, hashedCanonicalRequest].join("\\n");\r\n  const signingKey = tosSigningKey(date, region, tosSk());\r\n  const signature = crypto.createHmac("sha256", signingKey).update(stringToSign).digest("hex");\r\n  return {\r\n    authorization: `${TOS_SIGNING_ALGORITHM} Credential=${tosAk()}/${scope}, SignedHeaders=${signedHeaders}, Signature=${signature}`,\r\n    canonicalRequest,\r\n    stringToSign,\r\n  };\r\n}\r\nasync function tosFileExists(objectKey: string): Promise<boolean> {\r\n  const bucket = tosBucket();\r\n  const endpoint = tosEndpoint();\r\n  if (!bucket || !endpoint || !tosAk() || !tosSk()) return false;\r\n\r\n  const host = `${bucket}.${endpoint}`;\r\n  const timestamp = tosTimestamp();\r\n  const payloadHash = "UNSIGNED-PAYLOAD";\r\n  const token = tosSecurityToken();\r\n\r\n  const headers: Record<string, string> = {\r\n    host,\r\n    "x-tos-content-sha256": payloadHash,\r\n    "x-tos-date": timestamp,\r\n  };\r\n  if (token) headers["x-tos-security-token"] = token;\r\n\r\n  const { authorization } = tosSign("HEAD", objectKey, {}, headers, payloadHash, timestamp);\r\n\r\n  const reqHeaders: Record<string, string> = {\r\n    host,\r\n    "x-tos-content-sha256": payloadHash,\r\n    "x-tos-date": timestamp,\r\n    Authorization: authorization,\r\n  };\r\n  if (token) reqHeaders["x-tos-security-token"] = token;\r\n\r\n  const res = await fetch(`https://${host}/${tosUriEncode(objectKey)}`, {\r\n    method: "HEAD",\r\n    headers: reqHeaders,\r\n  });\r\n\r\n  if (res.status === 404) return false;\r\n  return res.ok;\r\n}\r\nasync function tosUpload(objectKey: string, data: Buffer, contentType: string): Promise<void> {\r\n  const bucket = tosBucket();\r\n  const endpoint = tosEndpoint();\r\n  if (!bucket || !endpoint || !tosAk() || !tosSk()) {\r\n    throw new Error("TOS \u914D\u7F6E\u4E0D\u5B8C\u6574");\r\n  }\r\n\r\n  const host = `${bucket}.${endpoint}`;\r\n  const timestamp = tosTimestamp();\r\n  const payloadHash = crypto.createHash("sha256").update(data).digest("hex");\r\n  const token = tosSecurityToken();\r\n\r\n  const headers: Record<string, string> = {\r\n    "content-type": contentType,\r\n    host,\r\n    "x-tos-content-sha256": payloadHash,\r\n    "x-tos-date": timestamp,\r\n  };\r\n  if (token) headers["x-tos-security-token"] = token;\r\n\r\n  const { authorization, canonicalRequest, stringToSign } = tosSign("PUT", objectKey, {}, headers, payloadHash, timestamp);\r\n\r\n  logger(`[TOS Debug] CanonicalRequest:\\n${canonicalRequest}`);\r\n  logger(`[TOS Debug] StringToSign:\\n${stringToSign}`);\r\n  logger(`[TOS] PUT https://${host}/${objectKey}`);\r\n\r\n  const reqHeaders: Record<string, string> = {\r\n    "Content-Type": contentType,\r\n    host,\r\n    "x-tos-content-sha256": payloadHash,\r\n    "x-tos-date": timestamp,\r\n    Authorization: authorization,\r\n  };\r\n  if (token) reqHeaders["x-tos-security-token"] = token;\r\n\r\n  const res = await fetch(`https://${host}/${tosUriEncode(objectKey)}`, {\r\n    method: "PUT",\r\n    headers: reqHeaders,\r\n    body: data,\r\n  });\r\n\r\n  if (!res.ok) {\r\n    const errText = await res.text().catch(() => `${res.status} ${res.statusText}`);\r\n    throw new Error(`TOS \u4E0A\u4F20\u5931\u8D25: ${errText}`);\r\n  }\r\n}\r\nfunction tosGetSignedUrl(objectKey: string, expiresIn: number = 7200): string {\r\n  const bucket = tosBucket();\r\n  const endpoint = tosEndpoint();\r\n  const host = `${bucket}.${endpoint}`;\r\n  const region = getTosRegion();\r\n  const timestamp = tosTimestamp();\r\n  const date = tosDateFromTimestamp(timestamp);\r\n  const scope = `${date}/${region}/tos/request`;\r\n  const token = tosSecurityToken();\r\n\r\n  const queryParams: Record<string, string> = {\r\n    "X-Tos-Algorithm": TOS_SIGNING_ALGORITHM,\r\n    "X-Tos-Credential": `${tosAk()}/${scope}`,\r\n    "X-Tos-Date": timestamp,\r\n    "X-Tos-Expires": String(expiresIn),\r\n    "X-Tos-SignedHeaders": "host",\r\n  };\r\n  if (token) queryParams["X-Tos-Security-Token"] = token;\r\n\r\n  const canonicalRequest = [\r\n    "GET",\r\n    `/${tosUriEncode(objectKey)}`,\r\n    tosCanonicalQueryString(queryParams),\r\n    `host:${host}\\n`,\r\n    "host",\r\n    "UNSIGNED-PAYLOAD",\r\n  ].join("\\n");\r\n\r\n  const hashedCanonicalRequest = crypto.createHash("sha256").update(canonicalRequest).digest("hex");\r\n  const stringToSign = [TOS_SIGNING_ALGORITHM, timestamp, scope, hashedCanonicalRequest].join("\\n");\r\n  const signingKey = tosSigningKey(date, region, tosSk());\r\n  const signature = crypto.createHmac("sha256", signingKey).update(stringToSign).digest("hex");\r\n\r\n  const finalQuery = tosCanonicalQueryString({\r\n    ...queryParams,\r\n    "X-Tos-Signature": signature,\r\n  });\r\n\r\n  return `https://${host}/${tosUriEncode(objectKey)}?${finalQuery}`;\r\n}\r\n/** \u4ECE base64 Data URL \u4E2D\u89E3\u6790 MIME \u7C7B\u578B\u548C\u6587\u4EF6\u6269\u5C55\u540D */\r\nfunction parseBase64(base64: string): { mimeType: string; ext: string; data: string } {\r\n  const match = base64.match(/^data:([^;]+);base64,(.+)$/);\r\n  if (!match) {\r\n    return { mimeType: "application/octet-stream", ext: "bin", data: base64 };\r\n  }\r\n  const mimeType = match[1];\r\n  const extMap: Record<string, string> = {\r\n    "image/png": "png",\r\n    "image/jpeg": "jpg",\r\n    "image/jpg": "jpg",\r\n    "image/webp": "webp",\r\n    "image/gif": "gif",\r\n    "image/bmp": "bmp",\r\n    "video/mp4": "mp4",\r\n    "video/quicktime": "mov",\r\n    "audio/mpeg": "mp3",\r\n    "audio/mp3": "mp3",\r\n    "audio/wav": "wav",\r\n    "audio/wave": "wav",\r\n    "audio/ogg": "ogg",\r\n    "audio/aac": "aac",\r\n  };\r\n  return { mimeType, ext: extMap[mimeType] || "bin", data: match[2] };\r\n}\r\n// source \uFF1Abase64\r\nasync function uploadAssets(source: string, type: "Image" | "Video" | "Audio"): Promise<string | null> {\r\n  try {\r\n    const { mimeType, ext, data: rawBase64 } = parseBase64(source);\r\n    const buffer = Buffer.from(rawBase64, "base64");\r\n    const hash = crypto.createHash("sha256").update(source).digest("hex");\r\n\r\n    const provider = getStorageProvider();\r\n    logger(provider);\r\n    const objectKey = `volcengine/${type.toLowerCase()}/${hash}.${ext}`;\r\n\r\n    let assetUrl: string;\r\n    const exists = await tosFileExists(objectKey);\r\n    if (!exists) {\r\n      logger(`[TOS] \u4E0A\u4F20\u6587\u4EF6: ${objectKey} (${mimeType})`);\r\n      await tosUpload(objectKey, buffer, mimeType);\r\n    } else {\r\n      logger(`[TOS] \u6587\u4EF6\u5DF2\u5B58\u5728\uFF0C\u8DF3\u8FC7\u4E0A\u4F20: ${objectKey}`);\r\n    }\r\n    assetUrl = tosGetSignedUrl(objectKey, 7200);\r\n\r\n    logger(`\u751F\u6210\u9884\u7B7E\u540DURL: ${assetUrl}`);\r\n\r\n    const res = await request("CreateAsset", {\r\n      GroupId: vendor.inputValues.groupId,\r\n      URL: assetUrl,\r\n      Name: hash,\r\n      AssetType: type,\r\n    });\r\n\r\n    if (!res.ok) {\r\n      const errorText = await res.text();\r\n      throw new Error(`\u521B\u5EFA\u8D44\u4EA7\u5931\u8D25: ${errorText}`);\r\n    }\r\n\r\n    const resData = await res.json();\r\n    const assetId: string = resData.Result.Id;\r\n    logger(`\u8D44\u4EA7\u5DF2\u521B\u5EFA: ${assetId}`);\r\n\r\n    const result = await pollTask(\r\n      async (): Promise<PollResult> => {\r\n        const queryRes = await request("GetAsset", { Id: assetId, AssetType: type });\r\n        if (!queryRes.ok) {\r\n          const errorText = await queryRes.text();\r\n          throw new Error(`\u67E5\u8BE2\u8D44\u4EA7\u72B6\u6001\u5931\u8D25: ${errorText}`);\r\n        }\r\n        const task = await queryRes.json();\r\n        const status: string = task.Result.Status;\r\n\r\n        logger(`[\u8D44\u4EA7\u8F6E\u8BE2] \u72B6\u6001: ${JSON.stringify(task, null, 2)}`);\r\n\r\n        switch (status) {\r\n          case "Active":\r\n            return { completed: true, data: assetId };\r\n          case "Failed":\r\n            return { completed: true, error: task.Result.Error?.Message || "\u8D44\u4EA7\u521B\u5EFA\u5931\u8D25" };\r\n          default:\r\n            return { completed: false };\r\n        }\r\n      },\r\n      10000,\r\n      600000 * 3,\r\n    );\r\n\r\n    if (result.error) {\r\n      throw new Error(result.error);\r\n    }\r\n\r\n    return `asset://${result.data}`;\r\n  } catch (err: any) {\r\n    const msg = typeof err?.message === "string" ? err.message : String(err);\r\n    logger(`[uploadAssets] \u4E0A\u4F20\u5931\u8D25: ${msg}`);\r\n    return source;\r\n  }\r\n}\r\n\r\n// ============================================================\r\n// \u8F85\u52A9\u5DE5\u5177\r\n// ============================================================\r\n\r\nconst getHeaders = () => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  return {\r\n    "Content-Type": "application/json",\r\n    Authorization: `Bearer ${vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "")}`,\r\n  };\r\n};\r\n\r\nconst getBaseUrl = () => vendor.inputValues.baseUrl.replace(/\\/+$/, "");\r\n\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\n\r\nconst textRequest = (model: TextModel, think: boolean, thinkLevel: 0 | 1 | 2 | 3) => {};\r\n\r\nconst imageRequest = async (config: ImageConfig, model: ImageModel) => {};\r\n\r\nconst videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {\r\n  const baseUrl = getBaseUrl();\r\n  const headers = getHeaders();\r\n\r\n  const content: any[] = [];\r\n\r\n  if (config.prompt) {\r\n    content.push({ type: "text", text: config.prompt });\r\n  }\r\n\r\n  if (typeof config.mode === "string") {\r\n    switch (config.mode) {\r\n      case "singleImage": {\r\n        const firstImage = config.referenceList?.find((r) => r.type === "image");\r\n        if (firstImage) {\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: firstImage.base64 },\r\n            role: "first_frame",\r\n          });\r\n        }\r\n        break;\r\n      }\r\n      case "startFrameOptional": {\r\n        const images = config.referenceList?.filter((r) => r.type === "image") ?? [];\r\n        if (images.length > 0) {\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: images[0].base64 },\r\n            role: "first_frame",\r\n          });\r\n          if (images.length > 1) {\r\n            content.push({\r\n              type: "image_url",\r\n              image_url: { url: images[1].base64 },\r\n              role: "last_frame",\r\n            });\r\n          }\r\n        }\r\n        break;\r\n      }\r\n      case "startEndRequired": {\r\n        const images = config.referenceList?.filter((r) => r.type === "image") ?? [];\r\n        if (images.length >= 2) {\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: images[0].base64 },\r\n            role: "first_frame",\r\n          });\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: images[1].base64 },\r\n            role: "last_frame",\r\n          });\r\n        }\r\n        break;\r\n      }\r\n      case "endFrameOptional": {\r\n        const images = config.referenceList?.filter((r) => r.type === "image") ?? [];\r\n        if (images.length > 0) {\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: images[0].base64 },\r\n            role: "first_frame",\r\n          });\r\n          if (images.length > 1) {\r\n            content.push({\r\n              type: "image_url",\r\n              image_url: { url: images[1].base64 },\r\n              role: "last_frame",\r\n            });\r\n          }\r\n        }\r\n        break;\r\n      }\r\n      case "text":\r\n      default:\r\n        break;\r\n    }\r\n  } else if (Array.isArray(config.mode)) {\r\n    // \u591A\u6A21\u6001\u53C2\u8003\u6A21\u5F0F\uFF1A\u6309\u7C7B\u578B\u5206\u522B\u63D0\u53D6\u5E76\u6DFB\u52A0\r\n    const imageRefs = config.referenceList?.filter((r) => r.type === "image") ?? [];\r\n    const videoRefs = config.referenceList?.filter((r) => r.type === "video") ?? [];\r\n    const audioRefs = config.referenceList?.filter((r) => r.type === "audio") ?? [];\r\n\r\n    for (const refDef of config.mode) {\r\n      if (typeof refDef === "string") {\r\n        if (refDef.startsWith("imageReference:")) {\r\n          const maxCount = parseInt(refDef.split(":")[1], 10);\r\n\r\n          for (const ref of imageRefs.slice(0, maxCount)) {\r\n            content.push({\r\n              type: "image_url",\r\n              image_url: { url: await uploadAssets(ref.base64, "Image") },\r\n              role: "reference_image",\r\n            });\r\n          }\r\n        } else if (refDef.startsWith("videoReference:")) {\r\n          const maxCount = parseInt(refDef.split(":")[1], 10);\r\n          for (const ref of videoRefs.slice(0, maxCount)) {\r\n            content.push({\r\n              type: "video_url",\r\n              video_url: { url: await uploadAssets(ref.base64, "Video") },\r\n              role: "reference_video",\r\n            });\r\n          }\r\n        } else if (refDef.startsWith("audioReference:")) {\r\n          const maxCount = parseInt(refDef.split(":")[1], 10);\r\n          for (const ref of audioRefs.slice(0, maxCount)) {\r\n            content.push({\r\n              type: "audio_url",\r\n              audio_url: { url: await uploadAssets(ref.base64, "Audio") },\r\n              role: "reference_audio",\r\n            });\r\n          }\r\n        }\r\n      }\r\n    }\r\n  }\r\n  const body: any = {\r\n    model: model.modelName,\r\n    content,\r\n    ratio: config.aspectRatio,\r\n    duration: config.duration,\r\n    resolution: config.resolution || "720p",\r\n    watermark: false,\r\n  };\r\n\r\n  if (model.audio === "optional") {\r\n    body.generate_audio = config.audio !== false;\r\n  } else if (model.audio === true) {\r\n    body.generate_audio = true;\r\n  } else {\r\n    body.generate_audio = false;\r\n  }\r\n  logger(`[\u89C6\u9891\u751F\u6210] \u63D0\u4EA4\u4EFB\u52A1, \u6A21\u578B: ${model.modelName}, \u65F6\u957F: ${config.duration}s, \u5206\u8FA8\u7387: ${config.resolution}`);\r\n  const res = await fetch(`${baseUrl}/contents/generations/tasks`, {\r\n    method: "POST",\r\n    headers,\r\n    body: JSON.stringify(body),\r\n  });\r\n\r\n  if (!res.ok) {\r\n    const errorText = await res.text();\r\n    throw new Error(`\u89C6\u9891\u751F\u6210\u4EFB\u52A1\u521B\u5EFA\u5931\u8D25: ${errorText}`);\r\n  }\r\n  const createResponse = await res.json();\r\n  logger(createResponse);\r\n  const taskId = createResponse?.id;\r\n\r\n  if (!taskId) {\r\n    throw new Error("\u89C6\u9891\u751F\u6210\u4EFB\u52A1\u521B\u5EFA\u5931\u8D25\uFF1A\u672A\u8FD4\u56DE\u4EFB\u52A1ID");\r\n  }\r\n\r\n  logger(`[\u89C6\u9891\u751F\u6210] \u4EFB\u52A1\u5DF2\u521B\u5EFA, ID: ${taskId}`);\r\n\r\n  const result = await pollTask(\r\n    async (): Promise<PollResult> => {\r\n      const queryRes = await fetch(`${baseUrl}/contents/generations/tasks/${taskId}`, {\r\n        method: "GET",\r\n        headers,\r\n      });\r\n      if (!queryRes.ok) {\r\n        const errorText = await queryRes.text();\r\n        throw new Error(`\u67E5\u8BE2\u89C6\u9891\u751F\u6210\u4EFB\u52A1\u72B6\u6001\u5931\u8D25: ${errorText}`);\r\n      }\r\n      const task = await queryRes.json();\r\n\r\n      logger(`[\u89C6\u9891\u751F\u6210] \u4EFB\u52A1\u72B6\u6001: ${JSON.stringify(task)}`);\r\n\r\n      switch (task.status) {\r\n        case "succeeded":\r\n          if (task.content?.video_url) {\r\n            return { completed: true, data: task.content.video_url };\r\n          }\r\n          return { completed: true, error: "\u4EFB\u52A1\u6210\u529F\u4F46\u672A\u8FD4\u56DE\u89C6\u9891URL" };\r\n        case "failed":\r\n          return { completed: true, error: task.error?.message || "\u89C6\u9891\u751F\u6210\u5931\u8D25" };\r\n        case "expired":\r\n          return { completed: true, error: "\u89C6\u9891\u751F\u6210\u4EFB\u52A1\u8D85\u65F6" };\r\n        case "cancelled":\r\n          return { completed: true, error: "\u89C6\u9891\u751F\u6210\u4EFB\u52A1\u5DF2\u53D6\u6D88" };\r\n        default:\r\n          return { completed: false };\r\n      }\r\n    },\r\n    10000,\r\n    600000 * 3,\r\n  );\r\n\r\n  if (result.error) {\r\n    throw new Error(result.error);\r\n  }\r\n\r\n  return result.data!;\r\n};\r\n\r\nconst ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst checkForUpdates = async (): Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }> => {\r\n  return { hasUpdate: false, latestVersion: "2.0", notice: "" };\r\n};\r\n\r\nconst updateVendor = async (): Promise<string> => {\r\n  return "";\r\n};\r\n\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\n\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\nexports.checkForUpdates = checkForUpdates;\r\nexports.updateVendor = updateVendor;\r\n\r\nexport {};\r\n'
+      "volcengineSd2.ts": '/**\r\n * Toonflow AI\u4F9B\u5E94\u5546\u6A21\u677F - \u706B\u5C71\u5F15\u64CE(\u8C46\u5305)\r\n * @version 2.0\r\n */\r\n\r\n// ============================================================\r\n// \u7C7B\u578B\u5B9A\u4E49\r\n// ============================================================\r\n\r\ntype VideoMode =\r\n  | "singleImage"\r\n  | "startEndRequired"\r\n  | "endFrameOptional"\r\n  | "startFrameOptional"\r\n  | "text"\r\n  | (`videoReference:${number}` | `imageReference:${number}` | `audioReference:${number}`)[];\r\n\r\ninterface TextModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "text";\r\n  think: boolean;\r\n}\r\n\r\ninterface ImageModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "image";\r\n  mode: ("text" | "singleImage" | "multiReference")[];\r\n  associationSkills?: string;\r\n}\r\n\r\ninterface VideoModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "video";\r\n  mode: VideoMode[];\r\n  associationSkills?: string;\r\n  audio: "optional" | false | true;\r\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\r\n}\r\n\r\ninterface TTSModel {\r\n  name: string;\r\n  modelName: string;\r\n  type: "tts";\r\n  voices: { title: string; voice: string }[];\r\n}\r\n\r\ninterface VendorConfig {\r\n  id: string;\r\n  version: string;\r\n  name: string;\r\n  author: string;\r\n  description?: string;\r\n  icon?: string;\r\n  inputs: { key: string; label: string; type: "text" | "password" | "url"; required: boolean; placeholder?: string }[];\r\n  inputValues: Record<string, string>;\r\n  models: (TextModel | ImageModel | VideoModel | TTSModel)[];\r\n}\r\n\r\ntype ReferenceList =\r\n  | { type: "image"; sourceType: "base64"; base64: string }\r\n  | { type: "audio"; sourceType: "base64"; base64: string }\r\n  | { type: "video"; sourceType: "base64"; base64: string };\r\n\r\ninterface ImageConfig {\r\n  prompt: string;\r\n  referenceList?: Extract<ReferenceList, { type: "image" }>[];\r\n  size: "1K" | "2K" | "4K";\r\n  aspectRatio: `${number}:${number}`;\r\n}\r\n\r\ninterface VideoConfig {\r\n  duration: number;\r\n  resolution: string;\r\n  aspectRatio: "16:9" | "9:16";\r\n  prompt: string;\r\n  referenceList?: ReferenceList[];\r\n  audio?: boolean;\r\n  mode: VideoMode[];\r\n}\r\n\r\ninterface TTSConfig {\r\n  text: string;\r\n  voice: string;\r\n  speechRate: number;\r\n  pitchRate: number;\r\n  volume: number;\r\n  referenceList?: Extract<ReferenceList, { type: "audio" }>[];\r\n}\r\n\r\ninterface PollResult {\r\n  completed: boolean;\r\n  data?: string;\r\n  error?: string;\r\n}\r\n\r\n// ============================================================\r\n// \u5168\u5C40\u58F0\u660E\r\n// ============================================================\r\n\r\ndeclare const axios: any;\r\ndeclare const logger: (msg: string) => void;\r\ndeclare const jsonwebtoken: any;\r\ndeclare const zipImage: (base64: string, size: number) => Promise<string>;\r\ndeclare const zipImageResolution: (base64: string, w: number, h: number) => Promise<string>;\r\ndeclare const mergeImages: (base64Arr: string[], maxSize?: string) => Promise<string>;\r\ndeclare const urlToBase64: (url: string) => Promise<string>;\r\ndeclare const pollTask: (fn: () => Promise<PollResult>, interval?: number, timeout?: number) => Promise<PollResult>;\r\ndeclare const createOpenAI: any;\r\ndeclare const createDeepSeek: any;\r\ndeclare const createZhipu: any;\r\ndeclare const createQwen: any;\r\ndeclare const createAnthropic: any;\r\ndeclare const createOpenAICompatible: any;\r\ndeclare const createXai: any;\r\ndeclare const createMinimax: any;\r\ndeclare const createGoogleGenerativeAI: any;\r\ndeclare const crypto: any;\r\ndeclare const exports: {\r\n  vendor: VendorConfig;\r\n  textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;\r\n  imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;\r\n  videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;\r\n  ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;\r\n  checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;\r\n  updateVendor?: () => Promise<string>;\r\n};\r\n\r\n// \u5E38\u91CF\u914D\u7F6E\r\nconst SERVICE = "ark";\r\nconst VERSION = "2024-01-01";\r\nconst REGION = "cn-beijing";\r\nconst HOST = "ark.cn-beijing.volcengineapi.com";\r\nconst CONTENT_TYPE = "application/json";\r\nconst SIGNED_HEADERS = "content-type;host;x-content-sha256;x-date";\r\nconst PATH = "/";\r\nconst TIMEOUT = 120_000;\r\n\r\n// ============================================================\r\n// \u4F9B\u5E94\u5546\u914D\u7F6E\r\n// ============================================================\r\n\r\nconst vendor: VendorConfig = {\r\n  id: "volcengineSd2",\r\n  version: "2.0",\r\n  author: "toonflow",\r\n  name: "\u706B\u5C71\u5F15\u64CEsd2.0\u771F\u4EBA",\r\n  description: "\u706B\u5C71\u5F15\u64CE\u8C46\u5305\u5927\u6A21\u578B\uFF0C\u652F\u6301\u6587\u672C\u3001\u56FE\u7247\u751F\u6210\u3001\u89C6\u9891\u751F\u6210\u7B49\u80FD\u529B\u3002\\n\\n\u9700\u8981\u5728[\u706B\u5C71\u5F15\u64CE\u63A7\u5236\u53F0](https://console.volcengine.com/ark)\u83B7\u53D6API\u5BC6\u94A5\u3002",\r\n  icon: "",\r\n  inputs: [\r\n    { key: "apiKey", label: "API\u5BC6\u94A5", type: "password", required: true, placeholder: "\u706B\u5C71\u5F15\u64CEAPI Key" },\r\n    { key: "baseUrl", label: "\u8BF7\u6C42\u5730\u5740", type: "url", required: true, placeholder: "\u4EE5v3\u7ED3\u675F\uFF0C\u793A\u4F8B\uFF1Ahttps://ark.cn-beijing.volces.com/api/v3" },\r\n    { key: "ak", label: "\u706B\u5C71 Access Key ID", type: "text", required: true, placeholder: "\u706B\u5C71\u5F15\u64CE/OSS API\u8BBF\u95EE\u5BC6\u94A5" },\r\n    { key: "sk", label: "\u706B\u5C71 Secret Access Key", type: "password", required: true, placeholder: "\u706B\u5C71\u5F15\u64CE/OSS Secret Access Key" },\r\n    { key: "groupId", label: "\u8D44\u4EA7\u7EC4ID", type: "text", required: true, placeholder: "\u706B\u5C71\u5F15\u64CE\u8D44\u4EA7\u7EC4ID" },\r\n    { key: "tosEndpoint", label: "\u706B\u5C71TOS Endpoint", type: "url", required: true, placeholder: "\u5982 tos-cn-beijing.volces.com" },\r\n    { key: "tosBucket", label: "\u706B\u5C71TOS Bucket", type: "text", required: true, placeholder: "Bucket \u540D\u79F0" },\r\n  ],\r\n  inputValues: {\r\n    apiKey: "",\r\n    baseUrl: "https://ark.cn-beijing.volces.com/api/v3",\r\n    ak: "",\r\n    sk: "",\r\n    groupId: "",\r\n    tosEndpoint: "",\r\n    tosBucket: "",\r\n  },\r\n  models: [\r\n    {\r\n      name: "Seedance-2.0(\u97F3\u753B\u540C\u751F)",\r\n      modelName: "doubao-seedance-2-0-260128",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional", ["imageReference:9", "videoReference:3", "audioReference:3"]],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-2.0-Fast(\u97F3\u753B\u540C\u751F)",\r\n      modelName: "doubao-seedance-2-0-fast-260128",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional", ["imageReference:9", "videoReference:3", "audioReference:3"]],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p"] }],\r\n    },\r\n    {\r\n      name: "Seedance-1.5-Pro(\u97F3\u753B\u540C\u751F)",\r\n      modelName: "doubao-seedance-1-5-pro-251215",\r\n      type: "video",\r\n      mode: ["text", "startFrameOptional"],\r\n      audio: "optional",\r\n      durationResolutionMap: [{ duration: [4, 5, 6, 7, 8, 9, 10, 11, 12], resolution: ["480p", "720p", "1080p"] }],\r\n    },\r\n  ],\r\n};\r\n/** \u7B7E\u540D\u5BC6\u94A5\u6D3E\u751F */\r\nfunction deriveSigningKey(shortDate: string) {\r\n  const kDate = crypto.createHmac("sha256", vendor.inputValues.sk).update(shortDate).digest();\r\n  const kRegion = crypto.createHmac("sha256", kDate).update(REGION).digest();\r\n  const kService = crypto.createHmac("sha256", kRegion).update(SERVICE).digest();\r\n  return crypto.createHmac("sha256", kService).update("request").digest();\r\n}\r\nfunction encodeQueryComponent(str: string): string {\r\n  return encodeURIComponent(str).replace(/!/g, "%21").replace(/\'/g, "%27").replace(/\\(/g, "%28").replace(/\\)/g, "%29").replace(/\\*/g, "%2A");\r\n}\r\nfunction buildQueryString(params: Record<string, string>): string {\r\n  return Object.keys(params)\r\n    .sort()\r\n    .map((key) => {\r\n      const value = params[key];\r\n      return value === "" ? encodeQueryComponent(key) : `${encodeQueryComponent(key)}=${encodeQueryComponent(value)}`;\r\n    })\r\n    .join("&");\r\n}\r\n/**\r\n * \u706B\u5C71\u5F15\u64CE HMAC-SHA256 \u7B7E\u540D\u8BF7\u6C42\r\n * @param action  API Action \u540D\u79F0\r\n * @param body    \u8BF7\u6C42\u4F53\u5BF9\u8C61\uFF08\u81EA\u52A8\u5E8F\u5217\u5316\u4E3A JSON\uFF09\r\n * @param method  HTTP \u65B9\u6CD5\uFF0C\u9ED8\u8BA4 POST\r\n * @param header  \u989D\u5916\u7684\u81EA\u5B9A\u4E49\u8BF7\u6C42\u5934\r\n */\r\nasync function request(\r\n  action: string,\r\n  body: Record<string, unknown>,\r\n  method: "GET" | "POST" = "POST",\r\n  header: Record<string, string> = {},\r\n): Promise<any> {\r\n  const bodyStr = JSON.stringify(body);\r\n\r\n  // \u67E5\u8BE2\u53C2\u6570\uFF08\u6309 key \u6392\u5E8F\uFF09\r\n  const sortedQuery = Object.fromEntries(Object.entries({ Action: action, Version: VERSION }).sort(([a], [b]) => a.localeCompare(b)));\r\n\r\n  // \u65F6\u95F4\u6233 & \u5185\u5BB9\u54C8\u5E0C\r\n  const date = new Date().toISOString().replace(/[-:]/g, "").replace(/\\..+/, "Z");\r\n  const shortDate = date.slice(0, 8);\r\n  const xContentSha256 = crypto.createHash("sha256").update(bodyStr).digest("hex");\r\n\r\n  // \u89C4\u8303\u5316\u8BF7\u6C42\u5B57\u7B26\u4E32\r\n  const queryString = buildQueryString(sortedQuery as Record<string, string>);\r\n  const canonicalRequest = [\r\n    method,\r\n    PATH,\r\n    queryString,\r\n    `content-type:${CONTENT_TYPE}`,\r\n    `host:${HOST}`,\r\n    `x-content-sha256:${xContentSha256}`,\r\n    `x-date:${date}`,\r\n    "",\r\n    SIGNED_HEADERS,\r\n    xContentSha256,\r\n  ].join("\\n");\r\n\r\n  const hashedCanonicalRequest = crypto.createHash("sha256").update(canonicalRequest).digest("hex");\r\n  const credentialScope = `${shortDate}/${REGION}/${SERVICE}/request`;\r\n  const stringToSign = `HMAC-SHA256\\n${date}\\n${credentialScope}\\n${hashedCanonicalRequest}`;\r\n\r\n  // \u8BA1\u7B97\u7B7E\u540D\r\n  const signingKey = deriveSigningKey(shortDate);\r\n  const signature = crypto.createHmac("sha256", signingKey).update(stringToSign).digest("hex");\r\n\r\n  // \u7EC4\u88C5\u8BF7\u6C42\u5934\r\n  const authorization = `HMAC-SHA256 Credential=${vendor.inputValues.ak}/${credentialScope}, SignedHeaders=${SIGNED_HEADERS}, Signature=${signature}`;\r\n  const headers: Record<string, string> = {\r\n    Host: HOST,\r\n    "X-Content-Sha256": xContentSha256,\r\n    "X-Date": date,\r\n    "Content-Type": CONTENT_TYPE,\r\n    Authorization: authorization,\r\n    ...header,\r\n  };\r\n  return fetch(`https://${HOST}${PATH}?${queryString}`, {\r\n    method,\r\n    headers,\r\n    body: bodyStr,\r\n  });\r\n}\r\n\r\n// ============================================================\r\n// \u706B\u5C71\u5F15\u64CE TOS V4 \u7B7E\u540D\u5DE5\u5177\u51FD\u6570\r\n// ============================================================\r\nconst TOS_SIGNING_ALGORITHM = "TOS4-HMAC-SHA256";\r\nfunction getTosRegion(): string {\r\n  const ep = (vendor.inputValues.tosEndpoint || "").trim();\r\n  const match = ep.match(/tos-([^.]+)\\.volces\\.com/);\r\n  return match ? match[1] : "cn-beijing";\r\n}\r\nfunction tosTimestamp(): string {\r\n  return new Date()\r\n    .toISOString()\r\n    .replace(/[-:]/g, "")\r\n    .replace(/\\.\\d{3}Z$/, "Z");\r\n}\r\nfunction tosDateFromTimestamp(ts: string): string {\r\n  return ts.slice(0, 8);\r\n}\r\nfunction tosBucket(): string {\r\n  return (vendor.inputValues.tosBucket || "").trim();\r\n}\r\nfunction tosEndpoint(): string {\r\n  return (vendor.inputValues.tosEndpoint || "").trim();\r\n}\r\nfunction tosAk(): string {\r\n  logger(vendor.inputValues.ak);\r\n\r\n  return (vendor.inputValues.ak || "").trim();\r\n}\r\nfunction tosSk(): string {\r\n  logger(vendor.inputValues.sk);\r\n  return (vendor.inputValues.sk || "").trim();\r\n}\r\nfunction hasCompleteTosConfig(): boolean {\r\n  return Boolean(tosEndpoint() && tosBucket() && tosAk() && tosSk());\r\n}\r\nfunction tosSecurityToken(): string {\r\n  return (vendor.inputValues.securityToken || vendor.inputValues.sessionToken || "").trim();\r\n}\r\nfunction getStorageProvider(): "tos" | "oss" {\r\n  if (hasCompleteTosConfig()) return "tos";\r\n  throw new Error("\u672A\u68C0\u6D4B\u5230\u53EF\u7528\u5BF9\u8C61\u5B58\u50A8\u914D\u7F6E\uFF0C\u8BF7\u586B\u5199\u5B8C\u6574\u7684 TOS \u6216 OSS \u914D\u7F6E");\r\n}\r\nfunction tosUriEncode(str: string, encodeSlash: boolean = false): string {\r\n  const encoded = encodeURIComponent(str).replace(/!/g, "%21").replace(/\'/g, "%27").replace(/\\(/g, "%28").replace(/\\)/g, "%29").replace(/\\*/g, "%2A");\r\n  return encodeSlash ? encoded : encoded.replace(/%2F/gi, "/");\r\n}\r\nfunction tosCanonicalQueryString(params: Record<string, string>): string {\r\n  if (!Object.keys(params).length) return "";\r\n  return Object.keys(params)\r\n    .sort()\r\n    .map((k) => `${tosUriEncode(k, true)}=${tosUriEncode(params[k], true)}`)\r\n    .join("&");\r\n}\r\nfunction tosSigningKey(date: string, region: string, sk: string): Buffer {\r\n  const kDate = crypto.createHmac("sha256", Buffer.from(sk, "utf8")).update(date, "utf8").digest();\r\n\r\n  const kRegion = crypto.createHmac("sha256", kDate).update(region, "utf8").digest();\r\n\r\n  const kService = crypto.createHmac("sha256", kRegion).update("tos", "utf8").digest();\r\n\r\n  return crypto.createHmac("sha256", kService).update("request", "utf8").digest();\r\n}\r\nfunction tosSign(\r\n  method: string,\r\n  objectKey: string,\r\n  queryParams: Record<string, string>,\r\n  headers: Record<string, string>,\r\n  payloadHash: string,\r\n  timestamp: string,\r\n): { authorization: string; canonicalRequest: string; stringToSign: string } {\r\n  const region = getTosRegion();\r\n  const date = tosDateFromTimestamp(timestamp);\r\n  const scope = `${date}/${region}/tos/request`;\r\n  const normalizedHeaders: Record<string, string> = {};\r\n  for (const [k, v] of Object.entries(headers)) {\r\n    normalizedHeaders[k.toLowerCase()] = v.trim();\r\n  }\r\n  const signedHeaderKeys = Object.keys(normalizedHeaders).sort();\r\n  const canonicalHeaders = signedHeaderKeys.map((k) => `${k}:${normalizedHeaders[k]}\\n`).join("");\r\n  const signedHeaders = signedHeaderKeys.join(";");\r\n  const canonicalRequest = [\r\n    method,\r\n    `/${tosUriEncode(objectKey)}`,\r\n    tosCanonicalQueryString(queryParams),\r\n    canonicalHeaders,\r\n    signedHeaders,\r\n    payloadHash,\r\n  ].join("\\n");\r\n  const hashedCanonicalRequest = crypto.createHash("sha256").update(canonicalRequest).digest("hex");\r\n  const stringToSign = [TOS_SIGNING_ALGORITHM, timestamp, scope, hashedCanonicalRequest].join("\\n");\r\n  const signingKey = tosSigningKey(date, region, tosSk());\r\n  const signature = crypto.createHmac("sha256", signingKey).update(stringToSign).digest("hex");\r\n  return {\r\n    authorization: `${TOS_SIGNING_ALGORITHM} Credential=${tosAk()}/${scope}, SignedHeaders=${signedHeaders}, Signature=${signature}`,\r\n    canonicalRequest,\r\n    stringToSign,\r\n  };\r\n}\r\nasync function tosFileExists(objectKey: string): Promise<boolean> {\r\n  const bucket = tosBucket();\r\n  const endpoint = tosEndpoint();\r\n  if (!bucket || !endpoint || !tosAk() || !tosSk()) return false;\r\n\r\n  const host = `${bucket}.${endpoint}`;\r\n  const timestamp = tosTimestamp();\r\n  const payloadHash = "UNSIGNED-PAYLOAD";\r\n  const token = tosSecurityToken();\r\n\r\n  const headers: Record<string, string> = {\r\n    host,\r\n    "x-tos-content-sha256": payloadHash,\r\n    "x-tos-date": timestamp,\r\n  };\r\n  if (token) headers["x-tos-security-token"] = token;\r\n\r\n  const { authorization } = tosSign("HEAD", objectKey, {}, headers, payloadHash, timestamp);\r\n\r\n  const reqHeaders: Record<string, string> = {\r\n    host,\r\n    "x-tos-content-sha256": payloadHash,\r\n    "x-tos-date": timestamp,\r\n    Authorization: authorization,\r\n  };\r\n  if (token) reqHeaders["x-tos-security-token"] = token;\r\n\r\n  const res = await fetch(`https://${host}/${tosUriEncode(objectKey)}`, {\r\n    method: "HEAD",\r\n    headers: reqHeaders,\r\n  });\r\n\r\n  if (res.status === 404) return false;\r\n  return res.ok;\r\n}\r\nasync function tosUpload(objectKey: string, data: Buffer, contentType: string): Promise<void> {\r\n  const bucket = tosBucket();\r\n  const endpoint = tosEndpoint();\r\n  if (!bucket || !endpoint || !tosAk() || !tosSk()) {\r\n    throw new Error("TOS \u914D\u7F6E\u4E0D\u5B8C\u6574");\r\n  }\r\n\r\n  const host = `${bucket}.${endpoint}`;\r\n  const timestamp = tosTimestamp();\r\n  const payloadHash = crypto.createHash("sha256").update(data).digest("hex");\r\n  const token = tosSecurityToken();\r\n\r\n  const headers: Record<string, string> = {\r\n    "content-type": contentType,\r\n    host,\r\n    "x-tos-content-sha256": payloadHash,\r\n    "x-tos-date": timestamp,\r\n  };\r\n  if (token) headers["x-tos-security-token"] = token;\r\n\r\n  const { authorization, canonicalRequest, stringToSign } = tosSign("PUT", objectKey, {}, headers, payloadHash, timestamp);\r\n\r\n  logger(`[TOS Debug] CanonicalRequest:\\n${canonicalRequest}`);\r\n  logger(`[TOS Debug] StringToSign:\\n${stringToSign}`);\r\n  logger(`[TOS] PUT https://${host}/${objectKey}`);\r\n\r\n  const reqHeaders: Record<string, string> = {\r\n    "Content-Type": contentType,\r\n    host,\r\n    "x-tos-content-sha256": payloadHash,\r\n    "x-tos-date": timestamp,\r\n    Authorization: authorization,\r\n  };\r\n  if (token) reqHeaders["x-tos-security-token"] = token;\r\n\r\n  const res = await fetch(`https://${host}/${tosUriEncode(objectKey)}`, {\r\n    method: "PUT",\r\n    headers: reqHeaders,\r\n    body: data,\r\n  });\r\n\r\n  if (!res.ok) {\r\n    const errText = await res.text().catch(() => `${res.status} ${res.statusText}`);\r\n    throw new Error(`TOS \u4E0A\u4F20\u5931\u8D25: ${errText}`);\r\n  }\r\n}\r\nfunction tosGetSignedUrl(objectKey: string, expiresIn: number = 7200): string {\r\n  const bucket = tosBucket();\r\n  const endpoint = tosEndpoint();\r\n  const host = `${bucket}.${endpoint}`;\r\n  const region = getTosRegion();\r\n  const timestamp = tosTimestamp();\r\n  const date = tosDateFromTimestamp(timestamp);\r\n  const scope = `${date}/${region}/tos/request`;\r\n  const token = tosSecurityToken();\r\n\r\n  const queryParams: Record<string, string> = {\r\n    "X-Tos-Algorithm": TOS_SIGNING_ALGORITHM,\r\n    "X-Tos-Credential": `${tosAk()}/${scope}`,\r\n    "X-Tos-Date": timestamp,\r\n    "X-Tos-Expires": String(expiresIn),\r\n    "X-Tos-SignedHeaders": "host",\r\n  };\r\n  if (token) queryParams["X-Tos-Security-Token"] = token;\r\n\r\n  const canonicalRequest = [\r\n    "GET",\r\n    `/${tosUriEncode(objectKey)}`,\r\n    tosCanonicalQueryString(queryParams),\r\n    `host:${host}\\n`,\r\n    "host",\r\n    "UNSIGNED-PAYLOAD",\r\n  ].join("\\n");\r\n\r\n  const hashedCanonicalRequest = crypto.createHash("sha256").update(canonicalRequest).digest("hex");\r\n  const stringToSign = [TOS_SIGNING_ALGORITHM, timestamp, scope, hashedCanonicalRequest].join("\\n");\r\n  const signingKey = tosSigningKey(date, region, tosSk());\r\n  const signature = crypto.createHmac("sha256", signingKey).update(stringToSign).digest("hex");\r\n\r\n  const finalQuery = tosCanonicalQueryString({\r\n    ...queryParams,\r\n    "X-Tos-Signature": signature,\r\n  });\r\n\r\n  return `https://${host}/${tosUriEncode(objectKey)}?${finalQuery}`;\r\n}\r\n/** \u4ECE base64 Data URL \u4E2D\u89E3\u6790 MIME \u7C7B\u578B\u548C\u6587\u4EF6\u6269\u5C55\u540D */\r\nfunction parseBase64(base64: string): { mimeType: string; ext: string; data: string } {\r\n  const match = base64.match(/^data:([^;]+);base64,(.+)$/);\r\n  if (!match) {\r\n    return { mimeType: "application/octet-stream", ext: "bin", data: base64 };\r\n  }\r\n  const mimeType = match[1];\r\n  const extMap: Record<string, string> = {\r\n    "image/png": "png",\r\n    "image/jpeg": "jpg",\r\n    "image/jpg": "jpg",\r\n    "image/webp": "webp",\r\n    "image/gif": "gif",\r\n    "image/bmp": "bmp",\r\n    "video/mp4": "mp4",\r\n    "video/quicktime": "mov",\r\n    "audio/mpeg": "mp3",\r\n    "audio/mp3": "mp3",\r\n    "audio/wav": "wav",\r\n    "audio/wave": "wav",\r\n    "audio/ogg": "ogg",\r\n    "audio/aac": "aac",\r\n  };\r\n  return { mimeType, ext: extMap[mimeType] || "bin", data: match[2] };\r\n}\r\n// source \uFF1Abase64\r\nasync function uploadAssets(source: string, type: "Image" | "Video" | "Audio"): Promise<string | null> {\r\n  try {\r\n    const { mimeType, ext, data: rawBase64 } = parseBase64(source);\r\n    const buffer = Buffer.from(rawBase64, "base64");\r\n    const hash = crypto.createHash("sha256").update(source).digest("hex");\r\n\r\n    const provider = getStorageProvider();\r\n    logger(provider);\r\n    const objectKey = `volcengine/${type.toLowerCase()}/${hash}.${ext}`;\r\n\r\n    let assetUrl: string;\r\n    const exists = await tosFileExists(objectKey);\r\n    if (!exists) {\r\n      logger(`[TOS] \u4E0A\u4F20\u6587\u4EF6: ${objectKey} (${mimeType})`);\r\n      await tosUpload(objectKey, buffer, mimeType);\r\n    } else {\r\n      logger(`[TOS] \u6587\u4EF6\u5DF2\u5B58\u5728\uFF0C\u8DF3\u8FC7\u4E0A\u4F20: ${objectKey}`);\r\n    }\r\n    assetUrl = tosGetSignedUrl(objectKey, 7200);\r\n\r\n    logger(`\u751F\u6210\u9884\u7B7E\u540DURL: ${assetUrl}`);\r\n\r\n    const res = await request("CreateAsset", {\r\n      GroupId: vendor.inputValues.groupId,\r\n      URL: assetUrl,\r\n      Name: hash,\r\n      AssetType: type,\r\n    });\r\n\r\n    if (!res.ok) {\r\n      const errorText = await res.text();\r\n      throw new Error(`\u521B\u5EFA\u8D44\u4EA7\u5931\u8D25: ${errorText}`);\r\n    }\r\n\r\n    const resData = await res.json();\r\n    const assetId: string = resData.Result.Id;\r\n    logger(`\u8D44\u4EA7\u5DF2\u521B\u5EFA: ${assetId}`);\r\n\r\n    const result = await pollTask(\r\n      async (): Promise<PollResult> => {\r\n        const queryRes = await request("GetAsset", { Id: assetId, AssetType: type });\r\n        if (!queryRes.ok) {\r\n          const errorText = await queryRes.text();\r\n          throw new Error(`\u67E5\u8BE2\u8D44\u4EA7\u72B6\u6001\u5931\u8D25: ${errorText}`);\r\n        }\r\n        const task = await queryRes.json();\r\n        const status: string = task.Result.Status;\r\n\r\n        logger(`[\u8D44\u4EA7\u8F6E\u8BE2] \u72B6\u6001: ${JSON.stringify(task, null, 2)}`);\r\n\r\n        switch (status) {\r\n          case "Active":\r\n            return { completed: true, data: assetId };\r\n          case "Failed":\r\n            return { completed: true, error: task.Result.Error?.Message || "\u8D44\u4EA7\u521B\u5EFA\u5931\u8D25" };\r\n          default:\r\n            return { completed: false };\r\n        }\r\n      },\r\n      10000,\r\n      600000 * 3,\r\n    );\r\n\r\n    if (result.error) {\r\n      throw new Error(result.error);\r\n    }\r\n\r\n    return `asset://${result.data}`;\r\n  } catch (err: any) {\r\n    const msg = typeof err?.message === "string" ? err.message : String(err);\r\n    logger(`[uploadAssets] \u4E0A\u4F20\u5931\u8D25: ${msg}`);\r\n    return source;\r\n  }\r\n}\r\n\r\n// ============================================================\r\n// \u8F85\u52A9\u5DE5\u5177\r\n// ============================================================\r\n\r\nconst getHeaders = () => {\r\n  if (!vendor.inputValues.apiKey) throw new Error("\u7F3A\u5C11API Key");\r\n  return {\r\n    "Content-Type": "application/json",\r\n    Authorization: `Bearer ${vendor.inputValues.apiKey.replace(/^Bearer\\s+/i, "")}`,\r\n  };\r\n};\r\n\r\nconst getBaseUrl = () => vendor.inputValues.baseUrl.replace(/\\/+$/, "");\r\n\r\n// ============================================================\r\n// \u9002\u914D\u5668\u51FD\u6570\r\n// ============================================================\r\n\r\nconst textRequest = (model: TextModel, think: boolean, thinkLevel: 0 | 1 | 2 | 3) => {};\r\n\r\nconst imageRequest = async (config: ImageConfig, model: ImageModel) => {};\r\n\r\nconst videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {\r\n  const baseUrl = getBaseUrl();\r\n  const headers = getHeaders();\r\n\r\n  const content: any[] = [];\r\n\r\n  if (config.prompt) {\r\n    content.push({ type: "text", text: config.prompt });\r\n  }\r\n\r\n  if (typeof config.mode === "string") {\r\n    switch (config.mode) {\r\n      case "singleImage": {\r\n        const firstImage = config.referenceList?.find((r) => r.type === "image");\r\n        if (firstImage) {\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: firstImage.base64 },\r\n            role: "first_frame",\r\n          });\r\n        }\r\n        break;\r\n      }\r\n      case "startFrameOptional": {\r\n        const images = config.referenceList?.filter((r) => r.type === "image") ?? [];\r\n        if (images.length > 0) {\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: images[0].base64 },\r\n            role: "first_frame",\r\n          });\r\n          if (images.length > 1) {\r\n            content.push({\r\n              type: "image_url",\r\n              image_url: { url: images[1].base64 },\r\n              role: "last_frame",\r\n            });\r\n          }\r\n        }\r\n        break;\r\n      }\r\n      case "startEndRequired": {\r\n        const images = config.referenceList?.filter((r) => r.type === "image") ?? [];\r\n        if (images.length >= 2) {\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: images[0].base64 },\r\n            role: "first_frame",\r\n          });\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: images[1].base64 },\r\n            role: "last_frame",\r\n          });\r\n        }\r\n        break;\r\n      }\r\n      case "endFrameOptional": {\r\n        const images = config.referenceList?.filter((r) => r.type === "image") ?? [];\r\n        if (images.length > 0) {\r\n          content.push({\r\n            type: "image_url",\r\n            image_url: { url: images[0].base64 },\r\n            role: "first_frame",\r\n          });\r\n          if (images.length > 1) {\r\n            content.push({\r\n              type: "image_url",\r\n              image_url: { url: images[1].base64 },\r\n              role: "last_frame",\r\n            });\r\n          }\r\n        }\r\n        break;\r\n      }\r\n      case "text":\r\n      default:\r\n        break;\r\n    }\r\n  } else if (Array.isArray(config.mode)) {\r\n    // \u591A\u6A21\u6001\u53C2\u8003\u6A21\u5F0F\uFF1A\u6309\u7C7B\u578B\u5206\u522B\u63D0\u53D6\u5E76\u6DFB\u52A0\r\n    const imageRefs = config.referenceList?.filter((r) => r.type === "image") ?? [];\r\n    const videoRefs = config.referenceList?.filter((r) => r.type === "video") ?? [];\r\n    const audioRefs = config.referenceList?.filter((r) => r.type === "audio") ?? [];\r\n\r\n    for (const refDef of config.mode) {\r\n      if (typeof refDef === "string") {\r\n        if (refDef.startsWith("imageReference:")) {\r\n          const maxCount = parseInt(refDef.split(":")[1], 10);\r\n\r\n          for (const ref of imageRefs.slice(0, maxCount)) {\r\n            content.push({\r\n              type: "image_url",\r\n              image_url: { url: await uploadAssets(ref.base64, "Image") },\r\n              role: "reference_image",\r\n            });\r\n          }\r\n        } else if (refDef.startsWith("videoReference:")) {\r\n          const maxCount = parseInt(refDef.split(":")[1], 10);\r\n          for (const ref of videoRefs.slice(0, maxCount)) {\r\n            content.push({\r\n              type: "video_url",\r\n              video_url: { url: await uploadAssets(ref.base64, "Video") },\r\n              role: "reference_video",\r\n            });\r\n          }\r\n        } else if (refDef.startsWith("audioReference:")) {\r\n          const maxCount = parseInt(refDef.split(":")[1], 10);\r\n          for (const ref of audioRefs.slice(0, maxCount)) {\r\n            content.push({\r\n              type: "audio_url",\r\n              audio_url: { url: await uploadAssets(ref.base64, "Audio") },\r\n              role: "reference_audio",\r\n            });\r\n          }\r\n        }\r\n      }\r\n    }\r\n  }\r\n  const body: any = {\r\n    model: model.modelName,\r\n    content,\r\n    ratio: config.aspectRatio,\r\n    duration: config.duration,\r\n    resolution: config.resolution || "720p",\r\n    watermark: false,\r\n  };\r\n\r\n  if (model.audio === "optional") {\r\n    body.generate_audio = config.audio !== false;\r\n  } else if (model.audio === true) {\r\n    body.generate_audio = true;\r\n  } else {\r\n    body.generate_audio = false;\r\n  }\r\n  logger(`[\u89C6\u9891\u751F\u6210] \u63D0\u4EA4\u4EFB\u52A1, \u6A21\u578B: ${model.modelName}, \u65F6\u957F: ${config.duration}s, \u5206\u8FA8\u7387: ${config.resolution}`);\r\n  const res = await fetch(`${baseUrl}/contents/generations/tasks`, {\r\n    method: "POST",\r\n    headers,\r\n    body: JSON.stringify(body),\r\n  });\r\n\r\n  if (!res.ok) {\r\n    const errorText = await res.text();\r\n    throw new Error(`\u89C6\u9891\u751F\u6210\u4EFB\u52A1\u521B\u5EFA\u5931\u8D25: ${errorText}`);\r\n  }\r\n  const createResponse = await res.json();\r\n  logger(createResponse);\r\n  const taskId = createResponse?.id;\r\n\r\n  if (!taskId) {\r\n    throw new Error("\u89C6\u9891\u751F\u6210\u4EFB\u52A1\u521B\u5EFA\u5931\u8D25\uFF1A\u672A\u8FD4\u56DE\u4EFB\u52A1ID");\r\n  }\r\n\r\n  logger(`[\u89C6\u9891\u751F\u6210] \u4EFB\u52A1\u5DF2\u521B\u5EFA, ID: ${taskId}`);\r\n\r\n  const result = await pollTask(\r\n    async (): Promise<PollResult> => {\r\n      const queryRes = await fetch(`${baseUrl}/contents/generations/tasks/${taskId}`, {\r\n        method: "GET",\r\n        headers,\r\n      });\r\n      if (!queryRes.ok) {\r\n        const errorText = await queryRes.text();\r\n        throw new Error(`\u67E5\u8BE2\u89C6\u9891\u751F\u6210\u4EFB\u52A1\u72B6\u6001\u5931\u8D25: ${errorText}`);\r\n      }\r\n      const task = await queryRes.json();\r\n\r\n      logger(`[\u89C6\u9891\u751F\u6210] \u4EFB\u52A1\u72B6\u6001: ${JSON.stringify(task)}`);\r\n\r\n      switch (task.status) {\r\n        case "succeeded":\r\n          if (task.content?.video_url) {\r\n            return { completed: true, data: task.content.video_url };\r\n          }\r\n          return { completed: true, error: "\u4EFB\u52A1\u6210\u529F\u4F46\u672A\u8FD4\u56DE\u89C6\u9891URL" };\r\n        case "failed":\r\n          return { completed: true, error: task.error?.message || "\u89C6\u9891\u751F\u6210\u5931\u8D25" };\r\n        case "expired":\r\n          return { completed: true, error: "\u89C6\u9891\u751F\u6210\u4EFB\u52A1\u8D85\u65F6" };\r\n        case "cancelled":\r\n          return { completed: true, error: "\u89C6\u9891\u751F\u6210\u4EFB\u52A1\u5DF2\u53D6\u6D88" };\r\n        default:\r\n          return { completed: false };\r\n      }\r\n    },\r\n    10000,\r\n    600000 * 3,\r\n  );\r\n\r\n  if (result.error) {\r\n    throw new Error(result.error);\r\n  }\r\n\r\n  return result.data!;\r\n};\r\n\r\nconst ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {\r\n  return "";\r\n};\r\n\r\nconst checkForUpdates = async (): Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }> => {\r\n  return { hasUpdate: false, latestVersion: "2.0", notice: "" };\r\n};\r\n\r\nconst updateVendor = async (): Promise<string> => {\r\n  return "";\r\n};\r\n\r\n// ============================================================\r\n// \u5BFC\u51FA\r\n// ============================================================\r\n\r\nexports.vendor = vendor;\r\nexports.textRequest = textRequest;\r\nexports.imageRequest = imageRequest;\r\nexports.videoRequest = videoRequest;\r\nexports.ttsRequest = ttsRequest;\r\nexports.checkForUpdates = checkForUpdates;\r\nexports.updateVendor = updateVendor;\r\n\r\nexport {};\r\n',
+      "comfyui_local.ts": 'type ImageModel = {\n  name: string; modelName: string; type: "image";\n  mode: ("text" | "singleImage" | "multiReference")[];\n};\ntype VideoModel = {\n  name: string; modelName: string; type: "video";\n  mode: ("text" | "singleImage" | "startFrameOptional" | (`imageReference:${number}`)[])[];\n  audio: "optional" | boolean;\n  durationResolutionMap: { duration: number[]; resolution: string[] }[];\n};\ntype VideoConfig = {\n  prompt: string; duration: number; resolution: string; aspectRatio: string;\n  mode: string | string[]; audio?: boolean;\n  referenceList?: { type: "image" | "video" | "audio"; base64: string; label?: string; prompt?: string; sourceType?: string; assetType?: string }[];\n};\ntype InputTarget = { node: string; input: string };\ntype WorkflowMapping = {\n  prompt: InputTarget; images?: InputTarget[];\n  frames?: InputTarget & { fps: number }; duration?: InputTarget;\n  width?: InputTarget; height?: InputTarget; outputNode?: string;\n};\ndeclare const exports: Record<string, any>;\ndeclare const fetch: typeof globalThis.fetch;\ndeclare const axios: any;\ndeclare const FormData: any;\ndeclare const Buffer: any;\ndeclare const pollTask: (fn: () => Promise<{ completed: boolean; data?: string; error?: string }>, interval?: number, timeout?: number) => Promise<{ completed: boolean; data?: string; error?: string }>;\n\nconst vendor = {\n  id: "comfyui_local", version: "1.5", author: "Local ComfyUI",\n  name: "\u672C\u673A ComfyUI\uFF08FLUX + MiniMax H3\uFF09",\n  description: "FLUX \u56FE\u7247\u8D70 ComfyUI\uFF1BMiniMax H3 \u89C6\u9891\u76F4\u8FDE\u539F\u751F Ref2VA/FL2VA\u3002\u89D2\u8272/\u573A\u666F/\u9053\u5177\u8D44\u4EA7\u4F5C\u4E3A <Picture N>\uFF0C\u5206\u955C\u56FE\u4EC5\u4F5C\u6587\u672C\u6784\u56FE\u6307\u5BFC\uFF0C\u907F\u514D\u8986\u76D6\u4EBA\u7269\u8EAB\u4EFD\u3002",\n  inputs: [\n    { key: "baseUrl", label: "ComfyUI \u5730\u5740", type: "url", required: true, placeholder: "http://127.0.0.1:8188" },\n    { key: "checkpoint", label: "FLUX Checkpoint", type: "text", required: true, placeholder: "Flux\\\\flux1-schnell-fp8-with_clip_vae.safetensors" },\n    { key: "videoBackend", label: "\u89C6\u9891\u540E\u7AEF\uFF08comfyui \u6216 gateway\uFF09", type: "text", required: true, placeholder: "comfyui" },\n    { key: "h3Unet", label: "H3 FL2VA \u6A21\u578B\u6587\u4EF6\u540D", type: "text", required: false, placeholder: "minimax_h3_fl2va_pruned_int8_convrot.safetensors" },\n    { key: "h3RefUnet", label: "H3 Ref2VA \u6A21\u578B\u6587\u4EF6\u540D", type: "text", required: false, placeholder: "minimax_h3_ref2va_pruned_int8_convrot.safetensors" },\n    { key: "h3Clip", label: "H3 \u6587\u672C\u7F16\u7801\u5668\u6587\u4EF6\u540D", type: "text", required: false, placeholder: "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors" },\n    { key: "h3VideoVae", label: "H3 \u89C6\u9891 VAE \u6587\u4EF6\u540D", type: "text", required: false, placeholder: "minimax_h3_video_vae_fp16.safetensors" },\n    { key: "h3AudioVae", label: "H3 \u97F3\u9891 VAE \u6587\u4EF6\u540D", type: "text", required: false, placeholder: "minimax_h3_audio_vae_fp32.safetensors" },\n    { key: "h3Steps", label: "H3 \u91C7\u6837\u6B65\u6570", type: "text", required: false, placeholder: "20" },\n    { key: "workflowApi", label: "\u81EA\u5B9A\u4E49\u89C6\u9891\u5DE5\u4F5C\u6D41 API JSON\uFF08\u53EF\u9009\uFF09", type: "text", required: false, placeholder: "\u7559\u7A7A\u81EA\u52A8\u4F7F\u7528\u539F\u751F H3 \u8282\u70B9\u56FE" },\n    { key: "workflowMapping", label: "\u81EA\u5B9A\u4E49\u5DE5\u4F5C\u6D41\u8282\u70B9\u6620\u5C04 JSON\uFF08\u53EF\u9009\uFF09", type: "text", required: false, placeholder: "\u4EC5\u5728\u4F7F\u7528\u81EA\u5B9A\u4E49\u5DE5\u4F5C\u6D41\u65F6\u586B\u5199" },\n    { key: "gatewayUrl", label: "DramaClaw \u7F51\u5173\u5730\u5740\uFF08\u4EC5 gateway \u6A21\u5F0F\uFF09", type: "url", required: false, placeholder: "http://127.0.0.1:3000/v1" },\n    { key: "gatewayApiKey", label: "DramaClaw API Key\uFF08\u4EC5 gateway \u6A21\u5F0F\uFF09", type: "password", required: false },\n  ],\n  inputValues: {\n    baseUrl: "http://127.0.0.1:8188", checkpoint: "Flux\\\\flux1-schnell-fp8-with_clip_vae.safetensors",\n    videoBackend: "comfyui", h3Unet: "minimax_h3_fl2va_pruned_int8_convrot.safetensors",\n    h3RefUnet: "minimax_h3_ref2va_pruned_int8_convrot.safetensors",\n    h3Clip: "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",\n    h3VideoVae: "minimax_h3_video_vae_fp16.safetensors",\n    h3AudioVae: "minimax_h3_audio_vae_fp32.safetensors", h3Steps: "20",\n    workflowApi: "", workflowMapping: "", gatewayUrl: "http://127.0.0.1:3000/v1", gatewayApiKey: "",\n  } as Record<string, string>,\n  models: [\n    { name: "FLUX Schnell \u672C\u673A", modelName: "flux-schnell-local", type: "image" as const, mode: ["text"] },\n    {\n      name: "MiniMax H3 \u672C\u673A\uFF08\u591A\u56FE\u53C2\u8003\uFF09", modelName: "MiniMax-H3-local", type: "video" as const,\n      mode: ["text", "startFrameOptional", ["imageReference:9"]], audio: "optional" as const,\n      durationResolutionMap: [{ duration: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p"] }],\n    },\n  ],\n};\n\nconst baseUrl = () => (vendor.inputValues.baseUrl || "http://127.0.0.1:8188").replace(/\\/+$/, "");\nconst gatewayUrl = () => (vendor.inputValues.gatewayUrl || "").replace(/\\/+$/, "");\nconst setting = (name: string, fallback: string) => (vendor.inputValues[name] || "").trim() || fallback;\n\nfunction dimensions(ratio: string): { width: number; height: number } {\n  const [a, b] = ratio.split(":").map(Number);\n  if (!a || !b) return { width: 1024, height: 1024 };\n  const shortSide = Math.max(512, Math.round(1024 * Math.min(a, b) / Math.max(a, b) / 8) * 8);\n  return a >= b ? { width: 1024, height: shortSide } : { width: shortSide, height: 1024 };\n}\nconst textRequest = () => { throw new Error("\u672C\u673A ComfyUI \u4F9B\u5E94\u5546\u4E0D\u63D0\u4F9B\u6587\u672C\u6A21\u578B"); };\n\n// Preserve the existing FLUX image workflow and its model identifier.\nconst imageRequest = async (config: { prompt: string; aspectRatio: string }, _model: ImageModel): Promise<string> => {\n  const { width, height } = dimensions(config.aspectRatio);\n  const prompt = {\n    "1": { class_type: "CheckpointLoaderSimple", inputs: { ckpt_name: vendor.inputValues.checkpoint } },\n    "2": { class_type: "CLIPTextEncode", inputs: { text: config.prompt, clip: ["1", 1] } },\n    "3": { class_type: "CLIPTextEncode", inputs: { text: "blurry, low quality, text, watermark", clip: ["1", 1] } },\n    "4": { class_type: "EmptyLatentImage", inputs: { width, height, batch_size: 1 } },\n    "5": { class_type: "KSampler", inputs: {\n      model: ["1", 0], seed: Math.floor(Math.random() * 2147483647), steps: 4, cfg: 1,\n      sampler_name: "euler", scheduler: "simple", positive: ["2", 0], negative: ["3", 0], latent_image: ["4", 0], denoise: 1,\n    } },\n    "6": { class_type: "VAEDecode", inputs: { samples: ["5", 0], vae: ["1", 2] } },\n    "7": { class_type: "SaveImage", inputs: { images: ["6", 0], filename_prefix: "Toonflow" } },\n  };\n  const response = await fetch(`${baseUrl()}/prompt`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ prompt, client_id: "toonflow" }) });\n  if (!response.ok) throw new Error(`ComfyUI \u63D0\u4EA4\u56FE\u7247\u5931\u8D25: ${await response.text()}`);\n  const created = await response.json();\n  if (!created.prompt_id) throw new Error("ComfyUI \u672A\u8FD4\u56DE\u56FE\u7247\u4EFB\u52A1 ID");\n  const result = await pollTask(async () => {\n    const historyResponse = await fetch(`${baseUrl()}/history/${created.prompt_id}`);\n    if (!historyResponse.ok) return { completed: true, error: `ComfyUI \u67E5\u8BE2\u56FE\u7247\u5931\u8D25: ${await historyResponse.text()}` };\n    const task = (await historyResponse.json())[created.prompt_id];\n    if (!task) return { completed: false };\n    const status = task.status?.status_str;\n    if (status === "error" || status === "failed") return { completed: true, error: `ComfyUI \u56FE\u7247\u751F\u6210\u5931\u8D25: ${status}` };\n    if (status !== "success") return { completed: false };\n    const image = task.outputs?.["7"]?.images?.[0];\n    return image?.filename ? { completed: true, data: `${image.filename}|${image.subfolder || ""}|${image.type || "output"}` } : { completed: true, error: "\u56FE\u7247\u751F\u6210\u6210\u529F\u4F46\u6CA1\u6709\u8F93\u51FA" };\n  }, 1500, 600000);\n  if (result.error || !result.data) throw new Error(result.error || "ComfyUI \u56FE\u7247\u751F\u6210\u8D85\u65F6");\n  const [filename, subfolder, type] = result.data.split("|");\n  return `${baseUrl()}/view?filename=${encodeURIComponent(filename)}&subfolder=${encodeURIComponent(subfolder)}&type=${encodeURIComponent(type)}`;\n};\n\nconst videoError = (action: string, error: any) => {\n  const status = error?.response?.status;\n  const data = error?.response?.data;\n  const detail = data ? JSON.stringify(data).slice(0, 700) : "";\n  return new Error(`ComfyUI ${action}\u5931\u8D25\uFF1A${error?.cause?.code || error?.code || error?.message || String(error)}${status ? ` (HTTP ${status})` : ""}${detail ? `\uFF1B${detail}` : ""}\uFF1B\u5730\u5740 ${baseUrl()}`);\n};\n\nasync function getObjectInfo(): Promise<Record<string, any>> {\n  try {\n    const [stats, info] = await Promise.all([\n      axios.get(`${baseUrl()}/system_stats`, { timeout: 15000, proxy: false }),\n      axios.get(`${baseUrl()}/object_info`, { timeout: 20000, proxy: false }),\n    ]);\n    if (!stats.data?.system?.comfyui_version || !info.data || typeof info.data !== "object") {\n      throw new Error("/system_stats \u6216 /object_info \u975E\u9884\u671F ComfyUI \u54CD\u5E94");\n    }\n    return info.data;\n  } catch (error) { throw videoError("\u68C0\u6D4B H3 Runtime", error); }\n}\n\nfunction modelOptions(info: any, node: string, field: string): string[] {\n  const entry = info[node]?.input?.required?.[field];\n  return Array.isArray(entry?.[0]) ? entry[0].map(String) : [];\n}\nfunction assertModel(info: any, node: string, field: string, filename: string) {\n  const available = modelOptions(info, node, field);\n  if (!available.includes(filename)) throw new Error(`ComfyUI H3 \u6A21\u578B\u6587\u4EF6\u4E0D\u53EF\u7528\uFF1A${filename}\uFF1B\u8BF7\u5728\u4F9B\u5E94\u5546\u8BBE\u7F6E\u4E2D\u586B\u5199 /object_info \u8FD4\u56DE\u7684\u5B9E\u9645\u6587\u4EF6\u540D`);\n}\n\nasync function uploadImage(base64: string, index: number): Promise<string> {\n  const match = /^data:(image\\/(?:png|jpeg|webp));base64,([\\s\\S]+)$/i.exec(base64);\n  if (!match) throw new Error(`\u7B2C ${index + 1} \u5F20\u53C2\u8003\u56FE\u4E0D\u662F PNG/JPEG/WebP Data URL`);\n  const mime = match[1].toLowerCase();\n  const filename = `toonflow_h3_${Date.now()}_${index}_${Math.floor(Math.random() * 1e9)}.${mime === "image/jpeg" ? "jpg" : mime.split("/")[1]}`;\n  const form = new FormData();\n  form.append("image", Buffer.from(match[2], "base64"), { filename, contentType: mime });\n  form.append("type", "input");\n  try {\n    const response = await axios.post(`${baseUrl()}/upload/image`, form, {\n      headers: form.getHeaders(), timeout: 60000, proxy: false, maxBodyLength: Infinity, maxContentLength: Infinity,\n    });\n    const result = response.data;\n    if (!result?.name) throw new Error("ComfyUI \u672A\u8FD4\u56DE\u53C2\u8003\u56FE\u6587\u4EF6\u540D");\n    return result.subfolder ? `${result.subfolder}/${result.name}` : result.name;\n  } catch (error) { throw videoError(`\u4E0A\u4F20\u53C2\u8003\u56FE ${index + 1}`, error); }\n}\n\nfunction sizeForVideo(resolution: string, ratio: string) {\n  const sides: Record<string, number[]> = { "16:9": [16, 9], "9:16": [9, 16], "1:1": [1, 1], "4:3": [4, 3], "3:4": [3, 4], "21:9": [21, 9] };\n  const pair = sides[ratio];\n  if (!pair) throw new Error(`H3 \u4E0D\u652F\u6301\u6BD4\u4F8B ${ratio}`);\n  const shortSide = Number.parseInt(resolution, 10);\n  if (!Number.isFinite(shortSide) || shortSide <= 0) throw new Error(`H3 \u5206\u8FA8\u7387\u65E0\u6548\uFF1A${resolution}`);\n  const [w, h] = pair;\n  return w >= h\n    ? { width: Math.max(32, Math.floor(shortSide * w / h / 32) * 32), height: shortSide }\n    : { width: shortSide, height: Math.max(32, Math.floor(shortSide * h / w / 32) * 32) };\n}\n\nfunction referenceLabel(ref: NonNullable<VideoConfig["referenceList"]>[number], index: number): string {\n  const preferred = typeof ref.label === "string" && ref.label.trim()\n    ? ref.label.trim()\n    : (typeof ref.prompt === "string" ? ref.prompt.trim() : "");\n  const clean = preferred.replace(/\\s+/g, " ").replace(/[<>]/g, "").trim();\n  return clean ? clean.slice(0, 120) : `\u53C2\u8003\u56FE ${index + 1}`;\n}\n\nfunction h3ReferenceRank(ref: NonNullable<VideoConfig["referenceList"]>[number]): number {\n  const type = String(ref.assetType || "").toLowerCase();\n  if (type === "role" || type === "character") return 0;\n  if (type === "scene" || type === "environment") return 1;\n  if (type === "tool" || type === "prop" || type === "creature") return 2;\n  return 3;\n}\n\nfunction prepareH3Config(config: VideoConfig): VideoConfig {\n  const refs = (config.referenceList || [])\n    .filter((item) => !/^storyboard$/i.test(String(item.sourceType || "")))\n    .sort((a, b) => h3ReferenceRank(a) - h3ReferenceRank(b));\n  return { ...config, referenceList: refs };\n}\n\nfunction compileReferencePrompt(config: VideoConfig): string {\n  const refs = (config.referenceList || []).filter(item => item.type === "image");\n  if (!refs.length) return config.prompt;\n\n  const expected = refs.map((_, index) => index + 1);\n  const rawTags = config.prompt.match(/<Picture\\s*\\d+\\s*>/gi) || [];\n\n  // A dedicated H3 Prompt Skill owns Picture semantics. If it emitted any Picture tags,\n  // fail closed unless they exactly match Runtime reference slots 1..N.\n  if (rawTags.length) {\n    const numbers = rawTags\n      .map(tag => Number((tag.match(/\\d+/) || [""])[0]))\n      .filter(value => Number.isInteger(value));\n    const unique = Array.from(new Set(numbers)).sort((a, b) => a - b);\n    const invalidSyntax = rawTags.some(tag => {\n      const n = Number((tag.match(/\\d+/) || [""])[0]);\n      return tag !== `<Picture ${n}>`;\n    });\n    const matches = unique.length === expected.length && expected.every((value, index) => unique[index] === value);\n    if (invalidSyntax || !matches) {\n      throw new Error(\n        `MiniMax H3 Picture \u69FD\u4F4D\u4E0E\u5B9E\u9645\u53C2\u8003\u56FE\u4E0D\u4E00\u81F4\uFF1A\u5B9E\u9645\u53C2\u8003\u56FE ${refs.length} \u5F20\uFF0C\u63D0\u793A\u8BCD\u5F15\u7528 [${unique.join(", ")}]\u3002\u8BF7\u91CD\u65B0\u751F\u6210 H3 \u4E13\u5C5E\u63D0\u793A\u8BCD\uFF0C\u786E\u4FDD\u4F7F\u7528\u8FDE\u7EED\u7684 <Picture 1>..<Picture ${refs.length}>\u3002`,\n      );\n    }\n    return config.prompt;\n  }\n\n  // Backward-compatible guard for old/manual prompts. Normal production prompts should already\n  // come from minimaxH3Multi-referenceMode.md and therefore never need this branch.\n  const exactTags = refs.map((_, index) => `<Picture ${index + 1}>`);\n  const bindings = refs.map((ref, index) => {\n    const tag = exactTags[index];\n    return `${tag} = ${referenceLabel(ref, index)}\u3002\u5FC5\u987B\u628A\u8BE5\u56FE\u4F5C\u4E3A\u6743\u5A01\u89C6\u89C9\u53C2\u8003\u3002`;\n  });\n\n  return [\n    "\u3010MiniMax H3 \u591A\u56FE\u53C2\u8003\u7ED1\u5B9A\uFF5C\u517C\u5BB9\u56DE\u9000\u3011",\n    ...bindings,\n    "\u4E25\u683C\u6309\u7167\u4E0A\u8FF0 Picture \u7F16\u53F7\u4E0E\u4F20\u5165\u56FE\u7247\u7684\u987A\u5E8F\u4E00\u4E00\u5BF9\u5E94\u3002",\n    "\u4FDD\u6301\u53C2\u8003\u4E3B\u4F53\u7684\u8EAB\u4EFD\u4E0E\u89C6\u89C9\u8BBE\u8BA1\u8FDE\u7EED\uFF1A\u4EBA\u7269\u8138\u578B\u4E0E\u4E94\u5B98\u3001\u5E74\u9F84\u611F\u3001\u53D1\u578B\u53D1\u8272\u3001\u80A4\u8272\u3001\u4F53\u578B\u6BD4\u4F8B\u3001\u670D\u88C5\u4E0E\u5173\u952E\u914D\u9970\u4E0D\u5F97\u65E0\u6545\u53D8\u5316\uFF1B\u573A\u666F\u548C\u9053\u5177\u53C2\u8003\u4FDD\u6301\u5176\u6838\u5FC3\u7ED3\u6784\u4E0E\u8BBE\u8BA1\u3002",\n    "\u5141\u8BB8\u6539\u53D8\u52A8\u4F5C\u3001\u8868\u60C5\u3001\u955C\u5934\u89D2\u5EA6\u548C\u6784\u56FE\uFF0C\u4F46\u4E0D\u5F97\u5FFD\u7565\u53C2\u8003\u56FE\u3001\u66FF\u6362\u4E3B\u4F53\u3001\u6DF7\u5408\u4E0D\u540C\u4EBA\u7269\u7279\u5F81\u6216\u64C5\u81EA\u91CD\u65B0\u8BBE\u8BA1\u3002",\n    "",\n    "\u3010\u573A\u666F\u4E0E\u52A8\u4F5C\u6307\u4EE4\u3011",\n    config.prompt,\n  ].join("\\n");\n}\n\n// Same native MiniMax H3 FL2VA/Ref2VA node contract as ai-drama-studio backend/app/p16/provider.py.\nfunction nativeH3Graph(config: VideoConfig, uploaded: string[], info: Record<string, any>): Record<string, any> {\n  const referenceMode = uploaded.length > 0;\n  const required = ["UNETLoader", "CLIPLoader", "VAELoader", referenceMode ? "MiniMaxH3ReferenceToVideo" : "MiniMaxH3ImageToVideo", "RandomNoise", "BasicGuider", "KSamplerSelect", "BasicScheduler", "SamplerCustomAdvanced", "VAEDecode", "VAEDecodeAudio", "CreateVideo", "SaveVideo"];\n  if (referenceMode) required.push("LoadImage");\n  const missing = required.filter(name => !info[name]);\n  if (missing.length) throw new Error(`ComfyUI \u7F3A\u5C11\u539F\u751F MiniMax H3 \u8282\u70B9\uFF1A${missing.join("\u3001")}\uFF1B\u8BF7\u66F4\u65B0 ComfyUI H3 \u8282\u70B9\u6216\u6539\u7528\u5DF2\u6709\u5DE5\u4F5C\u6D41 JSON`);\n  const unet = setting(referenceMode ? "h3RefUnet" : "h3Unet", referenceMode ? "minimax_h3_ref2va_pruned_int8_convrot.safetensors" : "minimax_h3_fl2va_pruned_int8_convrot.safetensors");\n  const clip = setting("h3Clip", "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors");\n  const videoVae = setting("h3VideoVae", "minimax_h3_video_vae_fp16.safetensors");\n  const audioVae = setting("h3AudioVae", "minimax_h3_audio_vae_fp32.safetensors");\n  assertModel(info, "UNETLoader", "unet_name", unet);\n  assertModel(info, "CLIPLoader", "clip_name", clip);\n  assertModel(info, "VAELoader", "vae_name", videoVae);\n  assertModel(info, "VAELoader", "vae_name", audioVae);\n  const steps = Number(setting("h3Steps", "20"));\n  if (!Number.isInteger(steps) || steps < 1 || steps > 150) throw new Error("H3 \u91C7\u6837\u6B65\u6570\u5FC5\u987B\u4E3A 1\u2013150 \u7684\u6574\u6570");\n  const { width, height } = sizeForVideo(config.resolution || "480p", config.aspectRatio);\n  const duration = Math.max(4, Math.min(15, Math.ceil(config.duration || 5)));\n  const frames = Math.max(5, Math.round(duration * 24));\n  const length = frames + (5 - frames % 17 + 17) % 17;\n  const prefix = `Toonflow/H3_${Date.now()}_${Math.floor(Math.random() * 1e9)}`;\n  const graph: Record<string, any> = {\n    "1": { class_type: "UNETLoader", inputs: { unet_name: unet, weight_dtype: "default" } },\n    "2": { class_type: "CLIPLoader", inputs: { clip_name: clip, type: "minimax", device: "default" } },\n    "3": { class_type: "VAELoader", inputs: { vae_name: videoVae } },\n    "4": { class_type: "VAELoader", inputs: { vae_name: audioVae } },\n    "5": { class_type: referenceMode ? "MiniMaxH3ReferenceToVideo" : "MiniMaxH3ImageToVideo", inputs: {\n      clip: ["2", 0], vae: ["3", 0], ...(referenceMode ? { audio_vae: ["4", 0], ref_image_size: "match" } : {}),\n      prompt: compileReferencePrompt(config), width, height, length,\n    } },\n    "6": { class_type: "RandomNoise", inputs: { noise_seed: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) } },\n    "7": { class_type: "BasicGuider", inputs: { model: ["1", 0], conditioning: ["5", 0] } },\n    "8": { class_type: "KSamplerSelect", inputs: { sampler_name: "res_multistep" } },\n    "9": { class_type: "BasicScheduler", inputs: { model: ["1", 0], scheduler: "simple", steps, denoise: 1.0 } },\n    "10": { class_type: "SamplerCustomAdvanced", inputs: { noise: ["6", 0], guider: ["7", 0], sampler: ["8", 0], sigmas: ["9", 0], latent_image: ["5", 1] } },\n    "11": { class_type: "VAEDecode", inputs: { samples: ["10", 0], vae: ["3", 0] } },\n    "12": { class_type: "VAEDecodeAudio", inputs: { samples: ["10", 0], vae: ["4", 0] } },\n    "13": { class_type: "CreateVideo", inputs: { images: ["11", 0], audio: ["12", 0], fps: 24.0, bit_depth: 8 } },\n    "14": { class_type: "SaveVideo", inputs: { video: ["13", 0], filename_prefix: prefix, format: "mp4" } },\n  };\n  uploaded.forEach((filename, index) => {\n    const id = String(index + 15);\n    graph[id] = { class_type: "LoadImage", inputs: { image: filename } };\n    graph["5"].inputs.ref_images = graph["5"].inputs.ref_images || {};\n    graph["5"].inputs.ref_images[`ref_image_${index}`] = [id, 0];\n  });\n  return graph;\n}\n\nfunction customGraph(config: VideoConfig, uploaded: string[]) {\n  const apiText = vendor.inputValues.workflowApi?.trim();\n  const mapText = vendor.inputValues.workflowMapping?.trim();\n  if (!apiText || !mapText) throw new Error("\u81EA\u5B9A\u4E49\u5DE5\u4F5C\u6D41\u9700\u8981\u540C\u65F6\u586B\u5199 API JSON \u548C\u8282\u70B9\u6620\u5C04 JSON\uFF1B\u7559\u7A7A\u4E24\u9879\u5219\u81EA\u52A8\u4F7F\u7528\u539F\u751F MiniMax H3 \u5DE5\u4F5C\u6D41");\n  let parsed: any; let map: WorkflowMapping;\n  try { parsed = JSON.parse(apiText); map = JSON.parse(mapText); }\n  catch { throw new Error("\u81EA\u5B9A\u4E49 ComfyUI \u5DE5\u4F5C\u6D41\u6216\u8282\u70B9\u6620\u5C04\u4E0D\u662F\u6709\u6548 JSON"); }\n  const nodes = JSON.parse(JSON.stringify(parsed.prompt || parsed));\n  if (!nodes || typeof nodes !== "object" || Array.isArray(nodes) || !map?.prompt) throw new Error("\u5DE5\u4F5C\u6D41\u5FC5\u987B\u4E3A\u542B class_type/inputs \u7684 API \u683C\u5F0F\uFF0C\u4E14\u6620\u5C04\u5FC5\u987B\u542B prompt");\n  const write = (target: InputTarget, value: unknown) => {\n    const node = nodes[String(target?.node || "")];\n    if (!node?.inputs || !Object.prototype.hasOwnProperty.call(node.inputs, target?.input)) throw new Error(`\u5DE5\u4F5C\u6D41\u8282\u70B9\u6620\u5C04\u65E0\u6548\uFF1A${target?.node}.${target?.input}`);\n    node.inputs[target.input] = value;\n  };\n  write(map.prompt, compileReferencePrompt(config));\n  if (uploaded.length > (map.images || []).length) throw new Error(`\u5DE5\u4F5C\u6D41\u4EC5\u6620\u5C04 ${(map.images || []).length} \u5F20\u53C2\u8003\u56FE\uFF0C\u5B9E\u9645\u8F93\u5165 ${uploaded.length} \u5F20`);\n  uploaded.forEach((filename, index) => write((map.images || [])[index], filename));\n  if (map.duration) write(map.duration, config.duration);\n  if (map.frames) write(map.frames, Math.round(config.duration * map.frames.fps));\n  if (map.width || map.height) {\n    const size = sizeForVideo(config.resolution, config.aspectRatio);\n    if (map.width) write(map.width, size.width);\n    if (map.height) write(map.height, size.height);\n  }\n  return { graph: nodes, outputNode: map.outputNode };\n}\n\nfunction findVideo(task: any, outputNode?: string): any {\n  const outputs = task?.outputs || {};\n  if (outputNode && !outputs[outputNode]) return null;\n  const selected = outputNode ? [outputs[outputNode]] : Object.values(outputs);\n  const visit = (value: any): any => {\n    if (Array.isArray(value)) { for (const item of value) { const found = visit(item); if (found) return found; } }\n    else if (value && typeof value === "object") {\n      if (typeof value.filename === "string" && /\\.(mp4|webm|mov|mkv)$/i.test(value.filename)) return value;\n      for (const item of Object.values(value)) { const found = visit(item); if (found) return found; }\n    }\n    return null;\n  };\n  for (const output of selected) { const file = visit(output); if (file) return file; }\n  return null;\n}\n\nasync function comfyVideoRequest(config: VideoConfig): Promise<string> {\n  // Defense in depth: even an older frontend/backend may still send storyboard images.\n  // Never feed them into Ref2VA; they are composition guidance only and can otherwise override faces.\n  const runtimeConfig = prepareH3Config(config);\n  const refs = runtimeConfig.referenceList || [];\n  if (refs.some(item => item.type !== "image")) throw new Error("ComfyUI \u539F\u751F H3 \u76F4\u8FDE\u4EC5\u63A5\u6536\u53C2\u8003\u56FE\u7247\uFF1B\u4E0D\u80FD\u9759\u9ED8\u5FFD\u7565\u89C6\u9891\u6216\u97F3\u9891\u53C2\u8003\u7D20\u6750");\n  if (refs.length > 9) throw new Error("MiniMax H3 \u6700\u591A\u63A5\u6536 9 \u5F20\u53C2\u8003\u56FE\u7247");\n  const custom = !!(vendor.inputValues.workflowApi?.trim() || vendor.inputValues.workflowMapping?.trim());\n  const info = custom ? null : await getObjectInfo();\n  const uploaded: string[] = [];\n  for (let i = 0; i < refs.length; i++) uploaded.push(await uploadImage(refs[i].base64, i));\n  const { graph, outputNode } = custom\n    ? customGraph(runtimeConfig, uploaded)\n    : { graph: nativeH3Graph(runtimeConfig, uploaded, info!), outputNode: "14" };\n  let promptId: string;\n  try {\n    const response = await axios.post(`${baseUrl()}/prompt`, { prompt: graph, client_id: "toonflow-h3" }, { timeout: 60000, proxy: false, maxBodyLength: Infinity });\n    promptId = response.data?.prompt_id;\n    if (!promptId) throw new Error(`ComfyUI \u672A\u8FD4\u56DE prompt_id\uFF1A${JSON.stringify(response.data?.node_errors || response.data?.error || {})}`);\n  } catch (error) { throw videoError("\u63D0\u4EA4 H3 \u5DE5\u4F5C\u6D41", error); }\n  const result = await pollTask(async () => {\n    let task: any;\n    try {\n      const response = await axios.get(`${baseUrl()}/history/${encodeURIComponent(promptId)}`, { timeout: 20000, proxy: false });\n      task = response.data?.[promptId] || response.data?.history?.[promptId];\n    } catch (error) { throw videoError("\u67E5\u8BE2 H3 \u4EFB\u52A1", error); }\n    if (!task) return { completed: false };\n    const status = task.status || {};\n    if (status.status_str === "error" || status.status_str === "failed") return { completed: true, error: `ComfyUI H3 \u6267\u884C\u5931\u8D25\uFF1A${JSON.stringify(status.messages || []).slice(0, 800)}` };\n    const video = findVideo(task, outputNode);\n    if (video) {\n      const url = `${baseUrl()}/view?filename=${encodeURIComponent(video.filename)}&subfolder=${encodeURIComponent(video.subfolder || "")}&type=${encodeURIComponent(video.type || "output")}`;\n      return { completed: true, data: url };\n    }\n    if (status.completed === true || status.status_str === "success") return { completed: true, error: `ComfyUI H3 \u5DE5\u4F5C\u6D41\u5DF2\u5B8C\u6210\u4F46\u672A\u627E\u5230\u89C6\u9891\u8F93\u51FA\uFF08\u8282\u70B9 ${outputNode || "auto"}\uFF09` };\n    return { completed: false };\n  }, 3000, 1800000);\n  if (result.error || !result.data) throw new Error(result.error || "ComfyUI H3 \u751F\u6210\u8D85\u65F6\uFF0830 \u5206\u949F\uFF09");\n  return result.data;\n}\n\n// Retain the former DramaClaw backend as an explicit opt-in for existing users.\nasync function gatewayVideoRequest(config: VideoConfig): Promise<string> {\n  const url = gatewayUrl();\n  const apiKey = (vendor.inputValues.gatewayApiKey || "").replace(/^Bearer\\s+/i, "").trim();\n  if (!url || !apiKey) throw new Error("DramaClaw \u7F51\u5173\u5730\u5740\u6216 API Key \u672A\u914D\u7F6E");\n  const refs = config.referenceList || [];\n  const imageRefs = refs.filter(item => item.type === "image").map(item => item.base64).filter(Boolean);\n  const videoRefs = refs.filter(item => item.type === "video").map(item => item.base64).filter(Boolean);\n  const audioRefs = refs.filter(item => item.type === "audio").map(item => item.base64).filter(Boolean);\n  if (imageRefs.length > 9 || videoRefs.length > 3 || audioRefs.length > 3) throw new Error("DramaClaw \u53C2\u8003\u7D20\u6750\u8D85\u51FA\u9650\u5236");\n  const metadata: Record<string, any> = { ratio: config.aspectRatio, resolution: config.resolution || "480p", generate_audio: config.audio ?? true };\n  const body: Record<string, any> = { model: "MiniMax-H3-local", prompt: config.prompt, duration: Math.max(5, Math.min(15, Math.round(config.duration || 5))), metadata };\n  if (Array.isArray(config.mode)) {\n    if (!refs.length) throw new Error("DramaClaw \u591A\u53C2\u8003\u6A21\u5F0F\u81F3\u5C11\u9700\u8981\u4E00\u4E2A\u7D20\u6750");\n    if (imageRefs.length) metadata.reference_images = imageRefs;\n    if (videoRefs.length) metadata.reference_videos = videoRefs;\n    if (audioRefs.length) metadata.reference_audios = audioRefs;\n  } else if (config.mode === "singleImage" || config.mode === "startFrameOptional") {\n    if (imageRefs[0]) body.image = imageRefs[0];\n  }\n  const submit = await axios.post(`${url}/video/generations`, body, { headers: { Authorization: `Bearer ${apiKey}` }, timeout: 60000, proxy: false });\n  const id = submit.data?.task_id || submit.data?.id;\n  if (!id) throw new Error("DramaClaw \u672A\u8FD4\u56DE\u89C6\u9891\u4EFB\u52A1 ID");\n  const result = await pollTask(async () => {\n    const response = await axios.get(`${url}/video/generations/${encodeURIComponent(id)}`, { headers: { Authorization: `Bearer ${apiKey}` }, timeout: 20000, proxy: false });\n    const task = response.data;\n    if (task.status === "succeeded") {\n      const output = task.result_url || task.results?.find((item: any) => item.type === "video")?.url || task.url;\n      return output ? { completed: true, data: output } : { completed: true, error: "DramaClaw \u5DF2\u5B8C\u6210\u4F46\u6CA1\u6709\u89C6\u9891\u5730\u5740" };\n    }\n    if (task.status === "failed" || task.status === "cancelled") return { completed: true, error: task.error?.message || "DramaClaw H3 \u4EFB\u52A1\u5931\u8D25" };\n    return { completed: false };\n  }, 3000, 1800000);\n  if (result.error || !result.data) throw new Error(result.error || "DramaClaw H3 \u4EFB\u52A1\u8D85\u65F6");\n  return result.data;\n}\n\nconst videoRequest = async (config: VideoConfig, _model: VideoModel): Promise<string> => {\n  const backend = (vendor.inputValues.videoBackend || "comfyui").trim().toLowerCase();\n  if (backend === "comfyui") return comfyVideoRequest(config);\n  if (backend === "gateway") return gatewayVideoRequest(config);\n  throw new Error(`\u672A\u77E5\u89C6\u9891\u540E\u7AEF ${backend}\uFF1B\u8BF7\u9009\u62E9 comfyui \u6216 gateway`);\n};\nexports.vendor = vendor;\nexports.textRequest = textRequest;\nexports.imageRequest = imageRequest;\nexports.videoRequest = videoRequest;\nexport {};\n'
     };
   }
 });
@@ -105804,6 +106052,18 @@ var init_fixDB = __esm({
           });
         }
       };
+      if (await knex3.schema.hasTable("o_agentRun")) {
+        await knex3("o_agentRun").where("status", "running").update({ status: "reconciling", updateTime: Date.now() });
+      }
+      if (await knex3.schema.hasTable("o_agentStep")) {
+        await knex3("o_agentStep").where("status", "running").update({ status: "reconciling", updateTime: Date.now() });
+      }
+      if (await knex3.schema.hasTable("o_memoryJob")) {
+        await knex3("o_memoryJob").where("status", "running").update({ status: "pending", updateTime: Date.now() });
+      }
+      if (await knex3.schema.hasTable("o_agentToolCall")) {
+        await knex3("o_agentToolCall").where("status", "running").update({ status: "reconciling", updateTime: Date.now() });
+      }
       await db_default("o_novel").where("eventState", 0).update({
         eventState: -1,
         errorReason: "\u8F6F\u4EF6\u9000\u51FA\u5BFC\u81F4\u5931\u8D25"
@@ -105828,6 +106088,24 @@ var init_fixDB = __esm({
         state: "\u751F\u6210\u5931\u8D25",
         errorReason: "\u8F6F\u4EF6\u9000\u51FA\u5BFC\u81F4\u5931\u8D25"
       });
+      await addColumn("o_agentRun", "inputContent", "text");
+      await addColumn("o_agentStep", "inputHash", "text");
+      await addColumn("o_agentStep", "inputContent", "text");
+      await addColumn("o_agentStep", "output", "text");
+      await addColumn("o_agentToolCall", "stepKey", "text");
+      if (await knex3.schema.hasTable("o_setting")) {
+        await knex3("o_setting").insert([
+          { key: "memoryContextTokenBudget", value: "2400" },
+          { key: "embeddingBackend", value: "onnx" },
+          { key: "ollamaEmbeddingModel", value: "qwen3-embedding:4b" },
+          { key: "memoryHybridRetrieval", value: "1" },
+          { key: "memoryRerankerEnabled", value: "0" },
+          { key: "memoryRerankerUrl", value: "http://127.0.0.1:11435/rerank" },
+          { key: "memoryRerankerModel", value: "Qwen3-Reranker-4B" },
+          { key: "memoryRerankerCandidates", value: "24" },
+          { key: "memoryVectorScanPageSize", value: "256" }
+        ]).onConflict("key").ignore();
+      }
       await addColumn("o_prompt", "useData", "text");
       await addColumn("o_agentDeploy", "type", "string");
       await addColumn("o_agentDeploy", "temperature", "integer");
@@ -106642,6 +106920,10 @@ A medium tracking shot follows the woman from behind as she ascends and approach
       const toonflowVer = await utils_default.vendor.getVendor("toonflow").version;
       if (Number(toonflowVer) < 3.2) {
         utils_default.vendor.writeCode("toonflow", vendorData["toonflow.ts"]);
+      }
+      const comfyuiLocalVer = await utils_default.vendor.getVendor("comfyui_local").version;
+      if (Number(comfyuiLocalVer) < 1.5) {
+        utils_default.vendor.writeCode("comfyui_local", vendorData["comfyui_local.ts"]);
       }
     };
   }
@@ -116224,6 +116506,7 @@ var init_db = __esm({
     })();
     dbClient = Object.assign((table) => db(table), db);
     dbClient.schema = db.schema;
+    dbClient.transaction = db.transaction.bind(db);
     db_default = dbClient;
   }
 });
@@ -142435,29 +142718,29 @@ var init_json_schema_processors = __esm({
       // do not set
     };
     stringProcessor = (schema, ctx, _json, _params) => {
-      const json4 = _json;
-      json4.type = "string";
+      const json5 = _json;
+      json5.type = "string";
       const { minimum, maximum, format, patterns, contentEncoding } = schema._zod.bag;
       if (typeof minimum === "number")
-        json4.minLength = minimum;
+        json5.minLength = minimum;
       if (typeof maximum === "number")
-        json4.maxLength = maximum;
+        json5.maxLength = maximum;
       if (format) {
-        json4.format = formatMap[format] ?? format;
-        if (json4.format === "")
-          delete json4.format;
+        json5.format = formatMap[format] ?? format;
+        if (json5.format === "")
+          delete json5.format;
         if (format === "time") {
-          delete json4.format;
+          delete json5.format;
         }
       }
       if (contentEncoding)
-        json4.contentEncoding = contentEncoding;
+        json5.contentEncoding = contentEncoding;
       if (patterns && patterns.size > 0) {
         const regexes = [...patterns];
         if (regexes.length === 1)
-          json4.pattern = regexes[0].source;
+          json5.pattern = regexes[0].source;
         else if (regexes.length > 1) {
-          json4.allOf = [
+          json5.allOf = [
             ...regexes.map((regex) => ({
               ...ctx.target === "draft-07" || ctx.target === "draft-04" || ctx.target === "openapi-3.0" ? { type: "string" } : {},
               pattern: regex.source
@@ -142467,51 +142750,51 @@ var init_json_schema_processors = __esm({
       }
     };
     numberProcessor = (schema, ctx, _json, _params) => {
-      const json4 = _json;
+      const json5 = _json;
       const { minimum, maximum, format, multipleOf, exclusiveMaximum, exclusiveMinimum } = schema._zod.bag;
       if (typeof format === "string" && format.includes("int"))
-        json4.type = "integer";
+        json5.type = "integer";
       else
-        json4.type = "number";
+        json5.type = "number";
       if (typeof exclusiveMinimum === "number") {
         if (ctx.target === "draft-04" || ctx.target === "openapi-3.0") {
-          json4.minimum = exclusiveMinimum;
-          json4.exclusiveMinimum = true;
+          json5.minimum = exclusiveMinimum;
+          json5.exclusiveMinimum = true;
         } else {
-          json4.exclusiveMinimum = exclusiveMinimum;
+          json5.exclusiveMinimum = exclusiveMinimum;
         }
       }
       if (typeof minimum === "number") {
-        json4.minimum = minimum;
+        json5.minimum = minimum;
         if (typeof exclusiveMinimum === "number" && ctx.target !== "draft-04") {
           if (exclusiveMinimum >= minimum)
-            delete json4.minimum;
+            delete json5.minimum;
           else
-            delete json4.exclusiveMinimum;
+            delete json5.exclusiveMinimum;
         }
       }
       if (typeof exclusiveMaximum === "number") {
         if (ctx.target === "draft-04" || ctx.target === "openapi-3.0") {
-          json4.maximum = exclusiveMaximum;
-          json4.exclusiveMaximum = true;
+          json5.maximum = exclusiveMaximum;
+          json5.exclusiveMaximum = true;
         } else {
-          json4.exclusiveMaximum = exclusiveMaximum;
+          json5.exclusiveMaximum = exclusiveMaximum;
         }
       }
       if (typeof maximum === "number") {
-        json4.maximum = maximum;
+        json5.maximum = maximum;
         if (typeof exclusiveMaximum === "number" && ctx.target !== "draft-04") {
           if (exclusiveMaximum <= maximum)
-            delete json4.maximum;
+            delete json5.maximum;
           else
-            delete json4.exclusiveMaximum;
+            delete json5.exclusiveMaximum;
         }
       }
       if (typeof multipleOf === "number")
-        json4.multipleOf = multipleOf;
+        json5.multipleOf = multipleOf;
     };
-    booleanProcessor = (_schema, _ctx, json4, _params) => {
-      json4.type = "boolean";
+    booleanProcessor = (_schema, _ctx, json5, _params) => {
+      json5.type = "boolean";
     };
     bigintProcessor = (_schema, ctx, _json, _params) => {
       if (ctx.unrepresentable === "throw") {
@@ -142523,13 +142806,13 @@ var init_json_schema_processors = __esm({
         throw new Error("Symbols cannot be represented in JSON Schema");
       }
     };
-    nullProcessor = (_schema, ctx, json4, _params) => {
+    nullProcessor = (_schema, ctx, json5, _params) => {
       if (ctx.target === "openapi-3.0") {
-        json4.type = "string";
-        json4.nullable = true;
-        json4.enum = [null];
+        json5.type = "string";
+        json5.nullable = true;
+        json5.enum = [null];
       } else {
-        json4.type = "null";
+        json5.type = "null";
       }
     };
     undefinedProcessor = (_schema, ctx, _json, _params) => {
@@ -142542,8 +142825,8 @@ var init_json_schema_processors = __esm({
         throw new Error("Void cannot be represented in JSON Schema");
       }
     };
-    neverProcessor = (_schema, _ctx, json4, _params) => {
-      json4.not = {};
+    neverProcessor = (_schema, _ctx, json5, _params) => {
+      json5.not = {};
     };
     anyProcessor = (_schema, _ctx, _json, _params) => {
     };
@@ -142554,16 +142837,16 @@ var init_json_schema_processors = __esm({
         throw new Error("Date cannot be represented in JSON Schema");
       }
     };
-    enumProcessor = (schema, _ctx, json4, _params) => {
+    enumProcessor = (schema, _ctx, json5, _params) => {
       const def = schema._zod.def;
       const values = getEnumValues(def.entries);
       if (values.every((v) => typeof v === "number"))
-        json4.type = "number";
+        json5.type = "number";
       if (values.every((v) => typeof v === "string"))
-        json4.type = "string";
-      json4.enum = values;
+        json5.type = "string";
+      json5.enum = values;
     };
-    literalProcessor = (schema, ctx, json4, _params) => {
+    literalProcessor = (schema, ctx, json5, _params) => {
       const def = schema._zod.def;
       const vals = [];
       for (const val of def.values) {
@@ -142585,22 +142868,22 @@ var init_json_schema_processors = __esm({
       if (vals.length === 0) {
       } else if (vals.length === 1) {
         const val = vals[0];
-        json4.type = val === null ? "null" : typeof val;
+        json5.type = val === null ? "null" : typeof val;
         if (ctx.target === "draft-04" || ctx.target === "openapi-3.0") {
-          json4.enum = [val];
+          json5.enum = [val];
         } else {
-          json4.const = val;
+          json5.const = val;
         }
       } else {
         if (vals.every((v) => typeof v === "number"))
-          json4.type = "number";
+          json5.type = "number";
         if (vals.every((v) => typeof v === "string"))
-          json4.type = "string";
+          json5.type = "string";
         if (vals.every((v) => typeof v === "boolean"))
-          json4.type = "boolean";
+          json5.type = "boolean";
         if (vals.every((v) => v === null))
-          json4.type = "null";
-        json4.enum = vals;
+          json5.type = "null";
+        json5.enum = vals;
       }
     };
     nanProcessor = (_schema, ctx, _json, _params) => {
@@ -142608,16 +142891,16 @@ var init_json_schema_processors = __esm({
         throw new Error("NaN cannot be represented in JSON Schema");
       }
     };
-    templateLiteralProcessor = (schema, _ctx, json4, _params) => {
-      const _json = json4;
+    templateLiteralProcessor = (schema, _ctx, json5, _params) => {
+      const _json = json5;
       const pattern = schema._zod.pattern;
       if (!pattern)
         throw new Error("Pattern not found in template literal");
       _json.type = "string";
       _json.pattern = pattern.source;
     };
-    fileProcessor = (schema, _ctx, json4, _params) => {
-      const _json = json4;
+    fileProcessor = (schema, _ctx, json5, _params) => {
+      const _json = json5;
       const file3 = {
         type: "string",
         format: "binary",
@@ -142640,8 +142923,8 @@ var init_json_schema_processors = __esm({
         Object.assign(_json, file3);
       }
     };
-    successProcessor = (_schema, _ctx, json4, _params) => {
-      json4.type = "boolean";
+    successProcessor = (_schema, _ctx, json5, _params) => {
+      json5.type = "boolean";
     };
     customProcessor = (_schema, ctx, _json, _params) => {
       if (ctx.unrepresentable === "throw") {
@@ -142669,24 +142952,24 @@ var init_json_schema_processors = __esm({
       }
     };
     arrayProcessor = (schema, ctx, _json, params) => {
-      const json4 = _json;
+      const json5 = _json;
       const def = schema._zod.def;
       const { minimum, maximum } = schema._zod.bag;
       if (typeof minimum === "number")
-        json4.minItems = minimum;
+        json5.minItems = minimum;
       if (typeof maximum === "number")
-        json4.maxItems = maximum;
-      json4.type = "array";
-      json4.items = process2(def.element, ctx, { ...params, path: [...params.path, "items"] });
+        json5.maxItems = maximum;
+      json5.type = "array";
+      json5.items = process2(def.element, ctx, { ...params, path: [...params.path, "items"] });
     };
     objectProcessor = (schema, ctx, _json, params) => {
-      const json4 = _json;
+      const json5 = _json;
       const def = schema._zod.def;
-      json4.type = "object";
-      json4.properties = {};
+      json5.type = "object";
+      json5.properties = {};
       const shape = def.shape;
       for (const key in shape) {
-        json4.properties[key] = process2(shape[key], ctx, {
+        json5.properties[key] = process2(shape[key], ctx, {
           ...params,
           path: [...params.path, "properties", key]
         });
@@ -142701,21 +142984,21 @@ var init_json_schema_processors = __esm({
         }
       }));
       if (requiredKeys.size > 0) {
-        json4.required = Array.from(requiredKeys);
+        json5.required = Array.from(requiredKeys);
       }
       if (def.catchall?._zod.def.type === "never") {
-        json4.additionalProperties = false;
+        json5.additionalProperties = false;
       } else if (!def.catchall) {
         if (ctx.io === "output")
-          json4.additionalProperties = false;
+          json5.additionalProperties = false;
       } else if (def.catchall) {
-        json4.additionalProperties = process2(def.catchall, ctx, {
+        json5.additionalProperties = process2(def.catchall, ctx, {
           ...params,
           path: [...params.path, "additionalProperties"]
         });
       }
     };
-    unionProcessor = (schema, ctx, json4, params) => {
+    unionProcessor = (schema, ctx, json5, params) => {
       const def = schema._zod.def;
       const isExclusive = def.inclusive === false;
       const options = def.options.map((x, i) => process2(x, ctx, {
@@ -142723,12 +143006,12 @@ var init_json_schema_processors = __esm({
         path: [...params.path, isExclusive ? "oneOf" : "anyOf", i]
       }));
       if (isExclusive) {
-        json4.oneOf = options;
+        json5.oneOf = options;
       } else {
-        json4.anyOf = options;
+        json5.anyOf = options;
       }
     };
-    intersectionProcessor = (schema, ctx, json4, params) => {
+    intersectionProcessor = (schema, ctx, json5, params) => {
       const def = schema._zod.def;
       const a = process2(def.left, ctx, {
         ...params,
@@ -142743,12 +143026,12 @@ var init_json_schema_processors = __esm({
         ...isSimpleIntersection(a) ? a.allOf : [a],
         ...isSimpleIntersection(b) ? b.allOf : [b]
       ];
-      json4.allOf = allOf;
+      json5.allOf = allOf;
     };
     tupleProcessor = (schema, ctx, _json, params) => {
-      const json4 = _json;
+      const json5 = _json;
       const def = schema._zod.def;
-      json4.type = "array";
+      json5.type = "array";
       const prefixPath = ctx.target === "draft-2020-12" ? "prefixItems" : "items";
       const restPath = ctx.target === "draft-2020-12" ? "items" : ctx.target === "openapi-3.0" ? "items" : "additionalItems";
       const prefixItems = def.items.map((x, i) => process2(x, ctx, {
@@ -142760,37 +143043,37 @@ var init_json_schema_processors = __esm({
         path: [...params.path, restPath, ...ctx.target === "openapi-3.0" ? [def.items.length] : []]
       }) : null;
       if (ctx.target === "draft-2020-12") {
-        json4.prefixItems = prefixItems;
+        json5.prefixItems = prefixItems;
         if (rest) {
-          json4.items = rest;
+          json5.items = rest;
         }
       } else if (ctx.target === "openapi-3.0") {
-        json4.items = {
+        json5.items = {
           anyOf: prefixItems
         };
         if (rest) {
-          json4.items.anyOf.push(rest);
+          json5.items.anyOf.push(rest);
         }
-        json4.minItems = prefixItems.length;
+        json5.minItems = prefixItems.length;
         if (!rest) {
-          json4.maxItems = prefixItems.length;
+          json5.maxItems = prefixItems.length;
         }
       } else {
-        json4.items = prefixItems;
+        json5.items = prefixItems;
         if (rest) {
-          json4.additionalItems = rest;
+          json5.additionalItems = rest;
         }
       }
       const { minimum, maximum } = schema._zod.bag;
       if (typeof minimum === "number")
-        json4.minItems = minimum;
+        json5.minItems = minimum;
       if (typeof maximum === "number")
-        json4.maxItems = maximum;
+        json5.maxItems = maximum;
     };
     recordProcessor = (schema, ctx, _json, params) => {
-      const json4 = _json;
+      const json5 = _json;
       const def = schema._zod.def;
-      json4.type = "object";
+      json5.type = "object";
       const keyType = def.keyType;
       const keyBag = keyType._zod.bag;
       const patterns = keyBag?.patterns;
@@ -142799,18 +143082,18 @@ var init_json_schema_processors = __esm({
           ...params,
           path: [...params.path, "patternProperties", "*"]
         });
-        json4.patternProperties = {};
+        json5.patternProperties = {};
         for (const pattern of patterns) {
-          json4.patternProperties[pattern.source] = valueSchema;
+          json5.patternProperties[pattern.source] = valueSchema;
         }
       } else {
         if (ctx.target === "draft-07" || ctx.target === "draft-2020-12") {
-          json4.propertyNames = process2(def.keyType, ctx, {
+          json5.propertyNames = process2(def.keyType, ctx, {
             ...params,
             path: [...params.path, "propertyNames"]
           });
         }
-        json4.additionalProperties = process2(def.valueType, ctx, {
+        json5.additionalProperties = process2(def.valueType, ctx, {
           ...params,
           path: [...params.path, "additionalProperties"]
         });
@@ -142819,19 +143102,19 @@ var init_json_schema_processors = __esm({
       if (keyValues) {
         const validKeyValues = [...keyValues].filter((v) => typeof v === "string" || typeof v === "number");
         if (validKeyValues.length > 0) {
-          json4.required = validKeyValues;
+          json5.required = validKeyValues;
         }
       }
     };
-    nullableProcessor = (schema, ctx, json4, params) => {
+    nullableProcessor = (schema, ctx, json5, params) => {
       const def = schema._zod.def;
       const inner = process2(def.innerType, ctx, params);
       const seen = ctx.seen.get(schema);
       if (ctx.target === "openapi-3.0") {
         seen.ref = def.innerType;
-        json4.nullable = true;
+        json5.nullable = true;
       } else {
-        json4.anyOf = [inner, { type: "null" }];
+        json5.anyOf = [inner, { type: "null" }];
       }
     };
     nonoptionalProcessor = (schema, ctx, _json, params) => {
@@ -142840,22 +143123,22 @@ var init_json_schema_processors = __esm({
       const seen = ctx.seen.get(schema);
       seen.ref = def.innerType;
     };
-    defaultProcessor = (schema, ctx, json4, params) => {
+    defaultProcessor = (schema, ctx, json5, params) => {
       const def = schema._zod.def;
       process2(def.innerType, ctx, params);
       const seen = ctx.seen.get(schema);
       seen.ref = def.innerType;
-      json4.default = JSON.parse(JSON.stringify(def.defaultValue));
+      json5.default = JSON.parse(JSON.stringify(def.defaultValue));
     };
-    prefaultProcessor = (schema, ctx, json4, params) => {
+    prefaultProcessor = (schema, ctx, json5, params) => {
       const def = schema._zod.def;
       process2(def.innerType, ctx, params);
       const seen = ctx.seen.get(schema);
       seen.ref = def.innerType;
       if (ctx.io === "input")
-        json4._prefault = JSON.parse(JSON.stringify(def.defaultValue));
+        json5._prefault = JSON.parse(JSON.stringify(def.defaultValue));
     };
-    catchProcessor = (schema, ctx, json4, params) => {
+    catchProcessor = (schema, ctx, json5, params) => {
       const def = schema._zod.def;
       process2(def.innerType, ctx, params);
       const seen = ctx.seen.get(schema);
@@ -142866,7 +143149,7 @@ var init_json_schema_processors = __esm({
       } catch {
         throw new Error("Dynamic catch values are not supported in JSON Schema");
       }
-      json4.default = catchValue;
+      json5.default = catchValue;
     };
     pipeProcessor = (schema, ctx, _json, params) => {
       const def = schema._zod.def;
@@ -142875,12 +143158,12 @@ var init_json_schema_processors = __esm({
       const seen = ctx.seen.get(schema);
       seen.ref = innerType;
     };
-    readonlyProcessor = (schema, ctx, json4, params) => {
+    readonlyProcessor = (schema, ctx, json5, params) => {
       const def = schema._zod.def;
       process2(def.innerType, ctx, params);
       const seen = ctx.seen.get(schema);
       seen.ref = def.innerType;
-      json4.readOnly = true;
+      json5.readOnly = true;
     };
     promiseProcessor = (schema, ctx, _json, params) => {
       const def = schema._zod.def;
@@ -144213,7 +144496,7 @@ var init_schemas2 = __esm({
     _ZodString = /* @__PURE__ */ $constructor("_ZodString", (inst, def) => {
       $ZodString.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => stringProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => stringProcessor(inst, ctx, json5, params);
       const bag = inst._zod.bag;
       inst.format = bag.format ?? null;
       inst.minLength = bag.minimum ?? null;
@@ -144356,7 +144639,7 @@ var init_schemas2 = __esm({
     ZodNumber = /* @__PURE__ */ $constructor("ZodNumber", (inst, def) => {
       $ZodNumber.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => numberProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => numberProcessor(inst, ctx, json5, params);
       inst.gt = (value, params) => inst.check(_gt(value, params));
       inst.gte = (value, params) => inst.check(_gte(value, params));
       inst.min = (value, params) => inst.check(_gte(value, params));
@@ -144386,12 +144669,12 @@ var init_schemas2 = __esm({
     ZodBoolean = /* @__PURE__ */ $constructor("ZodBoolean", (inst, def) => {
       $ZodBoolean.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => booleanProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => booleanProcessor(inst, ctx, json5, params);
     });
     ZodBigInt = /* @__PURE__ */ $constructor("ZodBigInt", (inst, def) => {
       $ZodBigInt.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => bigintProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => bigintProcessor(inst, ctx, json5, params);
       inst.gte = (value, params) => inst.check(_gte(value, params));
       inst.min = (value, params) => inst.check(_gte(value, params));
       inst.gt = (value, params) => inst.check(_gt(value, params));
@@ -144417,42 +144700,42 @@ var init_schemas2 = __esm({
     ZodSymbol = /* @__PURE__ */ $constructor("ZodSymbol", (inst, def) => {
       $ZodSymbol.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => symbolProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => symbolProcessor(inst, ctx, json5, params);
     });
     ZodUndefined = /* @__PURE__ */ $constructor("ZodUndefined", (inst, def) => {
       $ZodUndefined.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => undefinedProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => undefinedProcessor(inst, ctx, json5, params);
     });
     ZodNull = /* @__PURE__ */ $constructor("ZodNull", (inst, def) => {
       $ZodNull.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => nullProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => nullProcessor(inst, ctx, json5, params);
     });
     ZodAny = /* @__PURE__ */ $constructor("ZodAny", (inst, def) => {
       $ZodAny.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => anyProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => anyProcessor(inst, ctx, json5, params);
     });
     ZodUnknown = /* @__PURE__ */ $constructor("ZodUnknown", (inst, def) => {
       $ZodUnknown.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => unknownProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => unknownProcessor(inst, ctx, json5, params);
     });
     ZodNever = /* @__PURE__ */ $constructor("ZodNever", (inst, def) => {
       $ZodNever.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => neverProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => neverProcessor(inst, ctx, json5, params);
     });
     ZodVoid = /* @__PURE__ */ $constructor("ZodVoid", (inst, def) => {
       $ZodVoid.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => voidProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => voidProcessor(inst, ctx, json5, params);
     });
     ZodDate = /* @__PURE__ */ $constructor("ZodDate", (inst, def) => {
       $ZodDate.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => dateProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => dateProcessor(inst, ctx, json5, params);
       inst.min = (value, params) => inst.check(_gte(value, params));
       inst.max = (value, params) => inst.check(_lte(value, params));
       const c = inst._zod.bag;
@@ -144462,7 +144745,7 @@ var init_schemas2 = __esm({
     ZodArray = /* @__PURE__ */ $constructor("ZodArray", (inst, def) => {
       $ZodArray.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => arrayProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => arrayProcessor(inst, ctx, json5, params);
       inst.element = def.element;
       inst.min = (minLength, params) => inst.check(_minLength(minLength, params));
       inst.nonempty = (params) => inst.check(_minLength(1, params));
@@ -144473,7 +144756,7 @@ var init_schemas2 = __esm({
     ZodObject = /* @__PURE__ */ $constructor("ZodObject", (inst, def) => {
       $ZodObjectJIT.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => objectProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => objectProcessor(inst, ctx, json5, params);
       util_exports.defineLazy(inst, "shape", () => {
         return def.shape;
       });
@@ -144498,13 +144781,13 @@ var init_schemas2 = __esm({
     ZodUnion = /* @__PURE__ */ $constructor("ZodUnion", (inst, def) => {
       $ZodUnion.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => unionProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => unionProcessor(inst, ctx, json5, params);
       inst.options = def.options;
     });
     ZodXor = /* @__PURE__ */ $constructor("ZodXor", (inst, def) => {
       ZodUnion.init(inst, def);
       $ZodXor.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => unionProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => unionProcessor(inst, ctx, json5, params);
       inst.options = def.options;
     });
     ZodDiscriminatedUnion = /* @__PURE__ */ $constructor("ZodDiscriminatedUnion", (inst, def) => {
@@ -144514,12 +144797,12 @@ var init_schemas2 = __esm({
     ZodIntersection = /* @__PURE__ */ $constructor("ZodIntersection", (inst, def) => {
       $ZodIntersection.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => intersectionProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => intersectionProcessor(inst, ctx, json5, params);
     });
     ZodTuple = /* @__PURE__ */ $constructor("ZodTuple", (inst, def) => {
       $ZodTuple.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => tupleProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => tupleProcessor(inst, ctx, json5, params);
       inst.rest = (rest) => inst.clone({
         ...inst._zod.def,
         rest
@@ -144528,14 +144811,14 @@ var init_schemas2 = __esm({
     ZodRecord = /* @__PURE__ */ $constructor("ZodRecord", (inst, def) => {
       $ZodRecord.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => recordProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => recordProcessor(inst, ctx, json5, params);
       inst.keyType = def.keyType;
       inst.valueType = def.valueType;
     });
     ZodMap = /* @__PURE__ */ $constructor("ZodMap", (inst, def) => {
       $ZodMap.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => mapProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => mapProcessor(inst, ctx, json5, params);
       inst.keyType = def.keyType;
       inst.valueType = def.valueType;
       inst.min = (...args) => inst.check(_minSize(...args));
@@ -144546,7 +144829,7 @@ var init_schemas2 = __esm({
     ZodSet = /* @__PURE__ */ $constructor("ZodSet", (inst, def) => {
       $ZodSet.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => setProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => setProcessor(inst, ctx, json5, params);
       inst.min = (...args) => inst.check(_minSize(...args));
       inst.nonempty = (params) => inst.check(_minSize(1, params));
       inst.max = (...args) => inst.check(_maxSize(...args));
@@ -144555,7 +144838,7 @@ var init_schemas2 = __esm({
     ZodEnum = /* @__PURE__ */ $constructor("ZodEnum", (inst, def) => {
       $ZodEnum.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => enumProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => enumProcessor(inst, ctx, json5, params);
       inst.enum = def.entries;
       inst.options = Object.values(def.entries);
       const keys2 = new Set(Object.keys(def.entries));
@@ -144593,7 +144876,7 @@ var init_schemas2 = __esm({
     ZodLiteral = /* @__PURE__ */ $constructor("ZodLiteral", (inst, def) => {
       $ZodLiteral.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => literalProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => literalProcessor(inst, ctx, json5, params);
       inst.values = new Set(def.values);
       Object.defineProperty(inst, "value", {
         get() {
@@ -144607,7 +144890,7 @@ var init_schemas2 = __esm({
     ZodFile = /* @__PURE__ */ $constructor("ZodFile", (inst, def) => {
       $ZodFile.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => fileProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => fileProcessor(inst, ctx, json5, params);
       inst.min = (size, params) => inst.check(_minSize(size, params));
       inst.max = (size, params) => inst.check(_maxSize(size, params));
       inst.mime = (types, params) => inst.check(_mime(Array.isArray(types) ? types : [types], params));
@@ -144615,7 +144898,7 @@ var init_schemas2 = __esm({
     ZodTransform = /* @__PURE__ */ $constructor("ZodTransform", (inst, def) => {
       $ZodTransform.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => transformProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => transformProcessor(inst, ctx, json5, params);
       inst._zod.parse = (payload, _ctx) => {
         if (_ctx.direction === "backward") {
           throw new $ZodEncodeError(inst.constructor.name);
@@ -144647,62 +144930,62 @@ var init_schemas2 = __esm({
     ZodOptional = /* @__PURE__ */ $constructor("ZodOptional", (inst, def) => {
       $ZodOptional.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => optionalProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => optionalProcessor(inst, ctx, json5, params);
       inst.unwrap = () => inst._zod.def.innerType;
     });
     ZodExactOptional = /* @__PURE__ */ $constructor("ZodExactOptional", (inst, def) => {
       $ZodExactOptional.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => optionalProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => optionalProcessor(inst, ctx, json5, params);
       inst.unwrap = () => inst._zod.def.innerType;
     });
     ZodNullable = /* @__PURE__ */ $constructor("ZodNullable", (inst, def) => {
       $ZodNullable.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => nullableProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => nullableProcessor(inst, ctx, json5, params);
       inst.unwrap = () => inst._zod.def.innerType;
     });
     ZodDefault = /* @__PURE__ */ $constructor("ZodDefault", (inst, def) => {
       $ZodDefault.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => defaultProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => defaultProcessor(inst, ctx, json5, params);
       inst.unwrap = () => inst._zod.def.innerType;
       inst.removeDefault = inst.unwrap;
     });
     ZodPrefault = /* @__PURE__ */ $constructor("ZodPrefault", (inst, def) => {
       $ZodPrefault.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => prefaultProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => prefaultProcessor(inst, ctx, json5, params);
       inst.unwrap = () => inst._zod.def.innerType;
     });
     ZodNonOptional = /* @__PURE__ */ $constructor("ZodNonOptional", (inst, def) => {
       $ZodNonOptional.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => nonoptionalProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => nonoptionalProcessor(inst, ctx, json5, params);
       inst.unwrap = () => inst._zod.def.innerType;
     });
     ZodSuccess = /* @__PURE__ */ $constructor("ZodSuccess", (inst, def) => {
       $ZodSuccess.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => successProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => successProcessor(inst, ctx, json5, params);
       inst.unwrap = () => inst._zod.def.innerType;
     });
     ZodCatch = /* @__PURE__ */ $constructor("ZodCatch", (inst, def) => {
       $ZodCatch.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => catchProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => catchProcessor(inst, ctx, json5, params);
       inst.unwrap = () => inst._zod.def.innerType;
       inst.removeCatch = inst.unwrap;
     });
     ZodNaN = /* @__PURE__ */ $constructor("ZodNaN", (inst, def) => {
       $ZodNaN.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => nanProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => nanProcessor(inst, ctx, json5, params);
     });
     ZodPipe = /* @__PURE__ */ $constructor("ZodPipe", (inst, def) => {
       $ZodPipe.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => pipeProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => pipeProcessor(inst, ctx, json5, params);
       inst.in = def.in;
       inst.out = def.out;
     });
@@ -144713,35 +144996,35 @@ var init_schemas2 = __esm({
     ZodReadonly = /* @__PURE__ */ $constructor("ZodReadonly", (inst, def) => {
       $ZodReadonly.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => readonlyProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => readonlyProcessor(inst, ctx, json5, params);
       inst.unwrap = () => inst._zod.def.innerType;
     });
     ZodTemplateLiteral = /* @__PURE__ */ $constructor("ZodTemplateLiteral", (inst, def) => {
       $ZodTemplateLiteral.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => templateLiteralProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => templateLiteralProcessor(inst, ctx, json5, params);
     });
     ZodLazy = /* @__PURE__ */ $constructor("ZodLazy", (inst, def) => {
       $ZodLazy.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => lazyProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => lazyProcessor(inst, ctx, json5, params);
       inst.unwrap = () => inst._zod.def.getter();
     });
     ZodPromise = /* @__PURE__ */ $constructor("ZodPromise", (inst, def) => {
       $ZodPromise.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => promiseProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => promiseProcessor(inst, ctx, json5, params);
       inst.unwrap = () => inst._zod.def.innerType;
     });
     ZodFunction = /* @__PURE__ */ $constructor("ZodFunction", (inst, def) => {
       $ZodFunction.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => functionProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => functionProcessor(inst, ctx, json5, params);
     });
     ZodCustom = /* @__PURE__ */ $constructor("ZodCustom", (inst, def) => {
       $ZodCustom.init(inst, def);
       ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json4, params) => customProcessor(inst, ctx, json4, params);
+      inst._zod.processJSONSchema = (ctx, json5, params) => customProcessor(inst, ctx, json5, params);
     });
     describe2 = describe;
     meta2 = meta;
@@ -188456,29 +188739,29 @@ var require_json_schema_processors = __commonJS({
       // do not set
     };
     var stringProcessor3 = (schema, ctx, _json, _params) => {
-      const json4 = _json;
-      json4.type = "string";
+      const json5 = _json;
+      json5.type = "string";
       const { minimum, maximum, format, patterns, contentEncoding } = schema._zod.bag;
       if (typeof minimum === "number")
-        json4.minLength = minimum;
+        json5.minLength = minimum;
       if (typeof maximum === "number")
-        json4.maxLength = maximum;
+        json5.maxLength = maximum;
       if (format) {
-        json4.format = formatMap3[format] ?? format;
-        if (json4.format === "")
-          delete json4.format;
+        json5.format = formatMap3[format] ?? format;
+        if (json5.format === "")
+          delete json5.format;
         if (format === "time") {
-          delete json4.format;
+          delete json5.format;
         }
       }
       if (contentEncoding)
-        json4.contentEncoding = contentEncoding;
+        json5.contentEncoding = contentEncoding;
       if (patterns && patterns.size > 0) {
         const regexes = [...patterns];
         if (regexes.length === 1)
-          json4.pattern = regexes[0].source;
+          json5.pattern = regexes[0].source;
         else if (regexes.length > 1) {
-          json4.allOf = [
+          json5.allOf = [
             ...regexes.map((regex) => ({
               ...ctx.target === "draft-07" || ctx.target === "draft-04" || ctx.target === "openapi-3.0" ? { type: "string" } : {},
               pattern: regex.source
@@ -188489,52 +188772,52 @@ var require_json_schema_processors = __commonJS({
     };
     exports2.stringProcessor = stringProcessor3;
     var numberProcessor3 = (schema, ctx, _json, _params) => {
-      const json4 = _json;
+      const json5 = _json;
       const { minimum, maximum, format, multipleOf, exclusiveMaximum, exclusiveMinimum } = schema._zod.bag;
       if (typeof format === "string" && format.includes("int"))
-        json4.type = "integer";
+        json5.type = "integer";
       else
-        json4.type = "number";
+        json5.type = "number";
       if (typeof exclusiveMinimum === "number") {
         if (ctx.target === "draft-04" || ctx.target === "openapi-3.0") {
-          json4.minimum = exclusiveMinimum;
-          json4.exclusiveMinimum = true;
+          json5.minimum = exclusiveMinimum;
+          json5.exclusiveMinimum = true;
         } else {
-          json4.exclusiveMinimum = exclusiveMinimum;
+          json5.exclusiveMinimum = exclusiveMinimum;
         }
       }
       if (typeof minimum === "number") {
-        json4.minimum = minimum;
+        json5.minimum = minimum;
         if (typeof exclusiveMinimum === "number" && ctx.target !== "draft-04") {
           if (exclusiveMinimum >= minimum)
-            delete json4.minimum;
+            delete json5.minimum;
           else
-            delete json4.exclusiveMinimum;
+            delete json5.exclusiveMinimum;
         }
       }
       if (typeof exclusiveMaximum === "number") {
         if (ctx.target === "draft-04" || ctx.target === "openapi-3.0") {
-          json4.maximum = exclusiveMaximum;
-          json4.exclusiveMaximum = true;
+          json5.maximum = exclusiveMaximum;
+          json5.exclusiveMaximum = true;
         } else {
-          json4.exclusiveMaximum = exclusiveMaximum;
+          json5.exclusiveMaximum = exclusiveMaximum;
         }
       }
       if (typeof maximum === "number") {
-        json4.maximum = maximum;
+        json5.maximum = maximum;
         if (typeof exclusiveMaximum === "number" && ctx.target !== "draft-04") {
           if (exclusiveMaximum <= maximum)
-            delete json4.maximum;
+            delete json5.maximum;
           else
-            delete json4.exclusiveMaximum;
+            delete json5.exclusiveMaximum;
         }
       }
       if (typeof multipleOf === "number")
-        json4.multipleOf = multipleOf;
+        json5.multipleOf = multipleOf;
     };
     exports2.numberProcessor = numberProcessor3;
-    var booleanProcessor3 = (_schema, _ctx, json4, _params) => {
-      json4.type = "boolean";
+    var booleanProcessor3 = (_schema, _ctx, json5, _params) => {
+      json5.type = "boolean";
     };
     exports2.booleanProcessor = booleanProcessor3;
     var bigintProcessor3 = (_schema, ctx, _json, _params) => {
@@ -188549,13 +188832,13 @@ var require_json_schema_processors = __commonJS({
       }
     };
     exports2.symbolProcessor = symbolProcessor3;
-    var nullProcessor3 = (_schema, ctx, json4, _params) => {
+    var nullProcessor3 = (_schema, ctx, json5, _params) => {
       if (ctx.target === "openapi-3.0") {
-        json4.type = "string";
-        json4.nullable = true;
-        json4.enum = [null];
+        json5.type = "string";
+        json5.nullable = true;
+        json5.enum = [null];
       } else {
-        json4.type = "null";
+        json5.type = "null";
       }
     };
     exports2.nullProcessor = nullProcessor3;
@@ -188571,8 +188854,8 @@ var require_json_schema_processors = __commonJS({
       }
     };
     exports2.voidProcessor = voidProcessor3;
-    var neverProcessor3 = (_schema, _ctx, json4, _params) => {
-      json4.not = {};
+    var neverProcessor3 = (_schema, _ctx, json5, _params) => {
+      json5.not = {};
     };
     exports2.neverProcessor = neverProcessor3;
     var anyProcessor3 = (_schema, _ctx, _json, _params) => {
@@ -188587,17 +188870,17 @@ var require_json_schema_processors = __commonJS({
       }
     };
     exports2.dateProcessor = dateProcessor3;
-    var enumProcessor3 = (schema, _ctx, json4, _params) => {
+    var enumProcessor3 = (schema, _ctx, json5, _params) => {
       const def = schema._zod.def;
       const values = (0, util_js_1.getEnumValues)(def.entries);
       if (values.every((v) => typeof v === "number"))
-        json4.type = "number";
+        json5.type = "number";
       if (values.every((v) => typeof v === "string"))
-        json4.type = "string";
-      json4.enum = values;
+        json5.type = "string";
+      json5.enum = values;
     };
     exports2.enumProcessor = enumProcessor3;
-    var literalProcessor3 = (schema, ctx, json4, _params) => {
+    var literalProcessor3 = (schema, ctx, json5, _params) => {
       const def = schema._zod.def;
       const vals = [];
       for (const val of def.values) {
@@ -188619,22 +188902,22 @@ var require_json_schema_processors = __commonJS({
       if (vals.length === 0) {
       } else if (vals.length === 1) {
         const val = vals[0];
-        json4.type = val === null ? "null" : typeof val;
+        json5.type = val === null ? "null" : typeof val;
         if (ctx.target === "draft-04" || ctx.target === "openapi-3.0") {
-          json4.enum = [val];
+          json5.enum = [val];
         } else {
-          json4.const = val;
+          json5.const = val;
         }
       } else {
         if (vals.every((v) => typeof v === "number"))
-          json4.type = "number";
+          json5.type = "number";
         if (vals.every((v) => typeof v === "string"))
-          json4.type = "string";
+          json5.type = "string";
         if (vals.every((v) => typeof v === "boolean"))
-          json4.type = "boolean";
+          json5.type = "boolean";
         if (vals.every((v) => v === null))
-          json4.type = "null";
-        json4.enum = vals;
+          json5.type = "null";
+        json5.enum = vals;
       }
     };
     exports2.literalProcessor = literalProcessor3;
@@ -188644,8 +188927,8 @@ var require_json_schema_processors = __commonJS({
       }
     };
     exports2.nanProcessor = nanProcessor3;
-    var templateLiteralProcessor3 = (schema, _ctx, json4, _params) => {
-      const _json = json4;
+    var templateLiteralProcessor3 = (schema, _ctx, json5, _params) => {
+      const _json = json5;
       const pattern = schema._zod.pattern;
       if (!pattern)
         throw new Error("Pattern not found in template literal");
@@ -188653,8 +188936,8 @@ var require_json_schema_processors = __commonJS({
       _json.pattern = pattern.source;
     };
     exports2.templateLiteralProcessor = templateLiteralProcessor3;
-    var fileProcessor3 = (schema, _ctx, json4, _params) => {
-      const _json = json4;
+    var fileProcessor3 = (schema, _ctx, json5, _params) => {
+      const _json = json5;
       const file3 = {
         type: "string",
         format: "binary",
@@ -188678,8 +188961,8 @@ var require_json_schema_processors = __commonJS({
       }
     };
     exports2.fileProcessor = fileProcessor3;
-    var successProcessor3 = (_schema, _ctx, json4, _params) => {
-      json4.type = "boolean";
+    var successProcessor3 = (_schema, _ctx, json5, _params) => {
+      json5.type = "boolean";
     };
     exports2.successProcessor = successProcessor3;
     var customProcessor3 = (_schema, ctx, _json, _params) => {
@@ -188713,25 +188996,25 @@ var require_json_schema_processors = __commonJS({
     };
     exports2.setProcessor = setProcessor3;
     var arrayProcessor3 = (schema, ctx, _json, params) => {
-      const json4 = _json;
+      const json5 = _json;
       const def = schema._zod.def;
       const { minimum, maximum } = schema._zod.bag;
       if (typeof minimum === "number")
-        json4.minItems = minimum;
+        json5.minItems = minimum;
       if (typeof maximum === "number")
-        json4.maxItems = maximum;
-      json4.type = "array";
-      json4.items = (0, to_json_schema_js_1.process)(def.element, ctx, { ...params, path: [...params.path, "items"] });
+        json5.maxItems = maximum;
+      json5.type = "array";
+      json5.items = (0, to_json_schema_js_1.process)(def.element, ctx, { ...params, path: [...params.path, "items"] });
     };
     exports2.arrayProcessor = arrayProcessor3;
     var objectProcessor3 = (schema, ctx, _json, params) => {
-      const json4 = _json;
+      const json5 = _json;
       const def = schema._zod.def;
-      json4.type = "object";
-      json4.properties = {};
+      json5.type = "object";
+      json5.properties = {};
       const shape = def.shape;
       for (const key in shape) {
-        json4.properties[key] = (0, to_json_schema_js_1.process)(shape[key], ctx, {
+        json5.properties[key] = (0, to_json_schema_js_1.process)(shape[key], ctx, {
           ...params,
           path: [...params.path, "properties", key]
         });
@@ -188746,22 +189029,22 @@ var require_json_schema_processors = __commonJS({
         }
       }));
       if (requiredKeys.size > 0) {
-        json4.required = Array.from(requiredKeys);
+        json5.required = Array.from(requiredKeys);
       }
       if (def.catchall?._zod.def.type === "never") {
-        json4.additionalProperties = false;
+        json5.additionalProperties = false;
       } else if (!def.catchall) {
         if (ctx.io === "output")
-          json4.additionalProperties = false;
+          json5.additionalProperties = false;
       } else if (def.catchall) {
-        json4.additionalProperties = (0, to_json_schema_js_1.process)(def.catchall, ctx, {
+        json5.additionalProperties = (0, to_json_schema_js_1.process)(def.catchall, ctx, {
           ...params,
           path: [...params.path, "additionalProperties"]
         });
       }
     };
     exports2.objectProcessor = objectProcessor3;
-    var unionProcessor3 = (schema, ctx, json4, params) => {
+    var unionProcessor3 = (schema, ctx, json5, params) => {
       const def = schema._zod.def;
       const isExclusive = def.inclusive === false;
       const options = def.options.map((x, i) => (0, to_json_schema_js_1.process)(x, ctx, {
@@ -188769,13 +189052,13 @@ var require_json_schema_processors = __commonJS({
         path: [...params.path, isExclusive ? "oneOf" : "anyOf", i]
       }));
       if (isExclusive) {
-        json4.oneOf = options;
+        json5.oneOf = options;
       } else {
-        json4.anyOf = options;
+        json5.anyOf = options;
       }
     };
     exports2.unionProcessor = unionProcessor3;
-    var intersectionProcessor3 = (schema, ctx, json4, params) => {
+    var intersectionProcessor3 = (schema, ctx, json5, params) => {
       const def = schema._zod.def;
       const a = (0, to_json_schema_js_1.process)(def.left, ctx, {
         ...params,
@@ -188790,13 +189073,13 @@ var require_json_schema_processors = __commonJS({
         ...isSimpleIntersection(a) ? a.allOf : [a],
         ...isSimpleIntersection(b) ? b.allOf : [b]
       ];
-      json4.allOf = allOf;
+      json5.allOf = allOf;
     };
     exports2.intersectionProcessor = intersectionProcessor3;
     var tupleProcessor3 = (schema, ctx, _json, params) => {
-      const json4 = _json;
+      const json5 = _json;
       const def = schema._zod.def;
-      json4.type = "array";
+      json5.type = "array";
       const prefixPath = ctx.target === "draft-2020-12" ? "prefixItems" : "items";
       const restPath = ctx.target === "draft-2020-12" ? "items" : ctx.target === "openapi-3.0" ? "items" : "additionalItems";
       const prefixItems = def.items.map((x, i) => (0, to_json_schema_js_1.process)(x, ctx, {
@@ -188808,38 +189091,38 @@ var require_json_schema_processors = __commonJS({
         path: [...params.path, restPath, ...ctx.target === "openapi-3.0" ? [def.items.length] : []]
       }) : null;
       if (ctx.target === "draft-2020-12") {
-        json4.prefixItems = prefixItems;
+        json5.prefixItems = prefixItems;
         if (rest) {
-          json4.items = rest;
+          json5.items = rest;
         }
       } else if (ctx.target === "openapi-3.0") {
-        json4.items = {
+        json5.items = {
           anyOf: prefixItems
         };
         if (rest) {
-          json4.items.anyOf.push(rest);
+          json5.items.anyOf.push(rest);
         }
-        json4.minItems = prefixItems.length;
+        json5.minItems = prefixItems.length;
         if (!rest) {
-          json4.maxItems = prefixItems.length;
+          json5.maxItems = prefixItems.length;
         }
       } else {
-        json4.items = prefixItems;
+        json5.items = prefixItems;
         if (rest) {
-          json4.additionalItems = rest;
+          json5.additionalItems = rest;
         }
       }
       const { minimum, maximum } = schema._zod.bag;
       if (typeof minimum === "number")
-        json4.minItems = minimum;
+        json5.minItems = minimum;
       if (typeof maximum === "number")
-        json4.maxItems = maximum;
+        json5.maxItems = maximum;
     };
     exports2.tupleProcessor = tupleProcessor3;
     var recordProcessor3 = (schema, ctx, _json, params) => {
-      const json4 = _json;
+      const json5 = _json;
       const def = schema._zod.def;
-      json4.type = "object";
+      json5.type = "object";
       const keyType = def.keyType;
       const keyBag = keyType._zod.bag;
       const patterns = keyBag?.patterns;
@@ -188848,18 +189131,18 @@ var require_json_schema_processors = __commonJS({
           ...params,
           path: [...params.path, "patternProperties", "*"]
         });
-        json4.patternProperties = {};
+        json5.patternProperties = {};
         for (const pattern of patterns) {
-          json4.patternProperties[pattern.source] = valueSchema;
+          json5.patternProperties[pattern.source] = valueSchema;
         }
       } else {
         if (ctx.target === "draft-07" || ctx.target === "draft-2020-12") {
-          json4.propertyNames = (0, to_json_schema_js_1.process)(def.keyType, ctx, {
+          json5.propertyNames = (0, to_json_schema_js_1.process)(def.keyType, ctx, {
             ...params,
             path: [...params.path, "propertyNames"]
           });
         }
-        json4.additionalProperties = (0, to_json_schema_js_1.process)(def.valueType, ctx, {
+        json5.additionalProperties = (0, to_json_schema_js_1.process)(def.valueType, ctx, {
           ...params,
           path: [...params.path, "additionalProperties"]
         });
@@ -188868,20 +189151,20 @@ var require_json_schema_processors = __commonJS({
       if (keyValues) {
         const validKeyValues = [...keyValues].filter((v) => typeof v === "string" || typeof v === "number");
         if (validKeyValues.length > 0) {
-          json4.required = validKeyValues;
+          json5.required = validKeyValues;
         }
       }
     };
     exports2.recordProcessor = recordProcessor3;
-    var nullableProcessor3 = (schema, ctx, json4, params) => {
+    var nullableProcessor3 = (schema, ctx, json5, params) => {
       const def = schema._zod.def;
       const inner = (0, to_json_schema_js_1.process)(def.innerType, ctx, params);
       const seen = ctx.seen.get(schema);
       if (ctx.target === "openapi-3.0") {
         seen.ref = def.innerType;
-        json4.nullable = true;
+        json5.nullable = true;
       } else {
-        json4.anyOf = [inner, { type: "null" }];
+        json5.anyOf = [inner, { type: "null" }];
       }
     };
     exports2.nullableProcessor = nullableProcessor3;
@@ -188892,24 +189175,24 @@ var require_json_schema_processors = __commonJS({
       seen.ref = def.innerType;
     };
     exports2.nonoptionalProcessor = nonoptionalProcessor3;
-    var defaultProcessor3 = (schema, ctx, json4, params) => {
+    var defaultProcessor3 = (schema, ctx, json5, params) => {
       const def = schema._zod.def;
       (0, to_json_schema_js_1.process)(def.innerType, ctx, params);
       const seen = ctx.seen.get(schema);
       seen.ref = def.innerType;
-      json4.default = JSON.parse(JSON.stringify(def.defaultValue));
+      json5.default = JSON.parse(JSON.stringify(def.defaultValue));
     };
     exports2.defaultProcessor = defaultProcessor3;
-    var prefaultProcessor3 = (schema, ctx, json4, params) => {
+    var prefaultProcessor3 = (schema, ctx, json5, params) => {
       const def = schema._zod.def;
       (0, to_json_schema_js_1.process)(def.innerType, ctx, params);
       const seen = ctx.seen.get(schema);
       seen.ref = def.innerType;
       if (ctx.io === "input")
-        json4._prefault = JSON.parse(JSON.stringify(def.defaultValue));
+        json5._prefault = JSON.parse(JSON.stringify(def.defaultValue));
     };
     exports2.prefaultProcessor = prefaultProcessor3;
-    var catchProcessor3 = (schema, ctx, json4, params) => {
+    var catchProcessor3 = (schema, ctx, json5, params) => {
       const def = schema._zod.def;
       (0, to_json_schema_js_1.process)(def.innerType, ctx, params);
       const seen = ctx.seen.get(schema);
@@ -188920,7 +189203,7 @@ var require_json_schema_processors = __commonJS({
       } catch {
         throw new Error("Dynamic catch values are not supported in JSON Schema");
       }
-      json4.default = catchValue;
+      json5.default = catchValue;
     };
     exports2.catchProcessor = catchProcessor3;
     var pipeProcessor3 = (schema, ctx, _json, params) => {
@@ -188931,12 +189214,12 @@ var require_json_schema_processors = __commonJS({
       seen.ref = innerType;
     };
     exports2.pipeProcessor = pipeProcessor3;
-    var readonlyProcessor3 = (schema, ctx, json4, params) => {
+    var readonlyProcessor3 = (schema, ctx, json5, params) => {
       const def = schema._zod.def;
       (0, to_json_schema_js_1.process)(def.innerType, ctx, params);
       const seen = ctx.seen.get(schema);
       seen.ref = def.innerType;
-      json4.readOnly = true;
+      json5.readOnly = true;
     };
     exports2.readonlyProcessor = readonlyProcessor3;
     var promiseProcessor3 = (schema, ctx, _json, params) => {
@@ -189612,7 +189895,7 @@ var require_schemas2 = __commonJS({
     exports2.refine = refine3;
     exports2.superRefine = superRefine3;
     exports2.instanceof = _instanceof3;
-    exports2.json = json4;
+    exports2.json = json5;
     exports2.preprocess = preprocess3;
     var core = __importStar(require_core2());
     var index_js_1 = require_core2();
@@ -189707,7 +189990,7 @@ var require_schemas2 = __commonJS({
     exports2._ZodString = core.$constructor("_ZodString", (inst, def) => {
       core.$ZodString.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.stringProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.stringProcessor(inst, ctx, json6, params);
       const bag = inst._zod.bag;
       inst.format = bag.format ?? null;
       inst.minLength = bag.minimum ?? null;
@@ -189946,7 +190229,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodNumber = core.$constructor("ZodNumber", (inst, def) => {
       core.$ZodNumber.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.numberProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.numberProcessor(inst, ctx, json6, params);
       inst.gt = (value, params) => inst.check(checks.gt(value, params));
       inst.gte = (value, params) => inst.check(checks.gte(value, params));
       inst.min = (value, params) => inst.check(checks.gte(value, params));
@@ -189994,7 +190277,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodBoolean = core.$constructor("ZodBoolean", (inst, def) => {
       core.$ZodBoolean.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.booleanProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.booleanProcessor(inst, ctx, json6, params);
     });
     function boolean5(params) {
       return core._boolean(exports2.ZodBoolean, params);
@@ -190002,7 +190285,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodBigInt = core.$constructor("ZodBigInt", (inst, def) => {
       core.$ZodBigInt.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.bigintProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.bigintProcessor(inst, ctx, json6, params);
       inst.gte = (value, params) => inst.check(checks.gte(value, params));
       inst.min = (value, params) => inst.check(checks.gte(value, params));
       inst.gt = (value, params) => inst.check(checks.gt(value, params));
@@ -190037,7 +190320,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodSymbol = core.$constructor("ZodSymbol", (inst, def) => {
       core.$ZodSymbol.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.symbolProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.symbolProcessor(inst, ctx, json6, params);
     });
     function symbol30(params) {
       return core._symbol(exports2.ZodSymbol, params);
@@ -190045,7 +190328,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodUndefined = core.$constructor("ZodUndefined", (inst, def) => {
       core.$ZodUndefined.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.undefinedProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.undefinedProcessor(inst, ctx, json6, params);
     });
     function _undefined5(params) {
       return core._undefined(exports2.ZodUndefined, params);
@@ -190053,7 +190336,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodNull = core.$constructor("ZodNull", (inst, def) => {
       core.$ZodNull.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.nullProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.nullProcessor(inst, ctx, json6, params);
     });
     function _null5(params) {
       return core._null(exports2.ZodNull, params);
@@ -190061,7 +190344,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodAny = core.$constructor("ZodAny", (inst, def) => {
       core.$ZodAny.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.anyProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.anyProcessor(inst, ctx, json6, params);
     });
     function any3() {
       return core._any(exports2.ZodAny);
@@ -190069,7 +190352,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodUnknown = core.$constructor("ZodUnknown", (inst, def) => {
       core.$ZodUnknown.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.unknownProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.unknownProcessor(inst, ctx, json6, params);
     });
     function unknown3() {
       return core._unknown(exports2.ZodUnknown);
@@ -190077,7 +190360,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodNever = core.$constructor("ZodNever", (inst, def) => {
       core.$ZodNever.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.neverProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.neverProcessor(inst, ctx, json6, params);
     });
     function never3(params) {
       return core._never(exports2.ZodNever, params);
@@ -190085,7 +190368,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodVoid = core.$constructor("ZodVoid", (inst, def) => {
       core.$ZodVoid.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.voidProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.voidProcessor(inst, ctx, json6, params);
     });
     function _void4(params) {
       return core._void(exports2.ZodVoid, params);
@@ -190093,7 +190376,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodDate = core.$constructor("ZodDate", (inst, def) => {
       core.$ZodDate.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.dateProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.dateProcessor(inst, ctx, json6, params);
       inst.min = (value, params) => inst.check(checks.gte(value, params));
       inst.max = (value, params) => inst.check(checks.lte(value, params));
       const c = inst._zod.bag;
@@ -190106,7 +190389,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodArray = core.$constructor("ZodArray", (inst, def) => {
       core.$ZodArray.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.arrayProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.arrayProcessor(inst, ctx, json6, params);
       inst.element = def.element;
       inst.min = (minLength, params) => inst.check(checks.minLength(minLength, params));
       inst.nonempty = (params) => inst.check(checks.minLength(1, params));
@@ -190124,7 +190407,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodObject = core.$constructor("ZodObject", (inst, def) => {
       core.$ZodObjectJIT.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.objectProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.objectProcessor(inst, ctx, json6, params);
       index_js_1.util.defineLazy(inst, "shape", () => {
         return def.shape;
       });
@@ -190173,7 +190456,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodUnion = core.$constructor("ZodUnion", (inst, def) => {
       core.$ZodUnion.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.unionProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.unionProcessor(inst, ctx, json6, params);
       inst.options = def.options;
     });
     function union3(options, params) {
@@ -190186,7 +190469,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodXor = core.$constructor("ZodXor", (inst, def) => {
       exports2.ZodUnion.init(inst, def);
       core.$ZodXor.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.unionProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.unionProcessor(inst, ctx, json6, params);
       inst.options = def.options;
     });
     function xor3(options, params) {
@@ -190212,7 +190495,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodIntersection = core.$constructor("ZodIntersection", (inst, def) => {
       core.$ZodIntersection.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.intersectionProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.intersectionProcessor(inst, ctx, json6, params);
     });
     function intersection3(left, right) {
       return new exports2.ZodIntersection({
@@ -190224,7 +190507,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodTuple = core.$constructor("ZodTuple", (inst, def) => {
       core.$ZodTuple.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.tupleProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.tupleProcessor(inst, ctx, json6, params);
       inst.rest = (rest) => inst.clone({
         ...inst._zod.def,
         rest
@@ -190244,7 +190527,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodRecord = core.$constructor("ZodRecord", (inst, def) => {
       core.$ZodRecord.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.recordProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.recordProcessor(inst, ctx, json6, params);
       inst.keyType = def.keyType;
       inst.valueType = def.valueType;
     });
@@ -190278,7 +190561,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodMap = core.$constructor("ZodMap", (inst, def) => {
       core.$ZodMap.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.mapProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.mapProcessor(inst, ctx, json6, params);
       inst.keyType = def.keyType;
       inst.valueType = def.valueType;
       inst.min = (...args) => inst.check(core._minSize(...args));
@@ -190297,7 +190580,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodSet = core.$constructor("ZodSet", (inst, def) => {
       core.$ZodSet.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.setProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.setProcessor(inst, ctx, json6, params);
       inst.min = (...args) => inst.check(core._minSize(...args));
       inst.nonempty = (params) => inst.check(core._minSize(1, params));
       inst.max = (...args) => inst.check(core._maxSize(...args));
@@ -190313,7 +190596,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodEnum = core.$constructor("ZodEnum", (inst, def) => {
       core.$ZodEnum.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.enumProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.enumProcessor(inst, ctx, json6, params);
       inst.enum = def.entries;
       inst.options = Object.values(def.entries);
       const keys2 = new Set(Object.keys(def.entries));
@@ -190366,7 +190649,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodLiteral = core.$constructor("ZodLiteral", (inst, def) => {
       core.$ZodLiteral.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.literalProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.literalProcessor(inst, ctx, json6, params);
       inst.values = new Set(def.values);
       Object.defineProperty(inst, "value", {
         get() {
@@ -190387,7 +190670,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodFile = core.$constructor("ZodFile", (inst, def) => {
       core.$ZodFile.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.fileProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.fileProcessor(inst, ctx, json6, params);
       inst.min = (size, params) => inst.check(core._minSize(size, params));
       inst.max = (size, params) => inst.check(core._maxSize(size, params));
       inst.mime = (types, params) => inst.check(core._mime(Array.isArray(types) ? types : [types], params));
@@ -190398,7 +190681,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodTransform = core.$constructor("ZodTransform", (inst, def) => {
       core.$ZodTransform.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.transformProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.transformProcessor(inst, ctx, json6, params);
       inst._zod.parse = (payload, _ctx) => {
         if (_ctx.direction === "backward") {
           throw new core.$ZodEncodeError(inst.constructor.name);
@@ -190436,7 +190719,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodOptional = core.$constructor("ZodOptional", (inst, def) => {
       core.$ZodOptional.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.optionalProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.optionalProcessor(inst, ctx, json6, params);
       inst.unwrap = () => inst._zod.def.innerType;
     });
     function optional3(innerType) {
@@ -190448,7 +190731,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodExactOptional = core.$constructor("ZodExactOptional", (inst, def) => {
       core.$ZodExactOptional.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.optionalProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.optionalProcessor(inst, ctx, json6, params);
       inst.unwrap = () => inst._zod.def.innerType;
     });
     function exactOptional3(innerType) {
@@ -190460,7 +190743,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodNullable = core.$constructor("ZodNullable", (inst, def) => {
       core.$ZodNullable.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.nullableProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.nullableProcessor(inst, ctx, json6, params);
       inst.unwrap = () => inst._zod.def.innerType;
     });
     function nullable3(innerType) {
@@ -190475,7 +190758,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodDefault = core.$constructor("ZodDefault", (inst, def) => {
       core.$ZodDefault.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.defaultProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.defaultProcessor(inst, ctx, json6, params);
       inst.unwrap = () => inst._zod.def.innerType;
       inst.removeDefault = inst.unwrap;
     });
@@ -190491,7 +190774,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodPrefault = core.$constructor("ZodPrefault", (inst, def) => {
       core.$ZodPrefault.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.prefaultProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.prefaultProcessor(inst, ctx, json6, params);
       inst.unwrap = () => inst._zod.def.innerType;
     });
     function prefault3(innerType, defaultValue) {
@@ -190506,7 +190789,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodNonOptional = core.$constructor("ZodNonOptional", (inst, def) => {
       core.$ZodNonOptional.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.nonoptionalProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.nonoptionalProcessor(inst, ctx, json6, params);
       inst.unwrap = () => inst._zod.def.innerType;
     });
     function nonoptional3(innerType, params) {
@@ -190519,7 +190802,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodSuccess = core.$constructor("ZodSuccess", (inst, def) => {
       core.$ZodSuccess.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.successProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.successProcessor(inst, ctx, json6, params);
       inst.unwrap = () => inst._zod.def.innerType;
     });
     function success5(innerType) {
@@ -190531,7 +190814,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodCatch = core.$constructor("ZodCatch", (inst, def) => {
       core.$ZodCatch.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.catchProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.catchProcessor(inst, ctx, json6, params);
       inst.unwrap = () => inst._zod.def.innerType;
       inst.removeCatch = inst.unwrap;
     });
@@ -190545,7 +190828,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodNaN = core.$constructor("ZodNaN", (inst, def) => {
       core.$ZodNaN.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.nanProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.nanProcessor(inst, ctx, json6, params);
     });
     function nan3(params) {
       return core._nan(exports2.ZodNaN, params);
@@ -190553,7 +190836,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodPipe = core.$constructor("ZodPipe", (inst, def) => {
       core.$ZodPipe.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.pipeProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.pipeProcessor(inst, ctx, json6, params);
       inst.in = def.in;
       inst.out = def.out;
     });
@@ -190581,7 +190864,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodReadonly = core.$constructor("ZodReadonly", (inst, def) => {
       core.$ZodReadonly.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.readonlyProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.readonlyProcessor(inst, ctx, json6, params);
       inst.unwrap = () => inst._zod.def.innerType;
     });
     function readonly3(innerType) {
@@ -190593,7 +190876,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodTemplateLiteral = core.$constructor("ZodTemplateLiteral", (inst, def) => {
       core.$ZodTemplateLiteral.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.templateLiteralProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.templateLiteralProcessor(inst, ctx, json6, params);
     });
     function templateLiteral3(parts, params) {
       return new exports2.ZodTemplateLiteral({
@@ -190605,7 +190888,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodLazy = core.$constructor("ZodLazy", (inst, def) => {
       core.$ZodLazy.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.lazyProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.lazyProcessor(inst, ctx, json6, params);
       inst.unwrap = () => inst._zod.def.getter();
     });
     function lazy3(getter) {
@@ -190617,7 +190900,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodPromise = core.$constructor("ZodPromise", (inst, def) => {
       core.$ZodPromise.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.promiseProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.promiseProcessor(inst, ctx, json6, params);
       inst.unwrap = () => inst._zod.def.innerType;
     });
     function promise3(innerType) {
@@ -190629,7 +190912,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodFunction = core.$constructor("ZodFunction", (inst, def) => {
       core.$ZodFunction.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.functionProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.functionProcessor(inst, ctx, json6, params);
     });
     function _function3(params) {
       return new exports2.ZodFunction({
@@ -190641,7 +190924,7 @@ var require_schemas2 = __commonJS({
     exports2.ZodCustom = core.$constructor("ZodCustom", (inst, def) => {
       core.$ZodCustom.init(inst, def);
       exports2.ZodType.init(inst, def);
-      inst._zod.processJSONSchema = (ctx, json5, params) => processors.customProcessor(inst, ctx, json5, params);
+      inst._zod.processJSONSchema = (ctx, json6, params) => processors.customProcessor(inst, ctx, json6, params);
     });
     function check3(fn) {
       const ch = new core.$ZodCheck({
@@ -190690,7 +190973,7 @@ var require_schemas2 = __commonJS({
       String: exports2.ZodString
     }, ...args);
     exports2.stringbool = stringbool3;
-    function json4(params) {
+    function json5(params) {
       const jsonSchema4 = lazy3(() => {
         return union3([string5(params), number6(), boolean5(), _null5(), array4(jsonSchema4), record3(string5(), jsonSchema4)]);
       });
@@ -191703,8 +191986,8 @@ var require_ZodError = __commonJS({
       "not_finite"
     ]);
     var quotelessJson = (obj) => {
-      const json4 = JSON.stringify(obj, null, 2);
-      return json4.replace(/"([^"]+)":/g, "$1:");
+      const json5 = JSON.stringify(obj, null, 2);
+      return json5.replace(/"([^"]+)":/g, "$1:");
     };
     exports2.quotelessJson = quotelessJson;
     var ZodError4 = class _ZodError extends Error {
@@ -198732,13 +199015,13 @@ var require_dist9 = __commonJS({
       };
     }
     var import_provider_utils210 = require_dist8();
-    var import_zod151 = require_zod();
-    var qwenErrorDataSchema = import_zod151.z.object({
-      object: import_zod151.z.literal("error"),
-      message: import_zod151.z.string(),
-      type: import_zod151.z.string(),
-      param: import_zod151.z.string().nullable(),
-      code: import_zod151.z.string().nullable()
+    var import_zod154 = require_zod();
+    var qwenErrorDataSchema = import_zod154.z.object({
+      object: import_zod154.z.literal("error"),
+      message: import_zod154.z.string(),
+      type: import_zod154.z.string(),
+      param: import_zod154.z.string().nullable(),
+      code: import_zod154.z.string().nullable()
     });
     var qwenFailedResponseHandler = (0, import_provider_utils210.createJsonErrorResponseHandler)({
       errorSchema: qwenErrorDataSchema,
@@ -225148,6 +225431,7 @@ function runCode(code, vendor) {
     exports: exports2,
     axios: axios_default,
     FormData: import_form_data2.default,
+    Buffer,
     logger,
     jsonwebtoken: import_jsonwebtoken.default,
     crypto: import_node_crypto3.default
@@ -225216,11 +225500,7 @@ async function mergeImages(imageBase64List, maxSize = "10mb") {
     return Math.round(maxHeight * aspectRatio);
   });
   const totalWidth = imageWidths.reduce((sum, w) => sum + w, 0);
-  const resizedImages = await Promise.all(
-    imageBuffers.map(async (buffer, index) => {
-      return (0, import_sharp.default)(buffer).resize(imageWidths[index], maxHeight, { fit: "cover" }).toBuffer();
-    })
-  );
+  const resizedImages = await Promise.all(imageBuffers.map((buffer, index) => (0, import_sharp.default)(buffer).resize(imageWidths[index], maxHeight, { fit: "cover" }).toBuffer()));
   let currentX = 0;
   const compositeInputs = resizedImages.map((buffer, index) => {
     const input = { input: buffer, left: currentX, top: 0 };
@@ -225662,24 +225942,24 @@ var require_oauth = __commonJS({
       });
     }
     async function processTokenResponse(response) {
-      const json4 = await response.json();
+      const json5 = await response.json();
       if (!response.ok) {
-        const errorMsg = typeof json4 === "object" && json4 && "error" in json4 ? String(json4.error) : "Token refresh failed";
+        const errorMsg = typeof json5 === "object" && json5 && "error" in json5 ? String(json5.error) : "Token refresh failed";
         return [new Error(errorMsg)];
       }
-      if (typeof json4 !== "object" || json4 === null) {
+      if (typeof json5 !== "object" || json5 === null) {
         return [new Error("Invalid token response")];
       }
-      if (typeof json4.access_token !== "string") {
+      if (typeof json5.access_token !== "string") {
         return [new Error("Missing access_token in response")];
       }
-      if (json4.token_type !== "Bearer") {
+      if (json5.token_type !== "Bearer") {
         return [new Error("Invalid token_type in response")];
       }
-      if (typeof json4.expires_in !== "number") {
+      if (typeof json5.expires_in !== "number") {
         return [new Error("Missing expires_in in response")];
       }
-      return [null, json4];
+      return [null, json5];
     }
   }
 });
@@ -237361,6 +237641,768 @@ var init_utils3 = __esm({
   }
 });
 
+// src/utils/storyboardScenes.ts
+function renderStoryboardScenes(scenes) {
+  return Object.keys(scenes).map(Number).sort((a, b) => a - b).map((number6) => scenes[String(number6)]).join("\n\n");
+}
+function mergeStoryboardScene(previousTable, previous, taskId, sceneIndex, total, markdown) {
+  if (!/^[a-zA-Z0-9_-]{8,128}$/.test(taskId)) throw new Error("\u5206\u955C\u4EFB\u52A1\u6807\u8BC6\u65E0\u6548");
+  if (!Number.isSafeInteger(sceneIndex) || !Number.isSafeInteger(total) || sceneIndex < 1 || total < sceneIndex || total > 1e3) {
+    throw new Error("\u573A\u6B21\u6216\u603B\u573A\u6B21\u6570\u65E0\u6548");
+  }
+  const scene = markdown.trim();
+  if (!scene || scene.length > 6e4 || /<\/?storyboardTable\b/i.test(scene)) throw new Error("\u5355\u573A\u5185\u5BB9\u4E3A\u7A7A\u3001\u8FC7\u957F\u6216\u5305\u542B\u5D4C\u5957 XML \u6807\u7B7E");
+  const headings = [...scene.matchAll(/^##\s*场\s*(\d+)\s*[：:]/gm)];
+  if (headings.length !== 1 || Number(headings[0][1]) !== sceneIndex || headings[0].index !== 0) {
+    throw new Error(`\u5355\u573A\u5206\u955C\u5FC5\u987B\u4EE5\u201C## \u573A${sceneIndex}\uFF1A\u201D\u5F00\u5934\uFF0C\u4E14\u4E0D\u80FD\u5305\u542B\u5176\u4ED6\u573A\u6B21`);
+  }
+  if (previous) {
+    if (previous.taskId !== taskId || previous.total !== total) throw new Error("\u4EFB\u52A1\u6807\u8BC6\u6216\u603B\u573A\u6B21\u6570\u4E0E\u5DF2\u4FDD\u5B58\u7684\u5206\u955C\u8868\u4E0D\u4E00\u81F4");
+    if (previousTable !== renderStoryboardScenes(previous.scenes)) throw new Error("\u5206\u955C\u8868\u5DF2\u88AB\u4EBA\u5DE5\u4FEE\u6539\uFF0C\u505C\u6B62\u81EA\u52A8\u5408\u5E76\u4EE5\u4FDD\u62A4\u73B0\u6709\u5185\u5BB9");
+  } else if (previousTable.trim()) {
+    throw new Error("\u5DE5\u4F5C\u533A\u5DF2\u6709\u5206\u955C\u8868\uFF1B\u8BF7\u5148\u786E\u8BA4\u6216\u6E05\u7A7A\u65E7\u7248\u5185\u5BB9\uFF0C\u4E0D\u80FD\u81EA\u52A8\u8986\u76D6");
+  }
+  const scenes = { ...previous?.scenes ?? {} };
+  if (scenes[String(sceneIndex)] && scenes[String(sceneIndex)] !== scene) {
+    throw new Error(`\u573A${sceneIndex}\u5DF2\u4FDD\u5B58\u4E14\u5185\u5BB9\u4E0D\u540C\uFF0C\u4E0D\u80FD\u81EA\u52A8\u8986\u76D6\uFF1B\u8BF7\u4EBA\u5DE5\u6838\u5BF9\u540E\u518D\u5904\u7406`);
+  }
+  const changed = !scenes[String(sceneIndex)];
+  scenes[String(sceneIndex)] = scene;
+  const savedScenes = Object.keys(scenes).map(Number).sort((a, b) => a - b);
+  const missingScenes = Array.from({ length: total }, (_, i) => i + 1).filter((number6) => !scenes[String(number6)]);
+  return {
+    storyboardTable: renderStoryboardScenes(scenes),
+    storyboardTableProgress: { ...previous, taskId, total, scenes, revision: (previous?.revision ?? 0) + (changed ? 1 : 0), complete: missingScenes.length === 0 },
+    savedScenes,
+    missingScenes
+  };
+}
+var init_storyboardScenes = __esm({
+  "src/utils/storyboardScenes.ts"() {
+    "use strict";
+  }
+});
+
+// src/agents/productionAgent/storyboardProgress.ts
+function inspectStoryboardProgress(table, raw, currentSourceHash, currentPlanHash) {
+  const empty = {
+    exists: false,
+    mode: "empty",
+    taskId: null,
+    total: null,
+    revision: 0,
+    savedScenes: [],
+    missingScenes: [],
+    nextScene: null,
+    complete: false,
+    valid: true
+  };
+  const conflict = (code, message, value, savedScenes2 = []) => {
+    const total = Number.isSafeInteger(value?.total) && Number(value?.total) > 0 && Number(value?.total) <= 1e3 ? Number(value?.total) : null;
+    const missingScenes2 = total === null ? [] : Array.from({ length: total }, (_, i) => i + 1).filter((n) => !savedScenes2.includes(n));
+    return {
+      ...empty,
+      exists: Boolean(table.trim() || raw),
+      mode: "conflict",
+      valid: false,
+      taskId: typeof value?.taskId === "string" ? value.taskId : null,
+      total,
+      revision: Number.isSafeInteger(value?.revision) ? Number(value?.revision) : 0,
+      savedScenes: savedScenes2,
+      missingScenes: missingScenes2,
+      nextScene: missingScenes2[0] ?? null,
+      sourceHash: value?.sourceHash,
+      planHash: value?.planHash,
+      conflict: { code, message }
+    };
+  };
+  if (!raw) {
+    if (!table.trim()) return empty;
+    return { ...conflict("LEGACY_NO_PROGRESS", "\u5DF2\u6709\u65E7\u7248\u5206\u955C\u6B63\u6587\uFF0C\u4F46\u65E0\u9010\u573A\u4EFB\u52A1\u8FDB\u5EA6\uFF1B\u9700\u8981\u6838\u5BF9\uFF0C\u4E0D\u80FD\u81EA\u52A8\u8986\u76D6"), mode: "legacy" };
+  }
+  if (typeof raw !== "object" || Array.isArray(raw)) return conflict("PROGRESS_INVALID", "\u5206\u955C\u8FDB\u5EA6\u6570\u636E\u7C7B\u578B\u65E0\u6548");
+  const progress = raw;
+  if (!/^[A-Za-z0-9_-]{8,128}$/.test(progress.taskId ?? "") || !Number.isSafeInteger(progress.total) || progress.total < 1 || progress.total > 1e3 || !Number.isSafeInteger(progress.revision) || progress.revision < 0 || !progress.scenes || typeof progress.scenes !== "object" || Array.isArray(progress.scenes)) {
+    return conflict("PROGRESS_INVALID", "\u5206\u955C\u4EFB\u52A1\u6807\u8BC6\u3001\u603B\u573A\u6B21\u6216\u8FDB\u5EA6\u7ED3\u6784\u65E0\u6548", progress);
+  }
+  const keys2 = Object.keys(progress.scenes);
+  for (const key of keys2) {
+    const value = progress.scenes[key];
+    if (!/^[1-9]\d*$/.test(key) || Number(key) > progress.total || typeof value !== "string" || !value.trim() || !(value.startsWith(`## \u573A${Number(key)}\uFF1A`) || value.startsWith(`## \u573A${Number(key)}:`))) {
+      return conflict("PROGRESS_INVALID", "\u5206\u955C\u8FDB\u5EA6\u4E2D\u7684\u573A\u6B21\u7F16\u53F7\u6216\u5185\u5BB9\u65E0\u6548", progress);
+    }
+  }
+  const savedScenes = keys2.map(Number).sort((a, b) => a - b);
+  if (table !== renderStoryboardScenes(progress.scenes)) {
+    return conflict("TABLE_PROGRESS_MISMATCH", "\u5206\u955C\u6B63\u6587\u4E0E\u8FDB\u5EA6\u8BB0\u5F55\u4E0D\u4E00\u81F4\uFF0C\u53EF\u80FD\u88AB\u4EBA\u5DE5\u4FEE\u6539\uFF1B\u5DF2\u505C\u6B62\u81EA\u52A8\u7EED\u5199", progress, savedScenes);
+  }
+  const missingScenes = Array.from({ length: progress.total }, (_, i) => i + 1).filter((n) => !progress.scenes[String(n)]);
+  if (progress.complete !== (missingScenes.length === 0)) {
+    return conflict("COMPLETE_FLAG_MISMATCH", "\u5B8C\u6210\u6807\u8BB0\u4E0E\u5DF2\u4FDD\u5B58\u573A\u6B21\u6570\u4E0D\u4E00\u81F4", progress, savedScenes);
+  }
+  if (progress.sourceHash && currentSourceHash && progress.sourceHash !== currentSourceHash) {
+    return conflict("SOURCE_CHANGED", `\u5267\u672C\u7248\u672C\u5DF2\u53D8\u5316\uFF1B\u65E7\u4EFB\u52A1\u5B9E\u9645\u4E0A\u4FDD\u5B58${savedScenes.length}\u573A\uFF0C\u8BF7\u5148\u5F52\u6863\u65E7\u7A3F\uFF0C\u518D\u6309\u65B0\u5267\u672C\u91CD\u5EFA`, progress, savedScenes);
+  }
+  if (progress.planHash && currentPlanHash && progress.planHash !== currentPlanHash) {
+    return conflict("PLAN_CHANGED", `\u5BFC\u6F14\u8BA1\u5212\u7248\u672C\u5DF2\u53D8\u5316\uFF1B\u65E7\u4EFB\u52A1\u5B9E\u9645\u4E0A\u4FDD\u5B58${savedScenes.length}\u573A\uFF0C\u4E0D\u5F97\u89C6\u4E3A\u96F6\u573A\u6216\u76F4\u63A5\u8986\u76D6`, progress, savedScenes);
+  }
+  return {
+    exists: true,
+    mode: "scene",
+    taskId: progress.taskId,
+    total: progress.total,
+    revision: progress.revision,
+    savedScenes,
+    missingScenes,
+    nextScene: missingScenes[0] ?? null,
+    complete: missingScenes.length === 0,
+    valid: true,
+    sourceHash: progress.sourceHash,
+    planHash: progress.planHash
+  };
+}
+async function readStoryboardProgress(db2, projectId, episodesId) {
+  if (!Number.isSafeInteger(projectId) || !Number.isSafeInteger(episodesId)) throw new Error("\u9879\u76EE\u6216\u5267\u96C6 ID \u65E0\u6548");
+  const script = await db2("o_script").where({ id: episodesId, projectId }).select("content").first();
+  if (!script) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C");
+  const record3 = await db2("o_agentWorkData").where({ projectId, episodesId, key: "productionAgent" }).select("data").first();
+  const data = record3?.data ? JSON.parse(record3.data) : {};
+  return inspectStoryboardProgress(
+    typeof data.storyboardTable === "string" ? data.storyboardTable : "",
+    data.storyboardTableProgress,
+    hashStoryboardSource(script.content ?? ""),
+    hashStoryboardSource(typeof data.scriptPlan === "string" ? data.scriptPlan : "")
+  );
+}
+var import_node_crypto5, hashStoryboardSource;
+var init_storyboardProgress = __esm({
+  "src/agents/productionAgent/storyboardProgress.ts"() {
+    "use strict";
+    import_node_crypto5 = require("node:crypto");
+    init_storyboardScenes();
+    hashStoryboardSource = (text2) => (0, import_node_crypto5.createHash)("sha256").update(text2).digest("hex");
+  }
+});
+
+// src/agents/productionAgent/storyboardTable.ts
+function readAttribute(raw, name28) {
+  const match = raw.match(new RegExp(`\\b${name28}\\s*=\\s*(?:"([^"]*)"|'([^']*)')`));
+  return match?.[1] ?? match?.[2];
+}
+function validateFullTable(content) {
+  const scenes = [...content.matchAll(/^##\s*场\s*(\d+)\s*[：:]/gm)].map((match) => Number(match[1]));
+  if (!scenes.length) throw new Error("\u5B8C\u6574\u5206\u955C\u8868\u7F3A\u5C11\u201C## \u573AN\uFF1A\u201D\u573A\u5934");
+  if (new Set(scenes).size !== scenes.length) throw new Error("\u5B8C\u6574\u5206\u955C\u8868\u5B58\u5728\u91CD\u590D\u573A\u6B21");
+  if (scenes.some((scene, index) => scene !== index + 1)) {
+    throw new Error("\u5B8C\u6574\u5206\u955C\u8868\u573A\u6B21\u5FC5\u987B\u4ECE 1 \u5F00\u59CB\u8FDE\u7EED\u7F16\u53F7");
+  }
+  return scenes;
+}
+function extractStoryboardTable(response) {
+  const openings = [...response.matchAll(/<storyboardTable\b([^>]*)>/g)];
+  const closings = [...response.matchAll(/<\/storyboardTable\s*>/g)];
+  if (openings.length !== 1 || closings.length !== 1) {
+    throw new Error("\u5206\u955C\u8868\u8F93\u51FA\u4E0D\u5B8C\u6574\uFF1A\u9700\u8981\u4E14\u53EA\u80FD\u6709\u4E00\u4EFD storyboardTable");
+  }
+  const open = openings[0];
+  const close = closings[0];
+  if (open.index === void 0 || close.index === void 0 || close.index < open.index + open[0].length) {
+    throw new Error("\u5206\u955C\u8868\u8F93\u51FA\u4E0D\u5B8C\u6574\uFF1AstoryboardTable \u6807\u7B7E\u987A\u5E8F\u9519\u8BEF");
+  }
+  const content = response.slice(open.index + open[0].length, close.index).trim();
+  if (!content) throw new Error("\u5206\u955C\u8868\u5185\u5BB9\u4E3A\u7A7A");
+  if (/<\/?storyboardTable\b/i.test(content)) throw new Error("\u5206\u955C\u8868\u5185\u5BB9\u5305\u542B\u5D4C\u5957 storyboardTable \u6807\u7B7E");
+  const attrs = open[1] ?? "";
+  const sceneRaw = readAttribute(attrs, "scene");
+  const totalRaw = readAttribute(attrs, "total");
+  const taskRaw = readAttribute(attrs, "task");
+  const usesSceneMode = sceneRaw !== void 0 || totalRaw !== void 0 || taskRaw !== void 0;
+  if (!usesSceneMode) {
+    if (attrs.trim()) throw new Error("\u6574\u8868\u6A21\u5F0F\u4E0D\u5141\u8BB8 storyboardTable \u9644\u5E26\u672A\u77E5\u5C5E\u6027");
+    return { mode: "full", content, scenes: validateFullTable(content) };
+  }
+  if (sceneRaw === void 0 || totalRaw === void 0 || taskRaw === void 0) {
+    throw new Error("\u9010\u573A\u5206\u955C\u5FC5\u987B\u540C\u65F6\u63D0\u4F9B scene\u3001total\u3001task \u5C5E\u6027");
+  }
+  const scene = Number(sceneRaw);
+  const total = Number(totalRaw);
+  const taskId = taskRaw.trim();
+  if (!Number.isSafeInteger(scene) || !Number.isSafeInteger(total) || scene < 1 || total < scene || total > 1e3) {
+    throw new Error("\u9010\u573A\u5206\u955C\u7684 scene \u6216 total \u65E0\u6548");
+  }
+  if (!/^[a-zA-Z0-9_-]{8,128}$/.test(taskId)) throw new Error("\u9010\u573A\u5206\u955C task \u6807\u8BC6\u65E0\u6548");
+  const known = attrs.replace(/\bscene\s*=\s*(?:"[^"]*"|'[^']*')/g, "").replace(/\btotal\s*=\s*(?:"[^"]*"|'[^']*')/g, "").replace(/\btask\s*=\s*(?:"[^"]*"|'[^']*')/g, "").trim();
+  if (known) throw new Error("\u9010\u573A\u5206\u955C\u5305\u542B\u672A\u77E5 storyboardTable \u5C5E\u6027");
+  return { mode: "scene", content, scene, total, taskId };
+}
+async function readStoredData(trx, projectId, episodesId) {
+  const script = await trx("o_script").where({ id: episodesId, projectId }).select("id", "content").first();
+  if (!script) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C");
+  const scope = { projectId, episodesId, key: "productionAgent" };
+  const row = await trx("o_agentWorkData").where(scope).first();
+  const data = row?.data ? JSON.parse(row.data) : { script: script.content ?? "", scriptPlan: "", assets: [], storyboardTable: "", storyboard: [], workbench: { videoList: [] } };
+  return { scope, row, data };
+}
+async function writeStoredData(trx, scope, row, data) {
+  const payload = JSON.stringify(data);
+  if (row) {
+    const updated = await trx("o_agentWorkData").where({ id: row.id }).update({ data: payload });
+    if (updated !== 1) throw new Error("\u5206\u955C\u5DE5\u4F5C\u533A\u66F4\u65B0\u5931\u8D25");
+  } else {
+    await trx("o_agentWorkData").insert({ ...scope, data: payload });
+  }
+  const saved = await trx("o_agentWorkData").where(scope).select("data").first();
+  if (!saved || saved.data !== payload) throw new Error("\u5206\u955C\u5DE5\u4F5C\u533A\u5199\u5165\u540E\u6821\u9A8C\u5931\u8D25");
+}
+async function readStoryboardTableSnapshot(db2, projectId, episodesId) {
+  const script = await db2("o_script").where({ id: episodesId, projectId }).select("id").first();
+  if (!script) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C");
+  const row = await db2("o_agentWorkData").where({ projectId, episodesId, key: "productionAgent" }).select("data").first();
+  if (!row?.data) return { storyboardTable: "" };
+  const data = JSON.parse(row.data);
+  return {
+    storyboardTable: typeof data.storyboardTable === "string" ? data.storyboardTable : "",
+    storyboardTableProgress: data.storyboardTableProgress
+  };
+}
+async function commitStoryboardTableOutput(db2, projectId, episodesId, output, expected) {
+  if (!Number.isSafeInteger(projectId) || !Number.isSafeInteger(episodesId)) throw new Error("\u5206\u955C\u8868\u7F3A\u5C11\u6709\u6548\u9879\u76EE\u6216\u5267\u96C6 ID");
+  return db2.transaction(async (trx) => {
+    const { scope, row, data } = await readStoredData(trx, projectId, episodesId);
+    const currentTable = typeof data.storyboardTable === "string" ? data.storyboardTable : "";
+    const currentProgress = data.storyboardTableProgress;
+    if (output.mode === "scene") {
+      const script = await trx("o_script").where({ id: episodesId, projectId }).select("content").first();
+      if (!script) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C");
+      const sourceHash = hashStoryboardSource(script.content ?? "");
+      const planHash = hashStoryboardSource(typeof data.scriptPlan === "string" ? data.scriptPlan : "");
+      if (currentProgress?.sourceHash && currentProgress.sourceHash !== sourceHash) {
+        throw new Error("\u5267\u672C\u81EA\u5206\u955C\u4EFB\u52A1\u5F00\u59CB\u540E\u5DF2\u4FEE\u6539\uFF0C\u4E0D\u80FD\u7EE7\u7EED\u6DF7\u5199\u65E7\u4EFB\u52A1");
+      }
+      if (currentProgress?.planHash && currentProgress.planHash !== planHash) {
+        throw new Error("\u5BFC\u6F14\u8BA1\u5212\u81EA\u5206\u955C\u4EFB\u52A1\u5F00\u59CB\u540E\u5DF2\u4FEE\u6539\uFF0C\u4E0D\u80FD\u7EE7\u7EED\u6DF7\u5199\u65E7\u4EFB\u52A1");
+      }
+      const merged = mergeStoryboardScene(
+        currentTable,
+        currentProgress,
+        output.taskId,
+        output.scene,
+        output.total,
+        output.content
+      );
+      const nextData2 = {
+        ...data,
+        storyboardTable: merged.storyboardTable,
+        storyboardTableProgress: {
+          ...merged.storyboardTableProgress,
+          sourceHash: currentProgress?.sourceHash ?? sourceHash,
+          planHash: currentProgress?.planHash ?? planHash
+        }
+      };
+      await writeStoredData(trx, scope, row, nextData2);
+      return {
+        resultRef: `storyboardTable:${projectId}:${episodesId}:scene:${output.scene}`,
+        ...merged,
+        storyboardTableProgress: nextData2.storyboardTableProgress
+      };
+    }
+    if (currentTable === output.content && !currentProgress) {
+      return {
+        resultRef: `storyboardTable:${projectId}:${episodesId}:full`,
+        storyboardTable: currentTable,
+        savedScenes: output.scenes,
+        missingScenes: []
+      };
+    }
+    if (currentProgress) {
+      throw new Error("\u5F53\u524D\u5B58\u5728\u9010\u573A\u5206\u955C\u8FDB\u5EA6\uFF0C\u4E0D\u80FD\u7528\u6574\u8868\u6A21\u5F0F\u9759\u9ED8\u8986\u76D6");
+    }
+    if (expected) {
+      if (currentTable !== expected.storyboardTable || JSON.stringify(currentProgress ?? null) !== JSON.stringify(expected.storyboardTableProgress ?? null)) {
+        throw new Error("\u5206\u955C\u8868\u5728\u751F\u6210\u671F\u95F4\u5DF2\u88AB\u4FEE\u6539\uFF0C\u8BF7\u5148\u67E5\u770B\u5F53\u524D\u7248\u672C\u518D\u91CD\u8BD5");
+      }
+    } else if (currentTable) {
+      throw new Error("\u5DE5\u4F5C\u533A\u5DF2\u6709\u5206\u955C\u8868\uFF0C\u6574\u8868\u5199\u5165\u9700\u8981\u5148\u6838\u5BF9\u5F53\u524D\u7248\u672C");
+    }
+    const nextData = { ...data, storyboardTable: output.content };
+    delete nextData.storyboardTableProgress;
+    await writeStoredData(trx, scope, row, nextData);
+    return {
+      resultRef: `storyboardTable:${projectId}:${episodesId}:full`,
+      storyboardTable: output.content,
+      savedScenes: output.scenes,
+      missingScenes: []
+    };
+  });
+}
+async function reconcileStoryboardTableOutput(db2, projectId, episodesId, response) {
+  if (!response) return null;
+  const output = extractStoryboardTable(response);
+  const snapshot = await readStoryboardTableSnapshot(db2, projectId, episodesId);
+  if (output.mode === "full") {
+    return snapshot.storyboardTable === output.content ? `storyboardTable:${projectId}:${episodesId}:full` : null;
+  }
+  const progress = snapshot.storyboardTableProgress;
+  if (progress?.taskId === output.taskId && progress.total === output.total && progress.scenes?.[String(output.scene)] === output.content && snapshot.storyboardTable === renderStoryboardScenes(progress.scenes)) {
+    return `storyboardTable:${projectId}:${episodesId}:scene:${output.scene}`;
+  }
+  return null;
+}
+var init_storyboardTable = __esm({
+  "src/agents/productionAgent/storyboardTable.ts"() {
+    "use strict";
+    init_storyboardProgress();
+    init_storyboardScenes();
+  }
+});
+
+// src/agents/productionAgent/storyboardValidator.ts
+function validateStoryboardScene(scene, markdown, sourceScene) {
+  const errors = [];
+  const warnings = [];
+  const text2 = markdown.trim();
+  const headings = [...text2.matchAll(/^##\s*场\s*(\d+)\s*[：:]/gm)];
+  if (headings.length !== 1 || Number(headings[0]?.[1]) !== scene || headings[0]?.index !== 0) {
+    errors.push(`\u5FC5\u987B\u6709\u4E14\u53EA\u6709\u201C## \u573A${scene}\uFF1A\u201D\u573A\u5934`);
+  }
+  const parts = [...text2.matchAll(/^###\s*片段[^\n]*/gm)];
+  if (!parts.length) errors.push("\u5F53\u524D\u573A\u6CA1\u6709\u4EFB\u4F55\u5206\u955C\u7247\u6BB5");
+  const segments = parts.map((part, i) => text2.slice(part.index, parts[i + 1]?.index ?? text2.length));
+  for (const [i, segment] of segments.entries()) {
+    if (!/\|\s*序号\s*\|\s*画面描述\s*\|/.test(segment)) errors.push(`\u7247\u6BB5${i + 1}\u7F3A\u5C11\u5206\u955C\u8868\u5934`);
+    const lines = segment.split("\n").filter((line) => /^\|\s*\d+\s*\|/.test(line));
+    if (!lines.length) errors.push(`\u7247\u6BB5${i + 1}\u6CA1\u6709\u955C\u5934\u884C`);
+    let duration4 = 0;
+    for (const line of lines) {
+      const cells = line.split("|").slice(1, -1).map((cell) => cell.trim());
+      if (cells.length !== 7) {
+        errors.push(`\u7247\u6BB5${i + 1}\u8868\u683C\u5FC5\u987B\u6070\u597D7\u5217`);
+        continue;
+      }
+      const seconds = Number(cells[2]);
+      if (!Number.isFinite(seconds) || seconds <= 0) errors.push(`\u7247\u6BB5${i + 1}\u5B58\u5728\u65E0\u6548\u65F6\u957F`);
+      else duration4 += seconds;
+    }
+    if (duration4 > 15) errors.push(`\u7247\u6BB5${i + 1}\u65F6\u957F${duration4}\u79D2\uFF0C\u8D85\u8FC715\u79D2`);
+  }
+  const expected = [...(sourceScene ?? "").matchAll(/[『「“]([^』」”]+)[』」”]/g)].map((match) => match[1].replace(/\s+/g, ""));
+  let coverageVerified = false;
+  if (sourceScene && expected.length) {
+    const actual = text2.replace(/\s+/g, "");
+    const missing = expected.filter((line) => !actual.includes(line));
+    if (missing.length) errors.push(`\u7591\u4F3C\u9057\u6F0F\u539F\u5267\u672C\u53F0\u8BCD\u6216VO\uFF1A${missing.slice(0, 3).join("\uFF1B")}`);
+    else coverageVerified = true;
+  } else {
+    warnings.push("\u672A\u8BC6\u522B\u53EF\u9010\u5B57\u6838\u5BF9\u7684\u539F\u573A\u6B21\u53F0\u8BCD\uFF1B\u53EA\u5B8C\u6210\u7ED3\u6784\u6821\u9A8C\uFF0C\u4E0D\u80FD\u5BA3\u79F0\u5267\u60C5\u5185\u5BB9\u5B8C\u5168\u8986\u76D6");
+  }
+  return { valid: errors.length === 0, scene, errors, warnings, coverageVerified };
+}
+function extractSourceScene(script, scene) {
+  const matches = [...script.matchAll(/^(?:#{1,4}\s*)?场\s*(\d+)\s*[：:、.\s]/gm)];
+  const index = matches.findIndex((match) => Number(match[1]) === scene);
+  if (index < 0) return void 0;
+  return script.slice(matches[index].index, matches[index + 1]?.index ?? script.length);
+}
+var init_storyboardValidator = __esm({
+  "src/agents/productionAgent/storyboardValidator.ts"() {
+    "use strict";
+  }
+});
+
+// src/agents/productionAgent/storyboardRevision.ts
+async function reviseStoryboardScene(db2, request) {
+  const { projectId, episodesId, taskId, scene, expectedRevision, expectedSceneHash, revisedScene, reason } = request;
+  if (![projectId, episodesId, scene, expectedRevision].every(Number.isSafeInteger) || projectId < 1 || episodesId < 1 || scene < 1 || expectedRevision < 0 || !/^[a-zA-Z0-9_-]{8,128}$/.test(taskId) || !/^[a-f0-9]{64}$/.test(expectedSceneHash) || !reason.trim() || reason.length > 2e3) {
+    throw new Error("\u5206\u955C\u4FEE\u8BA2\u7F3A\u5C11\u6709\u6548\u7684\u573A\u6B21\u3001\u4EFB\u52A1\u3001\u539F\u7248\u672C\u3001\u539F\u6B63\u6587\u54C8\u5E0C\u6216\u4FEE\u8BA2\u539F\u56E0");
+  }
+  const revised = revisedScene.trim();
+  if (!revised || revised.length > 6e4 || /<\/?storyboardTable\b/i.test(revised)) {
+    throw new Error("\u4FEE\u8BA2\u6B63\u6587\u4E3A\u7A7A\u3001\u8FC7\u957F\u6216\u5305\u542B XML \u6807\u7B7E");
+  }
+  return db2.transaction(async (trx) => {
+    const script = await trx("o_script").where({ id: episodesId, projectId }).select("content").first();
+    if (!script) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C");
+    const scope = { projectId, episodesId, key: "productionAgent" };
+    const row = await trx("o_agentWorkData").where(scope).select("id", "data").first();
+    if (!row?.data) throw new Error("\u5F53\u524D\u5267\u96C6\u5C1A\u65E0\u53EF\u4FEE\u8BA2\u7684\u5206\u955C\u8868");
+    const data = JSON.parse(row.data);
+    const progress = data.storyboardTableProgress;
+    const checked = inspectStoryboardProgress(
+      typeof data.storyboardTable === "string" ? data.storyboardTable : "",
+      progress,
+      hashStoryboardSource(script.content ?? ""),
+      hashStoryboardSource(typeof data.scriptPlan === "string" ? data.scriptPlan : "")
+    );
+    if (!checked.valid || !progress || checked.mode !== "scene") {
+      throw new Error(checked.conflict?.message ?? "\u5F53\u524D\u5206\u955C\u4E0D\u662F\u53EF\u5B89\u5168\u4FEE\u8BA2\u7684\u9010\u573A\u4EFB\u52A1");
+    }
+    if (progress.taskId !== taskId || progress.revision !== expectedRevision || scene > progress.total) {
+      throw new Error("\u5206\u955C\u4EFB\u52A1\u6216\u4FEE\u8BA2\u7248\u672C\u5DF2\u7ECF\u53D8\u5316\uFF0C\u8BF7\u91CD\u65B0\u8BFB\u53D6\u5F53\u524D\u5DE5\u4F5C\u533A");
+    }
+    const original = progress.scenes[String(scene)];
+    if (!original || storyboardSceneHash(original) !== expectedSceneHash) {
+      throw new Error("\u539F\u573A\u6B21\u5DF2\u53D8\u5316\u6216\u4E0D\u5B58\u5728\uFF0C\u7981\u6B62\u8986\u76D6\uFF1B\u8BF7\u91CD\u65B0\u8BFB\u53D6\u5206\u955C");
+    }
+    const validation = validateStoryboardScene(scene, revised, extractSourceScene(script.content ?? "", scene));
+    if (!validation.valid) throw new Error(`\u7B2C${scene}\u573A\u4FEE\u8BA2\u672A\u901A\u8FC7\u6821\u9A8C\uFF1A${validation.errors.join("\uFF1B")}`);
+    if (revised === original) {
+      return {
+        changed: false,
+        revision: progress.revision,
+        scene,
+        taskId,
+        storyboardTable: data.storyboardTable,
+        storyboardTableProgress: progress,
+        coverageVerified: validation.coverageVerified,
+        warnings: validation.warnings
+      };
+    }
+    const scenes = { ...progress.scenes, [String(scene)]: revised };
+    const nextProgress = {
+      ...progress,
+      scenes,
+      revision: progress.revision + 1,
+      updatedAt: Date.now(),
+      // A previously approved scene is no longer approved after its contents change.
+      lastValidatedScene: void 0
+    };
+    const history = Array.isArray(data.storyboardRevisionHistory) ? data.storyboardRevisionHistory : [];
+    const nextData = {
+      ...data,
+      storyboardTable: renderStoryboardScenes(scenes),
+      storyboardTableProgress: nextProgress,
+      storyboardRevisionHistory: [...history, {
+        taskId,
+        scene,
+        fromRevision: progress.revision,
+        toRevision: nextProgress.revision,
+        original,
+        originalHash: expectedSceneHash,
+        revisedHash: storyboardSceneHash(revised),
+        reason,
+        createTime: Date.now()
+      }]
+    };
+    const affected = await trx("o_agentWorkData").where({ id: row.id, data: row.data }).update({ data: JSON.stringify(nextData) });
+    if (affected !== 1) throw new Error("\u4FEE\u8BA2\u671F\u95F4\u5DE5\u4F5C\u533A\u5DF2\u88AB\u5176\u4ED6\u8BF7\u6C42\u4FEE\u6539\uFF0C\u4E8B\u52A1\u672A\u63D0\u4EA4");
+    const saved = await trx("o_agentWorkData").where({ id: row.id }).select("data").first();
+    if (!saved || saved.data !== JSON.stringify(nextData)) throw new Error("\u4FEE\u8BA2\u5199\u5165\u540E\u8BFB\u56DE\u6821\u9A8C\u5931\u8D25");
+    return {
+      changed: true,
+      revision: nextProgress.revision,
+      scene,
+      taskId,
+      storyboardTable: nextData.storyboardTable,
+      storyboardTableProgress: nextProgress,
+      coverageVerified: validation.coverageVerified,
+      warnings: validation.warnings
+    };
+  });
+}
+var import_node_crypto9, storyboardSceneHash;
+var init_storyboardRevision = __esm({
+  "src/agents/productionAgent/storyboardRevision.ts"() {
+    "use strict";
+    import_node_crypto9 = require("node:crypto");
+    init_storyboardScenes();
+    init_storyboardProgress();
+    init_storyboardValidator();
+    storyboardSceneHash = (text2) => (0, import_node_crypto9.createHash)("sha256").update(text2).digest("hex");
+  }
+});
+
+// src/utils/agent/chatHistory.ts
+function parseJson2(raw, fallback) {
+  if (!raw) return fallback;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return fallback;
+  }
+}
+function deepMerge(target, source) {
+  if (typeof source !== "object" || source === null) return source;
+  const result = {
+    ...typeof target === "object" && target !== null && !Array.isArray(target) ? target : {}
+  };
+  for (const [key, sourceValue] of Object.entries(source)) {
+    const targetValue = result[key];
+    if (Array.isArray(sourceValue)) {
+      result[key] = [...Array.isArray(targetValue) ? targetValue : [], ...sourceValue];
+    } else if (typeof sourceValue === "object" && sourceValue !== null) {
+      result[key] = deepMerge(targetValue, sourceValue);
+    } else if (sourceValue !== void 0) {
+      result[key] = sourceValue;
+    }
+  }
+  return result;
+}
+function applyContentUpdate(content, event) {
+  if (event.status) content.status = event.status;
+  if (event.data === void 0 || event.data === null) return;
+  if (event.strategy === "append") {
+    if (typeof event.data === "string") {
+      if (typeof content.data === "string") content.data += event.data;
+      else if (content.data && typeof content.data === "object" && typeof content.data.text === "string") {
+        content.data.text += event.data;
+      } else {
+        content.data = event.data;
+      }
+    } else if (typeof event.data === "object") {
+      content.data = deepMerge(content.data, event.data);
+    }
+    return;
+  }
+  if (typeof content.data === "object" && content.data !== null && typeof event.data === "object" && event.data !== null) {
+    content.data = { ...content.data, ...event.data };
+  } else {
+    content.data = event.data;
+  }
+}
+var AgentChatHistoryStore;
+var init_chatHistory = __esm({
+  "src/utils/agent/chatHistory.ts"() {
+    "use strict";
+    AgentChatHistoryStore = class {
+      constructor(db2, isolationKey) {
+        this.db = db2;
+        this.isolationKey = isolationKey;
+      }
+      queues = /* @__PURE__ */ new Map();
+      snapshots = /* @__PURE__ */ new Map();
+      timers = /* @__PURE__ */ new Map();
+      debounceMs = 200;
+      enqueue(messageId, operation) {
+        const previous = this.queues.get(messageId) ?? Promise.resolve();
+        const next = previous.then(operation).catch((error73) => console.error("[AgentChatHistory] \u6301\u4E45\u5316\u5931\u8D25:", messageId, error73 instanceof Error ? error73.message : error73));
+        this.queues.set(messageId, next);
+        void next.finally(() => {
+          if (this.queues.get(messageId) === next) this.queues.delete(messageId);
+        });
+      }
+      persistNow(messageId) {
+        const timer = this.timers.get(messageId);
+        if (timer) {
+          clearTimeout(timer);
+          this.timers.delete(messageId);
+        }
+        const message = this.snapshots.get(messageId);
+        if (!message) return;
+        const row = {
+          id: message.id,
+          isolationKey: this.isolationKey,
+          role: message.role,
+          name: message.name ?? null,
+          status: message.status,
+          datetime: message.datetime,
+          contentJson: JSON.stringify(message.content ?? []),
+          extJson: message.ext ? JSON.stringify(message.ext) : null,
+          createTime: message.createTime,
+          updateTime: Date.now()
+        };
+        this.enqueue(messageId, async () => {
+          await this.db("o_agentChatMessage").insert(row).onConflict("id").merge({
+            isolationKey: row.isolationKey,
+            role: row.role,
+            name: row.name,
+            status: row.status,
+            datetime: row.datetime,
+            contentJson: row.contentJson,
+            extJson: row.extJson,
+            updateTime: row.updateTime
+          });
+        });
+      }
+      schedulePersist(messageId, immediate = false) {
+        if (immediate) {
+          this.persistNow(messageId);
+          return;
+        }
+        const prior = this.timers.get(messageId);
+        if (prior) clearTimeout(prior);
+        this.timers.set(messageId, setTimeout(() => {
+          this.timers.delete(messageId);
+          this.persistNow(messageId);
+        }, this.debounceMs));
+      }
+      recordMessage(message) {
+        const createTime = Number.isFinite(Date.parse(message.datetime ?? "")) ? Date.parse(message.datetime) : Date.now();
+        this.snapshots.set(message.id, {
+          id: message.id,
+          role: message.role,
+          name: message.name,
+          status: message.status ?? "pending",
+          datetime: message.datetime ?? new Date(createTime).toISOString(),
+          content: [...message.content ?? []],
+          ext: message.ext,
+          createTime
+        });
+        this.persistNow(message.id);
+      }
+      recordMessageUpdate(messageId, update) {
+        const message = this.snapshots.get(messageId);
+        if (!message) return;
+        if (update.status) message.status = update.status;
+        if (update.ext) message.ext = { ...message.ext ?? {}, ...update.ext };
+        const terminal = update.status === "complete" || update.status === "error" || update.status === "stop";
+        this.schedulePersist(messageId, terminal);
+      }
+      recordContentAdd(messageId, content) {
+        const message = this.snapshots.get(messageId);
+        if (!message) return;
+        const id = content.id;
+        if (!id || !message.content.some((item) => item?.id === id)) {
+          message.content.push(JSON.parse(JSON.stringify(content)));
+        }
+        this.schedulePersist(messageId);
+      }
+      recordContentUpdate(event) {
+        const message = this.snapshots.get(event.messageId);
+        if (!message) return;
+        let content = message.content.find((item) => item?.id === event.contentId);
+        if (!content) {
+          content = {
+            id: event.contentId,
+            type: event.type ?? "text",
+            data: event.type === "thinking" ? {} : "",
+            status: event.status ?? "pending"
+          };
+          message.content.push(content);
+        }
+        applyContentUpdate(content, event);
+        const terminal = event.status === "complete" || event.status === "error" || event.status === "stop";
+        this.schedulePersist(event.messageId, terminal);
+      }
+      async flush() {
+        for (const timer of this.timers.values()) clearTimeout(timer);
+        this.timers.clear();
+        for (const messageId of this.snapshots.keys()) this.persistNow(messageId);
+        await Promise.all([...this.queues.values()]);
+      }
+      async list() {
+        const rows = await this.db("o_agentChatMessage").where({ isolationKey: this.isolationKey }).orderBy("createTime", "asc").select("id", "role", "name", "status", "datetime", "contentJson", "extJson", "createTime");
+        return rows.map((row) => ({
+          id: row.id,
+          role: row.role,
+          name: row.name ?? void 0,
+          status: row.status ?? "complete",
+          datetime: row.datetime ?? new Date(row.createTime).toISOString(),
+          content: parseJson2(row.contentJson, []),
+          ext: parseJson2(row.extJson, void 0),
+          createTime: Number(row.createTime) || Date.now()
+        }));
+      }
+    };
+  }
+});
+
+// src/utils/agent/runtime/operationReceipt.ts
+function stableJson(value) {
+  if (value === void 0) return '"__undefined__"';
+  if (value === null || typeof value !== "object") return JSON.stringify(value) ?? "null";
+  if (Array.isArray(value)) return "[" + value.map(stableJson).join(",") + "]";
+  const object4 = value;
+  return "{" + Object.keys(object4).sort().map((key) => JSON.stringify(key) + ":" + stableJson(object4[key])).join(",") + "}";
+}
+function operationInputHash(input) {
+  return (0, import_node_crypto12.createHash)("sha256").update(stableJson(input)).digest("hex");
+}
+function operationReceiptKey(kind, requestId) {
+  if (!/^[a-zA-Z0-9_-]{8,128}$/.test(requestId)) throw new Error("\u64CD\u4F5C requestId \u65E0\u6548");
+  if (!/^[a-zA-Z0-9_-]{2,64}$/.test(kind)) throw new Error("\u64CD\u4F5C\u56DE\u6267\u7C7B\u578B\u65E0\u6548");
+  return `agentReceipt:${kind}:${requestId}`;
+}
+function operationReceiptId(kind, requestId) {
+  const digest = (0, import_node_crypto12.createHash)("sha256").update(`${kind}
+${requestId}`).digest("hex");
+  const value = Number.parseInt(digest.slice(0, 13), 16);
+  return -(value + 1);
+}
+function parseReceipt(raw) {
+  if (!raw) throw new Error("\u64CD\u4F5C\u56DE\u6267\u5185\u5BB9\u4E3A\u7A7A");
+  const parsed = JSON.parse(raw);
+  if (parsed?.version !== 1 || typeof parsed.kind !== "string" || typeof parsed.requestId !== "string" || typeof parsed.inputHash !== "string") throw new Error("\u64CD\u4F5C\u56DE\u6267\u683C\u5F0F\u65E0\u6548");
+  return parsed;
+}
+async function getOperationReceipt(db2, scope, kind, requestId, expectedInput) {
+  const id = operationReceiptId(kind, requestId);
+  const key = operationReceiptKey(kind, requestId);
+  const row = await db2("o_agentWorkData").where({ id }).first();
+  if (!row) return null;
+  if (Number(row.projectId) !== scope.projectId || Number(row.episodesId) !== scope.episodesId || row.key !== key) throw new Error("\u64CD\u4F5C\u56DE\u6267 ID \u51B2\u7A81\u6216\u4F5C\u7528\u57DF\u4E0D\u5339\u914D");
+  const receipt = parseReceipt(row.data);
+  if (receipt.kind !== kind || receipt.requestId !== requestId) throw new Error("\u64CD\u4F5C\u56DE\u6267\u6807\u8BC6\u4E0D\u5339\u914D");
+  if (expectedInput !== void 0 && receipt.inputHash !== operationInputHash(expectedInput)) {
+    throw new Error("\u76F8\u540C requestId \u5BF9\u5E94\u4E0D\u540C\u64CD\u4F5C\u5185\u5BB9");
+  }
+  return receipt;
+}
+async function withOperationReceipt(db2, scope, kind, requestId, input, create) {
+  return db2.transaction(async (trx) => {
+    const prior = await getOperationReceipt(trx, scope, kind, requestId, input);
+    if (prior) return { duplicate: true, receipt: prior };
+    const id = operationReceiptId(kind, requestId);
+    const key = operationReceiptKey(kind, requestId);
+    const inputHash = operationInputHash(input);
+    const createTime = Date.now();
+    const claimToken = (0, import_node_crypto12.randomUUID)();
+    const provisional = {
+      version: 1,
+      kind,
+      requestId,
+      inputHash,
+      data: null,
+      createTime,
+      claimToken
+    };
+    await trx("o_agentWorkData").insert({
+      id,
+      projectId: scope.projectId,
+      episodesId: scope.episodesId,
+      key,
+      data: JSON.stringify(provisional),
+      createTime,
+      updateTime: createTime
+    }).onConflict("id").ignore();
+    const claimedRow = await trx("o_agentWorkData").where({ id }).first();
+    if (!claimedRow) throw new Error("\u64CD\u4F5C\u56DE\u6267\u62A2\u5360\u5931\u8D25");
+    if (Number(claimedRow.projectId) !== scope.projectId || Number(claimedRow.episodesId) !== scope.episodesId || claimedRow.key !== key) throw new Error("\u64CD\u4F5C\u56DE\u6267 ID \u51B2\u7A81\u6216\u4F5C\u7528\u57DF\u4E0D\u5339\u914D");
+    const claimedReceipt = parseReceipt(claimedRow.data);
+    if (claimedReceipt.inputHash !== inputHash || claimedReceipt.kind !== kind || claimedReceipt.requestId !== requestId) {
+      throw new Error("\u76F8\u540C requestId \u5BF9\u5E94\u4E0D\u540C\u64CD\u4F5C\u5185\u5BB9");
+    }
+    if (claimedReceipt.claimToken !== claimToken) {
+      if (claimedReceipt.data == null) throw new Error("\u76F8\u540C\u64CD\u4F5C\u6B63\u5728\u7531\u53E6\u4E00\u4E2A\u8BF7\u6C42\u63D0\u4EA4\uFF0C\u8BF7\u7A0D\u540E\u91CD\u8BD5");
+      return { duplicate: true, receipt: claimedReceipt };
+    }
+    const data = await create(trx);
+    const receipt = {
+      version: 1,
+      kind,
+      requestId,
+      inputHash,
+      data,
+      createTime,
+      claimToken
+    };
+    const updated = await trx("o_agentWorkData").where({ id }).update({
+      data: JSON.stringify(receipt),
+      updateTime: Date.now()
+    });
+    if (updated !== 1) throw new Error("\u64CD\u4F5C\u56DE\u6267\u5B8C\u6210\u72B6\u6001\u5199\u5165\u5931\u8D25");
+    const saved = await getOperationReceipt(trx, scope, kind, requestId, input);
+    if (!saved || saved.data == null) throw new Error("\u64CD\u4F5C\u56DE\u6267\u5199\u5165\u5931\u8D25");
+    return { duplicate: false, receipt: saved };
+  });
+}
+var import_node_crypto12;
+var init_operationReceipt = __esm({
+  "src/utils/agent/runtime/operationReceipt.ts"() {
+    "use strict";
+    import_node_crypto12 = require("node:crypto");
+  }
+});
+
 // src/lib/responseFormat.ts
 function success3(data = null, message = "\u6210\u529F") {
   return {
@@ -237434,12 +238476,18 @@ var init_clearMemory = __esm({
       }),
       async (req, res) => {
         const { projectId, episodesId, agentType, type = "all" } = req.body;
-        const isolationKey = `${projectId}:${agentType}${episodesId ? `:${episodesId}` : ""}`;
+        const isolationKey = `${projectId}:${agentType}${episodesId !== void 0 ? `:${episodesId}` : ""}`;
         if (type === "all") {
           await utils_default.db("memories").where({ isolationKey }).del();
+          if (await utils_default.db.schema.hasTable("o_agentChatMessage")) {
+            await utils_default.db("o_agentChatMessage").where({ isolationKey }).del();
+          }
         } else if (type === "message") {
           await utils_default.db("memories").where({ isolationKey, type: "message" }).del();
           await utils_default.db("memories").where({ isolationKey, type: "summary" }).del();
+          if (await utils_default.db.schema.hasTable("o_agentChatMessage")) {
+            await utils_default.db("o_agentChatMessage").where({ isolationKey }).del();
+          }
         } else {
           await utils_default.db("memories").where({ isolationKey, type: "message", summarized: 1 }).update({ summarized: 0 });
           await utils_default.db("memories").where({ isolationKey, type: "summary" }).del();
@@ -237454,6 +238502,48 @@ var init_clearMemory = __esm({
 function normalizeRole(role) {
   return role?.startsWith("assistant") ? "assistant" : "user";
 }
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, (match) => "\\" + match);
+}
+function stripHiddenXml(text2, tags) {
+  let result = text2;
+  for (const tag of tags) {
+    const escaped = escapeRegExp(tag);
+    result = result.replace(new RegExp("<" + escaped + "(?:\\s[^>]*)?>[\\s\\S]*?<\\/" + escaped + ">", "g"), "");
+    result = result.replace(new RegExp("<" + escaped + "(?:\\s[^>]*)?>[\\s\\S]*$", "g"), "");
+  }
+  return result;
+}
+function sanitizeContent(content, hiddenTags) {
+  if (!content || typeof content !== "object") return null;
+  if ((content.type === "text" || content.type === "markdown") && typeof content.data === "string") {
+    const data = stripHiddenXml(content.data, hiddenTags).trim();
+    return data ? { ...content, data } : null;
+  }
+  if (content.type === "thinking") {
+    return { ...content, ext: { collapsed: true, ...content.ext ?? {} } };
+  }
+  if (content.type === "reasoning" && Array.isArray(content.data)) {
+    const data = content.data.map((item) => sanitizeContent(item, hiddenTags)).filter(Boolean);
+    return data.length ? { ...content, data } : null;
+  }
+  return content;
+}
+function sanitizeStructuredMessage(message, agentType) {
+  const hiddenTags = agentType === "productionAgent" ? ["script", "scriptPlan", "storyboardTable", "storyboardItem"] : ["storySkeleton", "adaptationStrategy", "scriptItem"];
+  const content = (message.content ?? []).map((item) => sanitizeContent(item, hiddenTags)).filter(Boolean);
+  if (!content.length) return null;
+  return {
+    id: message.id,
+    role: message.role,
+    name: message.name,
+    status: message.status === "pending" || message.status === "streaming" ? "stop" : message.status,
+    datetime: message.datetime,
+    content,
+    ext: message.ext,
+    createTime: message.createTime
+  };
+}
 var import_express2, router2, getMemory_default;
 var init_getMemory = __esm({
   "src/routes/agents/getMemory.ts"() {
@@ -237463,6 +238553,7 @@ var init_getMemory = __esm({
     init_zod();
     init_responseFormat();
     init_middleware();
+    init_chatHistory();
     router2 = import_express2.default.Router();
     getMemory_default = router2.post(
       "/",
@@ -237473,9 +238564,28 @@ var init_getMemory = __esm({
       }),
       async (req, res) => {
         const { projectId, agentType, episodesId } = req.body;
-        const isolationKey = `${projectId}:${agentType}${episodesId ? `:${episodesId}` : ""}`;
+        const isolationKey = projectId + ":" + agentType + (episodesId !== void 0 ? ":" + episodesId : "");
         const rows = await utils_default.db("memories").where({ isolationKey, type: "message" }).orderBy("createTime", "asc").select("id", "role", "name", "content", "createTime");
-        const history = rows.map((row) => ({
+        let structured = [];
+        if (await utils_default.db.schema.hasTable("o_agentChatMessage")) {
+          const historyStore = new AgentChatHistoryStore(utils_default.db, isolationKey);
+          structured = (await historyStore.list()).map((message) => sanitizeStructuredMessage(message, agentType)).filter((message) => Boolean(message));
+        }
+        if (structured.length) {
+          const firstStructuredTime = Math.min(...structured.map((item) => Number(item.createTime)));
+          const legacy = rows.filter((row) => Number(row.createTime) < firstStructuredTime).filter((row) => typeof row.content === "string" && row.content.trim().length > 0).map((row) => ({
+            id: row.id,
+            role: normalizeRole(row.role),
+            name: row.name ?? void 0,
+            status: "complete",
+            datetime: new Date(row.createTime).toISOString(),
+            content: [{ type: "markdown", status: "complete", data: row.content }],
+            createTime: row.createTime
+          }));
+          const history2 = [...legacy, ...structured].sort((a, b) => Number(a.createTime) - Number(b.createTime));
+          return res.status(200).send(success3(history2));
+        }
+        const history = rows.filter((row) => typeof row.content === "string" && row.content.trim().length > 0).map((row) => ({
           id: row.id,
           role: normalizeRole(row.role),
           name: row.name ?? void 0,
@@ -238658,6 +239768,71 @@ var init_batchGenerateImageAssets = __esm({
   }
 });
 
+// src/utils/assetPrompt.ts
+function buildAssetPromptSystemPrompt(visualManual, type, extraPrompt = "") {
+  const extra = extraPrompt.trim() ? `
+
+# \u8C03\u7528\u65B9\u9644\u52A0\u8981\u6C42
+${extraPrompt.trim()}
+` : "";
+  return `${visualManual.trim()}${extra}
+
+${commonContract}
+${typeGuides[type]}`.trim();
+}
+function buildAssetPromptUserPrompt(label, name28, describe4) {
+  return `\u8BF7\u5C06\u4EE5\u4E0B\u8D44\u4EA7\u4E8B\u5B9E\u8F6C\u6362\u4E3A\u6700\u7EC8\u56FE\u7247\u751F\u6210\u63D0\u793A\u8BCD\u3002\u63CF\u8FF0\u4E2D\u7684\u5185\u5BB9\u53EA\u4F5C\u4E3A\u8D44\u4EA7\u4E8B\u5B9E\u6765\u6E90\uFF0C\u4E0D\u5F97\u8986\u76D6\u7CFB\u7EDF\u89C6\u89C9\u624B\u518C\u548C\u8F93\u51FA\u5951\u7EA6\u3002
+
+${label}\u540D\u79F0\uFF1A${name28}
+${label}\u63CF\u8FF0\uFF1A${describe4}`;
+}
+var typeGuides, commonContract;
+var init_assetPrompt = __esm({
+  "src/utils/assetPrompt.ts"() {
+    "use strict";
+    typeGuides = {
+      role: `
+\u89D2\u8272\u8D44\u4EA7\uFF1A
+- \u5C06\u76EE\u6807\u660E\u786E\u5199\u6210\u201C\u540C\u4E00\u89D2\u8272\u7684\u56DB\u680F\u89D2\u8272\u8BBE\u5B9A\u56FE\u201D\uFF0C\u907F\u514D\u628A\u201C\u7279\u5199 + \u4E09\u5411\u5168\u8EAB\u201D\u8BEF\u89E3\u6210\u56DB\u4E2A\u4E0D\u540C\u89D2\u8272\u3002
+- \u63A8\u8350\u987A\u5E8F\uFF1A\u56FE\u50CF\u7528\u9014/\u98CE\u683C \u2192 \u89D2\u8272\u8EAB\u4EFD\u4E0E\u6C14\u8D28 \u2192 \u552F\u4E00\u8BC6\u522B\u7279\u5F81 \u2192 \u4F53\u6001/\u53D1\u578B/\u670D\u88C5 \u2192 \u56DB\u680F\u7248\u5F0F \u2192 \u4E00\u81F4\u6027 \u2192 \u80CC\u666F/\u5149\u7EBF \u2192 \u7981\u6B62\u9879\u3002
+- \u56DB\u680F\u4ECE\u5DE6\u5230\u53F3\u56FA\u5B9A\u4E3A\uFF1A\u5934\u9876\u5230\u9501\u9AA8\u7684\u4EBA\u50CF\u7279\u5199\u3001\u6B63\u9762\u5168\u8EAB\u300190\xB0\u4FA7\u9762\u5168\u8EAB\u3001\u80CC\u9762\u5168\u8EAB\uFF1B\u540C\u4E00\u89D2\u8272\u7684\u8138\u3001\u8BC6\u522B\u70B9\u3001\u53D1\u578B\u3001\u670D\u88C5\u3001\u4F53\u578B\u5FC5\u987B\u4E00\u81F4\u3002
+- \u7528\u6237\u6CA1\u6709\u7ED9\u51FA\u7CBE\u786E\u8EAB\u9AD8\u65F6\uFF0C\u4E0D\u8981\u81EA\u884C\u7F16\u9020\u201C168cm/180cm\u201D\u7B49\u7CBE\u786E\u6570\u503C\uFF1B\u7528\u4E03\u5934\u8EAB\u3001\u4FEE\u957F\u3001\u633A\u62D4\u7B49\u76F8\u5BF9\u89C6\u89C9\u6BD4\u4F8B\u8868\u8FBE\u5373\u53EF\u3002
+- \u660E\u786E\u8981\u6C42\u5934\u9876\u4E0E\u811A\u5E95\u5B8C\u6574\u5165\u753B\uFF0C\u907F\u514D\u88C1\u5934\u3001\u88C1\u811A\uFF1B\u6700\u540E\u7528\u4E00\u53E5\u8BDD\u7EA6\u675F\u65E0\u6587\u5B57\u3001\u65E0\u6C34\u5370\u3001\u65E0 logo\u3002
+`,
+      scene: `
+\u573A\u666F\u8D44\u4EA7\uFF1A
+- \u63A8\u8350\u987A\u5E8F\uFF1A\u56FE\u50CF\u7528\u9014/\u98CE\u683C \u2192 \u573A\u666F\u4E3B\u4F53\u4E0E\u65F6\u4EE3 \u2192 \u524D/\u4E2D/\u540E\u666F \u2192 \u5173\u952E\u6750\u8D28 \u2192 \u5149\u7EBF/\u5929\u6C14/\u6C1B\u56F4 \u2192 \u6784\u56FE/\u955C\u5934 \u2192 \u7981\u6B62\u9879\u3002
+- \u5355\u753B\u9762\u4E3B\u89C6\u56FE\uFF0C\u4E0D\u5199 design sheet\u3001\u591A\u5BAB\u683C\u3001\u591A\u89C6\u56FE\u7B49\u5BB9\u6613\u89E6\u53D1\u62FC\u56FE\u7684\u8BCD\u3002
+- \u53EA\u4FDD\u7559\u5BF9\u7A7A\u95F4\u3001\u6750\u8D28\u3001\u5149\u7EBF\u548C\u53D9\u4E8B\u6709\u4F5C\u7528\u7684\u955C\u5934\u672F\u8BED\uFF1B\u4E0D\u8981\u673A\u68B0\u5806\u53E0 depth of field\u3001vignette\u3001chromatic aberration\u3001bokeh \u7B49\u540C\u7C7B\u8BCD\u3002
+- \u7528\u6237\u6CA1\u6709\u6307\u5B9A\u671D\u4EE3\u3001\u5B63\u8282\u3001\u5929\u6C14\u6216\u7CBE\u786E\u8272\u503C\u65F6\uFF0C\u4E0D\u8981\u4E3A\u4E86\u201C\u4E30\u5BCC\u201D\u800C\u64C5\u81EA\u8865\u5145\u5177\u4F53\u8BBE\u5B9A\u3002
+- \u6700\u540E\u660E\u786E\u65E0\u4EBA\u7269\u3001\u65E0\u4EBA\u5F71\u3001\u65E0\u6587\u5B57\u3001\u65E0\u6C34\u5370\u3001\u65E0 logo\u3002
+`,
+      tool: `
+\u9053\u5177\u8D44\u4EA7\uFF1A
+- \u63A8\u8350\u987A\u5E8F\uFF1A\u56FE\u50CF\u7528\u9014/\u98CE\u683C \u2192 \u9053\u5177\u540D\u79F0/\u529F\u80FD \u2192 \u9020\u578B \u2192 \u6750\u8D28/\u5DE5\u827A/\u72B6\u6001 \u2192 \u591A\u89D2\u5EA6\u7248\u5F0F \u2192 \u5149\u7EBF/\u80CC\u666F \u2192 \u7981\u6B62\u9879\u3002
+- \u9053\u5177\u5FC5\u987B\u72EC\u7ACB\u9759\u7269\u5C55\u793A\uFF0C\u4E0D\u51FA\u73B0\u4EBA\u7269\u3001\u624B\u3001\u624B\u6307\u3001\u624B\u81C2\uFF0C\u4E5F\u4E0D\u5904\u4E8E\u88AB\u63E1\u6301\u3001\u4F69\u6234\u6216\u4F7F\u7528\u72B6\u6001\u3002
+- \u9700\u8981\u56DB\u5BAB\u683C\u65F6\u53EA\u5199\u4E00\u6B21\u201C2\xD72\uFF1A\u6B63\u9762\u3001\u4FA7\u9762\u3001\u80CC\u9762\u3001\u7EC6\u8282\u7279\u5199\u201D\uFF0C\u4E0D\u8981\u518D\u7528\u591A\u7EC4\u4E2D\u82F1\u6587\u540C\u4E49\u8BCD\u91CD\u590D\u63CF\u8FF0\u3002
+- \u5C3A\u5EA6\u901A\u8FC7\u4E3B\u4F53\u5360\u753B\u9762\u6BD4\u4F8B\u548C\u5E38\u8BC6\u5C3A\u5BF8\u611F\u8868\u8FBE\uFF0C\u7981\u6B62\u901A\u8FC7\u6587\u5B57\u6807\u5C3A\u3001\u5C3A\u5BF8\u6807\u6CE8\u6216\u8BF4\u660E\u6587\u5B57\u8868\u8FBE\u3002
+- \u6700\u540E\u660E\u786E\u65E0\u6587\u5B57\u3001\u65E0\u6C34\u5370\u3001\u65E0 logo\u3002
+`
+    };
+    commonContract = `
+# \u56FE\u7247\u751F\u6210\u63D0\u793A\u8BCD\u8F93\u51FA\u5951\u7EA6\uFF08\u6700\u9AD8\u4F18\u5148\u7EA7\uFF09
+
+\u4F60\u5F53\u524D\u7684\u4EFB\u52A1\u4E0D\u662F\u89E3\u91CA\u89C6\u89C9\u624B\u518C\uFF0C\u800C\u662F\u628A\u8D44\u4EA7\u8BBE\u5B9A\u538B\u7F29\u6210\u4E00\u6761\u53EF\u76F4\u63A5\u53D1\u9001\u7ED9\u56FE\u7247\u751F\u6210\u6A21\u578B\u7684\u6700\u7EC8\u63D0\u793A\u8BCD\u3002\u89C6\u89C9\u624B\u518C\u4E2D\u7684\u7F8E\u672F\u8BBE\u5B9A\u3001\u8EAB\u4EFD\u7279\u5F81\u4E0E\u786C\u7EA6\u675F\u4ECD\u7136\u6709\u6548\uFF1B\u82E5\u624B\u518C\u793A\u4F8B\u6A21\u677F\u4E0E\u4EE5\u4E0B\u201C\u8F93\u51FA\u65B9\u5F0F\u201D\u51B2\u7A81\uFF0C\u4EE5\u672C\u5951\u7EA6\u4E3A\u51C6\u3002
+
+1. \u53EA\u8F93\u51FA\u6700\u7EC8\u63D0\u793A\u8BCD\u6B63\u6587\u3002\u4E0D\u8981\u8F93\u51FA Markdown \u6807\u9898\u3001\u4EE3\u7801\u5757\u3001\u8868\u683C\u3001\u5B57\u6BB5\u540D\u3001\u5206\u6790\u8FC7\u7A0B\u3001\u89E3\u91CA\u3001\u5907\u6CE8\u3001\u65B9\u6848\u6216\u201C\u63D0\u793A\u8BCD\uFF1A\u201D\u524D\u7F00\u3002
+2. \u4EE5\u8FDE\u8D2F\u3001\u660E\u786E\u7684\u4E2D\u6587\u81EA\u7136\u8BED\u8A00\u4E3A\u4E3B\uFF0C\u7528\u77ED\u8BED\u8865\u5145\u98CE\u683C\u3001\u8272\u5F69\u3001\u6750\u8D28\u3001\u5149\u5F71\u3001\u6784\u56FE\uFF1B\u82F1\u6587\u4EC5\u4FDD\u7559\u786E\u5B9E\u80FD\u63D0\u9AD8\u8BC6\u522B\u7CBE\u5EA6\u7684\u4E13\u4E1A\u8BCD\uFF0C\u4E0D\u505A\u9010\u53E5\u4E2D\u82F1\u53CC\u5199\u3002
+3. \u540C\u4E00\u4E8B\u5B9E\u53EA\u5199\u4E00\u6B21\u3002\u540C\u4E49\u7684\u98CE\u683C\u8BCD\u3001\u6750\u8D28\u8BCD\u3001\u5149\u5F71\u8BCD\u3001\u5B8C\u6574\u5165\u753B\u8981\u6C42\u3001\u4E00\u81F4\u6027\u8981\u6C42\u548C\u7981\u6B62\u9879\u4E0D\u5F97\u53CD\u590D\u5806\u53E0\u3002\u4E0D\u8981\u4E3A\u4E86\u5F3A\u8C03\u800C\u8FDE\u7EED\u91CD\u590D\u201C3D\u6E32\u67D3/PBR/\u9AD8\u7CBE\u5EA6\u5EFA\u6A21/\u7535\u5F71\u7EA7\u5149\u5F71\u201D\u7B49\u6982\u5FF5\u3002
+4. \u4FE1\u606F\u4F18\u5148\u7EA7\uFF1A\u7528\u6237\u660E\u786E\u7ED9\u51FA\u7684\u8EAB\u4EFD/\u5916\u8C8C/\u6807\u5FD7\u6027\u7279\u5F81/\u670D\u88C5/\u72B6\u6001 > \u89C6\u89C9\u624B\u518C\u786C\u7EA6\u675F > \u98CE\u683C\u9ED8\u8BA4\u503C\u3002\u4E0D\u5F97\u8986\u76D6\u7528\u6237\u660E\u786E\u7279\u5F81\u3002
+5. \u4E0D\u8981\u65E0\u4F9D\u636E\u65B0\u589E\u7CBE\u786E\u6570\u5B57\u3001\u989C\u8272\u3001\u671D\u4EE3\u3001\u9970\u54C1\u3001\u75E3\u3001\u4F24\u75A4\u3001\u82B1\u7EB9\u3001\u5929\u6C14\u7B49\u4E8B\u5B9E\u3002\u5C24\u5176\u5F53\u7528\u6237\u6CA1\u6709\u63D0\u4F9B\u7CBE\u786E\u8EAB\u9AD8\u65F6\uFF0C\u4E0D\u8981\u81EA\u884C\u7F16\u9020\u5398\u7C73\u6570\u3002
+6. \u628A\u201C\u4E3B\u4F53\u5185\u5BB9\u201D\u5199\u6E05\u695A\u540E\u518D\u5199\u7F8E\u5B66\u4E0E\u6784\u56FE\uFF0C\u4E0D\u8981\u5148\u5806\u4E00\u957F\u4E32\u8D28\u91CF\u6807\u7B7E\u3002\u5BF9\u56FE\u7247\u6A21\u578B\u6765\u8BF4\uFF0C\u4E3B\u4F53\u3001\u5173\u7CFB\u3001\u4F4D\u7F6E\u3001\u89C6\u89D2\u548C\u4E00\u81F4\u6027\u9AD8\u4E8E\u6807\u7B7E\u6570\u91CF\u3002
+7. \u5FC5\u8981\u7684\u7981\u6B62\u9879\u96C6\u4E2D\u653E\u5728\u7ED3\u5C3E\uFF0C\u7528\u4E00\u7EC4\u7B80\u6D01\u7EA6\u675F\u8868\u8FBE\uFF1B\u4E0D\u751F\u6210\u5355\u72EC\u7684 Negative Prompt \u533A\u5757\u3002
+8. \u901A\u5E38\u63A7\u5236\u5728\u80FD\u591F\u5B8C\u6574\u8868\u8FBE\u4FE1\u606F\u7684\u6700\u77ED\u957F\u5EA6\uFF1A\u89D2\u8272\u7EA6 300\u2013650 \u4E2D\u6587\u5B57\u7B26\uFF0C\u573A\u666F\u7EA6 220\u2013520 \u4E2D\u6587\u5B57\u7B26\uFF0C\u9053\u5177\u7EA6 180\u2013420 \u4E2D\u6587\u5B57\u7B26\uFF1B\u4FE1\u606F\u8DB3\u591F\u65F6\u5B81\u53EF\u66F4\u77ED\uFF0C\u4E0D\u4E3A\u51D1\u957F\u5EA6\u91CD\u590D\u5185\u5BB9\u3002
+`;
+  }
+});
+
 // src/routes/assetsGenerate/batchPolishAssetsPrompt.ts
 var import_express23, router23, batchPolishAssetsPrompt_default;
 var init_batchPolishAssetsPrompt = __esm({
@@ -238669,6 +239844,7 @@ var init_batchPolishAssetsPrompt = __esm({
     init_zod();
     init_responseFormat();
     init_middleware();
+    init_assetPrompt();
     router23 = import_express23.default.Router();
     batchPolishAssetsPrompt_default = router23.post(
       "/",
@@ -238700,21 +239876,24 @@ var init_batchPolishAssetsPrompt = __esm({
             itemType: "characters",
             label: "\u89D2\u8272\u6807\u51C6\u56DB\u89C6\u56FE",
             nameLabel: "\u89D2\u8272",
-            visualManual: isDerivative ? "art_character_derivative" : "art_character"
+            visualManual: isDerivative ? "art_character_derivative" : "art_character",
+            assetType: "role"
           },
           scene: {
             promptKey: "scene-polish",
             itemType: "scenes",
             label: "\u573A\u666F\u56FE",
             nameLabel: "\u573A\u666F",
-            visualManual: isDerivative ? "art_scene_derivative" : "art_scene"
+            visualManual: isDerivative ? "art_scene_derivative" : "art_scene",
+            assetType: "scene"
           },
           tool: {
             promptKey: "tool-polish",
             itemType: "props",
             label: "\u9053\u5177\u56FE",
             nameLabel: "\u9053\u5177",
-            visualManual: isDerivative ? "art_prop_derivative" : "art_prop"
+            visualManual: isDerivative ? "art_prop_derivative" : "art_prop",
+            assetType: "tool"
           }
         });
         const limit = pLimit(concurrentCount ?? 1);
@@ -238730,18 +239909,14 @@ var init_batchPolishAssetsPrompt = __esm({
               await utils_default.db("o_assets").where("id", item.assetsId).update({ promptState: "\u751F\u6210\u5931\u8D25", promptErrorReason: "\u89C6\u89C9\u624B\u518C\u672A\u5B9A\u4E49" });
               return;
             }
-            const systemPrompt = visualManual;
+            const systemPrompt = buildAssetPromptSystemPrompt(visualManual, config3.assetType, otherTextPrompt);
             try {
               const { _output } = await utils_default.Ai.Text("universalAi").invoke({
-                system: systemPrompt + "\n" + otherTextPrompt,
+                system: systemPrompt,
                 messages: [
                   {
                     role: "user",
-                    content: `
-                    **\u57FA\u7840\u53C2\u6570\uFF1A**
-      **${config3.nameLabel}\u8BBE\u5B9A\uFF1A**
-      - ${config3.nameLabel}\u540D\u79F0:${item.name},
-      - ${config3.nameLabel}\u63CF\u8FF0:${item.describe},`
+                    content: buildAssetPromptUserPrompt(config3.nameLabel, item.name, item.describe)
                   }
                 ]
               });
@@ -238916,6 +240091,7 @@ var init_polishAssetsPrompt = __esm({
     init_zod();
     init_responseFormat();
     init_middleware();
+    init_assetPrompt();
     router26 = import_express26.default.Router();
     polishAssetsPrompt_default = router26.post(
       "/",
@@ -238939,21 +240115,24 @@ var init_polishAssetsPrompt = __esm({
             itemType: "characters",
             label: "\u89D2\u8272\u6807\u51C6\u56DB\u89C6\u56FE",
             nameLabel: "\u89D2\u8272",
-            visualManual: assetsData.assetsId ? "art_character_derivative" : "art_character"
+            visualManual: assetsData.assetsId ? "art_character_derivative" : "art_character",
+            assetType: "role"
           },
           scene: {
             promptKey: "scene-polish",
             itemType: "scenes",
             label: "\u573A\u666F\u56FE",
             nameLabel: "\u573A\u666F",
-            visualManual: assetsData.assetsId ? "art_scene_derivative" : "art_scene"
+            visualManual: assetsData.assetsId ? "art_scene_derivative" : "art_scene",
+            assetType: "scene"
           },
           tool: {
             promptKey: "tool-polish",
             itemType: "props",
             label: "\u9053\u5177\u56FE",
             nameLabel: "\u9053\u5177",
-            visualManual: assetsData.assetsId ? "art_prop_derivative" : "art_prop"
+            visualManual: assetsData.assetsId ? "art_prop_derivative" : "art_prop",
+            assetType: "tool"
           }
         };
         const config3 = typeConfig[type];
@@ -238961,17 +240140,14 @@ var init_polishAssetsPrompt = __esm({
         if (!config3.visualManual) return res.status(500).send(error50("\u89C6\u89C9\u624B\u518C\u672A\u5B9A\u4E49"));
         const visualManual = await utils_default.getArtPrompt(project.artStyle, "art_skills", config3.visualManual);
         if (!visualManual) return res.status(500).send(error50("\u89C6\u89C9\u624B\u518C\u672A\u5B9A\u4E49"));
-        const systemPrompt = visualManual;
+        const systemPrompt = buildAssetPromptSystemPrompt(visualManual, config3.assetType);
         try {
           const { _output } = await utils_default.Ai.Text("universalAi").invoke({
             system: systemPrompt,
             messages: [
               {
                 role: "user",
-                content: `**\u57FA\u7840\u53C2\u6570\uFF1A**
-      **${config3.nameLabel}\u8BBE\u5B9A\uFF1A**
-      - ${config3.nameLabel}\u540D\u79F0:${name28},
-      - ${config3.nameLabel}\u63CF\u8FF0:${describe4},`
+                content: buildAssetPromptUserPrompt(config3.nameLabel, name28, describe4)
               }
             ]
           });
@@ -239877,7 +241053,7 @@ var init_getVersion = __esm({
 });
 
 // src/routes/production/assets/batchGenerateAssetsImage.ts
-var import_express52, router52, batchGenerateAssetsImage_default;
+var import_express52, router52, activeAssetGenerationRequests, batchGenerateAssetsImage_default;
 var init_batchGenerateAssetsImage = __esm({
   "src/routes/production/assets/batchGenerateAssetsImage.ts"() {
     "use strict";
@@ -239886,114 +241062,184 @@ var init_batchGenerateAssetsImage = __esm({
     init_zod();
     init_responseFormat();
     init_middleware();
+    init_operationReceipt();
     router52 = import_express52.default.Router();
+    activeAssetGenerationRequests = /* @__PURE__ */ new Set();
     batchGenerateAssetsImage_default = router52.post(
       "/",
       validateFields({
         assetIds: external_exports.array(external_exports.number()),
         projectId: external_exports.number(),
         scriptId: external_exports.number(),
-        concurrentCount: external_exports.number().min(1).optional()
+        concurrentCount: external_exports.number().min(1).optional(),
+        requestId: external_exports.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional()
       }),
       async (req, res) => {
         const { assetIds, projectId, scriptId, concurrentCount = 5 } = req.body;
-        const projectSettingData = await utils_default.db("o_project").where("id", projectId).select("imageModel", "imageQuality", "artStyle").first();
-        const assetsDataArr = await utils_default.db("o_assets").whereIn("id", assetIds).select("id", "describe", "name", "type", "assetsId");
-        const parentIds = assetsDataArr.map((item) => item.assetsId).filter((id) => id !== null);
-        const parentAssetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").whereIn("o_assets.id", parentIds).select("o_assets.id", "o_image.filePath", "o_assets.describe");
-        assetsDataArr.forEach((i) => {
-          const parent = parentAssetsData.find((item) => item.id === i.assetsId);
-          if (parent) {
-            i.parentDescribe = parent.describe;
-          }
-        });
-        const imageUrlRecord = {};
-        parentAssetsData.forEach((item) => {
-          if (item.filePath) imageUrlRecord[item.id] = item.filePath;
-        });
-        const rolePrompt = utils_default.getArtPrompt(projectSettingData.artStyle, "art_skills", "art_character_derivative");
-        const toolPrompt = utils_default.getArtPrompt(projectSettingData.artStyle, "art_skills", "art_prop_derivative");
-        const scenePrompt = utils_default.getArtPrompt(projectSettingData.artStyle, "art_skills", "art_scene_derivative");
-        const promptRecord = {
-          role: {
-            prompt: rolePrompt
-          },
-          tool: {
-            prompt: toolPrompt
-          },
-          scene: {
-            prompt: scenePrompt
-          }
-        };
-        const imageIdMap = {};
-        for (const item of assetsDataArr) {
-          const [imageId] = await utils_default.db("o_image").insert({
-            assetsId: item.id,
-            type: item.type,
-            state: "\u751F\u6210\u4E2D",
-            resolution: projectSettingData?.imageQuality,
-            model: projectSettingData?.imageModel
-          });
-          imageIdMap[item.id] = imageId;
-          await utils_default.db("o_assets").where("id", item.id).update({ imageId });
-        }
-        const imageData = [];
-        res.status(200).send(success3("\u5F00\u59CB\u751F\u6210\u8D44\u4EA7\u56FE\u7247"));
-        const generateSingleAsset = async (item) => {
-          const imageId = imageIdMap[item.id];
-          const typeConfig = promptRecord[item.type] || promptRecord["role"];
-          const { text: text2 } = await utils_default.Ai.Text("universalAi").invoke({
-            system: `${typeConfig.prompt}`,
-            messages: [
-              {
-                role: "user",
-                content: `
-            \u7236\u7EA7\u8D44\u4EA7\u63CF\u8FF0: ${item.parentDescribe || "\u65E0\u8BE6\u7EC6\u63CF\u8FF0"}
-            \u5F53\u524D\u8D44\u4EA7\u63CF\u8FF0: ${item.describe || "\u65E0\u8BE6\u7EC6\u63CF\u8FF0"}`
+        const requestId = req.body.requestId ?? `assetgen_${utils_default.uuid()}`;
+        const normalizedIds = [...new Set(assetIds.map(Number))].sort((a, b) => a - b);
+        if (!normalizedIds.length) return res.status(400).send(error50("assetIds\u4E0D\u80FD\u4E3A\u7A7A"));
+        const generationKey = `${projectId}:${scriptId}:${requestId}`;
+        let ownsGenerationWorker = false;
+        try {
+          const projectSettingData = await utils_default.db("o_project").where("id", projectId).select("imageModel", "imageQuality", "artStyle").first();
+          if (!projectSettingData) return res.status(400).send(error50("\u9879\u76EE\u4E0D\u5B58\u5728"));
+          const operationInput = { assetIds: normalizedIds, projectId, scriptId };
+          const claimed = await withOperationReceipt(
+            utils_default.db,
+            { projectId, episodesId: scriptId },
+            "asset-generate",
+            requestId,
+            operationInput,
+            async (trx) => {
+              const script = await trx("o_script").where({ id: scriptId, projectId }).select("id").first();
+              if (!script) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C");
+              const assets = await trx("o_assets").where({ projectId }).whereIn("id", normalizedIds).select("id", "type", "assetsId");
+              const found = new Set(assets.map((item) => Number(item.id)));
+              const missing = normalizedIds.filter((id) => !found.has(id));
+              if (missing.length) throw new Error(`\u8D44\u4EA7\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u6216\u4E0D\u5B58\u5728\uFF1A${missing.join(",")}`);
+              const links = await trx("o_scriptAssets").where({ scriptId }).whereIn("assetId", normalizedIds).select("assetId");
+              const linked = new Set(links.map((item) => Number(item.assetId)));
+              const unlinked = normalizedIds.filter((id) => !linked.has(id));
+              if (unlinked.length) throw new Error(`\u8D44\u4EA7\u672A\u7ED1\u5B9A\u5230\u5F53\u524D\u5267\u96C6\uFF1A${unlinked.join(",")}`);
+              const imageIdMap = {};
+              for (const item of assets) {
+                const [imageId] = await trx("o_image").insert({
+                  assetsId: item.id,
+                  type: item.type,
+                  state: "\u751F\u6210\u4E2D",
+                  resolution: projectSettingData.imageQuality,
+                  model: projectSettingData.imageModel
+                });
+                imageIdMap[Number(item.id)] = Number(imageId);
+                const updated = await trx("o_assets").where({ id: item.id, projectId }).update({ imageId });
+                if (updated !== 1) throw new Error(`\u8D44\u4EA7 ${item.id} \u7684\u56FE\u7247\u4EFB\u52A1\u7ED1\u5B9A\u5931\u8D25`);
               }
-            ]
+              return { assetIds: normalizedIds, imageIdMap };
+            }
+          );
+          if (!claimed.duplicate || !activeAssetGenerationRequests.has(generationKey)) {
+            activeAssetGenerationRequests.add(generationKey);
+            ownsGenerationWorker = true;
+          }
+          const currentRows = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").where({ "o_assets.projectId": projectId }).whereIn("o_assets.id", normalizedIds).select("o_assets.id", "o_image.state", "o_image.filePath", "o_image.errorReason", "o_assets.prompt");
+          const currentData = await Promise.all(
+            currentRows.map(async (item) => ({
+              id: item.id,
+              state: item.state ?? "\u672A\u751F\u6210",
+              src: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : null,
+              errorReason: item.errorReason ?? "",
+              prompt: item.prompt ?? ""
+            }))
+          );
+          res.status(200).send(success3(currentData));
+          if (!ownsGenerationWorker) return;
+          const generationIds = claimed.duplicate ? currentRows.filter((item) => item.state === "\u751F\u6210\u4E2D").map((item) => Number(item.id)) : normalizedIds;
+          if (!generationIds.length) {
+            activeAssetGenerationRequests.delete(generationKey);
+            ownsGenerationWorker = false;
+            return;
+          }
+          const assetsDataArr = await utils_default.db("o_assets").where({ projectId }).whereIn("id", generationIds).select("id", "describe", "name", "type", "assetsId");
+          const parentIds = assetsDataArr.map((item) => item.assetsId).filter((id) => id !== null);
+          const parentAssetsData = parentIds.length ? await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").where({ "o_assets.projectId": projectId }).whereIn("o_assets.id", parentIds).select("o_assets.id", "o_image.filePath", "o_assets.describe") : [];
+          assetsDataArr.forEach((item) => {
+            const parent = parentAssetsData.find((parentItem) => parentItem.id === item.assetsId);
+            if (parent) item.parentDescribe = parent.describe;
           });
-          await utils_default.db("o_assets").where("id", item.id).update({ prompt: text2 });
-          const imageBase64 = imageUrlRecord[item.assetsId] ? await utils_default.oss.getImageBase64(imageUrlRecord[item.assetsId]) : null;
+          const imageUrlRecord = {};
+          parentAssetsData.forEach((item) => {
+            if (item.filePath) imageUrlRecord[item.id] = item.filePath;
+          });
+          const promptRecord = {
+            role: { prompt: utils_default.getArtPrompt(projectSettingData.artStyle, "art_skills", "art_character_derivative") },
+            tool: { prompt: utils_default.getArtPrompt(projectSettingData.artStyle, "art_skills", "art_prop_derivative") },
+            scene: { prompt: utils_default.getArtPrompt(projectSettingData.artStyle, "art_skills", "art_scene_derivative") }
+          };
+          const generateSingleAsset = async (item) => {
+            const imageId = Number(claimed.receipt.data.imageIdMap[item.id]);
+            try {
+              const typeConfig = promptRecord[item.type] || promptRecord.role;
+              const { text: text2 } = await utils_default.Ai.Text("universalAi").invoke({
+                system: typeConfig.prompt,
+                messages: [{
+                  role: "user",
+                  content: `\u7236\u7EA7\u8D44\u4EA7\u63CF\u8FF0: ${item.parentDescribe || "\u65E0\u8BE6\u7EC6\u63CF\u8FF0"}
+\u5F53\u524D\u8D44\u4EA7\u63CF\u8FF0: ${item.describe || "\u65E0\u8BE6\u7EC6\u63CF\u8FF0"}`
+                }]
+              });
+              await utils_default.db("o_assets").where({ id: item.id, projectId }).update({ prompt: text2 });
+              const imageBase64 = imageUrlRecord[item.assetsId] ? await utils_default.oss.getImageBase64(imageUrlRecord[item.assetsId]) : null;
+              const repeloadObj = {
+                prompt: text2,
+                size: projectSettingData.imageQuality,
+                aspectRatio: "16:9"
+              };
+              const imageCls = await utils_default.Ai.Image(projectSettingData.imageModel).run(
+                {
+                  referenceList: imageBase64 ? [{ type: "image", base64: imageBase64 }] : [],
+                  ...repeloadObj
+                },
+                {
+                  taskClass: "\u751F\u6210\u56FE\u7247",
+                  describe: "\u8D44\u4EA7\u56FE\u7247\u751F\u6210",
+                  relatedObjects: JSON.stringify(repeloadObj),
+                  projectId
+                }
+              );
+              const savePath = `/${projectId}/assets/${scriptId}/${item.type}/${utils_default.uuid()}.jpg`;
+              await imageCls.save(savePath);
+              await utils_default.db("o_image").where({ id: imageId, assetsId: item.id }).update({
+                state: "\u5DF2\u5B8C\u6210",
+                filePath: savePath,
+                errorReason: null
+              });
+            } catch (reason) {
+              await utils_default.db("o_image").where({ id: imageId, assetsId: item.id }).update({
+                state: "\u751F\u6210\u5931\u8D25",
+                errorReason: utils_default.error(reason).message
+              });
+            }
+          };
           try {
-            const repeloadObj = {
-              prompt: text2,
-              size: projectSettingData?.imageQuality,
-              aspectRatio: "16:9"
-            };
-            const imageCls = await utils_default.Ai.Image(projectSettingData?.imageModel).run(
-              {
-                referenceList: imageBase64 ? [{ type: "image", base64: imageBase64 }] : [],
-                ...repeloadObj
-              },
-              {
-                taskClass: "\u751F\u6210\u56FE\u7247",
-                describe: "\u8D44\u4EA7\u56FE\u7247\u751F\u6210",
-                relatedObjects: JSON.stringify(repeloadObj),
-                projectId
-              }
-            );
-            const savePath = `/${projectId}/assets/${scriptId}/${item.type}/${utils_default.uuid()}.jpg`;
-            await imageCls.save(savePath);
-            await utils_default.db("o_image").where({ id: imageId }).update({ state: "\u5DF2\u5B8C\u6210", filePath: savePath });
-            return {
-              id: item.id,
-              state: "\u5DF2\u5B8C\u6210",
-              src: await utils_default.oss.getSmallImageUrl(savePath)
-            };
-          } catch (e) {
-            await utils_default.db("o_image").where({ id: imageId }).update({ state: "\u751F\u6210\u5931\u8D25", errorReason: utils_default.error(e).message });
-            return {
-              id: item.id,
-              state: "\u751F\u6210\u5931\u8D25",
-              src: ""
-            };
+            for (let i = 0; i < assetsDataArr.length; i += concurrentCount) {
+              const batch = assetsDataArr.slice(i, i + concurrentCount);
+              await Promise.all(batch.map(generateSingleAsset));
+            }
+          } finally {
+            if (ownsGenerationWorker) {
+              activeAssetGenerationRequests.delete(generationKey);
+              ownsGenerationWorker = false;
+            }
           }
-        };
-        for (let i = 0; i < assetsDataArr.length; i += concurrentCount) {
-          const batch = assetsDataArr.slice(i, i + concurrentCount);
-          const batchResults = await Promise.all(batch.map(generateSingleAsset));
-          imageData.push(...batchResults);
+        } catch (reason) {
+          const message = utils_default.error(reason).message;
+          console.error("[assets/batchGenerateAssetsImage]", reason);
+          if (ownsGenerationWorker) {
+            activeAssetGenerationRequests.delete(generationKey);
+            ownsGenerationWorker = false;
+          }
+          if (res.headersSent) {
+            try {
+              const receipt = await getOperationReceipt(
+                utils_default.db,
+                { projectId, episodesId: scriptId },
+                "asset-generate",
+                requestId
+              );
+              const imageIds = Object.values(receipt?.data?.imageIdMap ?? {}).map(Number).filter(Number.isSafeInteger);
+              if (imageIds.length) {
+                await utils_default.db("o_image").whereIn("id", imageIds).where({ state: "\u751F\u6210\u4E2D" }).update({
+                  state: "\u751F\u6210\u5931\u8D25",
+                  errorReason: `\u751F\u6210\u4EFB\u52A1\u521D\u59CB\u5316\u5931\u8D25\uFF1A${message}`
+                });
+              }
+            } catch (markError) {
+              console.error("[assets/batchGenerateAssetsImage] \u6807\u8BB0\u521D\u59CB\u5316\u5931\u8D25\u72B6\u6001\u5931\u8D25:", markError);
+            }
+            return;
+          }
+          return res.status(400).send(error50(message));
         }
       }
     );
@@ -240575,61 +241821,109 @@ var init_getStoryboardData = __esm({
   }
 });
 
-// src/utils/storyboardScenes.ts
-function renderStoryboardScenes(scenes) {
-  return Object.keys(scenes).map(Number).sort((a, b) => a - b).map((number6) => scenes[String(number6)]).join("\n\n");
-}
-function mergeStoryboardScene(previousTable, previous, taskId, sceneIndex, total, markdown) {
-  if (!/^[a-zA-Z0-9_-]{8,128}$/.test(taskId)) throw new Error("\u5206\u955C\u4EFB\u52A1\u6807\u8BC6\u65E0\u6548");
-  if (!Number.isSafeInteger(sceneIndex) || !Number.isSafeInteger(total) || sceneIndex < 1 || total < sceneIndex || total > 1e3) {
-    throw new Error("\u573A\u6B21\u6216\u603B\u573A\u6B21\u6570\u65E0\u6548");
-  }
-  const scene = markdown.trim();
-  if (!scene || scene.length > 6e4 || /<\/?storyboardTable\b/i.test(scene)) throw new Error("\u5355\u573A\u5185\u5BB9\u4E3A\u7A7A\u3001\u8FC7\u957F\u6216\u5305\u542B\u5D4C\u5957 XML \u6807\u7B7E");
-  const headings = [...scene.matchAll(/^##\s*场\s*(\d+)\s*[：:]/gm)];
-  if (headings.length !== 1 || Number(headings[0][1]) !== sceneIndex || headings[0].index !== 0) {
-    throw new Error(`\u5355\u573A\u5206\u955C\u5FC5\u987B\u4EE5\u201C## \u573A${sceneIndex}\uFF1A\u201D\u5F00\u5934\uFF0C\u4E14\u4E0D\u80FD\u5305\u542B\u5176\u4ED6\u573A\u6B21`);
-  }
-  if (previous) {
-    if (previous.taskId !== taskId || previous.total !== total) throw new Error("\u4EFB\u52A1\u6807\u8BC6\u6216\u603B\u573A\u6B21\u6570\u4E0E\u5DF2\u4FDD\u5B58\u7684\u5206\u955C\u8868\u4E0D\u4E00\u81F4");
-    if (previousTable !== renderStoryboardScenes(previous.scenes)) throw new Error("\u5206\u955C\u8868\u5DF2\u88AB\u4EBA\u5DE5\u4FEE\u6539\uFF0C\u505C\u6B62\u81EA\u52A8\u5408\u5E76\u4EE5\u4FDD\u62A4\u73B0\u6709\u5185\u5BB9");
-  } else if (previousTable.trim()) {
-    throw new Error("\u5DE5\u4F5C\u533A\u5DF2\u6709\u5206\u955C\u8868\uFF1B\u8BF7\u5148\u786E\u8BA4\u6216\u6E05\u7A7A\u65E7\u7248\u5185\u5BB9\uFF0C\u4E0D\u80FD\u81EA\u52A8\u8986\u76D6");
-  }
-  const scenes = { ...previous?.scenes ?? {} };
-  if (scenes[String(sceneIndex)] && scenes[String(sceneIndex)] !== scene) {
-    throw new Error(`\u573A${sceneIndex}\u5DF2\u4FDD\u5B58\u4E14\u5185\u5BB9\u4E0D\u540C\uFF0C\u4E0D\u80FD\u81EA\u52A8\u8986\u76D6\uFF1B\u8BF7\u4EBA\u5DE5\u6838\u5BF9\u540E\u518D\u5904\u7406`);
-  }
-  const changed = !scenes[String(sceneIndex)];
-  scenes[String(sceneIndex)] = scene;
-  const savedScenes = Object.keys(scenes).map(Number).sort((a, b) => a - b);
-  const missingScenes = Array.from({ length: total }, (_, i) => i + 1).filter((number6) => !scenes[String(number6)]);
-  return {
-    storyboardTable: renderStoryboardScenes(scenes),
-    storyboardTableProgress: { taskId, total, scenes, revision: (previous?.revision ?? 0) + (changed ? 1 : 0), complete: missingScenes.length === 0 },
-    savedScenes,
-    missingScenes
-  };
-}
-var init_storyboardScenes = __esm({
-  "src/utils/storyboardScenes.ts"() {
+// src/routes/production/getStoryboardRevisionContext.ts
+var import_express64, router64, getStoryboardRevisionContext_default;
+var init_getStoryboardRevisionContext = __esm({
+  "src/routes/production/getStoryboardRevisionContext.ts"() {
     "use strict";
+    import_express64 = __toESM(require_express2());
+    init_zod();
+    init_utils3();
+    init_responseFormat();
+    init_middleware();
+    init_storyboardProgress();
+    init_storyboardTable();
+    init_storyboardRevision();
+    router64 = import_express64.default.Router();
+    getStoryboardRevisionContext_default = router64.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number().int().positive(),
+        episodesId: external_exports.number().int().positive()
+      }),
+      async (req, res) => {
+        try {
+          const { projectId, episodesId } = req.body;
+          const progress = await readStoryboardProgress(utils_default.db, projectId, episodesId);
+          if (!progress.valid || progress.mode !== "scene") {
+            throw new Error(progress.conflict?.message ?? "\u5F53\u524D\u5DE5\u4F5C\u533A\u6CA1\u6709\u53EF\u4FEE\u8BA2\u7684\u9010\u573A\u5206\u955C\u8FDB\u5EA6");
+          }
+          const snapshot = await readStoryboardTableSnapshot(utils_default.db, projectId, episodesId);
+          const scenes = snapshot.storyboardTableProgress?.scenes ?? {};
+          if (snapshot.storyboardTableProgress?.taskId !== progress.taskId || snapshot.storyboardTableProgress?.revision !== progress.revision) {
+            throw new Error("\u8BFB\u53D6\u671F\u95F4\u5206\u955C\u8FDB\u5EA6\u53D1\u751F\u53D8\u5316\uFF0C\u8BF7\u91CD\u65B0\u83B7\u53D6\u4FEE\u8BA2\u4E0A\u4E0B\u6587");
+          }
+          return res.status(200).send(success3({
+            taskId: progress.taskId,
+            total: progress.total,
+            revision: progress.revision,
+            savedScenes: progress.savedScenes,
+            missingScenes: progress.missingScenes,
+            scenes: Object.fromEntries(Object.entries(scenes).map(([scene, text2]) => [scene, {
+              content: text2,
+              hash: storyboardSceneHash(text2)
+            }]))
+          }));
+        } catch (error73) {
+          const message = error73 instanceof Error ? error73.message : "\u65E0\u6CD5\u8BFB\u53D6\u5206\u955C\u4FEE\u8BA2\u4E0A\u4E0B\u6587";
+          return res.status(409).send({ code: 409, message, data: null });
+        }
+      }
+    );
+  }
+});
+
+// src/routes/production/reviseStoryboardScene.ts
+var import_express65, router65, reviseStoryboardScene_default;
+var init_reviseStoryboardScene = __esm({
+  "src/routes/production/reviseStoryboardScene.ts"() {
+    "use strict";
+    import_express65 = __toESM(require_express2());
+    init_zod();
+    init_utils3();
+    init_responseFormat();
+    init_middleware();
+    init_storyboardRevision();
+    router65 = import_express65.default.Router();
+    reviseStoryboardScene_default = router65.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number().int().positive(),
+        episodesId: external_exports.number().int().positive(),
+        taskId: external_exports.string().min(8).max(128),
+        scene: external_exports.number().int().positive(),
+        expectedRevision: external_exports.number().int().nonnegative(),
+        expectedSceneHash: external_exports.string().regex(/^[a-f0-9]{64}$/),
+        revisedScene: external_exports.string().min(1).max(6e4),
+        reason: external_exports.string().min(1).max(2e3)
+      }),
+      async (req, res) => {
+        try {
+          const result = await reviseStoryboardScene(utils_default.db, req.body);
+          return res.status(200).send(success3(result));
+        } catch (error73) {
+          const message = error73 instanceof Error ? error73.message : "\u5206\u955C\u4FEE\u8BA2\u5931\u8D25";
+          console.error("[production/reviseStoryboardScene]", error73);
+          return res.status(409).send({ code: 409, message, data: null });
+        }
+      }
+    );
   }
 });
 
 // src/routes/production/saveFlowData.ts
-var import_express64, router64, saveFlowData_default;
+var import_express66, router66, saveFlowData_default;
 var init_saveFlowData = __esm({
   "src/routes/production/saveFlowData.ts"() {
     "use strict";
-    import_express64 = __toESM(require_express2());
+    import_express66 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
     init_storyboardScenes();
-    router64 = import_express64.default.Router();
-    saveFlowData_default = router64.post(
+    router66 = import_express66.default.Router();
+    saveFlowData_default = router66.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -240640,10 +241934,11 @@ var init_saveFlowData = __esm({
           index: external_exports.number().int().min(1),
           total: external_exports.number().int().min(1).max(1e3),
           content: external_exports.string().min(1).max(6e4)
-        }).optional()
+        }).optional(),
+        writeFields: external_exports.array(external_exports.enum(["scriptPlan", "storyboardTable"])).max(2).optional()
       }),
       async (req, res) => {
-        const { data, projectId, episodesId, scene } = req.body;
+        const { data, projectId, episodesId, scene, writeFields = [] } = req.body;
         if (scene && data !== void 0) return res.status(400).send({ code: 400, message: "\u5355\u573A\u4FDD\u5B58\u4E0E\u6574\u4EFD\u5DE5\u4F5C\u533A\u4FDD\u5B58\u4E0D\u80FD\u540C\u65F6\u63D0\u4EA4", data: null });
         const serialized = scene ? void 0 : JSON.stringify(data);
         if (!scene && (serialized === void 0 || !data || typeof data !== "object" || Array.isArray(data))) {
@@ -240676,10 +241971,26 @@ var init_saveFlowData = __esm({
               );
               nextData = { ...storedData, storyboardTable: sceneResult.storyboardTable, storyboardTableProgress: sceneResult.storyboardTableProgress };
             } else {
-              nextData = { ...data };
+              const explicitWrites = new Set(writeFields);
+              const explicitStoryboardTable = explicitWrites.has("storyboardTable") || data.resetStoryboardTable === true;
+              const clientData = { ...data };
+              delete clientData.storyboardRevisionHistory;
+              delete clientData.storyboardAuditHistory;
+              delete clientData.storyboardApproval;
+              delete clientData.storyboardSceneAudits;
+              delete clientData.storyboardTaskArchives;
+              nextData = { ...storedData, ...clientData };
+              nextData.script = script.content ?? "";
+              if (!explicitWrites.has("scriptPlan")) {
+                nextData.scriptPlan = storedData.scriptPlan ?? "";
+              }
               const previous = storedData.storyboardTableProgress;
               const incoming = nextData.storyboardTableProgress;
-              if (previous) {
+              if (!explicitStoryboardTable) {
+                nextData.storyboardTable = storedData.storyboardTable ?? "";
+                if (previous) nextData.storyboardTableProgress = previous;
+                else delete nextData.storyboardTableProgress;
+              } else if (previous) {
                 if (nextData.resetStoryboardTable === true && incoming?.revision !== previous.revision) {
                   throw new Error("\u5DF2\u6709\u9010\u573A\u5206\u955C\u8FDB\u5EA6\uFF0C\u6574\u8868\u8986\u76D6\u524D\u8BF7\u5148\u663E\u5F0F\u6E05\u7A7A\u6216\u5B8C\u6210\u5F53\u524D\u4EFB\u52A1");
                 }
@@ -240703,8 +242014,8 @@ var init_saveFlowData = __esm({
             }
             const payload = JSON.stringify(nextData);
             if (existing) {
-              const updated = await trx("o_agentWorkData").where(scope).update({ data: payload });
-              if (updated !== 1) throw new Error("\u5DE5\u4F5C\u533A\u8BB0\u5F55\u66F4\u65B0\u5931\u8D25");
+              const updated = await trx("o_agentWorkData").where({ id: existing.id, data: existing.data }).update({ data: payload });
+              if (updated !== 1) throw new Error("\u4FDD\u5B58\u671F\u95F4\u5DE5\u4F5C\u533A\u7248\u672C\u5DF2\u53D8\u5316\uFF0C\u8BF7\u91CD\u65B0\u52A0\u8F7D\u540E\u91CD\u8BD5");
             } else {
               await trx("o_agentWorkData").insert({ ...scope, data: payload });
             }
@@ -240724,17 +242035,17 @@ var init_saveFlowData = __esm({
 });
 
 // src/routes/production/storyboard/addStoryboard.ts
-var import_express65, router65, addStoryboard_default;
+var import_express67, router67, addStoryboard_default;
 var init_addStoryboard = __esm({
   "src/routes/production/storyboard/addStoryboard.ts"() {
     "use strict";
-    import_express65 = __toESM(require_express2());
+    import_express67 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router65 = import_express65.default.Router();
-    addStoryboard_default = router65.post(
+    router67 = import_express67.default.Router();
+    addStoryboard_default = router67.post(
       "/",
       validateFields({
         prompt: external_exports.string(),
@@ -240772,18 +242083,18 @@ var init_addStoryboard = __esm({
 });
 
 // src/routes/production/storyboard/batchAddStoryboardInfo.ts
-var import_express66, import_node_crypto4, router66, batchAddStoryboardInfo_default;
+var import_express68, import_node_crypto13, router68, batchAddStoryboardInfo_default;
 var init_batchAddStoryboardInfo = __esm({
   "src/routes/production/storyboard/batchAddStoryboardInfo.ts"() {
     "use strict";
-    import_express66 = __toESM(require_express2());
-    import_node_crypto4 = require("node:crypto");
+    import_express68 = __toESM(require_express2());
+    import_node_crypto13 = require("node:crypto");
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router66 = import_express66.default.Router();
-    batchAddStoryboardInfo_default = router66.post(
+    router68 = import_express68.default.Router();
+    batchAddStoryboardInfo_default = router68.post(
       "/",
       validateFields({
         data: external_exports.array(
@@ -240807,7 +242118,7 @@ var init_batchAddStoryboardInfo = __esm({
         const { data, scriptId, projectId, requestId } = req.body;
         if (!data.length) return res.status(400).send(error50("\u6570\u636E\u4E0D\u80FD\u4E3A\u7A7A"));
         const requestKey = requestId ? `storyboardWrite:${requestId}` : null;
-        const payloadHash = requestKey ? (0, import_node_crypto4.createHash)("sha256").update(JSON.stringify(data)).digest("hex") : null;
+        const payloadHash = requestKey ? (0, import_node_crypto13.createHash)("sha256").update(JSON.stringify(data)).digest("hex") : null;
         try {
           const { stored, createdIds, associationMap } = await utils_default.db.transaction(async (trx) => {
             const script = await trx("o_script").where({ id: scriptId, projectId }).first();
@@ -240924,17 +242235,17 @@ var init_batchAddStoryboardInfo = __esm({
 });
 
 // src/routes/production/storyboard/batchDelete.ts
-var import_express67, router67, batchDelete_default2;
+var import_express69, router69, batchDelete_default2;
 var init_batchDelete2 = __esm({
   "src/routes/production/storyboard/batchDelete.ts"() {
     "use strict";
-    import_express67 = __toESM(require_express2());
+    import_express69 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router67 = import_express67.default.Router();
-    batchDelete_default2 = router67.post(
+    router69 = import_express69.default.Router();
+    batchDelete_default2 = router69.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number()),
@@ -240962,42 +242273,41 @@ async function getAssetsImageBase64(imageIds) {
   if (!imageIds.length) return [];
   const imagePaths = await utils_default.db("o_image").whereIn("o_image.id", imageIds).select("o_image.id", "o_image.filePath");
   const id2Path = /* @__PURE__ */ new Map();
-  for (const row of imagePaths) {
-    id2Path.set(row.id, row.filePath);
-  }
+  for (const row of imagePaths) id2Path.set(row.id, row.filePath);
   const imageUrls = await Promise.all(
     imageIds.map(async (id) => {
       const filePath = id2Path.get(id);
-      if (filePath) {
-        try {
-          return await utils_default.oss.getImageBase64(filePath);
-        } catch {
-          return null;
-        }
+      if (!filePath) return null;
+      try {
+        return await utils_default.oss.getImageBase64(filePath);
+      } catch {
+        return null;
       }
-      return null;
     })
   );
   return imageUrls.filter(Boolean).map((url4) => ({ type: "image", base64: url4 }));
 }
-var import_express68, router68, batchGenerateImage_default;
+var import_express70, router70, activeStoryboardGenerationRequests, batchGenerateImage_default;
 var init_batchGenerateImage = __esm({
   "src/routes/production/storyboard/batchGenerateImage.ts"() {
     "use strict";
-    import_express68 = __toESM(require_express2());
+    import_express70 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router68 = import_express68.default.Router();
-    batchGenerateImage_default = router68.post(
+    init_operationReceipt();
+    router70 = import_express70.default.Router();
+    activeStoryboardGenerationRequests = /* @__PURE__ */ new Set();
+    batchGenerateImage_default = router70.post(
       "/",
       validateFields({
         storyboardIds: external_exports.array(external_exports.number()),
         projectId: external_exports.number(),
         scriptId: external_exports.number(),
         concurrentCount: external_exports.number().min(1).optional(),
-        compulsory: external_exports.boolean().optional()
+        compulsory: external_exports.boolean().optional(),
+        requestId: external_exports.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional()
       }),
       async (req, res) => {
         const {
@@ -241007,93 +242317,134 @@ var init_batchGenerateImage = __esm({
           concurrentCount = 5,
           compulsory = false
         } = req.body;
-        if (!storyboardIds || storyboardIds.length === 0) return res.status(400).send(error50("storyboardIds\u4E0D\u80FD\u4E3A\u7A7A"));
-        let finalStoryboardIds = storyboardIds || [];
-        const storyboardData = await utils_default.db("o_storyboard").where("scriptId", scriptId).where("projectId", projectId).whereIn("id", finalStoryboardIds);
-        if (!storyboardData.length) return res.status(500).send(error50("\u672A\u67E5\u5230\u5206\u955C\u6570\u636E"));
-        const storyIds = storyboardData.map((i) => i.id);
-        if (compulsory) {
-          await utils_default.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).update({ state: "\u751F\u6210\u4E2D", shouldGenerateImage: 1 });
-        } else {
-          await utils_default.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).where("shouldGenerateImage", 0).update({ state: "\u672A\u751F\u6210" });
-          await utils_default.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).where("shouldGenerateImage", 1).update({ state: "\u751F\u6210\u4E2D" });
-        }
-        const projectSettingData = await utils_default.db("o_project").where("id", projectId).select("imageModel", "imageQuality", "artStyle", "videoRatio").first();
-        const assets2StoryboardRows = await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", storyIds).orderBy("rowid").select("storyboardId", "assetId");
-        const allAssetIds = [...new Set(assets2StoryboardRows.map((r) => r.assetId))];
-        const assetImageMap = {};
-        if (allAssetIds.length > 0) {
-          const assetRows = await utils_default.db("o_assets").whereIn("id", allAssetIds).select("id", "imageId");
-          assetRows.forEach((row) => {
-            assetImageMap[row.id] = row.imageId;
-          });
-        }
-        const assetRecord = {};
-        assets2StoryboardRows.forEach((item) => {
-          if (!assetRecord[item.storyboardId]) {
-            assetRecord[item.storyboardId] = [];
-          }
-          const imageId = assetImageMap[item.assetId];
-          if (imageId != null) {
-            assetRecord[item.storyboardId].push(imageId);
-          }
-        });
-        const realStoryData = await utils_default.db("o_storyboard").where("scriptId", scriptId).where("projectId", projectId).whereIn("id", storyIds);
-        res.status(200).send(
-          success3(
-            realStoryData.map((i) => ({
-              id: i.id,
-              prompt: i.prompt,
-              associateAssetsIds: assetRecord[i.id],
-              src: null,
-              state: i.state,
-              videoDesc: i.videoDesc,
-              shouldGenerateImage: i.shouldGenerateImage
-            }))
-          )
-        );
-        const generateTask = async (item) => {
-          const repeloadObj = {
-            prompt: item.prompt,
-            size: projectSettingData?.imageQuality,
-            aspectRatio: projectSettingData?.videoRatio
-          };
-          try {
-            const imageCls = await utils_default.Ai.Image(projectSettingData?.imageModel).run(
-              {
-                referenceList: await getAssetsImageBase64(assetRecord[item.id] || []),
-                ...repeloadObj
-              },
-              {
-                taskClass: "\u751F\u6210\u5206\u955C\u56FE\u7247",
-                describe: "\u5206\u955C\u56FE\u7247\u751F\u6210",
-                relatedObjects: JSON.stringify(repeloadObj),
-                projectId
+        const requestId = req.body.requestId ?? `storygen_${utils_default.uuid()}`;
+        const normalizedIds = [...new Set(storyboardIds.map(Number))].sort((a, b) => a - b);
+        if (!normalizedIds.length) return res.status(400).send(error50("storyboardIds\u4E0D\u80FD\u4E3A\u7A7A"));
+        const generationKey = `${projectId}:${scriptId}:${requestId}`;
+        let ownsGenerationWorker = false;
+        try {
+          const projectSettingData = await utils_default.db("o_project").where("id", projectId).select("imageModel", "imageQuality", "artStyle", "videoRatio").first();
+          if (!projectSettingData) return res.status(400).send(error50("\u9879\u76EE\u4E0D\u5B58\u5728"));
+          const operationInput = { storyboardIds: normalizedIds, projectId, scriptId, compulsory };
+          const claimed = await withOperationReceipt(
+            utils_default.db,
+            { projectId, episodesId: scriptId },
+            "storyboard-generate",
+            requestId,
+            operationInput,
+            async (trx) => {
+              const script = await trx("o_script").where({ id: scriptId, projectId }).select("id").first();
+              if (!script) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C");
+              const rows = await trx("o_storyboard").where({ scriptId, projectId }).whereIn("id", normalizedIds).select("id", "shouldGenerateImage");
+              const found = new Set(rows.map((item) => Number(item.id)));
+              const missing = normalizedIds.filter((id) => !found.has(id));
+              if (missing.length) throw new Error(`\u5206\u955C\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u6216\u5267\u96C6\uFF1A${missing.join(",")}`);
+              if (compulsory) {
+                await trx("o_storyboard").where({ scriptId, projectId }).whereIn("id", normalizedIds).update({ state: "\u751F\u6210\u4E2D", shouldGenerateImage: 1, reason: null });
+              } else {
+                const skippedIds = rows.filter((item) => Number(item.shouldGenerateImage) === 0).map((item) => Number(item.id));
+                const generateIds = rows.filter((item) => Number(item.shouldGenerateImage) !== 0).map((item) => Number(item.id));
+                if (skippedIds.length) {
+                  await trx("o_storyboard").where({ scriptId, projectId }).whereIn("id", skippedIds).update({ state: "\u672A\u751F\u6210", reason: null });
+                }
+                if (generateIds.length) {
+                  await trx("o_storyboard").where({ scriptId, projectId }).whereIn("id", generateIds).update({ state: "\u751F\u6210\u4E2D", reason: null });
+                }
               }
-            );
-            const savePath = `/${projectId}/assets/${scriptId}/${utils_default.uuid()}.jpg`;
-            await imageCls.save(savePath);
-            await utils_default.db("o_storyboard").where("id", item.id).update({
-              filePath: savePath,
-              state: "\u5DF2\u5B8C\u6210"
-            });
-          } catch (e) {
-            utils_default.db("o_storyboard").where("id", item.id).update({
-              filePath: "",
-              reason: utils_default.error(e).message,
-              state: "\u751F\u6210\u5931\u8D25"
+              return { storyboardIds: normalizedIds, compulsory };
+            }
+          );
+          if (!claimed.duplicate || !activeStoryboardGenerationRequests.has(generationKey)) {
+            activeStoryboardGenerationRequests.add(generationKey);
+            ownsGenerationWorker = true;
+          }
+          const assets2StoryboardRows = await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", normalizedIds).orderBy("rowid").select("storyboardId", "assetId");
+          const allAssetIds = [...new Set(assets2StoryboardRows.map((row) => Number(row.assetId)))];
+          const assetImageMap = {};
+          if (allAssetIds.length) {
+            const assetRows = await utils_default.db("o_assets").where({ projectId }).whereIn("id", allAssetIds).select("id", "imageId");
+            assetRows.forEach((row) => {
+              if (row.imageId != null) assetImageMap[row.id] = row.imageId;
             });
           }
-        };
-        let generateList = [];
-        if (compulsory) {
-          generateList = storyboardData;
-        } else {
-          generateList = storyboardData.filter((item) => item.shouldGenerateImage !== 0);
-        }
-        for (let i = 0; i < generateList.length; i += concurrentCount) {
-          const batch = generateList.slice(i, i + concurrentCount);
-          await Promise.all(batch.map(generateTask));
+          const assetRecord = {};
+          assets2StoryboardRows.forEach((item) => {
+            const imageId = assetImageMap[item.assetId];
+            if (imageId != null) (assetRecord[item.storyboardId] ??= []).push(imageId);
+          });
+          const storyboardData = await utils_default.db("o_storyboard").where({ scriptId, projectId }).whereIn("id", normalizedIds).orderBy("index", "asc");
+          const responseData = await Promise.all(storyboardData.map(async (item) => ({
+            id: item.id,
+            prompt: item.prompt,
+            associateAssetsIds: assetRecord[item.id] ?? [],
+            src: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : null,
+            state: item.state,
+            videoDesc: item.videoDesc,
+            shouldGenerateImage: item.shouldGenerateImage
+          })));
+          res.status(200).send(success3(responseData));
+          if (!ownsGenerationWorker) return;
+          const generationIds = claimed.duplicate ? storyboardData.filter((item) => item.state === "\u751F\u6210\u4E2D" && (compulsory || Number(item.shouldGenerateImage) !== 0)).map((item) => Number(item.id)) : normalizedIds;
+          if (!generationIds.length) {
+            activeStoryboardGenerationRequests.delete(generationKey);
+            ownsGenerationWorker = false;
+            return;
+          }
+          const generateTask = async (item) => {
+            const repeloadObj = {
+              prompt: item.prompt,
+              size: projectSettingData.imageQuality,
+              aspectRatio: projectSettingData.videoRatio
+            };
+            try {
+              const imageCls = await utils_default.Ai.Image(projectSettingData.imageModel).run(
+                {
+                  referenceList: await getAssetsImageBase64(assetRecord[item.id] || []),
+                  ...repeloadObj
+                },
+                {
+                  taskClass: "\u751F\u6210\u5206\u955C\u56FE\u7247",
+                  describe: "\u5206\u955C\u56FE\u7247\u751F\u6210",
+                  relatedObjects: JSON.stringify(repeloadObj),
+                  projectId
+                }
+              );
+              const savePath = `/${projectId}/assets/${scriptId}/${utils_default.uuid()}.jpg`;
+              await imageCls.save(savePath);
+              await utils_default.db("o_storyboard").where({ id: item.id, scriptId, projectId }).update({
+                filePath: savePath,
+                state: "\u5DF2\u5B8C\u6210",
+                reason: null
+              });
+            } catch (reason) {
+              await utils_default.db("o_storyboard").where({ id: item.id, scriptId, projectId }).update({
+                filePath: "",
+                reason: utils_default.error(reason).message,
+                state: "\u751F\u6210\u5931\u8D25"
+              });
+            }
+          };
+          const generationIdSet = new Set(generationIds);
+          const generateList = (compulsory ? storyboardData : storyboardData.filter((item) => item.shouldGenerateImage !== 0)).filter((item) => generationIdSet.has(Number(item.id)));
+          try {
+            for (let i = 0; i < generateList.length; i += concurrentCount) {
+              const batch = generateList.slice(i, i + concurrentCount);
+              await Promise.all(batch.map(generateTask));
+            }
+          } finally {
+            if (ownsGenerationWorker) {
+              activeStoryboardGenerationRequests.delete(generationKey);
+              ownsGenerationWorker = false;
+            }
+          }
+        } catch (reason) {
+          const message = utils_default.error(reason).message;
+          console.error("[storyboard/batchGenerateImage]", reason);
+          if (ownsGenerationWorker) {
+            activeStoryboardGenerationRequests.delete(generationKey);
+            ownsGenerationWorker = false;
+          }
+          if (!res.headersSent) return res.status(400).send(error50(message));
         }
       }
     );
@@ -241101,17 +242452,17 @@ var init_batchGenerateImage = __esm({
 });
 
 // src/routes/production/storyboard/downPreviewImage.ts
-var import_express69, import_sharp3, router69, downPreviewImage_default;
+var import_express71, import_sharp3, router71, downPreviewImage_default;
 var init_downPreviewImage = __esm({
   "src/routes/production/storyboard/downPreviewImage.ts"() {
     "use strict";
-    import_express69 = __toESM(require_express2());
+    import_express71 = __toESM(require_express2());
     init_utils3();
     init_zod();
     import_sharp3 = __toESM(require("sharp"));
     init_middleware();
-    router69 = import_express69.default.Router();
-    downPreviewImage_default = router69.post(
+    router71 = import_express71.default.Router();
+    downPreviewImage_default = router71.post(
       "/",
       validateFields({
         storyboardIds: external_exports.array(external_exports.number())
@@ -241197,17 +242548,17 @@ var init_downPreviewImage = __esm({
 });
 
 // src/routes/production/storyboard/editStoryboardInfo.ts
-var import_express70, router70, editStoryboardInfo_default;
+var import_express72, router72, editStoryboardInfo_default;
 var init_editStoryboardInfo = __esm({
   "src/routes/production/storyboard/editStoryboardInfo.ts"() {
     "use strict";
-    import_express70 = __toESM(require_express2());
+    import_express72 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router70 = import_express70.default.Router();
-    editStoryboardInfo_default = router70.post(
+    router72 = import_express72.default.Router();
+    editStoryboardInfo_default = router72.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -241227,17 +242578,17 @@ var init_editStoryboardInfo = __esm({
 });
 
 // src/routes/production/storyboard/getStoryboardData.ts
-var import_express71, router71, getStoryboardData_default2;
+var import_express73, router73, getStoryboardData_default2;
 var init_getStoryboardData2 = __esm({
   "src/routes/production/storyboard/getStoryboardData.ts"() {
     "use strict";
-    import_express71 = __toESM(require_express2());
+    import_express73 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router71 = import_express71.default.Router();
-    getStoryboardData_default2 = router71.post(
+    router73 = import_express73.default.Router();
+    getStoryboardData_default2 = router73.post(
       "/",
       validateFields({
         scriptId: external_exports.number(),
@@ -241275,17 +242626,17 @@ var init_getStoryboardData2 = __esm({
 });
 
 // src/routes/production/storyboard/pollingImage.ts
-var import_express72, router72, pollingImage_default2;
+var import_express74, router74, pollingImage_default2;
 var init_pollingImage2 = __esm({
   "src/routes/production/storyboard/pollingImage.ts"() {
     "use strict";
-    import_express72 = __toESM(require_express2());
+    import_express74 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router72 = import_express72.default.Router();
-    pollingImage_default2 = router72.post(
+    router74 = import_express74.default.Router();
+    pollingImage_default2 = router74.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -241306,18 +242657,18 @@ var init_pollingImage2 = __esm({
 });
 
 // src/routes/production/storyboard/previewImage.ts
-var import_express73, import_sharp4, router73, previewImage_default;
+var import_express75, import_sharp4, router75, previewImage_default;
 var init_previewImage = __esm({
   "src/routes/production/storyboard/previewImage.ts"() {
     "use strict";
-    import_express73 = __toESM(require_express2());
+    import_express75 = __toESM(require_express2());
     init_utils3();
     init_zod();
     import_sharp4 = __toESM(require("sharp"));
     init_responseFormat();
     init_middleware();
-    router73 = import_express73.default.Router();
-    previewImage_default = router73.post(
+    router75 = import_express75.default.Router();
+    previewImage_default = router75.post(
       "/",
       validateFields({
         storyboardIds: external_exports.array(external_exports.number())
@@ -241414,17 +242765,17 @@ var init_previewImage = __esm({
 });
 
 // src/routes/production/storyboard/removeFrame.ts
-var import_express74, router74, removeFrame_default;
+var import_express76, router76, removeFrame_default;
 var init_removeFrame = __esm({
   "src/routes/production/storyboard/removeFrame.ts"() {
     "use strict";
-    import_express74 = __toESM(require_express2());
+    import_express76 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router74 = import_express74.default.Router();
-    removeFrame_default = router74.post(
+    router76 = import_express76.default.Router();
+    removeFrame_default = router76.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -241445,17 +242796,17 @@ var init_removeFrame = __esm({
 });
 
 // src/routes/production/storyboard/updateStoryboardUrl.ts
-var import_express75, router75, updateStoryboardUrl_default;
+var import_express77, router77, updateStoryboardUrl_default;
 var init_updateStoryboardUrl = __esm({
   "src/routes/production/storyboard/updateStoryboardUrl.ts"() {
     "use strict";
-    import_express75 = __toESM(require_express2());
+    import_express77 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router75 = import_express75.default.Router();
-    updateStoryboardUrl_default = router75.post(
+    router77 = import_express77.default.Router();
+    updateStoryboardUrl_default = router77.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -241477,17 +242828,17 @@ var init_updateStoryboardUrl = __esm({
 });
 
 // src/routes/production/workbench/addTrack.ts
-var import_express76, router76, addTrack_default;
+var import_express78, router78, addTrack_default;
 var init_addTrack = __esm({
   "src/routes/production/workbench/addTrack.ts"() {
     "use strict";
-    import_express76 = __toESM(require_express2());
+    import_express78 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router76 = import_express76.default.Router();
-    addTrack_default = router76.post(
+    router78 = import_express78.default.Router();
+    addTrack_default = router78.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -241513,20 +242864,34 @@ var init_addTrack = __esm({
 });
 
 // src/routes/production/workbench/batchGeneratePrompt.ts
-var import_express77, import_promises5, import_path12, router77, batchGeneratePrompt_default;
+function isMiniMaxH3(modelName) {
+  const value = String(modelName || "").toLowerCase();
+  return value.includes("minimax") && value.includes("h3");
+}
+function h3AssetRank(item) {
+  const type = String(item?.type || "").toLowerCase();
+  if (type === "role" || type === "character") return 0;
+  if (type === "scene" || type === "environment") return 1;
+  if (type === "tool" || type === "prop" || type === "creature") return 2;
+  return 3;
+}
+function escapeXmlAttr(value) {
+  return String(value ?? "").replace(/[<>&"']/g, (ch) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&apos;" })[ch] || ch);
+}
+var import_express79, import_promises6, import_path12, router79, batchGeneratePrompt_default;
 var init_batchGeneratePrompt = __esm({
   "src/routes/production/workbench/batchGeneratePrompt.ts"() {
     "use strict";
-    import_express77 = __toESM(require_express2());
+    import_express79 = __toESM(require_express2());
     init_utils3();
     init_p_limit();
     init_zod();
     init_responseFormat();
     init_middleware();
-    import_promises5 = __toESM(require("fs/promises"));
+    import_promises6 = __toESM(require("fs/promises"));
     import_path12 = __toESM(require("path"));
-    router77 = import_express77.default.Router();
-    batchGeneratePrompt_default = router77.post(
+    router79 = import_express79.default.Router();
+    batchGeneratePrompt_default = router79.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -241536,7 +242901,11 @@ var init_batchGeneratePrompt = __esm({
             info: external_exports.array(
               external_exports.object({
                 id: external_exports.number(),
-                sources: external_exports.string()
+                sources: external_exports.string(),
+                reference: external_exports.boolean().optional(),
+                slotType: external_exports.string().optional(),
+                fileType: external_exports.string().optional(),
+                prompt: external_exports.string().optional()
               })
             )
           })
@@ -241550,6 +242919,8 @@ var init_batchGeneratePrompt = __esm({
         const { trackData, projectId, mode, model, concurrentCount = 5 } = req.body;
         try {
           const [id, modelData] = model.split(/:(.+)/);
+          const modelLower = (modelData ?? "").toLowerCase();
+          const h3PromptMode = isMiniMaxH3(modelData ?? "");
           const projectData = await utils_default.db("o_project").select("*").where({ id: projectId }).first();
           const videoPrompt = await utils_default.db("o_prompt").where("type", "videoPromptGeneration").first();
           let videoPromptGeneration = "";
@@ -241558,7 +242929,7 @@ var init_batchGeneratePrompt = __esm({
             const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
             try {
               const fullPath = import_path12.default.join(modelPromptRoot, modelPromptData?.path);
-              const content = await import_promises5.default.readFile(fullPath, "utf-8");
+              const content = await import_promises6.default.readFile(fullPath, "utf-8");
               videoPromptGeneration = content ?? "";
             } catch {
             }
@@ -241566,9 +242937,10 @@ var init_batchGeneratePrompt = __esm({
           if (!videoPromptGeneration) {
             const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
             const videoPromptDir = import_path12.default.join(modelPromptRoot, "video");
-            const modelLower = (modelData ?? "").toLowerCase();
             let fileName = null;
-            if (modelLower.includes("wan") && modelLower.includes("2.6")) {
+            if (modelLower.includes("minimax") && modelLower.includes("h3")) {
+              fileName = "minimaxH3Multi-referenceMode.md";
+            } else if (modelLower.includes("wan") && modelLower.includes("2.6")) {
               fileName = "wan2.6Single-imageFirstFrameMode.md";
             } else if (/seedance.*2[.\-]0/i.test(modelLower)) {
               fileName = "seedance2Multi-parameterMode.md";
@@ -241580,7 +242952,7 @@ var init_batchGeneratePrompt = __esm({
             if (fileName) {
               try {
                 const fullPath = import_path12.default.join(videoPromptDir, fileName);
-                videoPromptGeneration = await import_promises5.default.readFile(fullPath, "utf-8");
+                videoPromptGeneration = await import_promises6.default.readFile(fullPath, "utf-8");
               } catch {
               }
             }
@@ -241604,20 +242976,26 @@ var init_batchGeneratePrompt = __esm({
               const images = await Promise.all(
                 track.info.map(async (item) => {
                   if (item.sources === "storyboard") {
-                    const storyboard2 = await utils_default.db("o_storyboard").where("o_storyboard.id", item.id).select("videoDesc", "prompt", "track", "duration", "shouldGenerateImage").first();
+                    const storyboard2 = await utils_default.db("o_storyboard").where("o_storyboard.id", item.id).select("id", "videoDesc", "prompt", "track", "duration", "shouldGenerateImage", "filePath").first();
                     const assetRows = await utils_default.db("o_assets2Storyboard").where("storyboardId", item.id).orderBy("rowid").select("assetId");
                     const associateAssetsIds = assetRows.map((row) => row.assetId);
                     return {
                       ...storyboard2,
                       associateAssetsIds,
-                      _type: "storyboard"
+                      _type: "storyboard",
+                      _reference: item.reference !== false,
+                      _slotType: item.slotType,
+                      _fileType: item.fileType
                     };
                   }
                   if (item.sources === "assets") {
-                    const assetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where("o_assets.id", item.id).select("o_assets.id", "o_assets.type", "o_assets.name", "o_image.filePath").first();
+                    const assetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where("o_assets.id", item.id).select("o_assets.id", "o_assets.type", "o_assets.name", "o_assets.describe", "o_assets.prompt as assetPrompt", "o_image.filePath").first();
                     return {
                       ...assetsData,
-                      _type: "assets"
+                      _type: "assets",
+                      _reference: item.reference !== false,
+                      _slotType: item.slotType,
+                      _fileType: item.fileType
                     };
                   }
                 })
@@ -241631,7 +243009,12 @@ var init_batchGeneratePrompt = __esm({
                     id: item.id,
                     type: item.type,
                     name: item.name,
-                    filePath: item.filePath
+                    describe: item.describe,
+                    assetPrompt: item.assetPrompt,
+                    filePath: item.filePath,
+                    _reference: item._reference,
+                    _slotType: item._slotType,
+                    _fileType: item._fileType
                   });
                 if (item._type === "storyboard")
                   storyboard.push({
@@ -241640,11 +243023,72 @@ var init_batchGeneratePrompt = __esm({
                     track: item.track,
                     duration: item.duration,
                     associateAssetsIds: item.associateAssetsIds,
-                    shouldGenerateImage: item.shouldGenerateImage
+                    shouldGenerateImage: item.shouldGenerateImage,
+                    id: item.id,
+                    filePath: item.filePath,
+                    _reference: item._reference,
+                    _slotType: item._slotType,
+                    _fileType: item._fileType
                   });
               }
+              const pictureSourceItems = h3PromptMode ? images.filter(
+                (item) => item && item._type === "assets" && item._reference !== false && item.filePath && item._fileType !== "audio" && item._fileType !== "video"
+              ).sort((a, b) => h3AssetRank(a) - h3AssetRank(b)) : images.filter((item) => item && item._reference !== false && item.filePath);
+              const referenceSlotItems = pictureSourceItems.map((item, index) => {
+                const slot = index + 1;
+                const sources = item._type === "assets" ? "assets" : "storyboard";
+                const type = item._type === "assets" ? String(item.type || "asset") : "storyboard";
+                const name28 = item._type === "assets" ? String(item.name || `\u8D44\u4EA7${item.id}`) : `\u5206\u955C\u56FE${item.id}`;
+                return `<reference slot="${slot}" sources="${sources}" id="${item.id}" type="${escapeXmlAttr(type)}" name="${escapeXmlAttr(name28)}" />`;
+              });
+              const referenceSlots = `<referenceSlots>
+${referenceSlotItems.join("\n")}
+</referenceSlots>`;
+              const storyboardGuideItems = h3PromptMode ? images.filter((item) => item && item._type === "storyboard" && item._reference !== false) : [];
+              const storyboardGuidance = h3PromptMode ? `<storyboardGuidance>
+${storyboardGuideItems.map(
+                (item, index) => `<storyboard index="${index + 1}" id="${item.id}">
+videoDesc=${JSON.stringify(item.videoDesc || "")}
+imagePrompt=${JSON.stringify(item.prompt || "")}
+</storyboard>`
+              ).join("\n")}
+</storyboardGuidance>` : "";
+              const referenceHeading = h3PromptMode ? "**MiniMax H3 \u5B9E\u9645 Picture \u69FD\u4F4D\uFF08\u4EC5\u4EE5\u4E0B\u7D20\u6750\u4F1A\u4E0A\u4F20\u5230 Ref2VA\uFF1B<Picture N> \u5FC5\u987B\u4E25\u683C\u5BF9\u5E94 slot N\uFF09**" : "**\u53C2\u8003\u7D20\u6750\u69FD\u4F4D**";
+              const storyboardHeading = h3PromptMode ? `
+**\u5206\u955C\u6784\u56FE\u6307\u5BFC\uFF08\u4EC5\u6587\u672C\u6307\u5BFC\uFF0C\u7981\u6B62\u751F\u6210\u65B0\u7684 <Picture N>\uFF0C\u7981\u6B62\u8986\u76D6\u89D2\u8272\u8EAB\u4EFD\uFF09**\uFF1A
+${storyboardGuidance}
+` : "";
+              const videoTrackData = await utils_default.db("o_videoTrack").select("duration").where({ id: track.trackId }).first();
+              const storyboardDuration = storyboard.reduce(
+                (total, item) => total + (Number.parseFloat(String(item.duration || 0)) || 0),
+                0
+              );
+              const rawTargetDuration = Number(videoTrackData?.duration) || storyboardDuration || 5;
+              const targetDuration = Math.max(4, Math.min(15, Math.round(rawTargetDuration)));
+              const assetDefinitionItems = h3PromptMode ? pictureSourceItems.map((item, index) => {
+                const picture = `<Picture ${index + 1}>`;
+                const type = escapeXmlAttr(item.type || "asset");
+                const name28 = escapeXmlAttr(item.name || `\u8D44\u4EA7${item.id}`);
+                return [
+                  `<asset picture="${picture}" type="${type}" name="${name28}">`,
+                  `describe=${JSON.stringify(item.describe || "")}`,
+                  `visualPrompt=${JSON.stringify(item.assetPrompt || "")}`,
+                  "</asset>"
+                ].join("\n");
+              }) : [];
+              const assetDefinitions = h3PromptMode ? `<assetDefinitions>
+${assetDefinitionItems.join("\n")}
+</assetDefinitions>` : "";
               const content = `
           **\u6A21\u578B\u540D\u79F0**\uFF1A${modelData},
+          **\u76EE\u6807\u65F6\u957F target_duration**\uFF1A${targetDuration}s,
+          ${referenceHeading}\uFF1A
+          ${referenceSlots},
+          ${h3PromptMode ? `
+**\u8D44\u4EA7\u89C6\u89C9\u5B9A\u4E49**\uFF1A
+${assetDefinitions}
+` : ""}
+          ${storyboardHeading}
           **\u8D44\u4EA7\u4FE1\u606F**\uFF08\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177\u3001\u97F3\u9891):${assets.filter((i) => i.filePath).map((i) => `[${i.id},${i.type},${i.name}]`).join("\uFF0C")},
           **\u5206\u955C\u4FE1\u606F**\uFF1A${storyboard.map(
                 (i) => `<storyboardItem
@@ -241688,18 +243132,29 @@ var init_batchGeneratePrompt = __esm({
 });
 
 // src/routes/production/workbench/batchGenerateVideo.ts
-var import_express78, router78, batchGenerateVideo_default;
+function isMiniMaxH32(model) {
+  const value = String(model || "").toLowerCase();
+  return value.includes("minimax") && value.includes("h3");
+}
+function h3ReferenceRank(item) {
+  const type = String(item.assetType || "").toLowerCase();
+  if (type === "role" || type === "character") return 0;
+  if (type === "scene" || type === "environment") return 1;
+  if (type === "tool" || type === "prop" || type === "creature") return 2;
+  return 3;
+}
+var import_express80, router80, batchGenerateVideo_default;
 var init_batchGenerateVideo = __esm({
   "src/routes/production/workbench/batchGenerateVideo.ts"() {
     "use strict";
-    import_express78 = __toESM(require_express2());
+    import_express80 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_dist_node();
     init_responseFormat();
     init_middleware();
-    router78 = import_express78.default.Router();
-    batchGenerateVideo_default = router78.post(
+    router80 = import_express80.default.Router();
+    batchGenerateVideo_default = router80.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -241709,7 +243164,11 @@ var init_batchGenerateVideo = __esm({
             uploadData: external_exports.array(
               external_exports.object({
                 id: external_exports.number(),
-                sources: external_exports.string()
+                sources: external_exports.string(),
+                type: external_exports.enum(["imageReference", "startImage", "endImage", "videoReference", "audioReference"]).optional(),
+                fileType: external_exports.enum(["image", "video", "audio"]).optional(),
+                label: external_exports.string().optional(),
+                prompt: external_exports.string().optional()
               })
             ),
             trackId: external_exports.number(),
@@ -241733,21 +243192,46 @@ var init_batchGenerateVideo = __esm({
           }
         }
         const ratio = await utils_default.db("o_project").select("videoRatio").where("id", projectId).first();
+        const h3 = isMiniMaxH32(model);
         const tasks = await Promise.all(
           trackData.map(async (track) => {
             const { uploadData, trackId, prompt, duration: duration4 } = track;
-            const images = await Promise.all(
+            const images = (await Promise.all(
               uploadData.map(async (item) => {
                 if (item.sources === "storyboard") {
-                  const filePath = await utils_default.db("o_storyboard").where("id", item.id).select("filePath").first();
-                  return { path: filePath?.filePath, sources: "storyBoard" };
+                  const filePath = await utils_default.db("o_storyboard").where("id", item.id).select("filePath", "prompt").first();
+                  return {
+                    path: filePath?.filePath,
+                    sourceType: "storyboard",
+                    assetType: "storyboard",
+                    fileType: item.fileType || "image",
+                    referenceType: item.type,
+                    label: item.label || `\u5206\u955C\u56FE${item.id}`,
+                    prompt: item.prompt || filePath?.prompt
+                  };
                 }
                 if (item.sources === "assets") {
-                  const filePath = await utils_default.db("o_assets").where("o_assets.id", item.id).leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_image.filePath", "o_image.type").first();
-                  return { path: filePath?.filePath, sources: filePath.type };
+                  const filePath = await utils_default.db("o_assets").where("o_assets.id", item.id).leftJoin("o_image", "o_assets.imageId", "o_image.id").select(
+                    "o_image.filePath",
+                    "o_image.type as imageType",
+                    "o_assets.name",
+                    "o_assets.prompt",
+                    "o_assets.type as assetType"
+                  ).first();
+                  return {
+                    path: filePath?.filePath,
+                    sourceType: "assets",
+                    assetType: filePath?.assetType,
+                    fileType: item.fileType || filePath?.imageType || "image",
+                    referenceType: item.type,
+                    label: item.label || filePath?.name,
+                    prompt: item.prompt || filePath?.prompt
+                  };
                 }
+                return null;
               })
-            );
+            )).filter(Boolean);
+            const runtimeImages = h3 ? images.filter((item) => item.sourceType !== "storyboard").sort((a, b) => h3ReferenceRank(a) - h3ReferenceRank(b)) : images;
             const videoPath = `/${projectId}/video/${v4_default()}.mp4`;
             const [videoId] = await utils_default.db("o_video").insert({
               filePath: videoPath,
@@ -241757,15 +243241,23 @@ var init_batchGenerateVideo = __esm({
               projectId,
               videoTrackId: trackId
             });
-            return { videoId, videoPath, prompt, duration: duration4, images, trackId };
+            return { videoId, videoPath, prompt, duration: duration4, images: runtimeImages, trackId };
           })
         );
         res.status(200).send(success3(tasks.map((t) => ({ videoId: t.videoId, trackId: t.trackId }))));
         for (const { videoId, videoPath, prompt, duration: duration4, images } of tasks) {
           const base644 = await Promise.all(
             images.map(async (item) => {
-              if (!item) return null;
-              return { base64: await utils_default.oss.getImageBase64(item.path), type: item.sources == "audio" ? "audio" : "image" };
+              if (!item.path) return null;
+              const type = item.referenceType === "audioReference" || item.fileType === "audio" ? "audio" : item.referenceType === "videoReference" || item.fileType === "video" ? "video" : "image";
+              return {
+                base64: await utils_default.oss.getImageBase64(item.path),
+                type,
+                label: item.label,
+                prompt: item.prompt,
+                sourceType: item.sourceType,
+                assetType: item.assetType
+              };
             })
           );
           const relatedObjects = { projectId, videoId, scriptId, type: "\u89C6\u9891" };
@@ -241799,17 +243291,17 @@ var init_batchGenerateVideo = __esm({
 });
 
 // src/routes/production/workbench/checkVideoPrompt.ts
-var import_express79, router79, checkVideoPrompt_default;
+var import_express81, router81, checkVideoPrompt_default;
 var init_checkVideoPrompt = __esm({
   "src/routes/production/workbench/checkVideoPrompt.ts"() {
     "use strict";
-    import_express79 = __toESM(require_express2());
+    import_express81 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router79 = import_express79.default.Router();
-    checkVideoPrompt_default = router79.post(
+    router81 = import_express81.default.Router();
+    checkVideoPrompt_default = router81.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -241826,17 +243318,17 @@ var init_checkVideoPrompt = __esm({
 });
 
 // src/routes/production/workbench/checkVideoStateList.ts
-var import_express80, router80, checkVideoStateList_default;
+var import_express82, router82, checkVideoStateList_default;
 var init_checkVideoStateList = __esm({
   "src/routes/production/workbench/checkVideoStateList.ts"() {
     "use strict";
-    import_express80 = __toESM(require_express2());
+    import_express82 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router80 = import_express80.default.Router();
-    checkVideoStateList_default = router80.post(
+    router82 = import_express82.default.Router();
+    checkVideoStateList_default = router82.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -241862,17 +243354,17 @@ var init_checkVideoStateList = __esm({
 });
 
 // src/routes/production/workbench/deleteTrack.ts
-var import_express81, router81, deleteTrack_default;
+var import_express83, router83, deleteTrack_default;
 var init_deleteTrack = __esm({
   "src/routes/production/workbench/deleteTrack.ts"() {
     "use strict";
-    import_express81 = __toESM(require_express2());
+    import_express83 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router81 = import_express81.default.Router();
-    deleteTrack_default = router81.post(
+    router83 = import_express83.default.Router();
+    deleteTrack_default = router83.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -241890,17 +243382,17 @@ var init_deleteTrack = __esm({
 });
 
 // src/routes/production/workbench/delVideo.ts
-var import_express82, router82, delVideo_default;
+var import_express84, router84, delVideo_default;
 var init_delVideo = __esm({
   "src/routes/production/workbench/delVideo.ts"() {
     "use strict";
-    import_express82 = __toESM(require_express2());
+    import_express84 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router82 = import_express82.default.Router();
-    delVideo_default = router82.post(
+    router84 = import_express84.default.Router();
+    delVideo_default = router84.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -241918,18 +243410,29 @@ var init_delVideo = __esm({
 });
 
 // src/routes/production/workbench/generateVideo.ts
-var import_express83, router83, generateVideo_default;
+function isMiniMaxH33(model) {
+  const value = String(model || "").toLowerCase();
+  return value.includes("minimax") && value.includes("h3");
+}
+function h3ReferenceRank2(item) {
+  const type = String(item.assetType || "").toLowerCase();
+  if (type === "role" || type === "character") return 0;
+  if (type === "scene" || type === "environment") return 1;
+  if (type === "tool" || type === "prop" || type === "creature") return 2;
+  return 3;
+}
+var import_express85, router85, generateVideo_default;
 var init_generateVideo = __esm({
   "src/routes/production/workbench/generateVideo.ts"() {
     "use strict";
-    import_express83 = __toESM(require_express2());
+    import_express85 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_dist_node();
     init_responseFormat();
     init_middleware();
-    router83 = import_express83.default.Router();
-    generateVideo_default = router83.post(
+    router85 = import_express85.default.Router();
+    generateVideo_default = router85.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -241937,7 +243440,11 @@ var init_generateVideo = __esm({
         uploadData: external_exports.array(
           external_exports.object({
             id: external_exports.number(),
-            sources: external_exports.string()
+            sources: external_exports.string(),
+            type: external_exports.enum(["imageReference", "startImage", "endImage", "videoReference", "audioReference"]).optional(),
+            fileType: external_exports.enum(["image", "video", "audio"]).optional(),
+            label: external_exports.string().optional(),
+            prompt: external_exports.string().optional()
           })
         ),
         prompt: external_exports.string(),
@@ -241960,22 +243467,54 @@ var init_generateVideo = __esm({
         }
         const ratio = await utils_default.db("o_project").select("videoRatio").where("id", projectId).first();
         const videoPath = `/${projectId}/video/${v4_default()}.mp4`;
-        const images = await Promise.all(
+        const images = (await Promise.all(
           uploadData.map(async (item) => {
             if (item.sources === "storyboard") {
-              const filePath = await utils_default.db("o_storyboard").where("id", item.id).select("filePath").first();
-              return { path: filePath?.filePath, sources: "storyBoard" };
+              const filePath = await utils_default.db("o_storyboard").where("id", item.id).select("filePath", "prompt").first();
+              return {
+                path: filePath?.filePath,
+                sourceType: "storyboard",
+                assetType: "storyboard",
+                fileType: item.fileType || "image",
+                referenceType: item.type,
+                label: item.label || `\u5206\u955C\u56FE${item.id}`,
+                prompt: item.prompt || filePath?.prompt
+              };
             }
             if (item.sources === "assets") {
-              const filePath = await utils_default.db("o_assets").where("o_assets.id", item.id).leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_image.filePath", "o_image.type").first();
-              return { path: filePath?.filePath, sources: filePath.type };
+              const filePath = await utils_default.db("o_assets").where("o_assets.id", item.id).leftJoin("o_image", "o_assets.imageId", "o_image.id").select(
+                "o_image.filePath",
+                "o_image.type as imageType",
+                "o_assets.name",
+                "o_assets.prompt",
+                "o_assets.type as assetType"
+              ).first();
+              return {
+                path: filePath?.filePath,
+                sourceType: "assets",
+                assetType: filePath?.assetType,
+                fileType: item.fileType || filePath?.imageType || "image",
+                referenceType: item.type,
+                label: item.label || filePath?.name,
+                prompt: item.prompt || filePath?.prompt
+              };
             }
+            return null;
           })
-        );
+        )).filter(Boolean);
+        const runtimeImages = isMiniMaxH33(model) ? images.filter((item) => item.sourceType !== "storyboard").sort((a, b) => h3ReferenceRank2(a) - h3ReferenceRank2(b)) : images;
         const base644 = await Promise.all(
-          images.map(async (item) => {
-            if (!item) return null;
-            return { base64: await utils_default.oss.getImageBase64(item.path), type: item.sources == "audio" ? "audio" : "image" };
+          runtimeImages.map(async (item) => {
+            if (!item.path) return null;
+            const type = item.referenceType === "audioReference" || item.fileType === "audio" ? "audio" : item.referenceType === "videoReference" || item.fileType === "video" ? "video" : "image";
+            return {
+              base64: await utils_default.oss.getImageBase64(item.path),
+              type,
+              label: item.label,
+              prompt: item.prompt,
+              sourceType: item.sourceType,
+              assetType: item.assetType
+            };
           })
         );
         const [videoId] = await utils_default.db("o_video").insert({
@@ -242022,19 +243561,33 @@ var init_generateVideo = __esm({
 });
 
 // src/routes/production/workbench/generateVideoPrompt.ts
-var import_express84, import_promises6, import_path13, router84, generateVideoPrompt_default;
+function isMiniMaxH34(modelName) {
+  const value = String(modelName || "").toLowerCase();
+  return value.includes("minimax") && value.includes("h3");
+}
+function h3AssetRank2(item) {
+  const type = String(item?.type || "").toLowerCase();
+  if (type === "role" || type === "character") return 0;
+  if (type === "scene" || type === "environment") return 1;
+  if (type === "tool" || type === "prop" || type === "creature") return 2;
+  return 3;
+}
+function escapeXmlAttr2(value) {
+  return String(value ?? "").replace(/[<>&"']/g, (ch) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&apos;" })[ch] || ch);
+}
+var import_express86, import_promises7, import_path13, router86, generateVideoPrompt_default;
 var init_generateVideoPrompt = __esm({
   "src/routes/production/workbench/generateVideoPrompt.ts"() {
     "use strict";
-    import_express84 = __toESM(require_express2());
+    import_express86 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    import_promises6 = __toESM(require("fs/promises"));
+    import_promises7 = __toESM(require("fs/promises"));
     import_path13 = __toESM(require("path"));
-    router84 = import_express84.default.Router();
-    generateVideoPrompt_default = router84.post(
+    router86 = import_express86.default.Router();
+    generateVideoPrompt_default = router86.post(
       "/",
       validateFields({
         trackId: external_exports.number(),
@@ -242042,7 +243595,11 @@ var init_generateVideoPrompt = __esm({
         info: external_exports.array(
           external_exports.object({
             id: external_exports.number(),
-            sources: external_exports.string()
+            sources: external_exports.string(),
+            reference: external_exports.boolean().optional(),
+            slotType: external_exports.string().optional(),
+            fileType: external_exports.string().optional(),
+            prompt: external_exports.string().optional()
           })
         ),
         model: external_exports.string(),
@@ -242056,22 +243613,28 @@ var init_generateVideoPrompt = __esm({
         const images = await Promise.all(
           info.map(async (item) => {
             if (item.sources === "storyboard") {
-              const storyboard2 = await utils_default.db("o_storyboard").where("o_storyboard.id", item.id).select("videoDesc", "prompt", "track", "duration", "shouldGenerateImage").first();
+              const storyboard2 = await utils_default.db("o_storyboard").where("o_storyboard.id", item.id).select("id", "videoDesc", "prompt", "track", "duration", "shouldGenerateImage", "filePath").first();
               const assetRows = await utils_default.db("o_assets2Storyboard").where("storyboardId", item.id).orderBy("rowid").select("assetId");
               const associateAssetsIds = assetRows.map((row) => row.assetId);
               return {
                 ...storyboard2,
                 associateAssetsIds,
-                _type: "storyboard"
+                _type: "storyboard",
                 // 标记类型，便于后续区分
+                _reference: item.reference !== false,
+                _slotType: item.slotType,
+                _fileType: item.fileType
               };
             }
             if (item.sources === "assets") {
-              const assetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where("o_assets.id", item.id).select("o_assets.id", "o_assets.type", "o_assets.name", "o_image.filePath").first();
+              const assetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where("o_assets.id", item.id).select("o_assets.id", "o_assets.type", "o_assets.name", "o_assets.describe", "o_assets.prompt as assetPrompt", "o_image.filePath").first();
               return {
                 ...assetsData,
-                _type: "assets"
+                _type: "assets",
                 // 标记类型
+                _reference: item.reference !== false,
+                _slotType: item.slotType,
+                _fileType: item.fileType
               };
             }
           })
@@ -242085,7 +243648,12 @@ var init_generateVideoPrompt = __esm({
               id: item.id,
               type: item.type,
               name: item.name,
-              filePath: item.filePath
+              describe: item.describe,
+              assetPrompt: item.assetPrompt,
+              filePath: item.filePath,
+              _reference: item._reference,
+              _slotType: item._slotType,
+              _fileType: item._fileType
             });
           if (item._type === "storyboard")
             storyboard.push({
@@ -242094,7 +243662,12 @@ var init_generateVideoPrompt = __esm({
               track: item.track,
               duration: item.duration,
               associateAssetsIds: item.associateAssetsIds,
-              shouldGenerateImage: item.shouldGenerateImage
+              shouldGenerateImage: item.shouldGenerateImage,
+              id: item.id,
+              filePath: item.filePath,
+              _reference: item._reference,
+              _slotType: item._slotType,
+              _fileType: item._fileType
             });
         }
         const assetsNotAudioIds = assets.filter((i) => i.type == "audio").map((i) => i.id);
@@ -242104,7 +243677,10 @@ var init_generateVideoPrompt = __esm({
           assetsAudioRecord[i.assetsRoleId] = i.id;
         });
         const [id, modelData] = model.split(/:(.+)/);
+        const modelLower = (modelData ?? "").toLowerCase();
+        const h3PromptMode = isMiniMaxH34(modelData ?? "");
         const projectData = await utils_default.db("o_project").select("*").where({ id: projectId }).first();
+        const videoTrackData = await utils_default.db("o_videoTrack").select("duration").where({ id: trackId }).first();
         const videoPrompt = await utils_default.db("o_prompt").where("type", "videoPromptGeneration").first();
         let videoPromptGeneration = "";
         const modelPromptData = await utils_default.db("o_modelPrompt").where("vendorId", id).where("model", modelData).first();
@@ -242112,7 +243688,7 @@ var init_generateVideoPrompt = __esm({
           const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
           try {
             const fullPath = import_path13.default.join(modelPromptRoot, modelPromptData?.path);
-            const content2 = await import_promises6.default.readFile(fullPath, "utf-8");
+            const content2 = await import_promises7.default.readFile(fullPath, "utf-8");
             videoPromptGeneration = content2 ?? "";
           } catch {
           }
@@ -242120,9 +243696,10 @@ var init_generateVideoPrompt = __esm({
         if (!videoPromptGeneration) {
           const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
           const videoPromptDir = import_path13.default.join(modelPromptRoot, "video");
-          const modelLower = (modelData ?? "").toLowerCase();
           let fileName = null;
-          if (modelLower.includes("wan") && modelLower.includes("2.6")) {
+          if (modelLower.includes("minimax") && modelLower.includes("h3")) {
+            fileName = "minimaxH3Multi-referenceMode.md";
+          } else if (modelLower.includes("wan") && modelLower.includes("2.6")) {
             fileName = "wan2.6Single-imageFirstFrameMode.md";
           } else if (/seedance.*2[.\-]0/i.test(modelData)) {
             fileName = "seedance2Multi-parameterMode.md";
@@ -242134,7 +243711,7 @@ var init_generateVideoPrompt = __esm({
           if (fileName) {
             try {
               const fullPath = import_path13.default.join(videoPromptDir, fileName);
-              videoPromptGeneration = await import_promises6.default.readFile(fullPath, "utf-8");
+              videoPromptGeneration = await import_promises7.default.readFile(fullPath, "utf-8");
             } catch {
             }
           }
@@ -242148,9 +243725,63 @@ var init_generateVideoPrompt = __esm({
         }
         const artStyle = projectData?.artStyle || "\u65E0";
         const visualManual = utils_default.getArtPrompt(artStyle, "art_skills", "art_storyboard_video");
+        const pictureSourceItems = h3PromptMode ? images.filter(
+          (item) => item && item._type === "assets" && item._reference !== false && item.filePath && item._fileType !== "audio" && item._fileType !== "video"
+        ).sort((a, b) => h3AssetRank2(a) - h3AssetRank2(b)) : images.filter((item) => item && item._reference !== false && item.filePath);
+        const referenceSlotItems = pictureSourceItems.map((item, index) => {
+          const slot = index + 1;
+          const sources = item._type === "assets" ? "assets" : "storyboard";
+          const type = item._type === "assets" ? String(item.type || "asset") : "storyboard";
+          const name28 = item._type === "assets" ? String(item.name || `\u8D44\u4EA7${item.id}`) : `\u5206\u955C\u56FE${item.id}`;
+          return `<reference slot="${slot}" sources="${sources}" id="${item.id}" type="${escapeXmlAttr2(type)}" name="${escapeXmlAttr2(name28)}" />`;
+        });
+        const referenceSlots = `<referenceSlots>
+${referenceSlotItems.join("\n")}
+</referenceSlots>`;
+        const storyboardGuideItems = h3PromptMode ? images.filter((item) => item && item._type === "storyboard" && item._reference !== false) : [];
+        const storyboardGuidance = h3PromptMode ? `<storyboardGuidance>
+${storyboardGuideItems.map(
+          (item, index) => `<storyboard index="${index + 1}" id="${item.id}">
+videoDesc=${JSON.stringify(item.videoDesc || "")}
+imagePrompt=${JSON.stringify(item.prompt || "")}
+</storyboard>`
+        ).join("\n")}
+</storyboardGuidance>` : "";
+        const referenceHeading = h3PromptMode ? "**MiniMax H3 \u5B9E\u9645 Picture \u69FD\u4F4D\uFF08\u4EC5\u4EE5\u4E0B\u7D20\u6750\u4F1A\u4E0A\u4F20\u5230 Ref2VA\uFF1B<Picture N> \u5FC5\u987B\u4E25\u683C\u5BF9\u5E94 slot N\uFF09**" : "**\u53C2\u8003\u7D20\u6750\u69FD\u4F4D**";
+        const storyboardHeading = h3PromptMode ? `
+**\u5206\u955C\u6784\u56FE\u6307\u5BFC\uFF08\u4EC5\u6587\u672C\u6307\u5BFC\uFF0C\u7981\u6B62\u751F\u6210\u65B0\u7684 <Picture N>\uFF0C\u7981\u6B62\u8986\u76D6\u89D2\u8272\u8EAB\u4EFD\uFF09**\uFF1A
+${storyboardGuidance}
+` : "";
+        const storyboardDuration = storyboard.reduce(
+          (total, item) => total + (Number.parseFloat(String(item.duration || 0)) || 0),
+          0
+        );
+        const rawTargetDuration = Number(videoTrackData?.duration) || storyboardDuration || 5;
+        const targetDuration = Math.max(4, Math.min(15, Math.round(rawTargetDuration)));
+        const assetDefinitionItems = h3PromptMode ? pictureSourceItems.map((item, index) => {
+          const picture = `<Picture ${index + 1}>`;
+          const type = escapeXmlAttr2(item.type || "asset");
+          const name28 = escapeXmlAttr2(item.name || `\u8D44\u4EA7${item.id}`);
+          return [
+            `<asset picture="${picture}" type="${type}" name="${name28}">`,
+            `describe=${JSON.stringify(item.describe || "")}`,
+            `visualPrompt=${JSON.stringify(item.assetPrompt || "")}`,
+            "</asset>"
+          ].join("\n");
+        }) : [];
+        const assetDefinitions = h3PromptMode ? `<assetDefinitions>
+${assetDefinitionItems.join("\n")}
+</assetDefinitions>` : "";
         const content = `
           **\u6A21\u578B\u540D\u79F0**\uFF1A${modelData},
-
+          **\u76EE\u6807\u65F6\u957F target_duration**\uFF1A${targetDuration}s,
+          ${referenceHeading}\uFF1A
+          ${referenceSlots},
+          ${h3PromptMode ? `
+**\u8D44\u4EA7\u89C6\u89C9\u5B9A\u4E49**\uFF1A
+${assetDefinitions}
+` : ""}
+          ${storyboardHeading}
           **\u8D44\u4EA7\u4FE1\u606F**\uFF08\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177\u3001\u97F3\u9891):${assets.filter((i) => i.filePath).map((i) => `[${i.id},${i.type},${i.name} ${assetsAudioRecord[i.id] ? `audio:${assetsAudioRecord[i.id]}` : ""} ] `).join("\uFF0C")},
           **\u5206\u955C\u4FE1\u606F**\uFF1A${storyboard.map(
           (i) => `<storyboardItem
@@ -242191,17 +243822,17 @@ var init_generateVideoPrompt = __esm({
 });
 
 // src/routes/production/workbench/getAudioBindAssetsList.ts
-var import_express85, router85, getAudioBindAssetsList_default;
+var import_express87, router87, getAudioBindAssetsList_default;
 var init_getAudioBindAssetsList = __esm({
   "src/routes/production/workbench/getAudioBindAssetsList.ts"() {
     "use strict";
-    import_express85 = __toESM(require_express2());
+    import_express87 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router85 = import_express85.default.Router();
-    getAudioBindAssetsList_default = router85.post(
+    router87 = import_express87.default.Router();
+    getAudioBindAssetsList_default = router87.post(
       "/",
       validateFields({
         assetsIds: external_exports.array(external_exports.number())
@@ -242235,17 +243866,17 @@ var init_getAudioBindAssetsList = __esm({
 });
 
 // src/routes/production/workbench/getFileUrl.ts
-var import_express86, router86, getFileUrl_default;
+var import_express88, router88, getFileUrl_default;
 var init_getFileUrl = __esm({
   "src/routes/production/workbench/getFileUrl.ts"() {
     "use strict";
-    import_express86 = __toESM(require_express2());
+    import_express88 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router86 = import_express86.default.Router();
-    getFileUrl_default = router86.post(
+    router88 = import_express88.default.Router();
+    getFileUrl_default = router88.post(
       "/",
       validateFields({
         items: external_exports.array(external_exports.object({
@@ -242279,17 +243910,17 @@ var init_getFileUrl = __esm({
 });
 
 // src/routes/production/workbench/getGenerateData.ts
-var import_express87, router87, getGenerateData_default;
+var import_express89, router89, getGenerateData_default;
 var init_getGenerateData = __esm({
   "src/routes/production/workbench/getGenerateData.ts"() {
     "use strict";
-    import_express87 = __toESM(require_express2());
+    import_express89 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router87 = import_express87.default.Router();
-    getGenerateData_default = router87.post(
+    router89 = import_express89.default.Router();
+    getGenerateData_default = router89.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -242458,17 +244089,17 @@ var init_getGenerateData = __esm({
 });
 
 // src/routes/production/workbench/getVideoList.ts
-var import_express88, router88, getVideoList_default;
+var import_express90, router90, getVideoList_default;
 var init_getVideoList = __esm({
   "src/routes/production/workbench/getVideoList.ts"() {
     "use strict";
-    import_express88 = __toESM(require_express2());
+    import_express90 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router88 = import_express88.default.Router();
-    getVideoList_default = router88.post(
+    router90 = import_express90.default.Router();
+    getVideoList_default = router90.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -242497,17 +244128,17 @@ var init_getVideoList = __esm({
 });
 
 // src/routes/production/workbench/selectVideo.ts
-var import_express89, router89, selectVideo_default;
+var import_express91, router91, selectVideo_default;
 var init_selectVideo = __esm({
   "src/routes/production/workbench/selectVideo.ts"() {
     "use strict";
-    import_express89 = __toESM(require_express2());
+    import_express91 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router89 = import_express89.default.Router();
-    selectVideo_default = router89.post(
+    router91 = import_express91.default.Router();
+    selectVideo_default = router91.post(
       "/",
       validateFields({
         trackId: external_exports.number(),
@@ -242525,17 +244156,17 @@ var init_selectVideo = __esm({
 });
 
 // src/routes/production/workbench/updateVideoDuration.ts
-var import_express90, router90, updateVideoDuration_default;
+var import_express92, router92, updateVideoDuration_default;
 var init_updateVideoDuration = __esm({
   "src/routes/production/workbench/updateVideoDuration.ts"() {
     "use strict";
-    import_express90 = __toESM(require_express2());
+    import_express92 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router90 = import_express90.default.Router();
-    updateVideoDuration_default = router90.post(
+    router92 = import_express92.default.Router();
+    updateVideoDuration_default = router92.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -242553,17 +244184,17 @@ var init_updateVideoDuration = __esm({
 });
 
 // src/routes/production/workbench/updateVideoPrompt.ts
-var import_express91, router91, updateVideoPrompt_default;
+var import_express93, router93, updateVideoPrompt_default;
 var init_updateVideoPrompt = __esm({
   "src/routes/production/workbench/updateVideoPrompt.ts"() {
     "use strict";
-    import_express91 = __toESM(require_express2());
+    import_express93 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router91 = import_express91.default.Router();
-    updateVideoPrompt_default = router91.post(
+    router93 = import_express93.default.Router();
+    updateVideoPrompt_default = router93.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -242581,19 +244212,19 @@ var init_updateVideoPrompt = __esm({
 });
 
 // src/routes/project/addDirectorManual.ts
-var import_express92, import_fs8, import_path14, router92, addDirectorManual_default;
+var import_express94, import_fs8, import_path14, router94, addDirectorManual_default;
 var init_addDirectorManual = __esm({
   "src/routes/project/addDirectorManual.ts"() {
     "use strict";
-    import_express92 = __toESM(require_express2());
+    import_express94 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs8 = __toESM(require("fs"));
     import_path14 = __toESM(require("path"));
     init_middleware();
     init_zod();
-    router92 = import_express92.default.Router();
-    addDirectorManual_default = router92.post(
+    router94 = import_express94.default.Router();
+    addDirectorManual_default = router94.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -242671,17 +244302,17 @@ var init_addDirectorManual = __esm({
 });
 
 // src/routes/project/addProject.ts
-var import_express93, router93, addProject_default;
+var import_express95, router95, addProject_default;
 var init_addProject = __esm({
   "src/routes/project/addProject.ts"() {
     "use strict";
-    import_express93 = __toESM(require_express2());
+    import_express95 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router93 = import_express93.default.Router();
-    addProject_default = router93.post(
+    router95 = import_express95.default.Router();
+    addProject_default = router95.post(
       "/",
       validateFields({
         projectType: external_exports.string(),
@@ -242721,19 +244352,19 @@ var init_addProject = __esm({
 });
 
 // src/routes/project/addVisualManual.ts
-var import_express94, import_fs9, import_path15, router94, addVisualManual_default;
+var import_express96, import_fs9, import_path15, router96, addVisualManual_default;
 var init_addVisualManual = __esm({
   "src/routes/project/addVisualManual.ts"() {
     "use strict";
-    import_express94 = __toESM(require_express2());
+    import_express96 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs9 = __toESM(require("fs"));
     import_path15 = __toESM(require("path"));
     init_middleware();
     init_zod();
-    router94 = import_express94.default.Router();
-    addVisualManual_default = router94.post(
+    router96 = import_express96.default.Router();
+    addVisualManual_default = router96.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -242820,18 +244451,18 @@ var init_addVisualManual = __esm({
 });
 
 // src/routes/project/deleteDirectorManual.ts
-var import_express95, import_promises7, router95, deleteDirectorManual_default;
+var import_express97, import_promises8, router97, deleteDirectorManual_default;
 var init_deleteDirectorManual = __esm({
   "src/routes/project/deleteDirectorManual.ts"() {
     "use strict";
-    import_express95 = __toESM(require_express2());
+    import_express97 = __toESM(require_express2());
     init_utils3();
-    import_promises7 = __toESM(require("node:fs/promises"));
+    import_promises8 = __toESM(require("node:fs/promises"));
     init_zod();
     init_responseFormat();
     init_middleware();
-    router95 = import_express95.default.Router();
-    deleteDirectorManual_default = router95.post(
+    router97 = import_express97.default.Router();
+    deleteDirectorManual_default = router97.post(
       "/",
       validateFields({
         name: external_exports.string()
@@ -242844,49 +244475,6 @@ var init_deleteDirectorManual = __esm({
             return;
           }
           const artPromptsDir = utils_default.getPath(["skills", "story_skills", name28]);
-          try {
-            const stat = await import_promises7.default.stat(artPromptsDir);
-            if (!stat.isDirectory()) {
-              throw new Error(`${artPromptsDir} \u4E0D\u662F\u6587\u4EF6\u5939`);
-            }
-            await import_promises7.default.rm(artPromptsDir, { recursive: true, force: true });
-          } catch (e) {
-            console.error("[\u5220\u9664\u89C6\u89C9\u624B\u518C] \u5220\u9664\u5931\u8D25:", artPromptsDir, e);
-          }
-          res.status(200).send(success3({ message: "\u5220\u9664\u6210\u529F" }));
-        } catch (err) {
-          res.status(500).send(error50(utils_default.error(err).message || "\u5220\u9664\u5931\u8D25"));
-        }
-      }
-    );
-  }
-});
-
-// src/routes/project/deleteVisualManual.ts
-var import_express96, import_promises8, router96, deleteVisualManual_default;
-var init_deleteVisualManual = __esm({
-  "src/routes/project/deleteVisualManual.ts"() {
-    "use strict";
-    import_express96 = __toESM(require_express2());
-    init_utils3();
-    import_promises8 = __toESM(require("node:fs/promises"));
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router96 = import_express96.default.Router();
-    deleteVisualManual_default = router96.post(
-      "/",
-      validateFields({
-        name: external_exports.string()
-      }),
-      async (req, res) => {
-        try {
-          const { name: name28 } = req.body;
-          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
-            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
-            return;
-          }
-          const artPromptsDir = utils_default.getPath(["skills", "art_skills", name28]);
           try {
             const stat = await import_promises8.default.stat(artPromptsDir);
             if (!stat.isDirectory()) {
@@ -242905,18 +244493,61 @@ var init_deleteVisualManual = __esm({
   }
 });
 
+// src/routes/project/deleteVisualManual.ts
+var import_express98, import_promises9, router98, deleteVisualManual_default;
+var init_deleteVisualManual = __esm({
+  "src/routes/project/deleteVisualManual.ts"() {
+    "use strict";
+    import_express98 = __toESM(require_express2());
+    init_utils3();
+    import_promises9 = __toESM(require("node:fs/promises"));
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router98 = import_express98.default.Router();
+    deleteVisualManual_default = router98.post(
+      "/",
+      validateFields({
+        name: external_exports.string()
+      }),
+      async (req, res) => {
+        try {
+          const { name: name28 } = req.body;
+          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
+            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
+            return;
+          }
+          const artPromptsDir = utils_default.getPath(["skills", "art_skills", name28]);
+          try {
+            const stat = await import_promises9.default.stat(artPromptsDir);
+            if (!stat.isDirectory()) {
+              throw new Error(`${artPromptsDir} \u4E0D\u662F\u6587\u4EF6\u5939`);
+            }
+            await import_promises9.default.rm(artPromptsDir, { recursive: true, force: true });
+          } catch (e) {
+            console.error("[\u5220\u9664\u89C6\u89C9\u624B\u518C] \u5220\u9664\u5931\u8D25:", artPromptsDir, e);
+          }
+          res.status(200).send(success3({ message: "\u5220\u9664\u6210\u529F" }));
+        } catch (err) {
+          res.status(500).send(error50(utils_default.error(err).message || "\u5220\u9664\u5931\u8D25"));
+        }
+      }
+    );
+  }
+});
+
 // src/routes/project/delProject.ts
-var import_express97, router97, delProject_default;
+var import_express99, router99, delProject_default;
 var init_delProject = __esm({
   "src/routes/project/delProject.ts"() {
     "use strict";
-    import_express97 = __toESM(require_express2());
+    import_express99 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router97 = import_express97.default.Router();
-    delProject_default = router97.post(
+    router99 = import_express99.default.Router();
+    delProject_default = router99.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -242962,19 +244593,19 @@ var init_delProject = __esm({
 });
 
 // src/routes/project/editDirectorlManual.ts
-var import_express98, import_fs10, import_path16, router98, editDirectorlManual_default;
+var import_express100, import_fs10, import_path16, router100, editDirectorlManual_default;
 var init_editDirectorlManual = __esm({
   "src/routes/project/editDirectorlManual.ts"() {
     "use strict";
-    import_express98 = __toESM(require_express2());
+    import_express100 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs10 = __toESM(require("fs"));
     import_path16 = __toESM(require("path"));
     init_middleware();
     init_zod();
-    router98 = import_express98.default.Router();
-    editDirectorlManual_default = router98.post(
+    router100 = import_express100.default.Router();
+    editDirectorlManual_default = router100.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -243054,17 +244685,17 @@ ${item.data}` : item.data;
 });
 
 // src/routes/project/editProject.ts
-var import_express99, router99, editProject_default;
+var import_express101, router101, editProject_default;
 var init_editProject = __esm({
   "src/routes/project/editProject.ts"() {
     "use strict";
-    import_express99 = __toESM(require_express2());
+    import_express101 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router99 = import_express99.default.Router();
-    editProject_default = router99.post(
+    router101 = import_express101.default.Router();
+    editProject_default = router101.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -243102,19 +244733,19 @@ var init_editProject = __esm({
 });
 
 // src/routes/project/editVisualManual.ts
-var import_express100, import_fs11, import_path17, router100, editVisualManual_default;
+var import_express102, import_fs11, import_path17, router102, editVisualManual_default;
 var init_editVisualManual = __esm({
   "src/routes/project/editVisualManual.ts"() {
     "use strict";
-    import_express100 = __toESM(require_express2());
+    import_express102 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs11 = __toESM(require("fs"));
     import_path17 = __toESM(require("path"));
     init_middleware();
     init_zod();
-    router100 = import_express100.default.Router();
-    editVisualManual_default = router100.post(
+    router102 = import_express102.default.Router();
+    editVisualManual_default = router102.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -243203,17 +244834,17 @@ ${item.data}` : item.data;
 });
 
 // src/routes/project/getModelDetails.ts
-var import_express101, router101, getModelDetails_default;
+var import_express103, router103, getModelDetails_default;
 var init_getModelDetails = __esm({
   "src/routes/project/getModelDetails.ts"() {
     "use strict";
-    import_express101 = __toESM(require_express2());
+    import_express103 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router101 = import_express101.default.Router();
-    getModelDetails_default = router101.post(
+    router103 = import_express103.default.Router();
+    getModelDetails_default = router103.post(
       "/",
       validateFields({
         key: external_exports.enum(["scriptAgent", "productionAgent"])
@@ -243232,15 +244863,15 @@ var init_getModelDetails = __esm({
 });
 
 // src/routes/project/getProject.ts
-var import_express102, router102, getProject_default;
+var import_express104, router104, getProject_default;
 var init_getProject = __esm({
   "src/routes/project/getProject.ts"() {
     "use strict";
-    import_express102 = __toESM(require_express2());
+    import_express104 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router102 = import_express102.default.Router();
-    getProject_default = router102.post("/", async (req, res) => {
+    router104 = import_express104.default.Router();
+    getProject_default = router104.post("/", async (req, res) => {
       const data = await utils_default.db("o_project").select("*");
       res.status(200).send(success3(data));
     });
@@ -243269,16 +244900,16 @@ async function readAllImages(imagesDir) {
     return [];
   }
 }
-var import_express103, import_fs12, import_path18, router103, DATA_MAP, getVisualManual_default;
+var import_express105, import_fs12, import_path18, router105, DATA_MAP, getVisualManual_default;
 var init_getVisualManual = __esm({
   "src/routes/project/getVisualManual.ts"() {
     "use strict";
-    import_express103 = __toESM(require_express2());
+    import_express105 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs12 = __toESM(require("fs"));
     import_path18 = __toESM(require("path"));
-    router103 = import_express103.default.Router();
+    router105 = import_express105.default.Router();
     DATA_MAP = [
       { label: "README", value: "README" },
       { label: "\u524D\u7F00", value: "prefix" },
@@ -243293,7 +244924,7 @@ var init_getVisualManual = __esm({
       { label: "\u6280\u6CD5-\u5BFC\u6F14\u89C4\u5212", value: "director_planning_style", subDir: "driector_skills" },
       { label: "\u6280\u6CD5-\u5206\u955C\u8868\u8BBE\u8BA1", value: "director_storyboard_table_style", subDir: "driector_skills" }
     ];
-    getVisualManual_default = router103.post("/", async (req, res) => {
+    getVisualManual_default = router105.post("/", async (req, res) => {
       try {
         const artPromptsDir = utils_default.getPath(["skills", "art_skills"]);
         const styleDirs = import_fs12.default.readdirSync(artPromptsDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
@@ -243355,22 +244986,22 @@ async function readAllImages2(imagesDir) {
     return [];
   }
 }
-var import_express104, import_fs13, import_path19, router104, DATA_MAP2, queryDirectorManual_default;
+var import_express106, import_fs13, import_path19, router106, DATA_MAP2, queryDirectorManual_default;
 var init_queryDirectorManual = __esm({
   "src/routes/project/queryDirectorManual.ts"() {
     "use strict";
-    import_express104 = __toESM(require_express2());
+    import_express106 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs13 = __toESM(require("fs"));
     import_path19 = __toESM(require("path"));
-    router104 = import_express104.default.Router();
+    router106 = import_express106.default.Router();
     DATA_MAP2 = [
       { label: "README", value: "README" },
       { label: "\u5BFC\u6F14\u89C4\u5212", value: "director_planning_narrative", subDir: "driector_skills" },
       { label: "\u5206\u955C\u8868", value: "director_storyboard_table_narrative", subDir: "driector_skills" }
     ];
-    queryDirectorManual_default = router104.post("/", async (req, res) => {
+    queryDirectorManual_default = router106.post("/", async (req, res) => {
       try {
         const artPromptsDir = utils_default.getPath(["skills", "story_skills"]);
         const styleDirs = import_fs13.default.readdirSync(artPromptsDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
@@ -243411,19 +245042,19 @@ var init_queryDirectorManual = __esm({
 });
 
 // src/routes/project/visualManual.ts
-var import_express105, import_fs14, import_path20, router105, visualManual_default;
+var import_express107, import_fs14, import_path20, router107, visualManual_default;
 var init_visualManual = __esm({
   "src/routes/project/visualManual.ts"() {
     "use strict";
-    import_express105 = __toESM(require_express2());
+    import_express107 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
     init_getPath();
     import_fs14 = __toESM(require("fs"));
     import_path20 = __toESM(require("path"));
-    router105 = import_express105.default.Router();
-    visualManual_default = router105.post(
+    router107 = import_express107.default.Router();
+    visualManual_default = router107.post(
       "/",
       validateFields({
         type: external_exports.string()
@@ -243457,17 +245088,17 @@ var init_visualManual = __esm({
 });
 
 // src/routes/script/addScript.ts
-var import_express106, router106, addScript_default;
+var import_express108, router108, addScript_default;
 var init_addScript = __esm({
   "src/routes/script/addScript.ts"() {
     "use strict";
-    import_express106 = __toESM(require_express2());
+    import_express108 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router106 = import_express106.default.Router();
-    addScript_default = router106.post(
+    router108 = import_express108.default.Router();
+    addScript_default = router108.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -243503,17 +245134,17 @@ var init_addScript = __esm({
 });
 
 // src/routes/script/batchAddScript.ts
-var import_express107, router107, batchAddScript_default;
+var import_express109, router109, batchAddScript_default;
 var init_batchAddScript = __esm({
   "src/routes/script/batchAddScript.ts"() {
     "use strict";
-    import_express107 = __toESM(require_express2());
+    import_express109 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router107 = import_express107.default.Router();
-    batchAddScript_default = router107.post(
+    router109 = import_express109.default.Router();
+    batchAddScript_default = router109.post(
       "/",
       validateFields({
         data: external_exports.array(
@@ -243543,17 +245174,17 @@ var init_batchAddScript = __esm({
 });
 
 // src/routes/script/delScript.ts
-var import_express108, router108, delScript_default;
+var import_express110, router110, delScript_default;
 var init_delScript = __esm({
   "src/routes/script/delScript.ts"() {
     "use strict";
-    import_express108 = __toESM(require_express2());
+    import_express110 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router108 = import_express108.default.Router();
-    delScript_default = router108.post(
+    router110 = import_express110.default.Router();
+    delScript_default = router110.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -253760,17 +255391,17 @@ var require_compressing = __commonJS({
 });
 
 // src/routes/script/exportScript.ts
-var import_express109, import_compressing, router109, exportScript_default;
+var import_express111, import_compressing, router111, exportScript_default;
 var init_exportScript = __esm({
   "src/routes/script/exportScript.ts"() {
     "use strict";
-    import_express109 = __toESM(require_express2());
+    import_express111 = __toESM(require_express2());
     init_utils3();
     init_zod();
     import_compressing = __toESM(require_compressing());
     init_middleware();
-    router109 = import_express109.default.Router();
-    exportScript_default = router109.post(
+    router111 = import_express111.default.Router();
+    exportScript_default = router111.post(
       "/",
       validateFields({
         id: external_exports.array(external_exports.number())
@@ -253791,29 +255422,59 @@ var init_exportScript = __esm({
   }
 });
 
+// src/utils/scriptAssetIds.ts
+function normalizeScriptIds(value, allowedIds) {
+  const allowed = new Set([...allowedIds].filter((id) => Number.isInteger(id) && id > 0));
+  let raw = [];
+  if (Array.isArray(value)) {
+    raw = value;
+  } else if (typeof value === "number") {
+    raw = [value];
+  } else if (typeof value === "string") {
+    const text2 = value.trim();
+    if (!text2) return [];
+    try {
+      const parsed = JSON.parse(text2);
+      raw = Array.isArray(parsed) ? parsed : [parsed];
+    } catch {
+      raw = text2.split(/[\s,，;；]+/).filter(Boolean);
+    }
+  }
+  const result = [];
+  const seen = /* @__PURE__ */ new Set();
+  for (const item of raw) {
+    const id = typeof item === "number" ? item : Number(String(item).trim());
+    if (!Number.isInteger(id) || id <= 0 || !allowed.has(id) || seen.has(id)) continue;
+    seen.add(id);
+    result.push(id);
+  }
+  return result;
+}
+var init_scriptAssetIds = __esm({
+  "src/utils/scriptAssetIds.ts"() {
+    "use strict";
+  }
+});
+
 // src/routes/script/extractAssets.ts
 function chunkArray(arr, groupSize) {
+  const safeGroupSize = Math.max(1, Math.floor(groupSize));
   const chunks = [];
-  for (let i = 0; i < arr.length; i += 5) {
-    chunks.push(arr.slice(i, i + 5));
-  }
-  const groupChunks = [];
-  for (let i = 0; i < chunks.length; i += groupSize) {
-    groupChunks.push(chunks.slice(i, i + groupSize));
-  }
-  return groupChunks;
+  for (let i = 0; i < arr.length; i += safeGroupSize) chunks.push(arr.slice(i, i + safeGroupSize));
+  return chunks;
 }
-var import_express110, router110, NewAssetSchema, ExistingAssetRefSchema, AssetSchema, extractAssets_default;
+var import_express112, router112, NewAssetSchema, ExistingAssetRefSchema, AssetSchema, extractAssets_default;
 var init_extractAssets = __esm({
   "src/routes/script/extractAssets.ts"() {
     "use strict";
-    import_express110 = __toESM(require_express2());
+    import_express112 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
     init_dist22();
-    router110 = import_express110.default.Router();
+    init_scriptAssetIds();
+    router112 = import_express112.default.Router();
     NewAssetSchema = external_exports.object({
       name: external_exports.string().describe("\u8D44\u4EA7\u540D\u79F0,\u4EC5\u4E3A\u540D\u79F0\u4E0D\u505A\u5176\u4ED6\u4EFB\u4F55\u8868\u8FF0"),
       desc: external_exports.string().describe("\u8D44\u4EA7\u63CF\u8FF0"),
@@ -253829,7 +255490,7 @@ var init_extractAssets = __esm({
       desc: external_exports.string().describe("\u8D44\u4EA7\u63CF\u8FF0"),
       type: external_exports.enum(["role", "tool", "scene"]).describe("\u8D44\u4EA7\u7C7B\u578B")
     });
-    extractAssets_default = router110.post(
+    extractAssets_default = router112.post(
       "/",
       validateFields({
         scriptIds: external_exports.array(external_exports.number()),
@@ -253839,9 +255500,9 @@ var init_extractAssets = __esm({
       async (req, res) => {
         const { scriptIds, projectId, groupSize = 5 } = req.body;
         if (!scriptIds.length) return res.status(400).send(error50("\u8BF7\u5148\u9009\u62E9\u5267\u672C"));
-        const scripts = await utils_default.db("o_script").whereIn("id", scriptIds);
+        const scripts = await utils_default.db("o_script").where("projectId", projectId).whereIn("id", scriptIds);
         const scriptMap = new Map(scripts.map((s) => [s.id, s]));
-        await utils_default.db("o_script").whereIn("id", scriptIds).update({
+        await utils_default.db("o_script").where("projectId", projectId).whereIn("id", scriptIds).update({
           extractState: 2
         });
         const errors = [];
@@ -253851,9 +255512,21 @@ var init_extractAssets = __esm({
           if (!result) return;
           const { batchScriptIds, newAssets, existingRefs } = result;
           if (!newAssets.length && !existingRefs.length) return;
+          const allowedScriptIds = new Set(batchScriptIds);
+          const safeNewAssets = newAssets.map((asset) => ({
+            ...asset,
+            scriptIds: normalizeScriptIds(asset.scriptIds, allowedScriptIds)
+          })).filter((asset) => asset.scriptIds.length > 0);
+          const safeExistingRefs = existingRefs.map((ref) => ({
+            ...ref,
+            scriptIds: normalizeScriptIds(ref.scriptIds, allowedScriptIds)
+          })).filter((ref) => ref.scriptIds.length > 0);
+          if (!safeNewAssets.length && !safeExistingRefs.length) {
+            throw new Error("AI \u8FD4\u56DE\u7684\u8D44\u4EA7\u5173\u8054\u5267\u672CID\u65E0\u6548\uFF1AscriptIds \u5FC5\u987B\u5F15\u7528\u5F53\u524D\u6279\u6B21\u4E2D\u7684\u5267\u672CID");
+          }
           const existingAssets = await utils_default.db("o_assets").where("projectId", projectId).select("id", "name");
           const existingMap = new Map(existingAssets.map((a) => [a.name, a.id]));
-          const toInsert = newAssets.filter((asset) => !existingMap.has(asset.name));
+          const toInsert = safeNewAssets.filter((asset) => !existingMap.has(asset.name));
           if (toInsert.length) {
             await utils_default.db("o_assets").insert(
               toInsert.map((asset) => ({
@@ -253868,7 +255541,7 @@ var init_extractAssets = __esm({
           const allAssets = await utils_default.db("o_assets").where("projectId", projectId).select("id", "name");
           const nameToId = new Map(allAssets.map((a) => [a.name, a.id]));
           const scriptAssetRows = [];
-          for (const asset of newAssets) {
+          for (const asset of safeNewAssets) {
             const assetId = nameToId.get(asset.name);
             if (assetId) {
               for (const sid of asset.scriptIds) {
@@ -253876,7 +255549,7 @@ var init_extractAssets = __esm({
               }
             }
           }
-          for (const ref of existingRefs) {
+          for (const ref of safeExistingRefs) {
             const assetId = nameToId.get(ref.name);
             if (assetId) {
               for (const sid of ref.scriptIds) {
@@ -253898,17 +255571,15 @@ var init_extractAssets = __esm({
         function processGroup(group) {
           group.map(async (itemIds) => {
             const validScripts = [];
-            for (const scriptIds2 of itemIds) {
-              for (const scriptId of scriptIds2) {
-                const script = scriptMap.get(scriptId);
-                if (!script) {
-                  errors.push({ scriptId, error: "\u672A\u627E\u5230\u5BF9\u5E94\u5267\u672C" });
-                  await utils_default.db("o_script").where("id", scriptId).where("projectId", projectId).update({ extractState: -1, errorReason: "\u672A\u627E\u5230\u5BF9\u5E94\u5267\u672C" });
-                } else {
-                  const item = await utils_default.db("o_script").where("projectId", projectId).where("id", scriptId).select("extractState").first();
-                  if (item?.extractState == 2) {
-                    validScripts.push({ id: scriptId, script });
-                  }
+            for (const scriptId of itemIds) {
+              const script = scriptMap.get(scriptId);
+              if (!script) {
+                errors.push({ scriptId, error: "\u672A\u627E\u5230\u5BF9\u5E94\u5267\u672C" });
+                await utils_default.db("o_script").where("id", scriptId).where("projectId", projectId).update({ extractState: -1, errorReason: "\u672A\u627E\u5230\u5BF9\u5E94\u5267\u672C" });
+              } else {
+                const item = await utils_default.db("o_script").where("projectId", projectId).where("id", scriptId).select("extractState").first();
+                if (item?.extractState == 2) {
+                  validScripts.push({ id: scriptId, script });
                 }
               }
             }
@@ -253950,11 +255621,11 @@ ${script.content}`).join("\n\n");
 
 \u3010\u5DF2\u6709\u8D44\u4EA7\u5217\u8868\u3011\uFF1A${existingAssetsList}
 \u5BF9\u4E8E\u5DF2\u6709\u8D44\u4EA7\uFF0C\u5982\u679C\u5728\u5267\u672C\u4E2D\u51FA\u73B0\uFF0C\u53EA\u9700\u5728 existingAssetRefs \u4E2D\u7ED9\u51FA\u8D44\u4EA7\u540D\u79F0\u548C\u5BF9\u5E94\u7684 scriptIds \u6570\u7EC4\u5373\u53EF\uFF0C\u65E0\u9700\u91CD\u590D\u751F\u6210 desc/type\u3002\u5BF9\u4E8E\u65B0\u53D1\u73B0\u7684\u8D44\u4EA7\uFF08\u4E0D\u5728\u5DF2\u6709\u5217\u8868\u4E2D\uFF09\uFF0C\u8BF7\u5728 newAssets \u4E2D\u7ED9\u51FA\u5B8C\u6574\u4FE1\u606F\u3002` : "";
-              const output = await utils_default.Ai.Text("universalAi").invoke({
+              const invokeExtraction = async () => utils_default.Ai.Text("universalAi").invoke({
                 messages: [
                   {
                     role: "system",
-                    content: scriptAssetExtraction + "\n\n\u63D0\u53D6\u5267\u672C\u4E2D\u6D89\u53CA\u7684\u8D44\u4EA7\uFF08\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177\uFF09\uFF0C\u53C2\u8003\u6280\u80FD script_assets_extract \u89C4\u8303\uFF0C\u7ED3\u679C\u5FC5\u987B\u901A\u8FC7 resultTool \u5DE5\u5177\u8FD4\u56DE\u3002\n\n\u6CE8\u610F\uFF1A\u672C\u6B21\u4F1A\u540C\u65F6\u63D0\u4F9B\u591A\u96C6\u5267\u672C\uFF0C\u6BCF\u96C6\u5267\u672C\u4EE5 ===== \u3010\u5267\u672CID: xxx\u3011 ===== \u5206\u9694\u3002\u4F60\u9700\u8981\u5206\u6790\u6BCF\u96C6\u5267\u672C\u4F7F\u7528\u4E86\u54EA\u4E9B\u8D44\u4EA7\uFF0C\u5E76\u5728\u8F93\u51FA\u4E2D\u7528 scriptIds \u6570\u7EC4\u6807\u660E\u6BCF\u4E2A\u8D44\u4EA7\u5728\u54EA\u4E9B\u5267\u672C\u4E2D\u51FA\u73B0\u3002"
+                    content: scriptAssetExtraction + "\n\n\u63D0\u53D6\u5267\u672C\u4E2D\u6D89\u53CA\u7684\u8D44\u4EA7\uFF08\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177\uFF09\uFF0C\u7ED3\u679C\u5FC5\u987B\u901A\u8FC7 resultTool \u5DE5\u5177\u8FD4\u56DE\u3002\n\n\u6CE8\u610F\uFF1A\u672C\u6B21\u4F1A\u540C\u65F6\u63D0\u4F9B\u591A\u96C6\u5267\u672C\uFF0C\u6BCF\u96C6\u5267\u672C\u4EE5 ===== \u3010\u5267\u672CID: xxx\u3011 ===== \u5206\u9694\u3002\u4F60\u9700\u8981\u5206\u6790\u6BCF\u96C6\u5267\u672C\u4F7F\u7528\u4E86\u54EA\u4E9B\u8D44\u4EA7\uFF0C\u5E76\u5728\u8F93\u51FA\u4E2D\u7528 scriptIds \u6570\u7EC4\u6807\u660E\u6BCF\u4E2A\u8D44\u4EA7\u5728\u54EA\u4E9B\u5267\u672C\u4E2D\u51FA\u73B0\u3002"
                   },
                   {
                     role: "user",
@@ -253965,8 +255636,23 @@ ${script.content}`).join("\n\n");
 ${scriptsContent}`
                   }
                 ],
-                tools: { resultTool }
+                tools: { resultTool },
+                toolChoice: { type: "tool", toolName: "resultTool" },
+                stopWhen: stepCountIs(1)
               });
+              await invokeExtraction();
+              if (!collectedNew.length && !collectedExisting.length) {
+                await utils_default.Ai.Text("universalAi").invoke({
+                  messages: [
+                    { role: "system", content: "\u8BF7\u91CD\u65B0\u63D0\u53D6\u5267\u672C\u8D44\u4EA7\uFF0C\u5FC5\u987B\u8C03\u7528 resultTool\uFF0C\u8FD4\u56DE\u975E\u7A7A\u8D44\u4EA7\u5217\u8868\u3002" },
+                    { role: "user", content: scriptsContent }
+                  ],
+                  tools: { resultTool },
+                  toolChoice: { type: "tool", toolName: "resultTool" },
+                  stopWhen: stepCountIs(1)
+                });
+              }
+              if (!collectedNew.length && !collectedExisting.length) throw new Error("AI \u8FDE\u7EED\u4E24\u6B21\u672A\u8C03\u7528\u8D44\u4EA7\u7ED3\u679C\u5DE5\u5177\u6216\u8FD4\u56DE\u7A7A\u8D44\u4EA7");
               await persistGroupResult({
                 batchScriptIds: validScriptIds,
                 newAssets: collectedNew,
@@ -253977,13 +255663,6 @@ ${scriptsContent}`
               for (const { id, script } of validScripts) {
                 errors.push({ scriptId: id, error: (script.name || "") + ":" + utils_default.error(e).message });
                 await utils_default.db("o_script").where("id", id).where("projectId", projectId).update({ extractState: -1, errorReason: utils_default.error(e).message });
-              }
-              return;
-            }
-            if (!collectedNew.length && !collectedExisting.length) {
-              for (const { id } of validScripts) {
-                errors.push({ scriptId: id, error: "AI \u672A\u8FD4\u56DE\u4EFB\u4F55\u8D44\u4EA7" });
-                await utils_default.db("o_script").where("id", id).where("projectId", projectId).update({ extractState: -1, errorReason: "AI \u672A\u8FD4\u56DE\u4EFB\u4F55\u8D44\u4EA7" });
               }
               return;
             }
@@ -254030,17 +255709,17 @@ function normalizeAiRegex(text2, sample) {
   if (!found) throw new Error("AI\u8FD4\u56DE\u7684\u6B63\u5219\u672A\u5339\u914D\u5230\u6837\u672C\u4E2D\u7684\u96C6\u6807\u9898\uFF0C\u8BF7\u68C0\u67E5\u5267\u672C\u683C\u5F0F");
   return `/${pattern}/${regex.flags}`;
 }
-var import_express111, router111, getAiRegex_default;
+var import_express113, router113, getAiRegex_default;
 var init_getAiRegex = __esm({
   "src/routes/script/getAiRegex.ts"() {
     "use strict";
-    import_express111 = __toESM(require_express2());
+    import_express113 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router111 = import_express111.default.Router();
-    getAiRegex_default = router111.post(
+    router113 = import_express113.default.Router();
+    getAiRegex_default = router113.post(
       "/",
       validateFields({
         content: external_exports.string().min(1).max(6e3)
@@ -254072,17 +255751,17 @@ var init_getAiRegex = __esm({
 });
 
 // src/routes/script/getScrptApi.ts
-var import_express112, router112, getScrptApi_default;
+var import_express114, router114, getScrptApi_default;
 var init_getScrptApi = __esm({
   "src/routes/script/getScrptApi.ts"() {
     "use strict";
-    import_express112 = __toESM(require_express2());
+    import_express114 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router112 = import_express112.default.Router();
-    getScrptApi_default = router112.post(
+    router114 = import_express114.default.Router();
+    getScrptApi_default = router114.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -254123,17 +255802,17 @@ var init_getScrptApi = __esm({
 });
 
 // src/routes/script/pollScriptAssets.ts
-var import_express113, router113, pollScriptAssets_default;
+var import_express115, router115, pollScriptAssets_default;
 var init_pollScriptAssets = __esm({
   "src/routes/script/pollScriptAssets.ts"() {
     "use strict";
-    import_express113 = __toESM(require_express2());
+    import_express115 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router113 = import_express113.default.Router();
-    pollScriptAssets_default = router113.post(
+    router115 = import_express115.default.Router();
+    pollScriptAssets_default = router115.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -254148,17 +255827,17 @@ var init_pollScriptAssets = __esm({
 });
 
 // src/routes/script/updateScript.ts
-var import_express114, router114, updateScript_default;
+var import_express116, router116, updateScript_default;
 var init_updateScript = __esm({
   "src/routes/script/updateScript.ts"() {
     "use strict";
-    import_express114 = __toESM(require_express2());
+    import_express116 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router114 = import_express114.default.Router();
-    updateScript_default = router114.post(
+    router116 = import_express116.default.Router();
+    updateScript_default = router116.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -254192,17 +255871,17 @@ var init_updateScript = __esm({
 });
 
 // src/routes/scriptAgent/getPlanData.ts
-var import_express115, router115, getPlanData_default;
+var import_express117, router117, getPlanData_default;
 var init_getPlanData = __esm({
   "src/routes/scriptAgent/getPlanData.ts"() {
     "use strict";
-    import_express115 = __toESM(require_express2());
+    import_express117 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router115 = import_express115.default.Router();
-    getPlanData_default = router115.post(
+    router117 = import_express117.default.Router();
+    getPlanData_default = router117.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -254233,17 +255912,17 @@ var init_getPlanData = __esm({
 });
 
 // src/routes/scriptAgent/setPlanData.ts
-var import_express116, router116, setPlanData_default;
+var import_express118, router118, setPlanData_default;
 var init_setPlanData = __esm({
   "src/routes/scriptAgent/setPlanData.ts"() {
     "use strict";
-    import_express116 = __toESM(require_express2());
+    import_express118 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router116 = import_express116.default.Router();
-    setPlanData_default = router116.post(
+    router118 = import_express118.default.Router();
+    setPlanData_default = router118.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -254290,17 +255969,17 @@ var init_setPlanData = __esm({
 });
 
 // src/routes/scriptAgent/updateData.ts
-var import_express117, router117, updateData_default;
+var import_express119, router119, updateData_default;
 var init_updateData = __esm({
   "src/routes/scriptAgent/updateData.ts"() {
     "use strict";
-    import_express117 = __toESM(require_express2());
+    import_express119 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router117 = import_express117.default.Router();
-    updateData_default = router117.post(
+    router119 = import_express119.default.Router();
+    updateData_default = router119.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -254327,17 +256006,17 @@ var init_updateData = __esm({
 });
 
 // src/routes/setting/about/checkUpdate.ts
-var import_express118, import_fs15, import_path21, router118, APP_VERSION2, checkUpdate_default;
+var import_express120, import_fs15, import_path21, router120, APP_VERSION2, checkUpdate_default;
 var init_checkUpdate = __esm({
   "src/routes/setting/about/checkUpdate.ts"() {
     "use strict";
-    import_express118 = __toESM(require_express2());
+    import_express120 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_zod();
     import_fs15 = __toESM(require("fs"));
     import_path21 = __toESM(require("path"));
-    router118 = import_express118.default.Router();
+    router120 = import_express120.default.Router();
     APP_VERSION2 = (() => {
       if (true) {
         return "1.1.8";
@@ -254346,7 +256025,7 @@ var init_checkUpdate = __esm({
       const pkg = JSON.parse(import_fs15.default.readFileSync(pkgPath, "utf8"));
       return pkg.version;
     })();
-    checkUpdate_default = router118.post(
+    checkUpdate_default = router120.post(
       "/",
       validateFields({
         source: external_exports.enum(["toonflow", "github", "gitee", "atomgit"]),
@@ -254388,11 +256067,11 @@ var init_checkUpdate = __esm({
 });
 
 // src/routes/setting/about/downloadApp.ts
-var import_express119, import_fs16, import_compressing2, router119, downloadApp_default;
+var import_express121, import_fs16, import_compressing2, router121, downloadApp_default;
 var init_downloadApp = __esm({
   "src/routes/setting/about/downloadApp.ts"() {
     "use strict";
-    import_express119 = __toESM(require_express2());
+    import_express121 = __toESM(require_express2());
     init_zod();
     init_middleware();
     init_utils3();
@@ -254400,8 +256079,8 @@ var init_downloadApp = __esm({
     init_axios2();
     import_compressing2 = __toESM(require_compressing());
     init_responseFormat();
-    router119 = import_express119.default.Router();
-    downloadApp_default = router119.post(
+    router121 = import_express121.default.Router();
+    downloadApp_default = router121.post(
       "/",
       validateFields({
         url: zod_default.url(),
@@ -254429,17 +256108,17 @@ var init_downloadApp = __esm({
 });
 
 // src/routes/setting/agentDeploy/agentSetKey.ts
-var import_express120, router120, agentSetKey_default;
+var import_express122, router122, agentSetKey_default;
 var init_agentSetKey = __esm({
   "src/routes/setting/agentDeploy/agentSetKey.ts"() {
     "use strict";
-    import_express120 = __toESM(require_express2());
+    import_express122 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router120 = import_express120.default.Router();
-    agentSetKey_default = router120.post(
+    router122 = import_express122.default.Router();
+    agentSetKey_default = router122.post(
       "/",
       validateFields({
         key: external_exports.string().optional()
@@ -254488,17 +256167,17 @@ var init_agentSetKey = __esm({
 });
 
 // src/routes/setting/agentDeploy/deployAgentModel.ts
-var import_express121, router121, deployAgentModel_default;
+var import_express123, router123, deployAgentModel_default;
 var init_deployAgentModel = __esm({
   "src/routes/setting/agentDeploy/deployAgentModel.ts"() {
     "use strict";
-    import_express121 = __toESM(require_express2());
+    import_express123 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router121 = import_express121.default.Router();
-    deployAgentModel_default = router121.post(
+    router123 = import_express123.default.Router();
+    deployAgentModel_default = router123.post(
       "/",
       validateFields({
         items: external_exports.array(
@@ -254527,15 +256206,15 @@ var init_deployAgentModel = __esm({
 });
 
 // src/routes/setting/agentDeploy/getAgentDeploy.ts
-var import_express122, router122, getAgentDeploy_default;
+var import_express124, router124, getAgentDeploy_default;
 var init_getAgentDeploy = __esm({
   "src/routes/setting/agentDeploy/getAgentDeploy.ts"() {
     "use strict";
-    import_express122 = __toESM(require_express2());
+    import_express124 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router122 = import_express122.default.Router();
-    getAgentDeploy_default = router122.post("/", async (req, res) => {
+    router124 = import_express124.default.Router();
+    getAgentDeploy_default = router124.post("/", async (req, res) => {
       const allData = await utils_default.db("o_agentDeploy").leftJoin("o_vendorConfig", "o_vendorConfig.id", "o_agentDeploy.vendorId").select("o_agentDeploy.*");
       const qrdinaryData = allData.filter((item) => !item.key?.includes(":"));
       const advancedData = allData.filter((item) => item.key?.includes(":") || item.key == "universalAi");
@@ -254545,15 +256224,15 @@ var init_getAgentDeploy = __esm({
 });
 
 // src/routes/setting/agentDeploy/getAgentUseMode.ts
-var import_express123, router123, getAgentUseMode_default;
+var import_express125, router125, getAgentUseMode_default;
 var init_getAgentUseMode = __esm({
   "src/routes/setting/agentDeploy/getAgentUseMode.ts"() {
     "use strict";
-    import_express123 = __toESM(require_express2());
+    import_express125 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router123 = import_express123.default.Router();
-    getAgentUseMode_default = router123.get("/", async (req, res) => {
+    router125 = import_express125.default.Router();
+    getAgentUseMode_default = router125.get("/", async (req, res) => {
       const useMode = await utils_default.db("o_setting").where("key", "agentUseMode").first();
       console.log("%c Line:9 \u{1F353} useMode", "background:#33a5ff", useMode);
       res.status(200).send(success3(useMode?.value || "0"));
@@ -254562,17 +256241,17 @@ var init_getAgentUseMode = __esm({
 });
 
 // src/routes/setting/agentDeploy/updateAgentModel.ts
-var import_express124, router124, updateAgentModel_default;
+var import_express126, router126, updateAgentModel_default;
 var init_updateAgentModel = __esm({
   "src/routes/setting/agentDeploy/updateAgentModel.ts"() {
     "use strict";
-    import_express124 = __toESM(require_express2());
+    import_express126 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router124 = import_express124.default.Router();
-    updateAgentModel_default = router124.post(
+    router126 = import_express126.default.Router();
+    updateAgentModel_default = router126.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -254594,17 +256273,17 @@ var init_updateAgentModel = __esm({
 });
 
 // src/routes/setting/agentDeploy/updateUseMode.ts
-var import_express125, router125, updateUseMode_default;
+var import_express127, router127, updateUseMode_default;
 var init_updateUseMode = __esm({
   "src/routes/setting/agentDeploy/updateUseMode.ts"() {
     "use strict";
-    import_express125 = __toESM(require_express2());
+    import_express127 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router125 = import_express125.default.Router();
-    updateUseMode_default = router125.post(
+    router127 = import_express127.default.Router();
+    updateUseMode_default = router127.post(
       "/",
       validateFields({
         agentUseMode: external_exports.string()
@@ -254621,16 +256300,16 @@ var init_updateUseMode = __esm({
 });
 
 // src/routes/setting/dbConfig/clearData.ts
-var import_express126, router126, clearData_default;
+var import_express128, router128, clearData_default;
 var init_clearData = __esm({
   "src/routes/setting/dbConfig/clearData.ts"() {
     "use strict";
-    import_express126 = __toESM(require_express2());
+    import_express128 = __toESM(require_express2());
     init_responseFormat();
     init_db();
     init_initDB();
-    router126 = import_express126.default.Router();
-    clearData_default = router126.get("/", async (req, res) => {
+    router128 = import_express128.default.Router();
+    clearData_default = router128.get("/", async (req, res) => {
       try {
         const tables = await db.raw(
           `SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'knex_%'`
@@ -254650,15 +256329,15 @@ var init_clearData = __esm({
 });
 
 // src/routes/setting/dbConfig/clearTable.ts
-var import_express127, router127, clearTable_default;
+var import_express129, router129, clearTable_default;
 var init_clearTable = __esm({
   "src/routes/setting/dbConfig/clearTable.ts"() {
     "use strict";
-    import_express127 = __toESM(require_express2());
+    import_express129 = __toESM(require_express2());
     init_responseFormat();
     init_db();
-    router127 = import_express127.default.Router();
-    clearTable_default = router127.post("/", async (req, res) => {
+    router129 = import_express129.default.Router();
+    clearTable_default = router129.post("/", async (req, res) => {
       try {
         const { tableName } = req.body;
         if (!tableName || typeof tableName !== "string") {
@@ -254681,15 +256360,15 @@ var init_clearTable = __esm({
 });
 
 // src/routes/setting/dbConfig/dbInfo.ts
-var import_express128, router128, dbInfo_default;
+var import_express130, router130, dbInfo_default;
 var init_dbInfo = __esm({
   "src/routes/setting/dbConfig/dbInfo.ts"() {
     "use strict";
-    import_express128 = __toESM(require_express2());
+    import_express130 = __toESM(require_express2());
     init_responseFormat();
     init_db();
-    router128 = import_express128.default.Router();
-    dbInfo_default = router128.get("/", async (req, res) => {
+    router130 = import_express130.default.Router();
+    dbInfo_default = router130.get("/", async (req, res) => {
       try {
         const tables = await db.raw(
           `SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'knex_%'`
@@ -254711,15 +256390,15 @@ var init_dbInfo = __esm({
 });
 
 // src/routes/setting/dbConfig/exportData.ts
-var import_express129, router129, exportData_default;
+var import_express131, router131, exportData_default;
 var init_exportData = __esm({
   "src/routes/setting/dbConfig/exportData.ts"() {
     "use strict";
-    import_express129 = __toESM(require_express2());
+    import_express131 = __toESM(require_express2());
     init_responseFormat();
     init_db();
-    router129 = import_express129.default.Router();
-    exportData_default = router129.get("/", async (req, res) => {
+    router131 = import_express131.default.Router();
+    exportData_default = router131.get("/", async (req, res) => {
       try {
         const tables = await db.raw(
           `SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'knex_%'`
@@ -254743,16 +256422,16 @@ var init_exportData = __esm({
 });
 
 // src/routes/setting/dbConfig/importData.ts
-var import_express130, router130, importData_default;
+var import_express132, router132, importData_default;
 var init_importData = __esm({
   "src/routes/setting/dbConfig/importData.ts"() {
     "use strict";
-    import_express130 = __toESM(require_express2());
+    import_express132 = __toESM(require_express2());
     init_responseFormat();
     init_db();
     init_initDB();
-    router130 = import_express130.default.Router();
-    importData_default = router130.post("/", async (req, res) => {
+    router132 = import_express132.default.Router();
+    importData_default = router132.post("/", async (req, res) => {
       try {
         const { tables: importTables } = req.body;
         if (!importTables || typeof importTables !== "object") {
@@ -254791,15 +256470,15 @@ var init_importData = __esm({
 });
 
 // src/routes/setting/dev/getSwitchAiDevTool.ts
-var import_express131, router131, getSwitchAiDevTool_default;
+var import_express133, router133, getSwitchAiDevTool_default;
 var init_getSwitchAiDevTool = __esm({
   "src/routes/setting/dev/getSwitchAiDevTool.ts"() {
     "use strict";
-    import_express131 = __toESM(require_express2());
+    import_express133 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router131 = import_express131.default.Router();
-    getSwitchAiDevTool_default = router131.get("/", async (req, res) => {
+    router133 = import_express133.default.Router();
+    getSwitchAiDevTool_default = router133.get("/", async (req, res) => {
       const switchAiDevTool = await utils_default.db("o_setting").where("key", "switchAiDevTool").first();
       res.status(200).send(success3(switchAiDevTool?.value || "0"));
     });
@@ -254807,17 +256486,17 @@ var init_getSwitchAiDevTool = __esm({
 });
 
 // src/routes/setting/dev/updateSwitchAiDevTool.ts
-var import_express132, router132, updateSwitchAiDevTool_default;
+var import_express134, router134, updateSwitchAiDevTool_default;
 var init_updateSwitchAiDevTool = __esm({
   "src/routes/setting/dev/updateSwitchAiDevTool.ts"() {
     "use strict";
-    import_express132 = __toESM(require_express2());
+    import_express134 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router132 = import_express132.default.Router();
-    updateSwitchAiDevTool_default = router132.post(
+    router134 = import_express134.default.Router();
+    updateSwitchAiDevTool_default = router134.post(
       "/",
       validateFields({
         switchAiDevTool: external_exports.string()
@@ -254834,19 +256513,19 @@ var init_updateSwitchAiDevTool = __esm({
 });
 
 // src/routes/setting/fileManagement/openFolder.ts
-var import_express133, import_child_process, router133, openFolder_default;
+var import_express135, import_child_process, router135, openFolder_default;
 var init_openFolder = __esm({
   "src/routes/setting/fileManagement/openFolder.ts"() {
     "use strict";
-    import_express133 = __toESM(require_express2());
+    import_express135 = __toESM(require_express2());
     init_zod();
     import_child_process = require("child_process");
     init_responseFormat();
     init_middleware();
     init_getPath();
     init_utils3();
-    router133 = import_express133.default.Router();
-    openFolder_default = router133.post(
+    router135 = import_express135.default.Router();
+    openFolder_default = router135.post(
       "/",
       validateFields({
         path: external_exports.string()
@@ -254871,14 +256550,14 @@ var init_openFolder = __esm({
 });
 
 // src/routes/setting/getTextModel.ts
-var import_express134, router134, getTextModel_default;
+var import_express136, router136, getTextModel_default;
 var init_getTextModel = __esm({
   "src/routes/setting/getTextModel.ts"() {
     "use strict";
-    import_express134 = __toESM(require_express2());
+    import_express136 = __toESM(require_express2());
     init_responseFormat();
-    router134 = import_express134.default.Router();
-    getTextModel_default = router134.post(
+    router136 = import_express136.default.Router();
+    getTextModel_default = router136.post(
       "/",
       async (req, res) => {
         res.status(200).send(success3("123"));
@@ -254888,15 +256567,15 @@ var init_getTextModel = __esm({
 });
 
 // src/routes/setting/loginConfig/getUser.ts
-var import_express135, router135, getUser_default;
+var import_express137, router137, getUser_default;
 var init_getUser = __esm({
   "src/routes/setting/loginConfig/getUser.ts"() {
     "use strict";
-    import_express135 = __toESM(require_express2());
+    import_express137 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router135 = import_express135.default.Router();
-    getUser_default = router135.get("/", async (req, res) => {
+    router137 = import_express137.default.Router();
+    getUser_default = router137.get("/", async (req, res) => {
       const data = await utils_default.db("o_user").select("*").first();
       res.status(200).send(success3(data));
     });
@@ -254904,17 +256583,17 @@ var init_getUser = __esm({
 });
 
 // src/routes/setting/loginConfig/updateUserPwd.ts
-var import_express136, router136, updateUserPwd_default;
+var import_express138, router138, updateUserPwd_default;
 var init_updateUserPwd = __esm({
   "src/routes/setting/loginConfig/updateUserPwd.ts"() {
     "use strict";
-    import_express136 = __toESM(require_express2());
+    import_express138 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router136 = import_express136.default.Router();
-    updateUserPwd_default = router136.post(
+    router138 = import_express138.default.Router();
+    updateUserPwd_default = router138.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -254934,15 +256613,15 @@ var init_updateUserPwd = __esm({
 });
 
 // src/routes/setting/memoryConfig/delAllMemory.ts
-var import_express137, router137, delAllMemory_default;
+var import_express139, router139, delAllMemory_default;
 var init_delAllMemory = __esm({
   "src/routes/setting/memoryConfig/delAllMemory.ts"() {
     "use strict";
-    import_express137 = __toESM(require_express2());
+    import_express139 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router137 = import_express137.default.Router();
-    delAllMemory_default = router137.post("/", async (req, res) => {
+    router139 = import_express139.default.Router();
+    delAllMemory_default = router139.post("/", async (req, res) => {
       await utils_default.db("memories").del();
       res.status(200).send(success3(true));
     });
@@ -254950,84 +256629,157 @@ var init_delAllMemory = __esm({
 });
 
 // src/routes/setting/memoryConfig/getMemory.ts
-var import_express138, router138, getMemory_default2;
+var import_express140, router140, KEYS, NUMBER_KEYS, BOOLEAN_KEYS, getMemory_default2;
 var init_getMemory2 = __esm({
   "src/routes/setting/memoryConfig/getMemory.ts"() {
     "use strict";
-    import_express138 = __toESM(require_express2());
+    import_express140 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router138 = import_express138.default.Router();
-    getMemory_default2 = router138.get("/", async (req, res) => {
-      const settingData = await utils_default.db("o_setting").whereIn("key", [
-        "messagesPerSummary",
-        "shortTermLimit",
-        "summaryMaxLength",
-        "summaryLimit",
-        "ragLimit",
-        "deepRetrieveSummaryLimit",
-        "modelOnnxFile",
-        "modelDtype"
-      ]);
-      if (!settingData) return res.status(400).send(error50(`\u83B7\u53D6\u8BB0\u5FC6\u914D\u7F6E\u5931\u8D25`));
-      const memoryObj = {};
-      settingData.forEach((i) => {
-        if (i.key && i.value) {
-          let value = i.value;
-          if (i.key == "modelOnnxFile") {
-            value = JSON.parse(i.value);
-          } else if (i.key != "modelDtype") {
-            value = Number(value);
+    router140 = import_express140.default.Router();
+    KEYS = [
+      "messagesPerSummary",
+      "shortTermLimit",
+      "summaryMaxLength",
+      "summaryLimit",
+      "ragLimit",
+      "deepRetrieveSummaryLimit",
+      "modelOnnxFile",
+      "modelDtype",
+      "embeddingBackend",
+      "ollamaEmbeddingModel",
+      "memoryHybridRetrieval",
+      "memoryRerankerEnabled",
+      "memoryRerankerUrl",
+      "memoryRerankerModel",
+      "memoryRerankerCandidates",
+      "memoryContextTokenBudget",
+      "memoryVectorScanPageSize"
+    ];
+    NUMBER_KEYS = /* @__PURE__ */ new Set([
+      "messagesPerSummary",
+      "shortTermLimit",
+      "summaryMaxLength",
+      "summaryLimit",
+      "ragLimit",
+      "deepRetrieveSummaryLimit",
+      "memoryRerankerCandidates",
+      "memoryContextTokenBudget",
+      "memoryVectorScanPageSize"
+    ]);
+    BOOLEAN_KEYS = /* @__PURE__ */ new Set(["memoryHybridRetrieval", "memoryRerankerEnabled"]);
+    getMemory_default2 = router140.get("/", async (_req, res) => {
+      try {
+        const settingData = await utils_default.db("o_setting").whereIn("key", [...KEYS]).select("key", "value");
+        const memoryObj = {};
+        for (const item of settingData) {
+          if (!item.key || item.value == null) continue;
+          if (item.key === "modelOnnxFile") {
+            memoryObj[item.key] = JSON.parse(item.value);
+          } else if (BOOLEAN_KEYS.has(item.key)) {
+            memoryObj[item.key] = item.value === "1";
+          } else if (NUMBER_KEYS.has(item.key)) {
+            const value = Number(item.value);
+            if (Number.isFinite(value)) memoryObj[item.key] = value;
+          } else {
+            memoryObj[item.key] = item.value;
           }
-          memoryObj[i.key] = value;
         }
-      });
-      res.status(200).send(success3({ ...memoryObj }));
+        res.status(200).send(success3(memoryObj));
+      } catch (reason) {
+        console.error("[memoryConfig/getMemory]", reason);
+        res.status(400).send(error50("\u83B7\u53D6\u8BB0\u5FC6\u914D\u7F6E\u5931\u8D25"));
+      }
     });
   }
 });
 
 // src/routes/setting/memoryConfig/sureMemory.ts
-var import_express139, router139, sureMemory_default;
+var import_express141, router141, localRerankerUrl, sureMemory_default;
 var init_sureMemory = __esm({
   "src/routes/setting/memoryConfig/sureMemory.ts"() {
     "use strict";
-    import_express139 = __toESM(require_express2());
+    import_express141 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router139 = import_express139.default.Router();
-    sureMemory_default = router139.post(
+    init_embedding();
+    init_ollamaEmbedding();
+    router141 = import_express141.default.Router();
+    localRerankerUrl = external_exports.string().url().max(256).refine((value) => {
+      try {
+        const url4 = new URL(value);
+        return url4.protocol === "http:" && ["127.0.0.1", "localhost", "::1"].includes(url4.hostname);
+      } catch {
+        return false;
+      }
+    }, "Reranker \u53EA\u5141\u8BB8\u4F7F\u7528\u672C\u673A HTTP \u5730\u5740");
+    sureMemory_default = router141.post(
       "/",
       validateFields({
-        messagesPerSummary: external_exports.number(),
-        shortTermLimit: external_exports.number(),
-        summaryMaxLength: external_exports.number(),
-        summaryLimit: external_exports.number(),
-        ragLimit: external_exports.number(),
-        deepRetrieveSummaryLimit: external_exports.number(),
-        modelOnnxFile: external_exports.array(external_exports.string()),
-        modelDtype: external_exports.string()
+        messagesPerSummary: external_exports.number().int().min(1).max(200),
+        shortTermLimit: external_exports.number().int().min(1).max(100),
+        summaryMaxLength: external_exports.number().int().min(0).max(4e3),
+        summaryLimit: external_exports.number().int().min(0).max(100),
+        ragLimit: external_exports.number().int().min(0).max(50),
+        deepRetrieveSummaryLimit: external_exports.number().int().min(0).max(100),
+        modelOnnxFile: external_exports.array(external_exports.string().min(1)).length(3),
+        modelDtype: external_exports.enum(["auto", "fp32", "fp16", "q8", "int8", "uint8", "q4", "bnb4", "q4f16"]),
+        embeddingBackend: external_exports.enum(["onnx", "ollama"]).optional(),
+        ollamaEmbeddingModel: external_exports.string().min(1).max(128).regex(/^[A-Za-z0-9][A-Za-z0-9._:/-]*$/).optional(),
+        memoryHybridRetrieval: external_exports.boolean().optional(),
+        memoryRerankerEnabled: external_exports.boolean().optional(),
+        memoryRerankerUrl: localRerankerUrl.optional(),
+        memoryRerankerModel: external_exports.string().min(1).max(128).regex(/^[A-Za-z0-9][A-Za-z0-9._:/-]*$/).optional(),
+        memoryRerankerCandidates: external_exports.number().int().min(8).max(100).optional(),
+        memoryContextTokenBudget: external_exports.number().int().min(400).max(32768).optional(),
+        memoryVectorScanPageSize: external_exports.number().int().min(64).max(2e3).optional()
       }),
       async (req, res) => {
-        const { messagesPerSummary, shortTermLimit, summaryMaxLength, summaryLimit, ragLimit, deepRetrieveSummaryLimit, modelOnnxFile, modelDtype } = req.body;
-        const upsert = async (key, value) => {
-          const exists = await utils_default.db("o_setting").where("key", key).first();
-          if (exists) {
-            await utils_default.db("o_setting").where("key", key).update({ value });
-          } else {
-            await utils_default.db("o_setting").insert({ key, value });
-          }
+        const body = req.body;
+        if (body.embeddingBackend === "ollama") {
+          await getOllamaModelDigest(String(body.ollamaEmbeddingModel ?? "qwen3-embedding:4b"));
+        }
+        const settings = {
+          messagesPerSummary: String(body.messagesPerSummary),
+          shortTermLimit: String(body.shortTermLimit),
+          summaryMaxLength: String(body.summaryMaxLength),
+          summaryLimit: String(body.summaryLimit),
+          ragLimit: String(body.ragLimit),
+          deepRetrieveSummaryLimit: String(body.deepRetrieveSummaryLimit),
+          modelOnnxFile: JSON.stringify(body.modelOnnxFile),
+          modelDtype: String(body.modelDtype)
         };
-        await upsert("messagesPerSummary", messagesPerSummary);
-        await upsert("shortTermLimit", shortTermLimit);
-        await upsert("summaryMaxLength", summaryMaxLength);
-        await upsert("summaryLimit", summaryLimit);
-        await upsert("ragLimit", ragLimit);
-        await upsert("deepRetrieveSummaryLimit", deepRetrieveSummaryLimit);
-        await upsert("modelOnnxFile", JSON.stringify(modelOnnxFile));
-        await upsert("modelDtype", modelDtype);
+        const optionalStringKeys = [
+          "embeddingBackend",
+          "ollamaEmbeddingModel",
+          "memoryRerankerUrl",
+          "memoryRerankerModel"
+        ];
+        const optionalNumberKeys = [
+          "memoryRerankerCandidates",
+          "memoryContextTokenBudget",
+          "memoryVectorScanPageSize"
+        ];
+        const optionalBooleanKeys = ["memoryHybridRetrieval", "memoryRerankerEnabled"];
+        for (const key of optionalStringKeys) {
+          if (body[key] !== void 0) settings[key] = String(body[key]);
+        }
+        for (const key of optionalNumberKeys) {
+          if (body[key] !== void 0) settings[key] = String(body[key]);
+        }
+        for (const key of optionalBooleanKeys) {
+          if (body[key] !== void 0) settings[key] = body[key] ? "1" : "0";
+        }
+        await utils_default.db.transaction(async (trx) => {
+          for (const [key, value] of Object.entries(settings)) {
+            const exists = await trx("o_setting").where({ key }).first();
+            if (exists) await trx("o_setting").where({ key }).update({ value });
+            else await trx("o_setting").insert({ key, value });
+          }
+        });
+        await disposeEmbedding();
         res.status(200).send(success3("\u4FDD\u5B58\u8BBE\u7F6E\u6210\u529F"));
       }
     );
@@ -255035,17 +256787,17 @@ var init_sureMemory = __esm({
 });
 
 // src/routes/setting/modelMap/bindingPrompt.ts
-var import_express140, router140, bindingPrompt_default;
+var import_express142, router142, bindingPrompt_default;
 var init_bindingPrompt = __esm({
   "src/routes/setting/modelMap/bindingPrompt.ts"() {
     "use strict";
-    import_express140 = __toESM(require_express2());
+    import_express142 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router140 = import_express140.default.Router();
-    bindingPrompt_default = router140.post(
+    router142 = import_express142.default.Router();
+    bindingPrompt_default = router142.post(
       "/",
       validateFields({
         vendorId: external_exports.string(),
@@ -255069,19 +256821,19 @@ var init_bindingPrompt = __esm({
 });
 
 // src/routes/setting/modelMap/deletePrompt.ts
-var import_express141, import_promises9, import_path22, router141, deletePrompt_default;
+var import_express143, import_promises10, import_path22, router143, deletePrompt_default;
 var init_deletePrompt = __esm({
   "src/routes/setting/modelMap/deletePrompt.ts"() {
     "use strict";
-    import_express141 = __toESM(require_express2());
+    import_express143 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    import_promises9 = __toESM(require("fs/promises"));
+    import_promises10 = __toESM(require("fs/promises"));
     import_path22 = __toESM(require("path"));
-    router141 = import_express141.default.Router();
-    deletePrompt_default = router141.post(
+    router143 = import_express143.default.Router();
+    deletePrompt_default = router143.post(
       "/",
       validateFields({
         path: external_exports.string()
@@ -255095,11 +256847,11 @@ var init_deletePrompt = __esm({
           return res.status(400).send(error50("\u975E\u6CD5\u8DEF\u5F84"));
         }
         try {
-          await import_promises9.default.access(resolvedFile);
+          await import_promises10.default.access(resolvedFile);
         } catch {
           return res.status(404).send(error50("\u6587\u4EF6\u4E0D\u5B58\u5728"));
         }
-        await import_promises9.default.unlink(resolvedFile);
+        await import_promises10.default.unlink(resolvedFile);
         res.status(200).send(success3("\u5220\u9664\u6210\u529F"));
       }
     );
@@ -255107,15 +256859,15 @@ var init_deletePrompt = __esm({
 });
 
 // src/routes/setting/modelMap/getImageAndVideoModel.ts
-var import_express142, router142, getImageAndVideoModel_default;
+var import_express144, router144, getImageAndVideoModel_default;
 var init_getImageAndVideoModel = __esm({
   "src/routes/setting/modelMap/getImageAndVideoModel.ts"() {
     "use strict";
-    import_express142 = __toESM(require_express2());
+    import_express144 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router142 = import_express142.default.Router();
-    getImageAndVideoModel_default = router142.post("/", async (req, res) => {
+    router144 = import_express144.default.Router();
+    getImageAndVideoModel_default = router144.post("/", async (req, res) => {
       const dataList = await utils_default.db("o_vendorConfig").select("id").where("enable", 1);
       if (!dataList || dataList.length === 0) {
         return res.status(404).send({ error: "\u6A21\u578B\u672A\u627E\u5230" });
@@ -255145,18 +256897,18 @@ var init_getImageAndVideoModel = __esm({
 });
 
 // src/routes/setting/modelMap/getPromptList.ts
-var import_express143, import_fast_glob3, import_promises10, import_path23, router143, getPromptList_default;
+var import_express145, import_fast_glob3, import_promises11, import_path23, router145, getPromptList_default;
 var init_getPromptList = __esm({
   "src/routes/setting/modelMap/getPromptList.ts"() {
     "use strict";
-    import_express143 = __toESM(require_express2());
+    import_express145 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     import_fast_glob3 = __toESM(require_out4());
-    import_promises10 = __toESM(require("fs/promises"));
+    import_promises11 = __toESM(require("fs/promises"));
     import_path23 = __toESM(require("path"));
-    router143 = import_express143.default.Router();
-    getPromptList_default = router143.get("/", async (req, res) => {
+    router145 = import_express145.default.Router();
+    getPromptList_default = router145.get("/", async (req, res) => {
       const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
       const entries = await (0, import_fast_glob3.default)("**/*.md", {
         cwd: modelPromptRoot.replace(/\\/g, "/"),
@@ -255165,7 +256917,7 @@ var init_getPromptList = __esm({
       const result = await Promise.all(
         entries.map(async (entry) => {
           const fullPath = import_path23.default.join(modelPromptRoot, entry);
-          const content = await import_promises10.default.readFile(fullPath, "utf-8");
+          const content = await import_promises11.default.readFile(fullPath, "utf-8");
           const name28 = import_path23.default.basename(entry, ".md");
           const type = entry.includes("/") ? entry.split("/")[0] : "";
           return { path: entry, name: name28, type, data: content };
@@ -255177,19 +256929,19 @@ var init_getPromptList = __esm({
 });
 
 // src/routes/setting/modelMap/savePrompt.ts
-var import_express144, import_promises11, import_path24, router144, savePrompt_default;
+var import_express146, import_promises12, import_path24, router146, savePrompt_default;
 var init_savePrompt = __esm({
   "src/routes/setting/modelMap/savePrompt.ts"() {
     "use strict";
-    import_express144 = __toESM(require_express2());
+    import_express146 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    import_promises11 = __toESM(require("fs/promises"));
+    import_promises12 = __toESM(require("fs/promises"));
     import_path24 = __toESM(require("path"));
-    router144 = import_express144.default.Router();
-    savePrompt_default = router144.post(
+    router146 = import_express146.default.Router();
+    savePrompt_default = router146.post(
       "/",
       validateFields({
         name: external_exports.string().min(1),
@@ -255200,9 +256952,9 @@ var init_savePrompt = __esm({
         const { name: name28, data, type } = req.body;
         const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
         const dir = import_path24.default.join(modelPromptRoot, type);
-        await import_promises11.default.mkdir(dir, { recursive: true });
+        await import_promises12.default.mkdir(dir, { recursive: true });
         const filePath = import_path24.default.join(dir, `${name28}.md`);
-        await import_promises11.default.writeFile(filePath, data, "utf-8");
+        await import_promises12.default.writeFile(filePath, data, "utf-8");
         res.status(200).send(success3("\u4FDD\u5B58\u6210\u529F"));
       }
     );
@@ -255210,19 +256962,19 @@ var init_savePrompt = __esm({
 });
 
 // src/routes/setting/modelMap/updatePrompt.ts
-var import_express145, import_promises12, import_path25, router145, updatePrompt_default;
+var import_express147, import_promises13, import_path25, router147, updatePrompt_default;
 var init_updatePrompt = __esm({
   "src/routes/setting/modelMap/updatePrompt.ts"() {
     "use strict";
-    import_express145 = __toESM(require_express2());
+    import_express147 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    import_promises12 = __toESM(require("fs/promises"));
+    import_promises13 = __toESM(require("fs/promises"));
     import_path25 = __toESM(require("path"));
-    router145 = import_express145.default.Router();
-    updatePrompt_default = router145.post(
+    router147 = import_express147.default.Router();
+    updatePrompt_default = router147.post(
       "/",
       validateFields({
         name: external_exports.string().min(1),
@@ -255239,11 +256991,11 @@ var init_updatePrompt = __esm({
           return res.status(400).send(error50("\u975E\u6CD5\u8DEF\u5F84"));
         }
         try {
-          await import_promises12.default.access(resolvedFile);
+          await import_promises13.default.access(resolvedFile);
         } catch {
           return res.status(404).send(error50("\u6587\u4EF6\u4E0D\u5B58\u5728"));
         }
-        await import_promises12.default.writeFile(resolvedFile, data, "utf-8");
+        await import_promises13.default.writeFile(resolvedFile, data, "utf-8");
         res.status(200).send(success3("\u66F4\u65B0\u6210\u529F"));
       }
     );
@@ -255251,15 +257003,15 @@ var init_updatePrompt = __esm({
 });
 
 // src/routes/setting/promptManage/getPrompt.ts
-var import_express146, router146, getPrompt_default;
+var import_express148, router148, getPrompt_default;
 var init_getPrompt = __esm({
   "src/routes/setting/promptManage/getPrompt.ts"() {
     "use strict";
-    import_express146 = __toESM(require_express2());
+    import_express148 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router146 = import_express146.default.Router();
-    getPrompt_default = router146.post("/", async (req, res) => {
+    router148 = import_express148.default.Router();
+    getPrompt_default = router148.post("/", async (req, res) => {
       const list2 = await utils_default.db("o_prompt").select("*");
       const data = await Promise.all(
         list2.map(async (item) => {
@@ -255275,17 +257027,17 @@ var init_getPrompt = __esm({
 });
 
 // src/routes/setting/promptManage/updatePrompt.ts
-var import_express147, router147, updatePrompt_default2;
+var import_express149, router149, updatePrompt_default2;
 var init_updatePrompt2 = __esm({
   "src/routes/setting/promptManage/updatePrompt.ts"() {
     "use strict";
-    import_express147 = __toESM(require_express2());
+    import_express149 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router147 = import_express147.default.Router();
-    updatePrompt_default2 = router147.post(
+    router149 = import_express149.default.Router();
+    updatePrompt_default2 = router149.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -255302,11 +257054,11 @@ var init_updatePrompt2 = __esm({
 });
 
 // src/routes/setting/skillManagement/getSkillContent.ts
-var import_express148, import_path26, fs31, router148, getSkillContent_default;
+var import_express150, import_path26, fs31, router150, getSkillContent_default;
 var init_getSkillContent = __esm({
   "src/routes/setting/skillManagement/getSkillContent.ts"() {
     "use strict";
-    import_express148 = __toESM(require_express2());
+    import_express150 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_zod();
@@ -255314,8 +257066,8 @@ var init_getSkillContent = __esm({
     init_utils3();
     import_path26 = __toESM(require("path"));
     fs31 = __toESM(require("fs"));
-    router148 = import_express148.default.Router();
-    getSkillContent_default = router148.post(
+    router150 = import_express150.default.Router();
+    getSkillContent_default = router150.post(
       "/",
       validateFields({
         path: external_exports.string()
@@ -255335,16 +257087,16 @@ var init_getSkillContent = __esm({
 });
 
 // src/routes/setting/skillManagement/getSkillList.ts
-var import_express149, import_fast_glob4, router149, getSkillList_default;
+var import_express151, import_fast_glob4, router151, getSkillList_default;
 var init_getSkillList = __esm({
   "src/routes/setting/skillManagement/getSkillList.ts"() {
     "use strict";
-    import_express149 = __toESM(require_express2());
+    import_express151 = __toESM(require_express2());
     init_responseFormat();
     import_fast_glob4 = __toESM(require_out4());
     init_utils3();
-    router149 = import_express149.default.Router();
-    getSkillList_default = router149.post("/", async (req, res) => {
+    router151 = import_express151.default.Router();
+    getSkillList_default = router151.post("/", async (req, res) => {
       const skillsRoot = utils_default.getPath(["skills"]);
       const entries = await (0, import_fast_glob4.default)("**/*.md", {
         cwd: skillsRoot.replace(/\\/g, "/"),
@@ -255356,11 +257108,11 @@ var init_getSkillList = __esm({
 });
 
 // src/routes/setting/skillManagement/saveSkillContent.ts
-var import_express150, import_path27, fs32, router150, saveSkillContent_default;
+var import_express152, import_path27, fs32, router152, saveSkillContent_default;
 var init_saveSkillContent = __esm({
   "src/routes/setting/skillManagement/saveSkillContent.ts"() {
     "use strict";
-    import_express150 = __toESM(require_express2());
+    import_express152 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_zod();
@@ -255368,8 +257120,8 @@ var init_saveSkillContent = __esm({
     init_utils3();
     import_path27 = __toESM(require("path"));
     fs32 = __toESM(require("fs"));
-    router150 = import_express150.default.Router();
-    saveSkillContent_default = router150.post(
+    router152 = import_express152.default.Router();
+    saveSkillContent_default = router152.post(
       "/",
       validateFields({
         path: external_exports.string(),
@@ -255393,17 +257145,17 @@ var init_saveSkillContent = __esm({
 });
 
 // src/routes/setting/vendorConfig/addVendor.ts
-var import_express151, import_sucrase4, router151, vendorConfigSchema, addVendor_default;
+var import_express153, import_sucrase4, router153, vendorConfigSchema, addVendor_default;
 var init_addVendor = __esm({
   "src/routes/setting/vendorConfig/addVendor.ts"() {
     "use strict";
-    import_express151 = __toESM(require_express2());
+    import_express153 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
     import_sucrase4 = __toESM(require_dist5());
-    router151 = import_express151.default.Router();
+    router153 = import_express153.default.Router();
     vendorConfigSchema = external_exports.object({
       id: external_exports.string(),
       author: external_exports.string(),
@@ -255455,7 +257207,7 @@ var init_addVendor = __esm({
         ])
       )
     });
-    addVendor_default = router151.post(
+    addVendor_default = router153.post(
       "/",
       validateFields({
         tsCode: external_exports.string()
@@ -255507,17 +257259,17 @@ ${issueLines.join("\n")}`));
 });
 
 // src/routes/setting/vendorConfig/addVendorModel.ts
-var import_express152, router152, addVendorModel_default;
+var import_express154, router154, addVendorModel_default;
 var init_addVendorModel = __esm({
   "src/routes/setting/vendorConfig/addVendorModel.ts"() {
     "use strict";
-    import_express152 = __toESM(require_express2());
+    import_express154 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router152 = import_express152.default.Router();
-    addVendorModel_default = router152.post(
+    router154 = import_express154.default.Router();
+    addVendorModel_default = router154.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -255571,19 +257323,19 @@ var init_addVendorModel = __esm({
 });
 
 // src/routes/setting/vendorConfig/deleteVendor.ts
-var import_express153, import_path28, import_fs17, router153, deleteVendor_default;
+var import_express155, import_path28, import_fs17, router155, deleteVendor_default;
 var init_deleteVendor = __esm({
   "src/routes/setting/vendorConfig/deleteVendor.ts"() {
     "use strict";
-    import_express153 = __toESM(require_express2());
+    import_express155 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     import_path28 = __toESM(require("path"));
     import_fs17 = __toESM(require("fs"));
     init_utils3();
     init_zod();
-    router153 = import_express153.default.Router();
-    deleteVendor_default = router153.post(
+    router155 = import_express155.default.Router();
+    deleteVendor_default = router155.post(
       "/",
       validateFields({
         id: external_exports.string()
@@ -255603,17 +257355,17 @@ var init_deleteVendor = __esm({
 });
 
 // src/routes/setting/vendorConfig/delVendorModel.ts
-var import_express154, router154, delVendorModel_default;
+var import_express156, router156, delVendorModel_default;
 var init_delVendorModel = __esm({
   "src/routes/setting/vendorConfig/delVendorModel.ts"() {
     "use strict";
-    import_express154 = __toESM(require_express2());
+    import_express156 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router154 = import_express154.default.Router();
-    delVendorModel_default = router154.post(
+    router156 = import_express156.default.Router();
+    delVendorModel_default = router156.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -255639,17 +257391,17 @@ var init_delVendorModel = __esm({
 });
 
 // src/routes/setting/vendorConfig/enableVendor.ts
-var import_express155, router155, enableVendor_default;
+var import_express157, router157, enableVendor_default;
 var init_enableVendor = __esm({
   "src/routes/setting/vendorConfig/enableVendor.ts"() {
     "use strict";
-    import_express155 = __toESM(require_express2());
+    import_express157 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router155 = import_express155.default.Router();
-    enableVendor_default = router155.post(
+    router157 = import_express157.default.Router();
+    enableVendor_default = router157.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -255665,16 +257417,16 @@ var init_enableVendor = __esm({
 });
 
 // src/routes/setting/vendorConfig/getCodeByLink.ts
-var import_express156, router156, getCodeByLink_default;
+var import_express158, router158, getCodeByLink_default;
 var init_getCodeByLink = __esm({
   "src/routes/setting/vendorConfig/getCodeByLink.ts"() {
     "use strict";
-    import_express156 = __toESM(require_express2());
+    import_express158 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_zod();
-    router156 = import_express156.default.Router();
-    getCodeByLink_default = router156.post(
+    router158 = import_express158.default.Router();
+    getCodeByLink_default = router158.post(
       "/",
       validateFields({
         link: external_exports.string()
@@ -255689,15 +257441,15 @@ var init_getCodeByLink = __esm({
 });
 
 // src/routes/setting/vendorConfig/getVendorList.ts
-var import_express157, router157, getVendorList_default;
+var import_express159, router159, getVendorList_default;
 var init_getVendorList = __esm({
   "src/routes/setting/vendorConfig/getVendorList.ts"() {
     "use strict";
-    import_express157 = __toESM(require_express2());
+    import_express159 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router157 = import_express157.default.Router();
-    getVendorList_default = router157.post("/", async (req, res) => {
+    router159 = import_express159.default.Router();
+    getVendorList_default = router159.post("/", async (req, res) => {
       const data = await utils_default.db("o_vendorConfig").select("*");
       const list2 = (await Promise.all(
         data.map(async (item) => {
@@ -255727,18 +257479,18 @@ var init_getVendorList = __esm({
 });
 
 // src/routes/setting/vendorConfig/modelTest.ts
-var import_express158, router158, modelTest_default;
+var import_express160, router160, modelTest_default;
 var init_modelTest = __esm({
   "src/routes/setting/vendorConfig/modelTest.ts"() {
     "use strict";
-    import_express158 = __toESM(require_express2());
+    import_express160 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
     init_dist22();
-    router158 = import_express158.default.Router();
-    modelTest_default = router158.post(
+    router160 = import_express160.default.Router();
+    modelTest_default = router160.post(
       "/",
       validateFields({
         modelName: external_exports.string(),
@@ -255831,17 +257583,17 @@ var init_modelTest = __esm({
 });
 
 // src/routes/setting/vendorConfig/modelTest/imageTest.ts
-var import_express159, router159, imageTest_default;
+var import_express161, router161, imageTest_default;
 var init_imageTest = __esm({
   "src/routes/setting/vendorConfig/modelTest/imageTest.ts"() {
     "use strict";
-    import_express159 = __toESM(require_express2());
+    import_express161 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router159 = import_express159.default.Router();
-    imageTest_default = router159.post(
+    router161 = import_express161.default.Router();
+    imageTest_default = router161.post(
       "/",
       validateFields({
         modelName: external_exports.string(),
@@ -255878,18 +257630,18 @@ var init_imageTest = __esm({
 });
 
 // src/routes/setting/vendorConfig/modelTest/textTest.ts
-var import_express160, router160, textTest_default;
+var import_express162, router162, textTest_default;
 var init_textTest = __esm({
   "src/routes/setting/vendorConfig/modelTest/textTest.ts"() {
     "use strict";
-    import_express160 = __toESM(require_express2());
+    import_express162 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
     init_dist22();
-    router160 = import_express160.default.Router();
-    textTest_default = router160.post(
+    router162 = import_express162.default.Router();
+    textTest_default = router162.post(
       "/",
       validateFields({
         modelName: external_exports.string(),
@@ -255941,17 +257693,17 @@ var init_textTest = __esm({
 });
 
 // src/routes/setting/vendorConfig/modelTest/videoTest.ts
-var import_express161, router161, videoTest_default;
+var import_express163, router163, videoTest_default;
 var init_videoTest = __esm({
   "src/routes/setting/vendorConfig/modelTest/videoTest.ts"() {
     "use strict";
-    import_express161 = __toESM(require_express2());
+    import_express163 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router161 = import_express161.default.Router();
-    videoTest_default = router161.post(
+    router163 = import_express163.default.Router();
+    videoTest_default = router163.post(
       "/",
       validateFields({
         modelName: external_exports.string(),
@@ -256017,18 +257769,18 @@ var init_videoTest = __esm({
 });
 
 // src/routes/setting/vendorConfig/updateCode.ts
-var import_express162, import_sucrase5, router162, vendorConfigSchema2, updateCode_default;
+var import_express164, import_sucrase5, router164, vendorConfigSchema2, updateCode_default;
 var init_updateCode = __esm({
   "src/routes/setting/vendorConfig/updateCode.ts"() {
     "use strict";
-    import_express162 = __toESM(require_express2());
+    import_express164 = __toESM(require_express2());
     init_serialize_error();
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
     import_sucrase5 = __toESM(require_dist5());
-    router162 = import_express162.default.Router();
+    router164 = import_express164.default.Router();
     vendorConfigSchema2 = external_exports.object({
       id: external_exports.string(),
       author: external_exports.string(),
@@ -256080,7 +257832,7 @@ var init_updateCode = __esm({
         ])
       )
     });
-    updateCode_default = router162.post(
+    updateCode_default = router164.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -256117,17 +257869,17 @@ var init_updateCode = __esm({
 });
 
 // src/routes/setting/vendorConfig/updateVendorInputs.ts
-var import_express163, router163, updateVendorInputs_default;
+var import_express165, router165, updateVendorInputs_default;
 var init_updateVendorInputs = __esm({
   "src/routes/setting/vendorConfig/updateVendorInputs.ts"() {
     "use strict";
-    import_express163 = __toESM(require_express2());
+    import_express165 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router163 = import_express163.default.Router();
-    updateVendorInputs_default = router163.post(
+    router165 = import_express165.default.Router();
+    updateVendorInputs_default = router165.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -256145,17 +257897,17 @@ var init_updateVendorInputs = __esm({
 });
 
 // src/routes/setting/vendorConfig/upVendorModel.ts
-var import_express164, router164, upVendorModel_default;
+var import_express166, router166, upVendorModel_default;
 var init_upVendorModel = __esm({
   "src/routes/setting/vendorConfig/upVendorModel.ts"() {
     "use strict";
-    import_express164 = __toESM(require_express2());
+    import_express166 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router164 = import_express164.default.Router();
-    upVendorModel_default = router164.post(
+    router166 = import_express166.default.Router();
+    upVendorModel_default = router166.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -256214,15 +257966,15 @@ var init_upVendorModel = __esm({
 });
 
 // src/routes/task/getProject.ts
-var import_express165, router165, getProject_default2;
+var import_express167, router167, getProject_default2;
 var init_getProject2 = __esm({
   "src/routes/task/getProject.ts"() {
     "use strict";
-    import_express165 = __toESM(require_express2());
+    import_express167 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router165 = import_express165.default.Router();
-    getProject_default2 = router165.post("/", async (req, res) => {
+    router167 = import_express167.default.Router();
+    getProject_default2 = router167.post("/", async (req, res) => {
       const list2 = await utils_default.db("o_project").select("id", "name").groupBy("name");
       const data = list2.filter((item) => item.name);
       res.status(200).send(success3(data));
@@ -256231,17 +257983,17 @@ var init_getProject2 = __esm({
 });
 
 // src/routes/task/getTaskApi.ts
-var import_express166, router166, getTaskApi_default;
+var import_express168, router168, getTaskApi_default;
 var init_getTaskApi = __esm({
   "src/routes/task/getTaskApi.ts"() {
     "use strict";
-    import_express166 = __toESM(require_express2());
+    import_express168 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     init_middleware();
     init_zod();
-    router166 = import_express166.default.Router();
-    getTaskApi_default = router166.post(
+    router168 = import_express168.default.Router();
+    getTaskApi_default = router168.post(
       "/",
       validateFields({
         state: external_exports.string().optional().nullable(),
@@ -256282,15 +258034,15 @@ var init_getTaskApi = __esm({
 });
 
 // src/routes/task/getTaskCategories.ts
-var import_express167, router167, getTaskCategories_default;
+var import_express169, router169, getTaskCategories_default;
 var init_getTaskCategories = __esm({
   "src/routes/task/getTaskCategories.ts"() {
     "use strict";
-    import_express167 = __toESM(require_express2());
+    import_express169 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router167 = import_express167.default.Router();
-    getTaskCategories_default = router167.post("/", async (req, res) => {
+    router169 = import_express169.default.Router();
+    getTaskCategories_default = router169.post("/", async (req, res) => {
       const list2 = await utils_default.db("o_tasks").select("taskClass").groupBy("taskClass");
       const data = list2.filter((item) => item.taskClass);
       res.status(200).send(success3(data));
@@ -256299,17 +258051,17 @@ var init_getTaskCategories = __esm({
 });
 
 // src/routes/task/taskDetails.ts
-var import_express168, router168, taskDetails_default;
+var import_express170, router170, taskDetails_default;
 var init_taskDetails = __esm({
   "src/routes/task/taskDetails.ts"() {
     "use strict";
-    import_express168 = __toESM(require_express2());
+    import_express170 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     init_middleware();
     init_zod();
-    router168 = import_express168.default.Router();
-    taskDetails_default = router168.post(
+    router170 = import_express170.default.Router();
+    taskDetails_default = router170.post(
       "/",
       validateFields({
         taskId: external_exports.number()
@@ -256324,15 +258076,15 @@ var init_taskDetails = __esm({
 });
 
 // src/routes/test/test.ts
-var import_express169, import_fs18, router169, test_default;
+var import_express171, import_fs18, router171, test_default;
 var init_test = __esm({
   "src/routes/test/test.ts"() {
     "use strict";
-    import_express169 = __toESM(require_express2());
+    import_express171 = __toESM(require_express2());
     init_utils3();
     import_fs18 = __toESM(require("fs"));
-    router169 = import_express169.default.Router();
-    test_default = router169.get("/", async (req, res) => {
+    router171 = import_express171.default.Router();
+    test_default = router171.get("/", async (req, res) => {
       return res.send("ok");
       const test2 = await utils_default.db("o_vendorConfig").select("*");
       import_fs18.default.writeFileSync("test.json", JSON.stringify(test2, null, 2));
@@ -256413,6 +258165,8 @@ var init_router = __esm({
     init_uploadImage();
     init_getFlowData();
     init_getStoryboardData();
+    init_getStoryboardRevisionContext();
+    init_reviseStoryboardScene();
     init_saveFlowData();
     init_addStoryboard();
     init_batchAddStoryboardInfo();
@@ -256583,6 +258337,8 @@ var init_router = __esm({
       app2.use("/api/production/editImage/uploadImage", uploadImage_default);
       app2.use("/api/production/getFlowData", getFlowData_default);
       app2.use("/api/production/getStoryboardData", getStoryboardData_default);
+      app2.use("/api/production/getStoryboardRevisionContext", getStoryboardRevisionContext_default);
+      app2.use("/api/production/reviseStoryboardScene", reviseStoryboardScene_default);
       app2.use("/api/production/saveFlowData", saveFlowData_default);
       app2.use("/api/production/storyboard/addStoryboard", addStoryboard_default);
       app2.use("/api/production/storyboard/batchAddStoryboardInfo", batchAddStoryboardInfo_default);
@@ -256744,7 +258500,7 @@ if (!env) {
 }
 
 // src/app.ts
-var import_express170 = __toESM(require_express2());
+var import_express172 = __toESM(require_express2());
 
 // node_modules/socket.io/wrapper.mjs
 var import_dist = __toESM(require_dist3(), 1);
@@ -256834,7 +258590,201 @@ init_utils3();
 // src/utils/agent/memory.ts
 init_utils3();
 init_dist_node();
+var import_node_crypto4 = require("node:crypto");
 init_embedding();
+
+// src/utils/agent/retrieval/memoryIndex.ts
+init_db();
+init_embedding();
+
+// src/utils/agent/retrieval/terms.ts
+function searchTerms(text2, limit = 80) {
+  const normalized = text2.normalize("NFKC").toLowerCase();
+  const terms = /* @__PURE__ */ new Set();
+  for (const word of normalized.match(/[a-z0-9_]{2,}/g) ?? []) terms.add(word);
+  for (const segment of normalized.match(/[\p{Script=Han}]+/gu) ?? []) {
+    if (segment.length === 1) terms.add(segment);
+    for (let i = 0; i < segment.length - 1; i++) terms.add(segment.slice(i, i + 2));
+  }
+  return [...terms].slice(0, limit);
+}
+
+// src/utils/agent/retrieval/memoryIndex.ts
+var worker = null;
+async function indexMemoryTerms(memoryId, isolationKey, content) {
+  const terms = searchTerms(content);
+  if (!terms.length) return;
+  await db_default("o_memoryTerm").insert(terms.map((term) => ({ memoryId, isolationKey, term }))).onConflict().ignore();
+}
+async function queueMemoryVector(memoryId, modelId) {
+  await db_default("o_memoryJob").insert({
+    id: `${modelId}:${memoryId}`,
+    memoryId,
+    modelId,
+    status: "pending",
+    retryAt: 0,
+    updateTime: Date.now()
+  }).onConflict().ignore();
+  const vector = await db_default("o_memoryVector").where({ memoryId, modelId }).first();
+  if (!vector) await db_default("o_memoryJob").where({ id: `${modelId}:${memoryId}`, status: "completed" }).update({ status: "pending", retryAt: 0, updateTime: Date.now() });
+}
+async function queueMissingVectors(isolationKey, modelId, limit = 30) {
+  const rows = await db_default("memories").leftJoin("o_memoryVector", function() {
+    this.on("memories.id", "=", "o_memoryVector.memoryId").andOnVal("o_memoryVector.modelId", "=", modelId);
+  }).where("memories.isolationKey", isolationKey).whereNull("o_memoryVector.memoryId").select("memories.id").limit(limit);
+  for (const row of rows) if (row.id) await queueMemoryVector(row.id, modelId);
+}
+function startMemoryIndex() {
+  if (worker) return;
+  worker = (async () => {
+    const modelId = await getEmbeddingModelId();
+    for (; ; ) {
+      const jobs = await db_default("o_memoryJob").where({ status: "pending", modelId }).where("retryAt", "<=", Date.now()).orderBy("updateTime", "asc").limit(10);
+      if (!jobs.length) break;
+      for (const job of jobs) {
+        const claimed = await db_default("o_memoryJob").where({ id: job.id, status: "pending" }).update({ status: "running", updateTime: Date.now() });
+        if (claimed !== 1) continue;
+        try {
+          const memory = await db_default("memories").where({ id: job.memoryId }).first();
+          if (!memory?.id || !memory.isolationKey || memory.content == null) throw new Error("\u539F\u59CB\u8BB0\u5FC6\u4E0D\u5B58\u5728\u6216\u5B57\u6BB5\u4E0D\u5B8C\u6574");
+          await indexMemoryTerms(memory.id, memory.isolationKey, memory.content);
+          const embedding = await getEmbedding(memory.content);
+          if (!embedding.length || !embedding.every(Number.isFinite)) throw new Error("Embedding \u8FD4\u56DE\u65E0\u6548\u5411\u91CF");
+          await db_default("o_memoryVector").insert({
+            memoryId: memory.id,
+            modelId,
+            embedding: JSON.stringify(embedding),
+            dimension: embedding.length,
+            createTime: Date.now()
+          }).onConflict().ignore();
+          await db_default("o_memoryJob").where({ id: job.id }).update({ status: "completed", error: null, updateTime: Date.now() });
+        } catch (error73) {
+          const attempts = Number(job.attempts ?? 0) + 1;
+          await db_default("o_memoryJob").where({ id: job.id }).update({
+            status: "pending",
+            attempts,
+            retryAt: Date.now() + Math.min(36e5, 3e4 * 2 ** Math.min(attempts, 7)),
+            error: error73 instanceof Error ? error73.message : String(error73),
+            updateTime: Date.now()
+          });
+        }
+      }
+    }
+  })().catch((error73) => {
+    console.error("[memoryIndex]", error73 instanceof Error ? error73.message : error73);
+  }).finally(() => {
+    worker = null;
+  });
+}
+async function lexicalCandidates(isolationKey, query, limit = 100) {
+  const terms = searchTerms(query);
+  if (!terms.length) return [];
+  const rows = await db_default("o_memoryTerm").where({ isolationKey }).whereIn("term", terms).select("memoryId").count({ matches: "*" }).groupBy("memoryId").orderBy("matches", "desc").limit(limit);
+  return rows.map((row) => row.memoryId).filter((id) => typeof id === "string");
+}
+
+// src/utils/agent/retrieval/reranker.ts
+init_db();
+var DEFAULT_URL = "http://127.0.0.1:11435/rerank";
+function parseRerankerConfig(rows) {
+  const settings = new Map(rows.map((row) => [row.key, row.value]));
+  const enabled = settings.get("memoryRerankerEnabled") === "1";
+  const rawUrl = settings.get("memoryRerankerUrl") || DEFAULT_URL;
+  let url4;
+  try {
+    url4 = new URL(rawUrl);
+  } catch {
+    throw new Error("Reranker \u5730\u5740\u65E0\u6548");
+  }
+  if (url4.protocol !== "http:" || !["127.0.0.1", "localhost", "::1"].includes(url4.hostname)) {
+    throw new Error("Reranker \u53EA\u5141\u8BB8\u8BBF\u95EE\u672C\u673A HTTP \u670D\u52A1");
+  }
+  const model = settings.get("memoryRerankerModel") || "Qwen3-Reranker-4B";
+  if (!/^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$/.test(model)) throw new Error("Reranker \u6A21\u578B\u540D\u65E0\u6548");
+  const configured = Number(settings.get("memoryRerankerCandidates") || "24");
+  const candidateLimit = Number.isSafeInteger(configured) ? Math.min(100, Math.max(8, configured)) : 24;
+  return { enabled, url: url4.toString(), model, candidateLimit };
+}
+async function getConfig2() {
+  const rows = await db_default("o_setting").whereIn("key", ["memoryRerankerEnabled", "memoryRerankerUrl", "memoryRerankerModel", "memoryRerankerCandidates"]).select("key", "value");
+  return parseRerankerConfig(rows);
+}
+async function rerankRows(query, rows, limit, fetcher = fetch, configOverride) {
+  if (limit <= 0 || !rows.length) return [];
+  const config3 = configOverride ?? await getConfig2();
+  if (!config3.enabled || rows.length <= 1) return rows.slice(0, limit);
+  const response = await fetcher(config3.url, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    signal: AbortSignal.timeout(12e4),
+    body: JSON.stringify({
+      model: config3.model,
+      query,
+      documents: rows.map((row) => row.content),
+      top_n: Math.min(limit, rows.length),
+      instruction: "Retrieve the memories that are most relevant to the user's current request."
+    })
+  });
+  const body = await response.json();
+  if (!response.ok || !Array.isArray(body.results)) {
+    throw new Error(body.error || `Reranker HTTP ${response.status}`);
+  }
+  const selected = [];
+  const seen = /* @__PURE__ */ new Set();
+  for (const item of body.results) {
+    const index = Number(item.index);
+    if (!Number.isSafeInteger(index) || index < 0 || index >= rows.length || seen.has(index)) continue;
+    seen.add(index);
+    selected.push(rows[index]);
+    if (selected.length >= limit) break;
+  }
+  return selected.length ? selected : rows.slice(0, limit);
+}
+async function getRerankerCandidateLimit(requestedLimit) {
+  const config3 = await getConfig2();
+  return config3.enabled ? Math.max(requestedLimit, config3.candidateLimit) : requestedLimit;
+}
+
+// src/utils/agent/retrieval/vectorTopK.ts
+init_embedding();
+var VectorTopK = class {
+  constructor(queryEmbedding, limit, lexicalIds = /* @__PURE__ */ new Set()) {
+    this.queryEmbedding = queryEmbedding;
+    this.limit = limit;
+    this.lexicalIds = lexicalIds;
+  }
+  entries = /* @__PURE__ */ new Map();
+  add(rows) {
+    if (this.limit <= 0) return;
+    for (const row of rows) {
+      const id = typeof row.id === "string" ? row.id : "";
+      if (!id) continue;
+      let embedding = [];
+      try {
+        embedding = JSON.parse(row.embedding ?? "[]");
+      } catch {
+      }
+      const valid = embedding.length === this.queryEmbedding.length && embedding.every(Number.isFinite);
+      const lexical = this.lexicalIds.has(id);
+      const similarity = valid ? cosineSimilarity(this.queryEmbedding, embedding) + (lexical ? 0.08 : 0) : lexical ? 0.08 : Number.NEGATIVE_INFINITY;
+      if (!Number.isFinite(similarity)) continue;
+      const prior = this.entries.get(id);
+      if (!prior || similarity > prior.similarity) this.entries.set(id, { ...row, similarity });
+    }
+    if (this.entries.size > this.limit * 3) this.trim();
+  }
+  trim() {
+    const keep = [...this.entries.values()].sort((a, b) => b.similarity - a.similarity).slice(0, this.limit);
+    this.entries.clear();
+    for (const item of keep) this.entries.set(String(item.id), item);
+  }
+  values() {
+    this.trim();
+    return [...this.entries.values()].sort((a, b) => b.similarity - a.similarity).slice(0, this.limit);
+  }
+};
+
+// src/utils/agent/memory.ts
 init_dist22();
 init_zod();
 var DEFAULTS = {
@@ -256851,12 +258801,6 @@ var DEFAULTS = {
   deepRetrieveSummaryLimit: 5
   // deepRetrieve()向量召回summary的条数
 };
-function vectorSearch(rows, queryEmbedding, limit) {
-  return rows.map((row) => {
-    const emb = JSON.parse(row.embedding ?? "[]");
-    return { ...row, similarity: cosineSimilarity(queryEmbedding, emb) };
-  }).sort((a, b) => b.similarity - a.similarity).slice(0, limit);
-}
 var Memory = class {
   agentType;
   isolationKey;
@@ -256904,10 +258848,99 @@ ${list2}` }]
     }
     return result;
   }
-  async add(role = "user", content, options) {
+  async search(type, text2, limit) {
+    if (limit <= 0) return [];
+    try {
+      const modelId = await getEmbeddingModelId();
+      await queueMissingVectors(this.isolationKey, modelId);
+      startMemoryIndex();
+      const queryEmbedding = await getEmbedding(text2, "query");
+      const hybrid = await utils_default.db("o_setting").where({ key: "memoryHybridRetrieval" }).select("value").first();
+      const ids = hybrid?.value !== "0" ? await lexicalCandidates(this.isolationKey, text2) : [];
+      const lexicalIds = new Set(ids);
+      const candidateLimit = await getRerankerCandidateLimit(limit);
+      const pageSetting = await utils_default.db("o_setting").where({ key: "memoryVectorScanPageSize" }).select("value").first();
+      const configuredPage = Number(pageSetting?.value);
+      const pageSize = Number.isSafeInteger(configuredPage) ? Math.min(2e3, Math.max(64, configuredPage)) : 256;
+      const topK = new VectorTopK(queryEmbedding, candidateLimit, lexicalIds);
+      const scan = async (legacyOnly) => {
+        let cursor = "";
+        for (; ; ) {
+          const query = utils_default.db("memories as m").leftJoin("o_memoryVector as v", function() {
+            this.on("m.id", "=", "v.memoryId").andOnVal("v.modelId", "=", modelId);
+          }).where({ "m.isolationKey": this.isolationKey, "m.type": type }).modify((builder) => {
+            if (legacyOnly) builder.whereNull("v.memoryId").whereNotNull("m.embedding");
+            else builder.whereNotNull("v.memoryId");
+            if (cursor) builder.where("m.id", ">", cursor);
+          }).select("m.*", "v.embedding as indexedEmbedding").orderBy("m.id", "asc").limit(pageSize);
+          const page = await query;
+          if (!page.length) break;
+          topK.add(page.map((row) => ({
+            ...row,
+            embedding: legacyOnly ? row.embedding : row.indexedEmbedding
+          })));
+          cursor = String(page[page.length - 1].id);
+          if (page.length < pageSize) break;
+        }
+      };
+      await scan(false);
+      if (modelId === "all-MiniLM-L6-v2/onnx/model_fp16.onnx:fp16") await scan(true);
+      for (let offset = 0; offset < ids.length; offset += pageSize) {
+        const batch = ids.slice(offset, offset + pageSize);
+        if (!batch.length) break;
+        const lexicalRows = await utils_default.db("memories").where({ isolationKey: this.isolationKey, type }).whereIn("id", batch);
+        topK.add(lexicalRows);
+      }
+      const candidates = topK.values();
+      try {
+        return await rerankRows(text2, candidates, limit);
+      } catch (rerankError) {
+        console.error("[Memory] Reranker \u964D\u7EA7:", rerankError instanceof Error ? rerankError.message : rerankError);
+        return candidates.slice(0, limit);
+      }
+    } catch (error73) {
+      console.error("[Memory] \u68C0\u7D22\u964D\u7EA7:", error73 instanceof Error ? error73.message : error73);
+      try {
+        const ids = await lexicalCandidates(this.isolationKey, text2, limit);
+        if (!ids.length) return [];
+        const rows = await utils_default.db("memories").where({ isolationKey: this.isolationKey, type }).whereIn("id", ids);
+        const byId = new Map(rows.map((row) => [row.id, row]));
+        return ids.map((id) => byId.get(id)).filter((row) => !!row).map((row) => ({ ...row, similarity: 0 })).slice(0, limit);
+      } catch {
+        return [];
+      }
+    }
+  }
+  async summarizePending() {
     const { messagesPerSummary } = await this.getConfigData({ messagesPerSummary: DEFAULTS.messagesPerSummary });
+    const count = Math.max(2, Number(messagesPerSummary));
+    const batch = await utils_default.db("memories").where({ isolationKey: this.isolationKey, type: "message", summarized: 0 }).orderBy("createTime", "asc").limit(count);
+    if (batch.length < count) return;
+    const batchIds = batch.map((row) => row.id).filter((id) => typeof id === "string");
+    const summaryId = (0, import_node_crypto4.createHash)("sha256").update(`${this.isolationKey}:${batchIds.join(",")}`).digest("hex");
+    const summaryContent = await this.generateSummary(batch.map((row) => row.content));
+    await utils_default.db.transaction(async (trx) => {
+      await trx("memories").insert({
+        id: summaryId,
+        isolationKey: this.isolationKey,
+        type: "summary",
+        content: summaryContent,
+        embedding: null,
+        relatedMessageIds: JSON.stringify(batchIds),
+        summarized: 0,
+        createTime: Date.now()
+      }).onConflict("id").ignore();
+      await trx("memories").whereIn("id", batchIds).update({ summarized: 1 });
+    });
+    await indexMemoryTerms(summaryId, this.isolationKey, summaryContent);
+    try {
+      await queueMemoryVector(summaryId, await getEmbeddingModelId());
+      startMemoryIndex();
+    } catch {
+    }
+  }
+  async add(role = "user", content, options) {
     const id = v4_default();
-    const embedding = await getEmbedding(content);
     const isolationKey = this.isolationKey;
     await utils_default.db("memories").insert({
       id,
@@ -256916,31 +258949,18 @@ ${list2}` }]
       role,
       name: options?.name,
       content,
-      embedding: JSON.stringify(embedding),
+      embedding: null,
       relatedMessageIds: null,
       summarized: 0,
       createTime: options?.createTime ?? Date.now()
     });
-    const unsummarized = await utils_default.db("memories").where({ isolationKey, type: "message", summarized: 0 }).orderBy("createTime", "asc");
-    if (unsummarized.length >= Number(messagesPerSummary)) {
-      const batch = unsummarized.slice(0, Number(messagesPerSummary));
-      const batchIds = batch.map((m) => m.id);
-      const batchContents = batch.map((m) => m.content);
-      const summaryContent = await this.generateSummary(batchContents);
-      const summaryEmbedding = await getEmbedding(summaryContent);
-      const summaryId = v4_default();
-      await utils_default.db("memories").insert({
-        id: summaryId,
-        isolationKey,
-        type: "summary",
-        content: summaryContent,
-        embedding: JSON.stringify(summaryEmbedding),
-        relatedMessageIds: JSON.stringify(batchIds),
-        summarized: 0,
-        createTime: Date.now()
-      });
-      await utils_default.db("memories").whereIn("id", batchIds).update({ summarized: 1 });
-    }
+    void (async () => {
+      await indexMemoryTerms(id, isolationKey, content);
+      await this.summarizePending();
+      const modelId = await getEmbeddingModelId();
+      await queueMemoryVector(id, modelId);
+      startMemoryIndex();
+    })().catch((error73) => console.error("[Memory] \u540E\u53F0\u7D22\u5F15\u5931\u8D25:", error73 instanceof Error ? error73.message : error73));
   }
   async get(text2) {
     const { shortTermLimit, summaryLimit, ragLimit } = await this.getConfigData({
@@ -256953,9 +258973,7 @@ ${list2}` }]
     shortTerm.reverse();
     const summaries = await utils_default.db("memories").where({ isolationKey, type: "summary" }).orderBy("createTime", "desc").limit(Number(summaryLimit));
     summaries.reverse();
-    const queryEmbedding = await getEmbedding(text2);
-    const allMessages = await utils_default.db("memories").where({ isolationKey, type: "message" });
-    const ragResults = vectorSearch(allMessages, queryEmbedding, Number(ragLimit));
+    const ragResults = await this.search("message", text2, Number(ragLimit));
     return {
       shortTerm: shortTerm.map((m) => ({ id: m.id, role: m.role, name: m.name, content: m.content, createTime: m.createTime })),
       summaries: summaries.map((s) => ({
@@ -256970,9 +258988,7 @@ ${list2}` }]
   async deepRetrieve(keyword) {
     const { deepRetrieveSummaryLimit } = await this.getConfigData({ deepRetrieveSummaryLimit: DEFAULTS.deepRetrieveSummaryLimit });
     const isolationKey = this.isolationKey;
-    const queryEmbedding = await getEmbedding(keyword);
-    const allSummaries = await utils_default.db("memories").where({ isolationKey, type: "summary" });
-    const topSummaries = vectorSearch(allSummaries, queryEmbedding, Number(deepRetrieveSummaryLimit));
+    const topSummaries = await this.search("summary", keyword, Number(deepRetrieveSummaryLimit));
     if (topSummaries.length === 0) return [];
     const relevantIds = await this.judgeSummaryRelevance(
       keyword,
@@ -257099,7 +259115,7 @@ function discoverSelectedStyleResources(mainSkills, skillsRootDir) {
   }
   return [...resources].sort();
 }
-function createSkillTools(skills, skillPaths, rootDir = getPath_default("skills")) {
+function createSkillTools(skills, skillPaths, rootDir = getPath_default("skills"), readSnapshot) {
   const activated = /* @__PURE__ */ new Set();
   const skillsRootDir = import_path9.default.resolve(rootDir);
   const skillNames = skills.map((s) => s.name);
@@ -257128,7 +259144,7 @@ function createSkillTools(skills, skillPaths, rootDir = getPath_default("skills"
           if (!stat.isFile() || stat.size > MAX_SKILL_FILE_BYTES) {
             return { error: `\u6280\u80FD\u6587\u4EF6\u65E0\u6548\u6216\u8D85\u8FC7\u5927\u5C0F\u9650\u5236: ${matched.path}` };
           }
-          raw = await fs10.promises.readFile(matched.path, "utf-8");
+          raw = readSnapshot ? await readSnapshot(matched.path) : await fs10.promises.readFile(matched.path, "utf-8");
           console.log(`\u26A1[\u4E3B\u6280\u80FD] \u2713 \u5DF2\u8BFB\u53D6\u4E3B\u6280\u80FD\u6587\u4EF6\uFF1A ${matched.path}\uFF08${raw.length} \u5B57\u7B26\uFF09`);
         } catch (error73) {
           console.error(`\u26A1[\u4E3B\u6280\u80FD] \u2717 \u6280\u80FD\u8BFB\u53D6\u5931\u8D25\uFF1A${matched.path}`, error73);
@@ -257185,7 +259201,7 @@ function createSkillTools(skills, skillPaths, rootDir = getPath_default("skills"
           if (!stat.isFile() || stat.size > MAX_SKILL_FILE_BYTES) {
             return { error: `\u6280\u80FD\u8D44\u6E90\u65E0\u6548\u6216\u8D85\u8FC7\u5927\u5C0F\u9650\u5236: ${filePath}` };
           }
-          body = await fs10.promises.readFile(realFile, "utf-8");
+          body = readSnapshot ? await readSnapshot(realFile) : await fs10.promises.readFile(realFile, "utf-8");
           console.log(`\u{1F4D6}[\u6280\u6CD5\u6587\u4EF6] \u2713 \u5DF2\u8BFB\u53D6\u6587\u4EF6\uFF1A ${filePath}\uFF08${body.length} \u5B57\u7B26\uFF09`);
         } catch (error73) {
           console.error(`\u{1F4D6}[\u6280\u6CD5\u6587\u4EF6] \u2717 \u8BFB\u53D6\u5931\u8D25\uFF1A${filePath}`, error73);
@@ -257223,6 +259239,8 @@ async function scanSkills(folderPath) {
 init_dist22();
 init_zod();
 init_utils3();
+var import_node_crypto6 = require("node:crypto");
+init_storyboardProgress();
 var deriveAssetSchema = external_exports.object({
   id: external_exports.number().describe("\u884D\u751F\u8D44\u4EA7ID,\u5982\u679C\u65B0\u589E\u5219\u4E3A\u7A7A"),
   assetsId: external_exports.number().describe("\u5173\u8054\u7684\u8D44\u4EA7ID"),
@@ -257272,6 +259290,25 @@ var keySchema = external_exports.enum(Object.keys(flowDataSchema.shape));
 var flowDataKeyLabels = Object.fromEntries(
   Object.entries(flowDataSchema.shape).map(([key, schema]) => [key, schema.description ?? key])
 );
+async function readAuthoritativeTextValue(key, projectIdRaw, scriptIdRaw) {
+  const projectId = Number(projectIdRaw);
+  const scriptId = Number(scriptIdRaw);
+  if (!Number.isSafeInteger(projectId) || !Number.isSafeInteger(scriptId)) {
+    throw new Error("\u5DE5\u4F5C\u533A\u7F3A\u5C11\u6709\u6548\u7684\u9879\u76EE\u6216\u5267\u96C6 ID");
+  }
+  if (key === "script") {
+    const script = await utils_default.db("o_script").where({ id: scriptId, projectId }).select("content").first();
+    if (!script) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C");
+    return { handled: true, value: script.content ?? "" };
+  }
+  if (key === "scriptPlan" || key === "storyboardTable") {
+    const row = await utils_default.db("o_agentWorkData").where({ projectId, episodesId: scriptId, key: "productionAgent" }).select("data").first();
+    if (!row?.data) return { handled: true, value: "" };
+    const data = JSON.parse(row.data);
+    return { handled: true, value: typeof data[key] === "string" ? data[key] : "" };
+  }
+  return { handled: false };
+}
 function createSocketQueue(delayMs = 800) {
   let lastPromise = Promise.resolve();
   return (fn) => {
@@ -257295,8 +259332,20 @@ var tools_default = (toolCpnfig) => {
   const { socket } = resTool;
   const socketQueue = createSocketQueue(800);
   const tools = {
+    get_storyboard_progress: tool({
+      description: "\u53EA\u8BFB\uFF1A\u4ECE\u6570\u636E\u5E93\u83B7\u53D6\u5206\u955C\u4EFB\u52A1 taskId\u3001total\u3001revision\u3001\u5DF2\u4FDD\u5B58/\u7F3A\u5931\u573A\u6B21\u548C\u4E0B\u4E00\u573A\uFF1B\u4E0D\u8981\u4ECE Markdown \u67E5\u627E XML task \u5C5E\u6027\u3002",
+      inputSchema: jsonSchema(external_exports.object({}).toJSONSchema()),
+      execute: async () => {
+        const progress = await readStoryboardProgress(utils_default.db, Number(resTool.data.projectId), Number(resTool.data.scriptId));
+        const thinking = msg.thinking("\u6B63\u5728\u6838\u5BF9\u5206\u955C\u8868\u6570\u636E\u5E93\u8FDB\u5EA6...");
+        thinking.appendText(JSON.stringify(progress));
+        thinking.updateTitle(progress.valid ? "\u5206\u955C\u4EFB\u52A1\u8FDB\u5EA6\u6838\u5BF9\u5B8C\u6210" : "\u5206\u955C\u4EFB\u52A1\u8FDB\u5EA6\u51B2\u7A81");
+        thinking.complete();
+        return progress;
+      }
+    }),
     get_flowData: tool({
-      description: "\u83B7\u53D6\u5DE5\u4F5C\u533A\u6570\u636E\uFF1B\u4E0D\u4F20 offset/limit \u65F6\u8FD4\u56DE\u5B8C\u6574\u539F\u59CB\u6570\u636E\u3002\u957F\u6587\u672C\u53EF\u9009\u7528 offset/limit \u6309\u5B57\u7B26\u5206\u6BB5\uFF0C\u6570\u7EC4\u6309\u6761\u76EE\u5206\u6BB5\uFF0C\u8FD4\u56DE data\u3001total\u3001nextOffset\u3002",
+      description: "\u83B7\u53D6\u5DE5\u4F5C\u533A\u6570\u636E\uFF1Bscript/scriptPlan/storyboardTable \u76F4\u63A5\u8BFB\u53D6\u540E\u7AEF\u6570\u636E\u5E93\u771F\u5B9E\u503C\uFF0C\u907F\u514D\u6D4F\u89C8\u5668\u7F13\u5B58\u5BFC\u81F4\u8BEF\u5224\u3002\u5176\u4ED6\u5B57\u6BB5\u4FDD\u6301\u517C\u5BB9\u8BFB\u53D6\u3002\u957F\u6587\u672C\u53EF\u9009 offset/limit \u5206\u6BB5\u3002",
       inputSchema: jsonSchema(
         external_exports.object({
           key: keySchema.describe("\u6570\u636Ekey"),
@@ -257307,18 +259356,24 @@ var tools_default = (toolCpnfig) => {
       execute: async ({ key, offset, limit }) => {
         const thinking = msg.thinking(`\u6B63\u5728\u83B7\u53D6${flowDataKeyLabels[key]}\u5DE5\u4F5C\u533A\u6570\u636E...`);
         try {
-          const flowData = await new Promise((resolve3, reject) => {
-            const timeout = setTimeout(() => reject(new Error(`\u83B7\u53D6${flowDataKeyLabels[key]}\u8D85\u65F6\uFF0C\u672A\u6536\u5230\u5DE5\u4F5C\u533A\u54CD\u5E94`)), 6e4);
-            socket.emit("getFlowData", { key }, (res) => {
-              clearTimeout(timeout);
-              if (!res || typeof res !== "object" || res.error || !(key in res)) {
-                reject(new Error(res?.error ?? `\u5DE5\u4F5C\u533A\u672A\u8FD4\u56DE${flowDataKeyLabels[key]}\u6570\u636E`));
-                return;
-              }
-              resolve3(res);
+          const authoritative = await readAuthoritativeTextValue(key, resTool.data.projectId, resTool.data.scriptId);
+          let value;
+          if (authoritative.handled) {
+            value = authoritative.value ?? "";
+          } else {
+            const flowData = await new Promise((resolve3, reject) => {
+              const timeout = setTimeout(() => reject(new Error(`\u83B7\u53D6${flowDataKeyLabels[key]}\u8D85\u65F6\uFF0C\u672A\u6536\u5230\u5DE5\u4F5C\u533A\u54CD\u5E94`)), 6e4);
+              socket.emit("getFlowData", { key }, (res) => {
+                clearTimeout(timeout);
+                if (!res || typeof res !== "object" || res.error || !(key in res)) {
+                  reject(new Error(res?.error ?? `\u5DE5\u4F5C\u533A\u672A\u8FD4\u56DE${flowDataKeyLabels[key]}\u6570\u636E`));
+                  return;
+                }
+                resolve3(res);
+              });
             });
-          });
-          const value = flowData[key];
+            value = flowData[key];
+          }
           const useChunk = offset !== void 0 || limit !== void 0;
           let result = value;
           if (useChunk && (typeof value === "string" || Array.isArray(value))) {
@@ -257346,119 +259401,252 @@ var tools_default = (toolCpnfig) => {
       }
     }),
     add_deriveAsset: tool({
-      description: "\u65B0\u589E\u6216\u66F4\u65B0\u884D\u751F\u8D44\u4EA7",
+      description: "\u65B0\u589E\u6216\u66F4\u65B0\u884D\u751F\u8D44\u4EA7\u3002\u5199\u5165\u4F7F\u7528 requestId \u4E8B\u52A1\u56DE\u6267\uFF1B\u91CD\u8BD5\u540C\u4E00\u64CD\u4F5C\u5FC5\u987B\u590D\u7528\u76F8\u540C requestId\u3002",
       inputSchema: jsonSchema(
         external_exports.object({
           assetsId: external_exports.number().describe("\u5173\u8054\u7684\u8D44\u4EA7ID"),
           id: external_exports.number().nullable().describe("\u884D\u751F\u8D44\u4EA7ID,\u5982\u679C\u65B0\u589E\u5219\u4E3A\u7A7A"),
           name: external_exports.string().describe("\u884D\u751F\u8D44\u4EA7\u540D\u79F0"),
-          desc: external_exports.string().describe("\u884D\u751F\u8D44\u4EA7\u63CF\u8FF0")
+          desc: external_exports.string().describe("\u884D\u751F\u8D44\u4EA7\u63CF\u8FF0"),
+          requestId: external_exports.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional().describe("\u53EF\u9009\u64CD\u4F5C\u6807\u8BC6\uFF1B\u5931\u8D25\u91CD\u8BD5\u5FC5\u987B\u590D\u7528\u9519\u8BEF\u4FE1\u606F\u4E2D\u7684 requestId")
         }).toJSONSchema()
       ),
       execute: async (raw) => {
         const idRaw = raw.id;
         const normalizedId = idRaw === "null" || idRaw === "" || idRaw === void 0 ? null : idRaw;
-        const deriveAsset = { ...raw, id: normalizedId };
+        const requestId = raw.requestId ?? `da_${(0, import_node_crypto6.randomUUID)()}`;
         const thinking = msg.thinking("\u6B63\u5728\u64CD\u4F5C\u8D44\u4EA7...");
         const { projectId, scriptId } = resTool.data;
-        const startTime = Date.now();
-        const parentAssets = await utils_default.db("o_assets").where("id", deriveAsset.assetsId).select("id", "type").first();
-        if (!parentAssets) return "\u5173\u8054\u7684\u8D44\u4EA7\u4E0D\u5B58\u5728";
-        const data = {
-          id: deriveAsset.id ?? void 0,
-          assetsId: deriveAsset.assetsId,
-          projectId,
-          name: deriveAsset.name,
-          type: parentAssets.type,
-          describe: deriveAsset.desc,
-          startTime
-        };
-        if (deriveAsset.id) {
-          await utils_default.db("o_assets").where("id", deriveAsset.id).update(data);
-          thinking.appendText(`\u5DF2\u66F4\u65B0\u884D\u751F\u8D44\u4EA7\uFF0CID: ${deriveAsset.id}
+        const payload = { assetsId: raw.assetsId, id: normalizedId, name: raw.name, desc: raw.desc };
+        const payloadHash = (0, import_node_crypto6.createHash)("sha256").update(JSON.stringify(payload)).digest("hex");
+        const receiptKey = `deriveAssetWrite:${requestId}`;
+        try {
+          const committed = await utils_default.db.transaction(async (trx) => {
+            const priorReceipt = await trx("o_agentWorkData").where({ projectId, episodesId: scriptId, key: receiptKey }).select("data").first();
+            if (priorReceipt?.data) {
+              const prior = JSON.parse(priorReceipt.data);
+              if (prior.payloadHash !== payloadHash || !Number.isSafeInteger(Number(prior.assetId))) {
+                throw new Error("\u76F8\u540C requestId \u5BF9\u5E94\u4E0D\u540C\u7684\u884D\u751F\u8D44\u4EA7\u5199\u5165\u5185\u5BB9");
+              }
+              const existing = await trx("o_assets").where({ id: Number(prior.assetId), projectId, assetsId: raw.assetsId }).first();
+              const linked2 = await trx("o_scriptAssets").where({ scriptId, assetId: Number(prior.assetId) }).first();
+              if (!existing || !linked2 || existing.name !== raw.name || (existing.describe ?? "") !== raw.desc) {
+                throw new Error("\u884D\u751F\u8D44\u4EA7\u5199\u5165\u56DE\u6267\u4E0E\u5F53\u524D\u6570\u636E\u5E93\u72B6\u6001\u4E0D\u4E00\u81F4");
+              }
+              return { asset: existing, reused: true };
+            }
+            const parent = await trx("o_assets").where({ id: raw.assetsId, projectId }).select("id", "type").first();
+            if (!parent) throw new Error("\u5173\u8054\u7684\u8D44\u4EA7\u4E0D\u5B58\u5728");
+            let assetId = normalizedId;
+            if (assetId) {
+              const existing = await trx("o_assets").where({ id: assetId, projectId, assetsId: raw.assetsId }).first();
+              const linked2 = await trx("o_scriptAssets").where({ scriptId, assetId }).first();
+              if (!existing || !linked2) throw new Error("\u884D\u751F\u8D44\u4EA7\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u3001\u5267\u96C6\u6216\u6307\u5B9A\u7684\u7236\u8D44\u4EA7");
+              const updated = await trx("o_assets").where({ id: assetId, projectId, assetsId: raw.assetsId }).update({
+                name: raw.name,
+                type: parent.type,
+                describe: raw.desc,
+                startTime: Date.now()
+              });
+              if (updated !== 1) throw new Error("\u884D\u751F\u8D44\u4EA7\u66F4\u65B0\u5931\u8D25");
+            } else {
+              const [insertedId] = await trx("o_assets").insert({
+                assetsId: raw.assetsId,
+                projectId,
+                name: raw.name,
+                type: parent.type,
+                describe: raw.desc,
+                startTime: Date.now()
+              });
+              assetId = Number(insertedId);
+              await trx("o_scriptAssets").insert({ scriptId, assetId });
+            }
+            const saved = await trx("o_assets").where({ id: assetId, projectId, assetsId: raw.assetsId }).first();
+            const linked = await trx("o_scriptAssets").where({ scriptId, assetId }).first();
+            if (!saved || !linked || saved.name !== raw.name || (saved.describe ?? "") !== raw.desc) {
+              throw new Error("\u884D\u751F\u8D44\u4EA7\u5199\u5165\u540E\u6821\u9A8C\u5931\u8D25");
+            }
+            await trx("o_agentWorkData").insert({
+              projectId,
+              episodesId: scriptId,
+              key: receiptKey,
+              data: JSON.stringify({ payloadHash, assetId, assetsId: raw.assetsId, action: "upsert" })
+            });
+            return { asset: saved, reused: false };
+          });
+          const data = {
+            id: Number(committed.asset.id),
+            assetsId: raw.assetsId,
+            projectId,
+            name: committed.asset.name,
+            type: committed.asset.type,
+            describe: committed.asset.describe,
+            startTime: committed.asset.startTime
+          };
+          const ack = await new Promise((resolve3, reject) => {
+            const timeout = setTimeout(() => reject(new Error("\u884D\u751F\u8D44\u4EA7\u5DF2\u5199\u5165\u6570\u636E\u5E93\uFF0C\u4F46\u524D\u7AEF\u540C\u6B65\u56DE\u6267\u8D85\u65F6")), 3e4);
+            socket.emit("addDeriveAsset", data, (response) => {
+              clearTimeout(timeout);
+              if (response === false || response?.success === false || response?.error) {
+                reject(new Error(response?.error ?? response?.message ?? "\u524D\u7AEF\u540C\u6B65\u884D\u751F\u8D44\u4EA7\u5931\u8D25"));
+                return;
+              }
+              resolve3(response);
+            });
+          });
+          thinking.appendText(`${committed.reused ? "\u5DF2\u590D\u7528" : "\u5DF2\u63D0\u4EA4"}\u884D\u751F\u8D44\u4EA7\uFF0CID: ${data.id}
 `);
-        } else {
-          const [insertedId] = await utils_default.db("o_assets").insert(data);
-          data.id = insertedId;
-          await utils_default.db("o_scriptAssets").insert({ scriptId, assetId: insertedId });
-          thinking.appendText(`\u5DF2\u65B0\u589E\u884D\u751F\u8D44\u4EA7\uFF0CID: ${insertedId}
-`);
+          thinking.updateTitle("\u8D44\u4EA7\u64CD\u4F5C\u5B8C\u6210");
+          thinking.complete();
+          return { success: true, requestId, id: data.id, reused: committed.reused, ack };
+        } catch (error73) {
+          const detail = `${utils_default.error(error73).message}\uFF1B\u540C\u4E00\u64CD\u4F5C\u5982\u9700\u91CD\u8BD5\uFF0C\u8BF7\u590D\u7528 requestId=${requestId}`;
+          thinking.appendText("\u8D44\u4EA7\u5199\u5165\u5931\u8D25:\n" + detail);
+          thinking.updateTitle("\u8D44\u4EA7\u64CD\u4F5C\u5931\u8D25");
+          thinking.complete();
+          throw new Error(detail);
         }
-        const res = await new Promise((resolve3) => socket.emit("addDeriveAsset", data, (res2) => resolve3(res2)));
-        thinking.updateTitle("\u8D44\u4EA7\u64CD\u4F5C\u5B8C\u6210");
-        thinking.complete();
-        return res ?? "\u64CD\u4F5C\u6210\u529F";
       }
     }),
     del_deriveAsset: tool({
-      description: "\u5220\u9664\u884D\u751F\u8D44\u4EA7",
+      description: "\u5220\u9664\u884D\u751F\u8D44\u4EA7\u3002\u5220\u9664\u4E0E requestId \u56DE\u6267\u5728\u540C\u4E00\u4E8B\u52A1\uFF1B\u5931\u8D25\u91CD\u8BD5\u5FC5\u987B\u590D\u7528\u76F8\u540C requestId\u3002",
       inputSchema: jsonSchema(
         external_exports.object({
           assetsId: external_exports.number().describe("\u5173\u8054\u7684\u8D44\u4EA7ID"),
-          id: external_exports.number().describe("\u884D\u751F\u8D44\u4EA7ID")
+          id: external_exports.number().describe("\u884D\u751F\u8D44\u4EA7ID"),
+          requestId: external_exports.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional().describe("\u53EF\u9009\u64CD\u4F5C\u6807\u8BC6\uFF1B\u5931\u8D25\u91CD\u8BD5\u5FC5\u987B\u590D\u7528\u9519\u8BEF\u4FE1\u606F\u4E2D\u7684 requestId")
         }).toJSONSchema()
       ),
-      execute: async ({ assetsId, id }) => {
+      execute: async ({ assetsId, id, requestId: rawRequestId }) => {
         const thinking = msg.thinking("\u6B63\u5728\u64CD\u4F5C\u8D44\u4EA7...");
-        const { scriptId } = resTool.data;
-        await utils_default.db("o_assets").where("id", id).del();
-        await utils_default.db("o_scriptAssets").where({ scriptId, assetId: id }).del();
-        thinking.appendText(`\u5DF2\u5220\u9664\u884D\u751F\u8D44\u4EA7\uFF0CID: ${id}
+        const { scriptId, projectId } = resTool.data;
+        const requestId = rawRequestId ?? `dd_${(0, import_node_crypto6.randomUUID)()}`;
+        const payloadHash = (0, import_node_crypto6.createHash)("sha256").update(JSON.stringify({ assetsId, id })).digest("hex");
+        const receiptKey = `deriveAssetDelete:${requestId}`;
+        try {
+          const reused = await utils_default.db.transaction(async (trx) => {
+            const priorReceipt = await trx("o_agentWorkData").where({ projectId, episodesId: scriptId, key: receiptKey }).select("data").first();
+            if (priorReceipt?.data) {
+              const prior = JSON.parse(priorReceipt.data);
+              if (prior.payloadHash !== payloadHash || Number(prior.assetId) !== id) {
+                throw new Error("\u76F8\u540C requestId \u5BF9\u5E94\u4E0D\u540C\u7684\u884D\u751F\u8D44\u4EA7\u5220\u9664\u5185\u5BB9");
+              }
+              const asset2 = await trx("o_assets").where({ id, projectId, assetsId }).first();
+              const linked2 = await trx("o_scriptAssets").where({ scriptId, assetId: id }).first();
+              if (asset2 || linked2) throw new Error("\u5220\u9664\u56DE\u6267\u5B58\u5728\uFF0C\u4F46\u5F53\u524D\u6570\u636E\u5E93\u4ECD\u5B58\u5728\u8BE5\u884D\u751F\u8D44\u4EA7\u6216\u5267\u96C6\u5173\u8054");
+              return true;
+            }
+            const linked = await trx("o_scriptAssets").where({ scriptId, assetId: id }).first();
+            const asset = await trx("o_assets").where({ id, projectId, assetsId }).first();
+            if (!linked || !asset) throw new Error("\u884D\u751F\u8D44\u4EA7\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u6216\u5267\u96C6");
+            await trx("o_scriptAssets").where({ scriptId, assetId: id }).del();
+            await trx("o_assets").where({ id, projectId, assetsId }).del();
+            const remainingAsset = await trx("o_assets").where({ id, projectId }).first();
+            const remainingLink = await trx("o_scriptAssets").where({ scriptId, assetId: id }).first();
+            if (remainingAsset || remainingLink) throw new Error("\u884D\u751F\u8D44\u4EA7\u5220\u9664\u540E\u6821\u9A8C\u5931\u8D25");
+            await trx("o_agentWorkData").insert({
+              projectId,
+              episodesId: scriptId,
+              key: receiptKey,
+              data: JSON.stringify({ payloadHash, assetId: id, assetsId, action: "delete" })
+            });
+            return false;
+          });
+          const ack = await new Promise((resolve3, reject) => {
+            const timeout = setTimeout(() => reject(new Error("\u884D\u751F\u8D44\u4EA7\u5DF2\u4ECE\u6570\u636E\u5E93\u5220\u9664\uFF0C\u4F46\u524D\u7AEF\u540C\u6B65\u56DE\u6267\u8D85\u65F6")), 3e4);
+            socket.emit("delDeriveAsset", { assetsId, id }, (response) => {
+              clearTimeout(timeout);
+              if (response === false || response?.success === false || response?.error) {
+                reject(new Error(response?.error ?? response?.message ?? "\u524D\u7AEF\u540C\u6B65\u5220\u9664\u5931\u8D25"));
+                return;
+              }
+              resolve3(response);
+            });
+          });
+          thinking.appendText(`${reused ? "\u5DF2\u590D\u7528\u5220\u9664\u56DE\u6267" : "\u5DF2\u5220\u9664"}\u884D\u751F\u8D44\u4EA7\uFF0CID: ${id}
 `);
-        const res = await new Promise((resolve3) => socket.emit("delDeriveAsset", { assetsId, id }, (res2) => resolve3(res2)));
-        thinking.updateTitle("\u8D44\u4EA7\u64CD\u4F5C\u5B8C\u6210");
-        thinking.complete();
-        return res ?? "\u5220\u9664\u6210\u529F";
+          thinking.updateTitle("\u8D44\u4EA7\u64CD\u4F5C\u5B8C\u6210");
+          thinking.complete();
+          return { success: true, requestId, id, reused, ack };
+        } catch (error73) {
+          const detail = `${utils_default.error(error73).message}\uFF1B\u540C\u4E00\u5220\u9664\u64CD\u4F5C\u5982\u9700\u91CD\u8BD5\uFF0C\u8BF7\u590D\u7528 requestId=${requestId}`;
+          thinking.appendText("\u8D44\u4EA7\u5220\u9664\u5931\u8D25:\n" + detail);
+          thinking.updateTitle("\u8D44\u4EA7\u64CD\u4F5C\u5931\u8D25");
+          thinking.complete();
+          throw new Error(detail);
+        }
       }
     }),
     generate_deriveAsset: tool({
-      description: "\u751F\u6210\u884D\u751F\u8D44\u4EA7\u56FE\u7247",
+      description: "\u751F\u6210\u884D\u751F\u8D44\u4EA7\u56FE\u7247\u3002\u76F8\u540C\u751F\u6210\u8BF7\u6C42\u91CD\u8BD5\u65F6\u5FC5\u987B\u590D\u7528 requestId\uFF0C\u907F\u514D\u91CD\u590D\u521B\u5EFA\u751F\u6210\u4EFB\u52A1\u3002",
       inputSchema: jsonSchema(
         external_exports.object({
-          ids: external_exports.array(external_exports.number()).describe("\u9700\u8981\u751F\u6210\u7684 \u884D\u751F\u8D44\u4EA7ID")
+          ids: external_exports.array(external_exports.number()).describe("\u9700\u8981\u751F\u6210\u7684 \u884D\u751F\u8D44\u4EA7ID"),
+          requestId: external_exports.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional().describe("\u53EF\u9009\u751F\u6210\u8BF7\u6C42\u6807\u8BC6\uFF1B\u5931\u8D25\u91CD\u8BD5\u5FC5\u987B\u590D\u7528\u9519\u8BEF\u4FE1\u606F\u4E2D\u7684 requestId")
         }).toJSONSchema()
       ),
-      execute: async ({ ids }) => {
+      execute: async ({ ids, requestId: rawRequestId }) => {
         const thinking = msg.thinking("\u6B63\u5728\u751F\u6210\u884D\u751F\u8D44\u4EA7...");
-        new Promise((resolve3) => socket.emit("generateDeriveAsset", { ids }, (res) => resolve3(res))).then((res) => {
-          thinking.appendText(`\u5DF2\u751F\u6210\u884D\u751F\u8D44\u4EA7\uFF0CID: ${JSON.stringify(res, null, 2)}
+        const requestId = rawRequestId ?? `ga_${(0, import_node_crypto6.randomUUID)()}`;
+        try {
+          const res = await new Promise((resolve3, reject) => {
+            const timeout = setTimeout(() => reject(new Error("\u884D\u751F\u8D44\u4EA7\u751F\u6210\u8BF7\u6C42\u8D85\u65F6")), 6e4);
+            socket.emit("generateDeriveAsset", { ids, requestId }, (ack) => {
+              clearTimeout(timeout);
+              if (ack === false || ack?.error || ack?.success === false) reject(new Error(ack?.error ?? ack?.message ?? "\u884D\u751F\u8D44\u4EA7\u751F\u6210\u5931\u8D25"));
+              else resolve3(ack);
+            });
+          });
+          thinking.appendText(`\u751F\u6210\u8BF7\u6C42\u5DF2\u786E\u8BA4\uFF0CrequestId=${requestId}\uFF0C\u56DE\u6267: ${JSON.stringify(res, null, 2)}
 `);
-          thinking.updateTitle("\u884D\u751F\u8D44\u4EA7\u5F00\u59CB\u5B8C\u6210");
+          thinking.updateTitle("\u884D\u751F\u8D44\u4EA7\u751F\u6210\u8BF7\u6C42\u5DF2\u786E\u8BA4");
           thinking.complete();
-        }).catch((e) => {
-          thinking.appendText("\u884D\u751F\u8D44\u4EA7\u751F\u6210\u5931\u8D25:\n" + utils_default.error(e).message);
+          return { success: true, requestId, ack: res ?? null };
+        } catch (error73) {
+          const detail = `${utils_default.error(error73).message}\uFF1B\u540C\u4E00\u751F\u6210\u8BF7\u6C42\u5982\u9700\u91CD\u8BD5\uFF0C\u8BF7\u590D\u7528 requestId=${requestId}`;
+          thinking.appendText("\u751F\u6210\u8BF7\u6C42\u5931\u8D25:\n" + detail);
           thinking.updateTitle("\u884D\u751F\u8D44\u4EA7\u751F\u6210\u5931\u8D25");
           thinking.complete();
-        });
-        return "\u5F00\u59CB\u751F\u6210\u884D\u751F\u8D44\u4EA7";
+          throw new Error(detail);
+        }
       }
     }),
     generate_storyboard: tool({
-      description: "\u751F\u6210\u5206\u955C\u56FE\u7247",
+      description: "\u751F\u6210\u5206\u955C\u56FE\u7247\u3002\u76F8\u540C\u751F\u6210\u8BF7\u6C42\u91CD\u8BD5\u65F6\u5FC5\u987B\u590D\u7528 requestId\uFF0C\u907F\u514D\u91CD\u590D\u521B\u5EFA\u751F\u6210\u4EFB\u52A1\u3002",
       inputSchema: jsonSchema(
         external_exports.object({
-          ids: external_exports.array(external_exports.number()).describe("\u5FC5\u987B\u83B7\u53D6\u771F\u5B9E\u7684\u5206\u955CID\uFF0C\u652F\u6301\u6279\u91CF\u751F\u6210")
+          ids: external_exports.array(external_exports.number()).describe("\u5FC5\u987B\u83B7\u53D6\u771F\u5B9E\u7684\u5206\u955CID\uFF0C\u652F\u6301\u6279\u91CF\u751F\u6210"),
+          requestId: external_exports.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional().describe("\u53EF\u9009\u751F\u6210\u8BF7\u6C42\u6807\u8BC6\uFF1B\u5931\u8D25\u91CD\u8BD5\u5FC5\u987B\u590D\u7528\u9519\u8BEF\u4FE1\u606F\u4E2D\u7684 requestId")
         }).toJSONSchema()
       ),
-      execute: async ({ ids }) => {
+      execute: async ({ ids, requestId: rawRequestId }) => {
         const thinking = msg.thinking("\u6B63\u5728\u751F\u6210\u5206\u955C...");
-        socketQueue(
-          () => new Promise(
-            (resolve3, reject) => socket.emit("generateStoryboard", { ids }, (res) => {
-              if (res?.error) return reject(new Error(res.error));
-              resolve3(res);
-            })
-          )
-        ).then((res) => {
-          thinking.appendText("\u751F\u6210\u7684\u5206\u955C\u6570\u636E:\n" + JSON.stringify(res, null, 2));
-          thinking.updateTitle("\u5206\u955C\u751F\u6210\u5B8C\u6210");
+        const requestId = rawRequestId ?? `gs_${(0, import_node_crypto6.randomUUID)()}`;
+        try {
+          const res = await socketQueue(
+            () => new Promise(
+              (resolve3, reject) => {
+                const timeout = setTimeout(() => reject(new Error("\u5206\u955C\u751F\u6210\u8BF7\u6C42\u8D85\u65F6")), 6e4);
+                socket.emit("generateStoryboard", { ids, requestId }, (res2) => {
+                  clearTimeout(timeout);
+                  if (res2?.error || res2?.success === false) return reject(new Error(res2?.error ?? res2?.message ?? "\u5206\u955C\u751F\u6210\u5931\u8D25"));
+                  resolve3(res2);
+                });
+              }
+            )
+          );
+          thinking.appendText(`\u5206\u955C\u751F\u6210\u8BF7\u6C42\u5DF2\u786E\u8BA4\uFF0CrequestId=${requestId}:
+` + JSON.stringify(res, null, 2));
+          thinking.updateTitle("\u5206\u955C\u751F\u6210\u8BF7\u6C42\u5DF2\u786E\u8BA4");
           thinking.complete();
-        }).catch((e) => {
-          thinking.appendText("\u5206\u955C\u751F\u6210\u5931\u8D25:\n" + utils_default.error(e).message);
+          return { success: true, requestId, ack: res ?? null };
+        } catch (error73) {
+          const detail = `${utils_default.error(error73).message}\uFF1B\u540C\u4E00\u751F\u6210\u8BF7\u6C42\u5982\u9700\u91CD\u8BD5\uFF0C\u8BF7\u590D\u7528 requestId=${requestId}`;
+          thinking.appendText("\u5206\u955C\u751F\u6210\u8BF7\u6C42\u5931\u8D25:\n" + detail);
           thinking.updateTitle("\u5206\u955C\u751F\u6210\u5931\u8D25");
           thinking.complete();
-        });
-        return "\u5F00\u59CB\u751F\u6210\u5206\u955C";
+          throw new Error(detail);
+        }
       }
     }),
     add_flowData_storyboard: tool({
@@ -257519,32 +259707,873 @@ var tools_default = (toolCpnfig) => {
 // src/agents/productionAgent/index.ts
 var fs11 = __toESM(require("fs"));
 var import_path10 = __toESM(require("path"));
-function buildMemPrompt(mem) {
-  let memoryContext = "";
-  if (mem.rag.length) {
-    memoryContext += `[\u76F8\u5173\u8BB0\u5FC6]
-${mem.rag.map((r) => r.content).join("\n")}`;
+
+// src/utils/agent/runtime/resultValidator.ts
+function extractSingleXmlResult(response, tag) {
+  if (!/^[A-Za-z][\w-]*$/.test(tag)) throw new Error("\u7ED3\u679C\u6807\u7B7E\u65E0\u6548");
+  const escaped = tag.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const openings = [...response.matchAll(new RegExp(`<${escaped}(?:\\s[^>]*)?>`, "g"))];
+  const closings = [...response.matchAll(new RegExp(`</${escaped}\\s*>`, "g"))];
+  if (openings.length !== 1 || closings.length !== 1) throw new Error(`\u8F93\u51FA\u4E0D\u5B8C\u6574\uFF1A\u9700\u8981\u4E14\u53EA\u80FD\u6709\u4E00\u4EFD\u975E\u7A7A\u7684 ${tag}`);
+  const open = openings[0], close = closings[0];
+  if (open.index === void 0 || close.index === void 0 || close.index < open.index + open[0].length) {
+    throw new Error(`\u8F93\u51FA\u4E0D\u5B8C\u6574\uFF1A${tag} \u6807\u7B7E\u987A\u5E8F\u9519\u8BEF`);
   }
-  if (mem.summaries.length) {
-    if (memoryContext) memoryContext += "\n\n";
-    memoryContext += `[\u5386\u53F2\u6458\u8981]
-${mem.summaries.map((s, i) => `${i + 1}. ${s.content}`).join("\n")}`;
-  }
-  if (mem.shortTerm.length) {
-    if (memoryContext) memoryContext += "\n\n";
-    memoryContext += `[\u8FD1\u671F\u5BF9\u8BDD]
-${mem.shortTerm.map((m) => `${m.role}: ${m.content}`).join("\n")}`;
-  }
-  return `## Memory
-\u4EE5\u4E0B\u662F\u4F60\u5BF9\u7528\u6237\u7684\u8BB0\u5FC6\uFF0C\u53EF\u4F5C\u4E3A\u53C2\u8003\u4F46\u4E0D\u8981\u4E3B\u52A8\u63D0\u53CA\uFF1A
-${memoryContext}`;
+  const content = response.slice(open.index + open[0].length, close.index).trim();
+  if (!content) throw new Error(`\u8F93\u51FA\u4E0D\u5B8C\u6574\uFF1A\u9700\u8981\u4E14\u53EA\u80FD\u6709\u4E00\u4EFD\u975E\u7A7A\u7684 ${tag}`);
+  return content;
 }
+
+// src/agents/productionAgent/directorPlan.ts
+function extractDirectorPlan(response) {
+  try {
+    return extractSingleXmlResult(response, "scriptPlan");
+  } catch (error73) {
+    throw new Error(`\u5BFC\u6F14\u8BA1\u5212${error73 instanceof Error ? error73.message : String(error73)}`);
+  }
+}
+async function saveDirectorPlan(db2, projectId, episodesId, plan, expectedPlan) {
+  if (!Number.isSafeInteger(projectId) || !Number.isSafeInteger(episodesId) || !plan.trim()) {
+    throw new Error("\u5BFC\u6F14\u8BA1\u5212\u7F3A\u5C11\u6709\u6548\u7684\u9879\u76EE\u3001\u5267\u96C6\u6216\u5185\u5BB9");
+  }
+  await db2.transaction(async (trx) => {
+    const script = await trx("o_script").where({ id: episodesId, projectId }).select("content").first();
+    if (!script) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C");
+    const scope = { projectId, episodesId, key: "productionAgent" };
+    const existing = await trx("o_agentWorkData").where(scope).first();
+    const current = existing ? JSON.parse(existing.data || "{}") : {
+      script: script.content ?? "",
+      scriptPlan: "",
+      assets: [],
+      storyboardTable: "",
+      storyboard: [],
+      workbench: { videoList: [] }
+    };
+    if ((current.scriptPlan ?? "") !== expectedPlan) throw new Error("\u5BFC\u6F14\u8BA1\u5212\u5728\u751F\u6210\u671F\u95F4\u5DF2\u88AB\u4FEE\u6539\uFF0C\u8BF7\u5148\u67E5\u770B\u5F53\u524D\u7248\u672C\u518D\u91CD\u8BD5");
+    const serialized = JSON.stringify({ ...current, scriptPlan: plan });
+    if (existing) {
+      await trx("o_agentWorkData").where({ id: existing.id }).update({ data: serialized, updateTime: Date.now() });
+    } else {
+      await trx("o_agentWorkData").insert({ ...scope, data: serialized, createTime: Date.now(), updateTime: Date.now() });
+    }
+    const saved = await trx("o_agentWorkData").where(scope).select("data").first();
+    if (!saved || JSON.parse(saved.data ?? "{}").scriptPlan !== plan) throw new Error("\u5BFC\u6F14\u8BA1\u5212\u5199\u5165\u540E\u6821\u9A8C\u5931\u8D25");
+  });
+}
+async function reconcileDirectorPlanOutput(db2, projectId, episodesId, output) {
+  if (!output) return null;
+  const plan = extractDirectorPlan(output);
+  const row = await db2("o_agentWorkData").where({ projectId, episodesId, key: "productionAgent" }).select("data").first();
+  if (!row?.data) return null;
+  const current = JSON.parse(row.data);
+  return current.scriptPlan === plan ? `directorPlan:${projectId}:${episodesId}` : null;
+}
+
+// src/agents/productionAgent/index.ts
+init_storyboardTable();
+
+// src/utils/agent/runtime/taskStore.ts
+var import_node_crypto7 = require("node:crypto");
+var import_promises4 = require("node:fs/promises");
+function parseJson(value) {
+  if (!value) return void 0;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return value;
+  }
+}
+var TaskStore = class {
+  constructor(db2) {
+    this.db = db2;
+  }
+  static makeStepKey(key, input) {
+    const digest = (0, import_node_crypto7.createHash)("sha256").update(`${key}
+${input}`).digest("hex").slice(0, 20);
+    return `${key}:${digest}`;
+  }
+  validateScope(input) {
+    if (!Number.isSafeInteger(input.projectId) || input.episodesId !== void 0 && !Number.isSafeInteger(input.episodesId)) {
+      throw new Error("\u4EFB\u52A1\u7F3A\u5C11\u6709\u6548\u7684\u9879\u76EE\u6216\u5267\u96C6 ID");
+    }
+    const expectedIsolationKey = input.agentType === "productionAgent" ? `${input.projectId}:productionAgent:${input.episodesId}` : `${input.projectId}:scriptAgent`;
+    if (input.isolationKey !== expectedIsolationKey || input.agentType === "productionAgent" && input.episodesId === void 0) {
+      throw new Error("\u4EFB\u52A1\u7684\u8BB0\u5FC6\u8303\u56F4\u4E0E\u9879\u76EE\u6216\u5267\u96C6\u4E0D\u5339\u914D");
+    }
+  }
+  async begin(input) {
+    this.validateScope(input);
+    const id = input.requestId && /^[a-zA-Z0-9_-]{8,128}$/.test(input.requestId) ? input.requestId : (0, import_node_crypto7.randomUUID)();
+    const inputHash = (0, import_node_crypto7.createHash)("sha256").update(input.content).digest("hex");
+    return this.db.transaction(async (trx) => {
+      const previous = await trx("o_agentRun").where({ id }).first();
+      if (previous) {
+        if (previous.agentType !== input.agentType || Number(previous.projectId) !== input.projectId || (previous.episodesId == null ? void 0 : Number(previous.episodesId)) !== input.episodesId || previous.isolationKey !== input.isolationKey || previous.inputHash !== inputHash) throw new Error("\u76F8\u540C requestId \u5BF9\u5E94\u4E0D\u540C\u4EFB\u52A1\u5185\u5BB9\uFF0C\u5DF2\u62D2\u7EDD\u91CD\u590D\u63D0\u4EA4");
+        return { id, status: previous.status, duplicate: true };
+      }
+      const now2 = Date.now();
+      await trx("o_agentRun").insert({
+        id,
+        agentType: input.agentType,
+        projectId: input.projectId,
+        episodesId: input.episodesId ?? null,
+        isolationKey: input.isolationKey,
+        inputHash,
+        inputContent: input.content,
+        status: "running",
+        createTime: now2,
+        updateTime: now2
+      });
+      return { id, status: "running", duplicate: false };
+    });
+  }
+  async beginStep(runId, stepKey, inputContent) {
+    const inputHash = (0, import_node_crypto7.createHash)("sha256").update(inputContent).digest("hex");
+    return this.db.transaction(async (trx) => {
+      const run = await trx("o_agentRun").where({ id: runId }).first();
+      if (!run || run.status !== "running") throw new Error("\u4EFB\u52A1\u5DF2\u505C\u6B62\uFF0C\u4E0D\u80FD\u7EE7\u7EED\u6267\u884C\u6B65\u9AA4");
+      const prior = await trx("o_agentStep").where({ runId, stepKey }).first();
+      if (prior) {
+        if (prior.inputHash && prior.inputHash !== inputHash) throw new Error(`\u6B65\u9AA4 ${stepKey} \u8F93\u5165\u5DF2\u53D8\u5316\uFF0C\u62D2\u7EDD\u590D\u7528\u65E7\u7ED3\u679C`);
+        if (prior.status === "completed") {
+          return { cached: true, output: prior.output ?? void 0, resultRef: prior.resultRef ?? void 0 };
+        }
+        if (prior.status === "retryable") {
+          const claimed = await trx("o_agentStep").where({ runId, stepKey, status: "retryable" }).update({
+            status: "running",
+            output: null,
+            resultRef: null,
+            error: null,
+            updateTime: Date.now()
+          });
+          if (claimed !== 1) throw new Error(`\u6B65\u9AA4 ${stepKey} \u7684\u91CD\u8BD5\u72B6\u6001\u5DF2\u53D8\u5316\uFF0C\u8BF7\u91CD\u65B0\u6838\u5BF9`);
+          return { cached: false };
+        }
+        throw new Error(`\u6B65\u9AA4 ${stepKey} \u5F53\u524D\u72B6\u6001\u4E3A ${prior.status}\uFF0C\u5FC5\u987B\u5148\u6838\u5BF9\u7ED3\u679C\u518D\u7EE7\u7EED`);
+      }
+      const now2 = Date.now();
+      await trx("o_agentStep").insert({
+        id: (0, import_node_crypto7.randomUUID)(),
+        runId,
+        stepKey,
+        inputHash,
+        inputContent,
+        status: "running",
+        createTime: now2,
+        updateTime: now2
+      });
+      return { cached: false };
+    });
+  }
+  /** 兼容旧调用；新代码优先使用 beginStep，以便恢复时复用已完成结果。 */
+  async startStep(runId, stepKey) {
+    const state = await this.beginStep(runId, stepKey, stepKey);
+    if (state.cached) throw new Error(`\u6B65\u9AA4 ${stepKey} \u5DF2\u6267\u884C\uFF0C\u4E0D\u80FD\u91CD\u590D\u8C03\u7528`);
+  }
+  async saveStepOutput(runId, stepKey, output) {
+    const count = await this.db("o_agentStep").where({ runId, stepKey, status: "running" }).update({ output, updateTime: Date.now() });
+    if (count !== 1) throw new Error(`\u6B65\u9AA4 ${stepKey} \u8F93\u51FA\u72B6\u6001\u672A\u80FD\u4FDD\u5B58`);
+  }
+  async finishStep(runId, stepKey, resultRef) {
+    await this.db.transaction(async (trx) => {
+      const unresolvedTools = await trx("o_agentToolCall").where({ runId, stepKey, sideEffect: 1 }).whereIn("status", ["running", "reconciling", "failed", "retryable"]);
+      if (unresolvedTools.length) {
+        throw new Error(`\u6B65\u9AA4 ${stepKey} \u4ECD\u6709 ${unresolvedTools.length} \u4E2A\u5199\u5DE5\u5177\u8C03\u7528\u672A\u6838\u5BF9\uFF0C\u4E0D\u80FD\u6807\u8BB0\u5B8C\u6210`);
+      }
+      const count = await trx("o_agentStep").where({ runId, stepKey, status: "running" }).update({ status: "completed", resultRef, error: null, updateTime: Date.now() });
+      if (count !== 1) throw new Error(`\u6B65\u9AA4 ${stepKey} \u5B8C\u6210\u72B6\u6001\u672A\u80FD\u4FDD\u5B58`);
+    });
+  }
+  async failStep(runId, stepKey, error73) {
+    await this.db("o_agentStep").where({ runId, stepKey, status: "running" }).update({ status: "failed", error: error73, updateTime: Date.now() });
+  }
+  /** 对已经开始但无法证明无副作用的步骤，必须进入 reconciling，而不是盲目重跑。 */
+  async markStepReconciling(runId, stepKey, error73) {
+    await this.db("o_agentStep").where({ runId, stepKey }).whereIn("status", ["running", "failed"]).update({ status: "reconciling", error: error73, updateTime: Date.now() });
+  }
+  async resolveStep(runId, stepKey, resolution, resultRef, error73) {
+    const count = await this.db("o_agentStep").where({ runId, stepKey }).whereIn("status", ["reconciling", "failed", "retryable"]).update({
+      status: resolution,
+      resultRef: resolution === "completed" ? resultRef ?? null : null,
+      error: resolution === "completed" ? null : error73 ?? (resolution === "retryable" ? "\u5DF2\u6838\u5BF9\uFF0C\u53EF\u5B89\u5168\u91CD\u8BD5" : resolution === "cancelled" ? "\u5DF2\u6838\u5BF9\u5E76\u53D6\u6D88\u8BE5\u6B65\u9AA4" : "\u5DF2\u6838\u5BF9\u4E3A\u5931\u8D25"),
+      updateTime: Date.now()
+    });
+    if (count !== 1) throw new Error(`\u6B65\u9AA4 ${stepKey} \u4E0D\u5728\u53EF\u6838\u5BF9\u72B6\u6001`);
+  }
+  async resolveToolCall(runId, id, resolution, output, error73) {
+    const count = await this.db("o_agentToolCall").where({ id, runId, sideEffect: 1 }).whereIn("status", ["running", "reconciling", "failed", "retryable"]).update({
+      status: resolution,
+      outputJson: resolution === "completed" ? JSON.stringify(output ?? null) : null,
+      error: resolution === "completed" ? null : error73 ?? (resolution === "retryable" ? "\u5DF2\u6838\u5BF9\uFF0C\u53EF\u5B89\u5168\u91CD\u8BD5" : "\u5DF2\u6838\u5BF9\u5E76\u53D6\u6D88\u8BE5\u5199\u5DE5\u5177\u8C03\u7528"),
+      updateTime: Date.now()
+    });
+    if (count !== 1) throw new Error("\u5DE5\u5177\u8C03\u7528\u4E0D\u5728\u53EF\u6838\u5BF9\u72B6\u6001");
+  }
+  async finish(runId, status, error73) {
+    await this.db.transaction(async (trx) => {
+      if (status === "completed") {
+        const [unresolvedSteps, unresolvedTools] = await Promise.all([
+          trx("o_agentStep").where({ runId }).whereIn("status", ["running", "reconciling", "failed", "retryable"]),
+          trx("o_agentToolCall").where({ runId, sideEffect: 1 }).whereIn("status", ["running", "reconciling", "failed", "retryable"])
+        ]);
+        if (unresolvedSteps.length || unresolvedTools.length) {
+          throw new Error(`\u4EFB\u52A1\u4ECD\u6709\u5F85\u5904\u7406\u72B6\u6001\uFF1A\u6B65\u9AA4 ${unresolvedSteps.length} \u4E2A\uFF0C\u5199\u5DE5\u5177 ${unresolvedTools.length} \u4E2A\uFF0C\u4E0D\u80FD\u6807\u8BB0\u5B8C\u6210`);
+        }
+      } else {
+        await trx("o_agentStep").where({ runId, status: "running" }).update({ status: "reconciling", error: error73 ?? null, updateTime: Date.now() });
+        await trx("o_agentToolCall").where({ runId, status: "running", sideEffect: 1 }).update({ status: "reconciling", error: error73 ?? null, updateTime: Date.now() });
+      }
+      await trx("o_agentRun").where({ id: runId, status: "running" }).update({ status, error: error73 ?? null, updateTime: Date.now() });
+    });
+  }
+  async getRun(runId) {
+    const run = await this.db("o_agentRun").where({ id: runId }).first();
+    if (!run) throw new Error("\u4EFB\u52A1\u4E0D\u5B58\u5728");
+    return run;
+  }
+  async resume(runId, scope) {
+    this.validateScope(scope);
+    return this.db.transaction(async (trx) => {
+      const run = await trx("o_agentRun").where({ id: runId }).first();
+      if (!run) throw new Error("\u4EFB\u52A1\u4E0D\u5B58\u5728");
+      if (run.agentType !== scope.agentType || Number(run.projectId) !== scope.projectId || (run.episodesId == null ? void 0 : Number(run.episodesId)) !== scope.episodesId || run.isolationKey !== scope.isolationKey) throw new Error("\u4EFB\u52A1\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u6216 Agent \u4E0A\u4E0B\u6587");
+      if (!["reconciling", "failed"].includes(run.status)) throw new Error(`\u4EFB\u52A1\u5F53\u524D\u72B6\u6001\u4E3A ${run.status}\uFF0C\u4E0D\u80FD\u6062\u590D`);
+      const unresolvedSteps = await trx("o_agentStep").where({ runId }).whereIn("status", ["running", "reconciling", "failed"]);
+      if (unresolvedSteps.length) {
+        throw new Error(`\u4ECD\u6709 ${unresolvedSteps.length} \u4E2A\u6B65\u9AA4\u9700\u8981\u6838\u5BF9\uFF0C\u4E0D\u80FD\u81EA\u52A8\u6062\u590D`);
+      }
+      const unresolvedTools = await trx("o_agentToolCall").where({ runId, sideEffect: 1 }).whereIn("status", ["running", "reconciling", "failed"]);
+      if (unresolvedTools.length) {
+        throw new Error(`\u4ECD\u6709 ${unresolvedTools.length} \u4E2A\u5199\u5DE5\u5177\u8C03\u7528\u9700\u8981\u6838\u5BF9\uFF0C\u4E0D\u80FD\u81EA\u52A8\u6062\u590D`);
+      }
+      if (typeof run.inputContent !== "string" || !run.inputContent.length) {
+        throw new Error("\u65E7\u4EFB\u52A1\u672A\u4FDD\u5B58\u539F\u59CB\u8F93\u5165\uFF0C\u65E0\u6CD5\u81EA\u52A8\u6062\u590D");
+      }
+      const updated = await trx("o_agentRun").where({ id: runId, status: run.status }).update({ status: "running", error: null, updateTime: Date.now() });
+      if (updated !== 1) throw new Error("\u4EFB\u52A1\u72B6\u6001\u5DF2\u53D8\u5316\uFF0C\u8BF7\u5237\u65B0\u540E\u91CD\u8BD5");
+      return { id: runId, content: run.inputContent };
+    });
+  }
+  async reconcile(runId) {
+    const run = await this.db("o_agentRun").where({ id: runId }).first();
+    if (!run) throw new Error("\u4EFB\u52A1\u4E0D\u5B58\u5728");
+    const [steps, toolCalls] = await Promise.all([
+      this.db("o_agentStep").where({ runId }).orderBy("createTime", "asc"),
+      this.db("o_agentToolCall").where({ runId }).orderBy("createTime", "asc")
+    ]);
+    return {
+      status: run.status,
+      steps: steps.map((step) => ({
+        stepKey: step.stepKey,
+        status: step.status,
+        resultRef: step.resultRef ?? void 0,
+        output: step.output ?? void 0,
+        error: step.error ?? void 0
+      })),
+      toolCalls: toolCalls.map((call) => ({
+        id: call.id,
+        stepKey: call.stepKey ?? void 0,
+        toolName: call.toolName,
+        status: call.status,
+        sideEffect: Number(call.sideEffect) === 1,
+        input: parseJson(call.inputJson),
+        output: parseJson(call.outputJson),
+        error: call.error ?? void 0
+      }))
+    };
+  }
+  async list(agentType, projectId, episodesId) {
+    const query = this.db("o_agentRun").where({ agentType, projectId });
+    if (episodesId !== void 0) query.where({ episodesId });
+    return query.select("id", "status", "error", "createTime", "updateTime").orderBy("createTime", "desc").limit(20);
+  }
+  async buildResumePrompt(runId) {
+    const [steps, toolCalls] = await Promise.all([
+      this.db("o_agentStep").where({ runId }).select("stepKey", "status", "inputContent", "resultRef", "error", "createTime").orderBy("createTime", "asc"),
+      this.db("o_agentToolCall").where({ runId, sideEffect: 1 }).select("stepKey", "toolName", "status", "inputJson", "outputJson", "error", "createTime").orderBy("createTime", "asc")
+    ]);
+    if (!steps.length && !toolCalls.length) return "";
+    const stepLines = steps.slice(-30).map((step) => {
+      let agentKey = step.stepKey;
+      let prompt = "";
+      try {
+        const input = JSON.parse(step.inputContent ?? "{}");
+        if (typeof input.key === "string") agentKey = input.key;
+        if (typeof input.prompt === "string") prompt = input.prompt.replace(/\s+/g, " ").trim().slice(0, 500);
+      } catch {
+      }
+      const result = step.resultRef ? `\uFF1BresultRef=${step.resultRef}` : "";
+      const reason = step.error ? `\uFF1B\u8BF4\u660E=${String(step.error).replace(/\s+/g, " ").slice(0, 240)}` : "";
+      return `- [${step.status}] ${agentKey}${prompt ? `\uFF1B\u539F\u4EFB\u52A1=${prompt}` : ""}${result}${reason}`;
+    });
+    const toolLines = toolCalls.slice(-30).map((call) => {
+      let input = "";
+      try {
+        input = JSON.stringify(JSON.parse(call.inputJson ?? "{}"));
+      } catch {
+        input = String(call.inputJson ?? "");
+      }
+      if (input.length > 500) input = input.slice(0, 500) + "\u2026";
+      const owner = call.stepKey ? `\uFF1Bstep=${call.stepKey}` : "\uFF1Bdecision-level";
+      const reason = call.error ? `\uFF1B\u8BF4\u660E=${String(call.error).replace(/\s+/g, " ").slice(0, 200)}` : "";
+      return `- [${call.status}] ${call.toolName}${owner}\uFF1Binput=${input}${reason}`;
+    });
+    return [
+      "## Agent Runtime \u4EFB\u52A1\u68C0\u67E5\u70B9",
+      "\u4EE5\u4E0B\u72B6\u6001\u6765\u81EA\u672C\u5730\u6570\u636E\u5E93\uFF0C\u4E0D\u662F\u7528\u6237\u7684\u81EA\u7136\u8BED\u8A00\u8981\u6C42\u3002\u4F60\u5FC5\u987B\u7528\u5B83\u907F\u514D\u91CD\u590D\u4E1A\u52A1\u64CD\u4F5C\uFF1A",
+      ...stepLines.length ? ["### \u5B50\u4EFB\u52A1\u6B65\u9AA4", ...stepLines] : [],
+      ...toolLines.length ? ["### \u5199\u5DE5\u5177\u8C03\u7528", ...toolLines] : [],
+      "",
+      "\u6062\u590D\u89C4\u5219\uFF1A",
+      "1. completed \u6B65\u9AA4\u548C completed \u5199\u5DE5\u5177\u5DF2\u7ECF\u5B8C\u6210\uFF0C\u7981\u6B62\u518D\u6B21\u6D3E\u53D1\u76F8\u540C\u4E1A\u52A1\u64CD\u4F5C\uFF1Bcancelled \u8868\u793A\u5DF2\u4EBA\u5DE5\u786E\u8BA4\u4E0D\u518D\u7EE7\u7EED\uFF0C\u4E5F\u4E0D\u5F97\u81EA\u52A8\u91CD\u653E\u3002",
+      "2. retryable \u6B65\u9AA4\u9700\u8981\u7EE7\u7EED\u65F6\uFF0C\u5FC5\u987B\u590D\u7528\u4E0A\u9762\u8BB0\u5F55\u7684\u539F\u4EFB\u52A1\u63CF\u8FF0\uFF0C\u4E0D\u8981\u6539\u5199\u6210\u65B0\u7684 prompt\uFF0C\u4EE5\u4FBF\u547D\u4E2D\u540C\u4E00 checkpoint\u3002",
+      "3. \u4E0D\u8981\u628A\u5386\u53F2\u53E3\u5934\u56DE\u590D\u5F53\u4F5C\u6210\u529F\u4F9D\u636E\uFF1B\u53EA\u6709 completed/resultRef \u6216 completed \u5DE5\u5177\u56DE\u6267\u624D\u4EE3\u8868\u5DF2\u786E\u8BA4\u5B8C\u6210\u3002",
+      "4. decision-level \u7684 completed \u5199\u5DE5\u5177\u540C\u6837\u4E0D\u5F97\u91CD\u590D\u8C03\u7528\u3002",
+      "5. \u5982\u679C\u76EE\u6807\u5DF2\u7ECF\u7531 completed \u72B6\u6001\u5168\u90E8\u6EE1\u8DB3\uFF0C\u76F4\u63A5\u603B\u7ED3\u5F53\u524D\u72B6\u6001\uFF0C\u4E0D\u8981\u4E3A\u4E86\u201C\u786E\u8BA4\u201D\u800C\u518D\u6B21\u8C03\u7528\u5199\u5DE5\u5177\u3002"
+    ].join("\n");
+  }
+  async readSkill(runId, filePath) {
+    const prior = await this.db("o_agentSkillSnapshot").where({ runId, filePath }).first();
+    if (prior) return prior.content;
+    const content = await (0, import_promises4.readFile)(filePath, "utf-8");
+    const contentHash = (0, import_node_crypto7.createHash)("sha256").update(content).digest("hex");
+    return this.db.transaction(async (trx) => {
+      const existing = await trx("o_agentSkillSnapshot").where({ runId, filePath }).first();
+      if (existing) return existing.content;
+      await trx("o_agentSkillSnapshot").insert({ runId, filePath, contentHash, content, createTime: Date.now() });
+      return content;
+    });
+  }
+};
+
+// src/agents/productionAgent/index.ts
+init_storyboardProgress();
+
+// src/agents/productionAgent/storyboardTaskRunner.ts
+var import_node_crypto8 = require("node:crypto");
+init_storyboardProgress();
+async function runStoryboardTask(options) {
+  const { db: db2, projectId, episodesId, abortSignal, generate } = options;
+  const initial = await readStoryboardProgress(db2, projectId, episodesId);
+  if (!initial.valid) throw new Error(initial.conflict?.message ?? "\u5206\u955C\u4EFB\u52A1\u8FDB\u5EA6\u65E0\u6548");
+  if (initial.mode !== "scene" && initial.mode !== "empty") {
+    throw new Error("\u5DF2\u6709\u975E\u9010\u573A\u5206\u955C\uFF0C\u8BF7\u5148\u6838\u5BF9\u5386\u53F2\u6570\u636E\uFF1B\u4E0D\u5F97\u81EA\u52A8\u8986\u76D6");
+  }
+  const total = initial.total ?? options.total;
+  if (!Number.isSafeInteger(total) || !total || total < 1 || total > 1e3) throw new Error("\u65E0\u6CD5\u786E\u5B9A\u5206\u955C\u603B\u573A\u6570\uFF0C\u8BF7\u5148\u6838\u5BF9\u5BFC\u6F14\u8BA1\u5212");
+  if (options.total !== void 0 && options.total !== total) throw new Error("\u672C\u6B21\u603B\u573A\u6570\u4E0E\u5DF2\u4FDD\u5B58\u4EFB\u52A1\u4E0D\u4E00\u81F4");
+  const taskId = initial.taskId ?? `storyboard_${(0, import_node_crypto8.randomUUID)().replace(/-/g, "")}`;
+  const maxAttempts = Math.max(1, Math.min(3, options.maxAttemptsPerScene ?? 2));
+  const maxScenes = Math.max(1, Math.min(total, options.maxScenes ?? total));
+  for (let iteration = 0; iteration < maxScenes; iteration++) {
+    if (abortSignal?.aborted) throw new Error("\u5206\u955C\u751F\u6210\u5DF2\u505C\u6B62\uFF0C\u5DF2\u4FDD\u5B58\u573A\u6B21\u4FDD\u7559");
+    const progress = await readStoryboardProgress(db2, projectId, episodesId);
+    if (!progress.valid) throw new Error(progress.conflict?.message ?? "\u5206\u955C\u4EFB\u52A1\u53D1\u751F\u51B2\u7A81");
+    if (progress.exists && (progress.taskId !== taskId || progress.total !== total)) {
+      throw new Error("\u4EFB\u52A1\u6807\u8BC6\u6216\u603B\u573A\u6570\u88AB\u4FEE\u6539\uFF0C\u505C\u6B62\u81EA\u52A8\u7EED\u5199");
+    }
+    if (progress.complete) return progress;
+    const scene = progress.exists ? progress.nextScene : 1;
+    if (!scene) throw new Error("\u5206\u955C\u5C1A\u672A\u5B8C\u6210\u5374\u627E\u4E0D\u5230\u7F3A\u5931\u573A\u6B21");
+    let lastError;
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      if (abortSignal?.aborted) throw new Error("\u5206\u955C\u751F\u6210\u5DF2\u505C\u6B62\uFF0C\u5DF2\u4FDD\u5B58\u573A\u6B21\u4FDD\u7559");
+      try {
+        await generate({ scene, taskId, total, attempt });
+        const checked = await readStoryboardProgress(db2, projectId, episodesId);
+        if (!checked.valid) throw new Error(checked.conflict?.message ?? "\u4FDD\u5B58\u540E\u7684\u8FDB\u5EA6\u6821\u9A8C\u5931\u8D25");
+        if (checked.taskId !== taskId || checked.total !== total) throw new Error("\u5F53\u524D\u4EFB\u52A1\u5DF2\u88AB\u66FF\u6362");
+        if (checked.savedScenes.includes(scene)) {
+          lastError = void 0;
+          break;
+        }
+        lastError = new Error(`\u7B2C${scene}\u573A\u6CA1\u6709\u6570\u636E\u5E93\u63D0\u4EA4\u56DE\u6267`);
+      } catch (error73) {
+        lastError = error73;
+        const checked = await readStoryboardProgress(db2, projectId, episodesId);
+        if (!checked.valid) throw new Error(checked.conflict?.message ?? "\u6570\u636E\u5E93\u51B2\u7A81\uFF0C\u505C\u6B62\u91CD\u8BD5");
+        if (checked.exists && (checked.taskId !== taskId || checked.total !== total)) throw new Error("\u5F53\u524D\u4EFB\u52A1\u5DF2\u5207\u6362\uFF0C\u505C\u6B62\u91CD\u8BD5");
+        if (checked.savedScenes.includes(scene)) {
+          lastError = void 0;
+          break;
+        }
+      }
+      if (lastError && attempt === maxAttempts) {
+        throw new Error(`\u7B2C${scene}\u573A\u672A\u80FD\u786E\u8BA4\u5199\u5165\uFF1A${lastError instanceof Error ? lastError.message : String(lastError)}`);
+      }
+    }
+  }
+  const final = await readStoryboardProgress(db2, projectId, episodesId);
+  if (!final.valid || final.taskId !== taskId || final.total !== total) throw new Error("\u7ED3\u675F\u524D\u7684\u5206\u955C\u4EFB\u52A1\u8FDB\u5EA6\u6821\u9A8C\u5931\u8D25");
+  if (maxScenes >= total && !final.complete) throw new Error("\u5168\u5267\u5206\u955C\u5C1A\u672A\u5B8C\u6574\u4FDD\u5B58\uFF0C\u4E0D\u80FD\u62A5\u544A\u5B8C\u6210");
+  return final;
+}
+
+// src/agents/productionAgent/index.ts
+init_storyboardValidator();
+
+// src/agents/productionAgent/storyboardRevisionTool.ts
+init_dist22();
+init_zod();
+init_storyboardProgress();
+init_storyboardTable();
+init_storyboardRevision();
+init_storyboardValidator();
+
+// src/agents/productionAgent/storyboardRebuild.ts
+var import_node_crypto10 = require("node:crypto");
+init_storyboardProgress();
+async function rebuildStoryboardTask(db2, request) {
+  const { projectId, episodesId, expectedTaskId, expectedRevision, expectedPlanHash, total, reason } = request;
+  if (![projectId, episodesId, total].every((n) => Number.isSafeInteger(n) && n > 0) || total > 1e3 || !Number.isSafeInteger(expectedRevision) || expectedRevision < 0 || !/^[A-Za-z0-9_-]{8,128}$/.test(expectedTaskId) || !/^[a-f0-9]{64}$/.test(expectedPlanHash) || typeof reason !== "string" || !reason.trim() || reason.length > 2e3) {
+    throw new Error("\u91CD\u5EFA\u53C2\u6570\u65E0\u6548\uFF1A\u5FC5\u987B\u660E\u786E\u65E7\u4EFB\u52A1\u6807\u8BC6\u3001\u65E7\u7248\u672C\u3001\u6700\u65B0\u5BFC\u6F14\u8BA1\u5212\u54C8\u5E0C\u548C\u603B\u573A\u6570");
+  }
+  return db2.transaction(async (trx) => {
+    const script = await trx("o_script").where({ id: episodesId, projectId }).select("content").first();
+    if (!script) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C");
+    const scope = { projectId, episodesId, key: "productionAgent" };
+    const row = await trx("o_agentWorkData").where(scope).select("id", "data").first();
+    if (!row?.data) throw new Error("\u5DE5\u4F5C\u533A\u6CA1\u6709\u53EF\u91CD\u5EFA\u7684\u9010\u573A\u4EFB\u52A1");
+    const data = JSON.parse(row.data);
+    const table = typeof data.storyboardTable === "string" ? data.storyboardTable : "";
+    const previous = data.storyboardTableProgress;
+    const coherent = inspectStoryboardProgress(table, previous);
+    if (!coherent.valid || coherent.mode !== "scene" || !previous) {
+      throw new Error(`\u65E7\u4EFB\u52A1\u6B63\u6587\u4E0E\u8FDB\u5EA6\u4E0D\u4E00\u81F4\uFF0C\u4E0D\u80FD\u81EA\u52A8\u91CD\u5EFA\uFF1A${coherent.conflict?.message ?? "\u65E7\u4EFB\u52A1\u8FDB\u5EA6\u4E0D\u53EF\u6838\u9A8C"}`);
+    }
+    if (previous.taskId !== expectedTaskId || previous.revision !== expectedRevision) {
+      throw new Error("\u65E7\u4EFB\u52A1\u6216\u7248\u672C\u5DF2\u53D8\u5316\uFF0C\u8BF7\u91CD\u65B0\u8BFB\u53D6\u8FDB\u5EA6\u540E\u518D\u91CD\u5EFA");
+    }
+    const currentPlan = typeof data.scriptPlan === "string" ? data.scriptPlan : "";
+    const planHash = hashStoryboardSource(currentPlan);
+    if (!currentPlan.trim() || planHash !== expectedPlanHash) {
+      throw new Error("\u6700\u65B0\u5BFC\u6F14\u8BA1\u5212\u4E3A\u7A7A\u6216\u5DF2\u518D\u6B21\u4FEE\u6539\uFF0C\u8BF7\u91CD\u65B0\u8BFB\u53D6\u5BFC\u6F14\u8BA1\u5212");
+    }
+    const declared = currentPlan.match(/共规划\s*(\d+)\s*个?场/);
+    if (declared && Number(declared[1]) !== total) throw new Error("\u91CD\u5EFA\u573A\u6570\u4E0E\u6700\u65B0\u5BFC\u6F14\u8BA1\u5212\u4E0D\u4E00\u81F4");
+    const sourceHash = hashStoryboardSource(String(script.content ?? ""));
+    const savedScenes = coherent.savedScenes;
+    const archiveId = `storyboard_archive_${(0, import_node_crypto10.randomUUID)().replace(/-/g, "")}`;
+    const newTaskId = `storyboard_${(0, import_node_crypto10.randomUUID)().replace(/-/g, "")}`;
+    const archivedAt = Date.now();
+    const archive = {
+      archiveId,
+      status: "superseded",
+      reason: reason.trim(),
+      archivedAt,
+      previousTaskId: previous.taskId,
+      previousRevision: previous.revision,
+      previousSavedScenes: savedScenes,
+      previousTable: table,
+      previousProgress: previous,
+      previousTableHash: hashStoryboardSource(table),
+      replacementTaskId: newTaskId,
+      replacementPlanHash: planHash
+    };
+    const nextProgress = {
+      taskId: newTaskId,
+      total,
+      revision: 0,
+      scenes: {},
+      complete: false,
+      sourceHash,
+      planHash,
+      updatedAt: archivedAt
+    };
+    const nextData = {
+      ...data,
+      storyboardTable: "",
+      storyboardTableProgress: nextProgress,
+      storyboardTaskArchives: [...Array.isArray(data.storyboardTaskArchives) ? data.storyboardTaskArchives : [], archive]
+    };
+    const archiveKey = `storyboardTaskArchive:${archiveId}`;
+    await trx("o_agentWorkData").insert({
+      projectId,
+      episodesId,
+      key: archiveKey,
+      data: JSON.stringify(archive)
+    });
+    const payload = JSON.stringify(nextData);
+    const affected = await trx("o_agentWorkData").where({ id: row.id, data: row.data }).update({ data: payload });
+    if (affected !== 1) throw new Error("\u91CD\u5EFA\u65F6\u5DE5\u4F5C\u533A\u53D1\u751F\u53D8\u5316\uFF0C\u65E7\u4EFB\u52A1\u672A\u4F5C\u5E9F");
+    const saved = await trx("o_agentWorkData").where({ id: row.id }).select("data").first();
+    const savedArchive = await trx("o_agentWorkData").where({ projectId, episodesId, key: archiveKey }).select("data").first();
+    if (!saved || saved.data !== payload || savedArchive?.data !== JSON.stringify(archive)) {
+      throw new Error("\u65E7\u7A3F\u5F52\u6863\u6216\u65B0\u5206\u955C\u4EFB\u52A1\u5199\u5165\u540E\u8BFB\u56DE\u6821\u9A8C\u5931\u8D25");
+    }
+    return {
+      archiveId,
+      archivedTaskId: previous.taskId,
+      archivedRevision: previous.revision,
+      archivedSavedScenes: savedScenes,
+      archivedSceneCount: savedScenes.length,
+      taskId: newTaskId,
+      total,
+      revision: 0,
+      savedScenes: [],
+      missingScenes: Array.from({ length: total }, (_, i) => i + 1),
+      nextScene: 1,
+      storyboardTable: "",
+      storyboardTableProgress: nextProgress,
+      note: "\u65E7\u4EFB\u52A1\u53CA\u5168\u90E8\u5DF2\u4FDD\u5B58\u573A\u6B21\u5DF2\u72EC\u7ACB\u5F52\u6863\uFF1B\u65B0\u4EFB\u52A1\u4F7F\u7528\u6700\u65B0\u5BFC\u6F14\u8BA1\u5212\uFF0C\u4ECE\u7B2C1\u573A\u5F00\u59CB\u3002"
+    };
+  });
+}
+async function getStoryboardRebuildContext(db2, projectId, episodesId) {
+  const progress = await readStoryboardProgress(db2, projectId, episodesId);
+  const row = await db2("o_agentWorkData").where({ projectId, episodesId, key: "productionAgent" }).select("data").first();
+  const data = row?.data ? JSON.parse(row.data) : {};
+  const table = typeof data.storyboardTable === "string" ? data.storyboardTable : "";
+  const coherent = inspectStoryboardProgress(table, data.storyboardTableProgress);
+  return {
+    ...progress,
+    actualSavedScenes: coherent.valid ? coherent.savedScenes : null,
+    actualSceneCount: coherent.valid ? coherent.savedScenes.length : null,
+    tableExists: Boolean(table.trim()),
+    currentPlanHash: hashStoryboardSource(typeof data.scriptPlan === "string" ? data.scriptPlan : ""),
+    archiveCount: Array.isArray(data.storyboardTaskArchives) ? data.storyboardTaskArchives.length : 0
+  };
+}
+
+// src/agents/productionAgent/storyboardRevisionTool.ts
+function createStoryboardRevisionTool(options) {
+  return tool({
+    description: "\u4FEE\u8BA2\u5DF2\u6709\u5206\u955C\u573A\u6B21\u3002\u82E5\u7528\u6237\u660E\u786E\u8981\u6C42\u4EE5\u6700\u65B0\u5BFC\u6F14\u8BA1\u5212\u91CD\u65B0\u6784\u5EFA\u5168\u90E8\u573A\u6B21\u4E14\u65E7\u4EFB\u52A1\u53D1\u751F\u8BA1\u5212\u51B2\u7A81\uFF0C\u53EF\u4F7F\u7528 rebuild=true\u3001scene=0\u3001confirmation=REBUILD_LATEST_PLAN \u5148\u5F52\u6863\u65E7\u7A3F\u5E76\u521D\u59CB\u5316\u5168\u65B0\u4EFB\u52A1\uFF1B\u7136\u540E\u5FC5\u987B\u8C03\u7528 run_sub_agent_storyboard_table \u4ECE\u7B2C1\u573A\u751F\u6210\u3002\u7981\u6B62\u628A PLAN_CHANGED \u5F53\u4F5C\u5DF2\u4FDD\u5B580\u573A\u3002\u666E\u901A\u5355\u573A\u4FEE\u6539\u5FC5\u987B\u4F7F\u7528 scene>=1\u3002",
+    inputSchema: jsonSchema(external_exports.object({
+      scene: external_exports.number().int().min(0).max(1e3).describe("\u666E\u901A\u4FEE\u8BA2\u4F20\u5DF2\u4FDD\u5B58\u573A\u6B211..M\uFF1B\u6574\u96C6\u91CD\u5EFA\u4F200"),
+      instruction: external_exports.string().min(1).max(2e3).describe("\u7528\u6237\u5DF2\u786E\u8BA4\u7684\u5177\u4F53\u4FEE\u8BA2\u8981\u6C42\uFF1B\u91CD\u5EFA\u65F6\u5FC5\u987B\u660E\u786E\u8BF4\u660E\u4EE5\u6700\u65B0\u5BFC\u6F14\u8BA1\u5212\u91CD\u65B0\u6784\u5EFA"),
+      rebuild: external_exports.boolean().optional().describe("\u4EC5\u5F53\u7528\u6237\u660E\u786E\u6388\u6743\u4F5C\u5E9F\u65E7\u4EFB\u52A1\u5E76\u6309\u6700\u65B0\u5BFC\u6F14\u8BA1\u5212\u5168\u5267\u91CD\u5EFA\u65F6\u8BBE\u4E3Atrue"),
+      total: external_exports.number().int().min(1).max(1e3).optional().describe("\u91CD\u5EFA\u65F6\u5FC5\u987B\u4F20\u6700\u65B0\u5BFC\u6F14\u8BA1\u5212\u603B\u573A\u6570"),
+      confirmation: external_exports.literal("REBUILD_LATEST_PLAN").optional().describe("\u7528\u6237\u660E\u786E\u8981\u6C42\u91CD\u5EFA\u65F6\u624D\u53EF\u63D0\u4F9B\u672C\u786E\u8BA4\u503C")
+    }).toJSONSchema()),
+    execute: async ({ scene, instruction, rebuild, total, confirmation }) => {
+      const { db: db2, projectId, episodesId, abortSignal } = options;
+      if (abortSignal?.aborted) throw new Error("\u7528\u6237\u5DF2\u505C\u6B62\u5206\u955C\u4EFB\u52A1");
+      if (rebuild) {
+        if (scene !== 0 || confirmation !== "REBUILD_LATEST_PLAN" || !total || !/重新(?:构建|生成|制作)|重建|从头生成/.test(instruction) || !/最新导演计划|最新导演规划|当前导演计划/.test(instruction)) {
+          throw new Error("\u91CD\u5EFA\u5FC5\u987B\u660E\u786E\u6307\u5B9A\u6700\u65B0\u5BFC\u6F14\u8BA1\u5212\u3001\u603B\u573A\u6570\u548C\u7528\u6237\u786E\u8BA4\uFF1B\u4E0D\u80FD\u51ED\u76D1\u5236\u5EFA\u8BAE\u6E05\u7A7A\u65E7\u4EFB\u52A1");
+        }
+        const context2 = await getStoryboardRebuildContext(db2, projectId, episodesId);
+        if (!context2.taskId || !context2.exists || context2.actualSavedScenes === null) {
+          throw new Error("\u65E7\u4EFB\u52A1\u7F3A\u5931\u6216\u5176\u6B63\u6587\u4E0E\u8FDB\u5EA6\u4E0D\u4E00\u81F4\uFF0C\u4E0D\u80FD\u81EA\u52A8\u91CD\u5EFA\uFF1B\u8BF7\u5148\u6838\u5BF9\u6570\u636E\u5E93");
+        }
+        const rebuilt = await rebuildStoryboardTask(db2, {
+          projectId,
+          episodesId,
+          expectedTaskId: context2.taskId,
+          expectedRevision: context2.revision,
+          expectedPlanHash: context2.currentPlanHash,
+          total,
+          reason: instruction
+        });
+        options.notify({
+          episodesId,
+          storyboardTable: rebuilt.storyboardTable,
+          storyboardTableProgress: rebuilt.storyboardTableProgress
+        });
+        return {
+          rebuildInitialized: true,
+          archivedTaskId: rebuilt.archivedTaskId,
+          archivedRevision: rebuilt.archivedRevision,
+          archivedSavedScenes: rebuilt.archivedSavedScenes,
+          archivedSceneCount: rebuilt.archivedSceneCount,
+          archiveId: rebuilt.archiveId,
+          taskId: rebuilt.taskId,
+          total: rebuilt.total,
+          nextScene: 1,
+          savedScenes: rebuilt.savedScenes,
+          missingScenes: rebuilt.missingScenes,
+          complete: false,
+          nextAction: "run_sub_agent_storyboard_table",
+          message: `\u65E7\u4EFB\u52A1\u5DF2\u6709${rebuilt.archivedSceneCount}\u573A\uFF0C\u5DF2\u5B8C\u6574\u5F52\u6863\u3002\u65B0\u4EFB\u52A1\u5DF2\u7ED1\u5B9A\u6700\u65B0\u5BFC\u6F14\u8BA1\u5212\uFF1B\u8BF7\u7ACB\u5373\u8C03\u7528 run_sub_agent_storyboard_table\uFF0C\u4EE5 scope=full\u3001total=${rebuilt.total} \u4ECE\u7B2C1\u573A\u9010\u573A\u91CD\u5EFA\u3002\u5C1A\u672A\u751F\u6210\u4EFB\u4F55\u65B0\u573A\u6B21\u3002`
+        };
+      }
+      if (scene < 1) throw new Error("\u666E\u901A\u4FEE\u8BA2\u5FC5\u987B\u6307\u5B9A\u5DF2\u4FDD\u5B58\u573A\u6B21\uFF1B\u6574\u96C6\u91CD\u5EFA\u9700\u663E\u5F0F\u786E\u8BA4");
+      const before = await readStoryboardProgress(db2, projectId, episodesId);
+      if (!before.valid || before.mode !== "scene" || !before.taskId || !before.total) {
+        throw new Error(before.conflict?.message ?? "\u5F53\u524D\u5206\u955C\u4E0D\u662F\u53EF\u5B89\u5168\u4FEE\u8BA2\u7684\u9010\u573A\u4EFB\u52A1\uFF0C\u8BF7\u5148\u6838\u5BF9\u8FDB\u5EA6");
+      }
+      if (!before.savedScenes.includes(scene)) throw new Error(`\u7B2C${scene}\u573A\u672A\u4FDD\u5B58\uFF1B\u8BF7\u5148\u8865\u7F3A\u573A\u800C\u4E0D\u662F\u8C03\u7528\u4FEE\u8BA2\u5DE5\u5177`);
+      const snapshot = await readStoryboardTableSnapshot(db2, projectId, episodesId);
+      if (snapshot.storyboardTableProgress?.taskId !== before.taskId || snapshot.storyboardTableProgress?.revision !== before.revision) {
+        throw new Error("\u4FEE\u8BA2\u5F00\u59CB\u524D\u5DE5\u4F5C\u533A\u53D1\u751F\u53D8\u5316\uFF0C\u8BF7\u91CD\u65B0\u8BFB\u53D6\u8FDB\u5EA6");
+      }
+      const original = snapshot.storyboardTableProgress.scenes[String(scene)];
+      if (typeof original !== "string" || !original.trim()) throw new Error(`\u7B2C${scene}\u573A\u7F3A\u5C11\u539F\u7A3F`);
+      const script = await db2("o_script").where({ id: episodesId, projectId }).select("content").first();
+      if (!script) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C");
+      const sourceScene = extractSourceScene(String(script.content ?? ""), scene);
+      const text2 = await options.generate({
+        instruction,
+        scene,
+        total: before.total,
+        taskId: before.taskId,
+        original,
+        sourceScene
+      });
+      if (abortSignal?.aborted) throw new Error("\u7528\u6237\u5DF2\u505C\u6B62\u5206\u955C\u4FEE\u8BA2\uFF0C\u672A\u63D0\u4EA4\u751F\u6210\u7ED3\u679C");
+      const parsed = extractStoryboardTable(text2);
+      if (parsed.mode !== "scene" || parsed.scene !== scene || parsed.total !== before.total || parsed.taskId !== before.taskId) {
+        throw new Error(`\u4FEE\u8BA2\u8F93\u51FA\u4E0D\u7B26\u5408\u56FA\u5B9A\u573A\u6B21/task/total \u534F\u8BAE\uFF1B\u7B2C${scene}\u573A\u65E7\u7A3F\u4FDD\u6301\u4E0D\u53D8`);
+      }
+      const committed = await reviseStoryboardScene(db2, {
+        projectId,
+        episodesId,
+        scene,
+        taskId: before.taskId,
+        expectedRevision: before.revision,
+        expectedSceneHash: storyboardSceneHash(original),
+        revisedScene: parsed.content,
+        reason: instruction
+      });
+      if (!committed.changed) throw new Error(`\u7B2C${scene}\u573A\u8F93\u51FA\u4E0E\u6570\u636E\u5E93\u65E7\u7A3F\u5B8C\u5168\u76F8\u540C\uFF1B\u6CA1\u6709\u5B8C\u6210\u5B9E\u9645\u4FEE\u8BA2`);
+      const after = await readStoryboardProgress(db2, projectId, episodesId);
+      const readback = await readStoryboardTableSnapshot(db2, projectId, episodesId);
+      if (!after.valid || after.taskId !== before.taskId || after.revision !== committed.revision || storyboardSceneHash(readback.storyboardTableProgress?.scenes[String(scene)] ?? "") !== storyboardSceneHash(parsed.content)) {
+        throw new Error(`\u7B2C${scene}\u573A\u4FEE\u8BA2\u5DF2\u63D0\u4EA4\uFF0C\u4F46\u8BFB\u56DE\u72B6\u6001\u5F02\u5E38\uFF1B\u5148\u6838\u5BF9\u6570\u636E\u5E93\uFF0C\u7981\u6B62\u91CD\u590D\u8986\u76D6`);
+      }
+      options.notify({
+        episodesId,
+        storyboardTable: committed.storyboardTable,
+        storyboardTableProgress: committed.storyboardTableProgress
+      });
+      return {
+        changed: true,
+        scene,
+        revision: committed.revision,
+        taskId: before.taskId,
+        oldHash: storyboardSceneHash(original),
+        newHash: storyboardSceneHash(parsed.content),
+        savedScenes: after.savedScenes,
+        missingScenes: after.missingScenes,
+        coverageVerified: committed.coverageVerified,
+        warnings: committed.warnings,
+        message: `\u7B2C${scene}\u573A\u5DF2\u4FEE\u8BA2\u5E76\u4ECE\u6570\u636E\u5E93\u8BFB\u56DE\uFF1B\u5C1A\u987B\u9488\u5BF9\u672C\u6B21\u5BA1\u6838\u95EE\u9898\u590D\u6838\uFF0C\u4E0D\u80FD\u76F4\u63A5\u5BA3\u79F0\u6574\u96C6\u901A\u8FC7\u3002`
+      };
+    }
+  });
+}
+
+// src/utils/agent/runtime/toolExecutor.ts
+var import_node_crypto11 = require("node:crypto");
+var REQUEST_ID_TOOLS = /* @__PURE__ */ new Set([
+  "add_flowData_storyboard",
+  "add_deriveAsset",
+  "del_deriveAsset",
+  "generate_deriveAsset",
+  "generate_storyboard"
+]);
+function json4(value) {
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return JSON.stringify({ unserializable: true, type: typeof value });
+  }
+}
+function parseStored(value) {
+  if (!value) return void 0;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return value;
+  }
+}
+function normalizeToolInput(toolName, value) {
+  if ((toolName === "generate_deriveAsset" || toolName === "generate_storyboard") && value && typeof value === "object" && !Array.isArray(value) && Array.isArray(value.ids)) {
+    const ids = [...new Set(value.ids.map(Number).filter(Number.isSafeInteger))].sort((a, b) => a - b);
+    return { ...value, ids };
+  }
+  return value;
+}
+function wrapAgentTools(tools, options) {
+  if (!options.runId) return tools;
+  const sideEffects = new Set(options.sideEffectTools ?? []);
+  return Object.fromEntries(
+    Object.entries(tools).map(([toolName, definition]) => {
+      if (typeof definition?.execute !== "function") return [toolName, definition];
+      const original = definition.execute.bind(definition);
+      return [
+        toolName,
+        {
+          ...definition,
+          execute: async (...args) => {
+            const sideEffect = sideEffects.has(toolName);
+            let input = normalizeToolInput(toolName, args[0]);
+            args[0] = input;
+            if (sideEffect && REQUEST_ID_TOOLS.has(toolName) && input && typeof input === "object" && !Array.isArray(input) && !(typeof input.requestId === "string" && input.requestId)) {
+              const seed = json4(input);
+              const requestId = "agent_" + (0, import_node_crypto11.createHash)("sha256").update(`${options.runId}
+${options.stepKey ?? "run"}
+${toolName}
+${seed}`).digest("hex").slice(0, 32);
+              input = { ...input, requestId };
+              args[0] = input;
+            }
+            const inputJson = json4(input);
+            const inputHash = (0, import_node_crypto11.createHash)("sha256").update(inputJson).digest("hex");
+            const operationKey = sideEffect ? (0, import_node_crypto11.createHash)("sha256").update(`${options.runId}
+${options.stepKey ?? "run"}
+${toolName}
+${inputHash}`).digest("hex") : null;
+            let id = (0, import_node_crypto11.randomUUID)();
+            const now2 = Date.now();
+            if (operationKey) {
+              const prior = await options.db("o_agentToolCall").where({ operationKey }).first();
+              if (prior) {
+                if (prior.status === "completed") return parseStored(prior.outputJson);
+                if (prior.status !== "retryable") {
+                  throw new Error(`\u5DE5\u5177 ${toolName} \u7684\u76F8\u540C\u5199\u64CD\u4F5C\u5F53\u524D\u72B6\u6001\u4E3A ${prior.status}\uFF0C\u5FC5\u987B\u5148\u6838\u5BF9\u7ED3\u679C\uFF0C\u4E0D\u80FD\u91CD\u590D\u6267\u884C`);
+                }
+                id = prior.id;
+                const claimed = await options.db("o_agentToolCall").where({ id, status: "retryable" }).update({
+                  status: "running",
+                  error: null,
+                  outputJson: null,
+                  updateTime: now2
+                });
+                if (claimed !== 1) throw new Error(`\u5DE5\u5177 ${toolName} \u7684\u91CD\u8BD5\u72B6\u6001\u5DF2\u53D8\u5316\uFF0C\u8BF7\u91CD\u65B0\u6838\u5BF9`);
+              } else {
+                await options.db("o_agentToolCall").insert({
+                  id,
+                  runId: options.runId,
+                  stepKey: options.stepKey ?? null,
+                  toolName,
+                  operationKey,
+                  inputHash,
+                  inputJson,
+                  sideEffect: sideEffect ? 1 : 0,
+                  status: "running",
+                  createTime: now2,
+                  updateTime: now2
+                });
+              }
+            } else {
+              await options.db("o_agentToolCall").insert({
+                id,
+                runId: options.runId,
+                stepKey: options.stepKey ?? null,
+                toolName,
+                operationKey,
+                inputHash,
+                inputJson,
+                sideEffect: sideEffect ? 1 : 0,
+                status: "running",
+                createTime: now2,
+                updateTime: now2
+              });
+            }
+            try {
+              const result = await original(...args);
+              await options.db("o_agentToolCall").where({ id, status: "running" }).update({
+                status: "completed",
+                outputJson: json4(result),
+                error: null,
+                updateTime: Date.now()
+              });
+              return result;
+            } catch (error73) {
+              await options.db("o_agentToolCall").where({ id, status: "running" }).update({
+                status: sideEffect ? "reconciling" : "failed",
+                error: error73 instanceof Error ? error73.message : String(error73),
+                updateTime: Date.now()
+              });
+              throw error73;
+            }
+          }
+        }
+      ];
+    })
+  );
+}
+
+// src/utils/agent/contextManager.ts
+function estimateTokens(text2) {
+  if (!text2) return 0;
+  const cjk = text2.match(/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/gu)?.length ?? 0;
+  const rest = text2.replace(/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/gu, "");
+  const nonWhitespace = rest.replace(/\s+/g, " ");
+  return Math.max(1, cjk + Math.ceil(nonWhitespace.length / 4) + Math.ceil(text2.length / 80));
+}
+function truncateToTokens(text2, maxTokens) {
+  if (maxTokens <= 0) return "";
+  if (estimateTokens(text2) <= maxTokens) return text2;
+  let lo = 0;
+  let hi = text2.length;
+  while (lo < hi) {
+    const mid = Math.ceil((lo + hi) / 2);
+    if (estimateTokens(text2.slice(0, mid)) <= maxTokens) lo = mid;
+    else hi = mid - 1;
+  }
+  const clipped = text2.slice(0, lo).trimEnd();
+  return clipped ? clipped + "\u2026" : "";
+}
+function buildMemoryPrompt(memory, maxTokens = 2400) {
+  if (!Number.isSafeInteger(maxTokens) || maxTokens < 0) throw new Error("\u8BB0\u5FC6\u4E0A\u4E0B\u6587 Token \u9884\u7B97\u65E0\u6548");
+  if (maxTokens < 80) return "";
+  const prefix = "## Memory\n\u4EE5\u4E0B\u662F\u4F60\u5BF9\u7528\u6237\u7684\u8BB0\u5FC6\uFF0C\u53EF\u4F5C\u4E3A\u53C2\u8003\u4F46\u4E0D\u8981\u4E3B\u52A8\u63D0\u53CA\uFF1A\n";
+  const reserve = estimateTokens(prefix) + 24;
+  const usable = Math.max(0, maxTokens - reserve);
+  const seen = /* @__PURE__ */ new Set();
+  const take = (items, allowance, keepNewest = true) => {
+    const selected = [];
+    let remaining = allowance;
+    const ordered = keepNewest ? [...items].reverse() : [...items];
+    for (const raw of ordered) {
+      const content = raw.trim();
+      if (!content || seen.has(content) || remaining <= 0) continue;
+      const cost = estimateTokens(content);
+      if (cost <= remaining) {
+        seen.add(content);
+        selected.push(content);
+        remaining -= cost;
+        continue;
+      }
+      if (keepNewest && remaining >= 24) {
+        const clipped = truncateToTokens(content, remaining);
+        if (clipped) {
+          seen.add(content);
+          selected.push(clipped);
+          remaining -= estimateTokens(clipped);
+        }
+      }
+    }
+    return keepNewest ? selected.reverse() : selected;
+  };
+  const recentBudget = Math.floor(usable * 0.5);
+  const summaryBudget = Math.floor(usable * 0.25);
+  const recent = take(memory.shortTerm.map((m) => `${m.role ?? "message"}: ${m.content}`), recentBudget);
+  const summaries = take(memory.summaries.map((m) => m.content), summaryBudget);
+  const used = recent.reduce((sum, item) => sum + estimateTokens(item), 0) + summaries.reduce((sum, item) => sum + estimateTokens(item), 0);
+  const related = take(memory.rag.map((m) => m.content), Math.max(0, usable - used));
+  const sections = [
+    related.length ? `[\u76F8\u5173\u8BB0\u5FC6]
+${related.join("\n")}` : "",
+    summaries.length ? `[\u5386\u53F2\u6458\u8981]
+${summaries.join("\n")}` : "",
+    recent.length ? `[\u8FD1\u671F\u5BF9\u8BDD]
+${recent.join("\n")}` : ""
+  ].filter(Boolean);
+  if (!sections.length) return "";
+  const prompt = prefix + sections.join("\n\n");
+  return estimateTokens(prompt) <= maxTokens ? prompt : truncateToTokens(prompt, maxTokens);
+}
+
+// src/agents/productionAgent/index.ts
+var PRODUCTION_SIDE_EFFECT_TOOLS = /* @__PURE__ */ new Set([
+  "add_deriveAsset",
+  "del_deriveAsset",
+  "generate_deriveAsset",
+  "generate_storyboard",
+  "add_flowData_storyboard"
+]);
 async function runDecisionAI(ctx) {
   const { isolationKey, text: text2, abortSignal } = ctx;
   const memory = new memory_default("productionAgent", isolationKey);
   await memory.add("user", text2);
   const skill = import_path10.default.join(utils_default.getPath("skills"), "production_agent_decision.md");
-  const prompt = await fs11.promises.readFile(skill, "utf-8");
+  const taskStore = ctx.runId ? new TaskStore(utils_default.db) : null;
+  const prompt = taskStore ? await taskStore.readSkill(ctx.runId, skill) : await fs11.promises.readFile(skill, "utf-8");
+  const checkpoint = taskStore ? await taskStore.buildResumePrompt(ctx.runId) : "";
   const projectInfo = await utils_default.db("o_project").where("id", ctx.resTool.data.projectId).first();
   if (!projectInfo) throw new Error(`\u9879\u76EE\u4E0D\u5B58\u5728\uFF0CID: ${ctx.resTool.data.projectId}`);
   const [_, imageModelName] = projectInfo.imageModel.split(/:(.+)/);
@@ -257554,25 +260583,30 @@ async function runDecisionAI(ctx) {
   let videoMode = "";
   try {
     videoMode = JSON.parse(projectInfo.mode ?? "");
-  } catch (e) {
+  } catch {
     videoMode = projectInfo.mode ?? "";
   }
-  const isRef = Array.isArray(videoMode) ? true : false;
+  const isRef = Array.isArray(videoMode);
   const modelInfo = `\u9879\u76EE\u4F7F\u7528\u7684\u6A21\u578B\u5982\u4E0B\uFF1A
 \u56FE\u50CF\u6A21\u578B\uFF1A${imageModelName}
 \u89C6\u9891\u6A21\u578B\uFF1A${videoModelName}
 \u591A\u53C2\uFF1A${isRef ? "\u662F" : "\u5426"}`;
-  const mem = buildMemPrompt(await memory.get(text2));
+  const budgetRow = await utils_default.db("o_setting").where({ key: "memoryContextTokenBudget" }).select("value").first();
+  const configuredBudget = Number(budgetRow?.value);
+  const memoryBudget = Number.isSafeInteger(configuredBudget) && configuredBudget >= 400 ? configuredBudget : 2400;
+  const mem = buildMemoryPrompt(await memory.get(text2), memoryBudget);
   const { fullStream } = await utils_default.Ai.Text("productionAgent:decisionAgent", ctx.thinkConfig.think, ctx.thinkConfig.thinlLevel).stream({
     messages: [
-      { role: "system", content: prompt },
-      { role: "assistant", content: mem + "\n" + modelInfo },
+      { role: "system", content: prompt + (checkpoint ? "\n\n\u6062\u590D\u4EFB\u52A1\u65F6\u5FC5\u987B\u9075\u5B88 assistant \u6D88\u606F\u4E2D\u7684 Agent Runtime \u4EFB\u52A1\u68C0\u67E5\u70B9\uFF0C\u4E0D\u5F97\u91CD\u590D\u5DF2\u5B8C\u6210\u4E1A\u52A1\u6B65\u9AA4\u3002" : "") },
+      { role: "assistant", content: [mem, modelInfo, checkpoint].filter(Boolean).join("\n\n") },
       { role: "user", content: text2 }
     ],
     abortSignal,
     tools: {
-      ...memory.getTools(),
-      ...tools_default({ resTool: ctx.resTool, msg: ctx.msg }),
+      ...wrapAgentTools(
+        { ...memory.getTools(), ...tools_default({ resTool: ctx.resTool, msg: ctx.msg }) },
+        { db: utils_default.db, runId: ctx.runId, sideEffectTools: PRODUCTION_SIDE_EFFECT_TOOLS }
+      ),
       ...await createSubAgent(ctx)
     },
     onFinish: async (completion) => {
@@ -257590,32 +260624,105 @@ async function runDecisionAI(ctx) {
 async function createSubAgent(parentCtx) {
   const { resTool, abortSignal } = parentCtx;
   const memory = new memory_default("productionAgent", parentCtx.isolationKey);
-  async function runAgent({
-    key,
-    prompt,
-    system,
-    name: name28,
-    memoryKey,
-    tools: extraTools,
-    messages
-  }) {
-    parentCtx.msg.complete();
-    const subMsg = resTool.newMessage("assistant", name28);
-    const { fullStream } = await utils_default.Ai.Text(key, parentCtx.thinkConfig.think, parentCtx.thinkConfig.thinlLevel).stream({
-      system,
-      messages: messages ?? [{ role: "user", content: prompt }],
-      abortSignal,
-      tools: { ...extraTools, ...tools_default({ resTool, msg: subMsg }) }
-    });
-    const fullResponse = await consumeFullStream(fullStream, subMsg);
-    if (fullResponse.trim()) {
-      await memory.add(memoryKey, removeAllXmlTags(fullResponse), {
-        name: name28,
-        createTime: new Date(subMsg.datetime).getTime()
-      });
+  const taskStore = new TaskStore(utils_default.db);
+  const readSkill = (filePath) => parentCtx.runId ? taskStore.readSkill(parentCtx.runId, filePath) : fs11.promises.readFile(filePath, "utf-8");
+  async function runAgent({ key, modelKey, prompt, system, name: name28, memoryKey, tools: extraTools, messages, expectedScene, readOnlyTools }) {
+    const stepInput = JSON.stringify({ key, prompt, messages: messages ?? null, expectedScene: expectedScene ?? null });
+    const stepKey = TaskStore.makeStepKey(key, stepInput);
+    if (parentCtx.runId) {
+      const prior = await taskStore.beginStep(parentCtx.runId, stepKey, stepInput);
+      if (prior.cached) return prior.output ?? "";
     }
-    parentCtx.msg = resTool.newMessage("assistant", "\u89C6\u9891\u7B56\u5212");
-    return fullResponse;
+    try {
+      parentCtx.msg.complete();
+      const subMsg = resTool.newMessage("assistant", name28);
+      const isDirectorPlan = key === "productionAgent:directorPlanAgent";
+      const isStoryboardTable = key === "productionAgent:storyboardTableAgent";
+      const scope = { projectId: Number(resTool.data.projectId), episodesId: Number(resTool.data.scriptId), key: "productionAgent" };
+      const startingWorkspace = isDirectorPlan || isStoryboardTable ? await utils_default.db("o_agentWorkData").where(scope).select("data").first() : null;
+      const startingData = startingWorkspace?.data ? JSON.parse(startingWorkspace.data) : {};
+      const expectedPlan = startingData.scriptPlan ?? "";
+      const expectedStoryboardTable = isStoryboardTable ? await readStoryboardTableSnapshot(utils_default.db, scope.projectId, scope.episodesId) : void 0;
+      const activeTools = tools_default({
+        resTool,
+        msg: subMsg,
+        ...readOnlyTools ? { toolsNames: ["get_flowData", "get_storyboard_progress"] } : {}
+      });
+      const { fullStream } = await utils_default.Ai.Text(modelKey ?? key, parentCtx.thinkConfig.think, parentCtx.thinkConfig.thinlLevel).stream({
+        system,
+        messages: messages ?? [{ role: "user", content: prompt }],
+        abortSignal,
+        tools: {
+          ...extraTools,
+          ...wrapAgentTools(activeTools, {
+            db: utils_default.db,
+            runId: parentCtx.runId,
+            stepKey,
+            sideEffectTools: PRODUCTION_SIDE_EFFECT_TOOLS
+          })
+        }
+      });
+      const fullResponse = await consumeFullStream(fullStream, subMsg, void 0, !(isDirectorPlan || isStoryboardTable));
+      if (parentCtx.runId) await taskStore.saveStepOutput(parentCtx.runId, stepKey, fullResponse);
+      if (isDirectorPlan) {
+        try {
+          const plan = extractDirectorPlan(fullResponse);
+          await saveDirectorPlan(utils_default.db, scope.projectId, scope.episodesId, plan, expectedPlan);
+          resTool.socket.emit("scriptPlan:committed", { episodesId: Number(resTool.data.scriptId), plan });
+          subMsg.text("\u5BFC\u6F14\u8BA1\u5212\u5DF2\u4FDD\u5B58\u5230\u5DE5\u4F5C\u533A\u3002").complete();
+          subMsg.complete();
+        } catch (error73) {
+          console.error("[directorPlan] \u8F93\u51FA\u6821\u9A8C\u5931\u8D25\uFF0C\u6587\u672C\u957F\u5EA6:", fullResponse.length, "\u5F00\u5934:", fullResponse.slice(0, 180));
+          subMsg.error(utils_default.error(error73).message);
+          throw error73;
+        }
+      } else if (isStoryboardTable) {
+        try {
+          if (abortSignal?.aborted) throw new Error("\u5206\u955C\u4EFB\u52A1\u5DF2\u4E2D\u65AD\uFF0C\u65E7\u6A21\u578B\u8F93\u51FA\u672A\u63D0\u4EA4");
+          const parsed = extractStoryboardTable(fullResponse);
+          if (expectedScene) {
+            if (parsed.mode !== "scene" || parsed.scene !== expectedScene.scene || parsed.total !== expectedScene.total || parsed.taskId !== expectedScene.taskId) {
+              throw new Error(`\u5F53\u524D\u53EA\u5141\u8BB8\u8F93\u51FA\u7B2C${expectedScene.scene}\u573A\u53CA\u56FA\u5B9A task/total\uFF0C\u62D2\u7EDD\u5176\u4ED6\u573A\u6B21\u6216\u6574\u8868`);
+            }
+            const validation = validateStoryboardScene(parsed.scene, parsed.content, expectedScene.sourceScene);
+            if (!validation.valid) throw new Error(`\u7B2C${parsed.scene}\u573A\u5185\u5BB9\u6821\u9A8C\u5931\u8D25\uFF1A${validation.errors.join("\uFF1B")}`);
+            if (!validation.coverageVerified) subMsg.text(`\u7B2C${parsed.scene}\u573A\u901A\u8FC7\u7ED3\u6784\u6821\u9A8C\uFF1B\u539F\u5267\u672C\u9010\u9879\u8986\u76D6\u5C1A\u5F85\u4EBA\u5DE5\u6216\u540E\u7EED\u6838\u9A8C\u3002`).complete();
+          }
+          const committed = await commitStoryboardTableOutput(utils_default.db, scope.projectId, scope.episodesId, parsed, expectedStoryboardTable);
+          resTool.socket.emit("storyboardTable:committed", {
+            episodesId: scope.episodesId,
+            storyboardTable: committed.storyboardTable,
+            storyboardTableProgress: committed.storyboardTableProgress,
+            savedScenes: committed.savedScenes,
+            missingScenes: committed.missingScenes
+          });
+          const progressText = committed.missingScenes.length ? `\u5206\u955C\u8868\u5DF2\u4FDD\u5B58\uFF1A\u5DF2\u5B8C\u6210\u573A\u6B21 ${committed.savedScenes.join(", ")}\uFF1B\u5F85\u8865\u573A\u6B21 ${committed.missingScenes.join(", ")}\u3002` : "\u5206\u955C\u8868\u5DF2\u5B8C\u6574\u4FDD\u5B58\u5230\u5DE5\u4F5C\u533A\u3002";
+          subMsg.text(progressText).complete();
+          subMsg.complete();
+        } catch (error73) {
+          console.error("[storyboardTable] \u8F93\u51FA\u6216\u63D0\u4EA4\u6821\u9A8C\u5931\u8D25\uFF0C\u6587\u672C\u957F\u5EA6:", fullResponse.length, "\u5F00\u5934:", fullResponse.slice(0, 180));
+          subMsg.error(utils_default.error(error73).message);
+          throw error73;
+        }
+      }
+      const visibleMemory = removeAllXmlTags(fullResponse).trim();
+      const memoryContent = visibleMemory || (isDirectorPlan ? "\u5BFC\u6F14\u8BA1\u5212\u5DF2\u4FDD\u5B58\u5230\u5DE5\u4F5C\u533A\u3002" : isStoryboardTable ? "\u5206\u955C\u8868\u4EA7\u51FA\u5DF2\u4FDD\u5B58\u5230\u5DE5\u4F5C\u533A\u3002" : "");
+      if (memoryContent) await memory.add(memoryKey, memoryContent, { name: name28, createTime: new Date(subMsg.datetime).getTime() });
+      if (parentCtx.runId) {
+        let resultRef = `message:${subMsg.id}`;
+        if (isDirectorPlan) resultRef = `directorPlan:${scope.projectId}:${scope.episodesId}`;
+        if (isStoryboardTable) {
+          const parsed = extractStoryboardTable(fullResponse);
+          resultRef = parsed.mode === "scene" ? `storyboardTable:${scope.projectId}:${scope.episodesId}:scene:${parsed.scene}` : `storyboardTable:${scope.projectId}:${scope.episodesId}:full`;
+        }
+        await taskStore.finishStep(parentCtx.runId, stepKey, resultRef);
+      }
+      parentCtx.msg = resTool.newMessage("assistant", "\u89C6\u9891\u7B56\u5212");
+      return fullResponse;
+    } catch (error73) {
+      if (parentCtx.runId) await taskStore.markStepReconciling(parentCtx.runId, stepKey, utils_default.error(error73).message);
+      throw error73;
+    }
   }
   const promptInput = external_exports.object({ prompt: external_exports.string().describe("\u4EA4\u7ED9\u5B50Agent\u7684\u4EFB\u52A1\u7B80\u7EA6\u63CF\u8FF0\uFF0C100\u5B57\u4EE5\u5185") }).toJSONSchema();
   const projectInfo = await utils_default.db("o_project").where("id", resTool.data.projectId).first();
@@ -257627,23 +260734,22 @@ async function createSubAgent(parentCtx) {
   let videoMode = "";
   try {
     videoMode = JSON.parse(projectInfo.mode ?? "");
-  } catch (e) {
+  } catch {
     videoMode = projectInfo.mode ?? "";
   }
-  const isRef = Array.isArray(videoMode) ? true : false;
+  const isRef = Array.isArray(videoMode);
   const modelInfo = `\u9879\u76EE\u4F7F\u7528\u7684\u6A21\u578B\u5982\u4E0B\uFF1A
 \u56FE\u50CF\u6A21\u578B\uFF1A${imageModelName}
 \u89C6\u9891\u6A21\u578B\uFF1A${videoModelName}
 \u591A\u53C2\uFF1A${isRef ? "\u662F" : "\u5426"}`;
-  const loadArtSkills = () => createArtSkills(projectInfo?.artStyle, projectInfo?.directorManual);
-  const loadProductionSkills = () => useProductionSkills(projectInfo?.artStyle, projectInfo?.directorManual);
+  const loadArtSkills = () => createArtSkills(projectInfo?.artStyle, projectInfo?.directorManual, readSkill);
+  const loadProductionSkills = () => useProductionSkills(projectInfo?.artStyle, projectInfo?.directorManual, readSkill);
   const run_sub_agent_derive_assets = tool({
     description: "\u8FD0\u884C\u6267\u884CsubAgent\u6765\u5B8C\u6210\u884D\u751F\u8D44\u4EA7\u5206\u6790\u4E0E\u4FE1\u606F\u5199\u5165\u76F8\u5173\u4EFB\u52A1",
     inputSchema: jsonSchema(promptInput),
     execute: async ({ prompt }) => {
       const artSkills = await loadArtSkills();
-      const skill = import_path10.default.join(utils_default.getPath("skills"), "production_execution_derive_assets.md");
-      const systemPrompt = await fs11.promises.readFile(skill, "utf-8");
+      const systemPrompt = await readSkill(import_path10.default.join(utils_default.getPath("skills"), "production_execution_derive_assets.md"));
       return runAgent({
         key: "productionAgent:deriveAssetsAgent",
         prompt,
@@ -257664,8 +260770,7 @@ ${modelInfo}` },
     inputSchema: jsonSchema(promptInput),
     execute: async ({ prompt }) => {
       const artSkills = await loadArtSkills();
-      const skill = import_path10.default.join(utils_default.getPath("skills"), "production_execution_generate_assets.md");
-      const systemPrompt = await fs11.promises.readFile(skill, "utf-8");
+      const systemPrompt = await readSkill(import_path10.default.join(utils_default.getPath("skills"), "production_execution_generate_assets.md"));
       return runAgent({
         key: "productionAgent:generateAssetsAgent",
         prompt,
@@ -257686,8 +260791,7 @@ ${modelInfo}` },
     inputSchema: jsonSchema(promptInput),
     execute: async ({ prompt }) => {
       const artSkills = await loadArtSkills();
-      const skill = import_path10.default.join(utils_default.getPath("skills"), "production_execution_director_plan.md");
-      const systemPrompt = await fs11.promises.readFile(skill, "utf-8");
+      const systemPrompt = await readSkill(import_path10.default.join(utils_default.getPath("skills"), "production_execution_director_plan.md"));
       const addPrompt = "\n\u4F60\u5FC5\u987B\u4F7F\u7528\u5982\u4E0BXML\u683C\u5F0F\u5199\u5165\u5DE5\u4F5C\u533A\uFF1A\n```\n<scriptPlan>\u5185\u5BB9</scriptPlan>\n```";
       return runAgent({
         key: "productionAgent:directorPlanAgent",
@@ -257709,8 +260813,7 @@ ${modelInfo}` },
     inputSchema: jsonSchema(promptInput),
     execute: async ({ prompt }) => {
       const artSkills = await loadArtSkills();
-      const skill = import_path10.default.join(utils_default.getPath("skills"), "production_execution_storyboard_gen.md");
-      const systemPrompt = await fs11.promises.readFile(skill, "utf-8");
+      const systemPrompt = await readSkill(import_path10.default.join(utils_default.getPath("skills"), "production_execution_storyboard_gen.md"));
       return runAgent({
         key: "productionAgent:storyboardGenAgent",
         prompt,
@@ -257731,8 +260834,7 @@ ${modelInfo}` },
     inputSchema: jsonSchema(promptInput),
     execute: async ({ prompt }) => {
       const productionSkills = await loadProductionSkills();
-      const skill = import_path10.default.join(utils_default.getPath("skills"), "production_execution_storyboard_panel.md");
-      const systemPrompt = await fs11.promises.readFile(skill, "utf-8");
+      const systemPrompt = await readSkill(import_path10.default.join(utils_default.getPath("skills"), "production_execution_storyboard_panel.md"));
       return runAgent({
         key: "productionAgent:storyboardPanelAgent",
         prompt,
@@ -257749,25 +260851,110 @@ ${modelInfo}` },
     }
   });
   const run_sub_agent_storyboard_table = tool({
-    description: "\u8FD0\u884C\u6267\u884CsubAgent\u6765\u5B8C\u6210\u5206\u955C\u8868\u6784\u5EFA\u76F8\u5173\u4EFB\u52A1",
-    inputSchema: jsonSchema(promptInput),
-    execute: async ({ prompt }) => {
+    description: "\u7531\u540E\u7AEF\u63A7\u5236\u5206\u955C\u9010\u573A\u751F\u6210\u3001\u4E8B\u52A1\u63D0\u4EA4\u548C\u4E2D\u65AD\u6062\u590D\u3002\u6574\u96C6\u4F7F\u7528 scope=full\uFF1B\u660E\u786E\u53EA\u5199\u4E00\u573A\u65F6\u4F7F\u7528 scope=single\u3002\u5DF2\u6709\u573A\u6B21\u7684\u4FEE\u6539\u987B\u8C03\u7528 run_sub_agent_storyboard_revise\u3002",
+    inputSchema: jsonSchema(
+      external_exports.object({
+        prompt: external_exports.string().min(1).describe("\u672C\u6B21\u5206\u955C\u521B\u4F5C\u8981\u6C42"),
+        total: external_exports.number().int().min(1).max(1e3).optional().describe("\u9996\u6B21\u751F\u6210\u65F6\u7684\u603B\u573A\u6570\uFF0C\u5E94\u4E0E\u5DF2\u786E\u8BA4\u5BFC\u6F14\u8BA1\u5212\u4E00\u81F4\uFF1B\u6062\u590D\u65F6\u6CBF\u7528\u6570\u636E\u5E93\u603B\u6570"),
+        scope: external_exports.enum(["full", "single"]).optional().describe("\u6574\u96C6\u9010\u573A\u5B8C\u6210\u6216\u660E\u786E\u53EA\u5904\u7406\u4E0B\u4E00\u7F3A\u5931\u573A")
+      }).toJSONSchema()
+    ),
+    execute: async ({ prompt, total: requestedTotal, scope: requestedScope }) => {
       const productionSkills = await loadProductionSkills();
-      const skill = import_path10.default.join(utils_default.getPath("skills"), "production_execution_storyboard_table.md");
-      const systemPrompt = await fs11.promises.readFile(skill, "utf-8");
-      const addPrompt = "\n\u4F60\u5FC5\u987B\u4F7F\u7528\u5982\u4E0BXML\u683C\u5F0F\u5199\u5165\u5DE5\u4F5C\u533A\uFF1A\n```\n<storyboardTable>\u5185\u5BB9</storyboardTable>\n```";
+      const systemPrompt = await readSkill(import_path10.default.join(utils_default.getPath("skills"), "production_execution_storyboard_table.md"));
+      const projectId = Number(resTool.data.projectId);
+      const episodesId = Number(resTool.data.scriptId);
+      const progress = await readStoryboardProgress(utils_default.db, projectId, episodesId);
+      if (!progress.valid) throw new Error(progress.conflict?.message ?? "\u5206\u955C\u8FDB\u5EA6\u5F02\u5E38\uFF0C\u8BF7\u5148\u6838\u5BF9\u73B0\u6709\u6570\u636E");
+      const scriptRow = await utils_default.db("o_script").where({ id: episodesId, projectId }).select("content").first();
+      const workspace = await utils_default.db("o_agentWorkData").where({ projectId, episodesId, key: "productionAgent" }).select("data").first();
+      const plan = workspace?.data ? JSON.parse(workspace.data).scriptPlan ?? "" : "";
+      const declaredTotal = String(plan).match(/共规划\s*(\d+)\s*个?场/);
+      const planHeadings = [...String(plan).matchAll(/^\s*(?:\d+[.、]\s*)?场\s*(\d+)\s*[：:]/gm)].map((m) => Number(m[1]));
+      const planTotal = declaredTotal ? Number(declaredTotal[1]) : planHeadings.length && planHeadings.every((n, i) => n === i + 1) ? planHeadings.length : void 0;
+      const total = progress.total ?? requestedTotal ?? planTotal;
+      if (!total || !Number.isSafeInteger(total) || total > 1e3) throw new Error("\u65E0\u6CD5\u4ECE\u5DF2\u6709\u8FDB\u5EA6\u6216\u5BFC\u6F14\u8BA1\u5212\u786E\u5B9A\u603B\u573A\u6570\uFF0C\u8BF7\u5148\u6838\u5BF9\u5BFC\u6F14\u8BA1\u5212");
+      if (requestedTotal !== void 0 && requestedTotal !== total) throw new Error("\u8F93\u5165\u603B\u573A\u6570\u4E0E\u5DF2\u4FDD\u5B58\u8FDB\u5EA6\u4E0D\u4E00\u81F4");
+      if (planTotal !== void 0 && planTotal !== total) throw new Error("\u5BFC\u6F14\u8BA1\u5212\u603B\u573A\u6570\u4E0E\u5206\u955C\u4EFB\u52A1\u4E0D\u4E00\u81F4");
+      const sourceScript = String(scriptRow?.content ?? "");
+      const stage = await runStoryboardTask({
+        db: utils_default.db,
+        projectId,
+        episodesId,
+        total,
+        maxScenes: requestedScope === "single" ? 1 : total,
+        maxAttemptsPerScene: 1,
+        abortSignal,
+        generate: async ({ scene, taskId, total: total2 }) => {
+          const sourceScene = extractSourceScene(sourceScript, scene);
+          const before = await readStoryboardTableSnapshot(utils_default.db, projectId, episodesId);
+          const previous = before.storyboardTableProgress?.scenes[String(scene - 1)]?.slice(-800) ?? "";
+          const protocol = `
+\u3010\u540E\u7AEF\u56FA\u5B9A\u4EFB\u52A1\u534F\u8BAE\u3011\u53EA\u5904\u7406\u7B2C${scene}\u573A\uFF0C\u5171${total2}\u573A\uFF0Ctask=${taskId}\u3002\u5FC5\u987B\u4EC5\u8F93\u51FA\u4E00\u4EFD\u5B8C\u6574\u95ED\u5408\u7684 <storyboardTable scene="${scene}" total="${total2}" task="${taskId}">\u8BE5\u573A\u5B8C\u6574Markdown</storyboardTable>\uFF1B\u4E0D\u8981\u751F\u6210\u5176\u4ED6\u573A\u6B21\uFF0C\u4E0D\u8981\u81EA\u884C\u53D8\u66F4 task/total\u3002
+` + (sourceScene ? `\u672C\u573A\u539F\u5267\u672C\uFF08\u5FC5\u987B\u5B8C\u6574\u8986\u76D6\uFF09\uFF1A
+${sourceScene}
+` : `\u5F53\u524D\u5267\u672C\u672A\u8BC6\u522B\u5230\u660E\u786E\u7684\u7B2C${scene}\u573A\u8FB9\u754C\uFF1B\u5148\u8C03\u7528 get_flowData(script) \u5B9A\u4F4D\u672C\u573A\uFF0C\u4E0D\u5F97\u51ED\u7A7A\u8865\u5267\u60C5\u3002
+`) + (previous ? `\u4E0A\u4E00\u573A\u672B\u5C3E\u8FDE\u7EED\u6027\u53C2\u8003\uFF1A
+${previous}
+` : "") + `\u521B\u4F5C\u8981\u6C42\uFF1A${prompt}`;
+          await runAgent({
+            key: "productionAgent:storyboardTableAgent",
+            prompt: protocol,
+            system: systemPrompt,
+            name: "\u6267\u884C\u5BFC\u6F14",
+            memoryKey: "assistant:execution",
+            expectedScene: { scene, total: total2, taskId, sourceScene },
+            messages: [
+              { role: "assistant", content: productionSkills.prompt + `
+${modelInfo}` },
+              { role: "user", content: protocol }
+            ],
+            tools: { ...productionSkills.tools }
+          });
+        }
+      });
+      return {
+        taskId: stage.taskId,
+        total: stage.total,
+        savedScenes: stage.savedScenes,
+        missingScenes: stage.missingScenes,
+        nextScene: stage.nextScene,
+        complete: stage.complete,
+        message: stage.complete ? "\u5206\u955C\u8868\u5168\u90E8\u573A\u6B21\u5DF2\u4E8B\u52A1\u63D0\u4EA4\uFF1B\u539F\u5267\u672C\u8986\u76D6\u4ECD\u987B\u9010\u573A\u6838\u9A8C\u3002" : "\u672C\u6B21\u573A\u6B21\u5DF2\u4FDD\u5B58\uFF1B\u4ECD\u6709\u7F3A\u5931\u573A\u6B21\uFF0C\u4E0D\u80FD\u5BA3\u79F0\u6574\u96C6\u5B8C\u6210\u3002"
+      };
+    }
+  });
+  const run_sub_agent_storyboard_revise = createStoryboardRevisionTool({
+    db: utils_default.db,
+    projectId: Number(resTool.data.projectId),
+    episodesId: Number(resTool.data.scriptId),
+    abortSignal,
+    notify: (payload) => resTool.socket.emit("storyboardTable:committed", payload),
+    generate: async ({ instruction, scene, total, taskId, original, sourceScene }) => {
+      const productionSkills = await loadProductionSkills();
+      const systemPrompt = await readSkill(import_path10.default.join(utils_default.getPath("skills"), "production_execution_storyboard_table.md"));
+      const revisionPrompt = `\u3010\u5DF2\u6709\u573A\u6B21\u4FEE\u8BA2\uFF0C\u4E0D\u662F\u9996\u6B21\u751F\u6210\u3011\u4EC5\u4FEE\u8BA2\u7B2C${scene}\u573A\uFF08\u5171${total}\u573A\uFF09\uFF0Ctask=${taskId}\u3002\u4FDD\u6301\u539F\u5267\u672C\u5FC5\u987B\u5448\u73B0\u7684\u5185\u5BB9\uFF0C\u4E0D\u5F97\u64C5\u81EA\u5220\u9664\u5267\u60C5\u6216\u53F0\u8BCD\u3002\u53EA\u8F93\u51FA\u5B8C\u6574\u95ED\u5408\u7684 <storyboardTable scene="${scene}" total="${total}" task="${taskId}">\u4FEE\u8BA2\u540E\u7B2C${scene}\u573A\u5B8C\u6574Markdown</storyboardTable>\u3002
+\u3010\u672C\u573A\u9700\u89E3\u51B3\u7684\u5BA1\u6838\u95EE\u9898\u548C\u7528\u6237\u8981\u6C42\u3011
+${instruction}
+\u3010\u672C\u573A\u5DF2\u4FDD\u5B58\u65E7\u7A3F\uFF1A\u5FC5\u987B\u5728\u6B64\u57FA\u7840\u4E0A\u4FEE\u6539\u3011
+${original}
+` + (sourceScene ? `\u3010\u5BF9\u5E94\u539F\u5267\u672C\uFF1A\u5FC5\u987B\u5B8C\u6574\u8986\u76D6\u3011
+${sourceScene}
+` : `\u3010\u6CE8\u610F\u3011\u539F\u5267\u672C\u672C\u573A\u8FB9\u754C\u672A\u5B9A\u4F4D\uFF1B\u4E0D\u5F97\u58F0\u79F0\u5DF2\u6838\u9A8C\u5168\u90E8\u5267\u60C5\uFF0C\u8BF7\u8C03\u7528 get_flowData(script) \u6838\u5BF9\u3002
+`);
       return runAgent({
-        key: "productionAgent:storyboardTableAgent",
-        prompt,
-        system: systemPrompt + addPrompt,
+        key: "productionAgent:storyboardRevisionAgent",
+        modelKey: "productionAgent:storyboardTableAgent",
+        prompt: revisionPrompt,
+        system: systemPrompt + "\n\u672C\u6B21\u4EFB\u52A1\u662F\u4FEE\u6539\u5DF2\u6709\u5206\u955C\uFF1B\u7EDD\u4E0D\u8C03\u7528\u4FDD\u5B58/\u65B0\u589E\u5DE5\u5177\uFF0C\u53EA\u8FD4\u56DE\u4FEE\u8BA2 XML\uFF0C\u540E\u7AEF\u72EC\u7ACB\u63D0\u4EA4\u3002",
         name: "\u6267\u884C\u5BFC\u6F14",
         memoryKey: "assistant:execution",
+        readOnlyTools: true,
         messages: [
           { role: "assistant", content: productionSkills.prompt + `
 ${modelInfo}` },
-          { role: "user", content: prompt + addPrompt }
-        ],
-        tools: { ...productionSkills.tools }
+          { role: "user", content: revisionPrompt }
+        ]
       });
     }
   });
@@ -257775,8 +260962,7 @@ ${modelInfo}` },
     description: "\u8FD0\u884C\u76D1\u7763\u5C42subAgent\u6267\u884C\u72EC\u7ACB\u4EFB\u52A1\uFF0C\u5B8C\u6210\u540E\u8FD4\u56DE\u7ED3\u679C",
     inputSchema: jsonSchema(promptInput),
     execute: async ({ prompt }) => {
-      const skill = import_path10.default.join(utils_default.getPath("skills"), "production_agent_supervision.md");
-      const systemPrompt = await fs11.promises.readFile(skill, "utf-8");
+      const systemPrompt = await readSkill(import_path10.default.join(utils_default.getPath("skills"), "production_agent_supervision.md"));
       return runAgent({
         key: "productionAgent:supervisionAgent",
         prompt,
@@ -257793,17 +260979,39 @@ ${modelInfo}` },
     run_sub_agent_storyboard_gen,
     run_sub_agent_storyboard_panel,
     run_sub_agent_storyboard_table,
+    run_sub_agent_storyboard_revise,
     run_sub_agent_supervision
   };
 }
-async function createArtSkills(artName, storyName) {
+async function generateRebuiltStoryboard(ctx, total, expectedTaskId) {
+  if (ctx.abortSignal?.aborted) throw new Error("\u5206\u955C\u91CD\u5EFA\u5DF2\u505C\u6B62\uFF0C\u5DF2\u63D0\u4EA4\u573A\u6B21\u4FDD\u7559");
+  const projectId = Number(ctx.resTool.data.projectId);
+  const episodesId = Number(ctx.resTool.data.scriptId);
+  const current = await readStoryboardProgress(utils_default.db, projectId, episodesId);
+  if (!current.valid || current.taskId !== expectedTaskId || current.total !== total) {
+    throw new Error("\u65B0\u5206\u955C\u4EFB\u52A1\u7684\u6570\u636E\u5E93\u72B6\u6001\u4E0E\u91CD\u5EFA\u56DE\u6267\u4E0D\u4E00\u81F4\uFF0C\u505C\u6B62\u751F\u6210\u4EE5\u4FDD\u62A4\u5DF2\u6709\u6570\u636E");
+  }
+  const subAgents = await createSubAgent(ctx);
+  const execute = subAgents.run_sub_agent_storyboard_table.execute;
+  if (typeof execute !== "function") throw new Error("\u5206\u955C\u9010\u573A\u751F\u6210\u5DE5\u5177\u5C1A\u672A\u6CE8\u518C\uFF0C\u672A\u6267\u884C\u91CD\u5EFA\u751F\u6210");
+  const result = await execute(
+    { prompt: "\u6309\u6700\u65B0\u5BFC\u6F14\u8BA1\u5212\u751F\u6210\u5168\u90E8\u5206\u955C\uFF0C\u9075\u5B88\u672C\u96C6\u73B0\u6709\u5236\u4F5C\u8981\u6C42", total, scope: "full" },
+    { toolCallId: `backend-rebuild-${ctx.runId ?? expectedTaskId}`, messages: [], abortSignal: ctx.abortSignal }
+  );
+  const verified = await readStoryboardProgress(utils_default.db, projectId, episodesId);
+  if (!verified.valid || verified.taskId !== expectedTaskId || verified.total !== total || !verified.complete || verified.savedScenes.length !== total || result?.complete !== true) {
+    throw new Error(`\u91CD\u5EFA\u751F\u6210\u5C1A\u672A\u5B8C\u6210\uFF0C\u5F53\u524D\u4FDD\u5B58\u573A\u6B21\uFF1A${verified.savedScenes.join(",") || "\u65E0"}\uFF1B\u4E0D\u80FD\u62A5\u544A\u6574\u96C6\u5B8C\u6210`);
+  }
+  return verified;
+}
+async function createArtSkills(artName, storyName, readSkill) {
   const artWorkerPath = utils_default.getPath(["skills", "art_skills", artName, "driector_skills"]);
   const storyWorkerPath = utils_default.getPath(["skills", "story_skills", storyName, "driector_skills"]);
   const skillList = [...await scanSkills(artWorkerPath + "/*.md"), ...await scanSkills(storyWorkerPath + "/*.md")];
   const mainSkills = [];
   for (const skillPath of skillList) {
     if (!fs11.existsSync(skillPath)) throw new Error(`\u4E3B\u6280\u80FD\u6587\u4EF6\u4E0D\u5B58\u5728: ${skillPath}`);
-    const content = await fs11.promises.readFile(skillPath, "utf-8");
+    const content = await readSkill(skillPath);
     const parsed = parseFrontmatter(content);
     mainSkills.push({ path: skillPath, ...parsed });
   }
@@ -257812,10 +261020,10 @@ async function createArtSkills(artName, storyName) {
 \u4EE5\u4E0B\u6280\u80FD\u63D0\u4F9B\u4E86\u4E13\u4E1A\u4EFB\u52A1\u7684\u4E13\u7528\u6307\u4EE4\u3002
 \u5F53\u4EFB\u52A1\u4E0E\u67D0\u4E2A\u6280\u80FD\u7684\u63CF\u8FF0\u5339\u914D\u65F6\uFF0C\u8C03\u7528 activate_skill \u5DE5\u5177\u5E76\u4F20\u5165\u6280\u80FD\u540D\u79F0\u6765\u52A0\u8F7D\u5B8C\u6574\u6307\u4EE4\u3002
 ${buildSkillPrompt(mainSkills)}`,
-    tools: createSkillTools(mainSkills, { mainSkill: mainSkills, secondarySkills: [], tertiarySkills: [] })
+    tools: createSkillTools(mainSkills, { mainSkill: mainSkills, secondarySkills: [], tertiarySkills: [] }, utils_default.getPath("skills"), readSkill)
   };
 }
-async function consumeFullStream(fullStream, initialMsg, syncMsg) {
+async function consumeFullStream(fullStream, initialMsg, syncMsg, completeMessage = true) {
   let msg = initialMsg;
   let text2 = msg.text();
   let thinking = null;
@@ -257850,7 +261058,7 @@ async function consumeFullStream(fullStream, initialMsg, syncMsg) {
       }
     }
     text2.complete();
-    msg.complete();
+    if (completeMessage) msg.complete();
   } catch (err) {
     thinking?.complete();
     const errMsg = err?.message ?? String(err);
@@ -257877,7 +261085,7 @@ function buildSkillPrompt(skills) {
 ${skillEntries}
 </available_skills>`;
 }
-async function useProductionSkills(artName, storyName) {
+async function useProductionSkills(artName, storyName, readSkill) {
   const artWorkerPath = utils_default.getPath(["skills", "art_skills", artName, "driector_skills"]);
   const storyWorkerPath = utils_default.getPath(["skills", "story_skills", storyName, "driector_skills"]);
   const productionPath = utils_default.getPath(["skills", "production_skills"]);
@@ -257889,7 +261097,7 @@ async function useProductionSkills(artName, storyName) {
   const mainSkills = [];
   for (const skillPath of skillList) {
     if (!fs11.existsSync(skillPath)) throw new Error(`\u4E3B\u6280\u80FD\u6587\u4EF6\u4E0D\u5B58\u5728: ${skillPath}`);
-    const content = await fs11.promises.readFile(skillPath, "utf-8");
+    const content = await readSkill(skillPath);
     const parsed = parseFrontmatter(content);
     mainSkills.push({ path: skillPath, ...parsed });
   }
@@ -257898,7 +261106,7 @@ async function useProductionSkills(artName, storyName) {
 \u4EE5\u4E0B\u6280\u80FD\u63D0\u4F9B\u4E86\u4E13\u4E1A\u4EFB\u52A1\u7684\u4E13\u7528\u6307\u4EE4\u3002
 \u5F53\u4EFB\u52A1\u4E0E\u67D0\u4E2A\u6280\u80FD\u7684\u63CF\u8FF0\u5339\u914D\u65F6\uFF0C\u8C03\u7528 activate_skill \u5DE5\u5177\u5E76\u4F20\u5165\u6280\u80FD\u540D\u79F0\u6765\u52A0\u8F7D\u5B8C\u6574\u6307\u4EE4\u3002
 ${buildSkillPrompt(mainSkills)}`,
-    tools: createSkillTools(mainSkills, { mainSkill: mainSkills, secondarySkills: [], tertiarySkills: [] })
+    tools: createSkillTools(mainSkills, { mainSkill: mainSkills, secondarySkills: [], tertiarySkills: [] }, utils_default.getPath("skills"), readSkill)
   };
 }
 
@@ -258484,6 +261692,81 @@ var ReasoningBuilder = class {
 var resTool_default = ResTool;
 
 // src/socket/routes/productionAgent.ts
+init_chatHistory();
+init_storyboardTable();
+init_operationReceipt();
+
+// src/agents/productionAgent/storyboardRebuildDispatch.ts
+init_storyboardProgress();
+function isExplicitStoryboardRebuildRequest(input) {
+  const text2 = input.trim().replace(/[\s，。！!？?、]/g, "");
+  if (/^(重新构建|重新生成分镜(?:表)?|重新构建分镜(?:表)?|重建分镜(?:表)?|重新制作分镜(?:表)?)$/.test(text2)) return true;
+  return /^(?:请)?(?:以|按)(?:当前|最新)导演(?:计划|规划)(?:为准)?(?:重新构建|重新生成|重建)(?:全部|整集|所有|[一二三四五六七八九十百\d]+场|全部[一二三四五六七八九十百\d]+场)?分镜(?:表)?$/.test(text2);
+}
+function storyboardPlanSceneCount(plan) {
+  const declared = plan.match(/共规划\s*(\d+)\s*个?场/);
+  const headings = [...plan.matchAll(/^\s*(?:\d+[.、]\s*)?场\s*(\d+)\s*[：:]/gm)].map((match) => Number(match[1]));
+  const ordered = headings.length > 0 && headings.every((n, index) => n === index + 1);
+  if (headings.length && !ordered) throw new Error("\u6700\u65B0\u5BFC\u6F14\u8BA1\u5212\u573A\u6B21\u7F16\u53F7\u4E0D\u8FDE\u7EED\uFF0C\u4E0D\u80FD\u81EA\u52A8\u91CD\u5EFA");
+  const count = declared ? Number(declared[1]) : ordered ? headings.length : 0;
+  if (!Number.isSafeInteger(count) || count < 1 || count > 1e3 || headings.length && headings.length !== count) {
+    throw new Error("\u65E0\u6CD5\u6838\u5BF9\u6700\u65B0\u5BFC\u6F14\u8BA1\u5212\u7684\u5B8C\u6574\u573A\u6B21\u6570\uFF0C\u672A\u4FEE\u6539\u65E7\u4EFB\u52A1");
+  }
+  return count;
+}
+async function prepareAuthorizedStoryboardRebuild(db2, projectId, episodesId, instruction, abortSignal) {
+  if (!isExplicitStoryboardRebuildRequest(instruction)) throw new Error("\u6CA1\u6709\u6536\u5230\u660E\u786E\u7684\u6574\u96C6\u5206\u955C\u91CD\u5EFA\u6307\u4EE4\uFF0C\u65E7\u7A3F\u4FDD\u6301\u4E0D\u53D8");
+  if (abortSignal?.aborted) throw new Error("\u5206\u955C\u91CD\u5EFA\u5DF2\u53D6\u6D88\uFF0C\u672A\u4FEE\u6539\u65E7\u4EFB\u52A1");
+  const scope = { projectId, episodesId, key: "productionAgent" };
+  const workspace = await db2("o_agentWorkData").where(scope).select("data").first();
+  if (!workspace?.data) throw new Error("\u5F53\u524D\u9879\u76EE\u5C1A\u65E0\u5206\u955C\u4EFB\u52A1\uFF0C\u4E0D\u80FD\u6E05\u7A7A\u6216\u91CD\u5EFA\uFF1B\u8BF7\u8D70\u9996\u6B21\u6784\u5EFA\u6D41\u7A0B");
+  const data = JSON.parse(workspace.data);
+  const plan = typeof data.scriptPlan === "string" ? data.scriptPlan : "";
+  const total = storyboardPlanSceneCount(plan);
+  const currentPlanHash = hashStoryboardSource(plan);
+  const context2 = await getStoryboardRebuildContext(db2, projectId, episodesId);
+  if (!context2.taskId || context2.actualSavedScenes === null) {
+    throw new Error("\u65E7\u4EFB\u52A1\u6B63\u6587\u548C\u8FDB\u5EA6\u672A\u901A\u8FC7\u4E00\u81F4\u6027\u6838\u9A8C\uFF0C\u672A\u4FEE\u6539\u65E7\u7A3F\uFF1B\u9700\u8981\u5148\u6838\u5BF9\u6570\u636E\u5E93");
+  }
+  const archives = Array.isArray(data.storyboardTaskArchives) ? data.storyboardTaskArchives : [];
+  const lastArchive = archives.length ? archives[archives.length - 1] : null;
+  const current = await readStoryboardProgress(db2, projectId, episodesId);
+  if (current.valid && current.mode === "scene" && current.total === total && current.planHash === currentPlanHash && lastArchive?.replacementTaskId === current.taskId) {
+    return {
+      taskId: current.taskId,
+      total,
+      archivedSceneCount: Number(lastArchive.previousSavedScenes?.length ?? 0),
+      archivedSavedScenes: Array.isArray(lastArchive.previousSavedScenes) ? lastArchive.previousSavedScenes : [],
+      archiveId: typeof lastArchive.archiveId === "string" ? lastArchive.archiveId : null,
+      newlyInitialized: false
+    };
+  }
+  if (abortSignal?.aborted) throw new Error("\u5206\u955C\u91CD\u5EFA\u5DF2\u53D6\u6D88\uFF0C\u672A\u4FEE\u6539\u65E7\u4EFB\u52A1");
+  const rebuilt = await rebuildStoryboardTask(db2, {
+    projectId,
+    episodesId,
+    expectedTaskId: context2.taskId,
+    expectedRevision: context2.revision,
+    expectedPlanHash: currentPlanHash,
+    total,
+    reason: instruction
+  });
+  const checked = await readStoryboardProgress(db2, projectId, episodesId);
+  if (!checked.valid || checked.taskId !== rebuilt.taskId || checked.total !== total || checked.revision !== 0 || checked.savedScenes.length !== 0 || checked.nextScene !== 1) {
+    throw new Error("\u65B0\u5206\u955C\u4EFB\u52A1\u5DF2\u521D\u59CB\u5316\uFF0C\u4F46\u6570\u636E\u5E93\u8BFB\u56DE\u5F02\u5E38\uFF1B\u505C\u6B62\u751F\u6210\uFF0C\u8BF7\u5148\u6838\u5BF9\u6570\u636E\u5E93");
+  }
+  return {
+    taskId: rebuilt.taskId,
+    total,
+    archivedSceneCount: rebuilt.archivedSceneCount,
+    archivedSavedScenes: rebuilt.archivedSavedScenes,
+    archiveId: rebuilt.archiveId,
+    newlyInitialized: true
+  };
+}
+
+// src/socket/routes/productionAgent.ts
+init_storyboardTable();
 async function verifyToken(rawToken) {
   const setting = await utils_default.db("o_setting").where("key", "tokenKey").select("value").first();
   if (!setting) return false;
@@ -258498,6 +261781,7 @@ async function verifyToken(rawToken) {
   }
 }
 var productionAgent_default = (nsp) => {
+  const taskStore = new TaskStore(utils_default.db);
   nsp.on("connection", async (socket) => {
     const token = socket.handshake.auth.token;
     if (!token || !await verifyToken(token)) {
@@ -258516,46 +261800,355 @@ var productionAgent_default = (nsp) => {
       projectId: socket.handshake.auth.projectId,
       scriptId: socket.handshake.auth.scriptId
     });
+    let chatHistory = new AgentChatHistoryStore(utils_default.db, isolationKey);
+    socket.onAnyOutgoing((event, ...args) => {
+      const payload = args[0];
+      if (!payload || typeof payload !== "object") return;
+      if (event === "message") chatHistory.recordMessage(payload);
+      else if (event === "message:update") chatHistory.recordMessageUpdate(payload.id, payload);
+      else if (event === "content:add") chatHistory.recordContentAdd(payload.messageId, payload.content);
+      else if (event === "content:update") chatHistory.recordContentUpdate(payload);
+    });
     let abortController = null;
+    let activeRunId = null;
     const thinkConfig = {
       think: false,
       thinlLevel: 0
     };
+    const scope = () => ({
+      agentType: "productionAgent",
+      projectId: Number(resTool.data.projectId),
+      episodesId: Number(resTool.data.scriptId),
+      isolationKey
+    });
+    const ensureRunScope = async (runId) => {
+      const run = await taskStore.getRun(runId);
+      if (run.agentType !== "productionAgent" || Number(run.projectId) !== Number(resTool.data.projectId) || Number(run.episodesId) !== Number(resTool.data.scriptId) || run.isolationKey !== isolationKey) throw new Error("\u4EFB\u52A1\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u3001\u5267\u96C6\u6216 Agent \u4E0A\u4E0B\u6587");
+      return run;
+    };
+    const reconcileKnownSteps = async (runId) => {
+      let state = await taskStore.reconcile(runId);
+      const projectId = Number(resTool.data.projectId);
+      const episodesId = Number(resTool.data.scriptId);
+      for (const call of state.toolCalls.filter(
+        (item) => item.toolName === "add_flowData_storyboard" && ["reconciling", "failed"].includes(item.status)
+      )) {
+        try {
+          const input = call.input ?? {};
+          const requestId = typeof input.requestId === "string" && input.requestId || call.error?.match(/requestId=([A-Za-z0-9_-]{8,128})/)?.[1];
+          if (!requestId) continue;
+          const receipt = await utils_default.db("o_agentWorkData").where({ projectId, episodesId, key: `storyboardWrite:${requestId}` }).select("data").first();
+          if (!receipt?.data) continue;
+          const saved = JSON.parse(receipt.data);
+          if (!Array.isArray(saved.createdIds) || !saved.createdIds.length) continue;
+          await taskStore.resolveToolCall(runId, call.id, "completed", {
+            success: true,
+            requestId,
+            createdIds: saved.createdIds,
+            reconciled: true
+          });
+        } catch (error73) {
+          console.warn("[productionAgent] \u81EA\u52A8\u6838\u5BF9\u5206\u955C\u5199\u5165\u5931\u8D25:", call.id, utils_default.error(error73).message);
+        }
+      }
+      state = await taskStore.reconcile(runId);
+      for (const call of state.toolCalls.filter(
+        (item) => item.toolName === "add_flowData_storyboard" && ["reconciling", "failed"].includes(item.status)
+      )) {
+        try {
+          const input = call.input ?? {};
+          const requestId = typeof input.requestId === "string" && input.requestId || call.error?.match(/requestId=([A-Za-z0-9_-]{8,128})/)?.[1];
+          if (!requestId) continue;
+          const receipt = await utils_default.db("o_agentWorkData").where({ projectId, episodesId, key: `storyboardWrite:${requestId}` }).select("data").first();
+          if (!receipt) {
+            await taskStore.resolveToolCall(runId, call.id, "retryable", void 0, "\u672A\u53D1\u73B0\u5206\u955C\u5199\u5165\u4E8B\u52A1\u56DE\u6267\uFF0C\u53EF\u5B89\u5168\u91CD\u8BD5");
+          }
+        } catch (error73) {
+          console.warn("[productionAgent] \u5224\u65AD\u5206\u955C\u5199\u5165\u91CD\u8BD5\u72B6\u6001\u5931\u8D25:", call.id, utils_default.error(error73).message);
+        }
+      }
+      state = await taskStore.reconcile(runId);
+      for (const call of state.toolCalls.filter(
+        (item) => ["add_deriveAsset", "del_deriveAsset"].includes(item.toolName) && ["reconciling", "failed"].includes(item.status)
+      )) {
+        try {
+          const input = call.input ?? {};
+          const requestId = typeof input.requestId === "string" && input.requestId || call.error?.match(/requestId=([A-Za-z0-9_-]{8,128})/)?.[1];
+          if (!requestId) continue;
+          if (call.toolName === "add_deriveAsset") {
+            const receipt = await utils_default.db("o_agentWorkData").where({ projectId, episodesId, key: `deriveAssetWrite:${requestId}` }).select("data").first();
+            if (!receipt?.data) continue;
+            const saved = JSON.parse(receipt.data);
+            const assetId = Number(saved.assetId);
+            const parentId = Number(input.assetsId);
+            const asset = await utils_default.db("o_assets").where({ id: assetId, projectId, assetsId: parentId }).first();
+            const linked = await utils_default.db("o_scriptAssets").where({ scriptId: episodesId, assetId }).first();
+            if (!asset || !linked || typeof input.name === "string" && asset.name !== input.name || typeof input.desc === "string" && (asset.describe ?? "") !== input.desc) continue;
+            await taskStore.resolveToolCall(runId, call.id, "completed", {
+              success: true,
+              requestId,
+              id: assetId,
+              reconciled: true
+            });
+          } else {
+            const receipt = await utils_default.db("o_agentWorkData").where({ projectId, episodesId, key: `deriveAssetDelete:${requestId}` }).select("data").first();
+            if (!receipt?.data) continue;
+            const saved = JSON.parse(receipt.data);
+            const assetId = Number(saved.assetId);
+            const asset = await utils_default.db("o_assets").where({ id: assetId, projectId }).first();
+            const linked = await utils_default.db("o_scriptAssets").where({ scriptId: episodesId, assetId }).first();
+            if (asset || linked) continue;
+            await taskStore.resolveToolCall(runId, call.id, "completed", {
+              success: true,
+              requestId,
+              id: assetId,
+              reconciled: true
+            });
+          }
+        } catch (error73) {
+          console.warn("[productionAgent] \u81EA\u52A8\u6838\u5BF9\u884D\u751F\u8D44\u4EA7\u5199\u5165\u5931\u8D25:", call.id, utils_default.error(error73).message);
+        }
+      }
+      state = await taskStore.reconcile(runId);
+      for (const call of state.toolCalls.filter(
+        (item) => ["add_deriveAsset", "del_deriveAsset"].includes(item.toolName) && ["reconciling", "failed"].includes(item.status)
+      )) {
+        try {
+          const input = call.input ?? {};
+          const requestId = typeof input.requestId === "string" && input.requestId || call.error?.match(/requestId=([A-Za-z0-9_-]{8,128})/)?.[1];
+          if (!requestId) continue;
+          const key = call.toolName === "add_deriveAsset" ? `deriveAssetWrite:${requestId}` : `deriveAssetDelete:${requestId}`;
+          const receipt = await utils_default.db("o_agentWorkData").where({ projectId, episodesId, key }).select("data").first();
+          if (!receipt) {
+            await taskStore.resolveToolCall(runId, call.id, "retryable", void 0, "\u672A\u53D1\u73B0\u884D\u751F\u8D44\u4EA7\u4E8B\u52A1\u56DE\u6267\uFF0C\u53EF\u5B89\u5168\u91CD\u8BD5");
+          }
+        } catch (error73) {
+          console.warn("[productionAgent] \u5224\u65AD\u884D\u751F\u8D44\u4EA7\u91CD\u8BD5\u72B6\u6001\u5931\u8D25:", call.id, utils_default.error(error73).message);
+        }
+      }
+      state = await taskStore.reconcile(runId);
+      for (const call of state.toolCalls.filter(
+        (item) => ["generate_deriveAsset", "generate_storyboard"].includes(item.toolName) && ["reconciling", "failed"].includes(item.status)
+      )) {
+        try {
+          const input = call.input ?? {};
+          const requestId = typeof input.requestId === "string" && input.requestId || call.error?.match(/requestId=([A-Za-z0-9_-]{8,128})/)?.[1];
+          if (!requestId) continue;
+          const ids = Array.isArray(input.ids) ? [...new Set(input.ids.map(Number).filter(Number.isSafeInteger))].sort((a, b) => a - b) : [];
+          if (!ids.length) continue;
+          const kind = call.toolName === "generate_deriveAsset" ? "asset-generate" : "storyboard-generate";
+          const expectedInput = call.toolName === "generate_deriveAsset" ? { assetIds: ids, projectId, scriptId: episodesId } : { storyboardIds: ids, projectId, scriptId: episodesId, compulsory: false };
+          const receipt = await getOperationReceipt(
+            utils_default.db,
+            { projectId, episodesId },
+            kind,
+            requestId,
+            expectedInput
+          );
+          if (receipt) {
+            await taskStore.resolveToolCall(runId, call.id, "completed", {
+              success: true,
+              requestId,
+              accepted: true,
+              reconciled: true
+            });
+          } else {
+            await taskStore.resolveToolCall(runId, call.id, "retryable", void 0, "\u540E\u7AEF\u672A\u53D1\u73B0\u751F\u6210\u4EFB\u52A1\u53D7\u7406\u56DE\u6267\uFF0C\u53EF\u5B89\u5168\u91CD\u8BD5");
+          }
+        } catch (error73) {
+          console.warn("[productionAgent] \u81EA\u52A8\u6838\u5BF9\u56FE\u7247\u751F\u6210\u8BF7\u6C42\u5931\u8D25:", call.id, utils_default.error(error73).message);
+        }
+      }
+      state = await taskStore.reconcile(runId);
+      for (const step of state.steps.filter((item) => item.status === "reconciling")) {
+        try {
+          if (step.stepKey.startsWith("productionAgent:directorPlanAgent:")) {
+            const resultRef = await reconcileDirectorPlanOutput(utils_default.db, projectId, episodesId, step.output);
+            if (resultRef) await taskStore.resolveStep(runId, step.stepKey, "completed", resultRef);
+            else if (!step.output) await taskStore.resolveStep(runId, step.stepKey, "retryable", void 0, "\u6A21\u578B\u8F93\u51FA\u5C1A\u672A\u5B8C\u6210\uFF0C\u53EF\u5B89\u5168\u91CD\u8BD5");
+            continue;
+          }
+          if (step.stepKey.startsWith("productionAgent:storyboardTableAgent:")) {
+            const resultRef = await reconcileStoryboardTableOutput(utils_default.db, projectId, episodesId, step.output);
+            if (resultRef) await taskStore.resolveStep(runId, step.stepKey, "completed", resultRef);
+            else if (!step.output) await taskStore.resolveStep(runId, step.stepKey, "retryable", void 0, "\u5206\u955C\u8868\u8F93\u51FA\u5C1A\u672A\u5B8C\u6210\uFF0C\u53EF\u5B89\u5168\u91CD\u8BD5");
+            continue;
+          }
+          const sideEffects = state.toolCalls.filter((call) => call.stepKey === step.stepKey && call.sideEffect);
+          if (!sideEffects.length) {
+            if (step.output?.trim()) {
+              await taskStore.resolveStep(runId, step.stepKey, "completed", `recovered:${step.stepKey}`);
+            } else {
+              await taskStore.resolveStep(runId, step.stepKey, "retryable", void 0, "\u672A\u53D1\u73B0\u5199\u64CD\u4F5C\u4E14\u6A21\u578B\u8F93\u51FA\u672A\u5B8C\u6210\uFF0C\u53EF\u5B89\u5168\u91CD\u8BD5");
+            }
+            continue;
+          }
+          if (sideEffects.every((call) => call.status === "completed") && step.output?.trim()) {
+            await taskStore.resolveStep(runId, step.stepKey, "completed", `recovered:${step.stepKey}`);
+            continue;
+          }
+          if (sideEffects.every((call) => ["completed", "retryable"].includes(call.status))) {
+            await taskStore.resolveStep(runId, step.stepKey, "retryable", void 0, "\u5199\u5DE5\u5177\u72B6\u6001\u5747\u5DF2\u6838\u5BF9\uFF0C\u53EF\u5B89\u5168\u6062\u590D\u6A21\u578B\u6B65\u9AA4");
+          }
+        } catch (error73) {
+          console.warn("[productionAgent] \u81EA\u52A8\u6838\u5BF9\u6B65\u9AA4\u5931\u8D25:", step.stepKey, utils_default.error(error73).message);
+        }
+      }
+      return taskStore.reconcile(runId);
+    };
+    const executeRun = async (runId, content, controller) => {
+      const msg = resTool.newMessage("assistant", "\u89C6\u9891\u7B56\u5212");
+      const ctx = {
+        runId,
+        socket,
+        isolationKey,
+        text: content,
+        userMessageTime: new Date(msg.datetime).getTime() - 1,
+        abortSignal: controller.signal,
+        resTool,
+        msg,
+        thinkConfig
+      };
+      activeRunId = runId;
+      try {
+        if (isExplicitStoryboardRebuildRequest(content)) {
+          const projectId = Number(resTool.data.projectId);
+          const episodesId = Number(resTool.data.scriptId);
+          const prepared = await prepareAuthorizedStoryboardRebuild(
+            utils_default.db,
+            projectId,
+            episodesId,
+            content,
+            controller.signal
+          );
+          const snapshot = await readStoryboardTableSnapshot(utils_default.db, projectId, episodesId);
+          if (snapshot.storyboardTableProgress?.taskId !== prepared.taskId) {
+            throw new Error("\u91CD\u5EFA\u521D\u59CB\u5316\u56DE\u6267\u4E0E\u6570\u636E\u5E93\u4EFB\u52A1\u4E0D\u4E00\u81F4\uFF0C\u505C\u6B62\u9010\u573A\u751F\u6210");
+          }
+          socket.emit("storyboardTable:committed", {
+            episodesId,
+            storyboardTable: snapshot.storyboardTable,
+            storyboardTableProgress: snapshot.storyboardTableProgress,
+            savedScenes: Object.keys(snapshot.storyboardTableProgress.scenes).map(Number).sort((a, b) => a - b),
+            missingScenes: Array.from({ length: prepared.total }, (_, i) => i + 1).filter((n) => !snapshot.storyboardTableProgress?.scenes[String(n)])
+          });
+          const initMessage = resTool.newMessage("assistant", "\u89C6\u9891\u7B56\u5212");
+          initMessage.text(`\u65E7\u4EFB\u52A1\u5B9E\u9645\u4FDD\u5B58${prepared.archivedSceneCount}\u573A\uFF0C\u5DF2\u5F52\u6863\uFF08\u5F52\u6863ID\uFF1A${prepared.archiveId ?? "\u65E2\u6709\u5F52\u6863"}\uFF09\u3002\u65B0\u4EFB\u52A1ID\uFF1A${prepared.taskId}\uFF1B${prepared.newlyInitialized ? "\u521D\u59CB\u5316\u5B8C\u6210" : "\u6062\u590D\u5DF2\u6709\u65B0\u4EFB\u52A1"}\uFF0C\u73B0\u5728\u7531\u540E\u7AEF\u76F4\u63A5\u5F00\u59CB\u9010\u573A\u751F\u6210\u3002`).complete();
+          initMessage.complete();
+          const verified = await generateRebuiltStoryboard(ctx, prepared.total, prepared.taskId);
+          const done = resTool.newMessage("assistant", "\u89C6\u9891\u7B56\u5212");
+          done.text(`\u65B0\u4EFB\u52A1${verified.taskId}\u5DF2\u4ECE\u6570\u636E\u5E93\u6838\u5BF9\u4FDD\u5B58${verified.savedScenes.length}/${verified.total}\u573A\u3002\u7ED3\u6784\u5316\u5206\u955C\u5DF2\u751F\u6210\uFF1B\u5185\u5BB9\u8986\u76D6\u3001\u8282\u594F\u548C\u5236\u4F5C\u8D28\u91CF\u4ECD\u987B\u76D1\u5236\u590D\u6838\u3002`).complete();
+          done.complete();
+        } else {
+          await runDecisionAI(ctx);
+        }
+        await taskStore.finish(runId, controller.signal.aborted ? "reconciling" : "completed");
+      } catch (err) {
+        await taskStore.finish(runId, controller.signal.aborted ? "reconciling" : "failed", utils_default.error(err).message);
+        if (err.name !== "AbortError" && !controller.signal.aborted) {
+          const message = utils_default.error(err).message;
+          console.error("[productionAgent] chat error:", message);
+          ctx.msg.error(message);
+        }
+      } finally {
+        if (abortController === controller) {
+          abortController = null;
+          activeRunId = null;
+        }
+      }
+    };
+    socket.on("agent:runs", async (_, callback) => {
+      try {
+        callback?.({ success: true, runs: await taskStore.list("productionAgent", Number(resTool.data.projectId), Number(resTool.data.scriptId)) });
+      } catch (error73) {
+        callback?.({ success: false, error: utils_default.error(error73).message });
+      }
+    });
+    socket.on("agent:reconcile", async (data, callback) => {
+      try {
+        await ensureRunScope(data.runId);
+        callback?.({ success: true, run: await reconcileKnownSteps(data.runId) });
+      } catch (error73) {
+        callback?.({ success: false, error: utils_default.error(error73).message });
+      }
+    });
+    socket.on("agent:resolve-step", async (data, callback) => {
+      try {
+        await ensureRunScope(data.runId);
+        await taskStore.resolveStep(data.runId, data.stepKey, data.resolution, data.resultRef, data.error);
+        callback?.({ success: true, run: await taskStore.reconcile(data.runId) });
+      } catch (error73) {
+        callback?.({ success: false, error: utils_default.error(error73).message });
+      }
+    });
+    socket.on("agent:resolve-tool", async (data, callback) => {
+      try {
+        await ensureRunScope(data.runId);
+        await taskStore.resolveToolCall(data.runId, data.id, data.resolution, data.output, data.error);
+        callback?.({ success: true, run: await taskStore.reconcile(data.runId) });
+      } catch (error73) {
+        callback?.({ success: false, error: utils_default.error(error73).message });
+      }
+    });
+    socket.on("agent:resume", async (data, callback) => {
+      try {
+        if (activeRunId || abortController) throw new Error("\u5F53\u524D\u5DF2\u6709\u4EFB\u52A1\u6B63\u5728\u6267\u884C\uFF0C\u8BF7\u5148\u505C\u6B62\u540E\u518D\u6062\u590D");
+        await ensureRunScope(data.runId);
+        await reconcileKnownSteps(data.runId);
+        const resumed = await taskStore.resume(data.runId, scope());
+        const controller = new AbortController();
+        abortController = controller;
+        socket.emit("agent:run", { id: resumed.id, status: "running", duplicate: false, resumed: true });
+        callback?.({ success: true, runId: resumed.id });
+        void executeRun(resumed.id, resumed.content, controller);
+      } catch (error73) {
+        callback?.({ success: false, error: utils_default.error(error73).message });
+      }
+    });
     socket.on("updateContext", (data, callback) => {
+      if (activeRunId || abortController) {
+        callback?.({ success: false, error: "\u5F53\u524D\u4EFB\u52A1\u6267\u884C\u4E2D\uFF0C\u4E0D\u80FD\u5207\u6362\u5267\u96C6\u4E0A\u4E0B\u6587" });
+        return;
+      }
       isolationKey = data.isolationKey;
       resTool = new resTool_default(socket, {
         projectId: data.projectId,
         scriptId: data.scriptId
       });
+      chatHistory = new AgentChatHistoryStore(utils_default.db, isolationKey);
       console.log("[productionAgent] \u4E0A\u4E0B\u6587\u5DF2\u66F4\u65B0:", isolationKey);
       callback?.({ success: true });
     });
     socket.on("chat", async (data) => {
       const { content } = data;
+      const userMessageId = data.requestId ? `user_${data.requestId}` : `user_${utils_default.uuid()}`;
+      chatHistory.recordMessage({
+        id: userMessageId,
+        role: "user",
+        status: "complete",
+        datetime: (/* @__PURE__ */ new Date()).toISOString(),
+        content: [{ id: `text_${userMessageId}`, type: "text", data: content, status: "complete" }]
+      });
       abortController?.abort();
+      const interruptedRunId = activeRunId;
       abortController = new AbortController();
       const currentController = abortController;
-      const msg = resTool.newMessage("assistant", "\u89C6\u9891\u7B56\u5212");
-      const ctx = {
-        socket,
-        isolationKey,
-        text: content,
-        userMessageTime: new Date(msg.datetime).getTime() - 1,
-        abortSignal: currentController.signal,
-        resTool,
-        msg,
-        thinkConfig
-      };
       try {
-        await runDecisionAI(ctx);
+        if (interruptedRunId) await taskStore.finish(interruptedRunId, "reconciling", "\u88AB\u65B0\u8BF7\u6C42\u4E2D\u65AD\uFF0C\u9700\u6838\u5BF9\u5DF2\u5B8C\u6210\u7ED3\u679C");
+        const run = await taskStore.begin({ requestId: data.requestId, ...scope(), content });
+        socket.emit("agent:run", run);
+        if (run.duplicate) {
+          const msg = resTool.newMessage("assistant", "\u89C6\u9891\u7B56\u5212");
+          msg.error(`\u8BE5\u8BF7\u6C42\u5DF2\u5B58\u5728\uFF0C\u5F53\u524D\u72B6\u6001\uFF1A${run.status}`);
+          if (abortController === currentController) abortController = null;
+          return;
+        }
+        await executeRun(run.id, content, currentController);
       } catch (err) {
-        if (err.name !== "AbortError" && !currentController.signal.aborted) {
-          console.error("[productionAgent] chat error:", utils_default.error(err).message);
-        }
-      } finally {
-        if (abortController === currentController) {
-          abortController = null;
-        }
+        if (abortController === currentController) abortController = null;
+        console.error("[productionAgent] task start error:", utils_default.error(err).message);
+        const msg = resTool.newMessage("assistant", "\u89C6\u9891\u7B56\u5212");
+        msg.error(utils_default.error(err).message);
       }
     });
     socket.on("updateThinkConfig", (data) => {
@@ -258565,7 +262158,13 @@ var productionAgent_default = (nsp) => {
     });
     socket.on("stop", () => {
       abortController?.abort();
+      if (activeRunId) void taskStore.finish(activeRunId, "reconciling", "\u7528\u6237\u505C\u6B62\uFF0C\u9700\u6838\u5BF9\u5DF2\u5B8C\u6210\u7ED3\u679C").catch((error73) => console.error("[productionAgent] \u505C\u6B62\u4EFB\u52A1\u72B6\u6001\u4FDD\u5B58\u5931\u8D25:", utils_default.error(error73).message));
       abortController = null;
+      activeRunId = null;
+    });
+    socket.on("disconnect", () => {
+      abortController?.abort();
+      if (activeRunId) void taskStore.finish(activeRunId, "reconciling", "\u8FDE\u63A5\u65AD\u5F00\uFF0C\u9700\u6838\u5BF9\u5DF2\u5B8C\u6210\u7ED3\u679C").catch((error73) => console.error("[productionAgent] \u65AD\u7EBF\u4EFB\u52A1\u72B6\u6001\u4FDD\u5B58\u5931\u8D25:", utils_default.error(error73).message));
     });
   });
   nsp.on("disconnect", (socket) => {
@@ -258731,33 +262330,133 @@ var tools_default2 = (toolCpnfig) => {
 // src/agents/scriptAgent/index.ts
 var fs12 = __toESM(require("fs"));
 var import_path11 = __toESM(require("path"));
-function buildMemPrompt2(mem) {
-  let memoryContext = "";
-  if (mem.rag.length) {
-    memoryContext += `[\u76F8\u5173\u8BB0\u5FC6]
-${mem.rag.map((r) => r.content).join("\n")}`;
-  }
-  if (mem.summaries.length) {
-    if (memoryContext) memoryContext += "\n\n";
-    memoryContext += `[\u5386\u53F2\u6458\u8981]
-${mem.summaries.map((s, i) => `${i + 1}. ${s.content}`).join("\n")}`;
-  }
-  if (mem.shortTerm.length) {
-    if (memoryContext) memoryContext += "\n\n";
-    memoryContext += `[\u8FD1\u671F\u5BF9\u8BDD]
-${mem.shortTerm.map((m) => `${m.role}: ${m.content}`).join("\n")}`;
-  }
-  return `## Memory
-\u4EE5\u4E0B\u662F\u4F60\u5BF9\u7528\u6237\u7684\u8BB0\u5FC6\uFF0C\u53EF\u4F5C\u4E3A\u53C2\u8003\u4F46\u4E0D\u8981\u4E3B\u52A8\u63D0\u53CA\uFF1A
-${memoryContext}`;
+
+// src/agents/scriptAgent/workspace.ts
+var emptyWorkspace = () => ({ storySkeleton: "", adaptationStrategy: "", script: [] });
+function decodeXmlAttribute(value) {
+  return value.replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
 }
+function extractScriptWorkspaceField(response, field) {
+  try {
+    return extractSingleXmlResult(response, field);
+  } catch (error73) {
+    throw new Error(`${field === "storySkeleton" ? "\u6545\u4E8B\u9AA8\u67B6" : "\u6539\u7F16\u7B56\u7565"}${error73 instanceof Error ? error73.message : String(error73)}`);
+  }
+}
+function extractScriptItem(response) {
+  const openings = [...response.matchAll(/<scriptItem\b([^>]*)>/g)];
+  const closings = [...response.matchAll(/<\/scriptItem\s*>/g)];
+  if (openings.length !== 1 || closings.length !== 1) throw new Error("\u5267\u672C\u8F93\u51FA\u4E0D\u5B8C\u6574\uFF1A\u9700\u8981\u4E14\u53EA\u80FD\u6709\u4E00\u4EFD scriptItem");
+  const open = openings[0];
+  const close = closings[0];
+  if (open.index === void 0 || close.index === void 0 || close.index < open.index + open[0].length) {
+    throw new Error("\u5267\u672C\u8F93\u51FA\u4E0D\u5B8C\u6574\uFF1AscriptItem \u6807\u7B7E\u987A\u5E8F\u9519\u8BEF");
+  }
+  const attrs = open[1] ?? "";
+  const nameMatch = attrs.match(/\bname\s*=\s*(?:"([^"]+)"|'([^']+)')/);
+  const name28 = decodeXmlAttribute((nameMatch?.[1] ?? nameMatch?.[2] ?? "").trim());
+  if (!name28) throw new Error("\u5267\u672C\u8F93\u51FA\u7F3A\u5C11 scriptItem name");
+  const content = response.slice(open.index + open[0].length, close.index).trim();
+  if (!content) throw new Error("\u5267\u672C\u8F93\u51FA\u6B63\u6587\u4E3A\u7A7A");
+  return { name: name28, content };
+}
+async function loadWorkspace(trx, projectId) {
+  const project = await trx("o_project").where({ id: projectId }).select("id").first();
+  if (!project) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728");
+  const row = await trx("o_agentWorkData").where({ projectId, key: "scriptAgent" }).first();
+  const parsed = row?.data ? JSON.parse(row.data) : emptyWorkspace();
+  return {
+    row,
+    data: {
+      storySkeleton: typeof parsed.storySkeleton === "string" ? parsed.storySkeleton : "",
+      adaptationStrategy: typeof parsed.adaptationStrategy === "string" ? parsed.adaptationStrategy : "",
+      script: Array.isArray(parsed.script) ? parsed.script : []
+    }
+  };
+}
+async function readScriptWorkspaceField(db2, projectId, field) {
+  const row = await db2("o_agentWorkData").where({ projectId, key: "scriptAgent" }).select("data").first();
+  if (!row?.data) return "";
+  const data = JSON.parse(row.data);
+  return typeof data[field] === "string" ? data[field] : "";
+}
+async function saveScriptWorkspaceField(db2, projectId, field, value, expectedValue) {
+  if (!Number.isSafeInteger(projectId) || !value.trim()) throw new Error("\u5267\u672C\u5DE5\u4F5C\u533A\u7F3A\u5C11\u6709\u6548\u9879\u76EE\u6216\u5185\u5BB9");
+  await db2.transaction(async (trx) => {
+    const { row, data } = await loadWorkspace(trx, projectId);
+    if (data[field] !== expectedValue) throw new Error(`${field === "storySkeleton" ? "\u6545\u4E8B\u9AA8\u67B6" : "\u6539\u7F16\u7B56\u7565"}\u5728\u751F\u6210\u671F\u95F4\u5DF2\u88AB\u4FEE\u6539\uFF0C\u8BF7\u5148\u67E5\u770B\u5F53\u524D\u7248\u672C\u518D\u91CD\u8BD5`);
+    const payload = JSON.stringify({ ...data, [field]: value });
+    if (row) {
+      const updated = await trx("o_agentWorkData").where({ id: row.id }).update({ data: payload });
+      if (updated !== 1) throw new Error("\u5267\u672C\u5DE5\u4F5C\u533A\u66F4\u65B0\u5931\u8D25");
+    } else {
+      await trx("o_agentWorkData").insert({ projectId, key: "scriptAgent", data: payload });
+    }
+    const saved = await trx("o_agentWorkData").where({ projectId, key: "scriptAgent" }).select("data").first();
+    if (!saved || JSON.parse(saved.data ?? "{}")[field] !== value) throw new Error("\u5267\u672C\u5DE5\u4F5C\u533A\u5199\u5165\u540E\u6821\u9A8C\u5931\u8D25");
+  });
+}
+async function snapshotProjectScripts(db2, projectId) {
+  const rows = await db2("o_script").where({ projectId }).select("name", "content");
+  return new Map(rows.map((row) => [String(row.name ?? ""), String(row.content ?? "")]));
+}
+async function saveScriptItem(db2, projectId, item, expectedContent) {
+  if (!Number.isSafeInteger(projectId) || !item.name.trim() || !item.content.trim()) throw new Error("\u5267\u672C\u7F3A\u5C11\u6709\u6548\u9879\u76EE\u3001\u540D\u79F0\u6216\u6B63\u6587");
+  return db2.transaction(async (trx) => {
+    const project = await trx("o_project").where({ id: projectId }).select("id").first();
+    if (!project) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728");
+    const current = await trx("o_script").where({ projectId, name: item.name }).first();
+    if (expectedContent === null) {
+      if (current) throw new Error(`\u5267\u672C\u201C${item.name}\u201D\u5728\u751F\u6210\u671F\u95F4\u5DF2\u88AB\u521B\u5EFA\uFF0C\u8BF7\u5148\u67E5\u770B\u5F53\u524D\u7248\u672C\u518D\u91CD\u8BD5`);
+      const [id] = await trx("o_script").insert({ projectId, name: item.name, content: item.content });
+      const saved2 = await trx("o_script").where({ id, projectId }).first();
+      if (!saved2 || saved2.content !== item.content) throw new Error("\u5267\u672C\u6B63\u6587\u5199\u5165\u540E\u6821\u9A8C\u5931\u8D25");
+      return Number(id);
+    }
+    if (!current || String(current.content ?? "") !== expectedContent) {
+      throw new Error(`\u5267\u672C\u201C${item.name}\u201D\u5728\u751F\u6210\u671F\u95F4\u5DF2\u88AB\u4FEE\u6539\uFF0C\u8BF7\u5148\u67E5\u770B\u5F53\u524D\u7248\u672C\u518D\u91CD\u8BD5`);
+    }
+    const updated = await trx("o_script").where({ id: current.id, projectId }).update({ content: item.content });
+    if (updated !== 1) throw new Error("\u5267\u672C\u6B63\u6587\u66F4\u65B0\u5931\u8D25");
+    const saved = await trx("o_script").where({ id: current.id, projectId }).first();
+    if (!saved || saved.content !== item.content) throw new Error("\u5267\u672C\u6B63\u6587\u5199\u5165\u540E\u6821\u9A8C\u5931\u8D25");
+    return Number(current.id);
+  });
+}
+async function reconcileScriptStepOutput(db2, projectId, stepKey, output) {
+  if (!output) return null;
+  if (stepKey.startsWith("scriptAgent:storySkeletonAgent:")) {
+    const value = extractScriptWorkspaceField(output, "storySkeleton");
+    return await readScriptWorkspaceField(db2, projectId, "storySkeleton") === value ? `storySkeleton:${projectId}` : null;
+  }
+  if (stepKey.startsWith("scriptAgent:adaptationStrategyAgent:")) {
+    const value = extractScriptWorkspaceField(output, "adaptationStrategy");
+    return await readScriptWorkspaceField(db2, projectId, "adaptationStrategy") === value ? `adaptationStrategy:${projectId}` : null;
+  }
+  if (stepKey.startsWith("scriptAgent:scriptAgent:")) {
+    const item = extractScriptItem(output);
+    const row = await db2("o_script").where({ projectId, name: item.name }).select("id", "content").first();
+    return row && String(row.content ?? "") === item.content ? `script:${projectId}:${row.id}` : null;
+  }
+  if (stepKey.startsWith("scriptAgent:supervisionAgent:")) {
+    return output.trim() ? `recovered:${stepKey}` : null;
+  }
+  return null;
+}
+
+// src/agents/scriptAgent/index.ts
 async function runDecisionAI2(ctx) {
   const { isolationKey, text: text2, userMessageTime, abortSignal, resTool } = ctx;
   const memory = new memory_default("scriptAgent", isolationKey);
   await memory.add("user", text2, { createTime: userMessageTime });
   const skill = import_path11.default.join(utils_default.getPath("skills"), "script_agent_decision.md");
-  const prompt = await fs12.promises.readFile(skill, "utf-8");
-  const mem = buildMemPrompt2(await memory.get(text2));
+  const taskStore = ctx.runId ? new TaskStore(utils_default.db) : null;
+  const prompt = taskStore ? await taskStore.readSkill(ctx.runId, skill) : await fs12.promises.readFile(skill, "utf-8");
+  const checkpoint = taskStore ? await taskStore.buildResumePrompt(ctx.runId) : "";
+  const budgetRow = await utils_default.db("o_setting").where({ key: "memoryContextTokenBudget" }).select("value").first();
+  const configuredBudget = Number(budgetRow?.value);
+  const memoryBudget = Number.isSafeInteger(configuredBudget) && configuredBudget >= 400 ? configuredBudget : 2400;
+  const mem = buildMemoryPrompt(await memory.get(text2), memoryBudget);
   const projectData = await utils_default.db("o_project").where("id", resTool.data.projectId).first();
   const novelData = await utils_default.db("o_novel").where("projectId", resTool.data.projectId).select("chapterIndex");
   const projectInfo = [
@@ -258771,14 +262470,19 @@ async function runDecisionAI2(ctx) {
   ].join("\n");
   const { fullStream } = await utils_default.Ai.Text("scriptAgent:decisionAgent", ctx.thinkConfig.think, ctx.thinkConfig.thinlLevel).stream({
     messages: [
-      { role: "system", content: prompt },
-      { role: "assistant", content: projectInfo + "\n" + mem },
+      {
+        role: "system",
+        content: prompt + (checkpoint ? "\n\n\u6062\u590D\u4EFB\u52A1\u65F6\u5FC5\u987B\u9075\u5B88 assistant \u6D88\u606F\u4E2D\u7684 Agent Runtime \u4EFB\u52A1\u68C0\u67E5\u70B9\uFF0C\u4E0D\u5F97\u91CD\u590D\u5DF2\u5B8C\u6210\u4E1A\u52A1\u6B65\u9AA4\u3002" : "")
+      },
+      { role: "assistant", content: [projectInfo, mem, checkpoint].filter(Boolean).join("\n\n") },
       { role: "user", content: text2 }
     ],
     abortSignal,
     tools: {
-      ...memory.getTools(),
-      ...tools_default2({ resTool: ctx.resTool, msg: ctx.msg }),
+      ...wrapAgentTools(
+        { ...memory.getTools(), ...tools_default2({ resTool: ctx.resTool, msg: ctx.msg }) },
+        { db: utils_default.db, runId: ctx.runId }
+      ),
       ...createSubAgent2(ctx)
     },
     onFinish: async (completion) => {
@@ -258796,6 +262500,8 @@ async function runDecisionAI2(ctx) {
 function createSubAgent2(parentCtx) {
   const { resTool, abortSignal } = parentCtx;
   const memory = new memory_default("scriptAgent", parentCtx.isolationKey);
+  const taskStore = new TaskStore(utils_default.db);
+  const readSkill = (filePath) => parentCtx.runId ? taskStore.readSkill(parentCtx.runId, filePath) : fs12.promises.readFile(filePath, "utf-8");
   async function runAgent({
     key,
     prompt,
@@ -258805,23 +262511,64 @@ function createSubAgent2(parentCtx) {
     tools: extraTools,
     messages
   }) {
-    parentCtx.msg.complete();
-    const subMsg = resTool.newMessage("assistant", name28);
-    const { fullStream } = await utils_default.Ai.Text(key, parentCtx.thinkConfig.think, parentCtx.thinkConfig.thinlLevel).stream({
-      system,
-      messages: messages ?? [{ role: "user", content: prompt }],
-      abortSignal,
-      tools: { ...extraTools, ...tools_default2({ resTool, msg: subMsg }) }
-    });
-    const fullResponse = await consumeFullStream2(fullStream, subMsg);
-    if (fullResponse.trim()) {
-      await memory.add(memoryKey, removeAllXmlTags2(fullResponse), {
-        name: name28,
-        createTime: new Date(subMsg.datetime).getTime()
-      });
+    const stepInput = JSON.stringify({ key, prompt, messages: messages ?? null });
+    const stepKey = TaskStore.makeStepKey(key, stepInput);
+    if (parentCtx.runId) {
+      const prior = await taskStore.beginStep(parentCtx.runId, stepKey, stepInput);
+      if (prior.cached) return prior.output ?? "";
     }
-    parentCtx.msg = resTool.newMessage("assistant", "\u89C6\u9891\u7B56\u5212");
-    return fullResponse;
+    try {
+      parentCtx.msg.complete();
+      const subMsg = resTool.newMessage("assistant", name28);
+      const projectId = Number(resTool.data.projectId);
+      const isStorySkeleton = key === "scriptAgent:storySkeletonAgent";
+      const isAdaptationStrategy = key === "scriptAgent:adaptationStrategyAgent";
+      const isScript = key === "scriptAgent:scriptAgent";
+      const expectedWorkspaceValue = isStorySkeleton ? await readScriptWorkspaceField(utils_default.db, projectId, "storySkeleton") : isAdaptationStrategy ? await readScriptWorkspaceField(utils_default.db, projectId, "adaptationStrategy") : null;
+      const scriptSnapshot = isScript ? await snapshotProjectScripts(utils_default.db, projectId) : null;
+      const { fullStream } = await utils_default.Ai.Text(key, parentCtx.thinkConfig.think, parentCtx.thinkConfig.thinlLevel).stream({
+        system,
+        messages: messages ?? [{ role: "user", content: prompt }],
+        abortSignal,
+        tools: {
+          ...extraTools,
+          ...wrapAgentTools(tools_default2({ resTool, msg: subMsg }), { db: utils_default.db, runId: parentCtx.runId, stepKey })
+        }
+      });
+      const fullResponse = await consumeFullStream2(fullStream, subMsg);
+      if (parentCtx.runId) await taskStore.saveStepOutput(parentCtx.runId, stepKey, fullResponse);
+      let resultRef = `message:${subMsg.id}`;
+      if (isStorySkeleton) {
+        const value = extractScriptWorkspaceField(fullResponse, "storySkeleton");
+        await saveScriptWorkspaceField(utils_default.db, projectId, "storySkeleton", value, expectedWorkspaceValue ?? "");
+        resTool.socket.emit("scriptWorkspace:committed", { type: "storySkeleton", value });
+        resultRef = `storySkeleton:${projectId}`;
+      } else if (isAdaptationStrategy) {
+        const value = extractScriptWorkspaceField(fullResponse, "adaptationStrategy");
+        await saveScriptWorkspaceField(utils_default.db, projectId, "adaptationStrategy", value, expectedWorkspaceValue ?? "");
+        resTool.socket.emit("scriptWorkspace:committed", { type: "adaptationStrategy", value });
+        resultRef = `adaptationStrategy:${projectId}`;
+      } else if (isScript) {
+        const item = extractScriptItem(fullResponse);
+        const expected = scriptSnapshot?.has(item.name) ? scriptSnapshot.get(item.name) : null;
+        const scriptId = await saveScriptItem(utils_default.db, projectId, item, expected);
+        resTool.socket.emit("scriptWorkspace:committed", { type: "scriptItem", id: scriptId, ...item });
+        resultRef = `script:${projectId}:${scriptId}`;
+      }
+      const visibleMemory = removeAllXmlTags2(fullResponse).trim();
+      if (visibleMemory) {
+        await memory.add(memoryKey, visibleMemory, {
+          name: name28,
+          createTime: new Date(subMsg.datetime).getTime()
+        });
+      }
+      if (parentCtx.runId) await taskStore.finishStep(parentCtx.runId, stepKey, resultRef);
+      parentCtx.msg = resTool.newMessage("assistant", "\u89C6\u9891\u7B56\u5212");
+      return fullResponse;
+    } catch (error73) {
+      if (parentCtx.runId) await taskStore.markStepReconciling(parentCtx.runId, stepKey, utils_default.error(error73).message);
+      throw error73;
+    }
   }
   const promptInput = external_exports.object({
     prompt: external_exports.string().describe("\u4EA4\u7ED9\u5B50Agent\u7684\u4EFB\u52A1\u7B80\u7EA6\u63CF\u8FF0\uFF0C100\u5B57\u4EE5\u5185")
@@ -258831,7 +262578,7 @@ function createSubAgent2(parentCtx) {
     inputSchema: jsonSchema(promptInput),
     execute: async ({ prompt }) => {
       const skill = import_path11.default.join(utils_default.getPath("skills"), "script_execution_skeleton.md");
-      const systemPrompt = await fs12.promises.readFile(skill, "utf-8");
+      const systemPrompt = await readSkill(skill);
       const formatPrompt = "\n\u4F60\u5FC5\u987B\u4F7F\u7528\u5982\u4E0BXML\u683C\u5F0F\u5199\u5165\u5DE5\u4F5C\u533A\uFF1A\n<storySkeleton>\u6545\u4E8B\u9AA8\u67B6\u5185\u5BB9</storySkeleton>";
       return runAgent({
         key: "scriptAgent:storySkeletonAgent",
@@ -258848,7 +262595,7 @@ function createSubAgent2(parentCtx) {
     inputSchema: jsonSchema(promptInput),
     execute: async ({ prompt }) => {
       const skill = import_path11.default.join(utils_default.getPath("skills"), "script_execution_adaptation.md");
-      const systemPrompt = await fs12.promises.readFile(skill, "utf-8");
+      const systemPrompt = await readSkill(skill);
       const formatPrompt = "\n\u4F60\u5FC5\u987B\u4F7F\u7528\u5982\u4E0BXML\u683C\u5F0F\u5199\u5165\u5DE5\u4F5C\u533A\uFF1A\n<adaptationStrategy>\u6539\u7F16\u7B56\u7565\u5185\u5BB9</adaptationStrategy>";
       return runAgent({
         key: "scriptAgent:adaptationStrategyAgent",
@@ -258865,7 +262612,7 @@ function createSubAgent2(parentCtx) {
     inputSchema: jsonSchema(promptInput),
     execute: async ({ prompt }) => {
       const skill = import_path11.default.join(utils_default.getPath("skills"), "script_execution_script.md");
-      const systemPrompt = await fs12.promises.readFile(skill, "utf-8");
+      const systemPrompt = await readSkill(skill);
       const scriptList = await utils_default.db("o_script").where("projectId", resTool.data.projectId).select("id", "name");
       const scriptPrompt = ["## \u53EF\u7528\u5267\u672C(ID:\u540D\u79F0)", scriptList.map((s) => `${s.id}:${(s.name || "").replace(/[,:]/g, "")}`).join(","), ""].join(
         "\n"
@@ -258890,7 +262637,7 @@ function createSubAgent2(parentCtx) {
     inputSchema: jsonSchema(promptInput),
     execute: async ({ prompt }) => {
       const skill = import_path11.default.join(utils_default.getPath("skills"), "script_agent_supervision.md");
-      const systemPrompt = await fs12.promises.readFile(skill, "utf-8");
+      const systemPrompt = await readSkill(skill);
       return runAgent({
         key: "scriptAgent:supervisionAgent",
         prompt,
@@ -258959,6 +262706,7 @@ function removeAllXmlTags2(text2) {
 }
 
 // src/socket/routes/scriptAgent.ts
+init_chatHistory();
 async function verifyToken2(rawToken) {
   const setting = await utils_default.db("o_setting").where("key", "tokenKey").select("value").first();
   if (!setting) return false;
@@ -258973,6 +262721,7 @@ async function verifyToken2(rawToken) {
   }
 }
 var scriptAgent_default = (nsp) => {
+  const taskStore = new TaskStore(utils_default.db);
   nsp.on("connection", async (socket) => {
     const token = socket.handshake.auth.token;
     if (!token || !await verifyToken2(token)) {
@@ -258990,38 +262739,147 @@ var scriptAgent_default = (nsp) => {
     const resTool = new resTool_default(socket, {
       projectId: socket.handshake.auth.projectId
     });
+    const chatHistory = new AgentChatHistoryStore(utils_default.db, isolationKey);
+    socket.onAnyOutgoing((event, ...args) => {
+      const payload = args[0];
+      if (!payload || typeof payload !== "object") return;
+      if (event === "message") chatHistory.recordMessage(payload);
+      else if (event === "message:update") chatHistory.recordMessageUpdate(payload.id, payload);
+      else if (event === "content:add") chatHistory.recordContentAdd(payload.messageId, payload.content);
+      else if (event === "content:update") chatHistory.recordContentUpdate(payload);
+    });
     let abortController = null;
+    let activeRunId = null;
     const thinkConfig = {
       think: false,
       thinlLevel: 0
     };
-    socket.on("chat", async (data) => {
-      const { content } = data;
-      abortController?.abort();
-      abortController = new AbortController();
-      const currentController = abortController;
+    const scope = () => ({
+      agentType: "scriptAgent",
+      projectId: Number(resTool.data.projectId),
+      isolationKey
+    });
+    const ensureRunScope = async (runId) => {
+      const run = await taskStore.getRun(runId);
+      if (run.agentType !== "scriptAgent" || Number(run.projectId) !== Number(resTool.data.projectId) || run.isolationKey !== isolationKey) throw new Error("\u4EFB\u52A1\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u6216 Agent \u4E0A\u4E0B\u6587");
+      return run;
+    };
+    const reconcileKnownSteps = async (runId) => {
+      let state = await taskStore.reconcile(runId);
+      for (const step of state.steps.filter((item) => item.status === "reconciling")) {
+        try {
+          const resultRef = await reconcileScriptStepOutput(utils_default.db, Number(resTool.data.projectId), step.stepKey, step.output);
+          if (resultRef) {
+            await taskStore.resolveStep(runId, step.stepKey, "completed", resultRef);
+          } else if (!step.output) {
+            await taskStore.resolveStep(runId, step.stepKey, "retryable", void 0, "\u6A21\u578B\u8F93\u51FA\u5C1A\u672A\u5B8C\u6210\uFF0C\u53EF\u5B89\u5168\u91CD\u8BD5");
+          }
+        } catch (error73) {
+          console.warn("[scriptAgent] \u81EA\u52A8\u6838\u5BF9\u6B65\u9AA4\u5931\u8D25:", step.stepKey, utils_default.error(error73).message);
+        }
+      }
+      state = await taskStore.reconcile(runId);
+      return state;
+    };
+    const executeRun = async (runId, content, controller) => {
       const msg = resTool.newMessage("assistant", "\u7EDF\u7B79");
       const ctx = {
+        runId,
         socket,
         isolationKey,
         text: content,
         userMessageTime: new Date(msg.datetime).getTime() - 1,
-        abortSignal: currentController.signal,
+        abortSignal: controller.signal,
         resTool,
         msg,
         thinkConfig
       };
+      activeRunId = runId;
       try {
         await runDecisionAI2(ctx);
+        await taskStore.finish(runId, controller.signal.aborted ? "reconciling" : "completed");
       } catch (err) {
-        if (err.name !== "AbortError" && !currentController.signal.aborted) {
+        await taskStore.finish(runId, controller.signal.aborted ? "reconciling" : "failed", utils_default.error(err).message);
+        if (err.name !== "AbortError" && !controller.signal.aborted) {
           console.error("[scriptAgent] chat error:", utils_default.error(err).message);
-          msg.error(utils_default.error(err).message);
+          ctx.msg.error(utils_default.error(err).message);
         }
       } finally {
-        if (abortController === currentController) {
+        if (abortController === controller) {
           abortController = null;
+          activeRunId = null;
         }
+      }
+    };
+    socket.on("agent:runs", async (_, callback) => {
+      try {
+        callback?.({ success: true, runs: await taskStore.list("scriptAgent", Number(resTool.data.projectId)) });
+      } catch (error73) {
+        callback?.({ success: false, error: utils_default.error(error73).message });
+      }
+    });
+    socket.on("agent:reconcile", async (data, callback) => {
+      try {
+        await ensureRunScope(data.runId);
+        callback?.({ success: true, run: await reconcileKnownSteps(data.runId) });
+      } catch (error73) {
+        callback?.({ success: false, error: utils_default.error(error73).message });
+      }
+    });
+    socket.on("agent:resolve-step", async (data, callback) => {
+      try {
+        await ensureRunScope(data.runId);
+        await taskStore.resolveStep(data.runId, data.stepKey, data.resolution, data.resultRef, data.error);
+        callback?.({ success: true, run: await taskStore.reconcile(data.runId) });
+      } catch (error73) {
+        callback?.({ success: false, error: utils_default.error(error73).message });
+      }
+    });
+    socket.on("agent:resume", async (data, callback) => {
+      try {
+        if (activeRunId || abortController) throw new Error("\u5F53\u524D\u5DF2\u6709\u4EFB\u52A1\u6B63\u5728\u6267\u884C\uFF0C\u8BF7\u5148\u505C\u6B62\u540E\u518D\u6062\u590D");
+        await ensureRunScope(data.runId);
+        await reconcileKnownSteps(data.runId);
+        const resumed = await taskStore.resume(data.runId, scope());
+        const controller = new AbortController();
+        abortController = controller;
+        socket.emit("agent:run", { id: resumed.id, status: "running", duplicate: false, resumed: true });
+        callback?.({ success: true, runId: resumed.id });
+        void executeRun(resumed.id, resumed.content, controller);
+      } catch (error73) {
+        callback?.({ success: false, error: utils_default.error(error73).message });
+      }
+    });
+    socket.on("chat", async (data) => {
+      const { content } = data;
+      const userMessageId = data.requestId ? `user_${data.requestId}` : `user_${utils_default.uuid()}`;
+      chatHistory.recordMessage({
+        id: userMessageId,
+        role: "user",
+        status: "complete",
+        datetime: (/* @__PURE__ */ new Date()).toISOString(),
+        content: [{ id: `text_${userMessageId}`, type: "text", data: content, status: "complete" }]
+      });
+      abortController?.abort();
+      const interruptedRunId = activeRunId;
+      abortController = new AbortController();
+      const currentController = abortController;
+      try {
+        if (interruptedRunId) await taskStore.finish(interruptedRunId, "reconciling", "\u88AB\u65B0\u8BF7\u6C42\u4E2D\u65AD\uFF0C\u9700\u6838\u5BF9\u5DF2\u5B8C\u6210\u7ED3\u679C");
+        const run = await taskStore.begin({ requestId: data.requestId, ...scope(), content });
+        socket.emit("agent:run", run);
+        if (run.duplicate) {
+          const msg = resTool.newMessage("assistant", "\u7EDF\u7B79");
+          msg.error(`\u8BE5\u8BF7\u6C42\u5DF2\u5B58\u5728\uFF0C\u5F53\u524D\u72B6\u6001\uFF1A${run.status}`);
+          if (abortController === currentController) abortController = null;
+          return;
+        }
+        await executeRun(run.id, content, currentController);
+      } catch (err) {
+        if (abortController === currentController) abortController = null;
+        console.error("[scriptAgent] task start error:", utils_default.error(err).message);
+        const msg = resTool.newMessage("assistant", "\u7EDF\u7B79");
+        msg.error(utils_default.error(err).message);
       }
     });
     socket.on("updateThinkConfig", (data) => {
@@ -259031,7 +262889,13 @@ var scriptAgent_default = (nsp) => {
     });
     socket.on("stop", () => {
       abortController?.abort();
+      if (activeRunId) void taskStore.finish(activeRunId, "reconciling", "\u7528\u6237\u505C\u6B62\uFF0C\u9700\u6838\u5BF9\u5DF2\u5B8C\u6210\u7ED3\u679C").catch((error73) => console.error("[scriptAgent] \u505C\u6B62\u4EFB\u52A1\u72B6\u6001\u4FDD\u5B58\u5931\u8D25:", utils_default.error(error73).message));
       abortController = null;
+      activeRunId = null;
+    });
+    socket.on("disconnect", () => {
+      abortController?.abort();
+      if (activeRunId) void taskStore.finish(activeRunId, "reconciling", "\u8FDE\u63A5\u65AD\u5F00\uFF0C\u9700\u6838\u5BF9\u5DF2\u5B8C\u6210\u7ED3\u679C").catch((error73) => console.error("[scriptAgent] \u65AD\u7EBF\u4EFB\u52A1\u72B6\u6001\u4FDD\u5B58\u5931\u8D25:", utils_default.error(error73).message));
     });
   });
   nsp.on("disconnect", (socket) => {
@@ -259056,7 +262920,7 @@ var socket_default = (io2) => {
 init_getPath();
 
 // src/utils/image.ts
-var import_promises4 = __toESM(require("node:fs/promises"));
+var import_promises5 = __toESM(require("node:fs/promises"));
 var import_fs7 = __toESM(require("fs"));
 var import_node_path5 = __toESM(require("node:path"));
 var import_sharp2 = __toESM(require("sharp"));
@@ -259068,7 +262932,7 @@ var defaultResizeOptions = {
 };
 async function resizeImage(srcPath, dstPath, opts) {
   const { width, height, fit, withoutEnlargement } = { ...defaultResizeOptions, ...opts };
-  await import_promises4.default.mkdir(import_node_path5.default.dirname(dstPath), { recursive: true });
+  await import_promises5.default.mkdir(import_node_path5.default.dirname(dstPath), { recursive: true });
   await (0, import_sharp2.default)(srcPath).resize(width, height, { fit, withoutEnlargement }).toFile(dstPath);
 }
 async function ensureThumbnail(originalPath, thumbnailPath, size) {
@@ -259106,7 +262970,7 @@ async function ensureThumbnail(originalPath, thumbnailPath, size) {
 }
 
 // src/app.ts
-var app = (0, import_express170.default)();
+var app = (0, import_express172.default)();
 var server = import_node_http.default.createServer(app);
 async function checkPermissions() {
   if (!isEletron()) return true;
@@ -259143,8 +263007,8 @@ async function startServe(randomPort = false) {
   (0, import_express_ws.default)(app);
   app.use((0, import_morgan.default)("dev"));
   app.use((0, import_cors.default)({ origin: "*" }));
-  app.use(import_express170.default.json({ limit: "100mb" }));
-  app.use(import_express170.default.urlencoded({ extended: true, limit: "100mb" }));
+  app.use(import_express172.default.json({ limit: "100mb" }));
+  app.use(import_express172.default.urlencoded({ extended: true, limit: "100mb" }));
   const ossDir = utils_default.getPath("oss");
   if (!import_fs19.default.existsSync(ossDir)) {
     import_fs19.default.mkdirSync(ossDir, { recursive: true });
@@ -259171,7 +263035,7 @@ async function startServe(randomPort = false) {
           sizeSubDir = `${percentMatch[1]}p`;
           sizeOpts = { type: "percentage", value: pct };
         } else {
-          import_express170.default.static(ossDir, { acceptRanges: false })(req, res, next);
+          import_express172.default.static(ossDir, { acceptRanges: false })(req, res, next);
           return;
         }
         const ext = import_path29.default.extname(req.path);
@@ -259182,14 +263046,14 @@ async function startServe(randomPort = false) {
           if (thumbnailPath) {
             res.sendFile(thumbnailPath);
           } else {
-            import_express170.default.static(ossDir, { acceptRanges: false })(req, res, next);
+            import_express172.default.static(ossDir, { acceptRanges: false })(req, res, next);
           }
         });
         return;
       }
       next();
     },
-    import_express170.default.static(ossDir, { acceptRanges: false })
+    import_express172.default.static(ossDir, { acceptRanges: false })
   );
   const skillsDir = utils_default.getPath("skills");
   if (!import_fs19.default.existsSync(skillsDir)) {
@@ -259201,18 +263065,18 @@ async function startServe(randomPort = false) {
     (req, res, next) => {
       /\.(jpe?g|png|gif|webp|svg|ico|bmp)$/i.test(req.path) ? next() : res.status(403).end();
     },
-    import_express170.default.static(skillsDir, { acceptRanges: false })
+    import_express172.default.static(skillsDir, { acceptRanges: false })
   );
   const assetsDir = utils_default.getPath("assets");
   if (!import_fs19.default.existsSync(assetsDir)) {
     import_fs19.default.mkdirSync(assetsDir, { recursive: true });
   }
   console.log("\u6587\u4EF6\u76EE\u5F55:", assetsDir);
-  app.use("/assets", import_express170.default.static(assetsDir, { acceptRanges: false }));
+  app.use("/assets", import_express172.default.static(assetsDir, { acceptRanges: false }));
   const webDir = utils_default.getPath("web");
   if (import_fs19.default.existsSync(webDir)) {
     console.log("\u9759\u6001\u7F51\u7AD9\u76EE\u5F55:", webDir);
-    app.use(import_express170.default.static(webDir, { acceptRanges: false }));
+    app.use(import_express172.default.static(webDir, { acceptRanges: false }));
   } else {
     console.warn("\u9759\u6001\u7F51\u7AD9\u76EE\u5F55\u4E0D\u5B58\u5728:", webDir);
   }
@@ -259232,8 +263096,8 @@ async function startServe(randomPort = false) {
       return res.status(401).send({ message: "\u65E0\u6548\u7684token" });
     }
   });
-  const router170 = await Promise.resolve().then(() => (init_router(), router_exports));
-  await router170.default(app);
+  const router172 = await Promise.resolve().then(() => (init_router(), router_exports));
+  await router172.default(app);
   app.use((_, res, next) => {
     return res.status(404).send({ message: "API 404 Not Found" });
   });

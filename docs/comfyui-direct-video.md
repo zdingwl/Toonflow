@@ -1,6 +1,6 @@
 # Toonflow 本机 MiniMax H3 视频直连（ComfyUI）
 
-对应 `data/vendor/comfyui_local.ts` 1.2 版。此实现参照 `zdingwl/ai-drama-studio` 的 `backend/app/p16/provider.py` 中 `LocalComfyUIH3Provider.workflow_payload`、`readiness`、参考图上传以及 SaveVideo 结果读取流程。
+对应 `data/vendor/comfyui_local.ts` 1.6 版。此实现参照 `zdingwl/ai-drama-studio` 的 `backend/app/p16/provider.py` 中 `LocalComfyUIH3Provider.workflow_payload`、`readiness`、参考图上传以及 SaveVideo 结果读取流程。
 
 ## 不再需要 DramaClaw 或手动导出工作流
 
@@ -17,7 +17,12 @@
 - `h3Clip=qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors`
 - `h3VideoVae=minimax_h3_video_vae_fp16.safetensors`
 - `h3AudioVae=minimax_h3_audio_vae_fp32.safetensors`
-- `h3Steps=20`
+- `h3Steps=20`（无参考图 FL2VA）
+- `h3RefLora=minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors`
+- `h3RefLoraStrength=1.0`
+- `h3RefSteps=4`（有参考图 Ref2VA）
+
+Ref2VA 自动节点图通过 `LoraLoaderModelOnly` 将上述 Turbo LoRA 接到 UNet，再以 4 步采样。LoRA 仅用于有参考图的 Ref2VA；无参考图的 FL2VA 不会误用该 LoRA。
 
 如果实际 ComfyUI `/object_info` 中的模型文件名或路径不同，应填写原样文件名；不要重命名模型文件以迁就默认值。原生图使用 24fps 与 `17k+5` 帧数网格，根据 Toonflow 传入的 480p/720p 和宽高比生成尺寸。输出尺寸和可用时长仍受本机模型、显存及节点限制。
 
