@@ -27,7 +27,7 @@ declare const Buffer: any;
 declare const pollTask: (fn: () => Promise<{ completed: boolean; data?: string; error?: string }>, interval?: number, timeout?: number) => Promise<{ completed: boolean; data?: string; error?: string }>;
 
 const vendor = {
-  id: "comfyui_local", version: "1.6", author: "Local ComfyUI",
+  id: "comfyui_local", version: "1.7", author: "Local ComfyUI",
   name: "本机 ComfyUI（FLUX + MiniMax H3）",
   description: "FLUX 图片走 ComfyUI；MiniMax H3 视频直连原生 Ref2VA/FL2VA。角色/场景/道具资产作为 <Picture N>，分镜图仅作文本构图指导，避免覆盖人物身份。",
   inputs: [
@@ -39,10 +39,7 @@ const vendor = {
     { key: "h3Clip", label: "H3 文本编码器文件名", type: "text", required: false, placeholder: "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors" },
     { key: "h3VideoVae", label: "H3 视频 VAE 文件名", type: "text", required: false, placeholder: "minimax_h3_video_vae_fp16.safetensors" },
     { key: "h3AudioVae", label: "H3 音频 VAE 文件名", type: "text", required: false, placeholder: "minimax_h3_audio_vae_fp32.safetensors" },
-    { key: "h3Steps", label: "H3 无参考图采样步数", type: "text", required: false, placeholder: "20" },
-    { key: "h3RefLora", label: "H3 Ref2VA 加速 LoRA", type: "text", required: false, placeholder: "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors" },
-    { key: "h3RefLoraStrength", label: "H3 Ref2VA LoRA 强度", type: "text", required: false, placeholder: "1.0" },
-    { key: "h3RefSteps", label: "H3 Ref2VA 采样步数", type: "text", required: false, placeholder: "4" },
+    { key: "h3Steps", label: "H3 采样步数", type: "text", required: false, placeholder: "20" },
     { key: "workflowApi", label: "自定义视频工作流 API JSON（可选）", type: "text", required: false, placeholder: "留空自动使用原生 H3 节点图" },
     { key: "workflowMapping", label: "自定义工作流节点映射 JSON（可选）", type: "text", required: false, placeholder: "仅在使用自定义工作流时填写" },
     { key: "gatewayUrl", label: "DramaClaw 网关地址（仅 gateway 模式）", type: "url", required: false, placeholder: "http://127.0.0.1:3000/v1" },
@@ -55,8 +52,6 @@ const vendor = {
     h3Clip: "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
     h3VideoVae: "minimax_h3_video_vae_fp16.safetensors",
     h3AudioVae: "minimax_h3_audio_vae_fp32.safetensors", h3Steps: "20",
-    h3RefLora: "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
-    h3RefLoraStrength: "1.0", h3RefSteps: "4",
     workflowApi: "", workflowMapping: "", gatewayUrl: "http://127.0.0.1:3000/v1", gatewayApiKey: "",
   } as Record<string, string>,
   models: [
@@ -249,7 +244,6 @@ function compileReferencePrompt(config: VideoConfig): string {
 function nativeH3Graph(config: VideoConfig, uploaded: string[], info: Record<string, any>): Record<string, any> {
   const referenceMode = uploaded.length > 0;
   const required = ["UNETLoader", "CLIPLoader", "VAELoader", referenceMode ? "MiniMaxH3ReferenceToVideo" : "MiniMaxH3ImageToVideo", "RandomNoise", "BasicGuider", "KSamplerSelect", "BasicScheduler", "SamplerCustomAdvanced", "VAEDecode", "VAEDecodeAudio", "CreateVideo", "SaveVideo"];
-  if (referenceMode) required.push("LoraLoaderModelOnly");
   if (referenceMode) required.push("LoadImage");
   const missing = required.filter(name => !info[name]);
   if (missing.length) throw new Error(`ComfyUI 缺少原生 MiniMax H3 节点：${missing.join("、")}；请更新 ComfyUI H3 节点或改用已有工作流 JSON`);
@@ -261,13 +255,7 @@ function nativeH3Graph(config: VideoConfig, uploaded: string[], info: Record<str
   assertModel(info, "CLIPLoader", "clip_name", clip);
   assertModel(info, "VAELoader", "vae_name", videoVae);
   assertModel(info, "VAELoader", "vae_name", audioVae);
-  const refLora = referenceMode ? setting("h3RefLora", "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors") : "";
-  if (referenceMode) assertModel(info, "LoraLoaderModelOnly", "lora_name", refLora);
-  const refLoraStrength = Number(setting("h3RefLoraStrength", "1.0"));
-  if (referenceMode && (!Number.isFinite(refLoraStrength) || refLoraStrength < -100 || refLoraStrength > 100)) {
-    throw new Error("H3 Ref2VA LoRA 强度必须为 -100 到 100 的数字");
-  }
-  const steps = Number(setting(referenceMode ? "h3RefSteps" : "h3Steps", referenceMode ? "4" : "20"));
+  const steps = Number(setting("h3Steps", "20"));
   if (!Number.isInteger(steps) || steps < 1 || steps > 150) throw new Error("H3 采样步数必须为 1–150 的整数");
   const { width, height } = sizeForVideo(config.resolution || "480p", config.aspectRatio);
   const duration = Math.max(4, Math.min(15, Math.ceil(config.duration || 5)));
@@ -284,20 +272,17 @@ function nativeH3Graph(config: VideoConfig, uploaded: string[], info: Record<str
       prompt: compileReferencePrompt(config), width, height, length,
     } },
     "6": { class_type: "RandomNoise", inputs: { noise_seed: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) } },
-    "7": { class_type: "BasicGuider", inputs: { model: referenceMode ? ["15", 0] : ["1", 0], conditioning: ["5", 0] } },
+    "7": { class_type: "BasicGuider", inputs: { model: ["1", 0], conditioning: ["5", 0] } },
     "8": { class_type: "KSamplerSelect", inputs: { sampler_name: "res_multistep" } },
-    "9": { class_type: "BasicScheduler", inputs: { model: referenceMode ? ["15", 0] : ["1", 0], scheduler: "simple", steps, denoise: 1.0 } },
+    "9": { class_type: "BasicScheduler", inputs: { model: ["1", 0], scheduler: "simple", steps, denoise: 1.0 } },
     "10": { class_type: "SamplerCustomAdvanced", inputs: { noise: ["6", 0], guider: ["7", 0], sampler: ["8", 0], sigmas: ["9", 0], latent_image: ["5", 1] } },
     "11": { class_type: "VAEDecode", inputs: { samples: ["10", 0], vae: ["3", 0] } },
     "12": { class_type: "VAEDecodeAudio", inputs: { samples: ["10", 0], vae: ["4", 0] } },
     "13": { class_type: "CreateVideo", inputs: { images: ["11", 0], audio: ["12", 0], fps: 24.0, bit_depth: 8 } },
     "14": { class_type: "SaveVideo", inputs: { video: ["13", 0], filename_prefix: prefix, format: "mp4" } },
   };
-  if (referenceMode) {
-    graph["15"] = { class_type: "LoraLoaderModelOnly", inputs: { model: ["1", 0], lora_name: refLora, strength_model: refLoraStrength } };
-  }
   uploaded.forEach((filename, index) => {
-    const id = String(index + 16);
+    const id = String(index + 15);
     graph[id] = { class_type: "LoadImage", inputs: { image: filename } };
     graph["5"].inputs.ref_images = graph["5"].inputs.ref_images || {};
     graph["5"].inputs.ref_images[`ref_image_${index}`] = [id, 0];
