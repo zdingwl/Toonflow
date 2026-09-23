@@ -358,7 +358,13 @@ async function comfyVideoRequest(config: VideoConfig): Promise<string> {
     try {
       const response = await axios.get(`${baseUrl()}/history/${encodeURIComponent(promptId)}`, { timeout: 20000, proxy: false });
       task = response.data?.[promptId] || response.data?.history?.[promptId];
-    } catch (error) { throw videoError("查询 H3 任务", error); }
+    } catch (error: any) {
+      const code = error?.code || error?.cause?.code;
+      if (code === "ECONNABORTED" || code === "ETIMEDOUT" || code === "ECONNRESET" || code === "EAI_AGAIN") {
+        return { completed: false };
+      }
+      throw videoError("查询 H3 任务", error);
+    }
     if (!task) return { completed: false };
     const status = task.status || {};
     if (status.status_str === "error" || status.status_str === "failed") return { completed: true, error: `ComfyUI H3 执行失败：${JSON.stringify(status.messages || []).slice(0, 800)}` };

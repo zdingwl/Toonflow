@@ -243245,45 +243245,54 @@ var init_batchGenerateVideo = __esm({
           })
         );
         res.status(200).send(success3(tasks.map((t) => ({ videoId: t.videoId, trackId: t.trackId }))));
-        for (const { videoId, videoPath, prompt, duration: duration4, images } of tasks) {
-          const base644 = await Promise.all(
-            images.map(async (item) => {
-              if (!item.path) return null;
-              const type = item.referenceType === "audioReference" || item.fileType === "audio" ? "audio" : item.referenceType === "videoReference" || item.fileType === "video" ? "video" : "image";
-              return {
-                base64: await utils_default.oss.getImageBase64(item.path),
-                type,
-                label: item.label,
-                prompt: item.prompt,
-                sourceType: item.sourceType,
-                assetType: item.assetType
-              };
-            })
-          );
-          const relatedObjects = { projectId, videoId, scriptId, type: "\u89C6\u9891" };
-          const aiVideo = utils_default.Ai.Video(model);
-          aiVideo.run(
-            {
-              prompt,
-              referenceList: base644.filter(Boolean),
-              mode: modeData.length > 0 ? modeData : mode,
-              duration: duration4,
-              aspectRatio: ratio?.videoRatio || "16:9",
-              resolution,
-              audio
-            },
-            {
-              projectId,
-              taskClass: "\u89C6\u9891\u751F\u6210",
-              describe: "\u6839\u636E\u63D0\u793A\u8BCD\u751F\u6210\u89C6\u9891",
-              relatedObjects: JSON.stringify(relatedObjects)
-            }
-          ).then(async () => await aiVideo.save(videoPath)).then(async () => await utils_default.db("o_video").where("id", videoId).update({ state: "\u751F\u6210\u6210\u529F" })).catch(async (error73) => {
+        const runTask = async ({ videoId, videoPath, prompt, duration: duration4, images }) => {
+          try {
+            const base644 = await Promise.all(
+              images.map(async (item) => {
+                if (!item.path) return null;
+                const type = item.referenceType === "audioReference" || item.fileType === "audio" ? "audio" : item.referenceType === "videoReference" || item.fileType === "video" ? "video" : "image";
+                return {
+                  base64: await utils_default.oss.getImageBase64(item.path),
+                  type,
+                  label: item.label,
+                  prompt: item.prompt,
+                  sourceType: item.sourceType,
+                  assetType: item.assetType
+                };
+              })
+            );
+            const relatedObjects = { projectId, videoId, scriptId, type: "\u89C6\u9891" };
+            const aiVideo = utils_default.Ai.Video(model);
+            await aiVideo.run(
+              {
+                prompt,
+                referenceList: base644.filter(Boolean),
+                mode: modeData.length > 0 ? modeData : mode,
+                duration: duration4,
+                aspectRatio: ratio?.videoRatio || "16:9",
+                resolution,
+                audio
+              },
+              {
+                projectId,
+                taskClass: "\u89C6\u9891\u751F\u6210",
+                describe: "\u6839\u636E\u63D0\u793A\u8BCD\u751F\u6210\u89C6\u9891",
+                relatedObjects: JSON.stringify(relatedObjects)
+              }
+            );
+            await aiVideo.save(videoPath);
+            await utils_default.db("o_video").where("id", videoId).update({ state: "\u751F\u6210\u6210\u529F", errorReason: null });
+          } catch (error73) {
             await utils_default.db("o_video").where("id", videoId).update({
               state: "\u751F\u6210\u5931\u8D25",
               errorReason: utils_default.error(error73).message
             });
-          });
+          }
+        };
+        if (h3) {
+          for (const task of tasks) await runTask(task);
+        } else {
+          await Promise.all(tasks.map(runTask));
         }
       }
     );

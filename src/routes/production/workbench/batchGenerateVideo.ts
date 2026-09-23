@@ -151,31 +151,31 @@ export default router.post(
 
     res.status(200).send(success(tasks.map((t) => ({ videoId: t.videoId, trackId: t.trackId }))));
 
-    for (const { videoId, videoPath, prompt, duration, images } of tasks) {
-      const base64 = await Promise.all(
-        images.map(async (item) => {
-          if (!item.path) return null;
-          const type =
-            item.referenceType === "audioReference" || item.fileType === "audio"
-              ? "audio"
-              : item.referenceType === "videoReference" || item.fileType === "video"
-                ? "video"
-                : "image";
-          return {
-            base64: await u.oss.getImageBase64(item.path),
-            type,
-            label: item.label,
-            prompt: item.prompt,
-            sourceType: item.sourceType,
-            assetType: item.assetType,
-          };
-        }),
-      );
+    const runTask = async ({ videoId, videoPath, prompt, duration, images }: (typeof tasks)[number]) => {
+      try {
+        const base64 = await Promise.all(
+          images.map(async (item) => {
+            if (!item.path) return null;
+            const type =
+              item.referenceType === "audioReference" || item.fileType === "audio"
+                ? "audio"
+                : item.referenceType === "videoReference" || item.fileType === "video"
+                  ? "video"
+                  : "image";
+            return {
+              base64: await u.oss.getImageBase64(item.path),
+              type,
+              label: item.label,
+              prompt: item.prompt,
+              sourceType: item.sourceType,
+              assetType: item.assetType,
+            };
+          }),
+        );
 
-      const relatedObjects = { projectId, videoId, scriptId, type: "视频" };
-      const aiVideo = u.Ai.Video(model);
-      aiVideo
-        .run(
+        const relatedObjects = { projectId, videoId, scriptId, type: "视频" };
+        const aiVideo = u.Ai.Video(model);
+        await aiVideo.run(
           {
             prompt,
             referenceList: base64.filter(Boolean) as ReferenceList[],
@@ -191,18 +191,21 @@ export default router.post(
             describe: "根据提示词生成视频",
             relatedObjects: JSON.stringify(relatedObjects),
           },
-        )
-        .then(async () => await aiVideo.save(videoPath))
-        .then(async () => await u.db("o_video").where("id", videoId).update({ state: "生成成功" }))
-        .catch(async (error: any) => {
-          await u
-            .db("o_video")
-            .where("id", videoId)
-            .update({
-              state: "生成失败",
-              errorReason: u.error(error).message,
-            });
+        );
+        await aiVideo.save(videoPath);
+        await u.db("o_video").where("id", videoId).update({ state: "生成成功", errorReason: null });
+      } catch (error: any) {
+        await u.db("o_video").where("id", videoId).update({
+          state: "生成失败",
+          errorReason: u.error(error).message,
         });
+      }
+    };
+
+    if (h3) {
+      for (const task of tasks) await runTask(task);
+    } else {
+      await Promise.all(tasks.map(runTask));
     }
   },
 );
