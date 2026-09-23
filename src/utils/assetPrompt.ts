@@ -60,3 +60,43 @@ export function buildAssetPromptUserPrompt(label: string, name: string, describe
 ${label}名称：${name}
 ${label}描述：${describe}`;
 }
+
+const roleGenerationLayout = `CHARACTER TURNAROUND SHEET, ONE SAME CHARACTER, exactly four panels in one horizontal row.
+Panel 1: head-and-shoulders portrait, complete head visible.
+Panel 2: full-body front view.
+Panel 3: full-body 90-degree side view.
+Panel 4: full-body back view.
+Panels 2-4 must show the entire body from the top of the head to the soles of the feet, with generous margin above the head and below the feet. Keep exactly the same identity, face, hairstyle, body proportions, outfit, colors and accessories in all four panels. Neutral standing pose, plain clean background. No cropped head, no cropped feet, no extra people, no duplicate body parts, no text, no labels, no watermark.`;
+
+/**
+ * Adds a short, unambiguous layout contract at the beginning of the runtime
+ * prompt. FLUX Schnell follows early English composition instructions much
+ * more reliably than a long Chinese prompt whose portrait and full-body
+ * clauses can otherwise look contradictory.
+ */
+export function buildAssetImagePrompt(
+  type: AssetPromptType,
+  artStyle: string,
+  name: string,
+  prompt: string,
+): string {
+  const facts = `Style: ${artStyle || "unspecified"}. Character name: ${name}. Character design facts: ${prompt.trim()}`;
+
+  if (type === "role") {
+    return `${roleGenerationLayout}\n\n${facts}\n\nThe four-panel layout contract above has priority over any conflicting camera-framing phrase in the character design facts.`;
+  }
+
+  const label = type === "scene" ? "scene" : "prop";
+  return `Create one production-ready ${label} reference image. Style: ${artStyle || "unspecified"}. Name: ${name}. Design facts: ${prompt.trim()}. No text, no labels, no watermark.`;
+}
+
+export function needsFluxPromptTranslation(text: string): boolean {
+  return /[\u3400-\u9fff\uf900-\ufaff]/u.test(text);
+}
+
+export function buildFluxPromptTranslationRequest(text: string): { system: string; user: string } {
+  return {
+    system: `You translate and compress image-generation prompts for FLUX.1 Schnell. Return only one concise English prompt, with no explanation, Markdown, headings, quotation marks, or code fences. Preserve every concrete visual fact, character identity marker, color, outfit, hairstyle, camera view, panel position, consistency rule, and prohibition. Remove redundant quality buzzwords and repeated synonyms, but resolve no facts and invent nothing. Translate Chinese names phonetically or describe them in English so that the result contains no Chinese characters. Keep the result under 260 English words so it fits the image model context.`,
+    user: text.trim(),
+  };
+}

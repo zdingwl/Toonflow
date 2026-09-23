@@ -27,12 +27,16 @@ declare const Buffer: any;
 declare const pollTask: (fn: () => Promise<{ completed: boolean; data?: string; error?: string }>, interval?: number, timeout?: number) => Promise<{ completed: boolean; data?: string; error?: string }>;
 
 const vendor = {
-  id: "comfyui_local", version: "1.7", author: "Local ComfyUI",
-  name: "本机 ComfyUI（FLUX + MiniMax H3）",
-  description: "FLUX 图片走 ComfyUI；MiniMax H3 视频直连原生 Ref2VA/FL2VA。角色/场景/道具资产作为 <Picture N>，分镜图仅作文本构图指导，避免覆盖人物身份。",
+  id: "comfyui_local", version: "1.8", author: "Local ComfyUI",
+  name: "本机 ComfyUI（FLUX + Qwen Image + MiniMax H3）",
+  description: "FLUX 与 Qwen-Image-2.1 图片走 ComfyUI；MiniMax H3 视频直连原生 Ref2VA/FL2VA。角色/场景/道具资产作为 <Picture N>，分镜图仅作文本构图指导，避免覆盖人物身份。",
   inputs: [
     { key: "baseUrl", label: "ComfyUI 地址", type: "url", required: true, placeholder: "http://127.0.0.1:8188" },
     { key: "checkpoint", label: "FLUX Checkpoint", type: "text", required: true, placeholder: "Flux\\flux1-schnell-fp8-with_clip_vae.safetensors" },
+    { key: "qwenImageUnet", label: "Qwen Image 2.1 主模型", type: "text", required: false, placeholder: "qwen_image_2.1_int8_convrot.safetensors" },
+    { key: "qwenImageClip", label: "Qwen Image 2.1 文本编码器", type: "text", required: false, placeholder: "qwen3vl_8b_int8_convrot.safetensors" },
+    { key: "qwenImageVae", label: "Qwen Image 2.1 VAE", type: "text", required: false, placeholder: "qwen_image_2.1_vae_bf16.safetensors" },
+    { key: "qwenImageSteps", label: "Qwen Image 2.1 采样步数", type: "text", required: false, placeholder: "25" },
     { key: "videoBackend", label: "视频后端（comfyui 或 gateway）", type: "text", required: true, placeholder: "comfyui" },
     { key: "h3Unet", label: "H3 FL2VA 模型文件名", type: "text", required: false, placeholder: "minimax_h3_fl2va_pruned_int8_convrot.safetensors" },
     { key: "h3RefUnet", label: "H3 Ref2VA 模型文件名", type: "text", required: false, placeholder: "minimax_h3_ref2va_pruned_int8_convrot.safetensors" },
@@ -47,6 +51,9 @@ const vendor = {
   ],
   inputValues: {
     baseUrl: "http://127.0.0.1:8188", checkpoint: "Flux\\flux1-schnell-fp8-with_clip_vae.safetensors",
+    qwenImageUnet: "qwen_image_2.1_int8_convrot.safetensors",
+    qwenImageClip: "qwen3vl_8b_int8_convrot.safetensors",
+    qwenImageVae: "qwen_image_2.1_vae_bf16.safetensors", qwenImageSteps: "25",
     videoBackend: "comfyui", h3Unet: "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
     h3RefUnet: "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
     h3Clip: "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
@@ -56,6 +63,7 @@ const vendor = {
   } as Record<string, string>,
   models: [
     { name: "FLUX Schnell 本机", modelName: "flux-schnell-local", type: "image" as const, mode: ["text"] },
+    { name: "Qwen Image 2.1 本机", modelName: "qwen-image-2.1-local", type: "image" as const, mode: ["text"] },
     {
       name: "MiniMax H3 本机（多图参考）", modelName: "MiniMax-H3-local", type: "video" as const,
       mode: ["text", "startFrameOptional", ["imageReference:9"]], audio: "optional" as const,
@@ -77,7 +85,28 @@ function dimensions(ratio: string): { width: number; height: number } {
 const textRequest = () => { throw new Error("本机 ComfyUI 供应商不提供文本模型"); };
 
 // Preserve the existing FLUX image workflow and its model identifier.
-const imageRequest = async (config: { prompt: string; aspectRatio: string }, _model: ImageModel): Promise<string> => {
+async function submitImageGraph(prompt: Record<string, any>, outputNode: string, clientId: string): Promise<string> {
+  const response = await fetch(`${baseUrl()}/prompt`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ prompt, client_id: clientId }) });
+  if (!response.ok) throw new Error(`ComfyUI 提交图片失败: ${await response.text()}`);
+  const created = await response.json();
+  if (!created.prompt_id) throw new Error(`ComfyUI 未返回图片任务 ID：${JSON.stringify(created.node_errors || created.error || {})}`);
+  const result = await pollTask(async () => {
+    const historyResponse = await fetch(`${baseUrl()}/history/${created.prompt_id}`);
+    if (!historyResponse.ok) return { completed: true, error: `ComfyUI 查询图片失败: ${await historyResponse.text()}` };
+    const task = (await historyResponse.json())[created.prompt_id];
+    if (!task) return { completed: false };
+    const status = task.status?.status_str;
+    if (status === "error" || status === "failed") return { completed: true, error: `ComfyUI 图片生成失败: ${JSON.stringify(task.status?.messages || []).slice(0, 800)}` };
+    if (status !== "success") return { completed: false };
+    const image = task.outputs?.[outputNode]?.images?.[0];
+    return image?.filename ? { completed: true, data: `${image.filename}|${image.subfolder || ""}|${image.type || "output"}` } : { completed: true, error: `图片生成成功但节点 ${outputNode} 没有输出` };
+  }, 1500, 1200000);
+  if (result.error || !result.data) throw new Error(result.error || "ComfyUI 图片生成超时");
+  const [filename, subfolder, type] = result.data.split("|");
+  return `${baseUrl()}/view?filename=${encodeURIComponent(filename)}&subfolder=${encodeURIComponent(subfolder)}&type=${encodeURIComponent(type)}`;
+}
+
+async function fluxImageRequest(config: { prompt: string; aspectRatio: string }): Promise<string> {
   const { width, height } = dimensions(config.aspectRatio);
   const prompt = {
     "1": { class_type: "CheckpointLoaderSimple", inputs: { ckpt_name: vendor.inputValues.checkpoint } },
@@ -91,24 +120,44 @@ const imageRequest = async (config: { prompt: string; aspectRatio: string }, _mo
     "6": { class_type: "VAEDecode", inputs: { samples: ["5", 0], vae: ["1", 2] } },
     "7": { class_type: "SaveImage", inputs: { images: ["6", 0], filename_prefix: "Toonflow" } },
   };
-  const response = await fetch(`${baseUrl()}/prompt`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ prompt, client_id: "toonflow" }) });
-  if (!response.ok) throw new Error(`ComfyUI 提交图片失败: ${await response.text()}`);
-  const created = await response.json();
-  if (!created.prompt_id) throw new Error("ComfyUI 未返回图片任务 ID");
-  const result = await pollTask(async () => {
-    const historyResponse = await fetch(`${baseUrl()}/history/${created.prompt_id}`);
-    if (!historyResponse.ok) return { completed: true, error: `ComfyUI 查询图片失败: ${await historyResponse.text()}` };
-    const task = (await historyResponse.json())[created.prompt_id];
-    if (!task) return { completed: false };
-    const status = task.status?.status_str;
-    if (status === "error" || status === "failed") return { completed: true, error: `ComfyUI 图片生成失败: ${status}` };
-    if (status !== "success") return { completed: false };
-    const image = task.outputs?.["7"]?.images?.[0];
-    return image?.filename ? { completed: true, data: `${image.filename}|${image.subfolder || ""}|${image.type || "output"}` } : { completed: true, error: "图片生成成功但没有输出" };
-  }, 1500, 600000);
-  if (result.error || !result.data) throw new Error(result.error || "ComfyUI 图片生成超时");
-  const [filename, subfolder, type] = result.data.split("|");
-  return `${baseUrl()}/view?filename=${encodeURIComponent(filename)}&subfolder=${encodeURIComponent(subfolder)}&type=${encodeURIComponent(type)}`;
+  return submitImageGraph(prompt, "7", "toonflow-flux");
+}
+
+async function qwenImageRequest(config: { prompt: string; aspectRatio: string; size?: string }): Promise<string> {
+  const info = await getObjectInfo("Qwen Image 2.1 Runtime");
+  const required = ["UNETLoader", "CLIPLoader", "VAELoader", "TextEncodeQwenImage21", "EmptyLatentImage", "KSampler", "VAEDecode", "SaveImage"];
+  const missing = required.filter(name => !info[name]);
+  if (missing.length) throw new Error(`ComfyUI 缺少 Qwen Image 2.1 节点：${missing.join("、")}；请更新 ComfyUI`);
+  const unet = setting("qwenImageUnet", "qwen_image_2.1_int8_convrot.safetensors");
+  const clip = setting("qwenImageClip", "qwen3vl_8b_int8_convrot.safetensors");
+  const vae = setting("qwenImageVae", "qwen_image_2.1_vae_bf16.safetensors");
+  assertModel(info, "UNETLoader", "unet_name", unet);
+  assertModel(info, "CLIPLoader", "clip_name", clip);
+  assertModel(info, "VAELoader", "vae_name", vae);
+  const steps = Number(setting("qwenImageSteps", "25"));
+  if (!Number.isInteger(steps) || steps < 1 || steps > 100) throw new Error("Qwen Image 2.1 采样步数必须为 1–100 的整数");
+  const maxSide = config.size === "1K" ? 1024 : 2048;
+  const [rw, rh] = (config.aspectRatio || "1:1").split(":").map(Number);
+  const a = rw > 0 ? rw : 1; const b = rh > 0 ? rh : 1;
+  const width = a >= b ? maxSide : Math.max(32, Math.round(maxSide * a / b / 32) * 32);
+  const height = a >= b ? Math.max(32, Math.round(maxSide * b / a / 32) * 32) : maxSide;
+  const graph = {
+    "1": { class_type: "UNETLoader", inputs: { unet_name: unet, weight_dtype: "default" } },
+    "2": { class_type: "CLIPLoader", inputs: { clip_name: clip, type: "qwen_image", device: "default" } },
+    "3": { class_type: "VAELoader", inputs: { vae_name: vae } },
+    "4": { class_type: "TextEncodeQwenImage21", inputs: { clip: ["2", 0], prompt: config.prompt, negative_prompt: "", resolution: Math.max(width, height) } },
+    "5": { class_type: "EmptyLatentImage", inputs: { width, height, batch_size: 1 } },
+    "6": { class_type: "KSampler", inputs: { model: ["1", 0], seed: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER), steps, cfg: 1, sampler_name: "euler", scheduler: "simple", positive: ["4", 0], negative: ["4", 1], latent_image: ["5", 0], denoise: 1 } },
+    "7": { class_type: "VAEDecode", inputs: { samples: ["6", 0], vae: ["3", 0] } },
+    "8": { class_type: "SaveImage", inputs: { images: ["7", 0], filename_prefix: "Toonflow/QwenImage21" } },
+  };
+  return submitImageGraph(graph, "8", "toonflow-qwen-image-2.1");
+}
+
+const imageRequest = async (config: { prompt: string; aspectRatio: string; size?: string }, model: ImageModel): Promise<string> => {
+  if (model.modelName === "qwen-image-2.1-local") return qwenImageRequest(config);
+  if (model.modelName === "flux-schnell-local") return fluxImageRequest(config);
+  throw new Error(`本机 ComfyUI 不支持图片模型 ${model.modelName}`);
 };
 
 const videoError = (action: string, error: any) => {
@@ -118,7 +167,7 @@ const videoError = (action: string, error: any) => {
   return new Error(`ComfyUI ${action}失败：${error?.cause?.code || error?.code || error?.message || String(error)}${status ? ` (HTTP ${status})` : ""}${detail ? `；${detail}` : ""}；地址 ${baseUrl()}`);
 };
 
-async function getObjectInfo(): Promise<Record<string, any>> {
+async function getObjectInfo(runtime = "H3 Runtime"): Promise<Record<string, any>> {
   try {
     const [stats, info] = await Promise.all([
       axios.get(`${baseUrl()}/system_stats`, { timeout: 15000, proxy: false }),
@@ -128,7 +177,7 @@ async function getObjectInfo(): Promise<Record<string, any>> {
       throw new Error("/system_stats 或 /object_info 非预期 ComfyUI 响应");
     }
     return info.data;
-  } catch (error) { throw videoError("检测 H3 Runtime", error); }
+  } catch (error) { throw videoError(`检测 ${runtime}`, error); }
 }
 
 function modelOptions(info: any, node: string, field: string): string[] {
@@ -137,7 +186,7 @@ function modelOptions(info: any, node: string, field: string): string[] {
 }
 function assertModel(info: any, node: string, field: string, filename: string) {
   const available = modelOptions(info, node, field);
-  if (!available.includes(filename)) throw new Error(`ComfyUI H3 模型文件不可用：${filename}；请在供应商设置中填写 /object_info 返回的实际文件名`);
+  if (!available.includes(filename)) throw new Error(`ComfyUI 模型文件不可用：${filename}；请确认文件已放入正确目录并刷新模型列表，或在供应商设置中填写 /object_info 返回的实际文件名`);
 }
 
 async function uploadImage(base64: string, index: number): Promise<string> {

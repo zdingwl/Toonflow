@@ -4,6 +4,11 @@ import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
+import {
+  buildAssetImagePrompt,
+  buildFluxPromptTranslationRequest,
+  needsFluxPromptTranslation,
+} from "@/utils/assetPrompt";
 
 const router = express.Router();
 
@@ -13,8 +18,6 @@ interface AssetTypeConfig {
   label: string;
   taskClass: string;
   dir: string;
-  promptTitle: string;
-  promptEnd: string;
 }
 
 const assetTypeConfig: Record<AssetType, AssetTypeConfig> = {
@@ -22,41 +25,18 @@ const assetTypeConfig: Record<AssetType, AssetTypeConfig> = {
     label: "角色",
     taskClass: "角色图生成",
     dir: "role",
-    promptTitle: "角色标准四视图",
-    promptEnd: "人物角色四视图",
   },
   scene: {
     label: "场景",
     taskClass: "场景图生成",
     dir: "scene",
-    promptTitle: "标准场景图",
-    promptEnd: "标准场景图",
   },
   tool: {
     label: "道具",
     taskClass: "道具图生成",
     dir: "props",
-    promptTitle: "标准道具图",
-    promptEnd: "标准道具图",
   },
 };
-
-// ─── 构建生成提示词 ──────────────────────────────────────────
-
-function buildPrompt(cfg: AssetTypeConfig, artStyle: string, name: string, prompt: string): string {
-  return `
-    请根据以下参数生成${cfg.promptTitle}：
-
-    **基础参数：**
-    - 画风风格: ${artStyle || "未指定"}
-
-    **${cfg.label}设定：**
-    - 名称:${name},
-    - 提示词:${prompt},
-
-    请严格按照系统规范生成${cfg.promptEnd}。
-  `;
-}
 
 // ─── 生成资产图片 ────────────────────────────────────────────
 
@@ -93,11 +73,33 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
 
   // 3. 准备生成参数
   const imagePath = `/${projectId}/${cfg.dir}/${uuidv4()}.jpg`;
-  const userPrompt = buildPrompt(cfg, project.artStyle!, name, prompt);
   const describe = `生成${cfg.label}图，名称：${name}，提示词：${prompt}`;
   const relatedObjects = { id, projectId, type: cfg.label };
 
   try {
+    let runtimePrompt = prompt;
+    let runtimeArtStyle = project.artStyle || "";
+    let runtimeName = name;
+    const [vendorId, selectedModelName] = model.split(/:(.+)/);
+    const localPromptSource = `Art style: ${runtimeArtStyle || "unspecified"}. Asset name: ${runtimeName}. Visual facts: ${runtimePrompt}`;
+    if (vendorId === "comfyui_local" && selectedModelName === "flux-schnell-local" && needsFluxPromptTranslation(localPromptSource)) {
+      const translation = buildFluxPromptTranslationRequest(localPromptSource);
+      const translated = (await u.Ai.Text("universalAi").invoke({
+        system: translation.system,
+        messages: [{ role: "user", content: translation.user }],
+        temperature: 0,
+      })) as any;
+      runtimePrompt = String(translated?._output || "")
+        .replace(/^```(?:text)?\s*/i, "")
+        .replace(/\s*```$/i, "")
+        .trim();
+      if (!runtimePrompt || needsFluxPromptTranslation(runtimePrompt)) {
+        throw new Error("本地 FLUX 提示词英文转换失败，已停止生成，避免输出与人物设定无关的图片");
+      }
+      runtimeArtStyle = "as specified in the translated visual facts";
+      runtimeName = "the same specified character";
+    }
+    const userPrompt = buildAssetImagePrompt(type as AssetType, runtimeArtStyle, runtimeName, runtimePrompt);
     const aiImage = u.Ai.Image(model);
     await aiImage.run(
       {

@@ -8,6 +8,9 @@ app.commandLine.appendSwitch("disable-gpu-shader-disk-cache");
 app.commandLine.appendSwitch("disable-features", "CalculateNativeWinOcclusion");
 
 const TARGET_ENTRIES = new Set(["assets", "models", "serve", "skills", "web", "vendor"]);
+// Merge bundled defaults into user-editable directories without overwriting
+// user files. Runtime bundles below are replaced on every launch instead.
+const MERGE_ENTRIES = new Set(["assets", "models", "skills", "vendor"]);
 // serve/web 是当前安装包的运行时代码，不属于用户数据。
 // 即使应用版本号没有变化（开发构建常见），也必须刷新，否则会继续运行旧 bundle。
 const RUNTIME_ENTRIES = new Set(["serve", "web"]);

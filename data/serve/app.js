@@ -106922,8 +106922,31 @@ A medium tracking shot follows the woman from behind as she ascends and approach
         utils_default.vendor.writeCode("toonflow", vendorData["toonflow.ts"]);
       }
       const comfyuiLocalVer = await utils_default.vendor.getVendor("comfyui_local").version;
-      if (Number(comfyuiLocalVer) < 1.5) {
+      if (Number(comfyuiLocalVer) < 1.8) {
         utils_default.vendor.writeCode("comfyui_local", vendorData["comfyui_local.ts"]);
+      }
+      const comfyuiLocalData = await utils_default.db("o_vendorConfig").where("id", "comfyui_local").first();
+      if (comfyuiLocalData) {
+        const models = JSON.parse(comfyuiLocalData.models || "[]");
+        if (!models.some((item) => item.modelName === "qwen-image-2.1-local")) {
+          models.splice(Math.min(1, models.length), 0, {
+            name: "Qwen Image 2.1 \u672C\u673A",
+            modelName: "qwen-image-2.1-local",
+            type: "image",
+            mode: ["text"]
+          });
+        }
+        const inputValues = {
+          qwenImageUnet: "qwen_image_2.1_int8_convrot.safetensors",
+          qwenImageClip: "qwen3vl_8b_int8_convrot.safetensors",
+          qwenImageVae: "qwen_image_2.1_vae_bf16.safetensors",
+          qwenImageSteps: "25",
+          ...JSON.parse(comfyuiLocalData.inputValues || "{}")
+        };
+        await utils_default.db("o_vendorConfig").where("id", "comfyui_local").update({
+          models: JSON.stringify(models),
+          inputValues: JSON.stringify(inputValues)
+        });
       }
     };
   }
@@ -239786,7 +239809,28 @@ function buildAssetPromptUserPrompt(label, name28, describe4) {
 ${label}\u540D\u79F0\uFF1A${name28}
 ${label}\u63CF\u8FF0\uFF1A${describe4}`;
 }
-var typeGuides, commonContract;
+function buildAssetImagePrompt(type, artStyle, name28, prompt) {
+  const facts = `Style: ${artStyle || "unspecified"}. Character name: ${name28}. Character design facts: ${prompt.trim()}`;
+  if (type === "role") {
+    return `${roleGenerationLayout}
+
+${facts}
+
+The four-panel layout contract above has priority over any conflicting camera-framing phrase in the character design facts.`;
+  }
+  const label = type === "scene" ? "scene" : "prop";
+  return `Create one production-ready ${label} reference image. Style: ${artStyle || "unspecified"}. Name: ${name28}. Design facts: ${prompt.trim()}. No text, no labels, no watermark.`;
+}
+function needsFluxPromptTranslation(text2) {
+  return /[\u3400-\u9fff\uf900-\ufaff]/u.test(text2);
+}
+function buildFluxPromptTranslationRequest(text2) {
+  return {
+    system: `You translate and compress image-generation prompts for FLUX.1 Schnell. Return only one concise English prompt, with no explanation, Markdown, headings, quotation marks, or code fences. Preserve every concrete visual fact, character identity marker, color, outfit, hairstyle, camera view, panel position, consistency rule, and prohibition. Remove redundant quality buzzwords and repeated synonyms, but resolve no facts and invent nothing. Translate Chinese names phonetically or describe them in English so that the result contains no Chinese characters. Keep the result under 260 English words so it fits the image model context.`,
+    user: text2.trim()
+  };
+}
+var typeGuides, commonContract, roleGenerationLayout;
 var init_assetPrompt = __esm({
   "src/utils/assetPrompt.ts"() {
     "use strict";
@@ -239830,6 +239874,12 @@ var init_assetPrompt = __esm({
 7. \u5FC5\u8981\u7684\u7981\u6B62\u9879\u96C6\u4E2D\u653E\u5728\u7ED3\u5C3E\uFF0C\u7528\u4E00\u7EC4\u7B80\u6D01\u7EA6\u675F\u8868\u8FBE\uFF1B\u4E0D\u751F\u6210\u5355\u72EC\u7684 Negative Prompt \u533A\u5757\u3002
 8. \u901A\u5E38\u63A7\u5236\u5728\u80FD\u591F\u5B8C\u6574\u8868\u8FBE\u4FE1\u606F\u7684\u6700\u77ED\u957F\u5EA6\uFF1A\u89D2\u8272\u7EA6 300\u2013650 \u4E2D\u6587\u5B57\u7B26\uFF0C\u573A\u666F\u7EA6 220\u2013520 \u4E2D\u6587\u5B57\u7B26\uFF0C\u9053\u5177\u7EA6 180\u2013420 \u4E2D\u6587\u5B57\u7B26\uFF1B\u4FE1\u606F\u8DB3\u591F\u65F6\u5B81\u53EF\u66F4\u77ED\uFF0C\u4E0D\u4E3A\u51D1\u957F\u5EA6\u91CD\u590D\u5185\u5BB9\u3002
 `;
+    roleGenerationLayout = `CHARACTER TURNAROUND SHEET, ONE SAME CHARACTER, exactly four panels in one horizontal row.
+Panel 1: head-and-shoulders portrait, complete head visible.
+Panel 2: full-body front view.
+Panel 3: full-body 90-degree side view.
+Panel 4: full-body back view.
+Panels 2-4 must show the entire body from the top of the head to the soles of the feet, with generous margin above the head and below the feet. Keep exactly the same identity, face, hairstyle, body proportions, outfit, colors and accessories in all four panels. Neutral standing pose, plain clean background. No cropped head, no cropped feet, no extra people, no duplicate body parts, no text, no labels, no watermark.`;
   }
 });
 
@@ -239967,20 +240017,6 @@ var init_cancelGenerate = __esm({
 });
 
 // src/routes/assetsGenerate/generateAssets.ts
-function buildPrompt2(cfg, artStyle, name28, prompt) {
-  return `
-    \u8BF7\u6839\u636E\u4EE5\u4E0B\u53C2\u6570\u751F\u6210${cfg.promptTitle}\uFF1A
-
-    **\u57FA\u7840\u53C2\u6570\uFF1A**
-    - \u753B\u98CE\u98CE\u683C: ${artStyle || "\u672A\u6307\u5B9A"}
-
-    **${cfg.label}\u8BBE\u5B9A\uFF1A**
-    - \u540D\u79F0:${name28},
-    - \u63D0\u793A\u8BCD:${prompt},
-
-    \u8BF7\u4E25\u683C\u6309\u7167\u7CFB\u7EDF\u89C4\u8303\u751F\u6210${cfg.promptEnd}\u3002
-  `;
-}
 var import_express25, router25, assetTypeConfig2, requestSchema2, generateAssets_default;
 var init_generateAssets = __esm({
   "src/routes/assetsGenerate/generateAssets.ts"() {
@@ -239991,28 +240027,23 @@ var init_generateAssets = __esm({
     init_dist_node();
     init_responseFormat();
     init_middleware();
+    init_assetPrompt();
     router25 = import_express25.default.Router();
     assetTypeConfig2 = {
       role: {
         label: "\u89D2\u8272",
         taskClass: "\u89D2\u8272\u56FE\u751F\u6210",
-        dir: "role",
-        promptTitle: "\u89D2\u8272\u6807\u51C6\u56DB\u89C6\u56FE",
-        promptEnd: "\u4EBA\u7269\u89D2\u8272\u56DB\u89C6\u56FE"
+        dir: "role"
       },
       scene: {
         label: "\u573A\u666F",
         taskClass: "\u573A\u666F\u56FE\u751F\u6210",
-        dir: "scene",
-        promptTitle: "\u6807\u51C6\u573A\u666F\u56FE",
-        promptEnd: "\u6807\u51C6\u573A\u666F\u56FE"
+        dir: "scene"
       },
       tool: {
         label: "\u9053\u5177",
         taskClass: "\u9053\u5177\u56FE\u751F\u6210",
-        dir: "props",
-        promptTitle: "\u6807\u51C6\u9053\u5177\u56FE",
-        promptEnd: "\u6807\u51C6\u9053\u5177\u56FE"
+        dir: "props"
       }
     };
     requestSchema2 = {
@@ -240040,10 +240071,29 @@ var init_generateAssets = __esm({
       });
       await utils_default.db("o_assets").where("id", id).update({ imageId });
       const imagePath = `/${projectId}/${cfg.dir}/${v4_default()}.jpg`;
-      const userPrompt = buildPrompt2(cfg, project.artStyle, name28, prompt);
       const describe4 = `\u751F\u6210${cfg.label}\u56FE\uFF0C\u540D\u79F0\uFF1A${name28}\uFF0C\u63D0\u793A\u8BCD\uFF1A${prompt}`;
       const relatedObjects = { id, projectId, type: cfg.label };
       try {
+        let runtimePrompt = prompt;
+        let runtimeArtStyle = project.artStyle || "";
+        let runtimeName = name28;
+        const [vendorId, selectedModelName] = model.split(/:(.+)/);
+        const localPromptSource = `Art style: ${runtimeArtStyle || "unspecified"}. Asset name: ${runtimeName}. Visual facts: ${runtimePrompt}`;
+        if (vendorId === "comfyui_local" && selectedModelName === "flux-schnell-local" && needsFluxPromptTranslation(localPromptSource)) {
+          const translation = buildFluxPromptTranslationRequest(localPromptSource);
+          const translated = await utils_default.Ai.Text("universalAi").invoke({
+            system: translation.system,
+            messages: [{ role: "user", content: translation.user }],
+            temperature: 0
+          });
+          runtimePrompt = String(translated?._output || "").replace(/^```(?:text)?\s*/i, "").replace(/\s*```$/i, "").trim();
+          if (!runtimePrompt || needsFluxPromptTranslation(runtimePrompt)) {
+            throw new Error("\u672C\u5730 FLUX \u63D0\u793A\u8BCD\u82F1\u6587\u8F6C\u6362\u5931\u8D25\uFF0C\u5DF2\u505C\u6B62\u751F\u6210\uFF0C\u907F\u514D\u8F93\u51FA\u4E0E\u4EBA\u7269\u8BBE\u5B9A\u65E0\u5173\u7684\u56FE\u7247");
+          }
+          runtimeArtStyle = "as specified in the translated visual facts";
+          runtimeName = "the same specified character";
+        }
+        const userPrompt = buildAssetImagePrompt(type, runtimeArtStyle, runtimeName, runtimePrompt);
         const aiImage = utils_default.Ai.Image(model);
         await aiImage.run(
           {

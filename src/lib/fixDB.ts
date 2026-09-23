@@ -223,8 +223,31 @@ export default async (knex: Knex): Promise<void> => {
     u.vendor.writeCode("toonflow", vendorData["toonflow.ts"]);
   }
   const comfyuiLocalVer = await u.vendor.getVendor("comfyui_local").version;
-  if (Number(comfyuiLocalVer) < 1.5) {
+  if (Number(comfyuiLocalVer) < 1.8) {
     u.vendor.writeCode("comfyui_local", vendorData["comfyui_local.ts"]);
+  }
+  const comfyuiLocalData = await u.db("o_vendorConfig").where("id", "comfyui_local").first();
+  if (comfyuiLocalData) {
+    const models = JSON.parse(comfyuiLocalData.models || "[]");
+    if (!models.some((item: any) => item.modelName === "qwen-image-2.1-local")) {
+      models.splice(Math.min(1, models.length), 0, {
+        name: "Qwen Image 2.1 本机",
+        modelName: "qwen-image-2.1-local",
+        type: "image",
+        mode: ["text"],
+      });
+    }
+    const inputValues = {
+      qwenImageUnet: "qwen_image_2.1_int8_convrot.safetensors",
+      qwenImageClip: "qwen3vl_8b_int8_convrot.safetensors",
+      qwenImageVae: "qwen_image_2.1_vae_bf16.safetensors",
+      qwenImageSteps: "25",
+      ...JSON.parse(comfyuiLocalData.inputValues || "{}"),
+    };
+    await u.db("o_vendorConfig").where("id", "comfyui_local").update({
+      models: JSON.stringify(models),
+      inputValues: JSON.stringify(inputValues),
+    });
   }
 };
 
