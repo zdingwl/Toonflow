@@ -1,0 +1,37 @@
+name: H3 四视图与对白语言回归
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/h3-feature-checks.yml"
+      - "src/utils/h3*.ts"
+      - "src/utils/assetReferenceMedia.ts"
+      - "src/routes/production/workbench/**"
+      - "Toonflow-web-master/src/views/production/components/workbench/**"
+      - "data/modelPrompt/video/minimaxH3Multi-referenceMode.md"
+      - "tests/**"
+  workflow_dispatch:
+
+jobs:
+  contracts-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: yarn
+      - name: 安装根目录依赖
+        run: yarn install --frozen-lockfile
+      - name: 执行 Agent 与 H3 回归测试
+        run: yarn test:agent
+      - name: 检查后端 TypeScript 类型
+        run: yarn lint
+      - name: 安装前端依赖并编译
+        run: |
+          yarn --cwd Toonflow-web-master install --frozen-lockfile
+          yarn --cwd Toonflow-web-master build-only
