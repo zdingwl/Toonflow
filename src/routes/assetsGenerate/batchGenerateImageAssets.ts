@@ -118,7 +118,6 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
         const roleReferences = item.type === "role" ? await ensureRoleReferenceMedia(imagePath, item.name) : [];
 
         const imageData = await u.db("o_image").where("id", imageId).select("*").first();
-        if (!imageData) return res.status(500).send("资产已被删除");
         if (!imageData) return;
         if (imageData.state === "生成失败") return;
         await u

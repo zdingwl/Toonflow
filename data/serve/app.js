@@ -239208,6 +239208,20 @@ var init_getMaterialData = __esm({
   }
 });
 
+// src/utils/latestAssetImageAttempts.ts
+function latestAssetImageAttempts(attempts) {
+  const latestByAsset = /* @__PURE__ */ new Map();
+  attempts.forEach((item) => {
+    if (item.assetsId != null && !latestByAsset.has(item.assetsId)) latestByAsset.set(item.assetsId, item);
+  });
+  return Array.from(latestByAsset.values());
+}
+var init_latestAssetImageAttempts = __esm({
+  "src/utils/latestAssetImageAttempts.ts"() {
+    "use strict";
+  }
+});
+
 // src/routes/assets/pollingImageAssets.ts
 var import_express16, router16, pollingImageAssets_default;
 var init_pollingImageAssets = __esm({
@@ -239218,6 +239232,7 @@ var init_pollingImageAssets = __esm({
     init_zod();
     init_responseFormat();
     init_middleware();
+    init_latestAssetImageAttempts();
     router16 = import_express16.default.Router();
     pollingImageAssets_default = router16.post(
       "/",
@@ -239226,10 +239241,13 @@ var init_pollingImageAssets = __esm({
       }),
       async (req, res) => {
         const { ids } = req.body;
-        const data = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").whereIn("o_assets.id", ids).whereNot("o_image.state", "\u751F\u6210\u4E2D").select("o_image.state", "o_assets.id", "o_image.filePath");
+        const attempts = await utils_default.db("o_image").whereIn("assetsId", ids).select("id", "assetsId", "state", "filePath", "errorReason").orderBy("id", "desc");
+        const data = latestAssetImageAttempts(attempts).filter((item) => item.state !== "\u751F\u6210\u4E2D");
         const result = await Promise.all(
           data.map(async (item) => ({
-            ...item,
+            id: item.assetsId,
+            state: item.state,
+            errorReason: item.errorReason,
             filePath: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : null
           }))
         );
@@ -239954,7 +239972,6 @@ var init_batchGenerateImageAssets = __esm({
             const actualResolution = actualImage.width && actualImage.height ? `${actualImage.width}x${actualImage.height}` : resolution;
             const roleReferences = item.type === "role" ? await ensureRoleReferenceMedia(imagePath, item.name) : [];
             const imageData = await utils_default.db("o_image").where("id", imageId).select("*").first();
-            if (!imageData) return res.status(500).send("\u8D44\u4EA7\u5DF2\u88AB\u5220\u9664");
             if (!imageData) return;
             if (imageData.state === "\u751F\u6210\u5931\u8D25") return;
             await utils_default.db("o_image").where("id", imageId).update({
@@ -240180,21 +240197,9 @@ var init_generateAssets = __esm({
     init_assetPrompt();
     router26 = import_express26.default.Router();
     assetTypeConfig2 = {
-      role: {
-        label: "\u89D2\u8272",
-        taskClass: "\u89D2\u8272\u56FE\u751F\u6210",
-        dir: "role"
-      },
-      scene: {
-        label: "\u573A\u666F",
-        taskClass: "\u573A\u666F\u56FE\u751F\u6210",
-        dir: "scene"
-      },
-      tool: {
-        label: "\u9053\u5177",
-        taskClass: "\u9053\u5177\u56FE\u751F\u6210",
-        dir: "props"
-      }
+      role: { label: "\u89D2\u8272", taskClass: "\u89D2\u8272\u56FE\u751F\u6210", dir: "role" },
+      scene: { label: "\u573A\u666F", taskClass: "\u573A\u666F\u56FE\u751F\u6210", dir: "scene" },
+      tool: { label: "\u9053\u5177", taskClass: "\u9053\u5177\u56FE\u751F\u6210", dir: "props" }
     };
     requestSchema2 = {
       projectId: external_exports.number(),
@@ -240204,21 +240209,26 @@ var init_generateAssets = __esm({
       type: external_exports.enum(["role", "scene", "tool", "storyboard"]),
       name: external_exports.string(),
       prompt: external_exports.string(),
-      base64: external_exports.string().optional().nullable()
+      base64: external_exports.string().optional().nullable(),
+      // Optional, backward-compatible second reference for Qwen-Image-2.1 single-view rendering.
+      styleBase64: external_exports.string().optional().nullable()
     };
     generateAssets_default = router26.post("/", validateFields(requestSchema2), async (req, res) => {
-      const { projectId, model, resolution, id, type, name: name28, prompt, base64: base644 } = req.body;
+      const { projectId, model, resolution, id, type, name: name28, prompt, base64: base644, styleBase64 } = req.body;
       const project = await utils_default.db("o_project").where("id", projectId).select("artStyle", "type", "intro").first();
-      if (!project) return res.status(500).send(success3({ message: "\u9879\u76EE\u4E3A\u7A7A" }));
+      if (!project) return res.status(404).send(error50("\u9879\u76EE\u4E3A\u7A7A"));
       const cfg = assetTypeConfig2[type];
-      if (!cfg) return res.status(400).send(error50("\u4E0D\u652F\u6301\u7684\u7C7B\u578B"));
-      const [imageId] = await utils_default.db("o_image").insert({
-        type,
-        state: "\u751F\u6210\u4E2D",
-        assetsId: id,
-        model: model.split(/:(.+)/)[1],
-        resolution
-      });
+      if (!cfg) return res.status(400).send(error50("\u4E0D\u652F\u6301\u7684\u8D44\u4EA7\u7C7B\u578B"));
+      const [vendorId, selectedModelName] = model.split(/:(.+)/);
+      const isQwenFourView = vendorId === "comfyui_qwen21_fourview" && selectedModelName === "qwen-image-2.1-fourview-local";
+      if (isQwenFourView && type !== "role") return res.status(400).send(error50("Qwen \u56DB\u89C6\u56FE\u5DE5\u4F5C\u6D41\u4EC5\u652F\u6301\u89D2\u8272\u8D44\u4EA7\uFF0C\u573A\u666F\u548C\u9053\u5177\u8BF7\u9009\u5BF9\u5E94\u6A21\u578B"));
+      if (styleBase64 && (!isQwenFourView || !base644)) return res.status(400).send(error50("\u7B2C\u4E8C\u5F20\u98CE\u683C\u53C2\u8003\u56FE\u4EC5\u7528\u4E8E Qwen \u56DB\u89C6\u56FE\uFF0C\u4E14\u5FC5\u987B\u5148\u63D0\u4F9B\u5F53\u524D\u72B6\u6001\u7684\u6B63\u9762\u5168\u8EAB\u951A\u70B9\u56FE"));
+      if (isQwenFourView) {
+        const asset = await utils_default.db("o_assets").where({ id, projectId }).select("assetsId").first();
+        if (!asset) return res.status(404).send(error50("\u8D44\u4EA7\u4E0D\u5B58\u5728"));
+        if (asset.assetsId && !base644) return res.status(400).send(error50("\u884D\u751F\u5F62\u6001\u5FC5\u987B\u4F20\u5165\u540C\u4E00\u89D2\u8272\u7684\u5DF2\u786E\u8BA4\u53C2\u8003\u56FE\uFF1B\u4E0D\u80FD\u4ECE\u6587\u672C\u9759\u9ED8\u731C\u6D4B\u7236\u89D2\u8272\u8EAB\u4EFD"));
+      }
+      const [imageId] = await utils_default.db("o_image").insert({ type, state: "\u751F\u6210\u4E2D", assetsId: id, model: selectedModelName, resolution });
       const imagePath = `/${projectId}/${cfg.dir}/${v4_default()}.jpg`;
       const describe4 = `\u751F\u6210${cfg.label}\u56FE\uFF0C\u540D\u79F0\uFF1A${name28}\uFF0C\u63D0\u793A\u8BCD\uFF1A${prompt}`;
       const relatedObjects = { id, projectId, type: cfg.label };
@@ -240226,52 +240236,37 @@ var init_generateAssets = __esm({
         let runtimePrompt = prompt;
         let runtimeArtStyle = project.artStyle || "";
         let runtimeName = name28;
-        const [vendorId, selectedModelName] = model.split(/:(.+)/);
         const localPromptSource = `Art style: ${runtimeArtStyle || "unspecified"}. Asset name: ${runtimeName}. Visual facts: ${runtimePrompt}`;
         if (vendorId === "comfyui_local" && selectedModelName === "flux-schnell-local" && needsFluxPromptTranslation(localPromptSource)) {
           const translation = buildFluxPromptTranslationRequest(localPromptSource);
-          const translated = await utils_default.Ai.Text("universalAi").invoke({
-            system: translation.system,
-            messages: [{ role: "user", content: translation.user }],
-            temperature: 0
-          });
+          const translated = await utils_default.Ai.Text("universalAi").invoke({ system: translation.system, messages: [{ role: "user", content: translation.user }], temperature: 0 });
           runtimePrompt = String(translated?._output || "").replace(/^```(?:text)?\s*/i, "").replace(/\s*```$/i, "").trim();
-          if (!runtimePrompt || needsFluxPromptTranslation(runtimePrompt)) {
-            throw new Error("\u672C\u5730 FLUX \u63D0\u793A\u8BCD\u82F1\u6587\u8F6C\u6362\u5931\u8D25\uFF0C\u5DF2\u505C\u6B62\u751F\u6210\uFF0C\u907F\u514D\u8F93\u51FA\u4E0E\u4EBA\u7269\u8BBE\u5B9A\u65E0\u5173\u7684\u56FE\u7247");
-          }
+          if (!runtimePrompt || needsFluxPromptTranslation(runtimePrompt)) throw new Error("\u672C\u5730 FLUX \u63D0\u793A\u8BCD\u82F1\u6587\u8F6C\u6362\u5931\u8D25\uFF0C\u5DF2\u505C\u6B62\u751F\u6210");
           runtimeArtStyle = "as specified in the translated visual facts";
           runtimeName = "the same specified character";
         }
-        const userPrompt = buildAssetImagePrompt(type, runtimeArtStyle, runtimeName, runtimePrompt);
+        const userPrompt = isQwenFourView ? `Project CGI style: ${runtimeArtStyle || "cinematic stylized realistic 3D animation"}. Current character and state: ${runtimeName}. Authoritative visible identity, wardrobe and state facts: ${runtimePrompt}` : buildAssetImagePrompt(type, runtimeArtStyle, runtimeName, runtimePrompt);
+        const references = base644 ? [{ type: "image", base64: base644 }] : [];
+        if (isQwenFourView && styleBase64) references.push({ type: "image", base64: styleBase64 });
         const aiImage = utils_default.Ai.Image(model);
-        await aiImage.run(
-          {
-            prompt: userPrompt,
-            referenceList: base644 ? [{ type: "image", base64: base644 }] : [],
-            size: resolution,
-            aspectRatio: "16:9"
-          },
-          {
-            taskClass: cfg.taskClass,
-            describe: describe4,
-            projectId,
-            relatedObjects: JSON.stringify(relatedObjects)
-          }
-        );
+        await aiImage.run({
+          prompt: userPrompt,
+          referenceList: references,
+          size: resolution,
+          // A standard four-column board is wide; Qwen renders each source panel portrait internally.
+          aspectRatio: isQwenFourView ? "2:3" : type === "tool" ? "1:1" : "16:9"
+        }, { taskClass: cfg.taskClass, describe: describe4, projectId, relatedObjects: JSON.stringify(relatedObjects) });
         await aiImage.save(imagePath);
-        const actualImage = await (0, import_sharp6.default)(await utils_default.oss.getFile(imagePath)).metadata();
-        const actualResolution = actualImage.width && actualImage.height ? `${actualImage.width}x${actualImage.height}` : resolution;
+        const metadata = await (0, import_sharp6.default)(await utils_default.oss.getFile(imagePath)).metadata();
+        const actualResolution = metadata.width && metadata.height ? `${metadata.width}x${metadata.height}` : resolution;
+        if (type === "role" && (!(metadata.width && metadata.height) || metadata.width / metadata.height < 1.7)) {
+          throw new Error("\u89D2\u8272\u56DB\u680F\u753B\u5E03\u6BD4\u4F8B\u5F02\u5E38\uFF1A\u672A\u5F97\u5230\u6A2A\u5411\u8BBE\u5B9A\u56FE\uFF1B\u8BF7\u68C0\u67E5\u56DB\u89C6\u56FE\u8F93\u51FA\uFF0C\u4E0D\u5199\u5165\u89D2\u8272\u53C2\u8003\u56FE");
+        }
         const roleReferences = type === "role" ? await ensureRoleReferenceMedia(imagePath, name28) : [];
         const imageData = await utils_default.db("o_image").where("id", imageId).select("*").first();
-        if (!imageData) return res.status(500).send("\u8D44\u4EA7\u5DF2\u88AB\u5220\u9664");
+        if (!imageData) return res.status(500).send(error50("\u8D44\u4EA7\u5DF2\u88AB\u5220\u9664"));
         if (imageData.state === "\u751F\u6210\u5931\u8D25") return;
-        await utils_default.db("o_image").where("id", imageId).update({
-          state: "\u5DF2\u5B8C\u6210",
-          filePath: imagePath,
-          type,
-          model: model.split(/:(.+)/)[1],
-          resolution: actualResolution
-        });
+        await utils_default.db("o_image").where("id", imageId).update({ state: "\u5DF2\u5B8C\u6210", filePath: imagePath, type, model: selectedModelName, resolution: actualResolution });
         await utils_default.db("o_assets").where({ id, projectId }).update({
           imageId,
           ...type === "role" && roleReferences.length >= 2 ? {
@@ -243414,11 +243409,42 @@ var init_videoQuality = __esm({
   }
 });
 
-// src/routes/production/workbench/batchGenerateVideo.ts
-function isMiniMaxH32(model) {
-  const value = String(model || "").toLowerCase();
-  return value.includes("minimax") && value.includes("h3");
+// src/utils/h3VisualStateGuard.ts
+function assertH3ActiveStates(assets) {
+  const active = /* @__PURE__ */ new Map();
+  for (const asset of assets) {
+    if (!asset.filePath) throw new Error(`H3 \u53C2\u8003\u56FE\u7F3A\u5931\uFF1A${asset.name || asset.assetId}\uFF08\u8D44\u4EA7 ID ${asset.assetId}\uFF09`);
+    if (!["role", "character"].includes(String(asset.assetType || "").toLowerCase())) continue;
+    const rootId = Number(asset.parentAssetId) > 0 ? Number(asset.parentAssetId) : Number(asset.assetId);
+    const existing = active.get(rootId);
+    if (existing) {
+      if (existing.assetId !== asset.assetId) {
+        throw new Error(`\u540C\u4E00\u4EBA\u7269\u7684\u4E92\u65A5\u5F62\u6001\u4E0D\u53EF\u540C\u65F6\u5F15\u7528\uFF1A${existing.name || existing.assetId}\uFF08${existing.assetId}\uFF09\u4E0E ${asset.name || asset.assetId}\uFF08${asset.assetId}\uFF09\uFF1B\u8BF7\u9009\u62E9\u5F53\u524D\u955C\u5934\u552F\u4E00\u6709\u6548\u72B6\u6001`);
+      }
+      throw new Error(`H3 \u4EBA\u7269\u8D44\u4EA7\u91CD\u590D\u5F15\u7528\uFF1A${asset.name || asset.assetId}\uFF08${asset.assetId}\uFF09\uFF1B\u4E00\u4E2A\u4EBA\u7269\u4F1A\u81EA\u52A8\u5C55\u5F00\u8138\u90E8\u548C\u6B63\u9762\u5168\u8EAB\u4E24\u5F20\u53C2\u8003\u56FE`);
+    }
+    active.set(rootId, asset);
+  }
 }
+function assertH3PictureSlots(prompt, slotCount) {
+  if (!Number.isInteger(slotCount) || slotCount < 0 || slotCount > 9) throw new Error(`MiniMax H3 \u53C2\u8003\u56FE\u6570\u91CF\u65E0\u6548\uFF1A${slotCount}\uFF0C\u6700\u591A9\u5F20`);
+  const raw = [...prompt.matchAll(/<Picture\s*(\d+)\s*>/gi)];
+  if (!slotCount) {
+    if (raw.length) throw new Error("\u5F53\u524D\u6CA1\u6709\u4E0A\u4F20 H3 \u53C2\u8003\u56FE\uFF0C\u4F46\u63D0\u793A\u8BCD\u4ECD\u5F15\u7528\u4E86 Picture \u69FD\u4F4D");
+    return;
+  }
+  const ids = new Set(raw.map((match) => Number(match[1])));
+  if (ids.size !== slotCount || [...ids].some((n) => !Number.isInteger(n) || n < 1 || n > slotCount)) {
+    throw new Error(`H3 \u63D0\u793A\u8BCD Picture \u69FD\u4F4D\u4E0E\u5B9E\u9645\u4E0A\u4F20\u56FE\u4E0D\u4E00\u81F4\uFF1A\u9700\u8981 1..${slotCount}\uFF0C\u5B9E\u9645\u51FA\u73B0 ${[...ids].sort((a, b) => a - b).join(",") || "\u65E0"}`);
+  }
+}
+var init_h3VisualStateGuard = __esm({
+  "src/utils/h3VisualStateGuard.ts"() {
+    "use strict";
+  }
+});
+
+// src/routes/production/workbench/batchGenerateVideo.ts
 function h3ReferenceRank(item) {
   const type = String(item.assetType || "").toLowerCase();
   if (type === "role" || type === "character") return 0;
@@ -243426,7 +243452,7 @@ function h3ReferenceRank(item) {
   if (type === "tool" || type === "prop" || type === "creature") return 2;
   return 3;
 }
-var import_express81, router81, batchGenerateVideo_default;
+var import_express81, router81, isMiniMaxH32, batchGenerateVideo_default;
 var init_batchGenerateVideo = __esm({
   "src/routes/production/workbench/batchGenerateVideo.ts"() {
     "use strict";
@@ -243438,156 +243464,151 @@ var init_batchGenerateVideo = __esm({
     init_middleware();
     init_assetReferenceMedia();
     init_videoQuality();
+    init_h3VisualStateGuard();
     router81 = import_express81.default.Router();
-    batchGenerateVideo_default = router81.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        scriptId: external_exports.number(),
-        trackData: external_exports.array(
-          external_exports.object({
-            uploadData: external_exports.array(
-              external_exports.object({
-                id: external_exports.number(),
-                sources: external_exports.string(),
-                type: external_exports.enum(["imageReference", "startImage", "endImage", "videoReference", "audioReference"]).optional(),
-                fileType: external_exports.enum(["image", "video", "audio"]).optional(),
-                label: external_exports.string().optional(),
-                prompt: external_exports.string().optional()
-              })
-            ),
-            trackId: external_exports.number(),
-            prompt: external_exports.string(),
-            duration: external_exports.number()
-          })
-        ),
-        model: external_exports.string(),
-        mode: external_exports.string(),
-        resolution: external_exports.string(),
-        audio: external_exports.boolean().optional()
-      }),
-      async (req, res) => {
-        const { scriptId, projectId, trackData, model, resolution, audio, mode } = req.body;
-        let modeData = [];
-        if (Array.isArray(mode)) {
-        } else if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
-          try {
-            modeData = JSON.parse(mode);
-          } catch (e) {
-          }
+    isMiniMaxH32 = (model) => {
+      const value = String(model || "").toLowerCase();
+      return value.includes("minimax") && value.includes("h3");
+    };
+    batchGenerateVideo_default = router81.post("/", validateFields({
+      projectId: external_exports.number(),
+      scriptId: external_exports.number(),
+      trackData: external_exports.array(external_exports.object({
+        uploadData: external_exports.array(external_exports.object({
+          id: external_exports.number(),
+          sources: external_exports.string(),
+          type: external_exports.enum(["imageReference", "startImage", "endImage", "videoReference", "audioReference"]).optional(),
+          fileType: external_exports.enum(["image", "video", "audio"]).optional(),
+          label: external_exports.string().optional(),
+          prompt: external_exports.string().optional()
+        })),
+        trackId: external_exports.number(),
+        prompt: external_exports.string(),
+        duration: external_exports.number()
+      })),
+      model: external_exports.string(),
+      mode: external_exports.string(),
+      resolution: external_exports.string(),
+      audio: external_exports.boolean().optional()
+    }), async (req, res) => {
+      const { scriptId, projectId, trackData, model, resolution, audio, mode } = req.body;
+      let modeData = [];
+      if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
+        try {
+          modeData = JSON.parse(mode);
+        } catch {
         }
-        const ratio = await utils_default.db("o_project").select("videoRatio").where("id", projectId).first();
-        const h3 = isMiniMaxH32(model);
-        const tasks = await Promise.all(
+      }
+      const ratio = await utils_default.db("o_project").select("videoRatio").where("id", projectId).first();
+      const h3 = isMiniMaxH32(model);
+      let prepared;
+      try {
+        prepared = await Promise.all(
           trackData.map(async (track) => {
-            const { uploadData, trackId, prompt, duration: duration4 } = track;
-            const images = (await Promise.all(
-              uploadData.map(async (item) => {
-                if (item.sources === "storyboard") {
-                  const filePath = await utils_default.db("o_storyboard").where("id", item.id).select("filePath", "prompt").first();
-                  return {
-                    path: filePath?.filePath ?? void 0,
-                    sourceType: "storyboard",
-                    assetType: "storyboard",
-                    fileType: item.fileType || "image",
-                    referenceType: item.type,
-                    label: item.label || `\u5206\u955C\u56FE${item.id}`,
-                    prompt: item.prompt || filePath?.prompt || void 0
-                  };
-                }
-                if (item.sources === "assets") {
-                  const filePath = await utils_default.db("o_assets").where("o_assets.id", item.id).leftJoin("o_image", "o_assets.imageId", "o_image.id").select(
-                    "o_image.filePath",
-                    "o_image.type as imageType",
-                    "o_assets.name",
-                    "o_assets.prompt",
-                    "o_assets.type as assetType"
-                  ).first();
-                  return {
-                    path: filePath?.filePath ?? void 0,
-                    sourceType: "assets",
-                    assetType: filePath?.assetType,
-                    fileType: item.fileType || filePath?.imageType || "image",
-                    referenceType: item.type,
-                    label: item.label || filePath?.name,
-                    prompt: item.prompt || filePath?.prompt || void 0
-                  };
-                }
-                return null;
-              })
-            )).filter(Boolean);
-            const expandedImages = h3 ? (await Promise.all(images.map(async (item) => {
+            const resolved = await Promise.all(track.uploadData.map(async (item) => {
+              if (item.sources === "storyboard") {
+                const found = await utils_default.db("o_storyboard").where({ id: item.id, projectId }).select("filePath", "prompt").first();
+                return found ? {
+                  path: found.filePath ?? void 0,
+                  sourceType: "storyboard",
+                  assetType: "storyboard",
+                  fileType: item.fileType || "image",
+                  referenceType: item.type,
+                  label: item.label || `\u5206\u955C\u56FE${item.id}`,
+                  prompt: item.prompt || found.prompt || void 0
+                } : null;
+              }
+              if (item.sources === "assets") {
+                const found = await utils_default.db("o_assets").where({ "o_assets.id": item.id, "o_assets.projectId": projectId }).leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_image.filePath", "o_image.type as imageType", "o_assets.id as assetId", "o_assets.assetsId as parentAssetId", "o_assets.name", "o_assets.prompt", "o_assets.type as assetType").first();
+                return found ? {
+                  path: found.filePath ?? void 0,
+                  sourceType: "assets",
+                  assetId: found.assetId,
+                  parentAssetId: found.parentAssetId,
+                  assetType: found.assetType,
+                  fileType: item.fileType || found.imageType || "image",
+                  referenceType: item.type,
+                  label: item.label || found.name,
+                  prompt: item.prompt || found.prompt || void 0
+                } : null;
+              }
+              return null;
+            }));
+            const images = resolved.filter(Boolean);
+            if (h3) {
+              if (resolved.length !== images.length) throw new Error(`\u8F68\u9053 ${track.trackId}\uFF1A\u53C2\u8003\u8D44\u4EA7\u5DF2\u5220\u9664\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE`);
+              assertH3ActiveStates(images.filter((item) => item.sourceType === "assets").map((item) => ({
+                assetId: Number(item.assetId),
+                parentAssetId: item.parentAssetId,
+                assetType: item.assetType,
+                name: item.label,
+                filePath: item.path
+              })));
+            }
+            const expanded = h3 ? (await Promise.all(images.map(async (item) => {
               if (item.sourceType === "assets" && item.assetType === "role" && item.path) {
                 const refs = await ensureRoleReferenceMedia(item.path, item.label || "role");
                 return refs.length ? refs : [item];
               }
               return [item];
             }))).flat() : images;
-            const runtimeImages = h3 ? expandedImages.filter((item) => item.sourceType !== "storyboard").sort((a, b) => h3ReferenceRank(a) - h3ReferenceRank(b)) : expandedImages;
-            const videoPath = `/${projectId}/video/${v4_default()}.mp4`;
-            const [videoId] = await utils_default.db("o_video").insert({
-              filePath: videoPath,
-              time: Date.now(),
-              state: "\u751F\u6210\u4E2D",
-              scriptId,
-              projectId,
-              videoTrackId: trackId
-            });
-            return { videoId, videoPath, prompt, duration: duration4, images: runtimeImages, trackId };
+            const runtimeImages = h3 ? expanded.filter((item) => item.sourceType !== "storyboard").sort((a, b) => h3ReferenceRank(a) - h3ReferenceRank(b)) : expanded;
+            if (h3) assertH3PictureSlots(track.prompt, runtimeImages.length);
+            return { trackId: track.trackId, prompt: track.prompt, duration: track.duration, images: runtimeImages };
           })
         );
-        res.status(200).send(success3(tasks.map((t) => ({ videoId: t.videoId, trackId: t.trackId }))));
-        const runTask = async ({ videoId, videoPath, prompt, duration: duration4, images }) => {
-          try {
-            const base644 = await Promise.all(
-              images.map(async (item) => {
-                if (!item.path) return null;
-                const type = item.referenceType === "audioReference" || item.fileType === "audio" ? "audio" : item.referenceType === "videoReference" || item.fileType === "video" ? "video" : "image";
-                return {
-                  base64: await utils_default.oss.getImageBase64(item.path),
-                  type,
-                  label: item.label,
-                  prompt: item.prompt,
-                  sourceType: item.sourceType,
-                  assetType: item.assetType
-                };
-              })
-            );
-            const relatedObjects = { projectId, videoId, scriptId, type: "\u89C6\u9891" };
-            const aiVideo = utils_default.Ai.Video(model);
-            await aiVideo.run(
-              {
-                prompt,
-                referenceList: base644.filter(Boolean),
-                mode: modeData.length > 0 ? modeData : mode,
-                duration: duration4,
-                aspectRatio: ratio?.videoRatio || "16:9",
-                resolution,
-                audio
-              },
-              {
-                projectId,
-                taskClass: "\u89C6\u9891\u751F\u6210",
-                describe: "\u6839\u636E\u63D0\u793A\u8BCD\u751F\u6210\u89C6\u9891",
-                relatedObjects: JSON.stringify(relatedObjects)
-              }
-            );
-            await aiVideo.save(videoPath);
-            await utils_default.db("o_video").where("id", videoId).update({ state: "\u751F\u6210\u6210\u529F", errorReason: null, ...await inspectVideoQuality(videoPath) });
-          } catch (error73) {
-            await utils_default.db("o_video").where("id", videoId).update({
-              state: "\u751F\u6210\u5931\u8D25",
-              errorReason: utils_default.error(error73).message
-            });
-          }
-        };
-        if (h3) {
-          for (const task of tasks) await runTask(task);
-        } else {
-          await Promise.all(tasks.map(runTask));
-        }
+      } catch (cause) {
+        return res.status(409).send(error50(`\u6279\u91CF H3 \u89C6\u9891\u53C2\u8003\u72B6\u6001/\u69FD\u4F4D\u68C0\u67E5\u5931\u8D25\uFF1A${utils_default.error(cause).message}`));
       }
-    );
+      const tasks = await Promise.all(prepared.map(async (item) => {
+        const videoPath = `/${projectId}/video/${v4_default()}.mp4`;
+        const [videoId] = await utils_default.db("o_video").insert({
+          filePath: videoPath,
+          time: Date.now(),
+          state: "\u751F\u6210\u4E2D",
+          scriptId,
+          projectId,
+          videoTrackId: item.trackId
+        });
+        return { ...item, videoId, videoPath };
+      }));
+      res.status(200).send(success3(tasks.map((item) => ({ videoId: item.videoId, trackId: item.trackId }))));
+      const runTask = async ({ videoId, videoPath, prompt, duration: duration4, images }) => {
+        try {
+          const base644 = await Promise.all(images.map(async (item) => {
+            if (!item.path) return null;
+            const type = item.referenceType === "audioReference" || item.fileType === "audio" ? "audio" : item.referenceType === "videoReference" || item.fileType === "video" ? "video" : "image";
+            return {
+              base64: await utils_default.oss.getImageBase64(item.path),
+              type,
+              label: item.label,
+              prompt: item.prompt,
+              sourceType: item.sourceType,
+              assetType: item.assetType
+            };
+          }));
+          if (h3 && base644.some((item) => !item)) throw new Error("H3 \u53C2\u8003\u56FE\u7F3A\u5931\uFF1A\u4E0D\u80FD\u8DF3\u8FC7\u67D0\u4E2A Picture \u69FD\u4F4D\u7EE7\u7EED\u751F\u6210");
+          const relatedObjects = { projectId, videoId, scriptId, type: "\u89C6\u9891" };
+          const aiVideo = utils_default.Ai.Video(model);
+          await aiVideo.run({
+            prompt,
+            referenceList: base644.filter(Boolean),
+            mode: modeData.length > 0 ? modeData : mode,
+            duration: duration4,
+            aspectRatio: ratio?.videoRatio || "16:9",
+            resolution,
+            audio
+          }, { projectId, taskClass: "\u89C6\u9891\u751F\u6210", describe: "\u6839\u636E\u63D0\u793A\u8BCD\u751F\u6210\u89C6\u9891", relatedObjects: JSON.stringify(relatedObjects) });
+          await aiVideo.save(videoPath);
+          await utils_default.db("o_video").where("id", videoId).update({ state: "\u751F\u6210\u6210\u529F", errorReason: null, ...await inspectVideoQuality(videoPath) });
+        } catch (cause) {
+          await utils_default.db("o_video").where("id", videoId).update({ state: "\u751F\u6210\u5931\u8D25", errorReason: utils_default.error(cause).message });
+        }
+      };
+      if (h3) {
+        for (const task of tasks) await runTask(task);
+      } else await Promise.all(tasks.map(runTask));
+    });
   }
 });
 
@@ -243734,22 +243755,21 @@ var init_generateVideo = __esm({
     init_middleware();
     init_assetReferenceMedia();
     init_videoQuality();
+    init_h3VisualStateGuard();
     router86 = import_express86.default.Router();
     generateVideo_default = router86.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
         scriptId: external_exports.number(),
-        uploadData: external_exports.array(
-          external_exports.object({
-            id: external_exports.number(),
-            sources: external_exports.string(),
-            type: external_exports.enum(["imageReference", "startImage", "endImage", "videoReference", "audioReference"]).optional(),
-            fileType: external_exports.enum(["image", "video", "audio"]).optional(),
-            label: external_exports.string().optional(),
-            prompt: external_exports.string().optional()
-          })
-        ),
+        uploadData: external_exports.array(external_exports.object({
+          id: external_exports.number(),
+          sources: external_exports.string(),
+          type: external_exports.enum(["imageReference", "startImage", "endImage", "videoReference", "audioReference"]).optional(),
+          fileType: external_exports.enum(["image", "video", "audio"]).optional(),
+          label: external_exports.string().optional(),
+          prompt: external_exports.string().optional()
+        })),
         prompt: external_exports.string(),
         model: external_exports.string(),
         mode: external_exports.string(),
@@ -243761,72 +243781,95 @@ var init_generateVideo = __esm({
       async (req, res) => {
         const { scriptId, projectId, prompt, uploadData, model, duration: duration4, resolution, audio, mode, trackId } = req.body;
         let modeData = [];
-        if (Array.isArray(mode)) {
-        } else if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
+        if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
           try {
             modeData = JSON.parse(mode);
-          } catch (e) {
+          } catch {
           }
         }
         const ratio = await utils_default.db("o_project").select("videoRatio").where("id", projectId).first();
         const videoPath = `/${projectId}/video/${v4_default()}.mp4`;
-        const images = (await Promise.all(
+        const h3 = isMiniMaxH33(model);
+        const resolved = await Promise.all(
           uploadData.map(async (item) => {
             if (item.sources === "storyboard") {
-              const filePath = await utils_default.db("o_storyboard").where("id", item.id).select("filePath", "prompt").first();
-              return {
-                path: filePath?.filePath ?? void 0,
+              const source = await utils_default.db("o_storyboard").where({ id: item.id, projectId }).select("filePath", "prompt").first();
+              return source ? {
+                path: source.filePath ?? void 0,
                 sourceType: "storyboard",
                 assetType: "storyboard",
                 fileType: item.fileType || "image",
                 referenceType: item.type,
                 label: item.label || `\u5206\u955C\u56FE${item.id}`,
-                prompt: item.prompt || filePath?.prompt || void 0
-              };
+                prompt: item.prompt || source.prompt || void 0
+              } : null;
             }
             if (item.sources === "assets") {
-              const filePath = await utils_default.db("o_assets").where("o_assets.id", item.id).leftJoin("o_image", "o_assets.imageId", "o_image.id").select(
-                "o_image.filePath",
-                "o_image.type as imageType",
-                "o_assets.name",
-                "o_assets.prompt",
-                "o_assets.type as assetType"
-              ).first();
-              return {
-                path: filePath?.filePath ?? void 0,
+              const source = await utils_default.db("o_assets").where({ "o_assets.id": item.id, "o_assets.projectId": projectId }).leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_image.filePath", "o_image.type as imageType", "o_assets.id as assetId", "o_assets.assetsId as parentAssetId", "o_assets.name", "o_assets.prompt", "o_assets.type as assetType").first();
+              return source ? {
+                path: source.filePath ?? void 0,
                 sourceType: "assets",
-                assetType: filePath?.assetType,
-                fileType: item.fileType || filePath?.imageType || "image",
+                assetId: source.assetId,
+                parentAssetId: source.parentAssetId,
+                assetType: source.assetType,
+                fileType: item.fileType || source.imageType || "image",
                 referenceType: item.type,
-                label: item.label || filePath?.name,
-                prompt: item.prompt || filePath?.prompt || void 0
-              };
+                label: item.label || source.name,
+                prompt: item.prompt || source.prompt || void 0
+              } : null;
             }
             return null;
           })
-        )).filter(Boolean);
-        const h3Images = isMiniMaxH33(model) ? (await Promise.all(images.map(async (item) => {
+        );
+        const images = resolved.filter(Boolean);
+        if (h3) {
+          try {
+            if (resolved.length !== images.length) throw new Error("\u90E8\u5206 H3 \u53C2\u8003\u8D44\u4EA7\u5DF2\u88AB\u5220\u9664\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\uFF1B\u8BF7\u91CD\u65B0\u751F\u6210\u89C6\u9891\u63D0\u793A\u8BCD\u5E76\u9009\u62E9\u53C2\u8003\u56FE");
+            const actualAssets = images.filter((item) => item.sourceType === "assets");
+            assertH3ActiveStates(actualAssets.map((item) => ({
+              assetId: Number(item.assetId),
+              parentAssetId: item.parentAssetId,
+              assetType: item.assetType,
+              name: item.label,
+              filePath: item.path
+            })));
+          } catch (cause) {
+            await utils_default.db("o_videoTrack").where({ id: trackId, projectId }).update({ state: "\u751F\u6210\u5931\u8D25" });
+            return res.status(409).send(error50(`H3 \u8D44\u4EA7\u72B6\u6001\u68C0\u67E5\u5931\u8D25\uFF1A${utils_default.error(cause).message}`));
+          }
+        }
+        const h3Images = h3 ? (await Promise.all(images.map(async (item) => {
           if (item.sourceType === "assets" && item.assetType === "role" && item.path) {
             const refs = await ensureRoleReferenceMedia(item.path, item.label || "role");
             return refs.length ? refs : [item];
           }
           return [item];
         }))).flat() : images;
-        const runtimeImages = isMiniMaxH33(model) ? h3Images.filter((item) => item.sourceType !== "storyboard").sort((a, b) => h3ReferenceRank2(a) - h3ReferenceRank2(b)) : images;
-        const base644 = await Promise.all(
-          runtimeImages.map(async (item) => {
-            if (!item.path) return null;
-            const type = item.referenceType === "audioReference" || item.fileType === "audio" ? "audio" : item.referenceType === "videoReference" || item.fileType === "video" ? "video" : "image";
-            return {
-              base64: await utils_default.oss.getImageBase64(item.path),
-              type,
-              label: item.label,
-              prompt: item.prompt,
-              sourceType: item.sourceType,
-              assetType: item.assetType
-            };
-          })
-        );
+        const runtimeImages = h3 ? h3Images.filter((item) => item.sourceType !== "storyboard").sort((a, b) => h3ReferenceRank2(a) - h3ReferenceRank2(b)) : images;
+        if (h3) {
+          try {
+            assertH3PictureSlots(prompt, runtimeImages.length);
+          } catch (cause) {
+            await utils_default.db("o_videoTrack").where({ id: trackId, projectId }).update({ state: "\u751F\u6210\u5931\u8D25" });
+            return res.status(409).send(error50(`H3 Picture \u7F16\u53F7\u68C0\u67E5\u5931\u8D25\uFF1A${utils_default.error(cause).message}`));
+          }
+        }
+        const base644 = await Promise.all(runtimeImages.map(async (item) => {
+          if (!item.path) return null;
+          const type = item.referenceType === "audioReference" || item.fileType === "audio" ? "audio" : item.referenceType === "videoReference" || item.fileType === "video" ? "video" : "image";
+          return {
+            base64: await utils_default.oss.getImageBase64(item.path),
+            type,
+            label: item.label,
+            prompt: item.prompt,
+            sourceType: item.sourceType,
+            assetType: item.assetType
+          };
+        }));
+        if (h3 && base644.some((item) => !item)) {
+          await utils_default.db("o_videoTrack").where({ id: trackId, projectId }).update({ state: "\u751F\u6210\u5931\u8D25" });
+          return res.status(409).send(error50("H3 \u67D0\u5F20\u53C2\u8003\u56FE\u7F3A\u5931\uFF0C\u4E0D\u5141\u8BB8\u8DF3\u8FC7\u8BE5\u69FD\u4F4D\u7EE7\u7EED\u751F\u6210"));
+        }
         const [videoId] = await utils_default.db("o_video").insert({
           filePath: videoPath,
           time: Date.now(),
@@ -243835,35 +243878,25 @@ var init_generateVideo = __esm({
           projectId,
           videoTrackId: trackId
         });
+        await utils_default.db("o_videoTrack").where({ id: trackId, projectId }).update({ state: "\u751F\u6210\u4E2D" });
         res.status(200).send(success3(videoId));
-        const relatedObjects = {
-          projectId,
-          videoId,
-          scriptId,
-          type: "\u89C6\u9891"
-        };
+        const relatedObjects = { projectId, videoId, scriptId, type: "\u89C6\u9891" };
         const aiVideo = utils_default.Ai.Video(model);
-        aiVideo.run(
-          {
-            prompt,
-            referenceList: base644.filter(Boolean),
-            mode: modeData.length > 0 ? modeData : mode,
-            duration: duration4,
-            aspectRatio: ratio?.videoRatio || "16:9",
-            resolution,
-            audio
-          },
-          {
-            projectId,
-            taskClass: "\u89C6\u9891\u751F\u6210",
-            describe: "\u6839\u636E\u63D0\u793A\u8BCD\u751F\u6210\u89C6\u9891",
-            relatedObjects: JSON.stringify(relatedObjects)
-          }
-        ).then(async () => await aiVideo.save(videoPath)).then(async () => await utils_default.db("o_video").where("id", videoId).update({ state: "\u751F\u6210\u6210\u529F", ...await inspectVideoQuality(videoPath) })).catch(async (error73) => {
-          await utils_default.db("o_video").where("id", videoId).update({
-            state: "\u751F\u6210\u5931\u8D25",
-            errorReason: utils_default.error(error73).message
-          });
+        aiVideo.run({
+          prompt,
+          referenceList: base644.filter(Boolean),
+          mode: modeData.length > 0 ? modeData : mode,
+          duration: duration4,
+          aspectRatio: ratio?.videoRatio || "16:9",
+          resolution,
+          audio
+        }, {
+          projectId,
+          taskClass: "\u89C6\u9891\u751F\u6210",
+          describe: "\u6839\u636E\u63D0\u793A\u8BCD\u751F\u6210\u89C6\u9891",
+          relatedObjects: JSON.stringify(relatedObjects)
+        }).then(async () => await aiVideo.save(videoPath)).then(async () => await utils_default.db("o_video").where("id", videoId).update({ state: "\u751F\u6210\u6210\u529F", ...await inspectVideoQuality(videoPath) })).catch(async (cause) => {
+          await utils_default.db("o_video").where("id", videoId).update({ state: "\u751F\u6210\u5931\u8D25", errorReason: utils_default.error(cause).message });
         });
       }
     );
