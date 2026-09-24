@@ -44,11 +44,13 @@ test('scripted changed eye color is allowed as a derivative state', () => {
   assert.match(skill, /普通虹膜可以在觉醒态变红/);
 });
 
-test('H3 prompt and storyboard skill require state-safe references and duration preflight', () => {
+test('H3 skill uses one Subject for a board or its selected views, with locale and duration constraints', () => {
   const h3 = read('data/modelPrompt/video/minimaxH3Multi-referenceMode.md');
   const storyboard = read('data/skills/production_execution_storyboard_table.md');
-  assert.match(h3, /FACE and FULL_BODY_FRONT/);
-  assert.match(h3, /current state/);
+  assert.match(h3, /BOARD/);
+  assert.match(h3, /FACE \/ FRONT \/ SIDE \/ BACK/);
+  assert.match(h3, /ONE.*Subject|one Subject/i);
+  assert.match(h3, /dialogue_locale/);
   assert.match(h3, /target_duration/);
   assert.match(storyboard, /minimum_duration > target_duration/);
   assert.match(storyboard, /PLAN_CHANGED/);

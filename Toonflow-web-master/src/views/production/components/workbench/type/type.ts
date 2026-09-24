@@ -1,6 +1,9 @@
 type ReferenceType = "videoReference" | "imageReference" | "audioReference" | "textReference";
 type Type = "imageReference" | "startImage" | "endImage" | "videoReference" | "audioReference";
 type VideoMode = "singleImage" | "startEndRequired" | "endFrameOptional" | "startFrameOptional" | "text" | ReferenceType[];
+type H3RoleView = "BOARD" | "FACE" | "FRONT" | "SIDE" | "BACK";
+type H3ReferenceMode = "board" | "auto" | "manual";
+type H3ShotView = "front" | "side" | "back" | "turn" | "closeup";
 
 interface UploadItemBase {
   fileType: "image" | "video" | "audio";
@@ -8,6 +11,9 @@ interface UploadItemBase {
   src?: string;
   prompt?: string;
   slotType?: Type;
+  h3ReferenceMode?: H3ReferenceMode;
+  h3Views?: H3RoleView[];
+  h3ShotView?: H3ShotView;
 }
 
 interface UploadItemStoryboard extends UploadItemBase {
@@ -54,6 +60,10 @@ interface TrackItem {
   medias: TrackMedia[];
   videoList: VideoItem[];
   duration: number;
+  h3DialogueLocale?: string;
+  h3ReferenceMode?: H3ReferenceMode;
+  h3ShotView?: H3ShotView;
+  h3Views?: H3RoleView[];
 }
 
 interface VideoItem {
@@ -67,8 +77,11 @@ interface TrackMediaBase {
   id?: number;
   prompt?: string;
   fileType: "image" | "video" | "audio";
-  slotType?: Type; // 本地保存时记录的 slot 类型，用于切换轨道时精确还原位置
+  slotType?: Type;
   index?: number;
+  h3ReferenceMode?: H3ReferenceMode;
+  h3Views?: H3RoleView[];
+  h3ShotView?: H3ShotView;
 }
 
 interface TrackMediaStoryboard extends TrackMediaBase {
@@ -103,4 +116,8 @@ interface ModelSetting {
   resolution: string;
   duration: number;
   audio: boolean;
+  dialogueLocale?: string;
+  h3ReferenceMode?: H3ReferenceMode;
+  h3ShotView?: H3ShotView;
+  h3Views?: H3RoleView[];
 }
