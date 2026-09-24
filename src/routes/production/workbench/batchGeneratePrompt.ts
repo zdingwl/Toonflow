@@ -6,323 +6,128 @@ import { success, error } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import fs from "fs/promises";
 import path from "path";
-import { expandH3AssetSlots } from "@/utils/h3ReferenceSlots";
+import { bindH3Prompt, prepareH3ReferencePlan } from "@/utils/h3GenerationContract";
+import { checkH3DialogueBudget, h3DialogueLocaleInstruction, resolveH3DialogueLocale } from "@/utils/h3DialogueLanguage";
+import { assertH3PictureSlots } from "@/utils/h3VisualStateGuard";
+
 const router = express.Router();
+const view = z.enum(["BOARD", "FACE", "FRONT", "SIDE", "BACK"]);
+const refMode = z.enum(["board", "auto", "manual"]);
+const shotView = z.enum(["front", "side", "back", "turn", "closeup"]);
+const h3Options = {
+  dialogueLocale: z.string().optional(), h3ReferenceMode: refMode.optional(),
+  h3Views: z.array(view).optional(), h3ShotView: shotView.optional(),
+};
+const infoSchema = z.object({
+  id: z.number(), sources: z.string(), reference: z.boolean().optional(),
+  slotType: z.string().optional(), fileType: z.string().optional(), prompt: z.string().optional(),
+  h3ReferenceMode: refMode.optional(), h3Views: z.array(view).optional(), h3ShotView: shotView.optional(),
+});
+type TrackInput = { trackId: number; info: z.infer<typeof infoSchema>[] } & {
+  dialogueLocale?: string; h3ReferenceMode?: z.infer<typeof refMode>;
+  h3Views?: z.infer<typeof view>[]; h3ShotView?: z.infer<typeof shotView>;
+};
+const isH3 = (model: string) => /minimax/i.test(model) && /h3/i.test(model);
+const xml = (value: unknown) => String(value ?? "").replace(/[<>&"']/g, ch => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&apos;" })[ch] || ch);
+const headings = ["subject_definitions:", "summary:", "retention_analysis:", "detailed_description:", "overall_soundscape:", "non_diegetic_music:"];
 
-function isMiniMaxH3(modelName: string): boolean {
-  const value = String(modelName || "").toLowerCase();
-  return value.includes("minimax") && value.includes("h3");
-}
-
-function h3AssetRank(item: any): number {
-  const type = String(item?.type || "").toLowerCase();
-  if (type === "role" || type === "character") return 0;
-  if (type === "scene" || type === "environment") return 1;
-  if (type === "tool" || type === "prop" || type === "creature") return 2;
-  return 3;
-}
-
-function escapeXmlAttr(value: unknown): string {
-  return String(value ?? "").replace(/[<>&"']/g, (ch) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&apos;" })[ch] || ch);
-}
-
-export default router.post(
-  "/",
-  validateFields({
-    projectId: z.number(),
-    trackData: z.array(
-      z.object({
-        trackId: z.number(),
-        info: z.array(
-          z.object({
-            id: z.number(),
-            sources: z.string(),
-            reference: z.boolean().optional(),
-            slotType: z.string().optional(),
-            fileType: z.string().optional(),
-            prompt: z.string().optional(),
-          }),
-        ),
-      }),
-    ),
-    mode: z.string(),
-    model: z.string(),
-    concurrentCount: z.number().optional(), //并发数
-  }),
-  async (req, res) => {
-    const { trackData, projectId, mode, model, concurrentCount = 5 } = req.body;
-    try {
-      // 预加载公共数据
-      const [id, modelData] = model.split(/:(.+)/);
-      const modelLower = (modelData ?? "").toLowerCase();
-      const h3PromptMode = isMiniMaxH3(modelData ?? "");
-      const projectData = await u.db("o_project").select("*").where({ id: projectId }).first();
-      const videoPrompt = await u.db("o_prompt").where("type", "videoPromptGeneration").first();
-      let videoPromptGeneration = "" as string | undefined;
-
-      const modelPromptData = await u.db("o_modelPrompt").where("vendorId", id).where("model", modelData).first();
-      //查询到 有绑定对应视频提示词
-      if (modelPromptData) {
-        const modelPromptRoot = u.getPath(["modelPrompt"]);
-        try {
-          const fullPath = path.join(modelPromptRoot, modelPromptData?.path!);
-          const content = await fs.readFile(fullPath, "utf-8");
-          videoPromptGeneration = content ?? "";
-        } catch {}
-      }
-
-      // 未查询到绑定，根据模型名称 + mode 自动匹配 modelPrompt/video/ 下的文件
-      if (!videoPromptGeneration) {
-        const modelPromptRoot = u.getPath(["modelPrompt"]);
-        const videoPromptDir = path.join(modelPromptRoot, "video");
-
-        let fileName: string | null = null;
-
-        if (modelLower.includes("minimax") && modelLower.includes("h3")) {
-          // MiniMax H3 / local Ref2VA => dedicated ordered <Picture N> prompt skill
-          fileName = "minimaxH3Multi-referenceMode.md";
-        } else if (modelLower.includes("wan") && modelLower.includes("2.6")) {
-          // wan2.6 系列 => 单图首尾帧模式
-          fileName = "wan2.6Single-imageFirstFrameMode.md";
-        } else if (/seedance.*2[.\-]0/i.test(modelLower)) {
-          // seedance 2.0 / 2-0 系列
-          fileName = "seedance2Multi-parameterMode.md";
-        } else if (mode === "startEndRequired" || mode === "endFrameOptional" || mode === "startFrameOptional") {
-          // body.mode 为首尾帧相关 => 通用首尾帧模式
-          fileName = "universalFirstAndLastFrameMode.md";
-        } else if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
-          // 其他 => 通用多参模式
-          fileName = "universalMulti-parameterMode.md";
-        }
-        if (fileName) {
-          try {
-            const fullPath = path.join(videoPromptDir, fileName);
-            videoPromptGeneration = await fs.readFile(fullPath, "utf-8");
-          } catch {
-            // 文件不存在则忽略，继续用备选
-          }
-        }
-      }
-
-      //备选
-      if (!videoPromptGeneration) {
-        if (videoPrompt && videoPrompt.useData) {
-          videoPromptGeneration = videoPrompt.useData;
-        } else {
-          videoPromptGeneration = videoPrompt?.data ?? undefined;
-        }
-      }
-
-      const artStyle = projectData?.artStyle || "无";
-      const visualManual = u.getArtPrompt(artStyle, "art_skills", "art_storyboard_video");
-      await u
-        .db("o_videoTrack")
-        .whereIn(
-          "id",
-          trackData.map((t: { trackId: number }) => t.trackId),
-        )
-        .update({ state: "生成中" });
-      // 并发控制：每个 track 独立走 查询→拼装→AI调用→更新 流程
-      const limit = pLimit(concurrentCount ?? 5);
-      const tasks = trackData.map((track: { trackId: number; info: { id: number; sources: string; reference?: boolean; slotType?: string; fileType?: string; prompt?: string }[] }) =>
-        limit(async () => {
-          // 查询参数
-          const images = await Promise.all(
-            track.info.map(async (item: { id: number; sources: string; reference?: boolean; slotType?: string; fileType?: string; prompt?: string }) => {
-              if (item.sources === "storyboard") {
-                // 查询分镜主信息
-                const storyboard = await u
-                  .db("o_storyboard")
-                  .where("o_storyboard.id", item.id)
-                  .select("id", "videoDesc", "prompt", "track", "duration", "shouldGenerateImage", "filePath")
-                  .first();
-                // 查询分镜关联的资产ID
-                const assetRows = await u.db("o_assets2Storyboard").where("storyboardId", item.id).orderBy("rowid").select("assetId");
-                const associateAssetsIds = assetRows.map((row: any) => row.assetId);
-                return {
-                  ...storyboard,
-                  associateAssetsIds,
-                  _type: "storyboard",
-                  _reference: item.reference !== false,
-                  _slotType: item.slotType,
-                  _fileType: item.fileType,
-                };
-              }
-              if (item.sources === "assets") {
-                // 查询素材
-                const assetsData = await u
-                  .db("o_assets")
-                  .leftJoin("o_image", "o_image.id", "o_assets.imageId")
-                  .where("o_assets.id", item.id)
-                  .select("o_assets.id", "o_assets.type", "o_assets.name", "o_assets.describe", "o_assets.prompt as assetPrompt", "o_image.filePath")
-                  .first();
-                return {
-                  ...assetsData,
-                  _type: "assets",
-                  _reference: item.reference !== false,
-                  _slotType: item.slotType,
-                  _fileType: item.fileType,
-                };
-              }
-            }),
-          );
-
-          // 拆分 assets 和 storyboard
-          const assets: any[] = [];
-          const storyboard: any[] = [];
-          for (const item of images) {
-            if (!item) continue;
-            if (item._type === "assets")
-              assets.push({
-                id: item.id,
-                type: item.type,
-                name: item.name,
-                describe: item.describe,
-                assetPrompt: item.assetPrompt,
-                filePath: item.filePath,
-                _reference: item._reference,
-                _slotType: item._slotType,
-                _fileType: item._fileType,
-              });
-            if (item._type === "storyboard")
-              storyboard.push({
-                videoDesc: item.videoDesc,
-                prompt: item.prompt,
-                track: item.track,
-                duration: item.duration,
-                associateAssetsIds: item.associateAssetsIds,
-                shouldGenerateImage: item.shouldGenerateImage,
-                id: item.id,
-                filePath: item.filePath,
-                _reference: item._reference,
-                _slotType: item._slotType,
-                _fileType: item._fileType,
-              });
-          }
-
-          // H3 Picture slots contain only the asset images that will be uploaded to Ref2VA.
-          // Selected storyboard images are converted to text guidance and never compete with character identity.
-          const pictureSourceItems = h3PromptMode
-            ? expandH3AssetSlots(images
-                .filter(
-                  (item: any) =>
-                    item &&
-                    item._type === "assets" &&
-                    item._reference !== false &&
-                    item.filePath &&
-                    item._fileType !== "audio" &&
-                    item._fileType !== "video",
-                )
-                .sort((a: any, b: any) => h3AssetRank(a) - h3AssetRank(b)))
-            : images.filter((item: any) => item && item._reference !== false && item.filePath);
-
-          const referenceSlotItems = pictureSourceItems.map((item: any, index: number) => {
-            const slot = index + 1;
-            const sources = item._type === "assets" ? "assets" : "storyboard";
-            const type = item._type === "assets" ? String(item.type || "asset") : "storyboard";
-            const name = item._type === "assets" ? String(item.name || `资产${item.id}`) : `分镜图${item.id}`;
-            return `<reference slot="${slot}" sources="${sources}" id="${item.id}" type="${escapeXmlAttr(type)}" name="${escapeXmlAttr(name)}" />`;
-          });
-          const referenceSlots = `<referenceSlots>\n${referenceSlotItems.join("\n")}\n</referenceSlots>`;
-
-          const storyboardGuideItems = h3PromptMode
-            ? images.filter((item: any) => item && item._type === "storyboard" && item._reference !== false)
-            : [];
-          const storyboardGuidance = h3PromptMode
-            ? `<storyboardGuidance>\n${storyboardGuideItems
-                .map(
-                  (item: any, index: number) =>
-                    `<storyboard index="${index + 1}" id="${item.id}">\nvideoDesc=${JSON.stringify(item.videoDesc || "")}\nimagePrompt=${JSON.stringify(item.prompt || "")}\n</storyboard>`,
-                )
-                .join("\n")}\n</storyboardGuidance>`
-            : "";
-
-          const referenceHeading = h3PromptMode
-            ? "**MiniMax H3 实际 Picture 槽位（仅以下素材会上传到 Ref2VA；<Picture N> 必须严格对应 slot N）**"
-            : "**参考素材槽位**";
-          const storyboardHeading = h3PromptMode
-            ? `\n**分镜构图指导（仅文本指导，禁止生成新的 <Picture N>，禁止覆盖角色身份）**：\n${storyboardGuidance}\n`
-            : "";
-
-          const videoTrackData = await u.db("o_videoTrack").select("duration").where({ id: track.trackId }).first();
-          const storyboardDuration = storyboard.reduce(
-            (total: number, item: any) => total + (Number.parseFloat(String(item.duration || 0)) || 0),
-            0,
-          );
-          const rawTargetDuration = Number(videoTrackData?.duration) || storyboardDuration || 5;
-          const targetDuration = Math.max(4, Math.min(15, Math.round(rawTargetDuration)));
-
-          const assetDefinitionItems = h3PromptMode
-            ? pictureSourceItems.map((item: any, index: number) => {
-                const picture = `<Picture ${index + 1}>`;
-                const type = escapeXmlAttr(item.type || "asset");
-                const name = escapeXmlAttr(item.name || `资产${item.id}`);
-                return [
-                  `<asset picture="${picture}" type="${type}" name="${name}">`,
-                  `describe=${JSON.stringify(item.describe || "")}`,
-                  `visualPrompt=${JSON.stringify(item.assetPrompt || "")}`,
-                  "</asset>",
-                ].join("\n");
-              })
-            : [];
-          const assetDefinitions = h3PromptMode
-            ? `<assetDefinitions>\n${assetDefinitionItems.join("\n")}\n</assetDefinitions>`
-            : "";
-
-          const content = `
-          **模型名称**：${modelData},
-          **目标时长 target_duration**：${targetDuration}s,
-          ${referenceHeading}：
-          ${referenceSlots},
-          ${h3PromptMode ? `\n**资产视觉定义**：\n${assetDefinitions}\n` : ""}
-          ${storyboardHeading}
-          **资产信息**（角色、场景、道具、音频):${assets
-            .filter((i: any) => i.filePath)
-            .map((i: any) => `[${i.id},${i.type},${i.name}]`)
-            .join("，")},
-          **分镜信息**：${storyboard.map(
-            (i: any) => `<storyboardItem
-  videoDesc='${i.videoDesc}'
-  duration='${i.duration}'
-></storyboardItem>`,
-          )},
-          `;
-
-          try {
-            const { text } = await u.Ai.Text("universalAi").invoke({
-              system: videoPromptGeneration,
-              messages: [
-                {
-                  role: "assistant",
-                  content: `${visualManual}`,
-                },
-                {
-                  role: "user",
-                  content: content,
-                },
-              ],
-            });
-
-            await u.db("o_videoTrack").where({ id: track.trackId }).update({
-              prompt: text,
-              state: "已完成",
-            });
-
-            return { trackId: track.trackId, text };
-          } catch (e: any) {
-            await u
-              .db("o_videoTrack")
-              .where({ id: track.trackId })
-              .update({ state: "生成失败", reason: u.error(e).message });
-          }
-        }),
-      );
-
-      // 后台执行，不等待结果
-      Promise.all(tasks);
-      res.status(200).send(success("开始生成提示词"));
-    } catch (e) {
-      res.status(400).send(error(u.error(e).message));
+export default router.post("/", validateFields({
+  projectId: z.number(), trackData: z.array(z.object({ trackId: z.number(), info: z.array(infoSchema), ...h3Options })),
+  mode: z.string(), model: z.string(), concurrentCount: z.number().optional(), ...h3Options,
+}), async (req, res) => {
+  const { trackData, projectId, mode, model, concurrentCount = 5 } = req.body as {
+    trackData: TrackInput[]; projectId: number; mode: string; model: string; concurrentCount?: number;
+  };
+  const h3 = isH3(model);
+  try {
+    const [vendorId, modelData] = model.split(/:(.+)/);
+    const modelLower = String(modelData || "").toLowerCase();
+    const project = await u.db("o_project").where({ id: projectId }).select("artStyle").first();
+    if (!project) throw new Error("项目不存在");
+    const manual = String(u.getArtPrompt(project.artStyle || "无", "art_skills", "art_storyboard_video") || "");
+    const root = u.getPath(["modelPrompt"]);
+    const officialH3 = h3 ? await fs.readFile(path.join(root, "video", "minimaxH3Multi-referenceMode.md"), "utf-8") : "";
+    const custom = await u.db("o_modelPrompt").where({ vendorId, model: modelData }).first();
+    let fallback = "";
+    if (custom?.path) try { fallback = await fs.readFile(path.join(root, custom.path), "utf-8"); } catch { /* fallback */ }
+    if (!fallback) {
+      let file: string | null = null;
+      if (modelLower.includes("wan") && modelLower.includes("2.6")) file = "wan2.6Single-imageFirstFrameMode.md";
+      else if (/seedance.*2[.\-]0/i.test(modelLower)) file = "seedance2Multi-parameterMode.md";
+      else if (["startEndRequired", "endFrameOptional", "startFrameOptional"].includes(mode)) file = "universalFirstAndLastFrameMode.md";
+      else if (mode.startsWith('["') || h3) file = "universalMulti-parameterMode.md";
+      if (file) try { fallback = await fs.readFile(path.join(root, "video", file), "utf-8"); } catch { /* fallback */ }
     }
-  },
-);
+    if (!fallback) {
+      const common = await u.db("o_prompt").where("type", "videoPromptGeneration").first();
+      fallback = common?.useData || common?.data || "";
+    }
+    await u.db("o_videoTrack").where({ projectId }).whereIn("id", trackData.map(item => item.trackId)).update({ state: "生成中" });
+    const limit = pLimit(Math.max(1, Math.min(20, concurrentCount)));
+    const tasks = trackData.map(track => limit(async () => {
+      try {
+        const row = await u.db("o_videoTrack").where({ id: track.trackId, projectId }).select("duration").first();
+        if (!row) throw new Error("视频轨道不属于当前项目");
+        const locale = h3 ? resolveH3DialogueLocale(track.dialogueLocale ?? req.body.dialogueLocale) : "original";
+        const opts = {
+          h3ReferenceMode: track.h3ReferenceMode ?? req.body.h3ReferenceMode,
+          h3Views: track.h3Views ?? req.body.h3Views,
+          h3ShotView: track.h3ShotView ?? req.body.h3ShotView,
+        };
+        const plan = h3 ? await prepareH3ReferencePlan(projectId, track.info.map(item => ({ ...item, type: item.slotType })), opts) : null;
+        const storyboard = (await Promise.all(track.info.filter(item => item.sources === "storyboard").map(async item => {
+          const found = await u.db("o_storyboard").where({ id: item.id, projectId }).select("id", "videoDesc", "prompt", "track", "duration").first();
+          return found || null;
+        }))).filter(Boolean) as { id: number; videoDesc?: string; prompt?: string; track?: string; duration?: number }[];
+        const assets = (await Promise.all(track.info.filter(item => item.sources === "assets").map(async item => {
+          const found = await u.db("o_assets").where({ "o_assets.id": item.id, "o_assets.projectId": projectId }).select("id", "type", "name").first();
+          return found || null;
+        }))).filter(Boolean);
+        const sum = storyboard.reduce((total, item) => total + (Number(item.duration) || 0), 0);
+        const duration = Math.max(4, Math.min(15, Math.round(Number(row.duration) || sum || 5)));
+        const slots = plan
+          ? plan.pictures.map(p => `<reference slot="${p.picture}" sources="assets" id="${p.id}" type="${xml(p.assetType)}" view="${p.view}" name="${xml(p.name)}" />`).join("\n")
+          : track.info.filter(item => item.reference !== false).map((item, index) => `<reference slot="${index + 1}" sources="${xml(item.sources)}" id="${item.id}" />`).join("\n");
+        const definitions = plan ? plan.pictures.map(p => `<asset picture="&lt;Picture ${p.picture}&gt;" assetId="${p.id}" parentAssetId="${p.parentAssetId ?? ""}" view="${p.view}" type="${xml(p.assetType)}" name="${xml(p.name)}">\ndescribe=${JSON.stringify(p.description)}\nvisualPrompt=${JSON.stringify(p.assetPrompt)}\n</asset>`).join("\n") : "";
+        const content = [
+          `模型名称=${modelData}; target_duration=${duration}s; dialogue_locale=${locale};`,
+          h3 ? h3DialogueLocaleInstruction(locale) : "",
+          `<referenceSlots>\n${slots}\n</referenceSlots>`, `<assetDefinitions>\n${definitions}\n</assetDefinitions>`,
+          `<storyboardGuidance>${storyboard.map(item => JSON.stringify({ id: item.id, videoDesc: item.videoDesc, imagePrompt: item.prompt })).join("\n")}</storyboardGuidance>`,
+          `资产信息：${JSON.stringify(assets)}`,
+          `原始分镜与对白（原文保留；若指定语言则只翻译发声台词）：${JSON.stringify(storyboard.map(item => ({ id: item.id, videoDesc: item.videoDesc, duration: item.duration, track: item.track })))}`,
+        ].join("\n\n");
+        const template = h3 && plan?.pictures.length ? officialH3 : fallback;
+        const { text } = await u.Ai.Text("universalAi").invoke({
+          system: template + (h3 ? `\n\n${h3DialogueLocaleInstruction(locale)}` : ""),
+          messages: [{ role: "assistant", content: manual }, { role: "user", content }],
+        });
+        if (!text?.trim()) throw new Error("未生成有效视频提示词");
+        if (h3 && plan?.pictures.length) {
+          let previous = -1;
+          for (const heading of headings) {
+            const first = text.indexOf(heading);
+            if (first < 0 || first <= previous || text.indexOf(heading, first + heading.length) >= 0) throw new Error(`H3 六段提示词结构不完整：${heading}`);
+            previous = first;
+          }
+          assertH3PictureSlots(text, plan.pictures.length);
+          if (locale !== "original") {
+            const spoken = [...text.matchAll(/<d>\s*\[[^\]]+\]\s*([^<]*?)\s*<\/d>/g)].map(match => match[1].trim());
+            const budget = checkH3DialogueBudget(spoken, locale, duration);
+            if (!budget.fits) throw new Error(`对白翻译后预计 ${budget.estimatedSeconds}s，超过当前片段 ${duration}s；请精简译文或局部拆镜`);
+          }
+        }
+        const saved = h3 && plan ? bindH3Prompt(text, plan) : text;
+        await u.db("o_videoTrack").where({ id: track.trackId, projectId }).update({ prompt: saved, state: "已完成", reason: null });
+        return { trackId: track.trackId, succeeded: true };
+      } catch (cause) {
+        await u.db("o_videoTrack").where({ id: track.trackId, projectId }).update({ state: "生成失败", reason: u.error(cause).message });
+        return { trackId: track.trackId, succeeded: false };
+      }
+    }));
+    void Promise.all(tasks);
+    return res.status(200).send(success("开始生成提示词"));
+  } catch (cause) {
+    return res.status(400).send(error(u.error(cause).message));
+  }
+});
