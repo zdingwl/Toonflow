@@ -3,6 +3,10 @@ import fs from "fs";
 import path from "path";
 import generateRouter from "../src/core";
 
+// Keep bundled vendor.json in sync with data/vendor/*.ts, including optional local providers.
+// Previously new vendor source files required a separate manual vendor2json step before packaging.
+import "./vendor2json";
+
 // 打包默认使用 prod 环境变量
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = "prod";

@@ -1,201 +1,47 @@
-# MiniMax H3 Ref2VA Prompt Skill
+# MiniMax H3 Ref2VA Prompt Skill · Toonflow
 
-This skill adapts Toonflow inputs to the official MiniMax H3 full-reference prompt format.
+Transform one storyboard segment and its actual uploaded image slots into the official MiniMax H3 six-section prompt. Return ONLY these six sections, exactly once, in this order: `subject_definitions:`, `summary:`, `retention_analysis:`, `detailed_description:`, `overall_soundscape:`, `non_diegetic_music:`. All instruction prose must be English. Only original dialogue, lyrics and deliberately visible scene text retain their original language. Do not write Markdown notes or explanations.
 
-## Required output structure
+## Inputs and reference-binding contract
 
-Return exactly these six sections, in this order:
+Inputs may include `target_duration` (seconds), `referenceSlots` (the actual ordered images uploaded to Ref2VA), `assetDefinitions` (parent identity, current state, source scene, asset names and visual facts), `storyboardGuidance` (TEXT-ONLY visual guidance, not an uploaded image), and `storyboardItem` (shot actions, dialogue, camera, audio, time budget).
 
-subject_definitions:
-summary:
-retention_analysis:
-detailed_description:
-overall_soundscape:
-non_diegetic_music:
+`referenceSlots` is authoritative: its ordered item 1 is `<Picture 1>`, item 2 is `<Picture 2>`, etc. Preserve the exact order; do not sort references in prose, invent a number, refer to a missing file or count storyboardGuidance as a Picture. A role may occupy TWO consecutive slots: FACE and FULL_BODY_FRONT. They define **one reusable Subject**, never two separately appearing characters. Create one Subject for each distinct visible role, environment, prop or creature. Each Subject cites only its actual Picture source(s).
 
-All six sections must be written in English. Preserve only dialogue, lyrics, and visibly rendered scene text in their original language.
+Before output, reconcile asset name + parent identity + current state + role (FACE/FULL_BODY_FRONT) against each actual slot. If a slot is missing, contradicts the active scene state, belongs to a different character, or if there are insufficient slots for the requested subjects, do NOT fabricate Picture links, silently substitute the base form, or include both mutually exclusive forms in one shot. Report a reference/state binding failure to the calling process instead of producing a seemingly valid prompt. A transformation within the shot has a clear BEFORE → AFTER boundary and only the intended state is visible after that boundary; it is not two characters.
 
-## Toonflow input mapping
+Storyboard images inform camera staging only; they are not identity authority. The current asset reference is the identity and wardrobe source. Prioritize named, observable visual anchors over vague tags such as 'high quality, cool, epic'. If the project's visual style is cinematic stylized 3D animation, express CG rendering, PBR materials, controlled facial stylization and lighting, NOT live-action photographs.
 
-Toonflow may provide:
+## Official Subject vs Picture semantics
 
-- target_duration: target video duration in seconds.
-- <referenceSlots>: the actual ordered images uploaded to H3 Ref2VA.
-- <assetDefinitions>: asset name, type, description, and image prompt.
-- <storyboardGuidance>: shot-planning information extracted from storyboard images; these images are not uploaded to Ref2VA.
-- <storyboardItem>: factual scene, action, camera, dialogue, sound, and timing information.
-- project visual-style context.
+Use `<Subject N>` for reusable visible subjects. An uploaded image defining the subject is cited inside its definition, e.g. `<Subject 1> is the same character shown in <Picture 1> (face) and <Picture 2> (front full body), with the current-state hairstyle, facial structure, outfit seams and proportions preserved.` Reference to the Picture itself as a standalone defined object is reserved for an actual first frame/keyframe/last frame/composition anchor. Do not assign one Subject to face and another to the same character's full-body image.
 
-referenceSlots is the runtime source mapping:
+## Required output
 
-slot 1 = <Picture 1>
-slot 2 = <Picture 2>
-...
-slot N = <Picture N>
+`subject_definitions:`: Define each Subject once with positive and observable appearance facts. Separate stable identity attributes from explicitly changed current-state attributes. Specify environment topology and prop geometry where relevant. No guessed age, height or accessories.
 
-Never reorder these slots and never invent a Picture index that is not present.
+`summary:`: Start with `[reference generation]` for image-reference execution; one concise paragraph covering the subject(s), scene action, and shot flow. No new Subject or Picture labels.
 
-storyboardGuidance is text-only planning input. It may guide composition, staging, action, camera movement, spatial relationships, and shot order, but it must not receive a new Picture label.
+`retention_analysis:`: One line per reference item, using ONLY `fully_preserved`, `partially_preserved`, `attribute_transfer`, `weak_reference`. State exactly what is retained and what visibly changes. A current-state reference must not be partially overwritten with the incompatible parent-form look.
 
-## Official reference semantics
+`detailed_description:`: Begin with one or two sentences of the target observable render style, current environment, lighting and composition. Then `[Shot 1]` (no timestamp) and optional further `[Shot N] At 00:SS.mmm, ...` with strictly increasing timestamps inside target_duration. Each shot gives visible Subject placement, action and movement progression, camera path, diegetic sound, and changes that can actually complete in the available seconds.
 
-Use <Subject N> for reusable visible content such as characters, creatures, environments, props, interfaces, clothing, or visual effects.
+Time and action budget (default, not a mandatory cut count):
+- 0–5 s: one principal action, usually one shot; a second shot only if essential and feasible.
+- >5–10 s: one or two principal actions and at most about three distinct shots unless the storyboard explicitly and feasibly demands more.
+- >10–15 s: two or three principal actions, transitions only where the script requires them.
+- Preserve exact script dialogue/VO; estimate speech time FIRST. If dialogue, indispensable actions and transitions cannot fit in target_duration, report that the storyboard must be rescheduled or split; do not accelerate speech unrealistically or silently omit lines.
+- A state-changing action has clear time-localized phases (before → observable onset → resulting appearance); do not repeat the whole transformation in every segment or show both forms at the same time.
+- Do not ask the model to achieve excessive independent camera movements, poses, facial changes and large effects in one tiny segment. Use one clear camera path per shot.
 
-When an uploaded image only defines a reusable subject, cite its Picture source inside that Subject definition instead of making the Picture itself the reusable identity.
+`overall_soundscape:`: Brief English summary of ambience, action effects and non-verbal vocalizations; do not duplicate dialogue or add new music.
 
-Example pattern:
+`non_diegetic_music:`: `N/A` unless the script explicitly requires audience-only background score; if explicitly requested, describe instrumentation, tempo and dynamic change in English.
 
-<Subject 1> is the woman shown in <Picture 1>, preserving the observable facial structure, hairstyle, skin tone, body proportions, wardrobe identity, and key accessories shown in the reference.
+## Dialogue
 
-Use a standalone <Picture N> definition only when the image itself functions as a concrete first frame, keyframe, last frame, edited frame, or composition anchor.
+Assign `(S1)`, `(S2)`, ... in first spoken order and keep each ID stable. Referenced speaking characters use both Subject and speaker ID, e.g. `<Subject 1> (S1) says, <d>[Chinese] 原始中文台词。</d>`; performative direction and mouth movement are outside `<d>`. Keep exact original dialogue, never invent or repeat full dialogue in the soundscape.
 
-For the current Toonflow H3 asset-reference flow, role/scene/tool/creature images normally become Subject sources.
+## Final hard checks
 
-## subject_definitions
-
-Start with exactly:
-
-subject_definitions:
-
-Create one line for every separately reusable visible Subject.
-
-Use concrete positive visual details from assetDefinitions whenever available.
-
-For a character, positively specify the identity features that should remain visually continuous: face structure, apparent age, hairstyle, hair color, skin tone, body proportions, wardrobe identity, and key accessories.
-
-For an environment, specify layout, structure, lighting, weather, and spatial features.
-
-For a prop or interface, specify shape, material, color, layout, scale, and defining design details.
-
-For a creature, specify body proportions, silhouette, surface texture, head or limb structure, scale, and defining features.
-
-## summary
-
-Start with exactly:
-
-summary:
-
-For this Toonflow image-reference workflow, normally use the task prefix:
-
-[reference generation]
-
-Write one short English paragraph summarizing the target video, main Subjects, shot flow, and reference relationships. Introduce no new reference labels here.
-
-## retention_analysis
-
-Start with exactly:
-
-retention_analysis:
-
-Use one line per defined reference item.
-
-For visible references, only use these official relationship markers:
-
-fully_preserved
-partially_preserved
-attribute_transfer
-weak_reference
-
-Prefer positive preservation statements that describe what remains consistent. Do not turn this section into a list of failure cases or negative prompts.
-
-## detailed_description
-
-Start with exactly:
-
-detailed_description:
-
-This is the main execution body.
-
-Before [Shot 1], establish the target visual style in one or two concrete English sentences. Prefer observable rendering, lighting, palette, material, texture, and atmosphere details over vague adjectives.
-
-Shot timing rules:
-
-- [Shot 1] has no timestamp.
-- Every later shot begins with a strictly increasing cut time, such as:
-  [Shot 2] At 00:05.000, ...
-- All timestamps must fit within target_duration.
-- The described sequence must end within the requested duration.
-
-For every shot, describe the current composition, visible Subjects and positions, environment and lighting, observable actions and state changes, camera movement, current diegetic sound, and the point where referenced content is visible or takes effect.
-
-At the first clear appearance of an important Subject, establish enough of its referenced appearance and placement to make the identity clear. Reuse the same Subject label later without redefining it.
-
-Write camera movement naturally in the prose. When useful, describe movement type, amplitude, and speed.
-
-## Dialogue and speakers
-
-Assign stable speaker IDs in order of actual vocal events: (S1), (S2), and so on.
-
-A referenced speaking character should use both its Subject label and speaker ID.
-
-Dialogue must use the official form:
-
-<Subject 2> (S1) says, <d>[Chinese] 原始中文台词。</d>
-
-Keep the spoken words in their original language. Put delivery, expression, voice quality, action, and mouth movement outside the <d> block.
-
-Do not repeat full dialogue in overall_soundscape.
-
-## Positive-detail priority
-
-Generation instructions should primarily state what H3 should render, preserve, move, show, and sound like.
-
-Prioritize:
-
-1. positive subject identity and appearance details;
-2. positive action and state changes;
-3. positive spatial relationships;
-4. positive camera path;
-5. positive sound and dialogue execution.
-
-Use exclusions only when they are genuine output requirements and keep them concise.
-
-## overall_soundscape
-
-Start with exactly:
-
-overall_soundscape:
-
-Write a compact English paragraph summarizing ambience, physical action sounds, environmental continuity, and non-verbal human sounds. Do not repeat dialogue or lyrics.
-
-Use N/A only when complete silence is explicitly requested.
-
-## non_diegetic_music
-
-Start with exactly:
-
-non_diegetic_music:
-
-If the user did not request audience-only background music, output:
-
-N/A
-
-If a score is requested, describe instrumentation, tempo, rhythm, and dynamic development in English.
-
-## Asset-detail use
-
-When <assetDefinitions> is present, use it to make Subject definitions concrete. Convert useful visual facts into natural English prose rather than copying an image-generation keyword list verbatim.
-
-Do not expose asset database IDs in the final prompt.
-
-## Final validation
-
-Before returning, verify:
-
-- all six official section names appear once and in the correct order;
-- all rewrite prose is English except original-language dialogue, lyrics, and visible scene text;
-- every Picture index comes from referenceSlots;
-- reusable visible content uses stable Subject labels;
-- storyboardGuidance has no invented Picture label;
-- summary introduces no new labels;
-- retention_analysis uses only valid relationship markers;
-- Shot 1 has no timestamp;
-- later shots have strictly increasing timestamps;
-- timing fits target_duration;
-- speaker IDs stay stable;
-- dialogue uses <d>[Language] ...</d>;
-- overall_soundscape does not repeat dialogue;
-- non_diegetic_music is N/A when no score is requested;
-- concrete positive instructions dominate over negative prompting.
-
-Return only the six-section H3 prompt with no explanation before or after it.
+Six sections exactly once and ordered; actual Picture indices only; one reusable Subject per character; FACE and FULL_BODY_FRONT refer to the SAME identity and current state; no storyboard picture; no incompatible parent/derived form in the same shot; only approved relationship markers; Shot 1 untimed; later times strictly increasing within target_duration; speech is feasible; original dialogue intact with stable speaker IDs; camera and actions feasible for the duration; music N/A unless explicitly requested. Positive, actionable details are preferred over long exclusion lists.
