@@ -77,6 +77,9 @@ export default async (knex: Knex): Promise<void> => {
   await addColumn("o_agentStep", "inputContent", "text");
   await addColumn("o_agentStep", "output", "text");
   await addColumn("o_agentToolCall", "stepKey", "text");
+  if (await knex.schema.hasTable("o_videoTrack") && !(await knex.schema.hasColumn("o_videoTrack", "archived"))) {
+    await knex.schema.alterTable("o_videoTrack", (table) => table.integer("archived").notNullable().defaultTo(0));
+  }
   if (await knex.schema.hasTable("o_setting")) {
     await knex("o_setting").insert([
       { key: "memoryContextTokenBudget", value: "2400" },
@@ -223,7 +226,7 @@ export default async (knex: Knex): Promise<void> => {
     u.vendor.writeCode("toonflow", vendorData["toonflow.ts"]);
   }
   const comfyuiLocalVer = await u.vendor.getVendor("comfyui_local").version;
-  if (Number(comfyuiLocalVer) < 1.8) {
+  if (Number(comfyuiLocalVer) < 1.9) {
     u.vendor.writeCode("comfyui_local", vendorData["comfyui_local.ts"]);
   }
   const comfyuiLocalData = await u.db("o_vendorConfig").where("id", "comfyui_local").first();
@@ -236,6 +239,12 @@ export default async (knex: Knex): Promise<void> => {
         type: "image",
         mode: ["text"],
       });
+    }
+    const h3Model = models.find((item: any) => item.modelName === "MiniMax-H3-local");
+    if (h3Model) {
+      for (const item of h3Model.durationResolutionMap || []) {
+        if (Array.isArray(item.resolution) && !item.resolution.includes("768p")) item.resolution.push("768p");
+      }
     }
     const inputValues = {
       qwenImageUnet: "qwen_image_2.1_int8_convrot.safetensors",

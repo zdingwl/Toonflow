@@ -27,7 +27,7 @@ declare const Buffer: any;
 declare const pollTask: (fn: () => Promise<{ completed: boolean; data?: string; error?: string }>, interval?: number, timeout?: number) => Promise<{ completed: boolean; data?: string; error?: string }>;
 
 const vendor = {
-  id: "comfyui_local", version: "1.8", author: "Local ComfyUI",
+  id: "comfyui_local", version: "1.9", author: "Local ComfyUI",
   name: "本机 ComfyUI（FLUX + Qwen Image + MiniMax H3）",
   description: "FLUX 与 Qwen-Image-2.1 图片走 ComfyUI；MiniMax H3 视频直连原生 Ref2VA/FL2VA。角色/场景/道具资产作为 <Picture N>，分镜图仅作文本构图指导，避免覆盖人物身份。",
   inputs: [
@@ -67,7 +67,7 @@ const vendor = {
     {
       name: "MiniMax H3 本机（多图参考）", modelName: "MiniMax-H3-local", type: "video" as const,
       mode: ["text", "startFrameOptional", ["imageReference:9"]], audio: "optional" as const,
-      durationResolutionMap: [{ duration: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p"] }],
+      durationResolutionMap: [{ duration: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p", "768p"] }],
     },
   ],
 };
@@ -211,12 +211,22 @@ function sizeForVideo(resolution: string, ratio: string) {
   const sides: Record<string, number[]> = { "16:9": [16, 9], "9:16": [9, 16], "1:1": [1, 1], "4:3": [4, 3], "3:4": [3, 4], "21:9": [21, 9] };
   const pair = sides[ratio];
   if (!pair) throw new Error(`H3 不支持比例 ${ratio}`);
+  if (!["480p", "720p", "768p"].includes(resolution)) throw new Error(`H3 分辨率无效：${resolution}`);
   const shortSide = Number.parseInt(resolution, 10);
-  if (!Number.isFinite(shortSide) || shortSide <= 0) throw new Error(`H3 分辨率无效：${resolution}`);
   const [w, h] = pair;
-  return w >= h
-    ? { width: Math.max(32, Math.floor(shortSide * w / h / 32) * 32), height: shortSide }
-    : { width: shortSide, height: Math.max(32, Math.floor(shortSide * h / w / 32) * 32) };
+  const rawWidth = w >= h ? shortSide * w / h : shortSide;
+  const rawHeight = w >= h ? shortSide : shortSide * h / w;
+  // H3's native canvas is 1344x768: both dimensions must be multiples of 32,
+  // and wider ratios must stay within the same total pixel area.
+  const aligned = (value: number) => Math.max(32, Math.floor(value / 32) * 32);
+  let width = aligned(rawWidth);
+  let height = aligned(rawHeight);
+  if (width * height > 1344 * 768) {
+    const scale = Math.sqrt((1344 * 768) / (width * height));
+    width = aligned(width * scale);
+    height = aligned(height * scale);
+  }
+  return { width, height };
 }
 
 function referenceLabel(ref: NonNullable<VideoConfig["referenceList"]>[number], index: number): string {

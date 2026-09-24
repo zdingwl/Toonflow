@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import vm from "node:vm";
+import { transform } from "sucrase";
 import test from "node:test";
 
 const source = await readFile(new URL("../data/vendor/comfyui_local.ts", import.meta.url), "utf8");
@@ -14,6 +16,25 @@ test("native MiniMax H3 workflows do not load Turbo LoRA", () => {
 test("Ref2VA and FL2VA use the standard 20-step setting", () => {
   assert.match(source, /h3Steps:\s*"20"/);
   assert.match(source, /setting\("h3Steps",\s*"20"\)/);
+});
+
+test("H3 offers 768p and keeps native dimensions on the 32-pixel grid", () => {
+  assert.match(source, /resolution:\s*\["480p", "720p", "768p"\]/);
+  const body = source.match(/function sizeForVideo\([\s\S]*?(?=function referenceLabel)/)?.[0].trim();
+  assert.ok(body, "H3 size calculator is present");
+  const sizeForVideo = vm.runInNewContext(`${transform(body, { transforms: ["typescript"] }).code}; sizeForVideo`);
+  assert.deepEqual(JSON.parse(JSON.stringify(sizeForVideo("768p", "16:9"))), { width: 1344, height: 768 });
+  assert.deepEqual(JSON.parse(JSON.stringify(sizeForVideo("768p", "9:16"))), { width: 768, height: 1344 });
+  for (const ratio of ["1:1", "4:3", "3:4", "21:9"]) {
+    const size = sizeForVideo("768p", ratio);
+    assert.equal(size.width % 32, 0);
+    assert.equal(size.height % 32, 0);
+    assert.ok(size.width * size.height <= 1344 * 768);
+  }
+  const prior = sizeForVideo("720p", "16:9");
+  assert.equal(prior.width % 32, 0);
+  assert.equal(prior.height % 32, 0);
+  assert.throws(() => sizeForVideo("1080p", "16:9"), /分辨率无效/);
 });
 
 test("Qwen Image 2.1 uses the official native ComfyUI text-to-image graph", () => {

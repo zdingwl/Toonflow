@@ -583,6 +583,7 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.text("prompt");
         table.integer("selectVideoId");
         table.integer("duration");
+        table.integer("archived").notNullable().defaultTo(0);
         table.primary(["id"]);
         table.unique(["id"]);
       },

@@ -81778,6 +81778,7 @@ A medium tracking shot follows the woman from behind as she ascends and approach
             table.text("prompt");
             table.integer("selectVideoId");
             table.integer("duration");
+            table.integer("archived").notNullable().defaultTo(0);
             table.primary(["id"]);
             table.unique(["id"]);
           }
@@ -106093,6 +106094,9 @@ var init_fixDB = __esm({
       await addColumn("o_agentStep", "inputContent", "text");
       await addColumn("o_agentStep", "output", "text");
       await addColumn("o_agentToolCall", "stepKey", "text");
+      if (await knex3.schema.hasTable("o_videoTrack") && !await knex3.schema.hasColumn("o_videoTrack", "archived")) {
+        await knex3.schema.alterTable("o_videoTrack", (table) => table.integer("archived").notNullable().defaultTo(0));
+      }
       if (await knex3.schema.hasTable("o_setting")) {
         await knex3("o_setting").insert([
           { key: "memoryContextTokenBudget", value: "2400" },
@@ -106922,7 +106926,7 @@ A medium tracking shot follows the woman from behind as she ascends and approach
         utils_default.vendor.writeCode("toonflow", vendorData["toonflow.ts"]);
       }
       const comfyuiLocalVer = await utils_default.vendor.getVendor("comfyui_local").version;
-      if (Number(comfyuiLocalVer) < 1.8) {
+      if (Number(comfyuiLocalVer) < 1.9) {
         utils_default.vendor.writeCode("comfyui_local", vendorData["comfyui_local.ts"]);
       }
       const comfyuiLocalData = await utils_default.db("o_vendorConfig").where("id", "comfyui_local").first();
@@ -106935,6 +106939,12 @@ A medium tracking shot follows the woman from behind as she ascends and approach
             type: "image",
             mode: ["text"]
           });
+        }
+        const h3Model = models.find((item) => item.modelName === "MiniMax-H3-local");
+        if (h3Model) {
+          for (const item of h3Model.durationResolutionMap || []) {
+            if (Array.isArray(item.resolution) && !item.resolution.includes("768p")) item.resolution.push("768p");
+          }
         }
         const inputValues = {
           qwenImageUnet: "qwen_image_2.1_int8_convrot.safetensors",
@@ -242304,14 +242314,22 @@ var init_batchDelete2 = __esm({
       async (req, res) => {
         const { ids, projectId } = req.body;
         if (!ids.length) return res.status(400).send(error50("\u8BF7\u5148\u9009\u62E9\u5206\u955C"));
-        const storyboardDataList = await utils_default.db("o_storyboard").whereIn("id", ids).where("projectId", projectId).select("id", "track", "trackId", "flowId");
-        if (!storyboardDataList.length) return res.status(400).send(error50("\u5F53\u524D\u9009\u62E9\u5206\u955C\u4E0D\u5B58\u5728"));
-        const flowIds = storyboardDataList.map((i) => i.flowId);
-        const storyBoardIds = storyboardDataList.map((i) => i.id);
-        if (flowIds.length)
-          await utils_default.db("o_imageFlow").whereIn("id", flowIds).delete();
-        await utils_default.db("o_storyboard").whereIn("id", storyBoardIds).delete();
-        await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", storyBoardIds).delete();
+        const removed = await utils_default.db.transaction(async (trx) => {
+          const storyboardDataList = await trx("o_storyboard").whereIn("id", ids).where("projectId", projectId).select("id", "trackId", "flowId");
+          if (!storyboardDataList.length) return 0;
+          const storyBoardIds = storyboardDataList.map((item) => item.id);
+          const flowIds = storyboardDataList.map((item) => item.flowId).filter((id) => id != null);
+          const trackIds = [...new Set(storyboardDataList.map((item) => item.trackId).filter((id) => id != null))];
+          await trx("o_assets2Storyboard").whereIn("storyboardId", storyBoardIds).delete();
+          await trx("o_storyboard").whereIn("id", storyBoardIds).delete();
+          if (flowIds.length) await trx("o_imageFlow").whereIn("id", flowIds).delete();
+          for (const trackId of trackIds) {
+            const remaining = await trx("o_storyboard").where({ trackId }).first("id");
+            if (!remaining) await trx("o_videoTrack").where({ id: trackId, projectId }).update({ archived: 1 });
+          }
+          return storyBoardIds.length;
+        });
+        if (!removed) return res.status(400).send(error50("\u5F53\u524D\u9009\u62E9\u5206\u955C\u4E0D\u5B58\u5728"));
         res.status(200).send(success3({ message: "\u89C6\u9891\u5220\u9664\u6210\u529F" }));
       }
     );
@@ -242832,13 +242850,21 @@ var init_removeFrame = __esm({
       }),
       async (req, res) => {
         const { id } = req.body;
-        const storyboardData = await utils_default.db("o_storyboard").where("id", id).select("id", "track", "trackId", "flowId").first();
-        if (!storyboardData) return res.status(400).send(error50("\u672A\u627E\u5230\u8BE5\u5206\u955C"));
-        if (storyboardData?.flowId) await utils_default.db("o_imageFlow").where("id", storyboardData?.flowId).delete();
-        const trackData = await utils_default.db("o_storyboard").where("track", storyboardData.track).select("id");
-        if (trackData.length == 1) await utils_default.db("o_videoTrack").where("id", storyboardData.trackId).delete();
-        await utils_default.db("o_storyboard").where("id", id).delete();
-        await utils_default.db("o_assets2Storyboard").where("storyboardId", id).delete();
+        const removed = await utils_default.db.transaction(async (trx) => {
+          const storyboardData = await trx("o_storyboard").where({ id }).select("id", "trackId", "flowId", "projectId", "scriptId").first();
+          if (!storyboardData) return false;
+          await trx("o_assets2Storyboard").where("storyboardId", id).delete();
+          await trx("o_storyboard").where({ id }).delete();
+          if (storyboardData.flowId != null) await trx("o_imageFlow").where("id", storyboardData.flowId).delete();
+          if (storyboardData.trackId != null) {
+            const remaining = await trx("o_storyboard").where({ trackId: storyboardData.trackId }).first("id");
+            if (!remaining) {
+              await trx("o_videoTrack").where({ id: storyboardData.trackId, projectId: storyboardData.projectId, scriptId: storyboardData.scriptId }).update({ archived: 1 });
+            }
+          }
+          return true;
+        });
+        if (!removed) return res.status(400).send(error50("\u672A\u627E\u5230\u8BE5\u5206\u955C"));
         res.status(200).send(success3({ message: "\u89C6\u9891\u5220\u9664\u6210\u529F" }));
       }
     );
@@ -244084,7 +244110,7 @@ var init_getGenerateData = __esm({
             })
           );
         }
-        const trackData = await utils_default.db("o_videoTrack").where({ projectId, scriptId });
+        const trackData = await utils_default.db("o_videoTrack").where({ projectId, scriptId, archived: 0 });
         const videoList = await utils_default.db("o_video").whereIn(
           "videoTrackId",
           trackData.map((t) => t.id)

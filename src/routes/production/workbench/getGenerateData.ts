@@ -152,7 +152,7 @@ export default router.post(
       );
     }
 
-    const trackData = await u.db("o_videoTrack").where({ projectId, scriptId });
+    const trackData = await u.db("o_videoTrack").where({ projectId, scriptId, archived: 0 });
     const videoList = await u.db("o_video").whereIn(
       "videoTrackId",
       trackData.map((t) => t.id),
