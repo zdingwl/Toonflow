@@ -58,6 +58,8 @@ export default router.post(
         return {
           ...parent,
           filePath: parent.filePath && (await u.oss.getSmallImageUrl(parent.filePath!)),
+          faceReferenceUrl: parent.faceReferencePath && (await u.oss.getFileUrl(parent.faceReferencePath)),
+          fullBodyReferenceUrl: parent.fullBodyReferencePath && (await u.oss.getFileUrl(parent.fullBodyReferencePath)),
           historyImages: historyImagesWithUrl,
           relepedAudio: repleAssets[parent.id] ?? [],
         };

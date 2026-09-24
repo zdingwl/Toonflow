@@ -177,6 +177,32 @@
           <t-empty v-else type="maintenance" :title="$t('workbench.cornerScape.noImage')" />
         </div>
         <t-form v-if="currentItem" labelAlign="top">
+          <t-form-item v-if="currentItem.type === 'role'" label="人物视觉设计">
+            <div class="identityReferencePanel">
+              <div class="identityMeta">
+                <t-tag :theme="currentItem.designStatus === 'ready' ? 'success' : 'warning'" variant="light">
+                  {{ currentItem.designStatus === "ready" ? "身份参考已就绪" : currentItem.filePath ? "可从当前人物图创建" : "请先生成角色图" }}
+                </t-tag>
+                <span>设计版本 {{ currentItem.designVersion || 1 }}</span>
+                <span v-if="currentItem.resolution">实际尺寸 {{ currentItem.resolution }}</span>
+              </div>
+              <div class="identityImages" v-if="currentItem.faceReferenceUrl || currentItem.fullBodyReferenceUrl">
+                <div v-if="currentItem.faceReferenceUrl"><span>脸部身份参考</span><t-image :src="currentItem.faceReferenceUrl" fit="contain" /></div>
+                <div v-if="currentItem.fullBodyReferenceUrl"><span>正面全身参考</span><t-image :src="currentItem.fullBodyReferenceUrl" fit="contain" /></div>
+              </div>
+              <t-button
+                v-if="currentItem.designStatus !== 'ready'"
+                size="small"
+                theme="primary"
+                variant="outline"
+                :loading="buildingIdentityReferences"
+                :disabled="!currentItem.filePath"
+                @click="buildIdentityReferences">
+                {{ currentItem.filePath ? "从当前人物图生成身份参考" : "先生成角色图" }}
+              </t-button>
+              <div class="identityHint">人物角色图生成成功后会自动创建身份参考；旧图片也可以点击上方按钮补建。重新生成人物图会创建新的设计版本，原图保留在历史记录中。</div>
+            </div>
+          </t-form-item>
           <t-form-item :label="$t('workbench.cornerScape.history')">
             <div class="historyImageList f">
               <div
@@ -268,6 +294,10 @@ interface DataItem {
   resolution: string;
   describe: string;
   promptState: string;
+  designStatus?: string;
+  designVersion?: number;
+  faceReferenceUrl?: string | null;
+  fullBodyReferenceUrl?: string | null;
   historyImages: Image[];
   errorReason: string;
   promptErrorReason: string;
@@ -589,6 +619,23 @@ async function savePromptOnBlur() {
 
 // AI 润色
 const polishing = ref(false);
+const buildingIdentityReferences = ref(false);
+async function buildIdentityReferences() {
+  if (!currentItem.value?.filePath) return;
+  buildingIdentityReferences.value = true;
+  try {
+    const { data } = await axios.post("/assetsGenerate/buildRoleReferences", {
+      projectId: project.value?.id,
+      assetsId: currentItem.value.id,
+    });
+    Object.assign(currentItem.value, data);
+    window.$message.success("人物身份参考已生成");
+  } catch (e: any) {
+    window.$message.error(e.message || "人物身份参考生成失败");
+  } finally {
+    buildingIdentityReferences.value = false;
+  }
+}
 async function polishPrompts() {
   if (!editForm.prompt.trim()) {
     window.$message.warning($t("workbench.cornerScape.msg.enterPromptFirst"));
@@ -1265,4 +1312,29 @@ async function selectAudio() {
     flex: 1;
   }
 }
+
+.identityReferencePanel {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--td-component-border);
+  border-radius: 8px;
+  background: var(--td-bg-color-secondarycontainer);
+}
+.identityMeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: var(--td-text-color-secondary);
+  font-size: 12px;
+}
+.identityImages {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+  > div { display: grid; gap: 6px; font-size: 12px; color: var(--td-text-color-secondary); }
+  :deep(.t-image) { height: 180px; background: var(--td-bg-color-container); border-radius: 6px; }
+}
+.identityHint { margin-top: 10px; font-size: 12px; color: var(--td-text-color-placeholder); }
 </style>

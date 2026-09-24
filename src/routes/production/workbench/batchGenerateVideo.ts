@@ -5,6 +5,8 @@ import { v4 as uuidv4 } from "uuid";
 import { success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { ReferenceList } from "@/utils/ai";
+import { ensureRoleReferenceMedia } from "@/utils/assetReferenceMedia";
+import { inspectVideoQuality } from "@/utils/videoQuality";
 const router = express.Router();
 
 type Type = "imageReference" | "startImage" | "endImage" | "videoReference" | "audioReference";
@@ -92,13 +94,13 @@ export default router.post(
               if (item.sources === "storyboard") {
                 const filePath = await u.db("o_storyboard").where("id", item.id).select("filePath", "prompt").first();
                 return {
-                  path: filePath?.filePath,
+                  path: filePath?.filePath ?? undefined,
                   sourceType: "storyboard",
                   assetType: "storyboard",
                   fileType: item.fileType || "image",
                   referenceType: item.type,
                   label: item.label || `分镜图${item.id}`,
-                  prompt: item.prompt || filePath?.prompt,
+                  prompt: item.prompt || filePath?.prompt || undefined,
                 };
               }
 
@@ -116,13 +118,13 @@ export default router.post(
                   )
                   .first();
                 return {
-                  path: filePath?.filePath,
+                  path: filePath?.filePath ?? undefined,
                   sourceType: "assets",
                   assetType: filePath?.assetType,
                   fileType: item.fileType || filePath?.imageType || "image",
                   referenceType: item.type,
                   label: item.label || filePath?.name,
-                  prompt: item.prompt || filePath?.prompt,
+                  prompt: item.prompt || filePath?.prompt || undefined,
                 };
               }
 
@@ -131,9 +133,18 @@ export default router.post(
           )
         ).filter(Boolean) as ResolvedReference[];
 
-        const runtimeImages = h3
-          ? images.filter((item) => item.sourceType !== "storyboard").sort((a, b) => h3ReferenceRank(a) - h3ReferenceRank(b))
+        const expandedImages = h3
+          ? (await Promise.all(images.map(async (item) => {
+              if (item.sourceType === "assets" && item.assetType === "role" && item.path) {
+                const refs = await ensureRoleReferenceMedia(item.path, item.label || "role");
+                return refs.length ? refs : [item];
+              }
+              return [item];
+            }))).flat()
           : images;
+        const runtimeImages = h3
+          ? expandedImages.filter((item) => item.sourceType !== "storyboard").sort((a, b) => h3ReferenceRank(a) - h3ReferenceRank(b))
+          : expandedImages;
 
         const videoPath = `/${projectId}/video/${uuidv4()}.mp4`;
         const [videoId] = await u.db("o_video").insert({
@@ -193,7 +204,7 @@ export default router.post(
           },
         );
         await aiVideo.save(videoPath);
-        await u.db("o_video").where("id", videoId).update({ state: "生成成功", errorReason: null });
+        await u.db("o_video").where("id", videoId).update({ state: "生成成功", errorReason: null, ...(await inspectVideoQuality(videoPath)) });
       } catch (error: any) {
         await u.db("o_video").where("id", videoId).update({
           state: "生成失败",

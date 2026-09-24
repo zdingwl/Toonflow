@@ -101,8 +101,19 @@ export default async (knex: Knex): Promise<void> => {
   // 添加新字段
   await addColumn("o_agentDeploy", "maxOutputTokens", "integer");
   await addColumn("o_assets", "audioBindState", "integer");
+  await addColumn("o_assets", "designVersion", "integer");
+  await addColumn("o_assets", "designStatus", "text");
+  await addColumn("o_assets", "faceReferencePath", "text");
+  await addColumn("o_assets", "fullBodyReferencePath", "text");
+  await addColumn("o_assets", "referenceFingerprint", "text");
   await addColumn("o_modelPrompt", "fileName", "string");
   await addColumn("o_modelPrompt", "path", "string");
+  await addColumn("o_video", "width", "integer");
+  await addColumn("o_video", "height", "integer");
+  await addColumn("o_video", "fps", "float");
+  await addColumn("o_video", "bitrate", "integer");
+  await addColumn("o_video", "codec", "text");
+  await addColumn("o_video", "actualDuration", "float");
   const vendorDataSelect = await u.db("o_vendorConfig").whereIn("id", ["deepseek", "atlascloud"]).select("*");
   if (!vendorDataSelect.find((i) => i.id == "deepseek")) {
     await u.db("o_vendorConfig").insert({

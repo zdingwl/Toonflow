@@ -6,6 +6,7 @@ import { success, error } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import fs from "fs/promises";
 import path from "path";
+import { expandH3AssetSlots } from "@/utils/h3ReferenceSlots";
 const router = express.Router();
 
 function isMiniMaxH3(modelName: string): boolean {
@@ -202,7 +203,7 @@ export default router.post(
           // H3 Picture slots contain only the asset images that will be uploaded to Ref2VA.
           // Selected storyboard images are converted to text guidance and never compete with character identity.
           const pictureSourceItems = h3PromptMode
-            ? images
+            ? expandH3AssetSlots(images
                 .filter(
                   (item: any) =>
                     item &&
@@ -212,7 +213,7 @@ export default router.post(
                     item._fileType !== "audio" &&
                     item._fileType !== "video",
                 )
-                .sort((a: any, b: any) => h3AssetRank(a) - h3AssetRank(b))
+                .sort((a: any, b: any) => h3AssetRank(a) - h3AssetRank(b)))
             : images.filter((item: any) => item && item._reference !== false && item.filePath);
 
           const referenceSlotItems = pictureSourceItems.map((item: any, index: number) => {

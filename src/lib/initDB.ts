@@ -488,6 +488,11 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.text("describe");
         table.integer("scriptId"); //剧本id
         table.integer("imageId").unsigned().references("id").inTable("o_image");
+        table.integer("designVersion").notNullable().defaultTo(1);
+        table.text("designStatus").notNullable().defaultTo("draft");
+        table.text("faceReferencePath");
+        table.text("fullBodyReferencePath");
+        table.text("referenceFingerprint");
         table.integer("assetsId");
         table.integer("projectId");
         table.integer("flowId"); //工作流id
@@ -566,6 +571,12 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.integer("scriptId");
         table.integer("projectId");
         table.integer("videoTrackId");
+        table.integer("width");
+        table.integer("height");
+        table.float("fps");
+        table.integer("bitrate");
+        table.text("codec");
+        table.float("actualDuration");
         table.primary(["id"]);
         table.unique(["id"]);
       },

@@ -3,10 +3,10 @@ import u from "@/utils";
 import { z } from "zod";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
-import { useSkill } from "@/utils/agent/skillsTools";
+import { getAssetVisualDesignSkill } from "@/utils/assetVisualDesignSkill";
 import { tool, jsonSchema, stepCountIs } from "ai";
 import { o_script } from "@/types/database";
-import { normalizeScriptIds } from "@/utils/scriptAssetIds";
+import { normalizeScriptIdsForBatch } from "@/utils/scriptAssetIds";
 
 const router = express.Router();
 
@@ -85,13 +85,13 @@ export default router.post(
       const safeNewAssets = newAssets
         .map((asset) => ({
           ...asset,
-          scriptIds: normalizeScriptIds((asset as { scriptIds?: unknown }).scriptIds, allowedScriptIds),
+          scriptIds: normalizeScriptIdsForBatch((asset as { scriptIds?: unknown }).scriptIds, allowedScriptIds),
         }))
         .filter((asset) => asset.scriptIds.length > 0);
       const safeExistingRefs = existingRefs
         .map((ref) => ({
           ...ref,
-          scriptIds: normalizeScriptIds((ref as { scriptIds?: unknown }).scriptIds, allowedScriptIds),
+          scriptIds: normalizeScriptIdsForBatch((ref as { scriptIds?: unknown }).scriptIds, allowedScriptIds),
         }))
         .filter((ref) => ref.scriptIds.length > 0);
 
@@ -231,7 +231,10 @@ export default router.post(
                 role: "system",
                 content:
                   scriptAssetExtraction +
+                  "\n\n【资产视觉设计 Skill】\n" +
+                  getAssetVisualDesignSkill() +
                   "\n\n提取剧本中涉及的资产（角色、场景、道具），结果必须通过 resultTool 工具返回。" +
+                  `\n\n本次允许使用的剧本ID只有：[${validScriptIds.join(", ")}]. 每个返回资产的 scriptIds 必须从该列表中选择；单集输入必须填写 [${validScriptIds[0]}]。` +
                   "\n\n注意：本次会同时提供多集剧本，每集剧本以 ===== 【剧本ID: xxx】 ===== 分隔。你需要分析每集剧本使用了哪些资产，并在输出中用 scriptIds 数组标明每个资产在哪些剧本中出现。",
               },
               {

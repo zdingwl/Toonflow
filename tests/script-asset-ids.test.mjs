@@ -14,7 +14,7 @@ const js = ts.transpileModule(helperSource, {
 }).outputText;
 const module = { exports: {} };
 new Function("module", "exports", js)(module, module.exports);
-const { normalizeScriptIds } = module.exports;
+const { normalizeScriptIds, normalizeScriptIdsForBatch } = module.exports;
 
 test("资产提取 scriptIds 兼容数组、单个数字和字符串，并限制为当前批次", () => {
   const allowed = [11, 12, 13];
@@ -25,9 +25,17 @@ test("资产提取 scriptIds 兼容数组、单个数字和字符串，并限制
   assert.deepEqual(normalizeScriptIds(null, allowed), []);
 });
 
+test("单剧本批次自动修复模型遗漏或幻觉的 scriptIds，多剧本仍保持严格校验", () => {
+  assert.deepEqual(normalizeScriptIdsForBatch([], [31]), [31]);
+  assert.deepEqual(normalizeScriptIdsForBatch([999], [31]), [31]);
+  assert.deepEqual(normalizeScriptIdsForBatch(null, [31]), [31]);
+  assert.deepEqual(normalizeScriptIdsForBatch([999], [31, 32]), []);
+  assert.deepEqual(normalizeScriptIdsForBatch([32], [31, 32]), [32]);
+});
+
 test("资产提取入库前必须归一化模型返回的 scriptIds，不能直接 for-of 未校验值", () => {
-  assert.match(routeSource, /normalizeScriptIds\(\(asset as \{ scriptIds\?: unknown \}\)\.scriptIds, allowedScriptIds\)/);
-  assert.match(routeSource, /normalizeScriptIds\(\(ref as \{ scriptIds\?: unknown \}\)\.scriptIds, allowedScriptIds\)/);
+  assert.match(routeSource, /normalizeScriptIdsForBatch\(\(asset as \{ scriptIds\?: unknown \}\)\.scriptIds, allowedScriptIds\)/);
+  assert.match(routeSource, /normalizeScriptIdsForBatch\(\(ref as \{ scriptIds\?: unknown \}\)\.scriptIds, allowedScriptIds\)/);
   assert.doesNotMatch(routeSource, /for \(const asset of newAssets\)[\s\S]{0,200}for \(const sid of asset\.scriptIds\)/);
   assert.match(routeSource, /AI 返回的资产关联剧本ID无效/);
 });

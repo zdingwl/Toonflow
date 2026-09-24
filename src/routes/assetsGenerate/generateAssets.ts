@@ -2,6 +2,8 @@ import express from "express";
 import u from "@/utils";
 import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
+import sharp from "sharp";
+import { ensureRoleReferenceMedia, roleReferenceFingerprint } from "@/utils/assetReferenceMedia";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import {
@@ -69,7 +71,6 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
     model: model.split(/:(.+)/)[1],
     resolution,
   });
-  await u.db("o_assets").where("id", id).update({ imageId });
 
   // 3. 准备生成参数
   const imagePath = `/${projectId}/${cfg.dir}/${uuidv4()}.jpg`;
@@ -115,7 +116,10 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
         relatedObjects: JSON.stringify(relatedObjects),
       },
     );
-    aiImage.save(imagePath);
+    await aiImage.save(imagePath);
+    const actualImage = await sharp(await u.oss.getFile(imagePath)).metadata();
+    const actualResolution = actualImage.width && actualImage.height ? `${actualImage.width}x${actualImage.height}` : resolution;
+    const roleReferences = type === "role" ? await ensureRoleReferenceMedia(imagePath, name) : [];
     // 5. 更新记录 & 返回结果
     const imageData = await u.db("o_image").where("id", imageId).select("*").first();
     if (!imageData) return res.status(500).send("资产已被删除");
@@ -128,11 +132,22 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
         filePath: imagePath,
         type,
         model: model.split(/:(.+)/)[1],
-        resolution,
+        resolution: actualResolution,
       });
+    await u.db("o_assets").where({ id, projectId }).update({
+      imageId,
+      ...(type === "role" && roleReferences.length >= 2
+        ? {
+            designStatus: "ready",
+            designVersion: u.db.raw("COALESCE(designVersion, 0) + 1"),
+            faceReferencePath: roleReferences[0].path,
+            fullBodyReferencePath: roleReferences[1].path,
+            referenceFingerprint: await roleReferenceFingerprint(imagePath),
+          }
+        : {}),
+    });
 
     const path = await u.oss.getSmallImageUrl(imagePath);
-    await u.db("o_assets").where("id", id).update({ imageId });
 
     return res.status(200).send(success({ path, assetsId: id }));
   } catch (e) {

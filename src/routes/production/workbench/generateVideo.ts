@@ -5,6 +5,8 @@ import { v4 as uuidv4 } from "uuid";
 import { success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { ReferenceList } from "@/utils/ai";
+import { ensureRoleReferenceMedia } from "@/utils/assetReferenceMedia";
+import { inspectVideoQuality } from "@/utils/videoQuality";
 const router = express.Router();
 
 type Type = "imageReference" | "startImage" | "endImage" | "videoReference" | "audioReference";
@@ -83,13 +85,13 @@ export default router.post(
           if (item.sources === "storyboard") {
             const filePath = await u.db("o_storyboard").where("id", item.id).select("filePath", "prompt").first();
             return {
-              path: filePath?.filePath,
+              path: filePath?.filePath ?? undefined,
               sourceType: "storyboard",
               assetType: "storyboard",
               fileType: item.fileType || "image",
               referenceType: item.type,
               label: item.label || `分镜图${item.id}`,
-              prompt: item.prompt || filePath?.prompt,
+              prompt: item.prompt || filePath?.prompt || undefined,
             };
           }
 
@@ -107,13 +109,13 @@ export default router.post(
               )
               .first();
             return {
-              path: filePath?.filePath,
+              path: filePath?.filePath ?? undefined,
               sourceType: "assets",
               assetType: filePath?.assetType,
               fileType: item.fileType || filePath?.imageType || "image",
               referenceType: item.type,
               label: item.label || filePath?.name,
-              prompt: item.prompt || filePath?.prompt,
+              prompt: item.prompt || filePath?.prompt || undefined,
             };
           }
 
@@ -122,10 +124,20 @@ export default router.post(
       )
     ).filter(Boolean) as ResolvedReference[];
 
+    const h3Images = isMiniMaxH3(model)
+      ? (await Promise.all(images.map(async (item) => {
+          if (item.sourceType === "assets" && item.assetType === "role" && item.path) {
+            const refs = await ensureRoleReferenceMedia(item.path, item.label || "role");
+            return refs.length ? refs : [item];
+          }
+          return [item];
+        }))).flat()
+      : images;
+
     // MiniMax H3 uses asset references for identity/design. Storyboard images are prompt-only
     // guidance because feeding them into Ref2VA can override the authoritative character faces.
     const runtimeImages = isMiniMaxH3(model)
-      ? images.filter((item) => item.sourceType !== "storyboard").sort((a, b) => h3ReferenceRank(a) - h3ReferenceRank(b))
+      ? h3Images.filter((item) => item.sourceType !== "storyboard").sort((a, b) => h3ReferenceRank(a) - h3ReferenceRank(b))
       : images;
 
     const base64 = await Promise.all(
@@ -184,7 +196,7 @@ export default router.post(
         },
       )
       .then(async () => await aiVideo.save(videoPath))
-      .then(async () => await u.db("o_video").where("id", videoId).update({ state: "生成成功" }))
+      .then(async () => await u.db("o_video").where("id", videoId).update({ state: "生成成功", ...(await inspectVideoQuality(videoPath)) }))
       .catch(async (error: any) => {
         await u
           .db("o_video")

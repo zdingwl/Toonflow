@@ -1,3 +1,5 @@
+import { getAssetVisualDesignSkill } from "@/utils/assetVisualDesignSkill";
+
 export type AssetPromptType = "role" | "scene" | "tool";
 
 const typeGuides: Record<AssetPromptType, string> = {
@@ -51,7 +53,8 @@ export function buildAssetPromptSystemPrompt(
     ? `\n\n# 调用方附加要求\n${extraPrompt.trim()}\n`
     : "";
 
-  return `${visualManual.trim()}${extra}\n\n${commonContract}\n${typeGuides[type]}`.trim();
+  const visualDesign = getAssetVisualDesignSkill();
+  return `${visualManual.trim()}\n\n# 资产视觉设计 Skill\n${visualDesign}${extra}\n\n${commonContract}\n${typeGuides[type]}`.trim();
 }
 
 export function buildAssetPromptUserPrompt(label: string, name: string, describe: string): string {

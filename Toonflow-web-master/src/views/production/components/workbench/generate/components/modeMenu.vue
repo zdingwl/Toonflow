@@ -88,7 +88,7 @@ const modelParmas = defineModel<ModelSetting>({
   default: {
     mode: "",
     model: "",
-    resolution: "480p",
+    resolution: "768p",
     duration: 8,
     audio: false,
   },

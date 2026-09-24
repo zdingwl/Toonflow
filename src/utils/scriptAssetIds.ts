@@ -27,3 +27,11 @@ export function normalizeScriptIds(value: unknown, allowedIds: Iterable<number>)
   }
   return result;
 }
+
+/** A single-script extraction has only one valid owner, so repair missing or hallucinated IDs deterministically. */
+export function normalizeScriptIdsForBatch(value: unknown, allowedIds: Iterable<number>): number[] {
+  const allowed = [...allowedIds].filter((id) => Number.isInteger(id) && id > 0);
+  const normalized = normalizeScriptIds(value, allowed);
+  if (normalized.length) return normalized;
+  return allowed.length === 1 ? [allowed[0]] : [];
+}

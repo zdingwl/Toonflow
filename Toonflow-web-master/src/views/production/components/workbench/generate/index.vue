@@ -78,7 +78,7 @@ const trackList = ref<TrackItem[]>([]); // 轨道列表
 const modelParmas = ref<ModelSetting>({
   mode: "",
   model: "",
-  resolution: "480p",
+  resolution: "768p",
   duration: 8,
   audio: false,
 });

@@ -3,7 +3,10 @@ import pLimit from "p-limit";
 import u from "@/utils";
 import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
+import sharp from "sharp";
+import { ensureRoleReferenceMedia, roleReferenceFingerprint } from "@/utils/assetReferenceMedia";
 import { error, success } from "@/lib/responseFormat";
+import { buildAssetImagePrompt } from "@/utils/assetPrompt";
 import { validateFields } from "@/middleware/middleware";
 
 const router = express.Router();
@@ -42,21 +45,6 @@ const assetTypeConfig: Record<AssetType, AssetTypeConfig> = {
   },
 };
 
-function buildPrompt(cfg: AssetTypeConfig, artStyle: string, name: string, prompt: string): string {
-  return `
-    请根据以下参数生成${cfg.promptTitle}：
-
-    **基础参数：**
-    - 画风风格: ${artStyle || "未指定"}
-
-    **${cfg.label}设定：**
-    - 名称:${name},
-    - 提示词:${prompt},
-
-    请严格按照系统规范生成${cfg.promptEnd}。
-  `;
-}
-
 const requestSchema = {
   projectId: z.number(),
   model: z.string(),
@@ -88,7 +76,6 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
       state: "生成中",
       assetsId: item.id,
     });
-    await u.db("o_assets").where("id", item.id).update({ imageId });
     totalNovelId.push(imageId);
   }
 
@@ -105,10 +92,8 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
       const cfg = assetTypeConfig[item.type as AssetType];
       if (!cfg) return;
 
-      await u.db("o_assets").where("id", item.id).update({ imageId });
-
       const imagePath = `/${projectId}/${cfg.dir}/${uuidv4()}.jpg`;
-      const userPrompt = buildPrompt(cfg, project.artStyle ?? "", item.name, item.prompt);
+      const userPrompt = buildAssetImagePrompt(item.type as AssetType, project.artStyle ?? "", item.name, item.prompt);
       const describe = `生成${cfg.label}图，名称：${item.name}，提示词：${item.prompt}`;
       const relatedObjects = { id: item.id, projectId, type: cfg.label };
       try {
@@ -127,7 +112,10 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
             relatedObjects: JSON.stringify(relatedObjects),
           },
         );
-        aiImage.save(imagePath);
+        await aiImage.save(imagePath);
+        const actualImage = await sharp(await u.oss.getFile(imagePath)).metadata();
+        const actualResolution = actualImage.width && actualImage.height ? `${actualImage.width}x${actualImage.height}` : resolution;
+        const roleReferences = item.type === "role" ? await ensureRoleReferenceMedia(imagePath, item.name) : [];
 
         const imageData = await u.db("o_image").where("id", imageId).select("*").first();
         if (!imageData) return res.status(500).send("资产已被删除");
@@ -141,10 +129,21 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
             filePath: imagePath,
             type: item.type,
             model: model.split(/:(.+)/)[1],
-            resolution,
+            resolution: actualResolution,
           });
 
-        await u.db("o_assets").where("id", item.id).update({ imageId });
+        await u.db("o_assets").where({ id: item.id, projectId }).update({
+          imageId,
+          ...(item.type === "role" && roleReferences.length >= 2
+            ? {
+                designStatus: "ready",
+                designVersion: u.db.raw("COALESCE(designVersion, 0) + 1"),
+                faceReferencePath: roleReferences[0].path,
+                fullBodyReferencePath: roleReferences[1].path,
+                referenceFingerprint: await roleReferenceFingerprint(imagePath),
+              }
+            : {}),
+        });
       } catch (e: any) {
         await u
           .db("o_image")
