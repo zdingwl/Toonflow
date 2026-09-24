@@ -3,6 +3,7 @@ import u from "@/utils";
 import { z } from "zod";
 import { success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
+import { latestAssetImageAttempts } from "@/utils/latestAssetImageAttempts";
 const router = express.Router();
 
 export default router.post(
@@ -41,6 +42,19 @@ export default router.post(
         data.map((i: any) => i.id!),
       )
       .select("o_assets.id", "o_assets.name", "o_assetsRole2Audio.assetsRoleId");
+    const imageAttempts = data.length
+      ? await u
+          .db("o_image")
+          .whereIn(
+            "assetsId",
+            data.map((item: any) => item.id),
+          )
+          .select("id", "assetsId", "state", "errorReason")
+          .orderBy("id", "desc")
+      : [];
+    const latestAttemptByAsset = new Map(
+      latestAssetImageAttempts(imageAttempts).map((attempt) => [attempt.assetsId, attempt]),
+    );
     const repleAssets: Record<number, { id: number; name: string }[]> = {};
     assets2AudioData.forEach((item) => {
       if (!repleAssets[item.assetsRoleId]) repleAssets[item.assetsRoleId] = [item];
@@ -48,6 +62,10 @@ export default router.post(
     });
     const result = await Promise.all(
       data.map(async (parent: any) => {
+        const latestAttempt = latestAttemptByAsset.get(parent.id);
+        const hasNewAttempt = latestAttempt && latestAttempt.id !== parent.imageId;
+        const displayState = hasNewAttempt ? latestAttempt.state : parent.state;
+        const displayErrorReason = hasNewAttempt ? latestAttempt.errorReason : parent.errorReason;
         const historyImages = await u.db("o_image").where("assetsId", parent.id).andWhere("state", "已完成").select("id", "filePath");
         const historyImagesWithUrl = await Promise.all(
           historyImages.map(async (img: any) => ({
@@ -57,6 +75,8 @@ export default router.post(
         );
         return {
           ...parent,
+          state: displayState,
+          errorReason: displayErrorReason,
           filePath: parent.filePath && (await u.oss.getSmallImageUrl(parent.filePath!)),
           faceReferenceUrl: parent.faceReferencePath && (await u.oss.getFileUrl(parent.faceReferencePath)),
           fullBodyReferenceUrl: parent.fullBodyReferencePath && (await u.oss.getFileUrl(parent.fullBodyReferencePath)),

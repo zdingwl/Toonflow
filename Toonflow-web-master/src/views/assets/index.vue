@@ -89,6 +89,8 @@
                       <template #previewWithLoading="{ row: subRow }">
                         <div class="previewCell">
                           <div v-if="subRow.state === '生成中'" class="imageTrigger generatingImage">
+                            <img v-if="subRow.src" :src="subRow.src" :alt="subRow.name" class="previewImage" />
+                            <div v-if="subRow.src" class="generationOverlay"></div>
                             <t-loading size="small" />
                             <span class="generatingLabel">{{ $t("workbench.assets.generating") }}</span>
                           </div>
@@ -166,6 +168,8 @@
                 <template #previewWithLoading="{ row }">
                   <div class="previewCell">
                     <div v-if="row.state === '生成中'" class="imageTrigger generatingImage">
+                      <img v-if="row.src" :src="row.src" :alt="row.name" class="previewImage" />
+                      <div v-if="row.src" class="generationOverlay"></div>
                       <t-loading size="small" />
                       <span class="generatingLabel">{{ $t("workbench.assets.generating") }}</span>
                     </div>
@@ -1408,6 +1412,22 @@ async function getBigImageUrl(row: Asset, fn: Function) {
           flex-direction: column;
           gap: 6px;
           cursor: default;
+
+          > :not(img):not(.generationOverlay) {
+            position: relative;
+            z-index: 2;
+          }
+
+          .generationOverlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background: rgba(20, 32, 52, 0.48);
+          }
+
+          .generatingLabel {
+            color: #fff;
+          }
 
           &:hover {
             transform: none !important;

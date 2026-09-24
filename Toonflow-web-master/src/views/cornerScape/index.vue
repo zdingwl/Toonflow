@@ -78,25 +78,36 @@
             </t-tag>
           </div>
           <t-empty v-if="!item.state && item.promptState !== '生成中'" type="maintenance" :title="$t('workbench.cornerScape.waitingGen')" />
-          <div v-else-if="item.state === '生成中' || item.promptState === '生成中' || item.audioBindState == '生成中'" class="generatingBox">
+          <div
+            v-else-if="(item.state === '生成中' || item.promptState === '生成中' || item.audioBindState == '生成中') && !item.filePath"
+            class="generatingBox">
             <t-loading />
             <span class="generatingText">
               {{ item.audioBindState === "生成中" ? $t("workbench.cornerScape.audioState") : $t("workbench.cornerScape.generating") }}
             </span>
           </div>
-          <t-popup :content="item.errorReason" v-else-if="item.state === '生成失败'">
+          <t-popup :content="item.errorReason" v-else-if="item.state === '生成失败' && !item.filePath">
             <t-empty type="fail" :title="$t('workbench.cornerScape.genFailed')" />
           </t-popup>
-          <t-image v-else class="image" :src="item.filePath ?? undefined" fit="contain" :preview="true" :lazy="true">
-            <template #error>
-              <t-empty type="fail" :title="$t('workbench.cornerScape.imageError')" />
-            </template>
-            <template #overlayContent>
-              <div class="imageToolsWrap">
-                <ImageTools :src="item.filePath!" position="br" />
-              </div>
-            </template>
-          </t-image>
+          <div v-else class="imageWithState">
+            <t-image class="image" :src="item.filePath ?? undefined" fit="contain" :preview="true" :lazy="true">
+              <template #error>
+                <t-empty type="fail" :title="$t('workbench.cornerScape.imageError')" />
+              </template>
+              <template #overlayContent>
+                <div class="imageToolsWrap">
+                  <ImageTools :src="item.filePath!" position="br" />
+                </div>
+              </template>
+            </t-image>
+            <div v-if="item.state === '生成中'" class="imageStateOverlay">
+              <t-loading size="small" />
+              <span>{{ $t("workbench.cornerScape.generating") }}</span>
+            </div>
+            <t-popup v-else-if="item.state === '生成失败'" :content="item.errorReason">
+              <div class="imageStateOverlay failed">{{ $t("workbench.cornerScape.genFailed") }}</div>
+            </t-popup>
+          </div>
         </div>
         <div class="infoBox">
           <div class="title ac jb">
@@ -1149,6 +1160,27 @@ async function selectAudio() {
             width: 100%;
             height: 100%;
             object-fit: contain;
+          }
+        }
+        .imageWithState {
+          position: relative;
+          width: 100%;
+          height: 100%;
+        }
+        .imageStateOverlay {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          color: #fff;
+          font-size: 13px;
+          background: rgba(20, 32, 52, 0.48);
+          pointer-events: none;
+          &.failed {
+            background: rgba(150, 35, 35, 0.52);
           }
         }
         .imageToolsWrap {
