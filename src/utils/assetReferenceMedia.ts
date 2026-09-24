@@ -22,16 +22,16 @@ export async function ensureRoleReferenceMedia(
   const width = metadata.width ?? 0;
   const height = metadata.height ?? 0;
   if (width < 4 || height < 4) return [];
-  const panelWidth = Math.floor(width / 4);
+  const panelWidth = Math.floor(width / 2);
   const safeName = name.replace(/[^a-zA-Z0-9_-]+/g, "_").slice(0, 48) || "role";
   const base = sourcePath.replace(/^[/\\]+/, "").replace(/\.[^.]+$/u, "");
   const facePath = `${base}.reference-${safeName}-face.png`;
   const fullBodyPath = `${base}.reference-${safeName}-full-body.png`;
-  const face = await sharp(source).extract({ left: 0, top: 0, width: panelWidth, height }).png().toBuffer();
-  const fullBody = await sharp(source)
-    .extract({ left: panelWidth, top: 0, width: panelWidth, height })
-    .png()
-    .toBuffer();
+  // The source board is front/back. Keep the complete front panel for body
+  // identity, and derive a head-and-upper-torso crop from the same front view.
+  const faceHeight = Math.max(1, Math.floor(height * 0.46));
+  const face = await sharp(source).extract({ left: 0, top: 0, width: panelWidth, height: faceHeight }).png().toBuffer();
+  const fullBody = await sharp(source).extract({ left: 0, top: 0, width: panelWidth, height }).png().toBuffer();
   await oss.writeFile(facePath, face);
   await oss.writeFile(fullBodyPath, fullBody);
   return [

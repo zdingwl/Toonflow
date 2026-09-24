@@ -6,7 +6,7 @@ import {
   needsFluxPromptTranslation,
 } from "../src/utils/assetPrompt";
 
-test("role runtime prompt makes the mixed portrait and full-body layout explicit", () => {
+test("role runtime prompt only enforces the front/back layout", () => {
   const result = buildAssetImagePrompt(
     "role",
     "写实国风",
@@ -15,11 +15,10 @@ test("role runtime prompt makes the mixed portrait and full-body layout explicit
   );
 
   assert.match(result, /^CHARACTER TURNAROUND SHEET/);
-  assert.match(result, /exactly four panels in one horizontal row/);
-  assert.match(result, /Panel 1: head-and-shoulders portrait/);
-  assert.match(result, /Panel 2: full-body front view/);
-  assert.match(result, /Panel 3: full-body 90-degree side view/);
-  assert.match(result, /Panel 4: full-body back view/);
+  assert.match(result, /exactly two panels in one horizontal row/);
+  assert.match(result, /Panel 1: full-body front view/);
+  assert.match(result, /Panel 2: full-body back view/);
+  assert.doesNotMatch(result, /phone camera|DSLR photography|not a photograph/);
   assert.match(result, /layout contract above has priority/);
   assert.match(result, /顾清寒/);
 });
@@ -40,6 +39,8 @@ test("scene and prop prompts do not receive a character turnaround contract", ()
 
   assert.doesNotMatch(scene, /CHARACTER TURNAROUND SHEET/);
   assert.doesNotMatch(prop, /CHARACTER TURNAROUND SHEET/);
-  assert.match(scene, /production-ready scene reference image/);
-  assert.match(prop, /production-ready prop reference image/);
+  assert.match(scene, /production-ready scene design reference render/);
+  assert.match(prop, /production-ready prop design reference render/);
+  assert.doesNotMatch(scene, /phone camera|DSLR photography|not a photograph/);
+  assert.doesNotMatch(prop, /phone camera|DSLR photography|not a photograph/);
 });
