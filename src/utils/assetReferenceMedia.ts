@@ -1,7 +1,7 @@
 import sharp from "sharp";
 import oss from "@/utils/oss";
 import crypto from "node:crypto";
-import { H3RoleView } from "@/utils/h3ReferenceSlots";
+import type { H3RoleView } from "@/utils/h3ReferenceSlots";
 
 export type AssetReferenceMedia = {
   path: string;
