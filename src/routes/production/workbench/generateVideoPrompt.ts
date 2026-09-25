@@ -6,6 +6,8 @@ import { validateFields } from "@/middleware/middleware";
 import fs from "fs/promises";
 import path from "path";
 import { expandH3AssetSlots } from "@/utils/h3ReferenceSlots";
+import { db as languageDb } from "@/utils/db";
+import { dialogueLanguagesSchema, generateLanguageVariants } from "@/utils/videoLanguages";
 const router = express.Router();
 
 function isMiniMaxH3(modelName: string): boolean {
@@ -29,6 +31,7 @@ export default router.post(
   "/",
   validateFields({
     trackId: z.number(),
+    languages: dialogueLanguagesSchema.optional(),
     projectId: z.number(),
     info: z.array(
       z.object({
@@ -45,6 +48,7 @@ export default router.post(
   }),
   async (req, res) => {
     const { trackId, projectId, info, model, mode } = req.body;
+    if (!(await u.db("o_videoTrack").where({ id: trackId, projectId }).first())) return res.status(404).send(error("视频段不存在"));
     await u.db("o_videoTrack").where({ id: trackId }).update({
       state: "生成中",
     });
@@ -201,19 +205,17 @@ export default router.post(
 
     // H3 Picture slots must describe only the images that will actually be uploaded to Ref2VA.
     // Storyboard images remain available as text-only composition guidance so they cannot override face identity.
-    const h3DirectionText = storyboard.map(item => `${item.videoDesc || ""}\n${item.prompt || ""}`).join("\n");
+    const h3DirectionText = storyboard.map((item) => `${item.videoDesc || ""}\n${item.prompt || ""}`).join("\n");
     const pictureSourceItems = h3PromptMode
-      ? expandH3AssetSlots(images
-          .filter(
-            (item: any) =>
-              item &&
-              item._type === "assets" &&
-              item._reference !== false &&
-              item.filePath &&
-              item._fileType !== "audio" &&
-              item._fileType !== "video",
-          )
-          .sort((a: any, b: any) => h3AssetRank(a) - h3AssetRank(b)), h3DirectionText)
+      ? expandH3AssetSlots(
+          images
+            .filter(
+              (item: any) =>
+                item && item._type === "assets" && item._reference !== false && item.filePath && item._fileType !== "audio" && item._fileType !== "video",
+            )
+            .sort((a: any, b: any) => h3AssetRank(a) - h3AssetRank(b)),
+          h3DirectionText,
+        )
       : images.filter((item: any) => item && item._reference !== false && item.filePath);
 
     const referenceSlotItems = pictureSourceItems.map((item: any, index: number) => {
@@ -225,9 +227,7 @@ export default router.post(
     });
     const referenceSlots = `<referenceSlots>\n${referenceSlotItems.join("\n")}\n</referenceSlots>`;
 
-    const storyboardGuideItems = h3PromptMode
-      ? images.filter((item: any) => item && item._type === "storyboard" && item._reference !== false)
-      : [];
+    const storyboardGuideItems = h3PromptMode ? images.filter((item: any) => item && item._type === "storyboard" && item._reference !== false) : [];
     const storyboardGuidance = h3PromptMode
       ? `<storyboardGuidance>\n${storyboardGuideItems
           .map(
@@ -240,14 +240,9 @@ export default router.post(
     const referenceHeading = h3PromptMode
       ? "**MiniMax H3 实际 Picture 槽位（仅以下素材会上传到 Ref2VA；<Picture N> 必须严格对应 slot N）**"
       : "**参考素材槽位**";
-    const storyboardHeading = h3PromptMode
-      ? `\n**分镜构图指导（仅文本指导，禁止生成新的 <Picture N>，禁止覆盖角色身份）**：\n${storyboardGuidance}\n`
-      : "";
+    const storyboardHeading = h3PromptMode ? `\n**分镜构图指导（仅文本指导，禁止生成新的 <Picture N>，禁止覆盖角色身份）**：\n${storyboardGuidance}\n` : "";
 
-    const storyboardDuration = storyboard.reduce(
-      (total: number, item: any) => total + (Number.parseFloat(String(item.duration || 0)) || 0),
-      0,
-    );
+    const storyboardDuration = storyboard.reduce((total: number, item: any) => total + (Number.parseFloat(String(item.duration || 0)) || 0), 0);
     const rawTargetDuration = Number(videoTrackData?.duration) || storyboardDuration || 5;
     const targetDuration = Math.max(4, Math.min(15, Math.round(rawTargetDuration)));
 
@@ -264,9 +259,7 @@ export default router.post(
           ].join("\n");
         })
       : [];
-    const assetDefinitions = h3PromptMode
-      ? `<assetDefinitions>\n${assetDefinitionItems.join("\n")}\n</assetDefinitions>`
-      : "";
+    const assetDefinitions = h3PromptMode ? `<assetDefinitions>\n${assetDefinitionItems.join("\n")}\n</assetDefinitions>` : "";
 
     const content = `
           **模型名称**：${modelData},
@@ -288,6 +281,36 @@ export default router.post(
           `;
 
     try {
+      if (req.body.languages) {
+        const variants = await generateLanguageVariants(
+          languageDb,
+          trackId,
+          req.body.languages,
+          async () => {
+            const result = await u.Ai.Text("universalAi").invoke({
+              system: videoPromptGeneration,
+              messages: [
+                {
+                  role: "assistant",
+                  content: `${visualManual}`,
+                },
+                {
+                  role: "user",
+                  content: content,
+                },
+              ],
+            });
+            return result.text;
+          },
+          async (system, source) => (await u.Ai.Text("universalAi").invoke({ system, messages: [{ role: "user", content: source }] })).text,
+        );
+        const failed = variants.filter((v: any) => req.body.languages.includes(v.language) && v.state === "生成失败");
+        await u
+          .db("o_videoTrack")
+          .where({ id: trackId })
+          .update({ state: failed.length ? "生成失败" : "已完成", reason: failed.map((v: any) => `${v.language}: ${v.reason}`).join("；") });
+        return res.status(200).send(success(variants));
+      }
       const { text } = await u.Ai.Text("universalAi").invoke({
         system: videoPromptGeneration,
         messages: [

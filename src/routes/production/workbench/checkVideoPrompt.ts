@@ -3,6 +3,7 @@ import u from "@/utils";
 import { z } from "zod";
 import { success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
+import { db as languageDb } from "@/utils/db";
 const router = express.Router();
 
 export default router.post(
@@ -21,6 +22,6 @@ export default router.post(
       .whereIn("id", trackIds)
       .whereIn("state", ["已完成", "生成失败"])
       .select("id", "state", "reason", "prompt");
-    res.status(200).send(success(promptList));
+    res.status(200).send(success(await Promise.all(promptList.map(async item => ({ ...item, variants: await languageDb("o_videoPromptVariant").where({ trackId: item.id }) })))));
   },
 );

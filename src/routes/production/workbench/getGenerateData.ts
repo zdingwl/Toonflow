@@ -3,6 +3,8 @@ import u from "@/utils";
 import { z } from "zod";
 import { success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
+import { db as languageDb } from "@/utils/db";
+import { dialogueLanguages } from "@/utils/videoLanguages";
 const router = express.Router();
 
 interface VideoItem {
@@ -20,6 +22,7 @@ interface TrackMedia {
 
 interface TrackItem {
   id?: number;
+  variants?: any[];
   prompt: string;
   state: "未生成" | "生成中" | "已完成" | "生成失败";
   reason?: string;
@@ -157,12 +160,16 @@ export default router.post(
       "videoTrackId",
       trackData.map((t) => t.id),
     );
+    const variants = await languageDb("o_videoPromptVariant").whereIn("trackId", trackData.map(t => t.id!).filter(id => id != null));
+    const videoLanguages = await languageDb("o_videoLanguage").whereIn("videoId", videoList.map(v => v.id!).filter(id => id != null));
+    const selection = await languageDb("o_videoLanguageSelection").where({ projectId, scriptId }).first();
     const trackList: TrackItem[] = [];
     const trackIdMap = [...new Set<number>(trackData.map((t) => t.id!))];
     for (const trackId of trackIdMap) {
       const item = trackData.find((t) => t.id === trackId);
       trackList.push({
         id: trackId,
+        variants: variants.filter(v => v.trackId === trackId),
         duration: item?.duration ?? 0,
         prompt: item?.prompt || "",
         state: (item?.state as "未生成" | "生成中" | "已完成" | "生成失败") ?? "未生成",
@@ -200,8 +207,9 @@ export default router.post(
             .filter((v) => v.videoTrackId === trackId)
             .map(async (v) => ({
               id: v.id!,
+              language: videoLanguages.find(meta => meta.videoId === v.id)?.language || "",
               src: v.filePath ? await u.oss.getFileUrl(v.filePath) : "",
-              state: v.state === "已完成" ? "已完成" : v.state === "生成中" ? "生成中" : v.state === "生成失败" ? "生成失败" : "未生成",
+              state: v.state === "已完成" || v.state === "生成成功" ? "已完成" : v.state === "生成中" ? "生成中" : v.state === "生成失败" ? "生成失败" : "未生成",
               errorReason: v?.errorReason ?? "",
             })),
         ),
@@ -216,6 +224,8 @@ export default router.post(
           })),
         ),
         trackList,
+        dialogueLanguages,
+        selectedLanguages: selection ? JSON.parse(selection.languages) : [],
       }),
     );
   },

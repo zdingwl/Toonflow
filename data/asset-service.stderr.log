@@ -1,0 +1,10 @@
+[directorPlan] 输出校验失败，文本长度: 8426 开头: <scriptPlan>
+  <section id="sceneSummary" title="分场汇总表">
+    <table>
+      <thead>
+        <tr>
+          <th>场次</th>
+          <th>场景名</th>
+          <th>时长</th>
+          <th>台词条
+[productionAgent] chat error: 任务仍有待处理状态：步骤 1 个，写工具 0 个，不能标记完成

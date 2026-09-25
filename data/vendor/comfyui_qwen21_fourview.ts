@@ -12,7 +12,7 @@ declare const Buffer: any;
 declare const pollTask: (fn: () => Promise<{ completed: boolean; data?: string; error?: string }>, interval?: number, timeout?: number) => Promise<{ completed: boolean; data?: string; error?: string }>;
 
 const vendor = {
-  id: "comfyui_qwen21_fourview", version: "1.1.2", author: "Toonflow",
+  id: "comfyui_qwen21_fourview", version: "1.1.3", author: "Toonflow",
   name: "本机 Qwen-Image-2.1 四视图（LoRA 可选）",
   description: "任意角色四栏：头像特写、正面全身、90°左侧面全身、背面全身；角色身份、外观及形态由当前资产提示词提供。首张参考图必须是当前目标状态的正面全身锚点；第二张可选风格参考。LoRA 权重需另外安装。",
   inputs: [
@@ -65,13 +65,13 @@ function checkFile(info: Record<string, any>, node: string, field: string, value
 const ref = (id: number, slot = 0): [string, number] => [String(id), slot];
 const node = (class_type: string, inputs: Record<string, any>) => ({ class_type, inputs });
 function identityFactsOnly(prompt: string): string {
-  return prompt
-    .replace(/同一角色的四栏角色设定图/g, "同一角色的角色设定")
-    .replace(/四栏从左到右固定为[：:]?[\s\S]*?(?=四栏为同一|纯净|虚拟|$)/g, "")
-    .replace(/四栏为同一[^。！？]*[。！？]?/g, "")
-    .replace(/CHARACTER TURNAROUND SHEET[\s\S]*?(?=Style:|Character name:|$)/gi, "")
-    .replace(/(?:exactly )?four[- ]panel[^.。！？]*[.。！？]?/gi, "")
-    .replace(/(?:first|second|third|fourth) panel[^.。！？]*[.。！？]?/gi, "")
+  const normalized = prompt
+    .replace(/同一角色的(?:四栏|四格|四视图)角色设定图/g, "同一角色的角色设定")
+    .replace(/CHARACTER TURNAROUND SHEET/gi, "CHARACTER DESIGN REFERENCE");
+  return normalized
+    .split(/(?<=[。！？.!?])\s*/u)
+    .filter(sentence => !/(?:四栏|四格|四宫格|四视图|四个视角|从左到右|第一栏|第二栏|第三栏|第四栏|(?:exactly\s+)?four[- ]panels?|first panel|second panel|third panel|fourth panel)/i.test(sentence))
+    .join(" ")
     .replace(/\s{2,}/g, " ")
     .trim();
 }
@@ -167,6 +167,7 @@ async function imageRequest(config: ImageConfig, model: ImageModel): Promise<str
   return `${base()}/view?filename=${encodeURIComponent(image.filename)}&subfolder=${encodeURIComponent(image.subfolder)}&type=${encodeURIComponent(image.type)}`;
 }
 exports.vendor = vendor;
+exports.identityFactsOnly = identityFactsOnly;
 exports.textRequest = textRequest;
 exports.uploadReference = uploadReference;
 exports.imageRequest = imageRequest;

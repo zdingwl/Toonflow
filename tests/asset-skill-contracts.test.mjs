@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import { transform } from 'sucrase';
+import { VM } from 'vm2';
 
 const root = path.resolve(import.meta.dirname, '..');
 const read = p => fs.readFileSync(path.join(root, p), 'utf8');
@@ -13,7 +15,6 @@ test('Qwen four-view provider is asset-driven rather than hardcoded to the sampl
   assert.match(vendor, /CURRENT ASSET FACTS/);
   assert.match(vendor, /SINGLE-VIEW/);
   assert.match(vendor, /identityFactsOnly/);
-  assert.match(vendor, /四栏从左到右固定为/);
   assert.match(vendor, /ImageStitch/);
   assert.match(vendor, /loraName/);
 });
@@ -31,6 +32,23 @@ test('character prompt and code use the same four canonical positions', () => {
   assert.match(code, /full-body front view/);
   assert.match(code, /full-body strict 90-degree left side view/);
   assert.match(code, /full-body straight back view/);
+});
+
+test('Qwen four-view provider removes layout sentences from every single-view prompt', () => {
+  const source = read('data/vendor/comfyui_qwen21_fourview.ts');
+  const exports = {};
+  const code = transform(source, { transforms: ['typescript'] }).code.replace(/export\s*\{\s*\};?/g, '');
+  new VM({ sandbox: { exports, Buffer }, eval: false, wasm: false }).run(code);
+  const prompts = [
+    '同一角色的四栏角色设定图，电影级 CGI。艾娃，黑发，灰色机能服。四栏从左到右：脸部特写、正面全身、侧面全身、背面全身；四栏为同一人。纯净浅灰背景。',
+    '同一角色的四栏角色设定图，电影级 CGI。麦迪逊，棕色卷发。四栏从左到右固定为：第一栏脸部，第二栏正面，第三栏侧面，第四栏背面；四个视角均为同一人。纯净浅灰背景。',
+  ];
+  for (const prompt of prompts) {
+    const cleaned = exports.identityFactsOnly(prompt);
+    assert.match(cleaned, /电影级 CGI/);
+    assert.match(cleaned, /纯净浅灰背景/);
+    assert.doesNotMatch(cleaned, /四栏|四个视角|从左到右|第一栏|第二栏|第三栏|第四栏/);
+  }
 });
 
 test('Qwen route sends per-asset facts and optional style reference without the generic layout contract', () => {

@@ -27,7 +27,7 @@ declare const Buffer: any;
 declare const pollTask: (fn: () => Promise<{ completed: boolean; data?: string; error?: string }>, interval?: number, timeout?: number) => Promise<{ completed: boolean; data?: string; error?: string }>;
 
 const vendor = {
-  id: "comfyui_local", version: "1.9", author: "Local ComfyUI",
+  id: "comfyui_local", version: "2.0", author: "Local ComfyUI",
   name: "本机 ComfyUI（FLUX + Qwen Image + MiniMax H3）",
   description: "FLUX 与 Qwen-Image-2.1 图片走 ComfyUI；MiniMax H3 视频直连原生 Ref2VA/FL2VA。角色/场景/道具资产作为 <Picture N>，分镜图仅作文本构图指导，避免覆盖人物身份。",
   inputs: [
@@ -67,7 +67,7 @@ const vendor = {
     {
       name: "MiniMax H3 本机（多图参考）", modelName: "MiniMax-H3-local", type: "video" as const,
       mode: ["text", "startFrameOptional", ["imageReference:9"]], audio: "optional" as const,
-      durationResolutionMap: [{ duration: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["480p", "720p", "768p"] }],
+      durationResolutionMap: [{ duration: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], resolution: ["768p"] }],
     },
   ],
 };
@@ -211,7 +211,7 @@ function sizeForVideo(resolution: string, ratio: string) {
   const sides: Record<string, number[]> = { "16:9": [16, 9], "9:16": [9, 16], "1:1": [1, 1], "4:3": [4, 3], "3:4": [3, 4], "21:9": [21, 9] };
   const pair = sides[ratio];
   if (!pair) throw new Error(`H3 不支持比例 ${ratio}`);
-  if (!["480p", "720p", "768p"].includes(resolution)) throw new Error(`H3 分辨率无效：${resolution}`);
+  if (resolution !== "768p") throw new Error(`H3 分辨率无效：${resolution}`);
   const shortSide = Number.parseInt(resolution, 10);
   const [w, h] = pair;
   const rawWidth = w >= h ? shortSide * w / h : shortSide;
@@ -316,7 +316,7 @@ function nativeH3Graph(config: VideoConfig, uploaded: string[], info: Record<str
   assertModel(info, "VAELoader", "vae_name", audioVae);
   const steps = Number(setting("h3Steps", "20"));
   if (!Number.isInteger(steps) || steps < 1 || steps > 150) throw new Error("H3 采样步数必须为 1–150 的整数");
-  const { width, height } = sizeForVideo(config.resolution || "480p", config.aspectRatio);
+  const { width, height } = sizeForVideo(config.resolution || "768p", config.aspectRatio);
   const duration = Math.max(4, Math.min(15, Math.ceil(config.duration || 5)));
   const frames = Math.max(5, Math.round(duration * 24));
   const length = frames + (5 - frames % 17 + 17) % 17;
@@ -369,7 +369,7 @@ function customGraph(config: VideoConfig, uploaded: string[]) {
   if (map.duration) write(map.duration, config.duration);
   if (map.frames) write(map.frames, Math.round(config.duration * map.frames.fps));
   if (map.width || map.height) {
-    const size = sizeForVideo(config.resolution, config.aspectRatio);
+    const size = sizeForVideo(config.resolution || "768p", config.aspectRatio);
     if (map.width) write(map.width, size.width);
     if (map.height) write(map.height, size.height);
   }
@@ -449,7 +449,7 @@ async function gatewayVideoRequest(config: VideoConfig): Promise<string> {
   const videoRefs = refs.filter(item => item.type === "video").map(item => item.base64).filter(Boolean);
   const audioRefs = refs.filter(item => item.type === "audio").map(item => item.base64).filter(Boolean);
   if (imageRefs.length > 9 || videoRefs.length > 3 || audioRefs.length > 3) throw new Error("DramaClaw 参考素材超出限制");
-  const metadata: Record<string, any> = { ratio: config.aspectRatio, resolution: config.resolution || "480p", generate_audio: config.audio ?? true };
+  const metadata: Record<string, any> = { ratio: config.aspectRatio, resolution: config.resolution || "768p", generate_audio: config.audio ?? true };
   const body: Record<string, any> = { model: "MiniMax-H3-local", prompt: config.prompt, duration: Math.max(5, Math.min(15, Math.round(config.duration || 5))), metadata };
   if (Array.isArray(config.mode)) {
     if (!refs.length) throw new Error("DramaClaw 多参考模式至少需要一个素材");
@@ -477,6 +477,7 @@ async function gatewayVideoRequest(config: VideoConfig): Promise<string> {
 }
 
 const videoRequest = async (config: VideoConfig, _model: VideoModel): Promise<string> => {
+  config = { ...config, resolution: "768p" };
   const backend = (vendor.inputValues.videoBackend || "comfyui").trim().toLowerCase();
   if (backend === "comfyui") return comfyVideoRequest(config);
   if (backend === "gateway") return gatewayVideoRequest(config);

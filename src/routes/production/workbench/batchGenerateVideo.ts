@@ -8,6 +8,8 @@ import { ReferenceList } from "@/utils/ai";
 import { persistedRoleReferencesForVideo } from "@/utils/assetReferenceMedia";
 import { inspectVideoQuality } from "@/utils/videoQuality";
 import { assertH3ActiveStates, assertH3PictureSlots } from "@/utils/h3VisualStateGuard";
+import { db as languageDb } from "@/utils/db";
+import { dialogueLanguageSchema, resolveLanguagePrompt } from "@/utils/videoLanguages";
 const router = express.Router();
 
 type Type = "imageReference" | "startImage" | "endImage" | "videoReference" | "audioReference";
@@ -46,6 +48,7 @@ export default router.post("/", validateFields({
       fileType: z.enum(["image", "video", "audio"]).optional(),
       label: z.string().optional(), prompt: z.string().optional(),
     })),
+    language: dialogueLanguageSchema.optional(),
     trackId: z.number(), prompt: z.string(), duration: z.number(),
   })),
   model: z.string(), mode: z.string(), resolution: z.string(), audio: z.boolean().optional(),
@@ -60,10 +63,13 @@ export default router.post("/", validateFields({
 
   // Preflight ALL tracks BEFORE creating any video row; never start a batch with
   // a role + mutually-exclusive derivative or a prompt with mismatched Picture indices.
-  let prepared: { trackId: number; prompt: string; duration: number; images: ResolvedReference[] }[];
+  let prepared: { trackId: number; prompt: string; duration: number; images: ResolvedReference[]; language?: string }[];
   try {
     prepared = await Promise.all(
-      (trackData as { uploadData: UploadItem[]; trackId: number; prompt: string; duration: number }[]).map(async track => {
+      (trackData as { uploadData: UploadItem[]; trackId: number; prompt: string; duration: number; language?: string }[]).map(async track => {
+        const ownedTrack = await u.db("o_videoTrack").where({ id: track.trackId, projectId, scriptId }).first();
+        if (!ownedTrack) throw new Error("视频段不存在");
+        track.prompt = await resolveLanguagePrompt(languageDb, track.trackId, track.language, track.prompt, audio);
         const resolved = await Promise.all(track.uploadData.map(async (item): Promise<ResolvedReference | null> => {
           if (item.sources === "storyboard") {
             const found = await u.db("o_storyboard").where({ id: item.id, projectId }).select("filePath", "prompt").first();
@@ -114,11 +120,11 @@ export default router.post("/", validateFields({
           ? expanded.filter(item => item.sourceType !== "storyboard").sort((a,b) => h3ReferenceRank(a) - h3ReferenceRank(b))
           : expanded;
         if (h3) assertH3PictureSlots(track.prompt, runtimeImages.length);
-        return { trackId: track.trackId, prompt: track.prompt, duration: track.duration, images: runtimeImages };
+        return { language: track.language, trackId: track.trackId, prompt: track.prompt, duration: track.duration, images: runtimeImages };
       }),
     );
   } catch (cause) {
-    return res.status(409).send(error(`批量 H3 视频参考状态/槽位检查失败：${u.error(cause).message}`));
+    return res.status(409).send(error(`批量视频检查失败：${u.error(cause).message}`));
   }
 
   const tasks = await Promise.all(prepared.map(async item => {
@@ -126,9 +132,10 @@ export default router.post("/", validateFields({
     const [videoId] = await u.db("o_video").insert({
       filePath: videoPath, time: Date.now(), state: "生成中", scriptId, projectId, videoTrackId: item.trackId,
     });
+    if (item.language) await languageDb("o_videoLanguage").insert({ videoId, language: item.language, prompt: item.prompt });
     return { ...item, videoId, videoPath };
   }));
-  res.status(200).send(success(tasks.map(item => ({ videoId: item.videoId, trackId: item.trackId }))));
+  res.status(200).send(success(tasks.map(item => ({ videoId: item.videoId, trackId: item.trackId, language: item.language }))));
 
   const runTask = async ({ videoId, videoPath, prompt, duration, images }: (typeof tasks)[number]) => {
     try {

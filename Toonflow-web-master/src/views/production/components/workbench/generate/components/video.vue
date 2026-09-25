@@ -6,15 +6,16 @@
     <div class="history">
       <div class="titleBox f ac">
         <i-time />
-        <span class="title">{{ $t("workbench.generate.history") }}（{{ currentTrack?.videoList.length }}）</span>
+        <span class="title">{{ $t("workbench.generate.history") }}（{{ displayedVideos.length }}）</span>
       </div>
       <div class="historyItemBox">
         <div
           class="historyItem"
           :class="{ active: v.id === selectVideoId, generating: v.state === '生成中', failed: v.state === '生成失败' }"
-          v-for="v in currentTrack?.videoList"
+          v-for="v in displayedVideos"
           :key="v.id"
           @click="previewVideo(v)">
+          <t-tag size="small" class="languageTag">{{ languageLabel }}</t-tag>
           <template v-if="videoCoverMap[v.src]">
             <img :src="videoCoverMap[v.src]" class="videoCover" />
           </template>
@@ -85,6 +86,8 @@ import projectStore from "@/stores/project";
 const props = defineProps<{
   activeTrackIndex: number;
   generating?: boolean;
+  language?: string;
+  languageLabel?: string;
 }>();
 const currentTrack = defineModel<TrackItem>("currentTrack", {
   default: () => {},
@@ -97,7 +100,10 @@ const emit = defineEmits<{
 const { project } = storeToRefs(projectStore());
 const episodesId = inject<Ref<number>>("episodesId")!;
 
-const selectVideoId = ref();
+const displayedVideos = computed(() => currentTrack.value?.videoList.filter((v) => (v.language || "") === (props.language || "")) || []);
+const selectVideoId = computed(() =>
+  props.language ? currentTrack.value?.variants?.find((v) => v.language === props.language)?.videoId : currentTrack.value?.selectVideoId,
+);
 const videoCoverMap = ref<Record<string, string>>({});
 const videoPlayerVisible = ref(false);
 const playingVideoSrc = ref<string>();
@@ -154,7 +160,7 @@ async function downloadVideo(value: HistoryVideoItem) {
     const link = document.createElement("a");
     link.href = objectUrl;
     // 使用时间戳保证文件名唯一，避免浏览器提示覆盖
-    link.download = `视频_${Date.now()}.mp4`;
+    link.download = `视频_${value.language || "original"}_${value.id}.mp4`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -233,6 +239,12 @@ function previewVideo(v: HistoryVideoItem) {
 </script>
 
 <style lang="scss" scoped>
+.languageTag {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  z-index: 2;
+}
 .history {
   height: 100%;
   .titleBox {

@@ -7,6 +7,8 @@ import { validateFields } from "@/middleware/middleware";
 import fs from "fs/promises";
 import path from "path";
 import { expandH3AssetSlots } from "@/utils/h3ReferenceSlots";
+import { db as languageDb } from "@/utils/db";
+import { dialogueLanguagesSchema, generateLanguageVariants } from "@/utils/videoLanguages";
 const router = express.Router();
 
 function isMiniMaxH3(modelName: string): boolean {
@@ -29,6 +31,7 @@ function escapeXmlAttr(value: unknown): string {
 export default router.post(
   "/",
   validateFields({
+    languages: dialogueLanguagesSchema.optional(),
     projectId: z.number(),
     trackData: z.array(
       z.object({
@@ -52,6 +55,14 @@ export default router.post(
   async (req, res) => {
     const { trackData, projectId, mode, model, concurrentCount = 5 } = req.body;
     try {
+      const tracks = await u
+        .db("o_videoTrack")
+        .where({ projectId })
+        .whereIn(
+          "id",
+          trackData.map((track: any) => track.trackId),
+        );
+      if (tracks.length !== new Set(trackData.map((track: any) => track.trackId)).size) return res.status(404).send(error("部分视频段不存在"));
       // 预加载公共数据
       const [id, modelData] = model.split(/:(.+)/);
       const modelLower = (modelData ?? "").toLowerCase();
@@ -124,153 +135,150 @@ export default router.post(
         .update({ state: "生成中" });
       // 并发控制：每个 track 独立走 查询→拼装→AI调用→更新 流程
       const limit = pLimit(concurrentCount ?? 5);
-      const tasks = trackData.map((track: { trackId: number; info: { id: number; sources: string; reference?: boolean; slotType?: string; fileType?: string; prompt?: string }[] }) =>
-        limit(async () => {
-          // 查询参数
-          const images = await Promise.all(
-            track.info.map(async (item: { id: number; sources: string; reference?: boolean; slotType?: string; fileType?: string; prompt?: string }) => {
-              if (item.sources === "storyboard") {
-                // 查询分镜主信息
-                const storyboard = await u
-                  .db("o_storyboard")
-                  .where("o_storyboard.id", item.id)
-                  .select("id", "videoDesc", "prompt", "track", "duration", "shouldGenerateImage", "filePath")
-                  .first();
-                // 查询分镜关联的资产ID
-                const assetRows = await u.db("o_assets2Storyboard").where("storyboardId", item.id).orderBy("rowid").select("assetId");
-                const associateAssetsIds = assetRows.map((row: any) => row.assetId);
-                return {
-                  ...storyboard,
-                  associateAssetsIds,
-                  _type: "storyboard",
-                  _reference: item.reference !== false,
-                  _slotType: item.slotType,
-                  _fileType: item.fileType,
-                };
-              }
-              if (item.sources === "assets") {
-                // 查询素材
-                const assetsData = await u
-                  .db("o_assets")
-                  .leftJoin("o_image", "o_image.id", "o_assets.imageId")
-                  .where("o_assets.id", item.id)
-                  .select("o_assets.id", "o_assets.type", "o_assets.name", "o_assets.describe", "o_assets.prompt as assetPrompt", "o_image.filePath")
-                  .first();
-                return {
-                  ...assetsData,
-                  _type: "assets",
-                  _reference: item.reference !== false,
-                  _slotType: item.slotType,
-                  _fileType: item.fileType,
-                };
-              }
-            }),
-          );
+      const tasks = trackData.map(
+        (track: { trackId: number; info: { id: number; sources: string; reference?: boolean; slotType?: string; fileType?: string; prompt?: string }[] }) =>
+          limit(async () => {
+            // 查询参数
+            const images = await Promise.all(
+              track.info.map(async (item: { id: number; sources: string; reference?: boolean; slotType?: string; fileType?: string; prompt?: string }) => {
+                if (item.sources === "storyboard") {
+                  // 查询分镜主信息
+                  const storyboard = await u
+                    .db("o_storyboard")
+                    .where("o_storyboard.id", item.id)
+                    .select("id", "videoDesc", "prompt", "track", "duration", "shouldGenerateImage", "filePath")
+                    .first();
+                  // 查询分镜关联的资产ID
+                  const assetRows = await u.db("o_assets2Storyboard").where("storyboardId", item.id).orderBy("rowid").select("assetId");
+                  const associateAssetsIds = assetRows.map((row: any) => row.assetId);
+                  return {
+                    ...storyboard,
+                    associateAssetsIds,
+                    _type: "storyboard",
+                    _reference: item.reference !== false,
+                    _slotType: item.slotType,
+                    _fileType: item.fileType,
+                  };
+                }
+                if (item.sources === "assets") {
+                  // 查询素材
+                  const assetsData = await u
+                    .db("o_assets")
+                    .leftJoin("o_image", "o_image.id", "o_assets.imageId")
+                    .where("o_assets.id", item.id)
+                    .select("o_assets.id", "o_assets.type", "o_assets.name", "o_assets.describe", "o_assets.prompt as assetPrompt", "o_image.filePath")
+                    .first();
+                  return {
+                    ...assetsData,
+                    _type: "assets",
+                    _reference: item.reference !== false,
+                    _slotType: item.slotType,
+                    _fileType: item.fileType,
+                  };
+                }
+              }),
+            );
 
-          // 拆分 assets 和 storyboard
-          const assets: any[] = [];
-          const storyboard: any[] = [];
-          for (const item of images) {
-            if (!item) continue;
-            if (item._type === "assets")
-              assets.push({
-                id: item.id,
-                type: item.type,
-                name: item.name,
-                describe: item.describe,
-                assetPrompt: item.assetPrompt,
-                filePath: item.filePath,
-                _reference: item._reference,
-                _slotType: item._slotType,
-                _fileType: item._fileType,
-              });
-            if (item._type === "storyboard")
-              storyboard.push({
-                videoDesc: item.videoDesc,
-                prompt: item.prompt,
-                track: item.track,
-                duration: item.duration,
-                associateAssetsIds: item.associateAssetsIds,
-                shouldGenerateImage: item.shouldGenerateImage,
-                id: item.id,
-                filePath: item.filePath,
-                _reference: item._reference,
-                _slotType: item._slotType,
-                _fileType: item._fileType,
-              });
-          }
+            // 拆分 assets 和 storyboard
+            const assets: any[] = [];
+            const storyboard: any[] = [];
+            for (const item of images) {
+              if (!item) continue;
+              if (item._type === "assets")
+                assets.push({
+                  id: item.id,
+                  type: item.type,
+                  name: item.name,
+                  describe: item.describe,
+                  assetPrompt: item.assetPrompt,
+                  filePath: item.filePath,
+                  _reference: item._reference,
+                  _slotType: item._slotType,
+                  _fileType: item._fileType,
+                });
+              if (item._type === "storyboard")
+                storyboard.push({
+                  videoDesc: item.videoDesc,
+                  prompt: item.prompt,
+                  track: item.track,
+                  duration: item.duration,
+                  associateAssetsIds: item.associateAssetsIds,
+                  shouldGenerateImage: item.shouldGenerateImage,
+                  id: item.id,
+                  filePath: item.filePath,
+                  _reference: item._reference,
+                  _slotType: item._slotType,
+                  _fileType: item._fileType,
+                });
+            }
 
-          // H3 Picture slots contain only the asset images that will be uploaded to Ref2VA.
-          // Selected storyboard images are converted to text guidance and never compete with character identity.
-          const h3DirectionText = storyboard.map(item => `${item.videoDesc || ""}\n${item.prompt || ""}`).join("\n");
-          const pictureSourceItems = h3PromptMode
-            ? expandH3AssetSlots(images
-                .filter(
-                  (item: any) =>
-                    item &&
-                    item._type === "assets" &&
-                    item._reference !== false &&
-                    item.filePath &&
-                    item._fileType !== "audio" &&
-                    item._fileType !== "video",
+            // H3 Picture slots contain only the asset images that will be uploaded to Ref2VA.
+            // Selected storyboard images are converted to text guidance and never compete with character identity.
+            const h3DirectionText = storyboard.map((item) => `${item.videoDesc || ""}\n${item.prompt || ""}`).join("\n");
+            const pictureSourceItems = h3PromptMode
+              ? expandH3AssetSlots(
+                  images
+                    .filter(
+                      (item: any) =>
+                        item &&
+                        item._type === "assets" &&
+                        item._reference !== false &&
+                        item.filePath &&
+                        item._fileType !== "audio" &&
+                        item._fileType !== "video",
+                    )
+                    .sort((a: any, b: any) => h3AssetRank(a) - h3AssetRank(b)),
+                  h3DirectionText,
                 )
-                .sort((a: any, b: any) => h3AssetRank(a) - h3AssetRank(b)), h3DirectionText)
-            : images.filter((item: any) => item && item._reference !== false && item.filePath);
+              : images.filter((item: any) => item && item._reference !== false && item.filePath);
 
-          const referenceSlotItems = pictureSourceItems.map((item: any, index: number) => {
-            const slot = index + 1;
-            const sources = item._type === "assets" ? "assets" : "storyboard";
-            const type = item._type === "assets" ? String(item.type || "asset") : "storyboard";
-            const name = item._type === "assets" ? String(item.name || `资产${item.id}`) : `分镜图${item.id}`;
-            return `<reference slot="${slot}" sources="${sources}" id="${item.id}" type="${escapeXmlAttr(type)}" name="${escapeXmlAttr(name)}" />`;
-          });
-          const referenceSlots = `<referenceSlots>\n${referenceSlotItems.join("\n")}\n</referenceSlots>`;
+            const referenceSlotItems = pictureSourceItems.map((item: any, index: number) => {
+              const slot = index + 1;
+              const sources = item._type === "assets" ? "assets" : "storyboard";
+              const type = item._type === "assets" ? String(item.type || "asset") : "storyboard";
+              const name = item._type === "assets" ? String(item.name || `资产${item.id}`) : `分镜图${item.id}`;
+              return `<reference slot="${slot}" sources="${sources}" id="${item.id}" type="${escapeXmlAttr(type)}" name="${escapeXmlAttr(name)}" />`;
+            });
+            const referenceSlots = `<referenceSlots>\n${referenceSlotItems.join("\n")}\n</referenceSlots>`;
 
-          const storyboardGuideItems = h3PromptMode
-            ? images.filter((item: any) => item && item._type === "storyboard" && item._reference !== false)
-            : [];
-          const storyboardGuidance = h3PromptMode
-            ? `<storyboardGuidance>\n${storyboardGuideItems
-                .map(
-                  (item: any, index: number) =>
-                    `<storyboard index="${index + 1}" id="${item.id}">\nvideoDesc=${JSON.stringify(item.videoDesc || "")}\nimagePrompt=${JSON.stringify(item.prompt || "")}\n</storyboard>`,
-                )
-                .join("\n")}\n</storyboardGuidance>`
-            : "";
+            const storyboardGuideItems = h3PromptMode ? images.filter((item: any) => item && item._type === "storyboard" && item._reference !== false) : [];
+            const storyboardGuidance = h3PromptMode
+              ? `<storyboardGuidance>\n${storyboardGuideItems
+                  .map(
+                    (item: any, index: number) =>
+                      `<storyboard index="${index + 1}" id="${item.id}">\nvideoDesc=${JSON.stringify(item.videoDesc || "")}\nimagePrompt=${JSON.stringify(item.prompt || "")}\n</storyboard>`,
+                  )
+                  .join("\n")}\n</storyboardGuidance>`
+              : "";
 
-          const referenceHeading = h3PromptMode
-            ? "**MiniMax H3 实际 Picture 槽位（仅以下素材会上传到 Ref2VA；<Picture N> 必须严格对应 slot N）**"
-            : "**参考素材槽位**";
-          const storyboardHeading = h3PromptMode
-            ? `\n**分镜构图指导（仅文本指导，禁止生成新的 <Picture N>，禁止覆盖角色身份）**：\n${storyboardGuidance}\n`
-            : "";
+            const referenceHeading = h3PromptMode
+              ? "**MiniMax H3 实际 Picture 槽位（仅以下素材会上传到 Ref2VA；<Picture N> 必须严格对应 slot N）**"
+              : "**参考素材槽位**";
+            const storyboardHeading = h3PromptMode
+              ? `\n**分镜构图指导（仅文本指导，禁止生成新的 <Picture N>，禁止覆盖角色身份）**：\n${storyboardGuidance}\n`
+              : "";
 
-          const videoTrackData = await u.db("o_videoTrack").select("duration").where({ id: track.trackId }).first();
-          const storyboardDuration = storyboard.reduce(
-            (total: number, item: any) => total + (Number.parseFloat(String(item.duration || 0)) || 0),
-            0,
-          );
-          const rawTargetDuration = Number(videoTrackData?.duration) || storyboardDuration || 5;
-          const targetDuration = Math.max(4, Math.min(15, Math.round(rawTargetDuration)));
+            const videoTrackData = await u.db("o_videoTrack").select("duration").where({ id: track.trackId }).first();
+            const storyboardDuration = storyboard.reduce((total: number, item: any) => total + (Number.parseFloat(String(item.duration || 0)) || 0), 0);
+            const rawTargetDuration = Number(videoTrackData?.duration) || storyboardDuration || 5;
+            const targetDuration = Math.max(4, Math.min(15, Math.round(rawTargetDuration)));
 
-          const assetDefinitionItems = h3PromptMode
-            ? pictureSourceItems.map((item: any, index: number) => {
-                const picture = `<Picture ${index + 1}>`;
-                const type = escapeXmlAttr(item.type || "asset");
-                const name = escapeXmlAttr(item.name || `资产${item.id}`);
-                return [
-                  `<asset picture="${picture}" type="${type}" name="${name}">`,
-                  `describe=${JSON.stringify(item.describe || "")}`,
-                  `visualPrompt=${JSON.stringify(item.assetPrompt || "")}`,
-                  "</asset>",
-                ].join("\n");
-              })
-            : [];
-          const assetDefinitions = h3PromptMode
-            ? `<assetDefinitions>\n${assetDefinitionItems.join("\n")}\n</assetDefinitions>`
-            : "";
+            const assetDefinitionItems = h3PromptMode
+              ? pictureSourceItems.map((item: any, index: number) => {
+                  const picture = `<Picture ${index + 1}>`;
+                  const type = escapeXmlAttr(item.type || "asset");
+                  const name = escapeXmlAttr(item.name || `资产${item.id}`);
+                  return [
+                    `<asset picture="${picture}" type="${type}" name="${name}">`,
+                    `describe=${JSON.stringify(item.describe || "")}`,
+                    `visualPrompt=${JSON.stringify(item.assetPrompt || "")}`,
+                    "</asset>",
+                  ].join("\n");
+                })
+              : [];
+            const assetDefinitions = h3PromptMode ? `<assetDefinitions>\n${assetDefinitionItems.join("\n")}\n</assetDefinitions>` : "";
 
-          const content = `
+            const content = `
           **模型名称**：${modelData},
           **目标时长 target_duration**：${targetDuration}s,
           ${referenceHeading}：
@@ -289,38 +297,77 @@ export default router.post(
           )},
           `;
 
-          try {
-            const { text } = await u.Ai.Text("universalAi").invoke({
-              system: videoPromptGeneration,
-              messages: [
-                {
-                  role: "assistant",
-                  content: `${visualManual}`,
-                },
-                {
-                  role: "user",
-                  content: content,
-                },
-              ],
-            });
+            try {
+              if (req.body.languages) {
+                const variants = await generateLanguageVariants(
+                  languageDb,
+                  track.trackId,
+                  req.body.languages,
+                  async () => {
+                    const result = await u.Ai.Text("universalAi").invoke({
+                      system: videoPromptGeneration,
+                      messages: [
+                        {
+                          role: "assistant",
+                          content: `${visualManual}`,
+                        },
+                        {
+                          role: "user",
+                          content: content,
+                        },
+                      ],
+                    });
+                    return result.text;
+                  },
+                  async (system, source) => (await u.Ai.Text("universalAi").invoke({ system, messages: [{ role: "user", content: source }] })).text,
+                );
+                const failed = variants.filter((v: any) => req.body.languages.includes(v.language) && v.state === "生成失败");
+                await u
+                  .db("o_videoTrack")
+                  .where({ id: track.trackId })
+                  .update({ state: failed.length ? "生成失败" : "已完成", reason: failed.map((v: any) => `${v.language}: ${v.reason}`).join("；") });
+                return { trackId: track.trackId, variants };
+              }
+              const { text } = await u.Ai.Text("universalAi").invoke({
+                system: videoPromptGeneration,
+                messages: [
+                  {
+                    role: "assistant",
+                    content: `${visualManual}`,
+                  },
+                  {
+                    role: "user",
+                    content: content,
+                  },
+                ],
+              });
 
-            await u.db("o_videoTrack").where({ id: track.trackId }).update({
-              prompt: text,
-              state: "已完成",
-            });
+              await u.db("o_videoTrack").where({ id: track.trackId }).update({
+                prompt: text,
+                state: "已完成",
+              });
 
-            return { trackId: track.trackId, text };
-          } catch (e: any) {
-            await u
-              .db("o_videoTrack")
-              .where({ id: track.trackId })
-              .update({ state: "生成失败", reason: u.error(e).message });
-          }
-        }),
+              return { trackId: track.trackId, text };
+            } catch (e: any) {
+              await u
+                .db("o_videoTrack")
+                .where({ id: track.trackId })
+                .update({ state: "生成失败", reason: u.error(e).message });
+            }
+          }),
       );
 
       // 后台执行，不等待结果
-      Promise.all(tasks);
+      Promise.allSettled(tasks).then(async (results) => {
+        for (let index = 0; index < results.length; index++) {
+          const result = results[index];
+          if (result.status === "rejected")
+            await u
+              .db("o_videoTrack")
+              .where({ id: trackData[index].trackId, projectId })
+              .update({ state: "生成失败", reason: u.error(result.reason).message });
+        }
+      });
       res.status(200).send(success("开始生成提示词"));
     } catch (e) {
       res.status(400).send(error(u.error(e).message));

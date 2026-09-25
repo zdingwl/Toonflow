@@ -18,21 +18,16 @@
         </div>
       </div>
       <div class="itemBox">
-        <div
-          class="item"
-          :class="{ active: index === activeTrackIndex }"
-          v-for="(track, index) in trackList"
-          :key="track.id"
-          @click="changeIndex(index)">
+        <div class="item" :class="{ active: index === activeTrackIndex }" v-for="(track, index) in trackList" :key="track.id" @click="changeIndex(index)">
           <t-checkbox
             class="trackCheck"
             :checked="track.id != null && checkedTrackIds.includes(track.id)"
             @click.stop
             @change="(val: boolean) => toggleCheck(track.id, val)" />
           <t-tag class="indexTag" size="small">#{{ index + 1 }}</t-tag>
-          <t-tag class="selectTag" theme="success" size="small" v-if="track.selectVideoId">已选择</t-tag>
+          <t-tag class="selectTag" theme="success" size="small" v-if="selectedVideoId(track)">已选择</t-tag>
           <!-- 优先展示选中视频的首帧 -->
-          <div class="thumbGroup" v-if="track.selectVideoId && getSelectedVideoSrc(track)">
+          <div class="thumbGroup" v-if="selectedVideoId(track) && getSelectedVideoSrc(track)">
             <img
               v-if="videoCoverMap[getSelectedVideoSrc(track)!]"
               class="thumb selectedVideoThumb"
@@ -81,6 +76,10 @@ const { project } = storeToRefs(projectStore());
 const { removeCache } = imageListCacheStore();
 const episodesId = inject<Ref<number>>("episodesId")!;
 const props = defineProps<{
+  languages: string[];
+  activeLanguage: string;
+  languageName: (language: string) => string;
+  savePrompt: () => Promise<void>;
   modelParmas: ModelSetting;
   imageList: UploadItem[];
   clampDuration: (trackDuration: number) => number;
@@ -102,10 +101,14 @@ const checkAll = ref(false); // 全选状态
 /** 视频封面缓存 src -> dataURL */
 const videoCoverMap = ref<Record<string, string>>({});
 
+function selectedVideoId(track: TrackItem) {
+  return props.activeLanguage ? track.variants?.find((v) => v.language === props.activeLanguage)?.videoId : track.selectVideoId;
+}
+
 /** 获取轨道选中视频的 src */
 function getSelectedVideoSrc(track: TrackItem): string | null {
-  if (!track.selectVideoId) return null;
-  const video = track.videoList?.find((v) => v.id === track.selectVideoId);
+  if (!selectedVideoId(track)) return null;
+  const video = track.videoList?.find((v) => v.id === selectedVideoId(track));
   return video?.src || null;
 }
 
@@ -218,9 +221,9 @@ async function batchDownloadVideo(): Promise<void> {
   const selectedTracks = trackList.value.filter((track) => checkedTrackIds.value.includes(track.id));
   const tasks = selectedTracks
     .map((track) => {
-      const video = track.videoList.find((v) => v.id === track.selectVideoId);
+      const video = track.videoList.find((v) => v.id === selectedVideoId(track));
       if (!video?.src) return null;
-      const filename = `分镜${track.id}.${getFileExtension(video.src)}`;
+      const filename = `分镜${track.id}_${video.language || "original"}.${getFileExtension(video.src)}`;
       return fetch(video.src)
         .then((res) => res.blob())
         .then((blob) => zip.file(filename, blob))
@@ -241,7 +244,11 @@ async function batchDownloadVideo(): Promise<void> {
   checkAll.value = false;
 }
 const generateTextLoad = ref(false);
-function batchGenText() {
+async function batchGenText() {
+  if (!props.languages.length) return window.$message.warning("请先选择对白语言");
+  if (!checkedTrackIds.value.length) return window.$message.warning("请勾选视频段");
+  if (trackList.value.some((t) => checkedTrackIds.value.includes(t.id) && t.state === "生成中")) return window.$message.warning("所选视频段正在生成，请稍候");
+  await props.savePrompt();
   generateTextLoad.value = true;
   const trackData: any[] = [];
   trackList.value.forEach((track, index) => {
@@ -266,6 +273,7 @@ function batchGenText() {
       model: props.modelParmas.model,
       mode: props.modelParmas.mode,
       concurrentCount: otherSetting.value.assetsBatchGenereateSize,
+      languages: [...props.languages],
     })
     .then(({ data }) => {
       window.$message.success("开始生成提示词");
@@ -275,11 +283,15 @@ function batchGenText() {
     })
     .catch((e) => {
       window.$message.error(e?.message ?? "生成提示词失败");
-      trackList.value.forEach((i) => {
-        i.state = "生成失败";
-      });
+      trackList.value
+        .filter((i) => checkedTrackIds.value.includes(i.id))
+        .forEach((i) => {
+          i.state = "生成失败";
+        });
     })
-    .finally(() => {});
+    .finally(() => {
+      generateTextLoad.value = false;
+    });
 }
 /**
  * 获取指定轨道的上传数据：
@@ -297,9 +309,7 @@ function getTrackUploadInfo(track: TrackItem, filterEmpty = false) {
     slotType: item.slotType,
     fileType: item.fileType,
     prompt: item.prompt,
-    type:
-      item.slotType ??
-      (item.fileType === "audio" ? "audioReference" : item.fileType === "video" ? "videoReference" : "imageReference"),
+    type: item.slotType ?? (item.fileType === "audio" ? "audioReference" : item.fileType === "video" ? "videoReference" : "imageReference"),
   });
 
   if (track.id === activeTrackId) {
@@ -310,26 +320,35 @@ function getTrackUploadInfo(track: TrackItem, filterEmpty = false) {
 }
 const generateVideoLoad = ref(false);
 /** 批量为已勾选轨道生成视频 */
-function batchGenVideo() {
+async function batchGenVideo() {
+  if (!props.languages.length) return window.$message.warning("请先选择对白语言");
+  if (!checkedTrackIds.value.length) return window.$message.warning("请勾选视频段");
+  if (!props.modelParmas.audio) return window.$message.warning("请开启声音后生成对白语言版本");
+  await props.savePrompt();
+  const languages = [...props.languages];
+  const selectedTracks = trackList.value.filter((track) => checkedTrackIds.value.includes(track.id));
   const dlg = DialogPlugin.confirm({
     header: $t("workbench.generate.generateConfirm"),
-    body: $t("workbench.generate.generateVideosInBatches"),
+    body: `将为 ${selectedTracks.length} 段视频分别生成 ${languages.map(props.languageName).join("、")}，共 ${selectedTracks.length * languages.length} 个视频。`,
     onConfirm: async () => {
       dlg.destroy();
 
-      const checkedTrackData = trackList.value.filter((track) => checkedTrackIds.value.includes(track.id));
-      const notHasPrompt = checkedTrackData.filter((i) => !i.prompt);
-      if (notHasPrompt.length) return window.$message.warning($t("workbench.generate.skipDataWithEmptyVideoPromptWords"));
+      const checkedTrackData = selectedTracks;
+      const notHasPrompt = checkedTrackData.filter((track) =>
+        languages.some((language) => !track.variants?.some((v) => v.language === language && v.prompt.trim() && v.state === "已完成")),
+      );
+      if (notHasPrompt.length) return window.$message.warning("请先生成并检查所有已选语言的提示词");
 
-      const trackData = checkedTrackData.map((track) => {
+      const trackData = checkedTrackData.flatMap((track) => {
         const trackId = track.id;
         const uploadData = props.modelParmas.mode === "text" ? [] : getTrackUploadInfo(track, true);
-        return {
+        return languages.map((language) => ({
+          language,
           duration: props.clampDuration(track.duration || props.modelParmas.duration),
-          prompt: track.prompt,
+          prompt: "",
           uploadData,
           trackId,
-        };
+        }));
       });
       const requestData = {
         projectId: project.value?.id,
@@ -340,19 +359,11 @@ function batchGenVideo() {
         audio: Boolean(props.modelParmas.audio),
         trackData,
       };
+      generateVideoLoad.value = true;
       try {
         const { data } = await axios.post("/production/workbench/batchGenerateVideo", requestData);
-        const videoRecordId: Record<number, number> = {};
-        data.forEach((item: { videoId: number; trackId: number }) => {
-          videoRecordId[item.trackId] = item.videoId;
-        });
-        checkedTrackData.forEach((i) => {
-          if (videoRecordId[i.id])
-            i.videoList.push({
-              id: videoRecordId[i.id],
-              state: "生成中",
-              src: "",
-            });
+        data.forEach((item: { videoId: number; trackId: number; language: string }) => {
+          checkedTrackData.find((track) => track.id === item.trackId)?.videoList.push({ id: item.videoId, language: item.language, state: "生成中", src: "" });
         });
         checkedTrackIds.value = [];
         window.$message.success($t("workbench.generate.generateStarted"));

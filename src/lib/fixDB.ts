@@ -6,6 +6,8 @@ import db from "@/utils/db";
 import { transform } from "sucrase";
 import rawVendorData from "./vendor.json";
 
+import { migrateVideoLanguages } from "@/utils/videoLanguages";
+
 const vendorData = rawVendorData as Record<string, string>;
 
 export default async (knex: Knex): Promise<void> => {
@@ -70,6 +72,11 @@ export default async (knex: Knex): Promise<void> => {
     state: "生成失败",
     errorReason: "软件退出导致失败",
   });
+
+  await migrateVideoLanguages(knex);
+  const interruptedLanguageTracks = await knex("o_videoPromptVariant").where({ state: "生成中" }).distinct("trackId");
+  if (interruptedLanguageTracks.length) await knex("o_videoTrack").whereIn("id", interruptedLanguageTracks.map(row => row.trackId)).update({ state: "生成失败", reason: "服务重启，请重试未完成的对白语言" });
+  await knex("o_videoPromptVariant").where({ state: "生成中" }).update({ state: "生成失败", reason: "服务重启，请重试该语言" });
 
   // 添加新字段
   await addColumn("o_agentRun", "inputContent", "text");
@@ -240,7 +247,7 @@ export default async (knex: Knex): Promise<void> => {
     u.vendor.writeCode("toonflow", vendorData["toonflow.ts"]);
   }
   const comfyuiLocalVer = await u.vendor.getVendor("comfyui_local").version;
-  if (Number(comfyuiLocalVer) < 1.9) {
+  if (Number(comfyuiLocalVer) < 2.0) {
     u.vendor.writeCode("comfyui_local", vendorData["comfyui_local.ts"]);
   }
   const comfyuiLocalData = await u.db("o_vendorConfig").where("id", "comfyui_local").first();
@@ -257,7 +264,7 @@ export default async (knex: Knex): Promise<void> => {
     const h3Model = models.find((item: any) => item.modelName === "MiniMax-H3-local");
     if (h3Model) {
       for (const item of h3Model.durationResolutionMap || []) {
-        if (Array.isArray(item.resolution) && !item.resolution.includes("768p")) item.resolution.push("768p");
+        item.resolution = ["768p"];
       }
     }
     const inputValues = {

@@ -8,6 +8,24 @@
     <div class="modelSelect">
       <modeMenu v-model="modelParmas" :modeOptions="modeOptions" :trackId="currentTrack?.id" :modeList="modeList" @modeChange="modeChange" />
     </div>
+    <div class="languagePanel">
+      <strong>对白语言</strong>
+      <t-select
+        :value="selectedLanguages"
+        multiple
+        :options="languageOptions"
+        placeholder="生成提示词前，请选择一种或多种对白语言"
+        :disabled="savingLanguages || hasGeneratePromptIds.length > 0"
+        @change="saveLanguages"
+        style="min-width: 360px; flex: 1" />
+      <span>每种语言分别生成提示词和视频；新增语言只补齐缺少的版本。</span>
+    </div>
+    <div class="languageTabs">
+      <t-radio-group v-model="activeLanguage" variant="default-filled">
+        <t-radio-button value="">原版（未标注语言）</t-radio-button>
+        <t-radio-button v-for="language in availableLanguages" :key="language" :value="language">{{ languageName(language) }}</t-radio-button>
+      </t-radio-group>
+    </div>
     <div class="generate ac">
       <div class="prompt" v-if="currentTrack">
         <t-card :title="'#' + (activeTrackIndex + 1) + $t('workbench.generate.generateText')" header-bordered class="videoPrompt">
@@ -16,9 +34,13 @@
               {{ $t("workbench.generate.generateText") }}
             </t-button>
           </template>
+          <div v-if="activeVariant?.reason" class="languageError">{{ activeVariant.reason }}</div>
+          <div v-if="activeLanguage" class="languageHint">
+            {{ languageName(activeLanguage) }} · {{ activeVariant?.state || "未生成" }} · 可编辑台词和提示词后再生成视频
+          </div>
           <div class="promptData fc">
-            <div class="promptInput" @focusout="handlePromptBlur">
-              <promptEditor v-model="currentTrack.prompt" :references="references" :placeholder="$t('workbench.generate.promptPlaceholder')" />
+            <div class="promptInput" :inert="currentTrack.state === '生成中'" @focusout="handlePromptBlur">
+              <promptEditor v-model="visiblePrompt" :references="references" :placeholder="$t('workbench.generate.promptPlaceholder')" />
             </div>
           </div>
         </t-card>
@@ -27,6 +49,8 @@
         <videoCard
           v-if="currentTrack"
           :active-track-index="activeTrackIndex"
+          :language="activeLanguage"
+          :language-label="languageName(activeLanguage)"
           v-model:current-track="currentTrack"
           @refresh="getGenerateData"
           @generate="generateVideo" />
@@ -40,6 +64,10 @@
         @change="trackChange"
         :modelParmas="modelParmas"
         :clampDuration="clampDuration"
+        :languages="selectedLanguages"
+        :activeLanguage="activeLanguage"
+        :languageName="languageName"
+        :savePrompt="handlePromptBlur"
         @getData="getGenerateData" />
     </div>
   </div>
@@ -83,6 +111,51 @@ const modelParmas = ref<ModelSetting>({
   audio: false,
 });
 
+const selectedLanguages = ref<string[]>([]);
+const languageOptions = ref<{ value: string; label: string }[]>([]);
+const activeLanguage = ref("");
+const savingLanguages = ref(false);
+let loadedLanguageSelection = false;
+const dirtyPrompts = new Set<string>();
+const activeVariant = computed(() => currentTrack.value?.variants?.find((v) => v.language === activeLanguage.value));
+const availableLanguages = computed(() => [...new Set([...selectedLanguages.value, ...(currentTrack.value?.variants || []).map((v) => v.language)])]);
+const languageName = (code: string) => languageOptions.value.find((v) => v.value === code)?.label || "原版（未标注语言）";
+const visiblePrompt = computed({
+  get: () => (activeLanguage.value ? activeVariant.value?.prompt || "" : currentTrack.value?.prompt || ""),
+  set: (value: string) => {
+    if (!currentTrack.value) return;
+    dirtyPrompts.add(`${currentTrack.value.id}:${activeLanguage.value}`);
+    if (!activeLanguage.value) currentTrack.value.prompt = value;
+    else {
+      currentTrack.value.variants ||= [];
+      let variant = currentTrack.value.variants.find((v) => v.language === activeLanguage.value);
+      if (!variant) {
+        variant = { language: activeLanguage.value, prompt: "", state: "未生成" };
+        currentTrack.value.variants.push(variant);
+      }
+      variant.prompt = value;
+      variant.state = value.trim() ? "已完成" : "未生成";
+    }
+  },
+});
+async function saveLanguages(value: unknown) {
+  const languages = value as string[];
+  if (!languages.length) return window.$message.warning("请至少选择一种对白语言");
+  savingLanguages.value = true;
+  try {
+    const { data } = await axios.post("/production/workbench/saveDialogueLanguages", {
+      projectId: project.value?.id,
+      scriptId: episodesId.value ?? 0,
+      languages,
+    });
+    selectedLanguages.value = data;
+    if (!activeLanguage.value) activeLanguage.value = data[0];
+  } catch (e: any) {
+    window.$message.error(e?.message || "对白语言保存失败");
+  } finally {
+    savingLanguages.value = false;
+  }
+}
 const storyboardList = ref<StoryboardItem[]>([]); // 分镜列表
 
 /** 排序优先级：assets有图=0，storyboard有图=1，无图=2 */
@@ -267,6 +340,12 @@ async function getGenerateData() {
     scriptId: episodesId.value ?? 0,
   });
 
+  languageOptions.value = data.dialogueLanguages || [];
+  selectedLanguages.value = data.selectedLanguages || [];
+  if (!loadedLanguageSelection) {
+    activeLanguage.value = selectedLanguages.value[0] || "";
+    loadedLanguageSelection = true;
+  }
   storyboardList.value = data.storyboardList;
   // 优先使用本地缓存，没有缓存则用后端数据并写入缓存
   const pid = project.value?.id;
@@ -291,14 +370,27 @@ async function getGenerateData() {
   modelParmas.value.duration = clampDuration(data.trackList?.[activeTrackIndex.value]?.duration);
 }
 /** 提示词失焦时保存到后端 */
-function handlePromptBlur() {
-  const trackId = trackList.value[activeTrackIndex.value]?.id;
-  if (trackId == null) return;
-  axios.post("/production/workbench/updateVideoPrompt", { id: trackId, prompt: currentTrack.value?.prompt });
+async function handlePromptBlur() {
+  const trackId = currentTrack.value?.id;
+  if (trackId == null || currentTrack.value?.state === "生成中") return;
+  const language = activeLanguage.value || undefined;
+  const prompt = visiblePrompt.value;
+  const key = `${trackId}:${language || ""}`;
+  if (!dirtyPrompts.has(key)) return;
+  if (language && !activeVariant.value) return;
+  try {
+    await axios.post("/production/workbench/updateVideoPrompt", { id: trackId, prompt, language });
+    if (currentTrack.value?.id === trackId && visiblePrompt.value === prompt) dirtyPrompts.delete(key);
+  } catch (e: any) {
+    window.$message.error(e?.message || "提示词保存失败");
+    throw e;
+  }
 }
 
 /** 单个轨道生成提示词 */
 async function genText() {
+  if (!selectedLanguages.value.length) return window.$message.warning("请先选择对白语言");
+  await handlePromptBlur();
   const track = currentTrack.value;
   if (track.id == null || track.state === "生成中") return;
   let info: {
@@ -347,12 +439,14 @@ async function genText() {
     const { data } = await axios.post("/production/workbench/generateVideoPrompt", {
       projectId: project.value?.id,
       trackId: currentTrackId,
+      languages: [...selectedLanguages.value],
       info: info,
       model: modelParmas.value.model,
       mode: modelParmas.value.mode,
     });
-    track.prompt = data;
-    track.state = "已完成";
+    track.variants = data;
+    track.state = data.some((v: VideoPromptVariant) => selectedLanguages.value.includes(v.language) && v.state === "生成失败") ? "生成失败" : "已完成";
+    if (!activeLanguage.value) activeLanguage.value = selectedLanguages.value[0] || "";
   } catch (e) {
     track.state = "生成失败";
     window.$message.error((e as Error)?.message ?? "提示词生成失败");
@@ -409,13 +503,20 @@ onMounted(() => {
 });
 /** 单个轨道生成视频 */
 async function generateVideo() {
+  if (!selectedLanguages.value.length) return window.$message.warning("请先选择对白语言并生成提示词");
+  if (!modelParmas.value.audio) return window.$message.warning("请开启声音后生成对白语言版本");
+  await handlePromptBlur();
+  const track = currentTrack.value;
+  const languages = [...selectedLanguages.value];
+  if (languages.some((language) => !track.variants?.some((v) => v.language === language && v.prompt.trim() && v.state === "已完成")))
+    return window.$message.warning("请先生成并检查所有已选语言的提示词");
   const dlg = DialogPlugin.confirm({
     header: $t("workbench.generate.generateConfirm"),
-    body: $t("workbench.generate.generateConfirmBody"),
+    body: `将为当前视频段生成 ${languages.length} 个版本：${languages.map(languageName).join("、")}。`,
     onConfirm: async () => {
       dlg.destroy();
       try {
-        const { data } = await axios.post("/production/workbench/generateVideo", {
+        const request = {
           projectId: project.value?.id,
           scriptId: episodesId.value,
           uploadData:
@@ -433,9 +534,7 @@ async function generateVideo() {
                     .map((item) => ({
                       id: item.id,
                       sources: item.sources,
-                      type:
-                        item.slotType ??
-                        (item.fileType === "audio" ? "audioReference" : item.fileType === "video" ? "videoReference" : "imageReference"),
+                      type: item.slotType ?? (item.fileType === "audio" ? "audioReference" : item.fileType === "video" ? "videoReference" : "imageReference"),
                       fileType: item.fileType,
                       prompt: item.prompt,
                     }));
@@ -449,14 +548,16 @@ async function generateVideo() {
           resolution: modelParmas.value.resolution,
           duration: modelParmas.value.duration,
           audio: modelParmas.value.audio,
-          trackId: currentTrack.value.id,
+          trackId: track.id,
+        };
+        const { data } = await axios.post("/production/workbench/batchGenerateVideo", {
+          ...request,
+          trackData: languages.map((language) => ({ trackId: track.id, language, prompt: "", duration: request.duration, uploadData: request.uploadData })),
         });
         window.$message.success($t("workbench.generate.generateStarted"));
-        currentTrack.value.videoList.push({
-          id: data,
-          state: "生成中",
-          src: "",
-        });
+        data.forEach((item: { videoId: number; language: string }) =>
+          track.videoList.push({ id: item.videoId, language: item.language, state: "生成中", src: "" }),
+        );
       } catch (e) {
         window.$message.error((e as any)?.message ?? "视频发起生成请求失败");
       } finally {
@@ -529,17 +630,20 @@ async function getTrackPromptList() {
     trackIds: hasGeneratePromptIds.value,
   });
   if (data && data.length) {
-    data.forEach((item: { id: number; state: "生成中" | "未生成" | "已完成" | "生成失败"; prompt?: string; reason?: string }) => {
-      const findData = trackList.value.find((t) => t.id == item.id);
-      if (findData) {
-        findData.state = item.state;
-        findData.prompt = item?.prompt ?? "";
-        findData.reason = item?.reason ?? "";
-        if (item.state === "生成失败") {
-          window.$message.error(`提示词生成失败，${item.reason ?? "未知原因"}`);
+    data.forEach(
+      (item: { id: number; state: "生成中" | "未生成" | "已完成" | "生成失败"; prompt?: string; reason?: string; variants?: VideoPromptVariant[] }) => {
+        const findData = trackList.value.find((t) => t.id == item.id);
+        if (findData) {
+          findData.state = item.state;
+          findData.prompt = item?.prompt ?? "";
+          findData.variants = item.variants || [];
+          findData.reason = item?.reason ?? "";
+          if (item.state === "生成失败") {
+            window.$message.error(`提示词生成失败，${item.reason ?? "未知原因"}`);
+          }
         }
-      }
-    });
+      },
+    );
   }
 }
 watch(
@@ -569,6 +673,29 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.languagePanel {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px;
+  background: var(--td-bg-color-container);
+  border-radius: 8px;
+}
+.languagePanel span,
+.languageHint {
+  color: var(--td-text-color-secondary);
+  font-size: 12px;
+}
+.languageTabs {
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+.languageError {
+  color: var(--td-error-color);
+  padding: 8px 0;
+}
 .index {
   height: calc(100vh - 120px);
   gap: 16px;
@@ -578,8 +705,8 @@ onUnmounted(() => {
   .modelSelect {
   }
   .generate {
-    flex: 1;
-    min-height: 0;
+    flex: 1 0 320px;
+    min-height: 320px;
     width: 100%;
     gap: 5px;
     .prompt {
@@ -620,6 +747,7 @@ onUnmounted(() => {
     }
   }
   .track {
+    flex-shrink: 0;
   }
 }
 </style>

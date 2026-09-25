@@ -8,6 +8,8 @@ import { ReferenceList } from "@/utils/ai";
 import { persistedRoleReferencesForVideo } from "@/utils/assetReferenceMedia";
 import { inspectVideoQuality } from "@/utils/videoQuality";
 import { assertH3ActiveStates, assertH3PictureSlots } from "@/utils/h3VisualStateGuard";
+import { db as languageDb } from "@/utils/db";
+import { dialogueLanguageSchema, resolveLanguagePrompt } from "@/utils/videoLanguages";
 const router = express.Router();
 
 type Type = "imageReference" | "startImage" | "endImage" | "videoReference" | "audioReference";
@@ -58,11 +60,17 @@ export default router.post(
       fileType: z.enum(["image", "video", "audio"]).optional(),
       label: z.string().optional(), prompt: z.string().optional(),
     })),
+    language: dialogueLanguageSchema.optional(),
     prompt: z.string(), model: z.string(), mode: z.string(),
     resolution: z.string(), duration: z.number(), audio: z.boolean().optional(), trackId: z.number(),
   }),
   async (req, res) => {
-    const { scriptId, projectId, prompt, uploadData, model, duration, resolution, audio, mode, trackId } = req.body;
+    const { scriptId, projectId, uploadData, model, duration, resolution, audio, mode, trackId, language } = req.body;
+    const ownedTrack = await u.db("o_videoTrack").where({ id: trackId, projectId, scriptId }).first();
+    if (!ownedTrack) return res.status(404).send(error("视频段不存在"));
+    let prompt: string;
+    try { prompt = await resolveLanguagePrompt(languageDb, trackId, language, req.body.prompt, audio); }
+    catch (cause) { return res.status(409).send(error((cause as Error).message)); }
     let modeData: any[] = [];
     if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
       try { modeData = JSON.parse(mode); } catch {}
@@ -153,6 +161,7 @@ export default router.post(
     const [videoId] = await u.db("o_video").insert({
       filePath: videoPath, time: Date.now(), state: "生成中", scriptId, projectId, videoTrackId: trackId,
     });
+    if (language) await languageDb("o_videoLanguage").insert({ videoId, language, prompt });
     await u.db("o_videoTrack").where({ id: trackId, projectId }).update({ state: "生成中" });
     res.status(200).send(success(videoId));
     const relatedObjects = { projectId, videoId, scriptId, type: "视频" };

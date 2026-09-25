@@ -18,8 +18,8 @@ test("Ref2VA and FL2VA use the standard 20-step setting", () => {
   assert.match(source, /setting\("h3Steps",\s*"20"\)/);
 });
 
-test("H3 offers 768p and keeps native dimensions on the 32-pixel grid", () => {
-  assert.match(source, /resolution:\s*\["480p", "720p", "768p"\]/);
+test("H3 only offers 768p and keeps native dimensions on the 32-pixel grid", () => {
+  assert.match(source, /resolution:\s*\["768p"\]/);
   const body = source.match(/function sizeForVideo\([\s\S]*?(?=function referenceLabel)/)?.[0].trim();
   assert.ok(body, "H3 size calculator is present");
   const sizeForVideo = vm.runInNewContext(`${transform(body, { transforms: ["typescript"] }).code}; sizeForVideo`);
@@ -31,9 +31,8 @@ test("H3 offers 768p and keeps native dimensions on the 32-pixel grid", () => {
     assert.equal(size.height % 32, 0);
     assert.ok(size.width * size.height <= 1344 * 768);
   }
-  const prior = sizeForVideo("720p", "16:9");
-  assert.equal(prior.width % 32, 0);
-  assert.equal(prior.height % 32, 0);
+  for (const resolution of ["480p", "720p"]) assert.throws(() => sizeForVideo(resolution, "16:9"), /分辨率无效/);
+  assert.match(source, /config = \{ \.\.\.config, resolution: "768p" \}/);
   assert.throws(() => sizeForVideo("1080p", "16:9"), /分辨率无效/);
 });
 

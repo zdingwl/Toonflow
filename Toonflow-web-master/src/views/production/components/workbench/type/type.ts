@@ -45,7 +45,10 @@ interface StoryboardItem {
   videoDesc?: string | null;
 }
 
+interface VideoPromptVariant { language: string; prompt: string; state: string; reason?: string; videoId?: number | null; }
+
 interface TrackItem {
+  variants?: VideoPromptVariant[];
   id: number;
   prompt: string;
   state: "未生成" | "生成中" | "已完成" | "生成失败";
@@ -57,6 +60,7 @@ interface TrackItem {
 }
 
 interface VideoItem {
+  language?: string;
   id: number;
   src: string;
   state: "未生成" | "生成中" | "已完成" | "生成失败";
@@ -87,6 +91,7 @@ interface TrackMediaUnknown extends TrackMediaBase {
 type TrackMedia = TrackMediaStoryboard | TrackMediaAssets | TrackMediaUnknown;
 
 interface HistoryVideoItem {
+  language?: string;
   errorReason?: string | null;
   src: string;
   id: number;
