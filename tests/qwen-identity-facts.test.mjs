@@ -60,12 +60,12 @@ test('Qwen does not remove directional color facts or ambiguous view details', (
   assert.equal((mixed.match(/背面金色刺绣/g) || []).length, 2);
 });
 
-test('Qwen passes preserved facts and the single-view contract to every generated view', () => {
+test('Qwen establishes facts in the front and derives other views from its actual image', () => {
   const graph = exports.graphForTest({
     prompt: '艾娃穿红色上衣、黑色短裙，四栏从左到右为脸部特写、正面全身、侧面全身、背面全身。皮肤保留细微纹理。',
     size: '1K', aspectRatio: '2:3',
   });
-  for (const node of ['11', '20', '30', '40']) {
+  for (const node of ['11']) {
     const prompt = graph[node].inputs.prompt;
     assert.match(prompt, /红色上衣/);
     assert.match(prompt, /黑色短裙/);
@@ -89,11 +89,17 @@ for (const style of [
     });
     for (const id of ['11', '20', '30', '40']) {
       const prompt = graph[id].inputs.prompt;
-      assert.ok(prompt.includes(style));
-      assert.match(prompt, /Follow the project rendering style/);
-      assert.match(prompt, /display background palette and lighting specified in CURRENT ASSET FACTS/);
+      if (id === '11') {
+        assert.ok(prompt.includes(style));
+        assert.match(prompt, /Follow the project rendering style/);
+        assert.match(prompt, /display background palette and lighting specified in CURRENT ASSET FACTS/);
+        assert.match(prompt, /red blouse, black skirt, low ponytail/);
+      } else {
+        assert.match(prompt, /Preserve the reference person's identity/);
+        assert.doesNotMatch(prompt, /CURRENT ASSET FACTS|red blouse, black skirt, low ponytail/);
+        assert.deepEqual(graph[id].inputs['images.image_1'], id === '40' ? ['32', 0] : ['14', 0]);
+      }
       assert.match(prompt, /SINGLE-VIEW render of ONE character/);
-      assert.match(prompt, /red blouse, black skirt, low ponytail/);
       assert.doesNotMatch(prompt, /cinematic stylized realistic 3D animated CGI character|no live-action photographic look|PBR cloth and skin/);
     }
     assert.deepEqual(graph['50'].inputs.image1, ['22', 0]);
