@@ -35,17 +35,17 @@ export default router.post(
     items: zod.array(
       zod.object({
         assetsId: zod.number(),
-        type: zod.string(),
+        type: zod.enum(["role", "scene", "tool"]),
         name: zod.string(),
         describe: zod.string(),
       }),
     ),
     projectId: zod.number(),
     concurrentCount: zod.number().int().min(1).optional(),
-    otherTextPrompt: zod.string(),
+    otherTextPrompt: zod.string().optional(),
   }),
   async (req, res) => {
-    const { projectId, items, concurrentCount, otherTextPrompt } = req.body;
+    const { projectId, items, concurrentCount, otherTextPrompt = "" } = req.body;
     //获取风格
     const project = await u.db("o_project").where("id", projectId).select("artStyle", "type", "intro").first();
     //如果没有找到对应的项目，返回错误
@@ -54,11 +54,12 @@ export default router.post(
     // 预加载公共数据
     const assetsIds = items.map((item: { assetsId: number }) => item.assetsId);
     //查询所有资产，用于判断每个资产是否是衍生资产
-    const assetsDataList = await u.db("o_assets").whereIn("id", assetsIds).select("id", "assetsId");
+    const assetsDataList = await u.db("o_assets").where({ projectId }).whereIn("id", assetsIds).select("id", "assetsId");
     if (!assetsDataList || assetsDataList.length === 0) return res.status(500).send(error("资产不存在"));
     const assetsDataMap = new Map(assetsDataList.map((a: any) => [a.id, a]));
+    if (assetsIds.some((id: number) => !assetsDataMap.has(id))) return res.status(400).send(error("资产不属于当前项目"));
     // 所有前置检测通过后，再批量更新状态为生成中
-    await u.db("o_assets").whereIn("id", assetsIds).update({ promptState: "生成中" });
+    await u.db("o_assets").whereIn("id", assetsIds).update({ promptState: "生成中", promptErrorReason: null });
 
     const getTypeConfig = (
       isDerivative: boolean,
@@ -98,14 +99,14 @@ export default router.post(
         const typeConfig = getTypeConfig(!!assetData.assetsId);
         const config = typeConfig[item.type];
         if (!config) return;
-        //获取到视觉手册
-        const visualManual = await u.getArtPrompt(project.artStyle as string, "art_skills", config.visualManual);
-        if (!visualManual) {
-          await u.db("o_assets").where("id", item.assetsId).update({ promptState: "生成失败", promptErrorReason: "视觉手册未定义" });
-          return;
-        }
-        const systemPrompt = buildAssetPromptSystemPrompt(visualManual, config.assetType, otherTextPrompt);
         try {
+          //获取到视觉手册
+          const visualManual = await u.getArtPrompt(project.artStyle as string, "art_skills", config.visualManual);
+          if (!visualManual) {
+            await u.db("o_assets").where("id", item.assetsId).update({ promptState: "生成失败", promptErrorReason: "视觉手册未定义" });
+            return;
+          }
+          const systemPrompt = buildAssetPromptSystemPrompt(visualManual, config.assetType, otherTextPrompt);
           const { _output } = (await u.Ai.Text("universalAi").invoke({
             system: systemPrompt,
             messages: [
@@ -116,24 +117,21 @@ export default router.post(
             ],
           })) as any;
 
-          if (!_output) {
-            await u.db("o_assets").where("id", item.assetsId).update({ promptState: "生成失败" });
-            return;
-          }
+          if (typeof _output !== "string" || !_output.trim()) throw new Error("模型返回了空提示词");
 
-          await u.db("o_assets").where("id", item.assetsId).update({ prompt: _output, promptState: "已完成" });
+          await u.db("o_assets").where("id", item.assetsId).update({ prompt: _output.trim(), promptState: "已完成", promptErrorReason: null });
         } catch (e: any) {
           await u
             .db("o_assets")
             .where("id", item.assetsId)
-            .update({ promptState: "失败", promptErrorReason: u.error(e).message });
+            .update({ promptState: "生成失败", promptErrorReason: u.error(e).message });
         }
       }),
     );
 
     // 后台执行，不等待结果
     Promise.all(tasks).catch((err: any) => {
-      res.status(500).send(error(err));
+      console.error("[batchPolishAssetsPrompt] 后台生成失败", err);
     });
 
     return res.status(200).send(success({ total: items.length }));

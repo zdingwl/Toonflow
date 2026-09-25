@@ -696,7 +696,9 @@ function getSelectedSubAssets(): Asset[] {
   return subAssets;
 }
 // 批量生成提示词
+const promptBatchSubmitting = ref(false);
 async function handleBatchGeneratePrompt() {
+  if (promptBatchSubmitting.value) return;
   const selectedParentAssets = tableData.value.filter((item: any) => selectedRowKeys.value.includes(item.id));
   const selectedSubAssets = getSelectedSubAssets();
   const selectedAssets = [...selectedParentAssets, ...selectedSubAssets];
@@ -704,7 +706,8 @@ async function handleBatchGeneratePrompt() {
     window.$message.warning($t("workbench.assets.selectAtLeastOne"));
     return;
   }
-  // 设置 promptState 为 '生成中'，让轮询自动接管状态跟踪
+  promptBatchSubmitting.value = true;
+  // 提交受理前暂停轮询，避免读取旧结果。
   selectedParentAssets.forEach((asset) => {
     const target = tableData.value.find((row) => row.id === asset.id);
     if (target) target.promptState = "生成中";
@@ -721,6 +724,7 @@ async function handleBatchGeneratePrompt() {
   try {
     await axios.post("/assetsGenerate/batchPolishAssetsPrompt", {
       projectId: project.value?.id,
+      otherTextPrompt: "",
       concurrentCount: otherSetting.value.assetsBatchGenereateSize,
       items: selectedAssets.map((item: { id: number; name: string; type: string; describe: string }) => ({
         assetsId: item.id,
@@ -731,6 +735,9 @@ async function handleBatchGeneratePrompt() {
     });
   } catch (e: any) {
     window.$message.error(e?.message ?? $t("workbench.assets.promptGenFail"));
+    await getFilteredData(assetOptions.value);
+  } finally {
+    promptBatchSubmitting.value = false;
   }
 }
 // 批量生成图片
@@ -1213,6 +1220,7 @@ function findAssetById(id: number): Asset | undefined {
   return undefined;
 }
 const notCompultedData = computed(() => {
+  if (promptBatchSubmitting.value) return [];
   return getAllAssetsFlat().filter((item) => item.promptState == "生成中");
 });
 const generatingData = computed(() => {

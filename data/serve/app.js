@@ -239864,8 +239864,8 @@ var init_assetPrompt = __esm({
 8. \u901A\u5E38\u63A7\u5236\u5728\u80FD\u591F\u5B8C\u6574\u8868\u8FBE\u4FE1\u606F\u7684\u6700\u77ED\u957F\u5EA6\uFF1A\u89D2\u8272\u7EA6 300\u2013650 \u4E2D\u6587\u5B57\u7B26\uFF0C\u573A\u666F\u7EA6 220\u2013520 \u4E2D\u6587\u5B57\u7B26\uFF0C\u9053\u5177\u7EA6 180\u2013420 \u4E2D\u6587\u5B57\u7B26\uFF1B\u4FE1\u606F\u8DB3\u591F\u65F6\u5B81\u53EF\u66F4\u77ED\uFF0C\u4E0D\u4E3A\u51D1\u957F\u5EA6\u91CD\u590D\u5185\u5BB9\u3002
 `;
     roleGenerationLayout = `CHARACTER TURNAROUND SHEET, ONE SAME CHARACTER, exactly two panels in one horizontal row.
-Panel 1: full-body front view.
-Panel 2: full-body back view.
+Panel 1: full-body front view. ONE figure centered in the LEFT HALF, face and chest facing the viewer.
+Panel 2: full-body back view. ONE figure centered in the RIGHT HALF, back of head and back facing the viewer. Both figures fill their half vertically at equal scale, feet aligned.
 Both panels must show the entire body from the top of the head to the soles of the feet, with generous margin above the head and below the feet. Keep exactly the same identity, hairstyle, body proportions, outfit, colors and accessories in both panels. Neutral standing pose, orthographic or weak-perspective design view, plain clean background and even studio lighting. No cropped head, no cropped feet, no extra people, no duplicate body parts, no text, no labels, no watermark.`;
   }
 });
@@ -239958,7 +239958,7 @@ var init_batchGenerateImageAssets = __esm({
                 prompt: userPrompt,
                 referenceList: item.base64 ? [{ base64: item.base64, type: "image" }] : [],
                 size: resolution,
-                aspectRatio: "16:9"
+                aspectRatio: item.type === "role" ? "1:1" : "16:9"
               },
               {
                 taskClass: cfg.taskClass,
@@ -240022,24 +240022,25 @@ var init_batchPolishAssetsPrompt = __esm({
         items: array(
           object({
             assetsId: number2(),
-            type: string2(),
+            type: _enum2(["role", "scene", "tool"]),
             name: string2(),
             describe: string2()
           })
         ),
         projectId: number2(),
         concurrentCount: number2().int().min(1).optional(),
-        otherTextPrompt: string2()
+        otherTextPrompt: string2().optional()
       }),
       async (req, res) => {
-        const { projectId, items, concurrentCount, otherTextPrompt } = req.body;
+        const { projectId, items, concurrentCount, otherTextPrompt = "" } = req.body;
         const project = await utils_default.db("o_project").where("id", projectId).select("artStyle", "type", "intro").first();
         if (!project) return res.status(500).send(success3({ message: "\u9879\u76EE\u4E3A\u7A7A" }));
         const assetsIds = items.map((item) => item.assetsId);
-        const assetsDataList = await utils_default.db("o_assets").whereIn("id", assetsIds).select("id", "assetsId");
+        const assetsDataList = await utils_default.db("o_assets").where({ projectId }).whereIn("id", assetsIds).select("id", "assetsId");
         if (!assetsDataList || assetsDataList.length === 0) return res.status(500).send(error50("\u8D44\u4EA7\u4E0D\u5B58\u5728"));
         const assetsDataMap = new Map(assetsDataList.map((a) => [a.id, a]));
-        await utils_default.db("o_assets").whereIn("id", assetsIds).update({ promptState: "\u751F\u6210\u4E2D" });
+        if (assetsIds.some((id) => !assetsDataMap.has(id))) return res.status(400).send(error50("\u8D44\u4EA7\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE"));
+        await utils_default.db("o_assets").whereIn("id", assetsIds).update({ promptState: "\u751F\u6210\u4E2D", promptErrorReason: null });
         const getTypeConfig = (isDerivative) => ({
           role: {
             promptKey: "role-polish",
@@ -240074,13 +240075,13 @@ var init_batchPolishAssetsPrompt = __esm({
             const typeConfig = getTypeConfig(!!assetData.assetsId);
             const config3 = typeConfig[item.type];
             if (!config3) return;
-            const visualManual = await utils_default.getArtPrompt(project.artStyle, "art_skills", config3.visualManual);
-            if (!visualManual) {
-              await utils_default.db("o_assets").where("id", item.assetsId).update({ promptState: "\u751F\u6210\u5931\u8D25", promptErrorReason: "\u89C6\u89C9\u624B\u518C\u672A\u5B9A\u4E49" });
-              return;
-            }
-            const systemPrompt = buildAssetPromptSystemPrompt(visualManual, config3.assetType, otherTextPrompt);
             try {
+              const visualManual = await utils_default.getArtPrompt(project.artStyle, "art_skills", config3.visualManual);
+              if (!visualManual) {
+                await utils_default.db("o_assets").where("id", item.assetsId).update({ promptState: "\u751F\u6210\u5931\u8D25", promptErrorReason: "\u89C6\u89C9\u624B\u518C\u672A\u5B9A\u4E49" });
+                return;
+              }
+              const systemPrompt = buildAssetPromptSystemPrompt(visualManual, config3.assetType, otherTextPrompt);
               const { _output } = await utils_default.Ai.Text("universalAi").invoke({
                 system: systemPrompt,
                 messages: [
@@ -240090,18 +240091,15 @@ var init_batchPolishAssetsPrompt = __esm({
                   }
                 ]
               });
-              if (!_output) {
-                await utils_default.db("o_assets").where("id", item.assetsId).update({ promptState: "\u751F\u6210\u5931\u8D25" });
-                return;
-              }
-              await utils_default.db("o_assets").where("id", item.assetsId).update({ prompt: _output, promptState: "\u5DF2\u5B8C\u6210" });
+              if (typeof _output !== "string" || !_output.trim()) throw new Error("\u6A21\u578B\u8FD4\u56DE\u4E86\u7A7A\u63D0\u793A\u8BCD");
+              await utils_default.db("o_assets").where("id", item.assetsId).update({ prompt: _output.trim(), promptState: "\u5DF2\u5B8C\u6210", promptErrorReason: null });
             } catch (e) {
-              await utils_default.db("o_assets").where("id", item.assetsId).update({ promptState: "\u5931\u8D25", promptErrorReason: utils_default.error(e).message });
+              await utils_default.db("o_assets").where("id", item.assetsId).update({ promptState: "\u751F\u6210\u5931\u8D25", promptErrorReason: utils_default.error(e).message });
             }
           })
         );
         Promise.all(tasks).catch((err) => {
-          res.status(500).send(error50(err));
+          console.error("[batchPolishAssetsPrompt] \u540E\u53F0\u751F\u6210\u5931\u8D25", err);
         });
         return res.status(200).send(success3({ total: items.length }));
       }
@@ -240254,13 +240252,13 @@ var init_generateAssets = __esm({
           referenceList: references,
           size: resolution,
           // A standard four-column board is wide; Qwen renders each source panel portrait internally.
-          aspectRatio: isQwenFourView ? "2:3" : type === "tool" ? "1:1" : "16:9"
+          aspectRatio: isQwenFourView ? "2:3" : type === "tool" || type === "role" ? "1:1" : "16:9"
         }, { taskClass: cfg.taskClass, describe: describe4, projectId, relatedObjects: JSON.stringify(relatedObjects) });
         await aiImage.save(imagePath);
         const metadata = await (0, import_sharp6.default)(await utils_default.oss.getFile(imagePath)).metadata();
         const actualResolution = metadata.width && metadata.height ? `${metadata.width}x${metadata.height}` : resolution;
-        if (type === "role" && (!(metadata.width && metadata.height) || metadata.width / metadata.height < 1.7)) {
-          throw new Error("\u89D2\u8272\u56DB\u680F\u753B\u5E03\u6BD4\u4F8B\u5F02\u5E38\uFF1A\u672A\u5F97\u5230\u6A2A\u5411\u8BBE\u5B9A\u56FE\uFF1B\u8BF7\u68C0\u67E5\u56DB\u89C6\u56FE\u8F93\u51FA\uFF0C\u4E0D\u5199\u5165\u89D2\u8272\u53C2\u8003\u56FE");
+        if (type === "role" && (!(metadata.width && metadata.height) || metadata.width / metadata.height < (isQwenFourView ? 1.7 : 0.95))) {
+          throw new Error("\u89D2\u8272\u8BBE\u5B9A\u56FE\u753B\u5E03\u6BD4\u4F8B\u5F02\u5E38\uFF0C\u65E0\u6CD5\u521B\u5EFA\u4EBA\u7269\u53C2\u8003\u56FE");
         }
         const roleReferences = type === "role" ? await ensureRoleReferenceMedia(imagePath, name28) : [];
         const imageData = await utils_default.db("o_image").where("id", imageId).select("*").first();

@@ -16,16 +16,16 @@ test('Qwen four-view provider is asset-driven rather than hardcoded to the sampl
   assert.match(vendor, /loraName/);
 });
 
-test('character prompt and code use the same four canonical positions', () => {
+test('character prompt and code use the same front and back positions', () => {
   const skill = read('data/skills/art_skills/realistic_3d_anime/art_prompt/art_character.md');
   const code = read('src/utils/assetPrompt.ts');
-  assert.match(skill, /脸部特写/);
+  assert.doesNotMatch(skill, /四栏|90°左侧面/);
   assert.match(skill, /正面全身/);
-  assert.match(skill, /90°左侧面全身/);
-  assert.match(skill, /正后方全身/);
-  assert.match(code, /head-and-shoulders portrait/);
+
+  assert.match(skill, /背面全身/);
+  assert.match(code, /exactly two panels/);
   assert.match(code, /full-body front view/);
-  assert.match(code, /full-body 90-degree side view/);
+
   assert.match(code, /full-body back view/);
 });
 

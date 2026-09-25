@@ -65,8 +65,8 @@ ${label}描述：${describe}`;
 }
 
 const roleGenerationLayout = `CHARACTER TURNAROUND SHEET, ONE SAME CHARACTER, exactly two panels in one horizontal row.
-Panel 1: full-body front view.
-Panel 2: full-body back view.
+Panel 1: full-body front view. ONE figure centered in the LEFT HALF, face and chest facing the viewer.
+Panel 2: full-body back view. ONE figure centered in the RIGHT HALF, back of head and back facing the viewer. Both figures fill their half vertically at equal scale, feet aligned.
 Both panels must show the entire body from the top of the head to the soles of the feet, with generous margin above the head and below the feet. Keep exactly the same identity, hairstyle, body proportions, outfit, colors and accessories in both panels. Neutral standing pose, orthographic or weak-perspective design view, plain clean background and even studio lighting. No cropped head, no cropped feet, no extra people, no duplicate body parts, no text, no labels, no watermark.`;
 
 /**

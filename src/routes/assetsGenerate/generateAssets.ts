@@ -70,15 +70,15 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
     await aiImage.run({
       prompt: userPrompt, referenceList: references, size: resolution,
       // A standard four-column board is wide; Qwen renders each source panel portrait internally.
-      aspectRatio: isQwenFourView ? "2:3" : type === "tool" ? "1:1" : "16:9",
+      aspectRatio: isQwenFourView ? "2:3" : type === "tool" || type === "role" ? "1:1" : "16:9",
     }, { taskClass: cfg.taskClass, describe, projectId, relatedObjects: JSON.stringify(relatedObjects) });
     await aiImage.save(imagePath);
     const metadata = await sharp(await u.oss.getFile(imagePath)).metadata();
     const actualResolution = metadata.width && metadata.height ? `${metadata.width}x${metadata.height}` : resolution;
     // A model reporting success is NOT a semantic quality review. Only derive stable reference crops
     // for a four-column role board, and never mark face identity independently verified here.
-    if (type === "role" && (!(metadata.width && metadata.height) || metadata.width / metadata.height < 1.7)) {
-      throw new Error("角色四栏画布比例异常：未得到横向设定图；请检查四视图输出，不写入角色参考图");
+    if (type === "role" && (!(metadata.width && metadata.height) || metadata.width / metadata.height < (isQwenFourView ? 1.7 : 0.95))) {
+      throw new Error("角色设定图画布比例异常，无法创建人物参考图");
     }
     const roleReferences = type === "role" ? await ensureRoleReferenceMedia(imagePath, name) : [];
     const imageData = await u.db("o_image").where("id", imageId).select("*").first();

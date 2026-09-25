@@ -103,7 +103,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
             prompt: userPrompt,
             referenceList: item.base64 ? [{ base64: item.base64, type: "image" }] : [],
             size: resolution,
-            aspectRatio: "16:9",
+            aspectRatio: item.type === "role" ? "1:1" : "16:9",
           },
           {
             taskClass: cfg.taskClass,
