@@ -59,6 +59,7 @@ export function translationInstruction(language: string) {
 将所有人物对白、独白和旁白翻译成该地区自然地道的目标语言，并明确标注 spoken language 为 ${language}；口型与目标语言同步。
 保持原提示词的章节名称、结构和视觉指令语言（原来是英文就仍用英文）。如使用 <d>[Chinese] 台词</d>，仅把发声台词及其语言标记改为目标语言；不要翻译明确标注为可见场景文字的内容。
 保持剧情、角色姓名与身份、场景、服装、镜头顺序、视觉描述、参考图编号和素材标记不变；不能将角色或场景搬到目标国家。
+视觉描述保留以全局内容表现约束为前提：旧文的红色血液、红色伤口及血色环境须改为遮挡包扎、必要的少量绿色或黑色血迹、自然环境色，并同步修正反射光；已有绿色或黑色沿用，不得在翻译中还原成红色。此例外不改变剧情因果、对白含义、正常红衣红灯或参考图编号。
 原文无对白的镜头保持无对白，不得添加台词。不要把原语言对白或中文译文混入发声内容。声音参考只用于音色，不得复制其原语言台词。
 保留时长和时间轴，在给定时长内自然表达，不可加速塞入过长台词、删去剧情信息或截断对白；如果无法容纳，返回以 LANGUAGE_TIMING_REVIEW: 开头的简短原因，不要生成不完整提示词。`;
 }
@@ -71,6 +72,7 @@ export async function generateLanguageVariants(
   languages: string[],
   generateBase: () => Promise<string>,
   translate: (system: string, source: string) => Promise<string>,
+  regenerate = false,
 ) {
   let pending = pendingVariants.get(db);
   if (!pending) {
@@ -78,7 +80,7 @@ export async function generateLanguageVariants(
     pendingVariants.set(db, pending);
   }
   const previous = pending.get(trackId) || Promise.resolve();
-  const next = previous.catch(() => {}).then(() => generateMissingVariants(db, trackId, languages, generateBase, translate));
+  const next = previous.catch(() => {}).then(() => generateMissingVariants(db, trackId, languages, generateBase, translate, regenerate));
   pending.set(trackId, next);
   try {
     return await next;
@@ -87,19 +89,20 @@ export async function generateLanguageVariants(
   }
 }
 
-// Called by both prompt routes. Existing variants and the original prompt are preserved.
+// Batch fill preserves existing versions; explicit regeneration refreshes requested languages only.
 async function generateMissingVariants(
   db: Knex,
   trackId: number,
   languages: string[],
   generateBase: () => Promise<string>,
   translate: (system: string, source: string) => Promise<string>,
+  regenerate: boolean,
 ) {
   dialogueLanguagesSchema.parse(languages);
   const track = await db("o_videoTrack").where({ id: trackId }).first();
   if (!track) throw new Error("视频段不存在");
   const existing = await db("o_videoPromptVariant").where({ trackId });
-  const missing = languages.filter((language) => !existing.some((row) => row.language === language && row.prompt?.trim()));
+  const missing = languages.filter((language) => regenerate || !existing.some((row) => row.language === language && row.prompt?.trim() && row.state === "已完成"));
   if (!missing.length) return existing;
   for (const language of missing) {
     await db("o_videoPromptVariant")
@@ -109,10 +112,10 @@ async function generateMissingVariants(
   }
   let base = track.prompt;
   try {
-    if (!base?.trim()) {
+    if (regenerate || !base?.trim()) {
       base = await generateBase();
       if (!base?.trim()) throw new Error("原版提示词为空");
-      await db("o_videoTrack").where({ id: trackId }).update({ prompt: base });
+      if (!track.prompt?.trim()) await db("o_videoTrack").where({ id: trackId }).update({ prompt: base });
     }
   } catch (cause) {
     await db("o_videoPromptVariant")

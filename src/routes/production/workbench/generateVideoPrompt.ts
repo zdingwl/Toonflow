@@ -32,6 +32,7 @@ export default router.post(
   validateFields({
     trackId: z.number(),
     languages: dialogueLanguagesSchema.optional(),
+    regenerate: z.boolean().optional(),
     projectId: z.number(),
     info: z.array(
       z.object({
@@ -303,6 +304,7 @@ export default router.post(
             return result.text;
           },
           async (system, source) => (await u.Ai.Text("universalAi").invoke({ system, messages: [{ role: "user", content: source }] })).text,
+          req.body.regenerate === true,
         );
         const failed = variants.filter((v: any) => req.body.languages.includes(v.language) && v.state === "生成失败");
         await u

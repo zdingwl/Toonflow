@@ -19106,7 +19106,7 @@ var require_view = __commonJS({
     "use strict";
     var debug = require_src()("express:view");
     var path35 = require("node:path");
-    var fs37 = require("node:fs");
+    var fs38 = require("node:fs");
     var dirname2 = path35.dirname;
     var basename = path35.basename;
     var extname = path35.extname;
@@ -19186,7 +19186,7 @@ var require_view = __commonJS({
     function tryStat(path36) {
       debug('stat "%s"', path36);
       try {
-        return fs37.statSync(path36);
+        return fs38.statSync(path36);
       } catch (e) {
         return void 0;
       }
@@ -22827,7 +22827,7 @@ var require_send = __commonJS({
     var escapeHtml = require_escape_html();
     var etag = require_etag();
     var fresh = require_fresh();
-    var fs37 = require("fs");
+    var fs38 = require("fs");
     var mime = require_mime_types();
     var ms = require_ms();
     var onFinished = require_on_finished();
@@ -23109,7 +23109,7 @@ var require_send = __commonJS({
       var i = 0;
       var self2 = this;
       debug('stat "%s"', path36);
-      fs37.stat(path36, function onstat(err, stat) {
+      fs38.stat(path36, function onstat(err, stat) {
         var pathEndsWithSep = path36[path36.length - 1] === sep;
         if (err && err.code === "ENOENT" && !extname(path36) && !pathEndsWithSep) {
           return next(err);
@@ -23126,7 +23126,7 @@ var require_send = __commonJS({
         }
         var p3 = path36 + "." + self2._extensions[i++];
         debug('stat "%s"', p3);
-        fs37.stat(p3, function(err2, stat) {
+        fs38.stat(p3, function(err2, stat) {
           if (err2) return next(err2);
           if (stat.isDirectory()) return next();
           self2.emit("file", p3, stat);
@@ -23144,7 +23144,7 @@ var require_send = __commonJS({
         }
         var p3 = join2(path36, self2._index[i]);
         debug('stat "%s"', p3);
-        fs37.stat(p3, function(err2, stat) {
+        fs38.stat(p3, function(err2, stat) {
           if (err2) return next(err2);
           if (stat.isDirectory()) return next();
           self2.emit("file", p3, stat);
@@ -23156,7 +23156,7 @@ var require_send = __commonJS({
     SendStream.prototype.stream = function stream4(path36, options) {
       var self2 = this;
       var res = this.res;
-      var stream5 = fs37.createReadStream(path36, options);
+      var stream5 = fs38.createReadStream(path36, options);
       this.emit("stream", stream5);
       stream5.pipe(res);
       function cleanup() {
@@ -49337,8 +49337,8 @@ var require_node2 = __commonJS({
           }
           break;
         case "FILE":
-          var fs37 = require("fs");
-          stream5 = new fs37.SyncWriteStream(fd2, { autoClose: false });
+          var fs38 = require("fs");
+          stream5 = new fs38.SyncWriteStream(fd2, { autoClose: false });
           stream5._type = "fs";
           break;
         case "PIPE":
@@ -53410,8 +53410,8 @@ var require_utils6 = __commonJS({
     exports2.array = array4;
     var errno = require_errno();
     exports2.errno = errno;
-    var fs37 = require_fs();
-    exports2.fs = fs37;
+    var fs38 = require_fs();
+    exports2.fs = fs38;
     var path35 = require_path();
     exports2.path = path35;
     var pattern = require_pattern();
@@ -53595,12 +53595,12 @@ var require_fs2 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createFileSystemAdapter = exports2.FILE_SYSTEM_ADAPTER = void 0;
-    var fs37 = require("fs");
+    var fs38 = require("fs");
     exports2.FILE_SYSTEM_ADAPTER = {
-      lstat: fs37.lstat,
-      stat: fs37.stat,
-      lstatSync: fs37.lstatSync,
-      statSync: fs37.statSync
+      lstat: fs38.lstat,
+      stat: fs38.stat,
+      lstatSync: fs38.lstatSync,
+      statSync: fs38.statSync
     };
     function createFileSystemAdapter(fsMethods) {
       if (fsMethods === void 0) {
@@ -53617,12 +53617,12 @@ var require_settings = __commonJS({
   "node_modules/@nodelib/fs.stat/out/settings.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var fs37 = require_fs2();
+    var fs38 = require_fs2();
     var Settings = class {
       constructor(_options = {}) {
         this._options = _options;
         this.followSymbolicLink = this._getValue(this._options.followSymbolicLink, true);
-        this.fs = fs37.createFileSystemAdapter(this._options.fs);
+        this.fs = fs38.createFileSystemAdapter(this._options.fs);
         this.markSymbolicLink = this._getValue(this._options.markSymbolicLink, false);
         this.throwErrorOnBrokenSymbolicLink = this._getValue(this._options.throwErrorOnBrokenSymbolicLink, true);
       }
@@ -53779,8 +53779,8 @@ var require_utils7 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.fs = void 0;
-    var fs37 = require_fs3();
-    exports2.fs = fs37;
+    var fs38 = require_fs3();
+    exports2.fs = fs38;
   }
 });
 
@@ -53975,14 +53975,14 @@ var require_fs4 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createFileSystemAdapter = exports2.FILE_SYSTEM_ADAPTER = void 0;
-    var fs37 = require("fs");
+    var fs38 = require("fs");
     exports2.FILE_SYSTEM_ADAPTER = {
-      lstat: fs37.lstat,
-      stat: fs37.stat,
-      lstatSync: fs37.lstatSync,
-      statSync: fs37.statSync,
-      readdir: fs37.readdir,
-      readdirSync: fs37.readdirSync
+      lstat: fs38.lstat,
+      stat: fs38.stat,
+      lstatSync: fs38.lstatSync,
+      statSync: fs38.statSync,
+      readdir: fs38.readdir,
+      readdirSync: fs38.readdirSync
     };
     function createFileSystemAdapter(fsMethods) {
       if (fsMethods === void 0) {
@@ -54001,12 +54001,12 @@ var require_settings2 = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     var path35 = require("path");
     var fsStat = require_out();
-    var fs37 = require_fs4();
+    var fs38 = require_fs4();
     var Settings = class {
       constructor(_options = {}) {
         this._options = _options;
         this.followSymbolicLinks = this._getValue(this._options.followSymbolicLinks, false);
-        this.fs = fs37.createFileSystemAdapter(this._options.fs);
+        this.fs = fs38.createFileSystemAdapter(this._options.fs);
         this.pathSegmentSeparator = this._getValue(this._options.pathSegmentSeparator, path35.sep);
         this.stats = this._getValue(this._options.stats, false);
         this.throwErrorOnBrokenSymbolicLink = this._getValue(this._options.throwErrorOnBrokenSymbolicLink, true);
@@ -55387,16 +55387,16 @@ var require_settings4 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DEFAULT_FILE_SYSTEM_ADAPTER = void 0;
-    var fs37 = require("fs");
+    var fs38 = require("fs");
     var os = require("os");
     var CPU_COUNT = Math.max(os.cpus().length, 1);
     exports2.DEFAULT_FILE_SYSTEM_ADAPTER = {
-      lstat: fs37.lstat,
-      lstatSync: fs37.lstatSync,
-      stat: fs37.stat,
-      statSync: fs37.statSync,
-      readdir: fs37.readdir,
-      readdirSync: fs37.readdirSync
+      lstat: fs38.lstat,
+      lstatSync: fs38.lstatSync,
+      stat: fs38.stat,
+      statSync: fs38.statSync,
+      readdir: fs38.readdir,
+      readdirSync: fs38.readdirSync
     };
     var Settings = class {
       constructor(_options = {}) {
@@ -60525,26 +60525,26 @@ var require_flatten = __commonJS({
 var require_fs5 = __commonJS({
   "node_modules/knex/lib/migrations/util/fs.js"(exports2, module2) {
     "use strict";
-    var fs37 = require("fs");
+    var fs38 = require("fs");
     var flatten = require_flatten();
     var os = require("os");
     var path35 = require("path");
     var { promisify: promisify2 } = require("util");
-    var stat = promisify2(fs37.stat);
-    var readFile4 = promisify2(fs37.readFile);
-    var writeFile3 = promisify2(fs37.writeFile);
-    var readdir = promisify2(fs37.readdir);
-    var mkdir = promisify2(fs37.mkdir);
+    var stat = promisify2(fs38.stat);
+    var readFile4 = promisify2(fs38.readFile);
+    var writeFile3 = promisify2(fs38.writeFile);
+    var readdir = promisify2(fs38.readdir);
+    var mkdir = promisify2(fs38.mkdir);
     function existsSync4(path36) {
       try {
-        fs37.accessSync(path36);
+        fs38.accessSync(path36);
         return true;
       } catch (e) {
         return false;
       }
     }
     function createTemp() {
-      return promisify2(fs37.mkdtemp)(`${os.tmpdir()}${path35.sep}`);
+      return promisify2(fs38.mkdtemp)(`${os.tmpdir()}${path35.sep}`);
     }
     function ensureDirectoryExists(dir) {
       return stat(dir).catch(() => mkdir(dir, { recursive: true }));
@@ -70643,15 +70643,15 @@ var require_pg_connection_string = __commonJS({
       if (config3.sslcert || config3.sslkey || config3.sslrootcert || config3.sslmode) {
         config3.ssl = {};
       }
-      const fs37 = config3.sslcert || config3.sslkey || config3.sslrootcert ? require("fs") : null;
+      const fs38 = config3.sslcert || config3.sslkey || config3.sslrootcert ? require("fs") : null;
       if (config3.sslcert) {
-        config3.ssl.cert = fs37.readFileSync(config3.sslcert).toString();
+        config3.ssl.cert = fs38.readFileSync(config3.sslcert).toString();
       }
       if (config3.sslkey) {
-        config3.ssl.key = fs37.readFileSync(config3.sslkey).toString();
+        config3.ssl.key = fs38.readFileSync(config3.sslkey).toString();
       }
       if (config3.sslrootcert) {
-        config3.ssl.ca = fs37.readFileSync(config3.sslrootcert).toString();
+        config3.ssl.ca = fs38.readFileSync(config3.sslrootcert).toString();
       }
       switch (config3.sslmode) {
         case "disable": {
@@ -120444,10 +120444,11 @@ function translationInstruction(language) {
 \u5C06\u6240\u6709\u4EBA\u7269\u5BF9\u767D\u3001\u72EC\u767D\u548C\u65C1\u767D\u7FFB\u8BD1\u6210\u8BE5\u5730\u533A\u81EA\u7136\u5730\u9053\u7684\u76EE\u6807\u8BED\u8A00\uFF0C\u5E76\u660E\u786E\u6807\u6CE8 spoken language \u4E3A ${language}\uFF1B\u53E3\u578B\u4E0E\u76EE\u6807\u8BED\u8A00\u540C\u6B65\u3002
 \u4FDD\u6301\u539F\u63D0\u793A\u8BCD\u7684\u7AE0\u8282\u540D\u79F0\u3001\u7ED3\u6784\u548C\u89C6\u89C9\u6307\u4EE4\u8BED\u8A00\uFF08\u539F\u6765\u662F\u82F1\u6587\u5C31\u4ECD\u7528\u82F1\u6587\uFF09\u3002\u5982\u4F7F\u7528 <d>[Chinese] \u53F0\u8BCD</d>\uFF0C\u4EC5\u628A\u53D1\u58F0\u53F0\u8BCD\u53CA\u5176\u8BED\u8A00\u6807\u8BB0\u6539\u4E3A\u76EE\u6807\u8BED\u8A00\uFF1B\u4E0D\u8981\u7FFB\u8BD1\u660E\u786E\u6807\u6CE8\u4E3A\u53EF\u89C1\u573A\u666F\u6587\u5B57\u7684\u5185\u5BB9\u3002
 \u4FDD\u6301\u5267\u60C5\u3001\u89D2\u8272\u59D3\u540D\u4E0E\u8EAB\u4EFD\u3001\u573A\u666F\u3001\u670D\u88C5\u3001\u955C\u5934\u987A\u5E8F\u3001\u89C6\u89C9\u63CF\u8FF0\u3001\u53C2\u8003\u56FE\u7F16\u53F7\u548C\u7D20\u6750\u6807\u8BB0\u4E0D\u53D8\uFF1B\u4E0D\u80FD\u5C06\u89D2\u8272\u6216\u573A\u666F\u642C\u5230\u76EE\u6807\u56FD\u5BB6\u3002
+\u89C6\u89C9\u63CF\u8FF0\u4FDD\u7559\u4EE5\u5168\u5C40\u5185\u5BB9\u8868\u73B0\u7EA6\u675F\u4E3A\u524D\u63D0\uFF1A\u65E7\u6587\u7684\u7EA2\u8272\u8840\u6DB2\u3001\u7EA2\u8272\u4F24\u53E3\u53CA\u8840\u8272\u73AF\u5883\u987B\u6539\u4E3A\u906E\u6321\u5305\u624E\u3001\u5FC5\u8981\u7684\u5C11\u91CF\u7EFF\u8272\u6216\u9ED1\u8272\u8840\u8FF9\u3001\u81EA\u7136\u73AF\u5883\u8272\uFF0C\u5E76\u540C\u6B65\u4FEE\u6B63\u53CD\u5C04\u5149\uFF1B\u5DF2\u6709\u7EFF\u8272\u6216\u9ED1\u8272\u6CBF\u7528\uFF0C\u4E0D\u5F97\u5728\u7FFB\u8BD1\u4E2D\u8FD8\u539F\u6210\u7EA2\u8272\u3002\u6B64\u4F8B\u5916\u4E0D\u6539\u53D8\u5267\u60C5\u56E0\u679C\u3001\u5BF9\u767D\u542B\u4E49\u3001\u6B63\u5E38\u7EA2\u8863\u7EA2\u706F\u6216\u53C2\u8003\u56FE\u7F16\u53F7\u3002
 \u539F\u6587\u65E0\u5BF9\u767D\u7684\u955C\u5934\u4FDD\u6301\u65E0\u5BF9\u767D\uFF0C\u4E0D\u5F97\u6DFB\u52A0\u53F0\u8BCD\u3002\u4E0D\u8981\u628A\u539F\u8BED\u8A00\u5BF9\u767D\u6216\u4E2D\u6587\u8BD1\u6587\u6DF7\u5165\u53D1\u58F0\u5185\u5BB9\u3002\u58F0\u97F3\u53C2\u8003\u53EA\u7528\u4E8E\u97F3\u8272\uFF0C\u4E0D\u5F97\u590D\u5236\u5176\u539F\u8BED\u8A00\u53F0\u8BCD\u3002
 \u4FDD\u7559\u65F6\u957F\u548C\u65F6\u95F4\u8F74\uFF0C\u5728\u7ED9\u5B9A\u65F6\u957F\u5185\u81EA\u7136\u8868\u8FBE\uFF0C\u4E0D\u53EF\u52A0\u901F\u585E\u5165\u8FC7\u957F\u53F0\u8BCD\u3001\u5220\u53BB\u5267\u60C5\u4FE1\u606F\u6216\u622A\u65AD\u5BF9\u767D\uFF1B\u5982\u679C\u65E0\u6CD5\u5BB9\u7EB3\uFF0C\u8FD4\u56DE\u4EE5 LANGUAGE_TIMING_REVIEW: \u5F00\u5934\u7684\u7B80\u77ED\u539F\u56E0\uFF0C\u4E0D\u8981\u751F\u6210\u4E0D\u5B8C\u6574\u63D0\u793A\u8BCD\u3002`;
 }
-async function generateLanguageVariants(db2, trackId, languages, generateBase, translate) {
+async function generateLanguageVariants(db2, trackId, languages, generateBase, translate, regenerate = false) {
   let pending = pendingVariants.get(db2);
   if (!pending) {
     pending = /* @__PURE__ */ new Map();
@@ -120455,7 +120456,7 @@ async function generateLanguageVariants(db2, trackId, languages, generateBase, t
   }
   const previous = pending.get(trackId) || Promise.resolve();
   const next = previous.catch(() => {
-  }).then(() => generateMissingVariants(db2, trackId, languages, generateBase, translate));
+  }).then(() => generateMissingVariants(db2, trackId, languages, generateBase, translate, regenerate));
   pending.set(trackId, next);
   try {
     return await next;
@@ -120463,22 +120464,22 @@ async function generateLanguageVariants(db2, trackId, languages, generateBase, t
     if (pending.get(trackId) === next) pending.delete(trackId);
   }
 }
-async function generateMissingVariants(db2, trackId, languages, generateBase, translate) {
+async function generateMissingVariants(db2, trackId, languages, generateBase, translate, regenerate) {
   dialogueLanguagesSchema.parse(languages);
   const track = await db2("o_videoTrack").where({ id: trackId }).first();
   if (!track) throw new Error("\u89C6\u9891\u6BB5\u4E0D\u5B58\u5728");
   const existing = await db2("o_videoPromptVariant").where({ trackId });
-  const missing = languages.filter((language) => !existing.some((row) => row.language === language && row.prompt?.trim()));
+  const missing = languages.filter((language) => regenerate || !existing.some((row) => row.language === language && row.prompt?.trim() && row.state === "\u5DF2\u5B8C\u6210"));
   if (!missing.length) return existing;
   for (const language of missing) {
     await db2("o_videoPromptVariant").insert({ trackId, language, state: "\u751F\u6210\u4E2D", reason: null }).onConflict(["trackId", "language"]).merge({ state: "\u751F\u6210\u4E2D", reason: null });
   }
   let base = track.prompt;
   try {
-    if (!base?.trim()) {
+    if (regenerate || !base?.trim()) {
       base = await generateBase();
       if (!base?.trim()) throw new Error("\u539F\u7248\u63D0\u793A\u8BCD\u4E3A\u7A7A");
-      await db2("o_videoTrack").where({ id: trackId }).update({ prompt: base });
+      if (!track.prompt?.trim()) await db2("o_videoTrack").where({ id: trackId }).update({ prompt: base });
     }
   } catch (cause) {
     await db2("o_videoPromptVariant").where({ trackId }).whereIn("language", missing).update({ state: "\u751F\u6210\u5931\u8D25", reason: cause.message });
@@ -130841,8 +130842,8 @@ var require_lib6 = __commonJS({
     handlebars.print = printer.print;
     module2.exports = handlebars;
     function extension(module3, filename) {
-      var fs37 = require("fs");
-      var templateString = fs37.readFileSync(filename, "utf8");
+      var fs38 = require("fs");
+      var templateString = fs38.readFileSync(filename, "utf8");
       module3.exports = handlebars.compile(templateString);
     }
     if (typeof require !== "undefined" && require.extensions) {
@@ -141008,7 +141009,7 @@ var require_form_data = __commonJS({
     var http4 = require("http");
     var https2 = require("https");
     var parseUrl2 = require("url").parse;
-    var fs37 = require("fs");
+    var fs38 = require("fs");
     var Stream = require("stream").Stream;
     var crypto7 = require("crypto");
     var mime = require_mime_types3();
@@ -141075,7 +141076,7 @@ var require_form_data = __commonJS({
         if (value.end != void 0 && value.end != Infinity && value.start != void 0) {
           callback(null, value.end + 1 - (value.start ? value.start : 0));
         } else {
-          fs37.stat(value.path, function(err, stat) {
+          fs38.stat(value.path, function(err, stat) {
             if (err) {
               callback(err);
               return;
@@ -226039,7 +226040,7 @@ var require_auth_config = __commonJS({
       writeAuthConfig: () => writeAuthConfig
     });
     module2.exports = __toCommonJS2(auth_config_exports);
-    var fs37 = __toESM2(require("fs"));
+    var fs38 = __toESM2(require("fs"));
     var path35 = __toESM2(require("path"));
     var import_token_util = require_token_util();
     function getAuthConfigPath() {
@@ -226054,10 +226055,10 @@ var require_auth_config = __commonJS({
     function readAuthConfig() {
       try {
         const authPath = getAuthConfigPath();
-        if (!fs37.existsSync(authPath)) {
+        if (!fs38.existsSync(authPath)) {
           return null;
         }
-        const content = fs37.readFileSync(authPath, "utf8");
+        const content = fs38.readFileSync(authPath, "utf8");
         if (!content) {
           return null;
         }
@@ -226069,10 +226070,10 @@ var require_auth_config = __commonJS({
     function writeAuthConfig(config3) {
       const authPath = getAuthConfigPath();
       const authDir = path35.dirname(authPath);
-      if (!fs37.existsSync(authDir)) {
-        fs37.mkdirSync(authDir, { mode: 504, recursive: true });
+      if (!fs38.existsSync(authDir)) {
+        fs38.mkdirSync(authDir, { mode: 504, recursive: true });
       }
-      fs37.writeFileSync(authPath, JSON.stringify(config3, null, 2), { mode: 384 });
+      fs38.writeFileSync(authPath, JSON.stringify(config3, null, 2), { mode: 384 });
     }
     function isValidAccessToken(authConfig) {
       if (!authConfig.token)
@@ -226219,7 +226220,7 @@ var require_token_util = __commonJS({
     });
     module2.exports = __toCommonJS2(token_util_exports);
     var path35 = __toESM2(require("path"));
-    var fs37 = __toESM2(require("fs"));
+    var fs38 = __toESM2(require("fs"));
     var import_token_error = require_token_error();
     var import_token_io = require_token_io();
     var import_auth_config = require_auth_config();
@@ -226304,12 +226305,12 @@ var require_token_util = __commonJS({
         );
       }
       const prjPath = path35.join(dir, ".vercel", "project.json");
-      if (!fs37.existsSync(prjPath)) {
+      if (!fs38.existsSync(prjPath)) {
         throw new import_token_error.VercelOidcTokenError(
           "project.json not found, have you linked your project with `vc link?`"
         );
       }
-      const prj = JSON.parse(fs37.readFileSync(prjPath, "utf8"));
+      const prj = JSON.parse(fs38.readFileSync(prjPath, "utf8"));
       if (typeof prj.projectId !== "string" && typeof prj.orgId !== "string") {
         throw new TypeError(
           "Expected a string-valued projectId property. Try running `vc link` to re-link your project."
@@ -226326,9 +226327,9 @@ var require_token_util = __commonJS({
       }
       const tokenPath = path35.join(dir, "com.vercel.token", `${projectId}.json`);
       const tokenJson = JSON.stringify(token);
-      fs37.mkdirSync(path35.dirname(tokenPath), { mode: 504, recursive: true });
-      fs37.writeFileSync(tokenPath, tokenJson);
-      fs37.chmodSync(tokenPath, 432);
+      fs38.mkdirSync(path35.dirname(tokenPath), { mode: 504, recursive: true });
+      fs38.writeFileSync(tokenPath, tokenJson);
+      fs38.chmodSync(tokenPath, 432);
       return;
     }
     function loadToken(projectId) {
@@ -226339,10 +226340,10 @@ var require_token_util = __commonJS({
         );
       }
       const tokenPath = path35.join(dir, "com.vercel.token", `${projectId}.json`);
-      if (!fs37.existsSync(tokenPath)) {
+      if (!fs38.existsSync(tokenPath)) {
         return null;
       }
-      const token = JSON.parse(fs37.readFileSync(tokenPath, "utf8"));
+      const token = JSON.parse(fs38.readFileSync(tokenPath, "utf8"));
       assertVercelOidcTokenResponse(token);
       return token;
     }
@@ -237318,6 +237319,25 @@ var init_dist23 = __esm({
   }
 });
 
+// src/utils/contentConstraints.ts
+function withContentConstraints(system) {
+  const existing = typeof system === "string" ? [{ role: "system", content: system }] : system ? Array.isArray(system) ? system : [system] : [];
+  return [...existing, { role: "system", content: import_node_fs2.default.readFileSync(getPath_default(["skills", "global_content_constraints.md"]), "utf8") }];
+}
+function withNonGraphicVisuals(prompt) {
+  return `${prompt}
+
+Visual content constraint: Prefer non-graphic, bloodless injury depiction using clothing or clean bandages covering the affected area, restrained pain reactions, protective gestures, silhouette, occlusion or a cutaway. Preserve story consequences, character identity, timing and reference slots. Never depict red blood or red wounds, including bright red, dark red, crimson or scarlet. Only when blood is necessary to the story, allow a small amount of GREEN or BLACK blood; preserve an explicitly established green or black choice, otherwise use muted dark green, consistently across the continuous scene. Never leave blood color unspecified or mix in red. Keep injuries covered; any necessary surface traces must be green or black. Avoid blood spray, blood mist, pools, large stained areas, open-wound close-ups, exposed tissue or gore. If a healed mark is necessary, use a subtle muted gray-brown closed scar. Preserve red clothing, lights, props and other non-injury colors. Apply this constraint to conflicting details in the supplied prompt and references.`;
+}
+var import_node_fs2;
+var init_contentConstraints = __esm({
+  "src/utils/contentConstraints.ts"() {
+    "use strict";
+    import_node_fs2 = __toESM(require("node:fs"));
+    init_getPath();
+  }
+});
+
 // src/utils/ai.ts
 async function resolveModelName(value) {
   if (AiTypeValues.includes(value)) {
@@ -237437,6 +237457,7 @@ var init_ai = __esm({
     init_axios2();
     import_sucrase2 = __toESM(require_dist5());
     init_utils3();
+    init_contentConstraints();
     AiTypeValues = [
       "scriptAgent",
       "productionAgent",
@@ -237481,6 +237502,7 @@ var init_ai = __esm({
         return generateText({
           ...input.tools && { stopWhen: stepCountIs(Object.keys(input.tools).length * 50) },
           ...input,
+          system: withContentConstraints(input.system),
           model: await this.resolveModel(),
           ...config3?.temperature && { temperature: config3.temperature },
           ...config3?.maxOutputTokens && { maxOutputTokens: config3.maxOutputTokens }
@@ -237491,6 +237513,7 @@ var init_ai = __esm({
         return streamText({
           ...input.tools && { stopWhen: stepCountIs(Object.keys(input.tools).length * 50) },
           ...input,
+          system: withContentConstraints(input.system),
           model: await this.resolveModel(extractReasoningMiddleware({ tagName: "reasoning_content", separator: "\n" })),
           ...config3?.temperature && { temperature: config3.temperature },
           ...config3?.maxOutputTokens && { maxOutputTokens: config3.maxOutputTokens }
@@ -237504,6 +237527,7 @@ var init_ai = __esm({
         this.key = key;
       }
       async run(input, taskRecord2) {
+        input = { ...input, prompt: withNonGraphicVisuals(input.prompt) };
         const modelName = await resolveModelName(this.key);
         const exec2 = async (mn) => {
           const fn = await getVendorTemplateFn("imageRequest", mn);
@@ -237531,6 +237555,7 @@ var init_ai = __esm({
         this.key = key;
       }
       async run(input, taskRecord2) {
+        input = { ...input, prompt: withNonGraphicVisuals(input.prompt) };
         const modelName = await resolveModelName(this.key);
         try {
           const exec2 = async (mn) => {
@@ -240043,7 +240068,7 @@ function needsFluxPromptTranslation(text2) {
 }
 function buildFluxPromptTranslationRequest(text2) {
   return {
-    system: `You translate and compress image-generation prompts for FLUX.1 Schnell. Return only one concise English prompt, with no explanation, Markdown, headings, quotation marks, or code fences. Preserve every concrete visual fact, character identity marker, color, outfit, hairstyle, camera view, panel position, consistency rule, and prohibition. Remove redundant quality buzzwords and repeated synonyms, but resolve no facts and invent nothing. Translate Chinese names phonetically or describe them in English so that the result contains no Chinese characters. Keep the result under 260 English words so it fits the image model context.`,
+    system: `You translate and compress image-generation prompts for FLUX.1 Schnell. Return only one concise English prompt, with no explanation, Markdown, headings, quotation marks, or code fences. Preserve concrete visual facts, identity markers, outfits, hairstyles, camera views, panel positions and reference slots. Apply global content constraints before preserving colors: adapt red blood/wounds to covered injuries or necessary small green/black traces, and blood-red environments to natural colors including their reflected light. Preserve unrelated red clothing, lights and identity features. Remove redundant quality buzzwords and repeated synonyms, but invent no story facts. Translate Chinese names phonetically or describe them in English so that the result contains no Chinese characters. Keep the result under 260 English words so it fits the image model context.`,
     user: text2.trim()
   };
 }
@@ -240086,7 +240111,7 @@ var init_assetPrompt = __esm({
 1. \u53EA\u8F93\u51FA\u6700\u7EC8\u63D0\u793A\u8BCD\u6B63\u6587\u3002\u4E0D\u8981\u8F93\u51FA Markdown \u6807\u9898\u3001\u4EE3\u7801\u5757\u3001\u8868\u683C\u3001\u5B57\u6BB5\u540D\u3001\u5206\u6790\u8FC7\u7A0B\u3001\u89E3\u91CA\u3001\u5907\u6CE8\u3001\u65B9\u6848\u6216\u201C\u63D0\u793A\u8BCD\uFF1A\u201D\u524D\u7F00\u3002
 2. \u4EE5\u8FDE\u8D2F\u3001\u660E\u786E\u7684\u4E2D\u6587\u81EA\u7136\u8BED\u8A00\u4E3A\u4E3B\uFF0C\u7528\u77ED\u8BED\u8865\u5145\u98CE\u683C\u3001\u8272\u5F69\u3001\u6750\u8D28\u3001\u5149\u5F71\u3001\u6784\u56FE\uFF1B\u82F1\u6587\u4EC5\u4FDD\u7559\u786E\u5B9E\u80FD\u63D0\u9AD8\u8BC6\u522B\u7CBE\u5EA6\u7684\u4E13\u4E1A\u8BCD\uFF0C\u4E0D\u505A\u9010\u53E5\u4E2D\u82F1\u53CC\u5199\u3002
 3. \u540C\u4E00\u4E8B\u5B9E\u53EA\u5199\u4E00\u6B21\u3002\u540C\u4E49\u7684\u98CE\u683C\u8BCD\u3001\u6750\u8D28\u8BCD\u3001\u5149\u5F71\u8BCD\u3001\u5B8C\u6574\u5165\u753B\u8981\u6C42\u3001\u4E00\u81F4\u6027\u8981\u6C42\u548C\u4EA4\u4ED8\u8FB9\u754C\u4E0D\u5F97\u53CD\u590D\u5806\u53E0\u3002\u4E0D\u8981\u4E3A\u4E86\u5F3A\u8C03\u800C\u8FDE\u7EED\u91CD\u590D\u201C3D\u6E32\u67D3/PBR/\u9AD8\u7CBE\u5EA6\u5EFA\u6A21/\u7535\u5F71\u7EA7\u5149\u5F71\u201D\u7B49\u6982\u5FF5\u3002
-4. \u4FE1\u606F\u4F18\u5148\u7EA7\uFF1A\u7528\u6237\u660E\u786E\u7ED9\u51FA\u7684\u8EAB\u4EFD/\u5916\u8C8C/\u6807\u5FD7\u6027\u7279\u5F81/\u670D\u88C5/\u72B6\u6001 > \u89C6\u89C9\u624B\u518C\u786C\u7EA6\u675F > \u98CE\u683C\u9ED8\u8BA4\u503C\u3002\u4E0D\u5F97\u8986\u76D6\u7528\u6237\u660E\u786E\u7279\u5F81\u3002
+4. \u4FE1\u606F\u4F18\u5148\u7EA7\uFF1A\u5168\u5C40\u5185\u5BB9\u8868\u73B0\u7EA6\u675F > \u539F\u6709\u8EAB\u4EFD/\u5916\u8C8C/\u6807\u5FD7\u6027\u7279\u5F81/\u670D\u88C5/\u72B6\u6001 > \u89C6\u89C9\u624B\u518C\u98CE\u683C\u7EA6\u675F > \u98CE\u683C\u9ED8\u8BA4\u503C\u3002\u8EAB\u4EFD\u4E0E\u5267\u60C5\u56E0\u679C\u4E0D\u53D8\uFF0C\u4F46\u7EA2\u8272\u8840\u6DB2\u3001\u7EA2\u8272\u4F24\u53E3\u53CA\u8840\u8272\u73AF\u5883\u5FC5\u987B\u6309\u5168\u5C40\u89C4\u5219\u6539\u7F16\uFF1B\u540C\u6B65\u4FEE\u6B63\u53CD\u5C04\u548C\u53CD\u5F39\u5149\uFF0C\u4E0D\u80FD\u4EE5\u201C\u5FE0\u5B9E\u4FDD\u7559\u989C\u8272\u201D\u6062\u590D\u7EA2\u8272\u8840\u6DB2\u3002\u975E\u4F24\u53E3\u7684\u7EA2\u8863\u3001\u7EA2\u706F\u3001\u7EA2\u77B3\u3001\u81EA\u7136\u5507\u8272\u7B49\u660E\u786E\u7279\u5F81\u4ECD\u987B\u4FDD\u7559\u3002
 5. \u4E0D\u8981\u65E0\u4F9D\u636E\u65B0\u589E\u7CBE\u786E\u6570\u5B57\u3001\u989C\u8272\u3001\u671D\u4EE3\u3001\u9970\u54C1\u3001\u75E3\u3001\u4F24\u75A4\u3001\u82B1\u7EB9\u3001\u5929\u6C14\u7B49\u4E8B\u5B9E\u3002\u5C24\u5176\u5F53\u7528\u6237\u6CA1\u6709\u63D0\u4F9B\u7CBE\u786E\u8EAB\u9AD8\u65F6\uFF0C\u4E0D\u8981\u81EA\u884C\u7F16\u9020\u5398\u7C73\u6570\u3002
 6. \u628A\u201C\u4E3B\u4F53\u5185\u5BB9\u201D\u5199\u6E05\u695A\u540E\u518D\u5199\u7F8E\u5B66\u4E0E\u6784\u56FE\uFF0C\u4E0D\u8981\u5148\u5806\u4E00\u957F\u4E32\u8D28\u91CF\u6807\u7B7E\u3002\u5BF9\u56FE\u7247\u6A21\u578B\u6765\u8BF4\uFF0C\u4E3B\u4F53\u3001\u5173\u7CFB\u3001\u4F4D\u7F6E\u3001\u89C6\u89D2\u548C\u4E00\u81F4\u6027\u9AD8\u4E8E\u6807\u7B7E\u6570\u91CF\u3002
 7. \u98CE\u683C\u3001\u9020\u578B\u3001\u6750\u8D28\u548C\u706F\u5149\u5FC5\u987B\u4F7F\u7528\u53EF\u89C1\u3001\u53EF\u6267\u884C\u7684\u6B63\u5411\u63CF\u8FF0\u5EFA\u7ACB\u3002\u4EA4\u4ED8\u8FB9\u754C\u53EA\u5904\u7406\u6587\u5B57\u3001\u6C34\u5370\u3001\u88C1\u5207\u3001\u7ED3\u6784\u9519\u8BEF\u7B49\u57FA\u7840\u7F3A\u9677\uFF0C\u4E0D\u5F97\u7528\u5927\u91CF\u8D1F\u9762\u8BCD\u4EE3\u66FF\u6B63\u5411\u89C6\u89C9\u8BBE\u8BA1\uFF0C\u4E5F\u4E0D\u751F\u6210\u5355\u72EC\u7684 Negative Prompt \u533A\u5757\u3002
@@ -244324,6 +244349,7 @@ var init_generateVideoPrompt = __esm({
       validateFields({
         trackId: external_exports.number(),
         languages: dialogueLanguagesSchema.optional(),
+        regenerate: external_exports.boolean().optional(),
         projectId: external_exports.number(),
         info: external_exports.array(
           external_exports.object({
@@ -244548,7 +244574,8 @@ ${assetDefinitions}
                 });
                 return result.text;
               },
-              async (system, source) => (await utils_default.Ai.Text("universalAi").invoke({ system, messages: [{ role: "user", content: source }] })).text
+              async (system, source) => (await utils_default.Ai.Text("universalAi").invoke({ system, messages: [{ role: "user", content: source }] })).text,
+              req.body.regenerate === true
             );
             const failed = variants.filter((v) => req.body.languages.includes(v.language) && v.state === "\u751F\u6210\u5931\u8D25");
             await utils_default.db("o_videoTrack").where({ id: trackId }).update({ state: failed.length ? "\u751F\u6210\u5931\u8D25" : "\u5DF2\u5B8C\u6210", reason: failed.map((v) => `${v.language}: ${v.reason}`).join("\uFF1B") });
@@ -246035,7 +246062,7 @@ var init_delScript = __esm({
 var require_utils13 = __commonJS({
   "node_modules/compressing/lib/utils.js"(exports2) {
     "use strict";
-    var fs37 = require("fs");
+    var fs38 = require("fs");
     var path35 = require("path");
     var { pipeline: pump } = require("stream");
     function isPathWithinParent(childPath, parentPath) {
@@ -246085,14 +246112,14 @@ var require_utils13 = __commonJS({
       return (source, dest, opts) => {
         opts = opts || {};
         opts.source = source;
-        const destStream = destType(dest) === "path" ? fs37.createWriteStream(dest) : dest;
+        const destStream = destType(dest) === "path" ? fs38.createWriteStream(dest) : dest;
         const compressStream = new StreamClass(opts);
         return safePipe([compressStream, destStream]);
       };
     };
     exports2.makeCompressDirFn = (StreamClass) => {
       return (dir, dest, opts) => {
-        const destStream = destType(dest) === "path" ? fs37.createWriteStream(dest) : dest;
+        const destStream = destType(dest) === "path" ? fs38.createWriteStream(dest) : dest;
         const compressStream = new StreamClass();
         compressStream.addEntry(dir, opts);
         return safePipe([compressStream, destStream]);
@@ -246115,7 +246142,7 @@ var require_utils13 = __commonJS({
         const strip = opts.strip ? Number(opts.strip) : 0;
         delete opts.strip;
         return new Promise((resolve3, reject) => {
-          fs37.mkdir(destDir, { recursive: true }, (err) => {
+          fs38.mkdir(destDir, { recursive: true }, (err) => {
             if (err) return reject(err);
             const resolvedDestDir = path35.resolve(destDir);
             let entryCount = 0;
@@ -246138,10 +246165,10 @@ var require_utils13 = __commonJS({
               }
               if (header.type === "file") {
                 const dir = path35.dirname(destFilePath);
-                fs37.mkdir(dir, { recursive: true }, (err2) => {
+                fs38.mkdir(dir, { recursive: true }, (err2) => {
                   if (err2) return reject(err2);
                   entryCount++;
-                  pump(stream4, fs37.createWriteStream(destFilePath, { mode: opts.mode || header.mode }), (err3) => {
+                  pump(stream4, fs38.createWriteStream(destFilePath, { mode: opts.mode || header.mode }), (err3) => {
                     if (err3) return reject(err3);
                     successCount++;
                     done();
@@ -246156,17 +246183,17 @@ var require_utils13 = __commonJS({
                   return;
                 }
                 entryCount++;
-                fs37.mkdir(dir, { recursive: true }, (err2) => {
+                fs38.mkdir(dir, { recursive: true }, (err2) => {
                   if (err2) return reject(err2);
                   const relativeTarget = path35.relative(dir, target);
-                  fs37.symlink(relativeTarget, destFilePath, (err3) => {
+                  fs38.symlink(relativeTarget, destFilePath, (err3) => {
                     if (err3) return reject(err3);
                     successCount++;
                     stream4.resume();
                   });
                 });
               } else {
-                fs37.mkdir(destFilePath, { recursive: true }, (err2) => {
+                fs38.mkdir(destFilePath, { recursive: true }, (err2) => {
                   if (err2) return reject(err2);
                   stream4.resume();
                 });
@@ -246533,7 +246560,7 @@ var require_buffer_crc32 = __commonJS({
 var require_yazl = __commonJS({
   "node_modules/yazl/index.js"(exports2) {
     "use strict";
-    var fs37 = require("fs");
+    var fs38 = require("fs");
     var Transform = require("stream").Transform;
     var PassThrough = require("stream").PassThrough;
     var zlib2 = require("zlib");
@@ -246557,14 +246584,14 @@ var require_yazl = __commonJS({
       if (options == null) options = {};
       var entry = new Entry(metadataPath, false, options);
       self2.entries.push(entry);
-      fs37.stat(realPath, function(err, stats) {
+      fs38.stat(realPath, function(err, stats) {
         if (err) return self2.emit("error", err);
         if (!stats.isFile()) return self2.emit("error", new Error("not a file: " + realPath));
         entry.uncompressedSize = stats.size;
         if (options.mtime == null) entry.setLastModDate(stats.mtime);
         if (options.mode == null) entry.setFileAttributesMode(stats.mode);
         entry.setFileDataPumpFunction(function() {
-          var readStream2 = fs37.createReadStream(realPath);
+          var readStream2 = fs38.createReadStream(realPath);
           entry.state = Entry.FILE_DATA_IN_PROGRESS;
           readStream2.on("error", function(err2) {
             self2.emit("error", err2);
@@ -250887,7 +250914,7 @@ var require_base_stream = __commonJS({
 var require_stream9 = __commonJS({
   "node_modules/compressing/lib/tar/stream.js"(exports2, module2) {
     "use strict";
-    var fs37 = require("fs");
+    var fs38 = require("fs");
     var path35 = require("path");
     var stream4 = require("stream");
     var tar = require_tar_stream();
@@ -250923,7 +250950,7 @@ var require_stream9 = __commonJS({
         }
       }
       _addFileOrDirEntry(entry, opts) {
-        fs37.stat(entry, (err, stat) => {
+        fs38.stat(entry, (err, stat) => {
           if (err) return this.emit("error", err);
           if (stat.isDirectory()) return this._addDirEntry(entry, opts);
           if (stat.isFile()) return this._addFileEntry(entry, opts);
@@ -250933,16 +250960,16 @@ var require_stream9 = __commonJS({
         });
       }
       _addFileEntry(entry, opts) {
-        fs37.stat(entry, (err, stat) => {
+        fs38.stat(entry, (err, stat) => {
           if (err) return this.emit("error", err);
           const entryStream = this._pack.entry({ name: opts.relativePath || path35.basename(entry), size: stat.size, mode: stat.mode & 511 }, this._onEntryFinish.bind(this));
-          const stream5 = fs37.createReadStream(entry, opts.fs);
+          const stream5 = fs38.createReadStream(entry, opts.fs);
           stream5.on("error", (err2) => this.emit("error", err2));
           stream5.pipe(entryStream);
         });
       }
       _addDirEntry(entry, opts) {
-        fs37.readdir(entry, (err, files) => {
+        fs38.readdir(entry, (err, files) => {
           if (err) return this.emit("error", err);
           const relativePath = opts.relativePath || "";
           files.forEach((fileOrDir) => {
@@ -251189,7 +251216,7 @@ var require_pend = __commonJS({
 var require_fd_slicer2 = __commonJS({
   "node_modules/fd-slicer2/index.js"(exports2) {
     "use strict";
-    var fs37 = require("fs");
+    var fs38 = require("fs");
     var { Readable: Readable2, Writable, PassThrough } = require("stream");
     var Pend = require_pend();
     var { EventEmitter: EventEmitter3 } = require("events");
@@ -251204,7 +251231,7 @@ var require_fd_slicer2 = __commonJS({
       }
       read(buffer, offset, length, position, callback) {
         this.pend.go((cb) => {
-          fs37.read(this.fd, buffer, offset, length, position, (err, bytesRead, buffer2) => {
+          fs38.read(this.fd, buffer, offset, length, position, (err, bytesRead, buffer2) => {
             cb();
             callback(err, bytesRead, buffer2);
           });
@@ -251212,7 +251239,7 @@ var require_fd_slicer2 = __commonJS({
       }
       write(buffer, offset, length, position, callback) {
         this.pend.go((cb) => {
-          fs37.write(this.fd, buffer, offset, length, position, (err, written, buffer2) => {
+          fs38.write(this.fd, buffer, offset, length, position, (err, written, buffer2) => {
             cb();
             callback(err, written, buffer2);
           });
@@ -251232,7 +251259,7 @@ var require_fd_slicer2 = __commonJS({
         if (this.refCount > 0) return;
         if (this.refCount < 0) throw new Error("invalid unref");
         if (this.autoClose) {
-          fs37.close(this.fd, (err) => {
+          fs38.close(this.fd, (err) => {
             if (err) {
               this.emit("error", err);
             } else {
@@ -251267,7 +251294,7 @@ var require_fd_slicer2 = __commonJS({
         this.context.pend.go((cb) => {
           if (this.destroyed) return cb();
           const buffer = Buffer.alloc(toRead);
-          fs37.read(this.context.fd, buffer, 0, toRead, this.pos, (err, bytesRead) => {
+          fs38.read(this.context.fd, buffer, 0, toRead, this.pos, (err, bytesRead) => {
             if (err) {
               this.destroy(err);
             } else if (bytesRead === 0) {
@@ -251313,7 +251340,7 @@ var require_fd_slicer2 = __commonJS({
         }
         this.context.pend.go((cb) => {
           if (this.destroyed) return cb();
-          fs37.write(this.context.fd, buffer, 0, buffer.length, this.pos, (err, bytes) => {
+          fs38.write(this.context.fd, buffer, 0, buffer.length, this.pos, (err, bytes) => {
             if (err) {
               this.destroy();
               cb();
@@ -251440,7 +251467,7 @@ var require_fd_slicer2 = __commonJS({
 var require_yauzl = __commonJS({
   "node_modules/@eggjs/yauzl/index.js"(exports2) {
     "use strict";
-    var fs37 = require("fs");
+    var fs38 = require("fs");
     var zlib2 = require("zlib");
     var fd_slicer = require_fd_slicer2();
     var crc32 = require_buffer_crc32();
@@ -251470,10 +251497,10 @@ var require_yauzl = __commonJS({
       if (options.validateEntrySizes == null) options.validateEntrySizes = true;
       if (options.strictFileNames == null) options.strictFileNames = false;
       if (callback == null) callback = defaultCallback;
-      fs37.open(path35, "r", function(err, fd) {
+      fs38.open(path35, "r", function(err, fd) {
         if (err) return callback(err);
         fromFd(fd, options, function(err2, zipfile) {
-          if (err2) fs37.close(fd, defaultCallback);
+          if (err2) fs38.close(fd, defaultCallback);
           callback(err2, zipfile);
         });
       });
@@ -251490,7 +251517,7 @@ var require_yauzl = __commonJS({
       if (options.validateEntrySizes == null) options.validateEntrySizes = true;
       if (options.strictFileNames == null) options.strictFileNames = false;
       if (callback == null) callback = defaultCallback;
-      fs37.fstat(fd, function(err, stats) {
+      fs38.fstat(fd, function(err, stats) {
         if (err) return callback(err);
         var reader = fd_slicer.createFromFd(fd, { autoClose: true });
         fromRandomAccessReader(reader, stats.size, options, callback);
@@ -255810,7 +255837,7 @@ var require_lib8 = __commonJS({
 var require_file_stream2 = __commonJS({
   "node_modules/compressing/lib/gzip/file_stream.js"(exports2, module2) {
     "use strict";
-    var fs37 = require("fs");
+    var fs38 = require("fs");
     var zlib2 = require("zlib");
     var utils = require_utils13();
     var streamifier = require_lib8();
@@ -255820,7 +255847,7 @@ var require_file_stream2 = __commonJS({
         super(opts.zlib);
         const sourceType = utils.sourceType(opts.source);
         if (sourceType === "file") {
-          const stream4 = fs37.createReadStream(opts.source, opts.fs);
+          const stream4 = fs38.createReadStream(opts.source, opts.fs);
           stream4.on("error", (err) => this.emit("error", err));
           stream4.pipe(this);
           return;
@@ -255845,7 +255872,7 @@ var require_file_stream2 = __commonJS({
 var require_uncompress_stream2 = __commonJS({
   "node_modules/compressing/lib/gzip/uncompress_stream.js"(exports2, module2) {
     "use strict";
-    var fs37 = require("fs");
+    var fs38 = require("fs");
     var zlib2 = require("zlib");
     var utils = require_utils13();
     var streamifier = require_lib8();
@@ -255855,7 +255882,7 @@ var require_uncompress_stream2 = __commonJS({
         super(opts.zlib);
         const sourceType = utils.sourceType(opts.source);
         if (sourceType === "file") {
-          const stream4 = fs37.createReadStream(opts.source, opts.fs);
+          const stream4 = fs38.createReadStream(opts.source, opts.fs);
           stream4.on("error", (err) => this.emit("error", err));
           stream4.pipe(this);
           return;
@@ -255895,7 +255922,7 @@ var require_gzip = __commonJS({
 var require_file_stream3 = __commonJS({
   "node_modules/compressing/lib/tar/file_stream.js"(exports2, module2) {
     "use strict";
-    var fs37 = require("fs");
+    var fs38 = require("fs");
     var path35 = require("path");
     var stream4 = require("stream");
     var tar = require_tar_stream();
@@ -255909,13 +255936,13 @@ var require_file_stream3 = __commonJS({
         pack.on("end", () => this.ready(true));
         const sourceType = utils.sourceType(opts.source);
         if (sourceType === "file") {
-          fs37.stat(opts.source, (err, stat) => {
+          fs38.stat(opts.source, (err, stat) => {
             if (err) return this.emit("error", err);
             this.entry = pack.entry({ name: opts.relativePath || path35.basename(opts.source), size: stat.size, mode: stat.mode & 511 }, (err2) => {
               if (err2) return this.emit("error", err2);
               pack.finalize();
             });
-            const stream5 = fs37.createReadStream(opts.source, opts.fs);
+            const stream5 = fs38.createReadStream(opts.source, opts.fs);
             stream5.on("error", (err2) => this.emit("error", err2));
             stream5.pipe(this);
           });
@@ -255974,7 +256001,7 @@ var require_file_stream3 = __commonJS({
 var require_uncompress_stream3 = __commonJS({
   "node_modules/compressing/lib/tar/uncompress_stream.js"(exports2, module2) {
     "use strict";
-    var fs37 = require("fs");
+    var fs38 = require("fs");
     var tar = require_tar_stream();
     var utils = require_utils13();
     var streamifier = require_lib8();
@@ -255984,7 +256011,7 @@ var require_uncompress_stream3 = __commonJS({
         super(opts);
         const sourceType = utils.sourceType(opts.source);
         if (sourceType === "file") {
-          const stream4 = fs37.createReadStream(opts.source, opts.fs);
+          const stream4 = fs38.createReadStream(opts.source, opts.fs);
           stream4.on("error", (err) => this.emit("error", err));
           stream4.pipe(this);
           return;
@@ -256126,7 +256153,7 @@ var require_FlushWritable = __commonJS({
 var require_uncompress_stream4 = __commonJS({
   "node_modules/compressing/lib/tgz/uncompress_stream.js"(exports2, module2) {
     "use strict";
-    var fs37 = require("fs");
+    var fs38 = require("fs");
     var utils = require_utils13();
     var ready = require_get_ready();
     var streamifier = require_lib8();
@@ -256144,7 +256171,7 @@ var require_uncompress_stream4 = __commonJS({
         this._gzipStream.pipe(tarStream);
         const sourceType = utils.sourceType(opts.source);
         if (sourceType === "file") {
-          const stream4 = fs37.createReadStream(opts.source, opts.fs);
+          const stream4 = fs38.createReadStream(opts.source, opts.fs);
           stream4.on("error", (err) => this.emit("error", err));
           stream4.pipe(this);
           return;
@@ -257879,7 +257906,7 @@ var init_updatePrompt2 = __esm({
 });
 
 // src/routes/setting/skillManagement/getSkillContent.ts
-var import_express152, import_path26, fs32, router152, getSkillContent_default;
+var import_express152, import_path26, fs33, router152, getSkillContent_default;
 var init_getSkillContent = __esm({
   "src/routes/setting/skillManagement/getSkillContent.ts"() {
     "use strict";
@@ -257890,7 +257917,7 @@ var init_getSkillContent = __esm({
     init_is_path_inside();
     init_utils3();
     import_path26 = __toESM(require("path"));
-    fs32 = __toESM(require("fs"));
+    fs33 = __toESM(require("fs"));
     router152 = import_express152.default.Router();
     getSkillContent_default = router152.post(
       "/",
@@ -257904,7 +257931,7 @@ var init_getSkillContent = __esm({
         if (!isPathInside(filePath, skillsRoot)) {
           return res.status(400).send(error50("\u65E0\u6548\u7684\u8DEF\u5F84"));
         }
-        const raw = await fs32.promises.readFile(filePath, "utf-8");
+        const raw = await fs33.promises.readFile(filePath, "utf-8");
         res.status(200).send(success3(raw));
       }
     );
@@ -257933,7 +257960,7 @@ var init_getSkillList = __esm({
 });
 
 // src/routes/setting/skillManagement/saveSkillContent.ts
-var import_express154, import_path27, fs33, router154, saveSkillContent_default;
+var import_express154, import_path27, fs34, router154, saveSkillContent_default;
 var init_saveSkillContent = __esm({
   "src/routes/setting/skillManagement/saveSkillContent.ts"() {
     "use strict";
@@ -257944,7 +257971,7 @@ var init_saveSkillContent = __esm({
     init_is_path_inside();
     init_utils3();
     import_path27 = __toESM(require("path"));
-    fs33 = __toESM(require("fs"));
+    fs34 = __toESM(require("fs"));
     router154 = import_express154.default.Router();
     saveSkillContent_default = router154.post(
       "/",
@@ -257959,10 +257986,10 @@ var init_saveSkillContent = __esm({
         if (!isPathInside(filePath, skillsRoot)) {
           return res.status(400).send(error50("\u65E0\u6548\u7684\u8DEF\u5F84"));
         }
-        if (!fs33.existsSync(filePath)) {
+        if (!fs34.existsSync(filePath)) {
           return res.status(400).send(error50("\u6587\u4EF6\u4E0D\u5B58\u5728"));
         }
-        const raw = await fs33.promises.writeFile(filePath, content, "utf-8");
+        const raw = await fs34.promises.writeFile(filePath, content, "utf-8");
         res.status(200).send(success3(raw));
       }
     );
@@ -259856,7 +259883,7 @@ init_dist22();
 var import_path9 = __toESM(require("path"));
 init_is_path_inside();
 init_getPath();
-var fs10 = __toESM(require("fs"));
+var fs11 = __toESM(require("fs"));
 var import_fast_glob2 = __toESM(require_out4());
 var MAX_SKILL_FILE_BYTES = 256 * 1024;
 function toUnixPath(filePath) {
@@ -259923,7 +259950,7 @@ function parseFrontmatter(content) {
 function discoverSelectedStyleResources(mainSkills, skillsRootDir) {
   const resources = /* @__PURE__ */ new Set();
   const addFile = (filePath) => {
-    if (fs10.existsSync(filePath) && fs10.statSync(filePath).isFile()) {
+    if (fs11.existsSync(filePath) && fs11.statSync(filePath).isFile()) {
       resources.add(toUnixPath(import_path9.default.relative(skillsRootDir, filePath)));
     }
   };
@@ -259937,8 +259964,8 @@ function discoverSelectedStyleResources(mainSkills, skillsRootDir) {
     if (category !== "art_skills") continue;
     addFile(import_path9.default.join(selectedDir, "prefix.md"));
     const artPromptDir = import_path9.default.join(selectedDir, "art_prompt");
-    if (!fs10.existsSync(artPromptDir) || !fs10.statSync(artPromptDir).isDirectory()) continue;
-    for (const entry of fs10.readdirSync(artPromptDir, { withFileTypes: true })) {
+    if (!fs11.existsSync(artPromptDir) || !fs11.statSync(artPromptDir).isDirectory()) continue;
+    for (const entry of fs11.readdirSync(artPromptDir, { withFileTypes: true })) {
       if (entry.isFile() && entry.name.endsWith(".md")) addFile(import_path9.default.join(artPromptDir, entry.name));
     }
   }
@@ -259969,11 +259996,11 @@ function createSkillTools(skills, skillPaths, rootDir = getPath_default("skills"
         if (!matched) return { error: `\u672A\u627E\u5230\u6280\u80FD "${name28}"` };
         let raw;
         try {
-          const stat = await fs10.promises.stat(matched.path);
+          const stat = await fs11.promises.stat(matched.path);
           if (!stat.isFile() || stat.size > MAX_SKILL_FILE_BYTES) {
             return { error: `\u6280\u80FD\u6587\u4EF6\u65E0\u6548\u6216\u8D85\u8FC7\u5927\u5C0F\u9650\u5236: ${matched.path}` };
           }
-          raw = readSnapshot ? await readSnapshot(matched.path) : await fs10.promises.readFile(matched.path, "utf-8");
+          raw = readSnapshot ? await readSnapshot(matched.path) : await fs11.promises.readFile(matched.path, "utf-8");
           console.log(`\u26A1[\u4E3B\u6280\u80FD] \u2713 \u5DF2\u8BFB\u53D6\u4E3B\u6280\u80FD\u6587\u4EF6\uFF1A ${matched.path}\uFF08${raw.length} \u5B57\u7B26\uFF09`);
         } catch (error73) {
           console.error(`\u26A1[\u4E3B\u6280\u80FD] \u2717 \u6280\u80FD\u8BFB\u53D6\u5931\u8D25\uFF1A${matched.path}`, error73);
@@ -260024,13 +260051,13 @@ function createSkillTools(skills, skillPaths, rootDir = getPath_default("skills"
         }
         let body;
         try {
-          const [realRoot, realFile] = await Promise.all([fs10.promises.realpath(skillsRootDir), fs10.promises.realpath(fullPath)]);
+          const [realRoot, realFile] = await Promise.all([fs11.promises.realpath(skillsRootDir), fs11.promises.realpath(fullPath)]);
           if (!isPathInside(realFile, realRoot)) return { error: "Access denied: resource is outside skill directory" };
-          const stat = await fs10.promises.stat(realFile);
+          const stat = await fs11.promises.stat(realFile);
           if (!stat.isFile() || stat.size > MAX_SKILL_FILE_BYTES) {
             return { error: `\u6280\u80FD\u8D44\u6E90\u65E0\u6548\u6216\u8D85\u8FC7\u5927\u5C0F\u9650\u5236: ${filePath}` };
           }
-          body = readSnapshot ? await readSnapshot(realFile) : await fs10.promises.readFile(realFile, "utf-8");
+          body = readSnapshot ? await readSnapshot(realFile) : await fs11.promises.readFile(realFile, "utf-8");
           console.log(`\u{1F4D6}[\u6280\u6CD5\u6587\u4EF6] \u2713 \u5DF2\u8BFB\u53D6\u6587\u4EF6\uFF1A ${filePath}\uFF08${body.length} \u5B57\u7B26\uFF09`);
         } catch (error73) {
           console.error(`\u{1F4D6}[\u6280\u6CD5\u6587\u4EF6] \u2717 \u8BFB\u53D6\u5931\u8D25\uFF1A${filePath}`, error73);
@@ -260534,7 +260561,7 @@ var tools_default = (toolCpnfig) => {
 };
 
 // src/agents/productionAgent/index.ts
-var fs11 = __toESM(require("fs"));
+var fs12 = __toESM(require("fs"));
 var import_path10 = __toESM(require("path"));
 
 // src/utils/agent/runtime/resultValidator.ts
@@ -261401,7 +261428,7 @@ async function runDecisionAI(ctx) {
   await memory.add("user", text2);
   const skill = import_path10.default.join(utils_default.getPath("skills"), "production_agent_decision.md");
   const taskStore = ctx.runId ? new TaskStore(utils_default.db) : null;
-  const prompt = taskStore ? await taskStore.readSkill(ctx.runId, skill) : await fs11.promises.readFile(skill, "utf-8");
+  const prompt = taskStore ? await taskStore.readSkill(ctx.runId, skill) : await fs12.promises.readFile(skill, "utf-8");
   const checkpoint = taskStore ? await taskStore.buildResumePrompt(ctx.runId) : "";
   const projectInfo = await utils_default.db("o_project").where("id", ctx.resTool.data.projectId).first();
   if (!projectInfo) throw new Error(`\u9879\u76EE\u4E0D\u5B58\u5728\uFF0CID: ${ctx.resTool.data.projectId}`);
@@ -261454,7 +261481,7 @@ async function createSubAgent(parentCtx) {
   const { resTool, abortSignal } = parentCtx;
   const memory = new memory_default("productionAgent", parentCtx.isolationKey);
   const taskStore = new TaskStore(utils_default.db);
-  const readSkill = (filePath) => parentCtx.runId ? taskStore.readSkill(parentCtx.runId, filePath) : fs11.promises.readFile(filePath, "utf-8");
+  const readSkill = (filePath) => parentCtx.runId ? taskStore.readSkill(parentCtx.runId, filePath) : fs12.promises.readFile(filePath, "utf-8");
   async function runAgent({ key, modelKey, prompt, system, name: name28, memoryKey, tools: extraTools, messages, expectedScene, readOnlyTools }) {
     const stepInput = JSON.stringify({ key, prompt, messages: messages ?? null, expectedScene: expectedScene ?? null });
     const stepKey = TaskStore.makeStepKey(key, stepInput);
@@ -261839,7 +261866,7 @@ async function createArtSkills(artName, storyName, readSkill) {
   const skillList = [...await scanSkills(artWorkerPath + "/*.md"), ...await scanSkills(storyWorkerPath + "/*.md")];
   const mainSkills = [];
   for (const skillPath2 of skillList) {
-    if (!fs11.existsSync(skillPath2)) throw new Error(`\u4E3B\u6280\u80FD\u6587\u4EF6\u4E0D\u5B58\u5728: ${skillPath2}`);
+    if (!fs12.existsSync(skillPath2)) throw new Error(`\u4E3B\u6280\u80FD\u6587\u4EF6\u4E0D\u5B58\u5728: ${skillPath2}`);
     const content = await readSkill(skillPath2);
     const parsed = parseFrontmatter(content);
     mainSkills.push({ path: skillPath2, ...parsed });
@@ -261925,7 +261952,7 @@ async function useProductionSkills(artName, storyName, readSkill) {
   ];
   const mainSkills = [];
   for (const skillPath2 of skillList) {
-    if (!fs11.existsSync(skillPath2)) throw new Error(`\u4E3B\u6280\u80FD\u6587\u4EF6\u4E0D\u5B58\u5728: ${skillPath2}`);
+    if (!fs12.existsSync(skillPath2)) throw new Error(`\u4E3B\u6280\u80FD\u6587\u4EF6\u4E0D\u5B58\u5728: ${skillPath2}`);
     const content = await readSkill(skillPath2);
     const parsed = parseFrontmatter(content);
     mainSkills.push({ path: skillPath2, ...parsed });
@@ -263157,7 +263184,7 @@ var tools_default2 = (toolCpnfig) => {
 };
 
 // src/agents/scriptAgent/index.ts
-var fs12 = __toESM(require("fs"));
+var fs13 = __toESM(require("fs"));
 var import_path11 = __toESM(require("path"));
 
 // src/agents/scriptAgent/workspace.ts
@@ -263280,7 +263307,7 @@ async function runDecisionAI2(ctx) {
   await memory.add("user", text2, { createTime: userMessageTime });
   const skill = import_path11.default.join(utils_default.getPath("skills"), "script_agent_decision.md");
   const taskStore = ctx.runId ? new TaskStore(utils_default.db) : null;
-  const prompt = taskStore ? await taskStore.readSkill(ctx.runId, skill) : await fs12.promises.readFile(skill, "utf-8");
+  const prompt = taskStore ? await taskStore.readSkill(ctx.runId, skill) : await fs13.promises.readFile(skill, "utf-8");
   const checkpoint = taskStore ? await taskStore.buildResumePrompt(ctx.runId) : "";
   const budgetRow = await utils_default.db("o_setting").where({ key: "memoryContextTokenBudget" }).select("value").first();
   const configuredBudget = Number(budgetRow?.value);
@@ -263330,7 +263357,7 @@ function createSubAgent2(parentCtx) {
   const { resTool, abortSignal } = parentCtx;
   const memory = new memory_default("scriptAgent", parentCtx.isolationKey);
   const taskStore = new TaskStore(utils_default.db);
-  const readSkill = (filePath) => parentCtx.runId ? taskStore.readSkill(parentCtx.runId, filePath) : fs12.promises.readFile(filePath, "utf-8");
+  const readSkill = (filePath) => parentCtx.runId ? taskStore.readSkill(parentCtx.runId, filePath) : fs13.promises.readFile(filePath, "utf-8");
   async function runAgent({
     key,
     prompt,

@@ -3,6 +3,7 @@ import { devToolsMiddleware } from "@ai-sdk/devtools";
 import axios from "axios";
 import { transform } from "sucrase";
 import u from "@/utils";
+import { withContentConstraints, withNonGraphicVisuals } from "./contentConstraints";
 
 type AiType =
   | "scriptAgent"
@@ -201,6 +202,7 @@ class AiText {
     return generateText({
       ...(input.tools && { stopWhen: stepCountIs(Object.keys(input.tools).length * 50) }),
       ...input,
+      system: withContentConstraints(input.system),
       model: await this.resolveModel(),
       ...(config?.temperature && { temperature: config.temperature }),
       ...(config?.maxOutputTokens && { maxOutputTokens: config.maxOutputTokens }),
@@ -212,6 +214,7 @@ class AiText {
     return streamText({
       ...(input.tools && { stopWhen: stepCountIs(Object.keys(input.tools).length * 50) }),
       ...input,
+      system: withContentConstraints(input.system),
       model: await this.resolveModel(extractReasoningMiddleware({ tagName: "reasoning_content", separator: "\n" })),
       ...(config?.temperature && { temperature: config.temperature }),
       ...(config?.maxOutputTokens && { maxOutputTokens: config.maxOutputTokens }),
@@ -255,6 +258,7 @@ class AiImage {
     this.key = key;
   }
   async run(input: ImageConfig, taskRecord?: TaskRecord) {
+    input = { ...input, prompt: withNonGraphicVisuals(input.prompt) };
     const modelName = await resolveModelName(this.key);
     const exec = async (mn: `${string}:${string}`) => {
       const fn = await getVendorTemplateFn("imageRequest", mn);
@@ -301,6 +305,7 @@ class AiVideo {
     this.key = key;
   }
   async run(input: VideoConfig, taskRecord?: TaskRecord) {
+    input = { ...input, prompt: withNonGraphicVisuals(input.prompt) };
     const modelName = await resolveModelName(this.key);
     try {
       const exec = async (mn: `${string}:${string}`) => {

@@ -18,7 +18,7 @@
         :disabled="savingLanguages || hasGeneratePromptIds.length > 0"
         @change="saveLanguages"
         style="min-width: 360px; flex: 1" />
-      <span>每种语言分别生成提示词和视频；新增语言只补齐缺少的版本。</span>
+      <span>生成提示词会更新当前视频段所选语言的提示词；批量生成只补齐未完成版本，已有视频保留。</span>
     </div>
     <div class="languageTabs">
       <t-radio-group v-model="activeLanguage" variant="default-filled">
@@ -402,6 +402,7 @@ async function genText() {
     prompt?: string;
   }[] = [];
   const currentTrackId = track.id;
+  const requestedLanguages = [...selectedLanguages.value];
   // Use the exact same ordered list as video generation. H3 <Picture N> must match Runtime ref_image_N.
   const rawMedias = imageList.value as UploadItem[];
   if (modelParmas.value.mode == "text") {
@@ -439,13 +440,17 @@ async function genText() {
     const { data } = await axios.post("/production/workbench/generateVideoPrompt", {
       projectId: project.value?.id,
       trackId: currentTrackId,
-      languages: [...selectedLanguages.value],
+      languages: requestedLanguages,
+      regenerate: true,
       info: info,
       model: modelParmas.value.model,
       mode: modelParmas.value.mode,
     });
     track.variants = data;
-    track.state = data.some((v: VideoPromptVariant) => selectedLanguages.value.includes(v.language) && v.state === "生成失败") ? "生成失败" : "已完成";
+    const failures = data.filter((v: VideoPromptVariant) => requestedLanguages.includes(v.language) && v.state === "生成失败");
+    track.state = failures.length ? "生成失败" : "已完成";
+    if (failures.length) window.$message.error(failures.map((v: VideoPromptVariant) => `${languageName(v.language)}：${v.reason || "生成失败"}`).join("；"));
+    else window.$message.success("所选语言提示词已更新，已有视频已保留");
     if (!activeLanguage.value) activeLanguage.value = selectedLanguages.value[0] || "";
   } catch (e) {
     track.state = "生成失败";

@@ -37,7 +37,7 @@ const commonContract = `
 1. 只输出最终提示词正文。不要输出 Markdown 标题、代码块、表格、字段名、分析过程、解释、备注、方案或“提示词：”前缀。
 2. 以连贯、明确的中文自然语言为主，用短语补充风格、色彩、材质、光影、构图；英文仅保留确实能提高识别精度的专业词，不做逐句中英双写。
 3. 同一事实只写一次。同义的风格词、材质词、光影词、完整入画要求、一致性要求和交付边界不得反复堆叠。不要为了强调而连续重复“3D渲染/PBR/高精度建模/电影级光影”等概念。
-4. 信息优先级：用户明确给出的身份/外貌/标志性特征/服装/状态 > 视觉手册硬约束 > 风格默认值。不得覆盖用户明确特征。
+4. 信息优先级：全局内容表现约束 > 原有身份/外貌/标志性特征/服装/状态 > 视觉手册风格约束 > 风格默认值。身份与剧情因果不变，但红色血液、红色伤口及血色环境必须按全局规则改编；同步修正反射和反弹光，不能以“忠实保留颜色”恢复红色血液。非伤口的红衣、红灯、红瞳、自然唇色等明确特征仍须保留。
 5. 不要无依据新增精确数字、颜色、朝代、饰品、痣、伤疤、花纹、天气等事实。尤其当用户没有提供精确身高时，不要自行编造厘米数。
 6. 把“主体内容”写清楚后再写美学与构图，不要先堆一长串质量标签。对图片模型来说，主体、关系、位置、视角和一致性高于标签数量。
 7. 风格、造型、材质和灯光必须使用可见、可执行的正向描述建立。交付边界只处理文字、水印、裁切、结构错误等基础缺陷，不得用大量负面词代替正向视觉设计，也不生成单独的 Negative Prompt 区块。
@@ -99,7 +99,7 @@ export function needsFluxPromptTranslation(text: string): boolean {
 
 export function buildFluxPromptTranslationRequest(text: string): { system: string; user: string } {
   return {
-    system: `You translate and compress image-generation prompts for FLUX.1 Schnell. Return only one concise English prompt, with no explanation, Markdown, headings, quotation marks, or code fences. Preserve every concrete visual fact, character identity marker, color, outfit, hairstyle, camera view, panel position, consistency rule, and prohibition. Remove redundant quality buzzwords and repeated synonyms, but resolve no facts and invent nothing. Translate Chinese names phonetically or describe them in English so that the result contains no Chinese characters. Keep the result under 260 English words so it fits the image model context.`,
+    system: `You translate and compress image-generation prompts for FLUX.1 Schnell. Return only one concise English prompt, with no explanation, Markdown, headings, quotation marks, or code fences. Preserve concrete visual facts, identity markers, outfits, hairstyles, camera views, panel positions and reference slots. Apply global content constraints before preserving colors: adapt red blood/wounds to covered injuries or necessary small green/black traces, and blood-red environments to natural colors including their reflected light. Preserve unrelated red clothing, lights and identity features. Remove redundant quality buzzwords and repeated synonyms, but invent no story facts. Translate Chinese names phonetically or describe them in English so that the result contains no Chinese characters. Keep the result under 260 English words so it fits the image model context.`,
     user: text.trim(),
   };
 }

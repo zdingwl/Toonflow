@@ -14,6 +14,39 @@ async function fixture() {
   return db;
 }
 
+test("explicit regeneration uses fresh visual instructions and preserves other languages and video history", async () => {
+  const db = await fixture();
+  try {
+    await db("o_videoPromptVariant").insert([
+      { trackId: 1, language: "en-US", prompt: "old English", state: "已完成", videoId: 91 },
+      { trackId: 1, language: "ja-JP", prompt: "edited Japanese", state: "已完成", videoId: 92 },
+    ]);
+    await db("o_videoLanguage").insert({ videoId: 91, language: "en-US", prompt: "original video snapshot" });
+    let baseCalls = 0;
+    await generateLanguageVariants(db, 1, ["en-US"], async () => {
+      baseCalls++;
+      return "<Picture 1> modern donghua updated visual manual";
+    }, async (_, source) => {
+      assert.match(source, /updated visual manual/);
+      return source + " spoken language: en-US";
+    }, true);
+    assert.equal(baseCalls, 1);
+    const english = await db("o_videoPromptVariant").where({ language: "en-US" }).first();
+    assert.match(english.prompt, /updated visual manual/);
+    assert.equal(english.videoId, 91);
+    assert.equal(english.state, "已完成");
+    assert.equal((await db("o_videoPromptVariant").where({ language: "ja-JP" }).first()).prompt, "edited Japanese");
+    assert.equal((await db("o_videoLanguage").first()).prompt, "original video snapshot");
+    assert.match((await db("o_videoTrack").first()).prompt, /你好/);
+    await generateLanguageVariants(db, 1, ["en-US"], async () => "<Picture 1> fresh", async () => { throw new Error("provider failed"); }, true);
+    const failed = await db("o_videoPromptVariant").where({ language: "en-US" }).first();
+    assert.equal(failed.prompt, english.prompt);
+    assert.equal(failed.state, "生成失败");
+    await generateLanguageVariants(db, 1, ["en-US"], async () => "", async () => "<Picture 1> retried");
+    assert.equal((await db("o_videoPromptVariant").where({ language: "en-US" }).first()).state, "已完成");
+  } finally { await db.destroy(); }
+});
+
 test("migration is repeatable and preserves original prompts and language selections", async () => {
   const db = await fixture();
   try {

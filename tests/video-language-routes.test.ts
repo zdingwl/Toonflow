@@ -22,7 +22,13 @@ test("real video routes keep each language prompt, video ID and selection separa
     t.text("prompt");
     t.text("state");
     t.integer("videoId");
+    t.integer("duration");
+    t.text("reason");
   });
+  await db.schema.createTable("o_assets", (t) => { t.integer("id"); t.integer("assetsId"); });
+  await db.schema.createTable("o_assetsRole2Audio", (t) => { t.integer("assetsAudioId"); t.integer("assetsRoleId"); });
+  await db.schema.createTable("o_prompt", (t) => { t.text("type"); t.text("data"); t.text("useData"); });
+  await db.schema.createTable("o_modelPrompt", (t) => { t.text("vendorId"); t.text("model"); t.text("path"); });
   await db.schema.createTable("o_video", (t) => {
     t.increments("id");
     t.text("filePath");
@@ -41,13 +47,20 @@ test("real video routes keep each language prompt, video ID and selection separa
     { trackId: 1, language: "ja-JP", prompt: "Japanese dialogue: こんにちは", state: "已完成" },
   ]);
   const submitted: any[] = [];
+  const textCalls: any[] = [];
   let running = 0,
     maxRunning = 0;
   const u = {
     db,
     error: (e: any) => e,
+    getArtPrompt: () => "current modern donghua visual manual",
+    getPath: () => "data/modelPrompt",
     oss: { getImageBase64: async () => "" },
     Ai: {
+      Text: () => ({ invoke: async (request: any) => {
+        textCalls.push(request);
+        return { text: request.messages.some((m: any) => m.content === "current modern donghua visual manual") ? "fresh base from visual manual" : "refreshed English" };
+      } }),
       Video: () => ({
         run: async (request: any) => {
           submitted.push(request);
@@ -62,7 +75,7 @@ test("real video routes keep each language prompt, video ID and selection separa
   };
   const app = express();
   app.use(express.json());
-  for (const name of ["generateVideo", "batchGenerateVideo", "updateVideoPrompt", "selectVideo", "saveDialogueLanguages"]) {
+  for (const name of ["generateVideoPrompt", "generateVideo", "batchGenerateVideo", "updateVideoPrompt", "selectVideo", "saveDialogueLanguages"]) {
     const source = readFileSync(new URL(`../src/routes/production/workbench/${name}.ts`, import.meta.url), "utf8");
     const code = transform(source, { transforms: ["typescript", "imports"] }).code;
     const mod = { exports: {} as any };
@@ -75,6 +88,7 @@ test("real video routes keep each language prompt, video ID and selection separa
       "@/utils/assetReferenceMedia": { persistedRoleReferencesForVideo: async (item: unknown) => [item] },
       "@/utils/videoQuality": { inspectVideoQuality: async () => ({}) },
       "@/utils/h3VisualStateGuard": { assertH3ActiveStates: () => {}, assertH3PictureSlots: () => {} },
+      "@/utils/h3ReferenceSlots": { expandH3AssetSlots: (items: unknown) => items },
     };
     new Function("require", "module", "exports", code)((id: string) => imports[id] || requireModule(id), mod, mod.exports);
     app.use(`/${name}`, mod.exports.default);
@@ -88,6 +102,16 @@ test("real video routes keep each language prompt, video ID and selection separa
   };
   const settings = { projectId: 7, scriptId: 2, model: "test:MiniMax-H3-local", mode: "text", resolution: "768p", audio: true };
   try {
+    const refreshBody = { projectId: 7, trackId: 1, languages: ["en-US"], info: [], model: "test:plain", mode: "text", regenerate: true };
+    const refreshed = await post("generateVideoPrompt", refreshBody);
+    assert.equal(refreshed.status, 200);
+    assert.equal(textCalls.length, 2);
+    assert.equal(textCalls[1].messages[0].content, "fresh base from visual manual");
+    assert.equal(refreshed.body.data.find((v: any) => v.language === "en-US").prompt, "refreshed English");
+    assert.equal((await db("o_videoTrack").first()).prompt, "original");
+    assert.equal((await post("generateVideoPrompt", { ...refreshBody, regenerate: false })).status, 200);
+    assert.equal(textCalls.length, 2);
+    await db("o_videoPromptVariant").where({ language: "en-US" }).update({ prompt: "English dialogue: Hello" });
     assert.equal((await post("saveDialogueLanguages", { ...settings, languages: ["en-US", "ja-JP"] })).status, 200);
     assert.deepEqual(JSON.parse((await db("o_videoLanguageSelection").first()).languages), ["en-US", "ja-JP"]);
     const rejected = await post("batchGenerateVideo", {
