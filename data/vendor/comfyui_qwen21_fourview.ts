@@ -12,7 +12,7 @@ declare const Buffer: any;
 declare const pollTask: (fn: () => Promise<{ completed: boolean; data?: string; error?: string }>, interval?: number, timeout?: number) => Promise<{ completed: boolean; data?: string; error?: string }>;
 
 const vendor = {
-  id: "comfyui_qwen21_fourview", version: "1.1.0", author: "Toonflow",
+  id: "comfyui_qwen21_fourview", version: "1.1.2", author: "Toonflow",
   name: "本机 Qwen-Image-2.1 四视图（LoRA 可选）",
   description: "任意角色四栏：头像特写、正面全身、90°左侧面全身、背面全身；角色身份、外观及形态由当前资产提示词提供。首张参考图必须是当前目标状态的正面全身锚点；第二张可选风格参考。LoRA 权重需另外安装。",
   inputs: [
@@ -64,6 +64,17 @@ function checkFile(info: Record<string, any>, node: string, field: string, value
 }
 const ref = (id: number, slot = 0): [string, number] => [String(id), slot];
 const node = (class_type: string, inputs: Record<string, any>) => ({ class_type, inputs });
+function identityFactsOnly(prompt: string): string {
+  return prompt
+    .replace(/同一角色的四栏角色设定图/g, "同一角色的角色设定")
+    .replace(/四栏从左到右固定为[：:]?[\s\S]*?(?=四栏为同一|纯净|虚拟|$)/g, "")
+    .replace(/四栏为同一[^。！？]*[。！？]?/g, "")
+    .replace(/CHARACTER TURNAROUND SHEET[\s\S]*?(?=Style:|Character name:|$)/gi, "")
+    .replace(/(?:exactly )?four[- ]panel[^.。！？]*[.。！？]?/gi, "")
+    .replace(/(?:first|second|third|fourth) panel[^.。！？]*[.。！？]?/gi, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
 function characterPrompt(facts: string, view: "front" | "portrait" | "side" | "back", hasStyle: boolean): string {
   const style = "cinematic stylized realistic 3D animated CGI character, controlled stylization of adult facial anatomy where appropriate, PBR cloth and skin, coherent studio lighting, plain neutral backdrop, a single character only, no live-action photographic look, no text, no watermark";
   const identity = `CURRENT ASSET FACTS (identity and CURRENT state, authoritative): ${facts}. Preserve every explicitly specified face feature, hair, outfit detail, proportion, eye color and state; do not invent character names or swap character states.`;
@@ -72,16 +83,18 @@ function characterPrompt(facts: string, view: "front" | "portrait" | "side" | "b
     view === "portrait" ? "Same individual in a straight-on HEAD-AND-SHOULDERS portrait, full head visible, face details legible." :
     view === "side" ? "Rotate the SAME individual to a strict 90-degree LEFT SIDE PROFILE, full body and both feet in frame, no three-quarter angle." :
     "Rotate the SAME individual to a straight 180-degree BACK view, full body and both feet in frame, no three-quarter angle.";
-  const references = view === "front" ? "" : `Use <image1> as the approved front-view identity and CURRENT-STATE anchor; only change the requested camera/view. ${hasStyle ? "Use <image2> only for CG style, NEVER for identity, clothing, scene, or composition." : ""}`;
+  const references = view === "front" ? "" : view === "back"
+    ? `Use <image1> as the approved strict side-view identity and CURRENT-STATE anchor. Continue rotating the SAME person another 90 degrees until the face and chest are completely invisible and only the back of the head, shoulders, torso and heels face the camera. ${hasStyle ? "Use <image2> only for CG style, NEVER for identity, clothing, scene, or composition." : ""}`
+    : `Use <image1> as the approved front-view identity and CURRENT-STATE anchor; only change the requested camera/view. ${hasStyle ? "Use <image2> only for CG style, NEVER for identity, clothing, scene, or composition." : ""}`;
   return [references, viewPrompt, identity, style, noGrid].filter(Boolean).join("\n");
 }
 function graphFor(config: ImageConfig, anchorFilename?: string, styleFilename?: string): Record<string, any> {
   const v = vendor.inputValues;
-  if (!config.prompt?.trim()) throw new Error("当前角色缺少资产身份与状态描述；不得以示例科尔替代");
+  if (!config.prompt?.trim()) throw new Error("当前角色缺少资产身份与状态描述；不能生成通用示例角色替代当前资产");
   const [width, height] = config.size === "1K" ? [640, 960] : config.size === "4K" ? [1024, 1536] : [896, 1344];
   const steps = Number(v.steps || "35");
   if (!Number.isInteger(steps) || steps < 1 || steps > 100) throw new Error("steps 必须是 1–100 的整数");
-  const facts = `${(v.identityToken || "").trim()} ${config.prompt}`.trim();
+  const facts = identityFactsOnly(`${(v.identityToken || "").trim()} ${config.prompt}`.trim());
   const graph: Record<string, any> = {
     "1": node("UNETLoader", { unet_name: v.unet, weight_dtype: "default" }),
     "2": node("CLIPLoader", { clip_name: v.clip, type: "qwen_image", device: "default" }),
@@ -105,7 +118,8 @@ function graphFor(config: ImageConfig, anchorFilename?: string, styleFilename?: 
   }
   if (styleFilename) graph["15"] = node("LoadImage", { image: styleFilename });
   for (const [view, id] of [["portrait", 20], ["side", 30], ["back", 40]] as const) {
-    const inputs: Record<string, any> = { clip, vae: ref(3), prompt: characterPrompt(facts, view, Boolean(styleFilename)), negative_prompt: "", resolution: height, "images.image_1": anchor };
+    const viewAnchor = view === "back" ? ref(32) : anchor;
+    const inputs: Record<string, any> = { clip, vae: ref(3), prompt: characterPrompt(facts, view, Boolean(styleFilename)), negative_prompt: "", resolution: height, "images.image_1": viewAnchor };
     if (styleFilename) inputs["images.image_2"] = ref(15);
     graph[String(id)] = node("TextEncodeQwenImage21", inputs);
     graph[String(id + 1)] = node("KSampler", { model, seed: Math.floor(Math.random() * 2147483647), steps, cfg: 1, sampler_name: "euler", scheduler: "simple", positive: ref(id), negative: ref(id, 1), latent_image: ref(id, 2), denoise: 1 });

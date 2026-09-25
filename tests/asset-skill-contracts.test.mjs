@@ -12,21 +12,25 @@ test('Qwen four-view provider is asset-driven rather than hardcoded to the sampl
   assert.doesNotMatch(vendor, /科尔|海兽王|red irises|wet dark hair/);
   assert.match(vendor, /CURRENT ASSET FACTS/);
   assert.match(vendor, /SINGLE-VIEW/);
+  assert.match(vendor, /identityFactsOnly/);
+  assert.match(vendor, /四栏从左到右固定为/);
   assert.match(vendor, /ImageStitch/);
   assert.match(vendor, /loraName/);
 });
 
-test('character prompt and code use the same front and back positions', () => {
+test('character prompt and code use the same four canonical positions', () => {
   const skill = read('data/skills/art_skills/realistic_3d_anime/art_prompt/art_character.md');
   const code = read('src/utils/assetPrompt.ts');
-  assert.doesNotMatch(skill, /四栏|90°左侧面/);
+  assert.match(skill, /四栏/);
+  assert.match(skill, /脸部特写/);
   assert.match(skill, /正面全身/);
-
-  assert.match(skill, /背面全身/);
-  assert.match(code, /exactly two panels/);
+  assert.match(skill, /90°左侧面全身/);
+  assert.match(skill, /正后方全身/);
+  assert.match(code, /exactly four panels/);
+  assert.match(code, /head-and-shoulders portrait/);
   assert.match(code, /full-body front view/);
-
-  assert.match(code, /full-body back view/);
+  assert.match(code, /full-body strict 90-degree left side view/);
+  assert.match(code, /full-body straight back view/);
 });
 
 test('Qwen route sends per-asset facts and optional style reference without the generic layout contract', () => {

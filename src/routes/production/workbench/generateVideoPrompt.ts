@@ -201,6 +201,7 @@ export default router.post(
 
     // H3 Picture slots must describe only the images that will actually be uploaded to Ref2VA.
     // Storyboard images remain available as text-only composition guidance so they cannot override face identity.
+    const h3DirectionText = storyboard.map(item => `${item.videoDesc || ""}\n${item.prompt || ""}`).join("\n");
     const pictureSourceItems = h3PromptMode
       ? expandH3AssetSlots(images
           .filter(
@@ -212,7 +213,7 @@ export default router.post(
               item._fileType !== "audio" &&
               item._fileType !== "video",
           )
-          .sort((a: any, b: any) => h3AssetRank(a) - h3AssetRank(b)))
+          .sort((a: any, b: any) => h3AssetRank(a) - h3AssetRank(b)), h3DirectionText)
       : images.filter((item: any) => item && item._reference !== false && item.filePath);
 
     const referenceSlotItems = pictureSourceItems.map((item: any, index: number) => {

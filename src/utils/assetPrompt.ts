@@ -5,9 +5,9 @@ export type AssetPromptType = "role" | "scene" | "tool";
 const typeGuides: Record<AssetPromptType, string> = {
   role: `
 角色资产：
-- 将目标明确写成“同一角色的正面与背面双栏角色设定图”，避免生成两个不同角色。
-- 推荐顺序：图像用途/风格 → 角色身份与气质 → 唯一识别特征 → 体态/发型/服装 → 双栏版式 → 一致性 → 背景/光线 → 交付边界。
-- 双栏从左到右固定为：正面全身、背面全身；同一角色的脸、识别点、发型、服装、体型必须一致。
+- 将目标明确写成“同一角色的四栏角色设定图”，避免生成多个不同角色。
+- 推荐顺序：图像用途/风格 → 角色身份与气质 → 唯一识别特征 → 体态/发型/服装 → 四栏版式 → 一致性 → 背景/光线 → 交付边界。
+- 四栏从左到右固定为：脸部特写、正面全身、90°左侧面全身、正后方全身；同一角色的脸、识别点、发型、服装、体型必须一致。
 - 用户没有给出精确身高时，不要自行编造“168cm/180cm”等精确数值；用七头身、修长、挺拔等相对视觉比例表达即可。
 - 明确要求头顶与脚底完整入画，避免裁头、裁脚；最后用一句话约束无文字、无水印、无 logo。
 `,
@@ -64,10 +64,12 @@ ${label}名称：${name}
 ${label}描述：${describe}`;
 }
 
-const roleGenerationLayout = `CHARACTER TURNAROUND SHEET, ONE SAME CHARACTER, exactly two panels in one horizontal row.
-Panel 1: full-body front view. ONE figure centered in the LEFT HALF, face and chest facing the viewer.
-Panel 2: full-body back view. ONE figure centered in the RIGHT HALF, back of head and back facing the viewer. Both figures fill their half vertically at equal scale, feet aligned.
-Both panels must show the entire body from the top of the head to the soles of the feet, with generous margin above the head and below the feet. Keep exactly the same identity, hairstyle, body proportions, outfit, colors and accessories in both panels. Neutral standing pose, orthographic or weak-perspective design view, plain clean background and even studio lighting. No cropped head, no cropped feet, no extra people, no duplicate body parts, no text, no labels, no watermark.`;
+const roleGenerationLayout = `CHARACTER TURNAROUND SHEET, ONE SAME CHARACTER, exactly four panels in one horizontal row.
+Panel 1: straight-on head-and-shoulders portrait, full head visible.
+Panel 2: full-body front view.
+Panel 3: full-body strict 90-degree left side view.
+Panel 4: full-body straight back view.
+All full-body panels show the entire body with aligned feet. Keep exactly the same identity, hairstyle, body proportions, outfit, colors and accessories across all panels. Plain clean background and even virtual studio lighting. No cropped head, no cropped feet, no extra characters, no text, no labels, no watermark.`;
 
 /**
  * Adds a short, unambiguous layout contract at the beginning of the runtime
@@ -84,7 +86,7 @@ export function buildAssetImagePrompt(
   const facts = `Style: ${artStyle || "unspecified"}. Character name: ${name}. Character design facts: ${prompt.trim()}`;
 
   if (type === "role") {
-    return `${roleGenerationLayout}\n\n${facts}\n\nThe two-panel layout contract above has priority over conflicting framing phrases in the character design facts.`;
+    return `${roleGenerationLayout}\n\n${facts}\n\nThe four-panel layout contract above has priority over conflicting framing phrases in the character design facts.`;
   }
 
   const label = type === "scene" ? "scene" : "prop";

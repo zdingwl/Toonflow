@@ -81686,6 +81686,9 @@ A medium tracking shot follows the woman from behind as she ascends and approach
             table.text("designStatus").notNullable().defaultTo("draft");
             table.text("faceReferencePath");
             table.text("fullBodyReferencePath");
+            table.text("sideReferencePath");
+            table.text("backReferencePath");
+            table.text("referenceLayout");
             table.text("referenceFingerprint");
             table.integer("assetsId");
             table.integer("projectId");
@@ -106130,6 +106133,9 @@ var init_fixDB = __esm({
       await addColumn("o_assets", "designStatus", "text");
       await addColumn("o_assets", "faceReferencePath", "text");
       await addColumn("o_assets", "fullBodyReferencePath", "text");
+      await addColumn("o_assets", "sideReferencePath", "text");
+      await addColumn("o_assets", "backReferencePath", "text");
+      await addColumn("o_assets", "referenceLayout", "text");
       await addColumn("o_assets", "referenceFingerprint", "text");
       await addColumn("o_modelPrompt", "fileName", "string");
       await addColumn("o_modelPrompt", "path", "string");
@@ -106979,6 +106985,26 @@ A medium tracking shot follows the woman from behind as she ascends and approach
           models: JSON.stringify(models),
           inputValues: JSON.stringify(inputValues)
         });
+      }
+      const fourViewCodePath = import_path4.default.join(utils_default.getPath("vendor"), "comfyui_qwen21_fourview.ts");
+      if (import_fs2.default.existsSync(fourViewCodePath)) {
+        const fourViewCode = import_fs2.default.readFileSync(fourViewCodePath, "utf-8");
+        const fourViewExports = utils_default.vm((0, import_sucrase.transform)(fourViewCode, { transforms: ["typescript"] }).code);
+        const fourViewVendor = fourViewExports.vendor;
+        const fourViewData = await utils_default.db("o_vendorConfig").where("id", fourViewVendor.id).first();
+        if (!fourViewData) {
+          await utils_default.db("o_vendorConfig").insert({
+            id: fourViewVendor.id,
+            inputValues: JSON.stringify(fourViewVendor.inputValues ?? {}),
+            models: JSON.stringify(fourViewVendor.models ?? []),
+            enable: 1
+          });
+        } else {
+          await utils_default.db("o_vendorConfig").where("id", fourViewVendor.id).update({
+            models: JSON.stringify(fourViewVendor.models ?? []),
+            enable: 1
+          });
+        }
       }
     };
   }
@@ -239283,26 +239309,100 @@ var init_pollingPromptAssets = __esm({
 });
 
 // src/utils/assetReferenceMedia.ts
-async function ensureRoleReferenceMedia(sourcePath, name28) {
+function referenceItem(path35, name28, kind, suffix) {
+  return { path: path35, label: `${name28}${suffix}`, sourceType: "assets", assetType: "role", fileType: "image", referenceKind: kind };
+}
+async function ensureRoleReferenceMedia(sourcePath, name28, requestedLayout = "auto") {
   const source = await oss_default.getFile(sourcePath);
   const metadata = await (0, import_sharp3.default)(source).metadata();
   const width = metadata.width ?? 0;
   const height = metadata.height ?? 0;
   if (width < 4 || height < 4) return [];
-  const panelWidth = Math.floor(width / 2);
+  const layout = requestedLayout === "auto" ? width / height >= 2.2 ? "four_view" : "front_back" : requestedLayout;
   const safeName = name28.replace(/[^a-zA-Z0-9_-]+/g, "_").slice(0, 48) || "role";
   const base = sourcePath.replace(/^[/\\]+/, "").replace(/\.[^.]+$/u, "");
-  const facePath = `${base}.reference-${safeName}-face.png`;
-  const fullBodyPath = `${base}.reference-${safeName}-full-body.png`;
+  const paths = {
+    face: `${base}.reference-${safeName}-face.png`,
+    front: `${base}.reference-${safeName}-full-body-front.png`,
+    side: `${base}.reference-${safeName}-full-body-side.png`,
+    back: `${base}.reference-${safeName}-full-body-back.png`
+  };
+  if (layout === "four_view") {
+    const panelWidth2 = Math.floor(width / 4);
+    const lastWidth = width - panelWidth2 * 3;
+    const [face2, front2, side, back2] = await Promise.all([
+      (0, import_sharp3.default)(source).extract({ left: 0, top: 0, width: panelWidth2, height }).png().toBuffer(),
+      (0, import_sharp3.default)(source).extract({ left: panelWidth2, top: 0, width: panelWidth2, height }).png().toBuffer(),
+      (0, import_sharp3.default)(source).extract({ left: panelWidth2 * 2, top: 0, width: panelWidth2, height }).png().toBuffer(),
+      (0, import_sharp3.default)(source).extract({ left: panelWidth2 * 3, top: 0, width: lastWidth, height }).png().toBuffer()
+    ]);
+    await Promise.all([
+      oss_default.writeFile(paths.face, face2),
+      oss_default.writeFile(paths.front, front2),
+      oss_default.writeFile(paths.side, side),
+      oss_default.writeFile(paths.back, back2)
+    ]);
+    return [
+      referenceItem(paths.face, name28, "FACE", "\u8138\u90E8\u8EAB\u4EFD\u53C2\u8003"),
+      referenceItem(paths.front, name28, "FULL_BODY_FRONT", "\u6B63\u9762\u5168\u8EAB\u53C2\u8003"),
+      referenceItem(paths.side, name28, "FULL_BODY_SIDE", "\u4FA7\u9762\u5168\u8EAB\u53C2\u8003"),
+      referenceItem(paths.back, name28, "FULL_BODY_BACK", "\u80CC\u9762\u5168\u8EAB\u53C2\u8003")
+    ];
+  }
+  const panelWidth = Math.floor(width / 2);
   const faceHeight = Math.max(1, Math.floor(height * 0.46));
-  const face = await (0, import_sharp3.default)(source).extract({ left: 0, top: 0, width: panelWidth, height: faceHeight }).png().toBuffer();
-  const fullBody = await (0, import_sharp3.default)(source).extract({ left: 0, top: 0, width: panelWidth, height }).png().toBuffer();
-  await oss_default.writeFile(facePath, face);
-  await oss_default.writeFile(fullBodyPath, fullBody);
+  const [face, front, back] = await Promise.all([
+    (0, import_sharp3.default)(source).extract({ left: 0, top: 0, width: panelWidth, height: faceHeight }).png().toBuffer(),
+    (0, import_sharp3.default)(source).extract({ left: 0, top: 0, width: panelWidth, height }).png().toBuffer(),
+    (0, import_sharp3.default)(source).extract({ left: panelWidth, top: 0, width: width - panelWidth, height }).png().toBuffer()
+  ]);
+  await Promise.all([
+    oss_default.writeFile(paths.face, face),
+    oss_default.writeFile(paths.front, front),
+    oss_default.writeFile(paths.back, back)
+  ]);
   return [
-    { path: facePath, label: `${name28}\u8138\u90E8\u8EAB\u4EFD\u53C2\u8003`, sourceType: "assets", assetType: "role", fileType: "image" },
-    { path: fullBodyPath, label: `${name28}\u6B63\u9762\u5168\u8EAB\u53C2\u8003`, sourceType: "assets", assetType: "role", fileType: "image" }
+    referenceItem(paths.face, name28, "FACE", "\u8138\u90E8\u8EAB\u4EFD\u53C2\u8003"),
+    referenceItem(paths.front, name28, "FULL_BODY_FRONT", "\u6B63\u9762\u5168\u8EAB\u53C2\u8003"),
+    referenceItem(paths.back, name28, "FULL_BODY_BACK", "\u80CC\u9762\u5168\u8EAB\u53C2\u8003")
   ];
+}
+function roleReferenceDatabaseFields(references, layout) {
+  const byKind = new Map(references.map((item) => [item.referenceKind, item.path]));
+  return {
+    faceReferencePath: byKind.get("FACE") ?? null,
+    fullBodyReferencePath: byKind.get("FULL_BODY_FRONT") ?? null,
+    sideReferencePath: byKind.get("FULL_BODY_SIDE") ?? null,
+    backReferencePath: byKind.get("FULL_BODY_BACK") ?? null,
+    referenceLayout: layout
+  };
+}
+function requestedRoleReferenceKinds(prompt) {
+  const value = String(prompt || "").toLowerCase();
+  const kinds = ["FACE", "FULL_BODY_FRONT"];
+  if (/(侧面|侧身|侧脸|profile|side view|from the side)/i.test(value)) kinds.push("FULL_BODY_SIDE");
+  if (/(背面|背影|背对|后背|back view|rear view|from behind)/i.test(value)) kinds.push("FULL_BODY_BACK");
+  return kinds;
+}
+function persistedRoleReferencesForVideo(asset, prompt) {
+  const name28 = asset.name || "\u89D2\u8272";
+  const paths = {
+    FACE: asset.faceReferencePath,
+    FULL_BODY_FRONT: asset.fullBodyReferencePath,
+    FULL_BODY_SIDE: asset.sideReferencePath,
+    FULL_BODY_BACK: asset.backReferencePath
+  };
+  const suffix = {
+    FACE: "\u8138\u90E8\u8EAB\u4EFD\u53C2\u8003",
+    FULL_BODY_FRONT: "\u6B63\u9762\u5168\u8EAB\u53C2\u8003",
+    FULL_BODY_SIDE: "\u4FA7\u9762\u5168\u8EAB\u53C2\u8003",
+    FULL_BODY_BACK: "\u80CC\u9762\u5168\u8EAB\u53C2\u8003"
+  };
+  return requestedRoleReferenceKinds(prompt).map((kind) => {
+    const path35 = paths[kind];
+    if (!path35) throw new Error(`${name28}\u7F3A\u5C11${suffix[kind]}\uFF0C\u8BF7\u5148\u5728\u8D44\u4EA7\u9875\u91CD\u5EFA\u56DB\u89C6\u56FE\u8EAB\u4EFD\u53C2\u8003`);
+    return referenceItem(path35, name28, kind, suffix[kind]);
+  });
 }
 async function roleReferenceFingerprint(sourcePath) {
   return import_node_crypto13.default.createHash("sha256").update(await oss_default.getFile(sourcePath)).digest("hex");
@@ -239365,18 +239465,19 @@ var init_saveAssets = __esm({
             resolution: metadata.width && metadata.height ? `${metadata.width}x${metadata.height}` : null
           });
         } else if (adoptedImageId) {
-          const selected = await utils_default.db("o_image").where({ id: adoptedImageId, assetsId: id }).select("filePath").first();
+          const selected = await utils_default.db("o_image").where({ id: adoptedImageId, assetsId: id }).select("filePath", "model").first();
           adoptedPath = selected?.filePath || null;
         }
-        const references = type === "role" && adoptedPath ? await ensureRoleReferenceMedia(adoptedPath, asset.name || "role") : [];
+        const adoptedImage = adoptedImageId ? await utils_default.db("o_image").where({ id: adoptedImageId, assetsId: id }).select("model").first() : null;
+        const referenceLayout = adoptedImage?.model === "qwen-image-2.1-fourview-local" ? "four_view" : "auto";
+        const references = type === "role" && adoptedPath ? await ensureRoleReferenceMedia(adoptedPath, asset.name || "role", referenceLayout) : [];
         await utils_default.db("o_assets").where({ id, projectId }).update({
           prompt: prompt ?? "",
           imageId: adoptedImageId,
           ...type === "role" && adoptedPath && references.length >= 2 ? {
             designStatus: "ready",
             designVersion: utils_default.db.raw("COALESCE(designVersion, 0) + 1"),
-            faceReferencePath: references[0].path,
-            fullBodyReferencePath: references[1].path,
+            ...roleReferenceDatabaseFields(references, referenceLayout === "four_view" ? "four_view" : references.length >= 4 ? "four_view" : "front_back"),
             referenceFingerprint: await roleReferenceFingerprint(adoptedPath)
           } : {}
         });
@@ -239804,7 +239905,7 @@ function buildAssetImagePrompt(type, artStyle, name28, prompt) {
 
 ${facts}
 
-The two-panel layout contract above has priority over conflicting framing phrases in the character design facts.`;
+The four-panel layout contract above has priority over conflicting framing phrases in the character design facts.`;
   }
   const label = type === "scene" ? "scene" : "prop";
   return `Create one production-ready ${label} design reference render. Style: ${artStyle || "unspecified"}. Name: ${name28}. Design facts: ${prompt.trim()}. Use a controlled design-presentation view with coherent materials and lighting. No text, no labels, no watermark.`;
@@ -239826,9 +239927,9 @@ var init_assetPrompt = __esm({
     typeGuides = {
       role: `
 \u89D2\u8272\u8D44\u4EA7\uFF1A
-- \u5C06\u76EE\u6807\u660E\u786E\u5199\u6210\u201C\u540C\u4E00\u89D2\u8272\u7684\u6B63\u9762\u4E0E\u80CC\u9762\u53CC\u680F\u89D2\u8272\u8BBE\u5B9A\u56FE\u201D\uFF0C\u907F\u514D\u751F\u6210\u4E24\u4E2A\u4E0D\u540C\u89D2\u8272\u3002
-- \u63A8\u8350\u987A\u5E8F\uFF1A\u56FE\u50CF\u7528\u9014/\u98CE\u683C \u2192 \u89D2\u8272\u8EAB\u4EFD\u4E0E\u6C14\u8D28 \u2192 \u552F\u4E00\u8BC6\u522B\u7279\u5F81 \u2192 \u4F53\u6001/\u53D1\u578B/\u670D\u88C5 \u2192 \u53CC\u680F\u7248\u5F0F \u2192 \u4E00\u81F4\u6027 \u2192 \u80CC\u666F/\u5149\u7EBF \u2192 \u4EA4\u4ED8\u8FB9\u754C\u3002
-- \u53CC\u680F\u4ECE\u5DE6\u5230\u53F3\u56FA\u5B9A\u4E3A\uFF1A\u6B63\u9762\u5168\u8EAB\u3001\u80CC\u9762\u5168\u8EAB\uFF1B\u540C\u4E00\u89D2\u8272\u7684\u8138\u3001\u8BC6\u522B\u70B9\u3001\u53D1\u578B\u3001\u670D\u88C5\u3001\u4F53\u578B\u5FC5\u987B\u4E00\u81F4\u3002
+- \u5C06\u76EE\u6807\u660E\u786E\u5199\u6210\u201C\u540C\u4E00\u89D2\u8272\u7684\u56DB\u680F\u89D2\u8272\u8BBE\u5B9A\u56FE\u201D\uFF0C\u907F\u514D\u751F\u6210\u591A\u4E2A\u4E0D\u540C\u89D2\u8272\u3002
+- \u63A8\u8350\u987A\u5E8F\uFF1A\u56FE\u50CF\u7528\u9014/\u98CE\u683C \u2192 \u89D2\u8272\u8EAB\u4EFD\u4E0E\u6C14\u8D28 \u2192 \u552F\u4E00\u8BC6\u522B\u7279\u5F81 \u2192 \u4F53\u6001/\u53D1\u578B/\u670D\u88C5 \u2192 \u56DB\u680F\u7248\u5F0F \u2192 \u4E00\u81F4\u6027 \u2192 \u80CC\u666F/\u5149\u7EBF \u2192 \u4EA4\u4ED8\u8FB9\u754C\u3002
+- \u56DB\u680F\u4ECE\u5DE6\u5230\u53F3\u56FA\u5B9A\u4E3A\uFF1A\u8138\u90E8\u7279\u5199\u3001\u6B63\u9762\u5168\u8EAB\u300190\xB0\u5DE6\u4FA7\u9762\u5168\u8EAB\u3001\u6B63\u540E\u65B9\u5168\u8EAB\uFF1B\u540C\u4E00\u89D2\u8272\u7684\u8138\u3001\u8BC6\u522B\u70B9\u3001\u53D1\u578B\u3001\u670D\u88C5\u3001\u4F53\u578B\u5FC5\u987B\u4E00\u81F4\u3002
 - \u7528\u6237\u6CA1\u6709\u7ED9\u51FA\u7CBE\u786E\u8EAB\u9AD8\u65F6\uFF0C\u4E0D\u8981\u81EA\u884C\u7F16\u9020\u201C168cm/180cm\u201D\u7B49\u7CBE\u786E\u6570\u503C\uFF1B\u7528\u4E03\u5934\u8EAB\u3001\u4FEE\u957F\u3001\u633A\u62D4\u7B49\u76F8\u5BF9\u89C6\u89C9\u6BD4\u4F8B\u8868\u8FBE\u5373\u53EF\u3002
 - \u660E\u786E\u8981\u6C42\u5934\u9876\u4E0E\u811A\u5E95\u5B8C\u6574\u5165\u753B\uFF0C\u907F\u514D\u88C1\u5934\u3001\u88C1\u811A\uFF1B\u6700\u540E\u7528\u4E00\u53E5\u8BDD\u7EA6\u675F\u65E0\u6587\u5B57\u3001\u65E0\u6C34\u5370\u3001\u65E0 logo\u3002
 `,
@@ -239863,10 +239964,38 @@ var init_assetPrompt = __esm({
 7. \u98CE\u683C\u3001\u9020\u578B\u3001\u6750\u8D28\u548C\u706F\u5149\u5FC5\u987B\u4F7F\u7528\u53EF\u89C1\u3001\u53EF\u6267\u884C\u7684\u6B63\u5411\u63CF\u8FF0\u5EFA\u7ACB\u3002\u4EA4\u4ED8\u8FB9\u754C\u53EA\u5904\u7406\u6587\u5B57\u3001\u6C34\u5370\u3001\u88C1\u5207\u3001\u7ED3\u6784\u9519\u8BEF\u7B49\u57FA\u7840\u7F3A\u9677\uFF0C\u4E0D\u5F97\u7528\u5927\u91CF\u8D1F\u9762\u8BCD\u4EE3\u66FF\u6B63\u5411\u89C6\u89C9\u8BBE\u8BA1\uFF0C\u4E5F\u4E0D\u751F\u6210\u5355\u72EC\u7684 Negative Prompt \u533A\u5757\u3002
 8. \u901A\u5E38\u63A7\u5236\u5728\u80FD\u591F\u5B8C\u6574\u8868\u8FBE\u4FE1\u606F\u7684\u6700\u77ED\u957F\u5EA6\uFF1A\u89D2\u8272\u7EA6 300\u2013650 \u4E2D\u6587\u5B57\u7B26\uFF0C\u573A\u666F\u7EA6 220\u2013520 \u4E2D\u6587\u5B57\u7B26\uFF0C\u9053\u5177\u7EA6 180\u2013420 \u4E2D\u6587\u5B57\u7B26\uFF1B\u4FE1\u606F\u8DB3\u591F\u65F6\u5B81\u53EF\u66F4\u77ED\uFF0C\u4E0D\u4E3A\u51D1\u957F\u5EA6\u91CD\u590D\u5185\u5BB9\u3002
 `;
-    roleGenerationLayout = `CHARACTER TURNAROUND SHEET, ONE SAME CHARACTER, exactly two panels in one horizontal row.
-Panel 1: full-body front view. ONE figure centered in the LEFT HALF, face and chest facing the viewer.
-Panel 2: full-body back view. ONE figure centered in the RIGHT HALF, back of head and back facing the viewer. Both figures fill their half vertically at equal scale, feet aligned.
-Both panels must show the entire body from the top of the head to the soles of the feet, with generous margin above the head and below the feet. Keep exactly the same identity, hairstyle, body proportions, outfit, colors and accessories in both panels. Neutral standing pose, orthographic or weak-perspective design view, plain clean background and even studio lighting. No cropped head, no cropped feet, no extra people, no duplicate body parts, no text, no labels, no watermark.`;
+    roleGenerationLayout = `CHARACTER TURNAROUND SHEET, ONE SAME CHARACTER, exactly four panels in one horizontal row.
+Panel 1: straight-on head-and-shoulders portrait, full head visible.
+Panel 2: full-body front view.
+Panel 3: full-body strict 90-degree left side view.
+Panel 4: full-body straight back view.
+All full-body panels show the entire body with aligned feet. Keep exactly the same identity, hairstyle, body proportions, outfit, colors and accessories across all panels. Plain clean background and even virtual studio lighting. No cropped head, no cropped feet, no extra characters, no text, no labels, no watermark.`;
+  }
+});
+
+// src/utils/assetImageModel.ts
+async function resolveAssetImageModel(requestedModel, type) {
+  if (type !== "role") {
+    if (!requestedModel.includes(":")) throw new Error("\u56FE\u7247\u6A21\u578B\u6807\u8BC6\u65E0\u6548");
+    return requestedModel;
+  }
+  const provider = await utils_default.db("o_vendorConfig").where({ id: "comfyui_qwen21_fourview", enable: 1 }).select("models").first();
+  if (!provider) throw new Error("\u4EBA\u7269\u56DB\u89C6\u56FE\u6A21\u578B\u5C1A\u672A\u542F\u7528\uFF0C\u8BF7\u91CD\u542F\u670D\u52A1\u5B8C\u6210\u6A21\u578B\u914D\u7F6E\u8FC1\u79FB");
+  const models = JSON.parse(provider.models || "[]");
+  if (!models.some((item) => item.modelName === "qwen-image-2.1-fourview-local")) {
+    throw new Error("\u4EBA\u7269\u56DB\u89C6\u56FE\u6A21\u578B\u914D\u7F6E\u7F3A\u5931\uFF0C\u8BF7\u5728\u6A21\u578B\u8BBE\u7F6E\u4E2D\u68C0\u67E5 Qwen-Image-2.1 \u56DB\u89C6\u56FE\u4F9B\u5E94\u5546");
+  }
+  return ROLE_FOUR_VIEW_MODEL;
+}
+function isRoleFourViewModel(model) {
+  return model === ROLE_FOUR_VIEW_MODEL;
+}
+var ROLE_FOUR_VIEW_MODEL;
+var init_assetImageModel = __esm({
+  "src/utils/assetImageModel.ts"() {
+    "use strict";
+    init_utils3();
+    ROLE_FOUR_VIEW_MODEL = "comfyui_qwen21_fourview:qwen-image-2.1-fourview-local";
   }
 });
 
@@ -239885,6 +240014,7 @@ var init_batchGenerateImageAssets = __esm({
     init_responseFormat();
     init_assetPrompt();
     init_middleware();
+    init_assetImageModel();
     router22 = import_express22.default.Router();
     assetTypeConfig = {
       role: {
@@ -239948,17 +240078,19 @@ var init_batchGenerateImageAssets = __esm({
           const cfg = assetTypeConfig[item.type];
           if (!cfg) return;
           const imagePath = `/${projectId}/${cfg.dir}/${v4_default()}.jpg`;
-          const userPrompt = buildAssetImagePrompt(item.type, project.artStyle ?? "", item.name, item.prompt);
           const describe4 = `\u751F\u6210${cfg.label}\u56FE\uFF0C\u540D\u79F0\uFF1A${item.name}\uFF0C\u63D0\u793A\u8BCD\uFF1A${item.prompt}`;
           const relatedObjects = { id: item.id, projectId, type: cfg.label };
           try {
-            const aiImage = utils_default.Ai.Image(model);
+            const runtimeModel = await resolveAssetImageModel(model, item.type);
+            const isQwenFourView = isRoleFourViewModel(runtimeModel);
+            const userPrompt = isQwenFourView ? `Project CGI style: ${project.artStyle || "cinematic stylized realistic 3D animation"}. Current character and state: ${item.name}. Authoritative visible identity, wardrobe and state facts: ${item.prompt}` : buildAssetImagePrompt(item.type, project.artStyle ?? "", item.name, item.prompt);
+            const aiImage = utils_default.Ai.Image(runtimeModel);
             await aiImage.run(
               {
                 prompt: userPrompt,
                 referenceList: item.base64 ? [{ base64: item.base64, type: "image" }] : [],
                 size: resolution,
-                aspectRatio: item.type === "role" ? "1:1" : "16:9"
+                aspectRatio: isQwenFourView ? "2:3" : item.type === "role" ? "1:1" : "16:9"
               },
               {
                 taskClass: cfg.taskClass,
@@ -239970,7 +240102,7 @@ var init_batchGenerateImageAssets = __esm({
             await aiImage.save(imagePath);
             const actualImage = await (0, import_sharp5.default)(await utils_default.oss.getFile(imagePath)).metadata();
             const actualResolution = actualImage.width && actualImage.height ? `${actualImage.width}x${actualImage.height}` : resolution;
-            const roleReferences = item.type === "role" ? await ensureRoleReferenceMedia(imagePath, item.name) : [];
+            const roleReferences = item.type === "role" ? await ensureRoleReferenceMedia(imagePath, item.name, isQwenFourView ? "four_view" : "auto") : [];
             const imageData = await utils_default.db("o_image").where("id", imageId).select("*").first();
             if (!imageData) return;
             if (imageData.state === "\u751F\u6210\u5931\u8D25") return;
@@ -239978,7 +240110,7 @@ var init_batchGenerateImageAssets = __esm({
               state: "\u5DF2\u5B8C\u6210",
               filePath: imagePath,
               type: item.type,
-              model: model.split(/:(.+)/)[1],
+              model: runtimeModel.split(/:(.+)/)[1],
               resolution: actualResolution
             });
             await utils_default.db("o_assets").where({ id: item.id, projectId }).update({
@@ -239986,8 +240118,7 @@ var init_batchGenerateImageAssets = __esm({
               ...item.type === "role" && roleReferences.length >= 2 ? {
                 designStatus: "ready",
                 designVersion: utils_default.db.raw("COALESCE(designVersion, 0) + 1"),
-                faceReferencePath: roleReferences[0].path,
-                fullBodyReferencePath: roleReferences[1].path,
+                ...roleReferenceDatabaseFields(roleReferences, isQwenFourView ? "four_view" : "front_back"),
                 referenceFingerprint: await roleReferenceFingerprint(imagePath)
               } : {}
             });
@@ -240124,17 +240255,17 @@ var init_buildRoleReferences = __esm({
       validateFields({ projectId: external_exports.number(), assetsId: external_exports.number() }),
       async (req, res) => {
         const { projectId, assetsId } = req.body;
-        const asset = await utils_default.db("o_assets").where({ "o_assets.id": assetsId, "o_assets.projectId": projectId, "o_assets.type": "role" }).leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_assets.name", "o_image.filePath").first();
+        const asset = await utils_default.db("o_assets").where({ "o_assets.id": assetsId, "o_assets.projectId": projectId, "o_assets.type": "role" }).leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_assets.name", "o_image.filePath", "o_image.model").first();
         if (!asset) return res.status(404).send(error50("\u4EBA\u7269\u8D44\u4EA7\u4E0D\u5B58\u5728"));
         if (!asset.filePath) return res.status(409).send(error50("\u8BF7\u5148\u751F\u6210\u6216\u9009\u62E9\u4E00\u5F20\u4EBA\u7269\u89D2\u8272\u56FE"));
         try {
-          const references = await ensureRoleReferenceMedia(asset.filePath, asset.name || "role");
+          const layout = asset.model === "qwen-image-2.1-fourview-local" ? "four_view" : "auto";
+          const references = await ensureRoleReferenceMedia(asset.filePath, asset.name || "role", layout);
           if (references.length < 2) return res.status(422).send(error50("\u5F53\u524D\u4EBA\u7269\u56FE\u5C3A\u5BF8\u65E0\u6548\uFF0C\u65E0\u6CD5\u751F\u6210\u8EAB\u4EFD\u53C2\u8003"));
           await utils_default.db("o_assets").where({ id: assetsId, projectId }).update({
             designStatus: "ready",
             designVersion: utils_default.db.raw("COALESCE(designVersion, 0) + 1"),
-            faceReferencePath: references[0].path,
-            fullBodyReferencePath: references[1].path,
+            ...roleReferenceDatabaseFields(references, layout === "four_view" ? "four_view" : references.length >= 4 ? "four_view" : "front_back"),
             referenceFingerprint: await roleReferenceFingerprint(asset.filePath)
           });
           const updated = await utils_default.db("o_assets").where({ id: assetsId, projectId }).select("designVersion").first();
@@ -240142,7 +240273,9 @@ var init_buildRoleReferences = __esm({
             designStatus: "ready",
             designVersion: updated?.designVersion,
             faceReferenceUrl: await utils_default.oss.getFileUrl(references[0].path),
-            fullBodyReferenceUrl: await utils_default.oss.getFileUrl(references[1].path)
+            fullBodyReferenceUrl: await utils_default.oss.getFileUrl(references[1].path),
+            sideReferenceUrl: references.find((item) => item.referenceKind === "FULL_BODY_SIDE")?.path ? await utils_default.oss.getFileUrl(references.find((item) => item.referenceKind === "FULL_BODY_SIDE").path) : null,
+            backReferenceUrl: references.find((item) => item.referenceKind === "FULL_BODY_BACK")?.path ? await utils_default.oss.getFileUrl(references.find((item) => item.referenceKind === "FULL_BODY_BACK").path) : null
           }));
         } catch (cause) {
           return res.status(422).send(error50(`\u751F\u6210\u8EAB\u4EFD\u53C2\u8003\u5931\u8D25\uFF1A${utils_default.error(cause).message}`));
@@ -240193,6 +240326,7 @@ var init_generateAssets = __esm({
     init_responseFormat();
     init_middleware();
     init_assetPrompt();
+    init_assetImageModel();
     router26 = import_express26.default.Router();
     assetTypeConfig2 = {
       role: { label: "\u89D2\u8272", taskClass: "\u89D2\u8272\u56FE\u751F\u6210", dir: "role" },
@@ -240217,8 +240351,9 @@ var init_generateAssets = __esm({
       if (!project) return res.status(404).send(error50("\u9879\u76EE\u4E3A\u7A7A"));
       const cfg = assetTypeConfig2[type];
       if (!cfg) return res.status(400).send(error50("\u4E0D\u652F\u6301\u7684\u8D44\u4EA7\u7C7B\u578B"));
-      const [vendorId, selectedModelName] = model.split(/:(.+)/);
-      const isQwenFourView = vendorId === "comfyui_qwen21_fourview" && selectedModelName === "qwen-image-2.1-fourview-local";
+      const runtimeModel = await resolveAssetImageModel(model, type);
+      const [vendorId, selectedModelName] = runtimeModel.split(/:(.+)/);
+      const isQwenFourView = isRoleFourViewModel(runtimeModel);
       if (isQwenFourView && type !== "role") return res.status(400).send(error50("Qwen \u56DB\u89C6\u56FE\u5DE5\u4F5C\u6D41\u4EC5\u652F\u6301\u89D2\u8272\u8D44\u4EA7\uFF0C\u573A\u666F\u548C\u9053\u5177\u8BF7\u9009\u5BF9\u5E94\u6A21\u578B"));
       if (styleBase64 && (!isQwenFourView || !base644)) return res.status(400).send(error50("\u7B2C\u4E8C\u5F20\u98CE\u683C\u53C2\u8003\u56FE\u4EC5\u7528\u4E8E Qwen \u56DB\u89C6\u56FE\uFF0C\u4E14\u5FC5\u987B\u5148\u63D0\u4F9B\u5F53\u524D\u72B6\u6001\u7684\u6B63\u9762\u5168\u8EAB\u951A\u70B9\u56FE"));
       if (isQwenFourView) {
@@ -240246,7 +240381,7 @@ var init_generateAssets = __esm({
         const userPrompt = isQwenFourView ? `Project CGI style: ${runtimeArtStyle || "cinematic stylized realistic 3D animation"}. Current character and state: ${runtimeName}. Authoritative visible identity, wardrobe and state facts: ${runtimePrompt}` : buildAssetImagePrompt(type, runtimeArtStyle, runtimeName, runtimePrompt);
         const references = base644 ? [{ type: "image", base64: base644 }] : [];
         if (isQwenFourView && styleBase64) references.push({ type: "image", base64: styleBase64 });
-        const aiImage = utils_default.Ai.Image(model);
+        const aiImage = utils_default.Ai.Image(runtimeModel);
         await aiImage.run({
           prompt: userPrompt,
           referenceList: references,
@@ -240260,7 +240395,7 @@ var init_generateAssets = __esm({
         if (type === "role" && (!(metadata.width && metadata.height) || metadata.width / metadata.height < (isQwenFourView ? 1.7 : 0.95))) {
           throw new Error("\u89D2\u8272\u8BBE\u5B9A\u56FE\u753B\u5E03\u6BD4\u4F8B\u5F02\u5E38\uFF0C\u65E0\u6CD5\u521B\u5EFA\u4EBA\u7269\u53C2\u8003\u56FE");
         }
-        const roleReferences = type === "role" ? await ensureRoleReferenceMedia(imagePath, name28) : [];
+        const roleReferences = type === "role" ? await ensureRoleReferenceMedia(imagePath, name28, isQwenFourView ? "four_view" : "auto") : [];
         const imageData = await utils_default.db("o_image").where("id", imageId).select("*").first();
         if (!imageData) return res.status(500).send(error50("\u8D44\u4EA7\u5DF2\u88AB\u5220\u9664"));
         if (imageData.state === "\u751F\u6210\u5931\u8D25") return;
@@ -240270,8 +240405,7 @@ var init_generateAssets = __esm({
           ...type === "role" && roleReferences.length >= 2 ? {
             designStatus: "ready",
             designVersion: utils_default.db.raw("COALESCE(designVersion, 0) + 1"),
-            faceReferencePath: roleReferences[0].path,
-            fullBodyReferencePath: roleReferences[1].path,
+            ...roleReferenceDatabaseFields(roleReferences, isQwenFourView ? "four_view" : "front_back"),
             referenceFingerprint: await roleReferenceFingerprint(imagePath)
           } : {}
         });
@@ -240554,6 +240688,8 @@ var init_getAllAssets = __esm({
               filePath: parent.filePath && await utils_default.oss.getSmallImageUrl(parent.filePath),
               faceReferenceUrl: parent.faceReferencePath && await utils_default.oss.getFileUrl(parent.faceReferencePath),
               fullBodyReferenceUrl: parent.fullBodyReferencePath && await utils_default.oss.getFileUrl(parent.fullBodyReferencePath),
+              sideReferenceUrl: parent.sideReferencePath && await utils_default.oss.getFileUrl(parent.sideReferencePath),
+              backReferenceUrl: parent.backReferencePath && await utils_default.oss.getFileUrl(parent.backReferencePath),
               historyImages: historyImagesWithUrl,
               relepedAudio: repleAssets[parent.id] ?? []
             };
@@ -243100,14 +243236,21 @@ var init_addTrack = __esm({
 });
 
 // src/utils/h3ReferenceSlots.ts
-function expandH3AssetSlots(items) {
+function expandH3AssetSlots(items, directionText = "") {
   const expanded = items.flatMap((item) => {
     const type = String(item.type || item.assetType || "").toLowerCase();
     if (type !== "role" && type !== "character") return [item];
-    return [
-      { ...item, _referenceRole: "FACE", name: `${item.name || "\u89D2\u8272"}\u8138\u90E8\u8EAB\u4EFD\u53C2\u8003` },
-      { ...item, _referenceRole: "FULL_BODY_FRONT", name: `${item.name || "\u89D2\u8272"}\u6B63\u9762\u5168\u8EAB\u53C2\u8003` }
-    ];
+    const labels = {
+      FACE: "\u8138\u90E8\u8EAB\u4EFD\u53C2\u8003",
+      FULL_BODY_FRONT: "\u6B63\u9762\u5168\u8EAB\u53C2\u8003",
+      FULL_BODY_SIDE: "\u4FA7\u9762\u5168\u8EAB\u53C2\u8003",
+      FULL_BODY_BACK: "\u80CC\u9762\u5168\u8EAB\u53C2\u8003"
+    };
+    return requestedRoleReferenceKinds(directionText).map((kind) => ({
+      ...item,
+      _referenceRole: kind,
+      name: `${item.name || "\u89D2\u8272"}${labels[kind]}`
+    }));
   });
   if (expanded.length > 9) {
     throw new Error(`MiniMax H3 \u6700\u591A\u652F\u6301 9 \u5F20\u53C2\u8003\u56FE\uFF0C\u5F53\u524D\u4EBA\u7269\u8EAB\u4EFD\u3001\u573A\u666F\u548C\u9053\u5177\u5171\u9700\u8981 ${expanded.length} \u5F20\uFF1B\u8BF7\u51CF\u5C11\u5F53\u524D\u955C\u5934\u7684\u53EF\u89C1\u8D44\u4EA7`);
@@ -243117,6 +243260,7 @@ function expandH3AssetSlots(items) {
 var init_h3ReferenceSlots = __esm({
   "src/utils/h3ReferenceSlots.ts"() {
     "use strict";
+    init_assetReferenceMedia();
   }
 });
 
@@ -243289,9 +243433,11 @@ var init_batchGeneratePrompt = __esm({
                     _fileType: item._fileType
                   });
               }
+              const h3DirectionText = storyboard.map((item) => `${item.videoDesc || ""}
+${item.prompt || ""}`).join("\n");
               const pictureSourceItems = h3PromptMode ? expandH3AssetSlots(images.filter(
                 (item) => item && item._type === "assets" && item._reference !== false && item.filePath && item._fileType !== "audio" && item._fileType !== "video"
-              ).sort((a, b) => h3AssetRank(a) - h3AssetRank(b))) : images.filter((item) => item && item._reference !== false && item.filePath);
+              ).sort((a, b) => h3AssetRank(a) - h3AssetRank(b)), h3DirectionText) : images.filter((item) => item && item._reference !== false && item.filePath);
               const referenceSlotItems = pictureSourceItems.map((item, index) => {
                 const slot = index + 1;
                 const sources = item._type === "assets" ? "assets" : "storyboard";
@@ -243531,7 +243677,20 @@ var init_batchGenerateVideo = __esm({
                 } : null;
               }
               if (item.sources === "assets") {
-                const found = await utils_default.db("o_assets").where({ "o_assets.id": item.id, "o_assets.projectId": projectId }).leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_image.filePath", "o_image.type as imageType", "o_assets.id as assetId", "o_assets.assetsId as parentAssetId", "o_assets.name", "o_assets.prompt", "o_assets.type as assetType").first();
+                const found = await utils_default.db("o_assets").where({ "o_assets.id": item.id, "o_assets.projectId": projectId }).leftJoin("o_image", "o_assets.imageId", "o_image.id").select(
+                  "o_image.filePath",
+                  "o_image.type as imageType",
+                  "o_assets.id as assetId",
+                  "o_assets.assetsId as parentAssetId",
+                  "o_assets.name",
+                  "o_assets.prompt",
+                  "o_assets.type as assetType",
+                  "o_assets.faceReferencePath",
+                  "o_assets.fullBodyReferencePath",
+                  "o_assets.sideReferencePath",
+                  "o_assets.backReferencePath",
+                  "o_assets.referenceLayout"
+                ).first();
                 return found ? {
                   path: found.filePath ?? void 0,
                   sourceType: "assets",
@@ -243541,7 +243700,12 @@ var init_batchGenerateVideo = __esm({
                   fileType: item.fileType || found.imageType || "image",
                   referenceType: item.type,
                   label: item.label || found.name,
-                  prompt: item.prompt || found.prompt || void 0
+                  prompt: item.prompt || found.prompt || void 0,
+                  faceReferencePath: found.faceReferencePath,
+                  fullBodyReferencePath: found.fullBodyReferencePath,
+                  sideReferencePath: found.sideReferencePath,
+                  backReferencePath: found.backReferencePath,
+                  referenceLayout: found.referenceLayout
                 } : null;
               }
               return null;
@@ -243559,8 +243723,7 @@ var init_batchGenerateVideo = __esm({
             }
             const expanded = h3 ? (await Promise.all(images.map(async (item) => {
               if (item.sourceType === "assets" && item.assetType === "role" && item.path) {
-                const refs = await ensureRoleReferenceMedia(item.path, item.label || "role");
-                return refs.length ? refs : [item];
+                return persistedRoleReferencesForVideo({ ...item, name: item.label }, track.prompt);
               }
               return [item];
             }))).flat() : images;
@@ -243817,7 +243980,20 @@ var init_generateVideo = __esm({
               } : null;
             }
             if (item.sources === "assets") {
-              const source = await utils_default.db("o_assets").where({ "o_assets.id": item.id, "o_assets.projectId": projectId }).leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_image.filePath", "o_image.type as imageType", "o_assets.id as assetId", "o_assets.assetsId as parentAssetId", "o_assets.name", "o_assets.prompt", "o_assets.type as assetType").first();
+              const source = await utils_default.db("o_assets").where({ "o_assets.id": item.id, "o_assets.projectId": projectId }).leftJoin("o_image", "o_assets.imageId", "o_image.id").select(
+                "o_image.filePath",
+                "o_image.type as imageType",
+                "o_assets.id as assetId",
+                "o_assets.assetsId as parentAssetId",
+                "o_assets.name",
+                "o_assets.prompt",
+                "o_assets.type as assetType",
+                "o_assets.faceReferencePath",
+                "o_assets.fullBodyReferencePath",
+                "o_assets.sideReferencePath",
+                "o_assets.backReferencePath",
+                "o_assets.referenceLayout"
+              ).first();
               return source ? {
                 path: source.filePath ?? void 0,
                 sourceType: "assets",
@@ -243827,7 +244003,12 @@ var init_generateVideo = __esm({
                 fileType: item.fileType || source.imageType || "image",
                 referenceType: item.type,
                 label: item.label || source.name,
-                prompt: item.prompt || source.prompt || void 0
+                prompt: item.prompt || source.prompt || void 0,
+                faceReferencePath: source.faceReferencePath,
+                fullBodyReferencePath: source.fullBodyReferencePath,
+                sideReferencePath: source.sideReferencePath,
+                backReferencePath: source.backReferencePath,
+                referenceLayout: source.referenceLayout
               } : null;
             }
             return null;
@@ -243852,8 +244033,7 @@ var init_generateVideo = __esm({
         }
         const h3Images = h3 ? (await Promise.all(images.map(async (item) => {
           if (item.sourceType === "assets" && item.assetType === "role" && item.path) {
-            const refs = await ensureRoleReferenceMedia(item.path, item.label || "role");
-            return refs.length ? refs : [item];
+            return persistedRoleReferencesForVideo({ ...item, name: item.label }, prompt);
           }
           return [item];
         }))).flat() : images;
@@ -244081,9 +244261,11 @@ var init_generateVideoPrompt = __esm({
         }
         const artStyle = projectData?.artStyle || "\u65E0";
         const visualManual = utils_default.getArtPrompt(artStyle, "art_skills", "art_storyboard_video");
+        const h3DirectionText = storyboard.map((item) => `${item.videoDesc || ""}
+${item.prompt || ""}`).join("\n");
         const pictureSourceItems = h3PromptMode ? expandH3AssetSlots(images.filter(
           (item) => item && item._type === "assets" && item._reference !== false && item.filePath && item._fileType !== "audio" && item._fileType !== "video"
-        ).sort((a, b) => h3AssetRank2(a) - h3AssetRank2(b))) : images.filter((item) => item && item._reference !== false && item.filePath);
+        ).sort((a, b) => h3AssetRank2(a) - h3AssetRank2(b)), h3DirectionText) : images.filter((item) => item && item._reference !== false && item.filePath);
         const referenceSlotItems = pictureSourceItems.map((item, index) => {
           const slot = index + 1;
           const sources = item._type === "assets" ? "assets" : "storyboard";

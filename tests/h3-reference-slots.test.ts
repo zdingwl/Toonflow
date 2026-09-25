@@ -20,3 +20,10 @@ test("H3 rejects reference sets larger than nine slots", () => {
     /最多支持 9 张参考图/,
   );
 });
+
+test("H3 adds side and back references only when the shot direction requires them", () => {
+  const slots = expandH3AssetSlots([{ id: 1, type: "role", name: "艾娃" }], "侧面转身后背对镜头");
+  assert.deepEqual(slots.map(item => item._referenceRole), [
+    "FACE", "FULL_BODY_FRONT", "FULL_BODY_SIDE", "FULL_BODY_BACK",
+  ]);
+});

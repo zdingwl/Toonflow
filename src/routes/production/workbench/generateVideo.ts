@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { success, error } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { ReferenceList } from "@/utils/ai";
-import { ensureRoleReferenceMedia } from "@/utils/assetReferenceMedia";
+import { persistedRoleReferencesForVideo } from "@/utils/assetReferenceMedia";
 import { inspectVideoQuality } from "@/utils/videoQuality";
 import { assertH3ActiveStates, assertH3PictureSlots } from "@/utils/h3VisualStateGuard";
 const router = express.Router();
@@ -30,6 +30,11 @@ interface ResolvedReference {
   referenceType?: Type;
   label?: string;
   prompt?: string;
+  faceReferencePath?: string | null;
+  fullBodyReferencePath?: string | null;
+  sideReferencePath?: string | null;
+  backReferencePath?: string | null;
+  referenceLayout?: string | null;
 }
 function isMiniMaxH3(model: string): boolean {
   const value = String(model || "").toLowerCase();
@@ -79,13 +84,21 @@ export default router.post(
           const source = await u.db("o_assets")
             .where({ "o_assets.id": item.id, "o_assets.projectId": projectId })
             .leftJoin("o_image", "o_assets.imageId", "o_image.id")
-            .select("o_image.filePath", "o_image.type as imageType", "o_assets.id as assetId", "o_assets.assetsId as parentAssetId", "o_assets.name", "o_assets.prompt", "o_assets.type as assetType")
+            .select(
+              "o_image.filePath", "o_image.type as imageType", "o_assets.id as assetId",
+              "o_assets.assetsId as parentAssetId", "o_assets.name", "o_assets.prompt", "o_assets.type as assetType",
+              "o_assets.faceReferencePath", "o_assets.fullBodyReferencePath", "o_assets.sideReferencePath",
+              "o_assets.backReferencePath", "o_assets.referenceLayout",
+            )
             .first();
           return source ? {
             path: source.filePath ?? undefined, sourceType: "assets",
             assetId: source.assetId, parentAssetId: source.parentAssetId, assetType: source.assetType,
             fileType: item.fileType || source.imageType || "image", referenceType: item.type,
             label: item.label || source.name, prompt: item.prompt || source.prompt || undefined,
+            faceReferencePath: source.faceReferencePath, fullBodyReferencePath: source.fullBodyReferencePath,
+            sideReferencePath: source.sideReferencePath, backReferencePath: source.backReferencePath,
+            referenceLayout: source.referenceLayout,
           } : null;
         }
         return null;
@@ -108,8 +121,7 @@ export default router.post(
     const h3Images = h3
       ? (await Promise.all(images.map(async item => {
           if (item.sourceType === "assets" && item.assetType === "role" && item.path) {
-            const refs = await ensureRoleReferenceMedia(item.path, item.label || "role");
-            return refs.length ? refs : [item];
+            return persistedRoleReferencesForVideo({ ...item, name: item.label }, prompt);
           }
           return [item];
         }))).flat()

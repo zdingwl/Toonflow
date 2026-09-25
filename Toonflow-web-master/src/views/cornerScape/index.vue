@@ -197,9 +197,11 @@
                 <span>设计版本 {{ currentItem.designVersion || 1 }}</span>
                 <span v-if="currentItem.resolution">实际尺寸 {{ currentItem.resolution }}</span>
               </div>
-              <div class="identityImages" v-if="currentItem.faceReferenceUrl || currentItem.fullBodyReferenceUrl">
+              <div class="identityImages" v-if="currentItem.faceReferenceUrl || currentItem.fullBodyReferenceUrl || currentItem.sideReferenceUrl || currentItem.backReferenceUrl">
                 <div v-if="currentItem.faceReferenceUrl"><span>脸部身份参考</span><t-image :src="currentItem.faceReferenceUrl" fit="contain" /></div>
                 <div v-if="currentItem.fullBodyReferenceUrl"><span>正面全身参考</span><t-image :src="currentItem.fullBodyReferenceUrl" fit="contain" /></div>
+                <div v-if="currentItem.sideReferenceUrl"><span>侧面全身参考</span><t-image :src="currentItem.sideReferenceUrl" fit="contain" /></div>
+                <div v-if="currentItem.backReferenceUrl"><span>背面全身参考</span><t-image :src="currentItem.backReferenceUrl" fit="contain" /></div>
               </div>
               <t-button
                 v-if="currentItem.designStatus !== 'ready'"
@@ -309,6 +311,8 @@ interface DataItem {
   designVersion?: number;
   faceReferenceUrl?: string | null;
   fullBodyReferenceUrl?: string | null;
+  sideReferenceUrl?: string | null;
+  backReferenceUrl?: string | null;
   historyImages: Image[];
   errorReason: string;
   promptErrorReason: string;
@@ -908,6 +912,7 @@ async function pollingImageAssets() {
             model: fresh.model, resolution: fresh.resolution, errorReason: fresh.errorReason,
             designStatus: fresh.designStatus, designVersion: fresh.designVersion,
             faceReferenceUrl: fresh.faceReferenceUrl, fullBodyReferenceUrl: fresh.fullBodyReferenceUrl,
+            sideReferenceUrl: fresh.sideReferenceUrl, backReferenceUrl: fresh.backReferenceUrl,
             historyImages: fresh.historyImages,
           });
         });

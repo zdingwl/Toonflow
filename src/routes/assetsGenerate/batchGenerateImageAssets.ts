@@ -4,10 +4,11 @@ import u from "@/utils";
 import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
 import sharp from "sharp";
-import { ensureRoleReferenceMedia, roleReferenceFingerprint } from "@/utils/assetReferenceMedia";
+import { ensureRoleReferenceMedia, roleReferenceDatabaseFields, roleReferenceFingerprint } from "@/utils/assetReferenceMedia";
 import { error, success } from "@/lib/responseFormat";
 import { buildAssetImagePrompt } from "@/utils/assetPrompt";
 import { validateFields } from "@/middleware/middleware";
+import { isRoleFourViewModel, resolveAssetImageModel } from "@/utils/assetImageModel";
 
 const router = express.Router();
 
@@ -93,17 +94,21 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
       if (!cfg) return;
 
       const imagePath = `/${projectId}/${cfg.dir}/${uuidv4()}.jpg`;
-      const userPrompt = buildAssetImagePrompt(item.type as AssetType, project.artStyle ?? "", item.name, item.prompt);
       const describe = `生成${cfg.label}图，名称：${item.name}，提示词：${item.prompt}`;
       const relatedObjects = { id: item.id, projectId, type: cfg.label };
       try {
-        const aiImage = u.Ai.Image(model);
+        const runtimeModel = await resolveAssetImageModel(model, item.type);
+        const isQwenFourView = isRoleFourViewModel(runtimeModel);
+        const userPrompt = isQwenFourView
+          ? `Project CGI style: ${project.artStyle || "cinematic stylized realistic 3D animation"}. Current character and state: ${item.name}. Authoritative visible identity, wardrobe and state facts: ${item.prompt}`
+          : buildAssetImagePrompt(item.type as AssetType, project.artStyle ?? "", item.name, item.prompt);
+        const aiImage = u.Ai.Image(runtimeModel);
         await aiImage.run(
           {
             prompt: userPrompt,
             referenceList: item.base64 ? [{ base64: item.base64, type: "image" }] : [],
             size: resolution,
-            aspectRatio: item.type === "role" ? "1:1" : "16:9",
+            aspectRatio: isQwenFourView ? "2:3" : item.type === "role" ? "1:1" : "16:9",
           },
           {
             taskClass: cfg.taskClass,
@@ -115,7 +120,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
         await aiImage.save(imagePath);
         const actualImage = await sharp(await u.oss.getFile(imagePath)).metadata();
         const actualResolution = actualImage.width && actualImage.height ? `${actualImage.width}x${actualImage.height}` : resolution;
-        const roleReferences = item.type === "role" ? await ensureRoleReferenceMedia(imagePath, item.name) : [];
+        const roleReferences = item.type === "role" ? await ensureRoleReferenceMedia(imagePath, item.name, isQwenFourView ? "four_view" : "auto") : [];
 
         const imageData = await u.db("o_image").where("id", imageId).select("*").first();
         if (!imageData) return;
@@ -127,7 +132,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
             state: "已完成",
             filePath: imagePath,
             type: item.type,
-            model: model.split(/:(.+)/)[1],
+            model: runtimeModel.split(/:(.+)/)[1],
             resolution: actualResolution,
           });
 
@@ -137,8 +142,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
             ? {
                 designStatus: "ready",
                 designVersion: u.db.raw("COALESCE(designVersion, 0) + 1"),
-                faceReferencePath: roleReferences[0].path,
-                fullBodyReferencePath: roleReferences[1].path,
+                ...roleReferenceDatabaseFields(roleReferences, isQwenFourView ? "four_view" : "front_back"),
                 referenceFingerprint: await roleReferenceFingerprint(imagePath),
               }
             : {}),

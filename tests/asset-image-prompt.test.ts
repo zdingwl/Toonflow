@@ -6,7 +6,7 @@ import {
   needsFluxPromptTranslation,
 } from "../src/utils/assetPrompt";
 
-test("role runtime prompt only enforces the front/back layout", () => {
+test("role runtime prompt enforces the canonical four-view layout", () => {
   const result = buildAssetImagePrompt(
     "role",
     "写实国风",
@@ -15,9 +15,11 @@ test("role runtime prompt only enforces the front/back layout", () => {
   );
 
   assert.match(result, /^CHARACTER TURNAROUND SHEET/);
-  assert.match(result, /exactly two panels in one horizontal row/);
-  assert.match(result, /Panel 1: full-body front view/);
-  assert.match(result, /Panel 2: full-body back view/);
+  assert.match(result, /exactly four panels in one horizontal row/);
+  assert.match(result, /Panel 1: straight-on head-and-shoulders portrait/);
+  assert.match(result, /Panel 2: full-body front view/);
+  assert.match(result, /Panel 3: full-body strict 90-degree left side view/);
+  assert.match(result, /Panel 4: full-body straight back view/);
   assert.doesNotMatch(result, /phone camera|DSLR photography|not a photograph/);
   assert.match(result, /layout contract above has priority/);
   assert.match(result, /顾清寒/);

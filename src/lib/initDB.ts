@@ -492,6 +492,9 @@ export default async (knex: Knex, forceInit: boolean = false): Promise<void> => 
         table.text("designStatus").notNullable().defaultTo("draft");
         table.text("faceReferencePath");
         table.text("fullBodyReferencePath");
+        table.text("sideReferencePath");
+        table.text("backReferencePath");
+        table.text("referenceLayout");
         table.text("referenceFingerprint");
         table.integer("assetsId");
         table.integer("projectId");

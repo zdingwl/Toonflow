@@ -3,10 +3,11 @@ import u from "@/utils";
 import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
 import sharp from "sharp";
-import { ensureRoleReferenceMedia, roleReferenceFingerprint } from "@/utils/assetReferenceMedia";
+import { ensureRoleReferenceMedia, roleReferenceDatabaseFields, roleReferenceFingerprint } from "@/utils/assetReferenceMedia";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { buildAssetImagePrompt, buildFluxPromptTranslationRequest, needsFluxPromptTranslation } from "@/utils/assetPrompt";
+import { isRoleFourViewModel, resolveAssetImageModel } from "@/utils/assetImageModel";
 
 const router = express.Router();
 type AssetType = "role" | "scene" | "tool";
@@ -30,8 +31,9 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
   if (!project) return res.status(404).send(error("项目为空"));
   const cfg = assetTypeConfig[type as AssetType];
   if (!cfg) return res.status(400).send(error("不支持的资产类型"));
-  const [vendorId, selectedModelName] = model.split(/:(.+)/);
-  const isQwenFourView = vendorId === "comfyui_qwen21_fourview" && selectedModelName === "qwen-image-2.1-fourview-local";
+  const runtimeModel = await resolveAssetImageModel(model, type);
+  const [vendorId, selectedModelName] = runtimeModel.split(/:(.+)/);
+  const isQwenFourView = isRoleFourViewModel(runtimeModel);
   if (isQwenFourView && type !== "role") return res.status(400).send(error("Qwen 四视图工作流仅支持角色资产，场景和道具请选对应模型"));
   if (styleBase64 && (!isQwenFourView || !base64)) return res.status(400).send(error("第二张风格参考图仅用于 Qwen 四视图，且必须先提供当前状态的正面全身锚点图"));
 
@@ -66,7 +68,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
       : buildAssetImagePrompt(type as AssetType, runtimeArtStyle, runtimeName, runtimePrompt);
     const references = base64 ? [{ type: "image" as const, base64 }] : [];
     if (isQwenFourView && styleBase64) references.push({ type: "image" as const, base64: styleBase64 });
-    const aiImage = u.Ai.Image(model);
+    const aiImage = u.Ai.Image(runtimeModel);
     await aiImage.run({
       prompt: userPrompt, referenceList: references, size: resolution,
       // A standard four-column board is wide; Qwen renders each source panel portrait internally.
@@ -80,7 +82,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
     if (type === "role" && (!(metadata.width && metadata.height) || metadata.width / metadata.height < (isQwenFourView ? 1.7 : 0.95))) {
       throw new Error("角色设定图画布比例异常，无法创建人物参考图");
     }
-    const roleReferences = type === "role" ? await ensureRoleReferenceMedia(imagePath, name) : [];
+    const roleReferences = type === "role" ? await ensureRoleReferenceMedia(imagePath, name, isQwenFourView ? "four_view" : "auto") : [];
     const imageData = await u.db("o_image").where("id", imageId).select("*").first();
     if (!imageData) return res.status(500).send(error("资产已被删除"));
     if (imageData.state === "生成失败") return;
@@ -89,7 +91,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
       imageId,
       ...(type === "role" && roleReferences.length >= 2 ? {
         designStatus: "ready", designVersion: u.db.raw("COALESCE(designVersion, 0) + 1"),
-        faceReferencePath: roleReferences[0].path, fullBodyReferencePath: roleReferences[1].path,
+        ...roleReferenceDatabaseFields(roleReferences, isQwenFourView ? "four_view" : "front_back"),
         referenceFingerprint: await roleReferenceFingerprint(imagePath),
       } : {}),
     });

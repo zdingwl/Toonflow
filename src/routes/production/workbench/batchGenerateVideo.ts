@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { success, error } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { ReferenceList } from "@/utils/ai";
-import { ensureRoleReferenceMedia } from "@/utils/assetReferenceMedia";
+import { persistedRoleReferencesForVideo } from "@/utils/assetReferenceMedia";
 import { inspectVideoQuality } from "@/utils/videoQuality";
 import { assertH3ActiveStates, assertH3PictureSlots } from "@/utils/h3VisualStateGuard";
 const router = express.Router();
@@ -21,6 +21,9 @@ interface ResolvedReference {
   assetId?: number; parentAssetId?: number | null;
   assetType?: string; fileType?: string; referenceType?: Type;
   label?: string; prompt?: string;
+  faceReferencePath?: string | null; fullBodyReferencePath?: string | null;
+  sideReferencePath?: string | null; backReferencePath?: string | null;
+  referenceLayout?: string | null;
 }
 const isMiniMaxH3 = (model: string) => {
   const value = String(model || "").toLowerCase();
@@ -74,13 +77,21 @@ export default router.post("/", validateFields({
             const found = await u.db("o_assets")
               .where({ "o_assets.id": item.id, "o_assets.projectId": projectId })
               .leftJoin("o_image", "o_assets.imageId", "o_image.id")
-              .select("o_image.filePath", "o_image.type as imageType", "o_assets.id as assetId", "o_assets.assetsId as parentAssetId", "o_assets.name", "o_assets.prompt", "o_assets.type as assetType")
+              .select(
+                "o_image.filePath", "o_image.type as imageType", "o_assets.id as assetId",
+                "o_assets.assetsId as parentAssetId", "o_assets.name", "o_assets.prompt", "o_assets.type as assetType",
+                "o_assets.faceReferencePath", "o_assets.fullBodyReferencePath", "o_assets.sideReferencePath",
+                "o_assets.backReferencePath", "o_assets.referenceLayout",
+              )
               .first();
             return found ? {
               path: found.filePath ?? undefined, sourceType: "assets", assetId: found.assetId,
               parentAssetId: found.parentAssetId, assetType: found.assetType,
               fileType: item.fileType || found.imageType || "image", referenceType: item.type,
               label: item.label || found.name, prompt: item.prompt || found.prompt || undefined,
+              faceReferencePath: found.faceReferencePath, fullBodyReferencePath: found.fullBodyReferencePath,
+              sideReferencePath: found.sideReferencePath, backReferencePath: found.backReferencePath,
+              referenceLayout: found.referenceLayout,
             } : null;
           }
           return null;
@@ -95,8 +106,7 @@ export default router.post("/", validateFields({
         }
         const expanded = h3 ? (await Promise.all(images.map(async item => {
           if (item.sourceType === "assets" && item.assetType === "role" && item.path) {
-            const refs = await ensureRoleReferenceMedia(item.path, item.label || "role");
-            return refs.length ? refs : [item];
+            return persistedRoleReferencesForVideo({ ...item, name: item.label }, track.prompt);
           }
           return [item];
         }))).flat() : images;

@@ -105,6 +105,9 @@ export default async (knex: Knex): Promise<void> => {
   await addColumn("o_assets", "designStatus", "text");
   await addColumn("o_assets", "faceReferencePath", "text");
   await addColumn("o_assets", "fullBodyReferencePath", "text");
+  await addColumn("o_assets", "sideReferencePath", "text");
+  await addColumn("o_assets", "backReferencePath", "text");
+  await addColumn("o_assets", "referenceLayout", "text");
   await addColumn("o_assets", "referenceFingerprint", "text");
   await addColumn("o_modelPrompt", "fileName", "string");
   await addColumn("o_modelPrompt", "path", "string");
@@ -268,6 +271,30 @@ export default async (knex: Knex): Promise<void> => {
       models: JSON.stringify(models),
       inputValues: JSON.stringify(inputValues),
     });
+  }
+
+  // The role provider renders four independent views and stitches them only for
+  // review. Keep it enabled so role generation never falls back to a generic
+  // text-to-image model that may draw an arbitrary number of figures.
+  const fourViewCodePath = path.join(u.getPath("vendor"), "comfyui_qwen21_fourview.ts");
+  if (fs.existsSync(fourViewCodePath)) {
+    const fourViewCode = fs.readFileSync(fourViewCodePath, "utf-8");
+    const fourViewExports = u.vm(transform(fourViewCode, { transforms: ["typescript"] }).code);
+    const fourViewVendor = fourViewExports.vendor;
+    const fourViewData = await u.db("o_vendorConfig").where("id", fourViewVendor.id).first();
+    if (!fourViewData) {
+      await u.db("o_vendorConfig").insert({
+        id: fourViewVendor.id,
+        inputValues: JSON.stringify(fourViewVendor.inputValues ?? {}),
+        models: JSON.stringify(fourViewVendor.models ?? []),
+        enable: 1,
+      });
+    } else {
+      await u.db("o_vendorConfig").where("id", fourViewVendor.id).update({
+        models: JSON.stringify(fourViewVendor.models ?? []),
+        enable: 1,
+      });
+    }
   }
 };
 

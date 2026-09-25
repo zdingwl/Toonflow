@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import sharp from "sharp";
-import { ensureRoleReferenceMedia, roleReferenceFingerprint } from "@/utils/assetReferenceMedia";
+import { ensureRoleReferenceMedia, roleReferenceDatabaseFields, roleReferenceFingerprint } from "@/utils/assetReferenceMedia";
 const router = express.Router();
 
 // 保存资产图片
@@ -47,10 +47,12 @@ export default router.post(
         resolution: metadata.width && metadata.height ? `${metadata.width}x${metadata.height}` : null,
       });
     } else if (adoptedImageId) {
-      const selected = await u.db("o_image").where({ id: adoptedImageId, assetsId: id }).select("filePath").first();
+      const selected = await u.db("o_image").where({ id: adoptedImageId, assetsId: id }).select("filePath", "model").first();
       adoptedPath = selected?.filePath || null;
     }
-    const references = type === "role" && adoptedPath ? await ensureRoleReferenceMedia(adoptedPath, asset.name || "role") : [];
+    const adoptedImage = adoptedImageId ? await u.db("o_image").where({ id: adoptedImageId, assetsId: id }).select("model").first() : null;
+    const referenceLayout = adoptedImage?.model === "qwen-image-2.1-fourview-local" ? "four_view" : "auto";
+    const references = type === "role" && adoptedPath ? await ensureRoleReferenceMedia(adoptedPath, asset.name || "role", referenceLayout) : [];
     await u.db("o_assets").where({ id, projectId }).update({
       prompt: prompt ?? "",
       imageId: adoptedImageId,
@@ -58,8 +60,7 @@ export default router.post(
         ? {
             designStatus: "ready",
             designVersion: u.db.raw("COALESCE(designVersion, 0) + 1"),
-            faceReferencePath: references[0].path,
-            fullBodyReferencePath: references[1].path,
+            ...roleReferenceDatabaseFields(references, referenceLayout === "four_view" ? "four_view" : references.length >= 4 ? "four_view" : "front_back"),
             referenceFingerprint: await roleReferenceFingerprint(adoptedPath),
           }
         : {}),
