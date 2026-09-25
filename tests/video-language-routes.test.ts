@@ -6,6 +6,10 @@ import { transform } from "sucrase";
 import express from "express";
 import knex from "knex";
 import * as languages from "../src/utils/videoLanguages";
+import * as h3Contract from "../src/utils/h3PromptContract";
+import * as plans from "../src/utils/h3ReferencePlan";
+import * as referenceBindings from "../src/utils/h3ReferenceBindings";
+import * as stateGuard from "../src/utils/h3VisualStateGuard";
 import { validateFields } from "../src/middleware/middleware";
 
 const requireModule = createRequire(import.meta.url);
@@ -83,6 +87,9 @@ test("real video routes keep each language prompt, video ID and selection separa
       "@/utils": u,
       "@/utils/db": { db },
       "@/utils/videoLanguages": languages,
+      "@/utils/h3PromptContract": h3Contract,
+      "@/utils/h3ReferencePlan": plans,
+      "@/utils/h3ReferenceBindings": referenceBindings,
       "@/middleware/middleware": { validateFields },
       "@/lib/responseFormat": { success: (data: unknown) => ({ data }), error: (message: string) => ({ message }) },
       "@/utils/assetReferenceMedia": { persistedRoleReferencesForVideo: async (item: unknown) => [item] },
@@ -90,6 +97,9 @@ test("real video routes keep each language prompt, video ID and selection separa
       "@/utils/h3VisualStateGuard": { assertH3ActiveStates: () => {}, assertH3PictureSlots: () => {} },
       "@/utils/h3ReferenceSlots": { expandH3AssetSlots: (items: unknown) => items },
     };
+    const service = { exports: {} as any };
+    new Function("require", "module", "exports", transform(readFileSync("src/utils/videoPromptGeneration.ts", "utf8"), { transforms: ["typescript", "imports"] }).code)((id: string) => imports[id] || requireModule(id), service, service.exports);
+    imports["@/utils/videoPromptGeneration"] = service.exports;
     new Function("require", "module", "exports", code)((id: string) => imports[id] || requireModule(id), mod, mod.exports);
     app.use(`/${name}`, mod.exports.default);
   }

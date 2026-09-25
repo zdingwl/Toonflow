@@ -5,7 +5,8 @@ import { v4 as uuidv4 } from "uuid";
 import { success, error } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { ReferenceList } from "@/utils/ai";
-import { persistedRoleReferencesForVideo } from "@/utils/assetReferenceMedia";
+import { loadH3ReferencePlan, resolveH3ReferencePlan } from "@/utils/h3ReferencePlan";
+import { assertH3ReferenceBindings } from "@/utils/h3ReferenceBindings";
 import { inspectVideoQuality } from "@/utils/videoQuality";
 import { assertH3ActiveStates, assertH3PictureSlots } from "@/utils/h3VisualStateGuard";
 import { db as languageDb } from "@/utils/db";
@@ -31,16 +32,13 @@ const isMiniMaxH3 = (model: string) => {
   const value = String(model || "").toLowerCase();
   return value.includes("minimax") && value.includes("h3");
 };
-function h3ReferenceRank(item: ResolvedReference): number {
-  const type = String(item.assetType || "").toLowerCase();
-  if (type === "role" || type === "character") return 0;
-  if (type === "scene" || type === "environment") return 1;
-  if (type === "tool" || type === "prop" || type === "creature") return 2;
-  return 3;
+function referenceMediaType(item: ResolvedReference): "image" | "audio" | "video" {
+  return item.referenceType === "audioReference" || item.fileType === "audio" ? "audio"
+    : item.referenceType === "videoReference" || item.fileType === "video" ? "video" : "image";
 }
 
 export default router.post("/", validateFields({
-  projectId: z.number(), scriptId: z.number(),
+  projectId: z.number(), scriptId: z.number(), validateOnly: z.boolean().optional(),
   trackData: z.array(z.object({
     uploadData: z.array(z.object({
       id: z.number(), sources: z.string(),
@@ -54,6 +52,7 @@ export default router.post("/", validateFields({
   model: z.string(), mode: z.string(), resolution: z.string(), audio: z.boolean().optional(),
 }), async (req, res) => {
   const { scriptId, projectId, trackData, model, resolution, audio, mode } = req.body;
+  const validateOnly = req.body.validateOnly === true;
   let modeData: any[] = [];
   if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
     try { modeData = JSON.parse(mode); } catch {}
@@ -63,69 +62,95 @@ export default router.post("/", validateFields({
 
   // Preflight ALL tracks BEFORE creating any video row; never start a batch with
   // a role + mutually-exclusive derivative or a prompt with mismatched Picture indices.
-  let prepared: { trackId: number; prompt: string; duration: number; images: ResolvedReference[]; language?: string }[];
+  let validationTracks: { trackId: number; language?: string; valid: boolean; pictureCount?: number; referenceCount?: number; reason?: string }[] = [];
+  let prepared: { trackId: number; prompt: string; duration: number; referenceList: ReferenceList[]; language?: string }[];
   try {
-    prepared = await Promise.all(
+    const preparationResults = await Promise.allSettled(
       (trackData as { uploadData: UploadItem[]; trackId: number; prompt: string; duration: number; language?: string }[]).map(async track => {
         const ownedTrack = await u.db("o_videoTrack").where({ id: track.trackId, projectId, scriptId }).first();
         if (!ownedTrack) throw new Error("视频段不存在");
-        track.prompt = await resolveLanguagePrompt(languageDb, track.trackId, track.language, track.prompt, audio);
-        const resolved = await Promise.all(track.uploadData.map(async (item): Promise<ResolvedReference | null> => {
-          if (item.sources === "storyboard") {
-            const found = await u.db("o_storyboard").where({ id: item.id, projectId }).select("filePath", "prompt").first();
-            return found ? {
-              path: found.filePath ?? undefined, sourceType: "storyboard", assetType: "storyboard",
-              fileType: item.fileType || "image", referenceType: item.type,
-              label: item.label || `分镜图${item.id}`, prompt: item.prompt || found.prompt || undefined,
-            } : null;
+        try {
+          track.prompt = await resolveLanguagePrompt(languageDb, track.trackId, track.language, track.prompt, audio);
+          const resolved = await Promise.all(track.uploadData.map(async (item): Promise<ResolvedReference | null> => {
+            if (item.sources === "storyboard") {
+              const found = await u.db("o_storyboard").where({ id: item.id, projectId }).select("filePath", "prompt").first();
+              return found ? {
+                path: found.filePath ?? undefined, sourceType: "storyboard", assetType: "storyboard",
+                fileType: item.fileType || "image", referenceType: item.type,
+                label: item.label || `分镜图${item.id}`, prompt: item.prompt || found.prompt || undefined,
+              } : null;
+            }
+            if (item.sources === "assets") {
+              const found = await u.db("o_assets")
+                .where({ "o_assets.id": item.id, "o_assets.projectId": projectId })
+                .leftJoin("o_image", "o_assets.imageId", "o_image.id")
+                .select(
+                  "o_image.filePath", "o_image.type as imageType", "o_assets.id as assetId",
+                  "o_assets.assetsId as parentAssetId", "o_assets.name", "o_assets.prompt", "o_assets.type as assetType",
+                  "o_assets.faceReferencePath", "o_assets.fullBodyReferencePath", "o_assets.sideReferencePath",
+                  "o_assets.backReferencePath", "o_assets.referenceLayout",
+                )
+                .first();
+              return found ? {
+                path: found.filePath ?? undefined, sourceType: "assets", assetId: found.assetId,
+                parentAssetId: found.parentAssetId, assetType: found.assetType,
+                fileType: item.fileType || found.imageType || "image", referenceType: item.type,
+                label: item.label || found.name, prompt: item.prompt || found.prompt || undefined,
+                faceReferencePath: found.faceReferencePath, fullBodyReferencePath: found.fullBodyReferencePath,
+                sideReferencePath: found.sideReferencePath, backReferencePath: found.backReferencePath,
+                referenceLayout: found.referenceLayout,
+              } : null;
+            }
+            return null;
+          }));
+          const images = resolved.filter(Boolean) as ResolvedReference[];
+          let runtimeReferences = images;
+          if (h3) {
+            if (resolved.length !== images.length) throw new Error("轨道 " + track.trackId + "：参考资产已删除或不属于当前项目");
+            const assetImages = images.filter(item => item.sourceType === "assets" && referenceMediaType(item) === "image");
+            assertH3ActiveStates(assetImages.map(item => ({
+              assetId: Number(item.assetId), parentAssetId: item.parentAssetId,
+              assetType: item.assetType, name: item.label, filePath: item.path,
+            })));
+            const plan = await loadH3ReferencePlan(u.db, track.trackId, track.prompt);
+            if (assetImages.length && !plan) throw new Error("该视频段使用旧版参考图规则，请重新生成视频提示词后再生成视频");
+            const pictureReferences: ResolvedReference[] = plan ? resolveH3ReferencePlan(assetImages, plan) : [];
+            assertH3PictureSlots(track.prompt, pictureReferences.length);
+            if (plan) assertH3ReferenceBindings(track.prompt, plan.slots);
+            const otherMedia = images.filter(item => item.sourceType !== "storyboard" && referenceMediaType(item) !== "image");
+            runtimeReferences = [...pictureReferences, ...otherMedia];
           }
-          if (item.sources === "assets") {
-            const found = await u.db("o_assets")
-              .where({ "o_assets.id": item.id, "o_assets.projectId": projectId })
-              .leftJoin("o_image", "o_assets.imageId", "o_image.id")
-              .select(
-                "o_image.filePath", "o_image.type as imageType", "o_assets.id as assetId",
-                "o_assets.assetsId as parentAssetId", "o_assets.name", "o_assets.prompt", "o_assets.type as assetType",
-                "o_assets.faceReferencePath", "o_assets.fullBodyReferencePath", "o_assets.sideReferencePath",
-                "o_assets.backReferencePath", "o_assets.referenceLayout",
-              )
-              .first();
-            return found ? {
-              path: found.filePath ?? undefined, sourceType: "assets", assetId: found.assetId,
-              parentAssetId: found.parentAssetId, assetType: found.assetType,
-              fileType: item.fileType || found.imageType || "image", referenceType: item.type,
-              label: item.label || found.name, prompt: item.prompt || found.prompt || undefined,
-              faceReferencePath: found.faceReferencePath, fullBodyReferencePath: found.fullBodyReferencePath,
-              sideReferencePath: found.sideReferencePath, backReferencePath: found.backReferencePath,
-              referenceLayout: found.referenceLayout,
-            } : null;
-          }
-          return null;
-        }));
-        const images = resolved.filter(Boolean) as ResolvedReference[];
-        if (h3) {
-          if (resolved.length !== images.length) throw new Error(`轨道 ${track.trackId}：参考资产已删除或不属于当前项目`);
-          assertH3ActiveStates(images.filter(item => item.sourceType === "assets").map(item => ({
-            assetId: Number(item.assetId), parentAssetId: item.parentAssetId,
-            assetType: item.assetType, name: item.label, filePath: item.path,
-          })));
+          // Read the exact references during preflight so a failed crop never creates a video attempt.
+          const loaded = await Promise.all(runtimeReferences.map(async item => {
+            if (!item.path) return null;
+            return {
+              base64: await u.oss.getImageBase64(item.path), type: referenceMediaType(item),
+              label: item.label, prompt: item.prompt, sourceType: item.sourceType, assetType: item.assetType,
+            };
+          }));
+          if (h3 && loaded.some(item => !item)) throw new Error("H3 参考素材缺失：不能跳过某个 Picture 槽位继续生成");
+          return { language: track.language, trackId: track.trackId, prompt: track.prompt, duration: track.duration, referenceList: loaded.filter(Boolean) as ReferenceList[] };
+        } catch (cause) {
+          const reason = "视频参考检查失败：" + u.error(cause).message;
+          if (!validateOnly) await u.db("o_videoTrack").where({ id: track.trackId, projectId, scriptId }).update({ state: "生成失败", reason });
+          throw new Error("轨道 " + track.trackId + "：" + reason);
         }
-        const expanded = h3 ? (await Promise.all(images.map(async item => {
-          if (item.sourceType === "assets" && item.assetType === "role" && item.path) {
-            return persistedRoleReferencesForVideo({ ...item, name: item.label }, track.prompt);
-          }
-          return [item];
-        }))).flat() : images;
-        const runtimeImages = h3
-          ? expanded.filter(item => item.sourceType !== "storyboard").sort((a,b) => h3ReferenceRank(a) - h3ReferenceRank(b))
-          : expanded;
-        if (h3) assertH3PictureSlots(track.prompt, runtimeImages.length);
-        return { language: track.language, trackId: track.trackId, prompt: track.prompt, duration: track.duration, images: runtimeImages };
       }),
     );
+    validationTracks = preparationResults.map((result, index) => ({
+      trackId: trackData[index].trackId, language: trackData[index].language, valid: result.status === "fulfilled",
+      ...(result.status === "fulfilled"
+        ? { pictureCount: result.value.referenceList.filter(item => item.type === "image").length, referenceCount: result.value.referenceList.length }
+        : { reason: u.error(result.reason).message }),
+    }));
+    const failed = preparationResults.filter(result => result.status === "rejected");
+    if (failed.length) throw new Error(failed.map(result => u.error(result.reason).message).join("；"));
+    prepared = preparationResults.filter(result => result.status === "fulfilled").map(result => result.value);
   } catch (cause) {
-    return res.status(409).send(error(`批量视频检查失败：${u.error(cause).message}`));
+    return res.status(409).send(error(`批量视频检查失败：${u.error(cause).message}`, { valid: false, tracks: validationTracks }));
   }
+
+  if (validateOnly) return res.status(200).send(success({ valid: true, tracks: validationTracks }));
 
   const tasks = await Promise.all(prepared.map(async item => {
     const videoPath = `/${projectId}/video/${uuidv4()}.mp4`;
@@ -137,22 +162,12 @@ export default router.post("/", validateFields({
   }));
   res.status(200).send(success(tasks.map(item => ({ videoId: item.videoId, trackId: item.trackId, language: item.language }))));
 
-  const runTask = async ({ videoId, videoPath, prompt, duration, images }: (typeof tasks)[number]) => {
+  const runTask = async ({ videoId, videoPath, prompt, duration, referenceList }: (typeof tasks)[number]) => {
     try {
-      const base64 = await Promise.all(images.map(async item => {
-        if (!item.path) return null;
-        const type = item.referenceType === "audioReference" || item.fileType === "audio" ? "audio"
-          : item.referenceType === "videoReference" || item.fileType === "video" ? "video" : "image";
-        return {
-          base64: await u.oss.getImageBase64(item.path), type,
-          label: item.label, prompt: item.prompt, sourceType: item.sourceType, assetType: item.assetType,
-        };
-      }));
-      if (h3 && base64.some(item => !item)) throw new Error("H3 参考图缺失：不能跳过某个 Picture 槽位继续生成");
       const relatedObjects = { projectId, videoId, scriptId, type: "视频" };
       const aiVideo = u.Ai.Video(model);
       await aiVideo.run({
-        prompt, referenceList: base64.filter(Boolean) as ReferenceList[],
+        prompt, referenceList,
         mode: modeData.length > 0 ? modeData : mode,
         duration, aspectRatio: (ratio?.videoRatio as "16:9" | "9:16") || "16:9", resolution, audio,
       }, { projectId, taskClass: "视频生成", describe: "根据提示词生成视频", relatedObjects: JSON.stringify(relatedObjects) });

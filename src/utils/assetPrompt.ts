@@ -5,25 +5,31 @@ export type AssetPromptType = "role" | "scene" | "tool";
 const typeGuides: Record<AssetPromptType, string> = {
   role: `
 角色资产：
-- 将目标明确写成“同一角色的四栏角色设定图”，避免生成多个不同角色。
+- 将目标明确写成“同一角色、同一状态的四栏角色设定图”：一张展示板中同一个人的四个视角，不是四个角色或四种状态。
 - 推荐顺序：图像用途/风格 → 角色身份与气质 → 唯一识别特征 → 体态/发型/服装 → 四栏版式 → 一致性 → 背景/光线 → 交付边界。
 - 四栏从左到右固定为：脸部特写、正面全身、90°左侧面全身、正后方全身；同一角色的脸、识别点、发型、服装、体型必须一致。
+- 第一栏只要求头部和肩胸完整，头脚完整只约束后三栏，不把全身要求施加到脸部特写。
+- 使用“同一人的四个视角”，不能写“四名视角”或暗示四个人。排版与各栏朝向只写一次。
+- 标志存在不等于每栏均可见：脸部特写不强求手臂入画，背面不强求眼角痣可见。衣袖或头发遮挡的旧伤、纹样保持遮挡，不卷袖、不新增破口，不为展示标志换装或扭转身体。
 - 用户没有给出精确身高时，不要自行编造“168cm/180cm”等精确数值；用七头身、修长、挺拔等相对视觉比例表达即可。
-- 明确要求头顶与脚底完整入画，避免裁头、裁脚；最后用一句话约束无文字、无水印、无 logo。
+- 头顶与脚底完整入画只约束后三栏；独立视角工作流的每个子任务只画一个角色的一种视角，最终再拼成展示板，不能要求每个子任务重复四栏。
+- 最后用一句话约束无文字、无水印、无 logo。
 `,
   scene: `
 场景资产：
 - 推荐顺序：图像用途/风格 → 场景主体与时代 → 前/中/后景 → 关键材质 → 光线/天气/氛围 → 构图/镜头 → 交付边界。
-- 单画面主视图，不写 design sheet、多宫格、多视图等容易触发拼图的词。
+- 一张单画面主视图，明确可行动空间、主要出入口及物件相对位置，供后续视频继承；不写 design sheet、多宫格、多视图等容易触发拼图的词。
 - 只保留对空间、材质、光线和叙事有作用的镜头术语；不要机械堆叠 depth of field、vignette、chromatic aberration、bokeh 等同类词。
 - 用户没有指定朝代、季节、天气或精确色值时，不要为了“丰富”而擅自补充具体设定。
 - 最后明确无人物、无人影、无文字、无水印、无 logo。
 `,
   tool: `
-道具资产：
-- 推荐顺序：图像用途/风格 → 道具名称/功能 → 造型 → 材质/工艺/状态 → 多角度版式 → 光线/背景 → 交付边界。
-- 道具必须独立静物展示，不出现人物、手、手指、手臂，也不处于被握持、佩戴或使用状态。
-- 需要四宫格时只写一次“2×2：正面、侧面、背面、细节特写”，不要再用多组中英文同义词重复描述。
+道具与生物资产：
+- 推荐顺序：主体名称/用途或物种 → 完整外形与识别结构 → 材质/颜色/当前状态 → 主视角与尺度关系 → 风格/光线/背景 → 交付边界。
+- 默认一张单画面、一个主体的清晰主视图，完整可读地展示轮廓和关键结构，供 H3 继承；不默认生成 2×2、四宫格或多个并列实例。
+- 只有用户事实明确要求多视图时才生成相应版式；各视角仍是同一资产的同一状态，视角顺序只写一次。
+- 无生命道具以独立完整展示为主，不添加无关人物或手部；用户明确的持握、佩戴、互动或使用状态按事实保留。
+- 生物按其物种的活体结构、体态、体表和自然姿态描述，不强套“静物”“被握持”或人体站姿；动作展示不能替代完整外形定义。
 - 尺度通过主体占画面比例和常识尺寸感表达，禁止通过文字标尺、尺寸标注或说明文字表达。
 - 最后明确无文字、无水印、无 logo。
 `,
@@ -34,7 +40,9 @@ const commonContract = `
 
 你当前的任务不是解释视觉手册，而是把资产设定压缩成一条可直接发送给图片生成模型的最终提示词。视觉手册中的美术设定、身份特征与硬约束仍然有效；若手册示例模板与以下“输出方式”冲突，以本契约为准。
 
-1. 只输出最终提示词正文。不要输出 Markdown 标题、代码块、表格、字段名、分析过程、解释、备注、方案或“提示词：”前缀。
+此处编写的是资产图片绘制定义，必须完整表达本次可见身份、发型、衣装、外形结构、材质和目标状态；不能用“同参考图”或供视频使用的短绑定句替代必要设计。视频提示词才通过真实图片和固定 Picture 编号简短绑定资产，将篇幅留给动作、镜头和互动；两种用途不能混写。设计补全、来源和待确认项只进入内部设计/审核记录，不作为最终绘制正文的标注。
+
+1. 如果明确身份/状态冲突或父角色身份依据缺失而无法从输入解决，只返回 ASSET_REVIEW_REQUIRED: 加简短原因，调用方将作为内部审核信息处理；不能编造可绘制正文。其余情况只输出最终提示词正文。不要输出 Markdown 标题、代码块、表格、字段名、分析过程、解释、备注、方案或“提示词：”前缀。
 2. 以连贯、明确的中文自然语言为主，用短语补充风格、色彩、材质、光影、构图；英文仅保留确实能提高识别精度的专业词，不做逐句中英双写。
 3. 同一事实只写一次。同义的风格词、材质词、光影词、完整入画要求、一致性要求和交付边界不得反复堆叠。不要为了强调而连续重复“3D渲染/PBR/高精度建模/电影级光影”等概念。
 4. 信息优先级：全局内容表现约束 > 原有身份/外貌/标志性特征/服装/状态 > 视觉手册风格约束 > 风格默认值。身份与剧情因果不变，但红色血液、红色伤口及血色环境必须按全局规则改编；同步修正反射和反弹光，不能以“忠实保留颜色”恢复红色血液。非伤口的红衣、红灯、红瞳、自然唇色等明确特征仍须保留。
@@ -69,7 +77,7 @@ Panel 1: straight-on head-and-shoulders portrait, full head visible.
 Panel 2: full-body front view.
 Panel 3: full-body strict 90-degree left side view.
 Panel 4: full-body straight back view.
-All full-body panels show the entire body with aligned feet. Keep exactly the same identity, hairstyle, body proportions, outfit, colors and accessories across all panels. Plain clean background and even virtual studio lighting. No cropped head, no cropped feet, no extra characters, no text, no labels, no watermark.`;
+All full-body panels show the entire body with aligned feet. Keep exactly the same identity, hairstyle, body proportions, outfit, colors and accessories across all panels. Uncluttered background and readable lighting following the selected project style and design facts. No cropped head, no cropped feet, no extra characters, no text, no labels, no watermark.`;
 
 /**
  * Adds a short, unambiguous layout contract at the beginning of the runtime
@@ -89,8 +97,11 @@ export function buildAssetImagePrompt(
     return `${roleGenerationLayout}\n\n${facts}\n\nThe four-panel layout contract above has priority over conflicting framing phrases in the character design facts.`;
   }
 
-  const label = type === "scene" ? "scene" : "prop";
-  return `Create one production-ready ${label} design reference render. Style: ${artStyle || "unspecified"}. Name: ${name}. Design facts: ${prompt.trim()}. Use a controlled design-presentation view with coherent materials and lighting. No text, no labels, no watermark.`;
+  const label = type === "scene" ? "scene" : "prop or creature";
+  const presentation = type === "scene"
+    ? "Use one coherent scene image with readable spatial relationships and access paths."
+    : "Default to one clear main view of a single subject. Use a multi-view layout only when explicitly required by the design facts; all views depict the same asset and state. For living creatures preserve natural anatomy and posture.";
+  return `Create one production-ready ${label} design reference render. Style: ${artStyle || "unspecified"}. Name: ${name}. Design facts: ${prompt.trim()}. ${presentation} Use a controlled design-presentation view with coherent materials and lighting. No text, no labels, no watermark.`;
 }
 
 export function needsFluxPromptTranslation(text: string): boolean {

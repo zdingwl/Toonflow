@@ -304,6 +304,10 @@ const textRequest = (model: TextModel, think: boolean, thinkLevel: 0 | 1 | 2 | 3
     name: "volcengine",
     baseURL: getBaseUrl(),
     apiKey,
+    // Enable schema enforcement only for models confirmed by the provider.
+    ...(["doubao-seed-2-1-pro-260915", "doubao-seed-2-0-pro-260215"].includes(model.modelName)
+      ? { supportsStructuredOutputs: true }
+      : {}),
     fetch: async (url: string, options?: RequestInit) => {
       const rawBody = JSON.parse((options?.body as string) ?? "{}");
       const modifiedBody = {

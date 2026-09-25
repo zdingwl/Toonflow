@@ -69,9 +69,14 @@ test('scripted changed eye color is allowed as a derivative state', () => {
 test('H3 prompt and storyboard skill require state-safe references and duration preflight', () => {
   const h3 = read('data/modelPrompt/video/minimaxH3Multi-referenceMode.md');
   const storyboard = read('data/skills/production_execution_storyboard_table.md');
-  assert.match(h3, /FACE and FULL_BODY_FRONT/);
-  assert.match(h3, /current state/);
+  assert.match(h3, /FULL_BODY_FRONT/);
+  assert.match(h3, /optional FACE\/SIDE\/BACK/);
+  assert.match(h3, /ONE character in ONE state/);
   assert.match(h3, /target_duration/);
+  assert.match(h3, /350–500 English words/);
+  assert.match(h3, /not a total-prompt cap/);
+  assert.match(h3, /one short sentence/);
+  assert.match(h3, /Remove redundant prose, not story facts/);
   assert.match(storyboard, /minimum_duration > target_duration/);
   assert.match(storyboard, /PLAN_CHANGED/);
 });

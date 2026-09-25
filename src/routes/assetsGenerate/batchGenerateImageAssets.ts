@@ -9,41 +9,15 @@ import { error, success } from "@/lib/responseFormat";
 import { buildAssetImagePrompt } from "@/utils/assetPrompt";
 import { validateFields } from "@/middleware/middleware";
 import { isRoleFourViewModel, resolveAssetImageModel } from "@/utils/assetImageModel";
+import { loadAssetPromptContext, reviewAssetImage } from "@/utils/assetPromptGeneration";
 
 const router = express.Router();
-
 type AssetType = "role" | "scene" | "tool";
-
-interface AssetTypeConfig {
-  label: string;
-  taskClass: string;
-  dir: string;
-  promptTitle: string;
-  promptEnd: string;
-}
-
-const assetTypeConfig: Record<AssetType, AssetTypeConfig> = {
-  role: {
-    label: "角色",
-    taskClass: "角色图生成",
-    dir: "role",
-    promptTitle: "角色标准四视图",
-    promptEnd: "人物角色四视图",
-  },
-  scene: {
-    label: "场景",
-    taskClass: "场景图生成",
-    dir: "scene",
-    promptTitle: "标准场景图",
-    promptEnd: "标准场景图",
-  },
-  tool: {
-    label: "道具",
-    taskClass: "道具图生成",
-    dir: "props",
-    promptTitle: "标准道具图",
-    promptEnd: "标准道具图",
-  },
+type BatchItem = { id: number; type: string; name: string; prompt: string; base64?: string | null; styleBase64?: string | null };
+const assetTypeConfig: Record<AssetType, { label: string; taskClass: string; dir: string }> = {
+  role: { label: "角色", taskClass: "角色图生成", dir: "role" },
+  scene: { label: "场景", taskClass: "场景图生成", dir: "scene" },
+  tool: { label: "道具", taskClass: "道具图生成", dir: "props" },
 };
 
 const requestSchema = {
@@ -51,113 +25,110 @@ const requestSchema = {
   model: z.string(),
   resolution: z.string(),
   concurrentCount: z.number().int().min(1).optional(),
-  items: z.array(
-    z.object({
-      id: z.number(),
-      type: z.enum(["role", "scene", "tool", "storyboard"]),
-      name: z.string(),
-      prompt: z.string(),
-      base64: z.string().optional().nullable(),
-    }),
-  ),
+  items: z.array(z.object({
+    id: z.number(),
+    type: z.enum(["role", "scene", "tool", "storyboard"]),
+    name: z.string(),
+    prompt: z.string(),
+    base64: z.string().optional().nullable(),
+    styleBase64: z.string().optional().nullable(),
+  })),
 };
 
 export default router.post("/", validateFields(requestSchema), async (req, res) => {
   const { projectId, model, resolution, concurrentCount, items } = req.body;
-
-  // 1. 查询项目
   const project = await u.db("o_project").where("id", projectId).select("artStyle", "type", "intro").first();
-  if (!project) return res.status(500).send(error("项目为空"));
+  if (!project) return res.status(404).send(error("项目为空"));
 
-  // 2. 逐条插入 o_image 占位记录，收集 imageId 列表
-  const totalNovelId: number[] = [];
-  for (const item of items) {
-    const [imageId] = await u.db("o_image").insert({
-      type: item.type,
-      state: "生成中",
-      assetsId: item.id,
-    });
-    totalNovelId.push(imageId);
+  // Validate every target before creating jobs. A mixed-project item must not acquire a candidate.
+  const prepared: Array<{
+    item: BatchItem;
+    runtimeModel: Awaited<ReturnType<typeof resolveAssetImageModel>>;
+    context: Awaited<ReturnType<typeof loadAssetPromptContext>>;
+  }> = [];
+  try {
+    for (const item of items as BatchItem[]) {
+      if (!assetTypeConfig[item.type as AssetType]) throw new Error("不支持的资产类型");
+      const asset = await u.db("o_assets").where({ id: item.id, projectId, type: item.type }).select("*").first();
+      if (!asset) throw new Error(`${item.name}：资产不存在或不属于当前项目和类型`);
+      const runtimeModel = await resolveAssetImageModel(model, item.type);
+      const isQwenFourView = isRoleFourViewModel(runtimeModel);
+      if (isQwenFourView && item.type !== "role") throw new Error("Qwen 四视图工作流仅支持角色资产，场景和道具请选对应模型");
+      if (isQwenFourView && asset.assetsId && !item.base64) throw new Error(`${asset.name || item.name}：衍生形态必须传入同一角色的已确认参考图；不能从文本静默猜测父角色身份`);
+      if (item.styleBase64 && (!isQwenFourView || !item.base64)) throw new Error("第二张风格参考图仅用于 Qwen 四视图，且必须先提供当前状态的正面全身锚点图");
+      const context = await loadAssetPromptContext(u.db, {
+        projectId, assetsId: item.id, type: item.type as AssetType, name: asset.name || item.name, describe: asset.describe || "",
+      });
+      prepared.push({ item, runtimeModel, context });
+    }
+  } catch (cause) {
+    return res.status(400).send(error(u.error(cause).message));
   }
 
-  // 3. 后台异步并发生成，不阻塞响应
+  const imageIds: number[] = [];
+  for (const { item, runtimeModel } of prepared) {
+    const [imageId] = await u.db("o_image").insert({
+      type: item.type, state: "生成中", assetsId: item.id,
+      model: runtimeModel.split(/:(.+)/)[1], resolution,
+    });
+    imageIds.push(imageId);
+  }
+
   const limit = pLimit(concurrentCount ?? 1);
-
-  const tasks = items.map((item: { id: number; type: string; name: string; prompt: string; base64: string | null | undefined }, index: number) =>
-    limit(async () => {
-      const imageId = totalNovelId[index];
+  const tasks = prepared.map(({ item, runtimeModel, context }, index) => limit(async () => {
+    const imageId = imageIds[index];
+    const cfg = assetTypeConfig[item.type as AssetType];
+    const imagePath = `/${projectId}/${cfg.dir}/${uuidv4()}.jpg`;
+    const describe = `生成${cfg.label}图，名称：${item.name}，提示词：${item.prompt}`;
+    const relatedObjects = { id: item.id, projectId, type: cfg.label };
+    try {
       const data = await u.db("o_image").where("id", imageId).select("state").first();
-      if (data?.state === "生成失败") {
-        return;
+      if (!data || data.state === "生成失败") return;
+      const isQwenFourView = isRoleFourViewModel(runtimeModel);
+      const userPrompt = isQwenFourView
+        ? `Project style preset: ${project.artStyle || "use the rendering style specified in the asset prompt"}. Current character and state: ${item.name}. Authoritative visible identity, wardrobe and state facts: ${item.prompt}`
+        : buildAssetImagePrompt(item.type as AssetType, project.artStyle ?? "", item.name, item.prompt);
+      const references = item.base64 ? [{ base64: item.base64, type: "image" as const }] : [];
+      if (isQwenFourView && item.styleBase64) references.push({ base64: item.styleBase64, type: "image" as const });
+      const aiImage = u.Ai.Image(runtimeModel);
+      await aiImage.run({
+        prompt: userPrompt,
+        referenceList: references,
+        size: resolution,
+        aspectRatio: isQwenFourView ? "2:3" : item.type === "tool" || item.type === "role" ? "1:1" : "16:9",
+      }, { taskClass: cfg.taskClass, describe, projectId, relatedObjects: JSON.stringify(relatedObjects) });
+      await aiImage.save(imagePath);
+      // Retain rejected output for inspection; leave the current asset image and references intact.
+      await u.db("o_image").where("id", imageId).update({ filePath: imagePath });
+      const metadata = await sharp(await u.oss.getFile(imagePath)).metadata();
+      const actualResolution = metadata.width && metadata.height ? `${metadata.width}x${metadata.height}` : resolution;
+      if (item.type === "role" && (!(metadata.width && metadata.height) || metadata.width / metadata.height < (isQwenFourView ? 1.7 : 0.95))) {
+        throw new Error("角色设定图画布比例异常，无法创建人物参考图");
       }
-      const cfg = assetTypeConfig[item.type as AssetType];
-      if (!cfg) return;
-
-      const imagePath = `/${projectId}/${cfg.dir}/${uuidv4()}.jpg`;
-      const describe = `生成${cfg.label}图，名称：${item.name}，提示词：${item.prompt}`;
-      const relatedObjects = { id: item.id, projectId, type: cfg.label };
-      try {
-        const runtimeModel = await resolveAssetImageModel(model, item.type);
-        const isQwenFourView = isRoleFourViewModel(runtimeModel);
-        const userPrompt = isQwenFourView
-          ? `Project CGI style: ${project.artStyle || "cinematic stylized realistic 3D animation"}. Current character and state: ${item.name}. Authoritative visible identity, wardrobe and state facts: ${item.prompt}`
-          : buildAssetImagePrompt(item.type as AssetType, project.artStyle ?? "", item.name, item.prompt);
-        const aiImage = u.Ai.Image(runtimeModel);
-        await aiImage.run(
-          {
-            prompt: userPrompt,
-            referenceList: item.base64 ? [{ base64: item.base64, type: "image" }] : [],
-            size: resolution,
-            aspectRatio: isQwenFourView ? "2:3" : item.type === "role" ? "1:1" : "16:9",
-          },
-          {
-            taskClass: cfg.taskClass,
-            describe,
-            projectId,
-            relatedObjects: JSON.stringify(relatedObjects),
-          },
-        );
-        await aiImage.save(imagePath);
-        const actualImage = await sharp(await u.oss.getFile(imagePath)).metadata();
-        const actualResolution = actualImage.width && actualImage.height ? `${actualImage.width}x${actualImage.height}` : resolution;
-        const roleReferences = item.type === "role" ? await ensureRoleReferenceMedia(imagePath, item.name, isQwenFourView ? "four_view" : "auto") : [];
-
-        const imageData = await u.db("o_image").where("id", imageId).select("*").first();
-        if (!imageData) return;
-        if (imageData.state === "生成失败") return;
-        await u
-          .db("o_image")
-          .where("id", imageId)
-          .update({
-            state: "已完成",
-            filePath: imagePath,
-            type: item.type,
-            model: runtimeModel.split(/:(.+)/)[1],
-            resolution: actualResolution,
-          });
-
-        await u.db("o_assets").where({ id: item.id, projectId }).update({
-          imageId,
-          ...(item.type === "role" && roleReferences.length >= 2
-            ? {
-                designStatus: "ready",
-                designVersion: u.db.raw("COALESCE(designVersion, 0) + 1"),
-                ...roleReferenceDatabaseFields(roleReferences, isQwenFourView ? "four_view" : "front_back"),
-                referenceFingerprint: await roleReferenceFingerprint(imagePath),
-              }
-            : {}),
-        });
-      } catch (e: any) {
-        await u
-          .db("o_image")
-          .where("id", imageId)
-          .update({ state: "生成失败", errorReason: u.error(e).message });
-      }
-    }),
-  );
-
-  // 后台执行，不等待结果
+      await reviewAssetImage({
+        loadImage: (path) => u.oss.getImageBase64(path),
+        invoke: (input) => u.Ai.Text("universalAi").invoke(input),
+      }, context, item.prompt, imagePath);
+      const roleReferences = item.type === "role" ? await ensureRoleReferenceMedia(imagePath, item.name, "four_view") : [];
+      const imageData = await u.db("o_image").where("id", imageId).select("*").first();
+      if (!imageData || imageData.state === "生成失败") return;
+      await u.db("o_image").where("id", imageId).update({
+        state: "已完成", filePath: imagePath, type: item.type,
+        model: runtimeModel.split(/:(.+)/)[1], resolution: actualResolution,
+      });
+      await u.db("o_assets").where({ id: item.id, projectId, type: item.type }).update({
+        imageId,
+        ...(item.type === "role" && roleReferences.length >= 2 ? {
+          // ready indicates usable reference files, not human approval.
+          designStatus: "ready", designVersion: u.db.raw("COALESCE(designVersion, 0) + 1"),
+          ...roleReferenceDatabaseFields(roleReferences, "four_view"),
+          referenceFingerprint: await roleReferenceFingerprint(imagePath),
+        } : {}),
+      });
+    } catch (cause) {
+      await u.db("o_image").where("id", imageId).update({ state: "生成失败", errorReason: u.error(cause).message });
+    }
+  }));
   Promise.all(tasks).catch(() => {});
-
   return res.status(200).send(success({ total: items.length }));
 });

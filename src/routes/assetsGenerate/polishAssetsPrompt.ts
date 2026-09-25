@@ -3,7 +3,8 @@ import u from "@/utils";
 import * as zod from "zod";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
-import { buildAssetPromptSystemPrompt, buildAssetPromptUserPrompt, type AssetPromptType } from "@/utils/assetPrompt";
+import { type AssetPromptType } from "@/utils/assetPrompt";
+import { generateAssetPrompt, loadAssetPromptContext } from "@/utils/assetPromptGeneration";
 const router = express.Router();
 
 
@@ -15,7 +16,7 @@ export default router.post(
   validateFields({
     assetsId: zod.number(),
     projectId: zod.number(),
-    type: zod.string(),
+    type: zod.enum(["role", "scene", "tool"]),
     name: zod.string(),
     describe: zod.string(),
   }),
@@ -26,11 +27,10 @@ export default router.post(
     //如果没有找到对应的项目，返回错误
     if (!project) return res.status(500).send(success({ message: "项目为空" }));
 
-    await u.db("o_assets").where("id", assetsId).update({ promptState: "生成中" });
 
     //查询资产是否是衍生资产
-    const assetsData = await u.db("o_assets").where("id", assetsId).select("assetsId").first();
-    if (!assetsData) return { code: 500, message: "资产不存在" };
+    const assetsData = await u.db("o_assets").where({ id: assetsId, projectId, type }).select("assetsId").first();
+    if (!assetsData) return res.status(404).send(error("资产不存在、类型不符或不属于当前项目"));
     const typeConfig: Record<string, { promptKey: string; itemType: ItemType; label: string; nameLabel: string; visualManual: string; assetType: AssetPromptType }> = {
       role: {
         promptKey: "role-polish",
@@ -64,27 +64,20 @@ export default router.post(
     //获取到视觉手册
     const visualManual = await u.getArtPrompt(project.artStyle as string, "art_skills", config.visualManual);
     if (!visualManual) return res.status(500).send(error("视觉手册未定义"));
-    const systemPrompt = buildAssetPromptSystemPrompt(visualManual, config.assetType);
+    await u.db("o_assets").where({ id: assetsId, projectId }).update({ promptState: "生成中", promptErrorReason: null });
     try {
-      const { _output } = (await u.Ai.Text("universalAi").invoke({
-        system: systemPrompt,
-        messages: [
-          {
-            role: "user",
-            content: buildAssetPromptUserPrompt(config.nameLabel, name, describe),
-          },
-        ],
-      })) as any;
-
-      if (!_output) return res.status(500).send("失败");
-      await u.db("o_assets").where("id", assetsId).update({ prompt: _output, promptState: "已完成" });
-
-      res.status(200).send(success({ prompt: _output, assetsId }));
+      const context = await loadAssetPromptContext(u.db, { projectId, assetsId, type, name, describe });
+      const prompt = await generateAssetPrompt({
+        loadImage: path => u.oss.getImageBase64(path),
+        invoke: input => u.Ai.Text("universalAi").invoke(input),
+      }, context, visualManual);
+      await u.db("o_assets").where({ id: assetsId, projectId }).update({ prompt, promptState: "已完成", promptErrorReason: null });
+      res.status(200).send(success({ prompt, assetsId }));
     } catch (e: any) {
       await u
         .db("o_assets")
-        .where("id", assetsId)
-        .update({ promptState: "失败", promptErrorReason: u.error(e).message });
+        .where({ id: assetsId, projectId })
+        .update({ promptState: "生成失败", promptErrorReason: u.error(e).message });
       return res.status(500).send(error(e?.data?.error?.message ?? e?.message ?? "生成失败"));
     }
   },

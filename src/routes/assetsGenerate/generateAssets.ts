@@ -8,6 +8,7 @@ import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { buildAssetImagePrompt, buildFluxPromptTranslationRequest, needsFluxPromptTranslation } from "@/utils/assetPrompt";
 import { isRoleFourViewModel, resolveAssetImageModel } from "@/utils/assetImageModel";
+import { loadAssetPromptContext, reviewAssetImage } from "@/utils/assetPromptGeneration";
 
 const router = express.Router();
 type AssetType = "role" | "scene" | "tool";
@@ -31,6 +32,8 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
   if (!project) return res.status(404).send(error("项目为空"));
   const cfg = assetTypeConfig[type as AssetType];
   if (!cfg) return res.status(400).send(error("不支持的资产类型"));
+  const asset = await u.db("o_assets").where({ id, projectId, type }).select("*").first();
+  if (!asset) return res.status(404).send(error("资产不存在或不属于当前项目和类型"));
   const runtimeModel = await resolveAssetImageModel(model, type);
   const [vendorId, selectedModelName] = runtimeModel.split(/:(.+)/);
   const isQwenFourView = isRoleFourViewModel(runtimeModel);
@@ -39,8 +42,6 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
 
   // Prevent silent identity drift when creating a transformed character from no reference.
   if (isQwenFourView) {
-    const asset = await u.db("o_assets").where({ id, projectId }).select("assetsId").first();
-    if (!asset) return res.status(404).send(error("资产不存在"));
     if (asset.assetsId && !base64) return res.status(400).send(error("衍生形态必须传入同一角色的已确认参考图；不能从文本静默猜测父角色身份"));
   }
 
@@ -49,6 +50,9 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
   const describe = `生成${cfg.label}图，名称：${name}，提示词：${prompt}`;
   const relatedObjects = { id, projectId, type: cfg.label };
   try {
+    const context = await loadAssetPromptContext(u.db, {
+      projectId, assetsId: id, type: type as AssetType, name: asset.name || name, describe: asset.describe || "",
+    });
     let runtimePrompt = prompt;
     let runtimeArtStyle = project.artStyle || "";
     let runtimeName = name;
@@ -64,7 +68,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
     // The Qwen four-view provider performs four SINGLE-VIEW jobs itself.
     // Do not prepend the generic four-panel composition contract to each of its jobs.
     const userPrompt = isQwenFourView
-      ? `Project CGI style: ${runtimeArtStyle || "cinematic stylized realistic 3D animation"}. Current character and state: ${runtimeName}. Authoritative visible identity, wardrobe and state facts: ${runtimePrompt}`
+      ? `Project style preset: ${runtimeArtStyle || "use the rendering style specified in the asset prompt"}. Current character and state: ${runtimeName}. Authoritative visible identity, wardrobe and state facts: ${runtimePrompt}`
       : buildAssetImagePrompt(type as AssetType, runtimeArtStyle, runtimeName, runtimePrompt);
     const references = base64 ? [{ type: "image" as const, base64 }] : [];
     if (isQwenFourView && styleBase64) references.push({ type: "image" as const, base64: styleBase64 });
@@ -75,6 +79,8 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
       aspectRatio: isQwenFourView ? "2:3" : type === "tool" || type === "role" ? "1:1" : "16:9",
     }, { taskClass: cfg.taskClass, describe, projectId, relatedObjects: JSON.stringify(relatedObjects) });
     await aiImage.save(imagePath);
+    // Keep a failed candidate available for inspection without changing the selected asset image.
+    await u.db("o_image").where("id", imageId).update({ filePath: imagePath });
     const metadata = await sharp(await u.oss.getFile(imagePath)).metadata();
     const actualResolution = metadata.width && metadata.height ? `${metadata.width}x${metadata.height}` : resolution;
     // A model reporting success is NOT a semantic quality review. Only derive stable reference crops
@@ -82,16 +88,21 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
     if (type === "role" && (!(metadata.width && metadata.height) || metadata.width / metadata.height < (isQwenFourView ? 1.7 : 0.95))) {
       throw new Error("角色设定图画布比例异常，无法创建人物参考图");
     }
-    const roleReferences = type === "role" ? await ensureRoleReferenceMedia(imagePath, name, isQwenFourView ? "four_view" : "auto") : [];
+    await reviewAssetImage({
+      loadImage: (path) => u.oss.getImageBase64(path),
+      invoke: (input) => u.Ai.Text("universalAi").invoke(input),
+    }, context, prompt, imagePath);
+    const roleReferences = type === "role" ? await ensureRoleReferenceMedia(imagePath, name, "four_view") : [];
     const imageData = await u.db("o_image").where("id", imageId).select("*").first();
     if (!imageData) return res.status(500).send(error("资产已被删除"));
-    if (imageData.state === "生成失败") return;
+    if (imageData.state === "生成失败") return res.status(400).send(error(imageData.errorReason || "图片生成已取消"));
     await u.db("o_image").where("id", imageId).update({ state: "已完成", filePath: imagePath, type, model: selectedModelName, resolution: actualResolution });
-    await u.db("o_assets").where({ id, projectId }).update({
+    await u.db("o_assets").where({ id, projectId, type }).update({
       imageId,
       ...(type === "role" && roleReferences.length >= 2 ? {
+        // ready only means usable reference files, not human approval.
         designStatus: "ready", designVersion: u.db.raw("COALESCE(designVersion, 0) + 1"),
-        ...roleReferenceDatabaseFields(roleReferences, isQwenFourView ? "four_view" : "front_back"),
+        ...roleReferenceDatabaseFields(roleReferences, "four_view"),
         referenceFingerprint: await roleReferenceFingerprint(imagePath),
       } : {}),
     });

@@ -5,6 +5,9 @@ import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { getOperationReceipt, withOperationReceipt } from "@/utils/agent/runtime/operationReceipt";
 
+import { generateAssetPrompt, loadAssetPromptContext, reviewAssetImage } from "@/utils/assetPromptGeneration";
+import { ensureRoleReferenceMedia, roleReferenceDatabaseFields, roleReferenceFingerprint } from "@/utils/assetReferenceMedia";
+
 const router = express.Router();
 const activeAssetGenerationRequests = new Set<string>();
 
@@ -46,7 +49,7 @@ export default router.post(
           const assets = await trx("o_assets")
             .where({ projectId })
             .whereIn("id", normalizedIds)
-            .select("id", "type", "assetsId");
+            .select("id", "type", "assetsId", "imageId");
           const found = new Set(assets.map((item: any) => Number(item.id)));
           const missing = normalizedIds.filter((id) => !found.has(id));
           if (missing.length) throw new Error(`资产不属于当前项目或不存在：${missing.join(",")}`);
@@ -59,6 +62,11 @@ export default router.post(
           const unlinked = normalizedIds.filter((id) => !linked.has(id));
           if (unlinked.length) throw new Error(`资产未绑定到当前剧集：${unlinked.join(",")}`);
 
+          // Persist the selected inputs in the receipt so recovery cannot read an empty pending image.
+          const referenceImageIdMap: Record<number, number | null> = {};
+          const referenceIds = [...new Set(assets.flatMap((a: any) => [a.id, a.assetsId]).filter(Boolean))];
+          const referenceAssets = await trx("o_assets").where({ projectId }).whereIn("id", referenceIds).select("id", "imageId");
+          for (const a of referenceAssets) referenceImageIdMap[Number(a.id)] = a.imageId ?? null;
           const imageIdMap: Record<number, number> = {};
           for (const item of assets) {
             const [imageId] = await trx("o_image").insert({
@@ -72,7 +80,7 @@ export default router.post(
             const updated = await trx("o_assets").where({ id: item.id, projectId }).update({ imageId });
             if (updated !== 1) throw new Error(`资产 ${item.id} 的图片任务绑定失败`);
           }
-          return { assetIds: normalizedIds, imageIdMap };
+          return { assetIds: normalizedIds, imageIdMap, referenceImageIdMap };
         },
       );
 
@@ -98,8 +106,16 @@ export default router.post(
       res.status(200).send(success(currentData));
 
       if (!ownsGenerationWorker) return;
+      // A later request may already own the asset's selected image. Recovery must
+      // inspect this receipt's attempts, or retrying completed A while B is pending
+      // would rerun A and overwrite its completed result.
+      const receiptImages = claimed.duplicate
+        ? await u.db("o_image").whereIn("id", Object.values(claimed.receipt.data.imageIdMap)).select("id", "assetsId", "state")
+        : [];
       const generationIds = claimed.duplicate
-        ? currentRows.filter((item: any) => item.state === "生成中").map((item: any) => Number(item.id))
+        ? receiptImages
+            .filter((item: any) => item.state === "生成中" && Number(item.id) === Number(claimed.receipt.data.imageIdMap[item.assetsId]))
+            .map((item: any) => Number(item.assetsId))
         : normalizedIds;
       if (!generationIds.length) {
         activeAssetGenerationRequests.delete(generationKey);
@@ -113,45 +129,20 @@ export default router.post(
         .where({ projectId })
         .whereIn("id", generationIds)
         .select("id", "describe", "name", "type", "assetsId");
-      const parentIds = assetsDataArr.map((item: any) => item.assetsId).filter((id: any) => id !== null);
-      const parentAssetsData = parentIds.length
-        ? await u.db("o_assets")
-            .leftJoin("o_image", "o_assets.imageId", "o_image.id")
-            .where({ "o_assets.projectId": projectId })
-            .whereIn("o_assets.id", parentIds as number[])
-            .select("o_assets.id", "o_image.filePath", "o_assets.describe")
-        : [];
-      assetsDataArr.forEach((item: any) => {
-        const parent = parentAssetsData.find((parentItem: any) => parentItem.id === item.assetsId);
-        if (parent) item.parentDescribe = parent.describe;
-      });
-      const imageUrlRecord: Record<number, string> = {};
-      parentAssetsData.forEach((item: any) => {
-        if (item.filePath) imageUrlRecord[item.id] = item.filePath;
-      });
-
-      const promptRecord: Record<string, { prompt: string }> = {
-        role: { prompt: u.getArtPrompt(projectSettingData.artStyle!, "art_skills", "art_character_derivative") },
-        tool: { prompt: u.getArtPrompt(projectSettingData.artStyle!, "art_skills", "art_prop_derivative") },
-        scene: { prompt: u.getArtPrompt(projectSettingData.artStyle!, "art_skills", "art_scene_derivative") },
-      };
+      const visionDeps = { loadImage: (path: string) => u.oss.getImageBase64(path), invoke: (input: any) => u.Ai.Text("universalAi").invoke(input) };
+      const referenceImageIdMap = claimed.receipt.data.referenceImageIdMap || {};
 
       const generateSingleAsset = async (item: any) => {
         const imageId = Number(claimed.receipt.data.imageIdMap[item.id]);
         try {
-          const typeConfig = promptRecord[item.type!] || promptRecord.role;
-          const { text } = await u.Ai.Text("universalAi").invoke({
-            system: typeConfig.prompt,
-            messages: [{
-              role: "user",
-              content: `父级资产描述: ${item.parentDescribe || "无详细描述"}\n当前资产描述: ${item.describe || "无详细描述"}`,
-            }],
-          });
-          await u.db("o_assets").where({ id: item.id, projectId }).update({ prompt: text });
-
-          const imageBase64 = imageUrlRecord[item.assetsId!]
-            ? await u.oss.getImageBase64(imageUrlRecord[item.assetsId!])
-            : null;
+          const context = await loadAssetPromptContext(u.db, { projectId, assetsId: item.id, type: item.type, name: item.name, describe: item.describe || "" }, referenceImageIdMap);
+          const manualKind = item.type === "role" ? "character" : item.type === "scene" ? "scene" : "prop";
+          const manual = u.getArtPrompt(projectSettingData.artStyle!, "art_skills", `art_${manualKind}${context.parent ? "_derivative" : ""}`);
+          if (!manual) throw new Error("视觉手册未定义");
+          const text = await generateAssetPrompt(visionDeps, context, manual);
+          await u.db("o_assets").where({ id: item.id, projectId }).update({ prompt: text, promptState: "已完成", promptErrorReason: null });
+          const sourcePath = context.parent?.selectedImagePath || context.asset.selectedImagePath;
+          const imageBase64 = sourcePath ? await u.oss.getImageBase64(sourcePath) : null;
           const repeloadObj = {
             prompt: text,
             size: projectSettingData.imageQuality as "1K" | "2K" | "4K",
@@ -171,12 +162,34 @@ export default router.post(
           );
           const savePath = `/${projectId}/assets/${scriptId}/${item.type}/${u.uuid()}.jpg`;
           await imageCls.save(savePath);
-          await u.db("o_image").where({ id: imageId, assetsId: item.id }).update({
-            state: "已完成",
-            filePath: savePath,
-            errorReason: null,
+          await u.db("o_image").where({ id: imageId, assetsId: item.id }).update({ filePath: savePath });
+          await reviewAssetImage(visionDeps, context, text, savePath);
+          // Generated role prompts use the reviewed four-column contract regardless of canvas ratio.
+          const layout = "four_view" as const;
+          const roleReferences = item.type === "role" ? await ensureRoleReferenceMedia(savePath, item.name, layout) : [];
+          if (item.type === "role" && roleReferences.length < 2) throw new Error("新角色图片无法建立脸部和全身参考，已保留原图");
+          const referenceFields = item.type === "role" ? {
+            designStatus: "ready",
+            designVersion: u.db.raw("COALESCE(designVersion, 0) + 1"),
+            ...roleReferenceDatabaseFields(roleReferences, layout),
+            referenceFingerprint: await roleReferenceFingerprint(savePath),
+          } : null;
+          await u.db.transaction(async (trx) => {
+            const completed = await trx("o_image").where({ id: imageId, assetsId: item.id, state: "生成中" }).update({
+              state: "已完成", filePath: savePath, errorReason: null,
+            });
+            // A later generation or manual selection may now own this asset. Its
+            // selected image and reference crops must remain together.
+            if (completed && referenceFields) {
+              await trx("o_assets").where({ id: item.id, projectId, imageId }).update(referenceFields);
+            }
           });
         } catch (reason) {
+          // Keep the failed candidate for inspection and restore the previously selected result.
+          if (Object.hasOwn(referenceImageIdMap, item.id)) {
+            await u.db("o_assets").where({ id: item.id, projectId, imageId }).update({ imageId: referenceImageIdMap[item.id] });
+          }
+          await u.db("o_assets").where({ id: item.id, projectId }).update({ promptState: "生成失败", promptErrorReason: u.error(reason).message });
           await u.db("o_image").where({ id: imageId, assetsId: item.id }).update({
             state: "生成失败",
             errorReason: u.error(reason).message,

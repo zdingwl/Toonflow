@@ -21,13 +21,13 @@ export function assertH3ActiveStates(assets: H3SelectedAsset[]): void {
       if (existing.assetId !== asset.assetId) {
         throw new Error(`同一人物的互斥形态不可同时引用：${existing.name || existing.assetId}（${existing.assetId}）与 ${asset.name || asset.assetId}（${asset.assetId}）；请选择当前镜头唯一有效状态`);
       }
-      throw new Error(`H3 人物资产重复引用：${asset.name || asset.assetId}（${asset.assetId}）；一个人物会自动展开脸部和正面全身两张参考图`);
+      throw new Error(`H3 人物资产重复引用：${asset.name || asset.assetId}（${asset.assetId}）；同一人物只选择一次，所需视角会按镜头和图片额度分配`);
     }
     active.set(rootId, asset);
   }
 }
 
-/** Picture tags refer to ACTUAL expanded upload slots (face + body for roles). */
+/** Picture tags refer to the actual allocated image slots, not the number of assets. */
 export function assertH3PictureSlots(prompt: string, slotCount: number): void {
   if (!Number.isInteger(slotCount) || slotCount < 0 || slotCount > 9) throw new Error(`MiniMax H3 参考图数量无效：${slotCount}，最多9张`);
   const raw = [...prompt.matchAll(/<Picture\s*(\d+)\s*>/gi)];

@@ -12,7 +12,7 @@ declare const Buffer: any;
 declare const pollTask: (fn: () => Promise<{ completed: boolean; data?: string; error?: string }>, interval?: number, timeout?: number) => Promise<{ completed: boolean; data?: string; error?: string }>;
 
 const vendor = {
-  id: "comfyui_qwen21_fourview", version: "1.1.3", author: "Toonflow",
+  id: "comfyui_qwen21_fourview", version: "1.1.4", author: "Toonflow",
   name: "本机 Qwen-Image-2.1 四视图（LoRA 可选）",
   description: "任意角色四栏：头像特写、正面全身、90°左侧面全身、背面全身；角色身份、外观及形态由当前资产提示词提供。首张参考图必须是当前目标状态的正面全身锚点；第二张可选风格参考。LoRA 权重需另外安装。",
   inputs: [
@@ -65,28 +65,54 @@ function checkFile(info: Record<string, any>, node: string, field: string, value
 const ref = (id: number, slot = 0): [string, number] => [String(id), slot];
 const node = (class_type: string, inputs: Record<string, any>) => ({ class_type, inputs });
 function identityFactsOnly(prompt: string): string {
-  const normalized = prompt
-    .replace(/同一角色的(?:四栏|四格|四视图)角色设定图/g, "同一角色的角色设定")
-    .replace(/CHARACTER TURNAROUND SHEET/gi, "CHARACTER DESIGN REFERENCE");
-  return normalized
-    .split(/(?<=[。！？.!?])\s*/u)
-    .filter(sentence => !/(?:四栏|四格|四宫格|四视图|四个视角|从左到右|第一栏|第二栏|第三栏|第四栏|(?:exactly\s+)?four[- ]panels?|first panel|second panel|third panel|fourth panel)/i.test(sentence))
-    .join(" ")
+  // Layout and identity commonly share one sentence. Never drop that sentence:
+  // doing so discards names, outfits and state facts before any view is rendered.
+  // Strip presentation instructions, not the identity/wardrobe that may share
+  // their sentence. Replacing 四栏 with 各视角 still requests a multi-view image.
+  const viewName = "(?:正面(?:脸部至肩胸|头肩|脸部)特写|脸部正面特写|脸部特写|(?:严格)?90[°度]左侧(?:面)?全身|正后方全身|正面全身|左侧面全身|左侧全身|侧面全身|背面全身|脸部|正面|侧面|背面)";
+  const numberedView = "(?:第[一二三四1-4]栏[：:]?\\s*)?" + viewName + "(?:视图|视角)?(?=[、，,；;。.!?\\s]|$)";
+  const orderedViews = new RegExp(
+    "(?:(?:(?:四栏|四格|四宫格|四视图|四个视角)\\s*)?从左到右(?:固定)?(?:排列)?(?:分别|依次)?(?:为)?[：:]?|(?:四栏|四格|四宫格|四视图|四个视角)(?:固定)?(?:分别为|依次为|为|[：:]))\\s*" + numberedView + "(?:[、，,]\\s*" + numberedView + "){1,}",
+    "g",
+  );
+  return prompt
+    .replace(orderedViews, "")
+    .replace(/(?:四栏|四格|四宫格|四视图|四个视角)从左到右(?:固定)?(?:排列)?(?:分别|依次)?(?:为)?[：:]?/g, "")
+    // Consume ordinal markers before 四栏, otherwise 第四栏 becomes 第各视角.
+    .replace(/第[一二三四1-4]栏(?:[：:]?\s*(?:为|是))?/g, "")
+    .replace(/(?:后|前)[二三四234]栏/g, "")
+    .replace(/(?:正面)?(?:脸部|头部)(?:正面)?(?:至|到)?(?:肩胸)?特写|正面头肩特写/g, "")
+    .replace(/(?:严格)?(?:90[°度])?左侧面全身(?:严格侧面)?|严格90[°度]左侧全身|正面全身(?:中性站姿)?|正后方全身|背面全身/g, "")
+    .replace(/(?:严格90[°度]左侧面|侧面严格90[°度]|严格90[°度]|正后方)(?=[，,；;。.!?\s]|$)/g, "")
+    .replace(/完整头部(?:至|到)肩胸|(?:完整)?头部与肩胸|(?:头顶(?:与|到)|头)脚(?:底)?完整(?:入画)?|头顶到脚底完整(?:入画)?/g, "")
+    .replace(/(?:正面|侧面|背面)[，,](?=\s*(?:第[一二三四1-4]栏|严格90))/g, "")
+    .replace(/(?:CHARACTER\s+)?(?:TURNAROUND|DESIGN|REFERENCE)\s+(?:SHEET|BOARD)/gi, "single character design")
+    .replace(/(?:exactly\s+)?four[- ](?:panels?|views?)(?:\s+in\s+(?:one|a|single)\s+horizontal\s+row)?/gi, "one character")
+    .replace(/(?:first|second|third|fourth)\s+panel/gi, "")
+    .replace(/(?:portrait|front\s+view|side\s+view|back\s+view)(?:\s*[,/+、]\s*(?:portrait|front\s+view|side\s+view|back\s+view)){1,}/gi, "")
+    .replace(/(?:四栏|四格|四宫格|四视图|四(?:个|名)视角|四视角|各视角|跨视角|多个视角)(?:角色设定(?:展示)?(?:图|板)|角色设定|设定板|展示板)?/g, "本角色")
+    .replace(/不是四个角色/g, "仅一个人物")
+    .replace(/背面(?:可见|展示)|能看到/g, "")
+    .replace(/[,，;；、]\s*[,，;；、]+/g, "，")
     .replace(/\s{2,}/g, " ")
     .trim();
 }
 function characterPrompt(facts: string, view: "front" | "portrait" | "side" | "back", hasStyle: boolean): string {
-  const style = "cinematic stylized realistic 3D animated CGI character, controlled stylization of adult facial anatomy where appropriate, PBR cloth and skin, coherent studio lighting, plain neutral backdrop, a single character only, no live-action photographic look, no text, no watermark";
-  const identity = `CURRENT ASSET FACTS (identity and CURRENT state, authoritative): ${facts}. Preserve every explicitly specified face feature, hair, outfit detail, proportion, eye color and state; do not invent character names or swap character states.`;
-  const noGrid = "This is a SINGLE-VIEW render of ONE character, NOT a four-panel sheet, collage, split screen, or multiple bodies. Ignore any multi-panel composition instructions inside asset facts; the final sheet is assembled programmatically.";
+  const style = view === "front"
+    ? "Follow the project rendering style and visible design specified in CURRENT ASSET FACTS; preserve its facial proportions, hair, surface treatment and materials without switching render medium. Use the display background palette and lighting specified in CURRENT ASSET FACTS, keeping the background uncluttered and the full silhouette readable; do not replace the specified palette with a default gray studio. No text, no watermark."
+    : "Preserve the reference person's identity, hairstyle, clothing, current state, rendering medium, background palette and lighting. Features outside the requested frame or hidden by this view remain unseen. No text, no watermark.";
+  // The front image already establishes the design. Repeating the complete
+  // body/face/back inventory in an image-edit request induces contact sheets.
+  const identity = view === "front" ? `CURRENT ASSET FACTS (identity and CURRENT state, authoritative): ${facts}. Preserve the specified identity, wardrobe and state.` : "";
+  const noGrid = "This is a SINGLE-VIEW render of ONE character. Output a single continuous image containing exactly one person, viewed once.";
   const viewPrompt = view === "front" ? "Standing neutral, exact straight-on front FULL BODY, whole head and both feet in frame with margins." :
-    view === "portrait" ? "Same individual in a straight-on HEAD-AND-SHOULDERS portrait, full head visible, face details legible." :
-    view === "side" ? "Rotate the SAME individual to a strict 90-degree LEFT SIDE PROFILE, full body and both feet in frame, no three-quarter angle." :
-    "Rotate the SAME individual to a straight 180-degree BACK view, full body and both feet in frame, no three-quarter angle.";
+    view === "portrait" ? "Replace the entire composition with a straight-on HEAD-AND-SHOULDERS close-up of the same individual. Show the full head and shoulders only; the bottom edge ends at the upper chest. 单人正面头肩近景，整个画面只有一个头像，上胸以下不入画。" :
+    view === "side" ? "Replace the original pose with a strict 90-degree LEFT SIDE PROFILE of the same individual, full body and both feet in frame. Only the resulting side view fills the image. 单人严格左侧面全身。" :
+    "Replace the original pose with a straight 180-degree BACK view of the same individual, full body and both feet in frame. Shoulders face directly away; neither cheek is visible. Only the resulting back view fills the image. 单人正后方全身，只呈现背影。";
   const references = view === "front" ? "" : view === "back"
-    ? `Use <image1> as the approved strict side-view identity and CURRENT-STATE anchor. Continue rotating the SAME person another 90 degrees until the face and chest are completely invisible and only the back of the head, shoulders, torso and heels face the camera. ${hasStyle ? "Use <image2> only for CG style, NEVER for identity, clothing, scene, or composition." : ""}`
-    : `Use <image1> as the approved front-view identity and CURRENT-STATE anchor; only change the requested camera/view. ${hasStyle ? "Use <image2> only for CG style, NEVER for identity, clothing, scene, or composition." : ""}`;
-  return [references, viewPrompt, identity, style, noGrid].filter(Boolean).join("\n");
+    ? `Use <image1> as the approved strict side-view identity and CURRENT-STATE anchor. Continue rotating the SAME person another 90 degrees until the face and chest are completely invisible and only the back of the head, shoulders, torso and heels face the camera. ${hasStyle ? "Use <image2> only for the requested project rendering style, NEVER for identity, clothing, scene, or composition." : ""}`
+    : `Use <image1> as the approved front-view identity and CURRENT-STATE anchor; only change the requested camera/view. ${hasStyle ? "Use <image2> only for the requested project rendering style, NEVER for identity, clothing, scene, or composition." : ""}`;
+  return [noGrid, references, viewPrompt, identity, style, `FINAL FRAMING: ${viewPrompt} Render exactly ONE person in this ONE view.`].filter(Boolean).join("\n");
 }
 function graphFor(config: ImageConfig, anchorFilename?: string, styleFilename?: string): Record<string, any> {
   const v = vendor.inputValues;

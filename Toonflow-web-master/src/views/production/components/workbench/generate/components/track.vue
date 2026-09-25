@@ -268,6 +268,7 @@ async function batchGenText() {
   });
   axios
     .post("/production/workbench/batchGeneratePrompt", {
+      regenerate: true,
       projectId: project.value?.id,
       trackData,
       model: props.modelParmas.model,
