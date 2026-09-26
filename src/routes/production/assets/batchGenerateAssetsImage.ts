@@ -5,7 +5,7 @@ import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { getOperationReceipt, withOperationReceipt } from "@/utils/agent/runtime/operationReceipt";
 
-import { generateAssetPrompt, loadAssetPromptContext, reviewAssetImage } from "@/utils/assetPromptGeneration";
+import { generateAssetPrompt, loadAssetPromptContext } from "@/utils/assetPromptGeneration";
 import { ensureRoleReferenceMedia, roleReferenceDatabaseFields, roleReferenceFingerprint } from "@/utils/assetReferenceMedia";
 
 const router = express.Router();
@@ -163,8 +163,7 @@ export default router.post(
           const savePath = `/${projectId}/assets/${scriptId}/${item.type}/${u.uuid()}.jpg`;
           await imageCls.save(savePath);
           await u.db("o_image").where({ id: imageId, assetsId: item.id }).update({ filePath: savePath });
-          await reviewAssetImage(visionDeps, context, text, savePath);
-          // Generated role prompts use the reviewed four-column contract regardless of canvas ratio.
+          // Generated role prompts use the four-column contract regardless of canvas ratio.
           const layout = "four_view" as const;
           const roleReferences = item.type === "role" ? await ensureRoleReferenceMedia(savePath, item.name, layout) : [];
           if (item.type === "role" && roleReferences.length < 2) throw new Error("新角色图片无法建立脸部和全身参考，已保留原图");

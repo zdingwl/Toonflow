@@ -16,7 +16,9 @@ export function getArtPrompt(styleName: string, source: string, fileName: string
   }
 
   // 获取 prefix.md 内容
-  const prefixFile = findFileRecursive(baseDir, "prefix.md");
+  // Video rendering may deliberately differ from the illustration medium of asset sheets.
+  const prefixFile = (fileName.replace(/\.md$/, "") === "art_storyboard_video"
+    ? findFileRecursive(baseDir, "video_prefix.md") : null) || findFileRecursive(baseDir, "prefix.md");
   const prefixContent = prefixFile ? fs.readFileSync(prefixFile, "utf-8") : "";
 
   const target = fileName.endsWith(".md") ? fileName : `${fileName}.md`;

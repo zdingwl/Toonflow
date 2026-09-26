@@ -6,7 +6,7 @@ import { h3SlotPath, saveH3ReferencePlan, loadH3ReferencePlan, copyH3ReferencePl
 import { assertH3ActiveStates } from "@/utils/h3VisualStateGuard";
 import { db as languageDb } from "@/utils/db";
 import { generateLanguageVariants } from "@/utils/videoLanguages";
-import { assertH3PromptContract, normalizeH3DialogueLocales } from "@/utils/h3PromptContract";
+import { assertH3PromptContract, normalizeH3PromptFormat, h3FormatChecklist, completeH3Repair } from "@/utils/h3PromptContract";
 import { buildH3PromptInput, h3BindingSlots } from "@/utils/h3PromptContext";
 import { assertH3ReferenceBindings } from "@/utils/h3ReferenceBindings";
 
@@ -277,22 +277,24 @@ async function generateForTrack(input: VideoPromptRequest) {
       }
     }
     const generateBase = async () => {
-      const system = h3PromptMode ? `${videoPromptGeneration || ""}\n\nProject visual requirements (express the relevant render qualities once in 1-2 English opening sentences; keep a few concrete anchors, without repeating the whole manual or static appearance in every section):\n${visualManual}` : videoPromptGeneration;
+      const system = h3PromptMode ? `${videoPromptGeneration || ""}\n\n${h3FormatChecklist}\n\nProject visual requirements (express the relevant render qualities once in 1-2 English opening sentences; keep a few concrete anchors, without repeating the whole manual or static appearance in every section):\n${visualManual}` : videoPromptGeneration;
       const messages: any[] = h3PromptMode
         ? [{ role: "user", content: userContent }]
         : [{ role: "assistant", content: visualManual }, { role: "user", content }];
-      for (let attempt = 0; attempt < 2; attempt++) {
+      for (let attempt = 0; attempt < 3; attempt++) {
         const result = { text: (await u.Ai.Text("universalAi").invoke({ system, messages })).text };
         if (!h3PromptMode) return result.text;
-        result.text = normalizeH3DialogueLocales(result.text.trim());
+        result.text = normalizeH3PromptFormat(result.text.trim());
+        const priorDraft = messages.filter((message: any) => message.role === "assistant").at(-1)?.content;
+        if (typeof priorDraft === "string") result.text = completeH3Repair(result.text, priorDraft);
         if (/^(REFERENCE_STATE_REVIEW|LANGUAGE_TIMING_REVIEW):/.test(result.text.trim())) throw new Error(result.text);
         try {
           assertH3PromptContract(result.text, targetDuration, pictureSourceItems.length);
           assertH3ReferenceBindings(result.text, h3BindingSlots(pictureSourceItems));
         }
         catch (cause) {
-          if (attempt) throw cause;
-          messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Correct the complete prompt against the official H3 rules. Keep actual image identity, style, dialogue and timing. Validation error: ${u.error(cause).message}` });
+          if (attempt === 2) throw Object.assign(cause as Error, { candidatePrompt: result.text });
+          messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Correct the complete prompt against the official H3 rules. Keep actual image identity, style, dialogue and timing. ${h3FormatChecklist} Validation error: ${u.error(cause).message}` });
           continue;
         }
         await saveH3ReferencePlan(languageDb, trackId, result.text, pictureSourceItems);
@@ -320,18 +322,20 @@ async function generateForTrack(input: VideoPromptRequest) {
             assertH3ReferenceBindings(source, sourcePlan?.slots ?? h3BindingSlots(pictureSourceItems));
           }
           const messages: any[] = [{ role: "user", content: source }];
-          for (let attempt = 0; attempt < 2; attempt++) {
-            const result = { text: (await u.Ai.Text("universalAi").invoke({ system, messages })).text };
+          for (let attempt = 0; attempt < 3; attempt++) {
+            const result = { text: (await u.Ai.Text("universalAi").invoke({ system: h3PromptMode ? `${system}\n${h3FormatChecklist}` : system, messages })).text };
             if (!h3PromptMode || result.text.trim().startsWith("LANGUAGE_TIMING_REVIEW:")) return result.text;
-            result.text = normalizeH3DialogueLocales(result.text.trim());
+            result.text = normalizeH3PromptFormat(result.text.trim());
+        const priorDraft = messages.filter((message: any) => message.role === "assistant").at(-1)?.content;
+        if (typeof priorDraft === "string") result.text = completeH3Repair(result.text, priorDraft);
             try {
               const sourcePlan = await loadH3ReferencePlan(languageDb, trackId, source);
               assertH3PromptContract(result.text, targetDuration, sourcePlan?.slots.length ?? pictureSourceItems.length);
               assertH3ReferenceBindings(result.text, sourcePlan?.slots ?? h3BindingSlots(pictureSourceItems), source);
             }
             catch (cause) {
-              if (attempt) throw cause;
-              messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Correct only these H3 format errors, preserving visual facts, meaning and reference labels: ${u.error(cause).message}` });
+              if (attempt === 2) throw Object.assign(cause as Error, { candidatePrompt: result.text });
+              messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Correct only these H3 format errors, preserving visual facts, meaning and reference labels. ${h3FormatChecklist} Validation error: ${u.error(cause).message}` });
               continue;
             }
             await copyH3ReferencePlan(languageDb, trackId, source, result.text);

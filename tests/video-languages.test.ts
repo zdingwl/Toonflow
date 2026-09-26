@@ -145,3 +145,13 @@ test("overlapping requests do not duplicate translation, and base failures remai
     await db.destroy();
   }
 });
+
+test("format rejection shows the rejected draft rather than unrelated old text", async () => {
+ const db=await fixture();try {
+ await db("o_videoPromptVariant").insert({trackId:1,language:"en-US",prompt:"old English",state:"已完成"});
+ const rejected=Object.assign(new Error("H3 format error"),{candidatePrompt:"actual rejected draft"});
+ await generateLanguageVariants(db,1,["en-US"],async()=>"fresh base",async()=>{throw rejected},true);
+ const row=await db("o_videoPromptVariant").first();assert.equal(row.prompt,rejected.candidatePrompt);assert.equal(row.state,"生成失败");assert.equal(row.reason,rejected.message);
+ assert.equal((await db("o_videoTrack").first()).prompt,'<Picture 1> 女孩说：“你好。”');
+ }finally{await db.destroy()}
+});

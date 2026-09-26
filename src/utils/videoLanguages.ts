@@ -123,7 +123,7 @@ async function generateMissingVariants(
     await db("o_videoPromptVariant")
       .where({ trackId })
       .whereIn("language", missing)
-      .update({ state: "生成失败", reason: (cause as Error).message });
+      .update({ state: "生成失败", reason: (cause as Error).message, ...((cause as any).candidatePrompt ? { prompt: (cause as any).candidatePrompt } : {}) });
     throw cause;
   }
   for (const language of missing) {
@@ -140,7 +140,7 @@ async function generateMissingVariants(
     } catch (cause) {
       await db("o_videoPromptVariant")
         .where({ trackId, language })
-        .update({ state: "生成失败", reason: (cause as Error).message });
+        .update({ state: "生成失败", reason: (cause as Error).message, ...((cause as any).candidatePrompt ? { prompt: (cause as any).candidatePrompt } : {}) });
     }
   }
   return db("o_videoPromptVariant").where({ trackId });

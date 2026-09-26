@@ -8,7 +8,7 @@ import knex from "knex";
 import { validateFields } from "../src/middleware/middleware";
 
 type Mode = "single" | "batch";
-async function fixture(mode: Mode, options: { reject?: boolean; derivative?: boolean } = {}) {
+async function fixture(mode: Mode, options: { reject?: boolean; brokenFile?: boolean; derivative?: boolean } = {}) {
   const db = knex({ client: "better-sqlite3", connection: { filename: ":memory:" }, useNullAsDefault: true });
   await db.schema.createTable("o_project", t => { t.integer("id"); t.text("artStyle"); t.text("type"); t.text("intro"); });
   await db.schema.createTable("o_assets", t => {
@@ -33,7 +33,7 @@ async function fixture(mode: Mode, options: { reject?: boolean; derivative?: boo
   };
   const imports: Record<string, unknown> = {
     "@/utils": u,
-    "sharp": () => ({ metadata: async () => ({ width: 1200, height: 400 }) }),
+    "sharp": () => ({ metadata: async () => { if (options.brokenFile) throw new Error("图片文件损坏"); return { width: 1200, height: 400 }; } }),
     "@/middleware/middleware": { validateFields },
     "@/lib/responseFormat": { success: (data: unknown) => ({ data }), error: (message: string) => ({ message }) },
     "@/utils/assetImageModel": { resolveAssetImageModel: async () => "comfyui_local:qwen-four-view", isRoleFourViewModel: () => true },
@@ -81,28 +81,28 @@ async function fixture(mode: Mode, options: { reject?: boolean; derivative?: boo
 }
 
 for (const mode of ["single", "batch"] as Mode[]) {
-  test(`${mode} image review rejects a candidate without replacing the selected image or references`, async () => {
-    const f = await fixture(mode, { reject: true });
+  test(`${mode} invalid image files preserve the selected image and references`, async () => {
+    const f = await fixture(mode, { brokenFile: true });
     try {
       const before = await f.db("o_assets").where({ id: 10 }).first();
       const result = await f.request();
       assert.equal(result.status, mode === "single" ? 400 : 200);
       assert.deepEqual(await f.db("o_assets").where({ id: 10 }).first(), before);
       const candidate = await f.db("o_image").where("id", ">", 4).first();
-      assert.equal(candidate.state, "生成失败"); assert.match(candidate.errorReason, /服装不符/); assert.match(candidate.filePath, /\.jpg$/);
-      assert.deepEqual(f.events, ["generate", "save", "review"]);
-      assert.equal(f.contexts[0].describe, "数据库中的当前角色设定"); assert.equal(f.contexts[0].name, "Ava");
+      assert.equal(candidate.state, "生成失败"); assert.match(candidate.errorReason, /图片文件损坏/); assert.match(candidate.filePath, /\.jpg$/);
+      assert.deepEqual(f.events, ["generate", "save"]);
+      assert.equal(f.contexts.length, 0);
     } finally { await f.close(); }
   });
 
-  test(`${mode} image adoption and reference crops happen only after the candidate passes review`, async () => {
-    const f = await fixture(mode);
+  test(`${mode} successful images are adopted without calling the image reviewer`, async () => {
+    const f = await fixture(mode, { reject: true });
     try {
       const result = await f.request(); assert.equal(result.status, 200);
       const asset = await f.db("o_assets").where({ id: 10 }).first();
       const candidate = await f.db("o_image").where("id", ">", 4).first();
       assert.equal(candidate.state, "已完成"); assert.equal(asset.imageId, candidate.id); assert.equal(asset.designVersion, 4);
-      assert.equal(asset.faceReferencePath, "/new-face.png"); assert.deepEqual(f.events, ["generate", "save", "review", "references"]);
+      assert.equal(asset.faceReferencePath, "/new-face.png"); assert.deepEqual(f.events, ["generate", "save", "references"]);
     } finally { await f.close(); }
   });
 

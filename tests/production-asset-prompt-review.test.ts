@@ -55,7 +55,7 @@ async function fixture(options: { reject?: boolean; blockPrompt?: boolean; switc
     oss: { getSmallImageUrl: async (path: string) => path, getImageBase64: async (path: string) => "data:image/png;base64," + Buffer.from(path).toString("base64") },
     Ai: {
       Text: () => ({ invoke: async () => { throw new Error("Unexpected real text invocation"); } }),
-      Image: () => ({ run: async (input: any) => { calls.renders.push(input); return { save: async (path: string) => { calls.saved.push(path); } }; } }),
+      Image: () => ({ run: async (input: any) => { calls.renders.push(input); return { save: async (path: string) => { calls.saved.push(path); if (options.reject) throw new Error("图片文件保存失败"); } }; } }),
     },
   };
   const imports: Record<string, unknown> = {
@@ -66,7 +66,11 @@ async function fixture(options: { reject?: boolean; blockPrompt?: boolean; switc
     "@/utils/assetImageModel": { isRoleFourViewModel: (model: string) => model === "comfyui_qwen21_fourview:qwen-image-2.1-fourview-local" },
     "@/utils/assetReferenceMedia": {
       ensureRoleReferenceMedia: async (path: string, name: string, layout: string) => {
-        assert.ok(calls.reviews.some(review => review.candidatePath === path));
+        assert.ok(calls.saved.includes(path));
+        if (options.switchSelection) {
+          const [selectedImageId] = await db("o_image").insert({ assetsId: (await db("o_image").where({ filePath: path }).first()).assetsId, type: "role", state: "已完成", filePath: "/newer-selected.jpg" });
+          await db("o_assets").where({ id: (await db("o_image").where({ filePath: path }).first()).assetsId }).update({ imageId: selectedImageId, faceReferencePath: "/newer-face.png", fullBodyReferencePath: "/newer-body.png", referenceFingerprint: "newer-hash", designVersion: 8 });
+        }
         calls.crops.push({ path, name, layout });
         if (options.brokenCrops) return [];
         const kinds = layout === "four_view" ? ["FACE", "FULL_BODY_FRONT", "FULL_BODY_SIDE", "FULL_BODY_BACK"] : ["FACE", "FULL_BODY_FRONT", "FULL_BODY_BACK"];
@@ -92,10 +96,7 @@ async function fixture(options: { reject?: boolean; blockPrompt?: boolean; switc
         assert.equal(candidate.state, "生成中");
         calls.reviews.push({ context, prompt, candidatePath });
         if (options.reject) throw new Error("图文审核未通过：衣装与参考不符");
-        if (options.switchSelection) {
-          const [selectedImageId] = await db("o_image").insert({ assetsId: context.asset.id, type: "role", state: "已完成", filePath: "/newer-selected.jpg" });
-          await db("o_assets").where({ id: context.asset.id }).update({ imageId: selectedImageId, faceReferencePath: "/newer-face.png", fullBodyReferencePath: "/newer-body.png", referenceFingerprint: "newer-hash", designVersion: 8 });
-        }
+
       },
     },
   };
@@ -145,7 +146,7 @@ test("production receipt snapshots selected base and derivative images before bi
     assert.equal(f.calls.prompts[0].manual, "manual:art_character");
     assert.equal(f.calls.prompts[1].manual, "manual:art_character_derivative");
     assert.equal((await f.db("o_assets").where({ id: 11 }).first()).prompt, "新资产提示词:11");
-    assert.equal(f.calls.reviews.length, 2);
+    assert.equal(f.calls.reviews.length, 0);
     for (const id of [10, 11]) {
       const asset = await f.db("o_assets").where({ id }).first();
       const image = await f.db("o_image").where({ id: asset.imageId }).first();
@@ -158,7 +159,7 @@ test("production receipt snapshots selected base and derivative images before bi
   } finally { await f.close(); }
 });
 
-test("production candidate rejection restores the prior selection and keeps the failed image path", async () => {
+test("production save failure restores the prior selection", async () => {
   const f = await fixture({ reject: true });
   try {
     const before = await f.db("o_assets").where({ id: 10 }).first();
@@ -167,9 +168,9 @@ test("production candidate rejection restores the prior selection and keeps the 
     assert.equal(asset.imageId, before.imageId);
     for (const key of ["faceReferencePath", "fullBodyReferencePath", "referenceFingerprint", "designVersion", "designStatus"]) assert.equal(asset[key], before[key]);
     assert.equal(f.calls.crops.length, 0);
-    assert.equal(asset.promptState, "生成失败"); assert.match(asset.promptErrorReason, /衣装与参考不符/);
+    assert.equal(asset.promptState, "生成失败"); assert.match(asset.promptErrorReason, /图片文件保存失败/);
     const candidate = await f.db("o_image").where("id", ">", 5).first();
-    assert.equal(candidate.state, "生成失败"); assert.match(candidate.filePath, /candidate-1\.jpg$/); assert.match(candidate.errorReason, /衣装与参考不符/);
+    assert.equal(candidate.state, "生成失败"); assert.equal(candidate.filePath, null); assert.match(candidate.errorReason, /图片文件保存失败/);
     assert.equal((await f.request()).status, 200);
     assert.equal((await f.db("o_image").where("id", ">", 5)).length, 1);
     assert.equal(f.calls.prompts.length, 1); assert.equal(f.calls.renders.length, 1);

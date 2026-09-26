@@ -2,12 +2,36 @@ import { assertH3PictureSlots } from "./h3VisualStateGuard";
 
 const sections = ["subject_definitions", "summary", "retention_analysis", "detailed_description", "overall_soundscape", "non_diegetic_music"];
 
+/** A repair model may return only changed sections. Retain omitted sections from this same attempt. */
+export function completeH3Repair(candidate: string, previous: string): string {
+  const split = (text: string) => {
+    const matches = [...text.matchAll(/^(subject_definitions|summary|retention_analysis|detailed_description|overall_soundscape|non_diegetic_music):\s*/gm)];
+    if (!matches.length || text.slice(0, matches[0].index).trim() || new Set(matches.map(m => m[1])).size !== matches.length) return null;
+    return new Map(matches.map((m, i) => [m[1], text.slice(m.index! + m[0].length, matches[i + 1]?.index ?? text.length).trim()]));
+  };
+  if (/^\[(?:reference generation|keyframe completion|video editing|video continuation|audio reuse|audio reference)(?:\s*\+|\])/.test(candidate)) candidate = `summary:\n${candidate}`;
+  const current = split(candidate), prior = split(previous);
+  if (!current || !prior || sections.every(section => current.has(section))) return candidate;
+  if (sections.some(section => !current.has(section) && !prior.has(section))) return candidate;
+  return sections.map(section => `${section}:\n${current.get(section) ?? prior.get(section)}`).join("\n\n");
+}
+
 // Only a locale directly after the language label is metadata; later speech stays untouched.
 const dialogueLocalePrefix = /(<d>\[[A-Za-z][A-Za-z -]*\])\s*\(([a-z]{2,3}-(?:[A-Z][a-z]{3}(?:-(?:[A-Z]{2}|\d{3}))?|[A-Z]{2}|\d{3}))\)\s*/g;
 
 export function normalizeH3DialogueLocales(prompt: string): string {
   return prompt.replace(dialogueLocalePrefix, (_, label: string, locale: string) => "(spoken locale: " + locale + ") " + label + " ");
 }
+
+/** Canonicalize explicit cut times only; never infer a missing cut or alter dialogue. */
+export function normalizeH3PromptFormat(prompt: string): string {
+  return normalizeH3DialogueLocales(prompt).replace(
+    /^(\[Shot ([2-9]|[1-9]\d+)\])\s+At\s+(\d{1,2}):([0-5]\d)(?:\.(\d{1,3}))?\s*[,，:：]/gm,
+    (_, shot, _number, minutes, seconds, fraction) => `${shot} At ${minutes.padStart(2, "0")}:${seconds}.${(fraction || "").padEnd(3, "0")},`,
+  );
+}
+
+export const h3FormatChecklist = `Mandatory H3 output syntax: all six section bodies are English, except speech inside <d> and explicitly quoted visible screen/sign text. Translate Chinese style-manual terms into English; do not copy Chinese instructions. summary must start with [reference generation] (or the applicable task prefix) and use the defined <Subject N> labels. Put every shot heading at the start of a new line. [Shot 1] has no timestamp. Every later heading MUST begin exactly like [Shot 2] At 00:03.200, followed by the shot description. Use your actual cut time, two minute digits, two second digits and three millisecond digits. Do not put camera descriptions or duration ranges between the heading and At. Never invent a cut time when the storyboard timing is insufficient. Keep all Subject/Picture bindings, spoken lines and event order.`;
 
 /** Official Ref2VA grammar only; visual fidelity still requires inspecting the result. */
 export function assertH3PromptContract(prompt: string, duration: number, pictureCount: number): void {
@@ -47,7 +71,7 @@ export function assertH3PromptContract(prompt: string, duration: number, picture
     const tail = body.detailed_description.slice(shot.index! + shot[0].length);
     const time = /^\s*At (\d{2}):([0-5]\d)\.(\d{3}),/.exec(tail);
     if (i === 0) { if (/^\s*At\s+\d/.test(tail)) fail("Shot 1 不能带时间戳"); return; }
-    if (!time) fail("后续镜头使用 At MM:SS.mmm, 时间格式");
+    if (!time) fail(`Shot ${i + 1} 应以 [Shot ${i + 1}] At MM:SS.mmm, 开始，当前开头：${tail.trim().slice(0, 100)}`);
     const seconds = Number(time![1]) * 60 + Number(time![2]) + Number(time![3]) / 1000;
     if (seconds <= previousTime || seconds >= duration) fail("切镜时间必须递增且在目标时长以内");
     previousTime = seconds;

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { assertH3PromptContract, normalizeH3DialogueLocales } from "../src/utils/h3PromptContract";
+import { assertH3PromptContract, normalizeH3DialogueLocales, normalizeH3PromptFormat, completeH3Repair } from "../src/utils/h3PromptContract";
 
 const valid = `subject_definitions:
 <Subject 1> is the woman in <Picture 1> (face) and <Picture 2> (body), wearing the red sweater and black skirt from the references.
@@ -65,4 +65,26 @@ test("keeps metadata already outside dialogue and ordinary locale mentions insid
     assert.equal(normalizeH3DialogueLocales(input), input);
     assert.doesNotThrow(() => assertH3PromptContract(input, 6, 2));
   }
+});
+
+test("canonicalizes explicit cut formatting without changing the cut time or quoted speech", () => {
+ for (const stamp of ["0:03.0，", "00:03:", "00:03.000,"]) {
+ const input=valid.replace("00:03.000,",stamp);
+ assert.equal(normalizeH3PromptFormat(input),valid);
+ }
+ const missing=valid.replace("At 00:03.000,", "Close-up:");
+ assert.equal(normalizeH3PromptFormat(missing),missing);
+ assert.throws(()=>assertH3PromptContract(missing,6,2),/Shot 2/);
+ const visible=valid.replace("Wind and creaking metal.","The screen reads “确认”.");
+ assert.doesNotThrow(()=>assertH3PromptContract(visible,6,2));
+});
+
+test("partial format repairs retain omitted sections only from the same draft",()=>{
+ const partial=valid.slice(valid.indexOf("summary:"));
+ assert.equal(completeH3Repair(partial,valid).replace(/\n\n/g,"\n"),valid);
+ assert.doesNotThrow(()=>assertH3PromptContract(completeH3Repair(partial.slice(9),valid),6,2));
+ assert.equal(completeH3Repair(valid,valid),valid);
+ assert.equal(completeH3Repair("Sorry, no output",valid),"Sorry, no output");
+ const bad=completeH3Repair(partial.replace("turns and speaks","turns toward <Subject 8>"),valid);
+ assert.throws(()=>assertH3PromptContract(bad,6,2),/未定义/);
 });

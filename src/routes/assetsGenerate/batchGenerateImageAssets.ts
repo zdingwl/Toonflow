@@ -9,7 +9,6 @@ import { error, success } from "@/lib/responseFormat";
 import { buildAssetImagePrompt } from "@/utils/assetPrompt";
 import { validateFields } from "@/middleware/middleware";
 import { isRoleFourViewModel, resolveAssetImageModel } from "@/utils/assetImageModel";
-import { loadAssetPromptContext, reviewAssetImage } from "@/utils/assetPromptGeneration";
 
 const router = express.Router();
 type AssetType = "role" | "scene" | "tool";
@@ -44,7 +43,6 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
   const prepared: Array<{
     item: BatchItem;
     runtimeModel: Awaited<ReturnType<typeof resolveAssetImageModel>>;
-    context: Awaited<ReturnType<typeof loadAssetPromptContext>>;
   }> = [];
   try {
     for (const item of items as BatchItem[]) {
@@ -56,10 +54,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
       if (isQwenFourView && item.type !== "role") throw new Error("Qwen 四视图工作流仅支持角色资产，场景和道具请选对应模型");
       if (isQwenFourView && asset.assetsId && !item.base64) throw new Error(`${asset.name || item.name}：衍生形态必须传入同一角色的已确认参考图；不能从文本静默猜测父角色身份`);
       if (item.styleBase64 && (!isQwenFourView || !item.base64)) throw new Error("第二张风格参考图仅用于 Qwen 四视图，且必须先提供当前状态的正面全身锚点图");
-      const context = await loadAssetPromptContext(u.db, {
-        projectId, assetsId: item.id, type: item.type as AssetType, name: asset.name || item.name, describe: asset.describe || "",
-      });
-      prepared.push({ item, runtimeModel, context });
+      prepared.push({ item, runtimeModel });
     }
   } catch (cause) {
     return res.status(400).send(error(u.error(cause).message));
@@ -75,7 +70,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
   }
 
   const limit = pLimit(concurrentCount ?? 1);
-  const tasks = prepared.map(({ item, runtimeModel, context }, index) => limit(async () => {
+  const tasks = prepared.map(({ item, runtimeModel }, index) => limit(async () => {
     const imageId = imageIds[index];
     const cfg = assetTypeConfig[item.type as AssetType];
     const imagePath = `/${projectId}/${cfg.dir}/${uuidv4()}.jpg`;
@@ -98,17 +93,13 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
         aspectRatio: isQwenFourView ? "2:3" : item.type === "tool" || item.type === "role" ? "1:1" : "16:9",
       }, { taskClass: cfg.taskClass, describe, projectId, relatedObjects: JSON.stringify(relatedObjects) });
       await aiImage.save(imagePath);
-      // Retain rejected output for inspection; leave the current asset image and references intact.
+      // Persist the output before validating its file and creating reference crops.
       await u.db("o_image").where("id", imageId).update({ filePath: imagePath });
       const metadata = await sharp(await u.oss.getFile(imagePath)).metadata();
       const actualResolution = metadata.width && metadata.height ? `${metadata.width}x${metadata.height}` : resolution;
       if (item.type === "role" && (!(metadata.width && metadata.height) || metadata.width / metadata.height < (isQwenFourView ? 1.7 : 0.95))) {
         throw new Error("角色设定图画布比例异常，无法创建人物参考图");
       }
-      await reviewAssetImage({
-        loadImage: (path) => u.oss.getImageBase64(path),
-        invoke: (input) => u.Ai.Text("universalAi").invoke(input),
-      }, context, item.prompt, imagePath);
       const roleReferences = item.type === "role" ? await ensureRoleReferenceMedia(imagePath, item.name, "four_view") : [];
       const imageData = await u.db("o_image").where("id", imageId).select("*").first();
       if (!imageData || imageData.state === "生成失败") return;

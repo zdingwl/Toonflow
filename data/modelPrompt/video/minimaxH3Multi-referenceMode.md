@@ -23,6 +23,8 @@ List the subject's own Picture sources first. For spatial or scale context from 
 
 ## Concise definitions, useful visual detail
 
+The supplied video visual manual determines the rendering medium. Reference images establish identity, geometry, clothing, colors and scene layout; asset-sheet illustration terminology is not automatically a video style instruction. When the video manual requests semi-realistic 3D animation, explicitly establish that medium in the opening of detailed_description, with natural facial proportions, physical materials and coherent lighting. Preserve reference identity while rendering it in that medium. Do not replace the requested 3D film look with concept-art or illustration shading, and do not force this 3D rule on projects whose video manual requests a different medium.
+
 Images supply the design; text explains how it acts in the scene. Each subject definition is one short sentence: name/category, all actual Picture/view sources, and two or three visible recognition cues. For characters prioritize silhouette, hair and a major clothing cue; for environments use location and essential spatial anchors; for props/creatures use shape and scale. Do not inventory anatomy, every garment seam, every tooth or all furniture.
 
 Toonflow writing targets, not model limits: usually 25–50 English words per Subject definition, 10–25 words of preservation explanation per retention row, and a 30–60-word summary. Reference lists may need extra words. Avoid repeating an appearance inventory across definitions, retention, style and every shot. Preserve facts instead of mechanically hitting a length target. Never truncate generated text.
@@ -56,3 +58,7 @@ Assign `(S1)`, `(S2)` by first audible speaker appearance and reuse them. A visi
 `non_diegetic_music:` Use `N/A` unless the supplied storyboard requests audience-only music. When requested, describe instrumentation and development concisely.
 
 Before returning, check: six sections, complete Subject/Picture groups, no missing or invented sources, identity/state continuity, concise definitions, feasible actions and cuts, exact speech and speakers, and target duration alignment.
+
+## Final syntax checklist
+
+Write shot headings at the beginning of separate lines: `[Shot 1] Description...` and `[Shot 2] At 00:03.200, Description...`. Do not insert a camera label or time range before `At`. Every later cut needs two minute digits, two second digits and three millisecond digits. The summary must actually contain the defined `<Subject N>` labels, not only character names. Translate all Chinese visual-manual terms into English; preserve Chinese only inside dialogue tags or quoted text visibly printed in the scene.

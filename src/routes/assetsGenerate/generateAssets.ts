@@ -8,7 +8,6 @@ import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { buildAssetImagePrompt, buildFluxPromptTranslationRequest, needsFluxPromptTranslation } from "@/utils/assetPrompt";
 import { isRoleFourViewModel, resolveAssetImageModel } from "@/utils/assetImageModel";
-import { loadAssetPromptContext, reviewAssetImage } from "@/utils/assetPromptGeneration";
 
 const router = express.Router();
 type AssetType = "role" | "scene" | "tool";
@@ -50,9 +49,6 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
   const describe = `生成${cfg.label}图，名称：${name}，提示词：${prompt}`;
   const relatedObjects = { id, projectId, type: cfg.label };
   try {
-    const context = await loadAssetPromptContext(u.db, {
-      projectId, assetsId: id, type: type as AssetType, name: asset.name || name, describe: asset.describe || "",
-    });
     let runtimePrompt = prompt;
     let runtimeArtStyle = project.artStyle || "";
     let runtimeName = name;
@@ -79,7 +75,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
       aspectRatio: isQwenFourView ? "2:3" : type === "tool" || type === "role" ? "1:1" : "16:9",
     }, { taskClass: cfg.taskClass, describe, projectId, relatedObjects: JSON.stringify(relatedObjects) });
     await aiImage.save(imagePath);
-    // Keep a failed candidate available for inspection without changing the selected asset image.
+    // Persist the output before validating its file and creating reference crops.
     await u.db("o_image").where("id", imageId).update({ filePath: imagePath });
     const metadata = await sharp(await u.oss.getFile(imagePath)).metadata();
     const actualResolution = metadata.width && metadata.height ? `${metadata.width}x${metadata.height}` : resolution;
@@ -88,10 +84,6 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
     if (type === "role" && (!(metadata.width && metadata.height) || metadata.width / metadata.height < (isQwenFourView ? 1.7 : 0.95))) {
       throw new Error("角色设定图画布比例异常，无法创建人物参考图");
     }
-    await reviewAssetImage({
-      loadImage: (path) => u.oss.getImageBase64(path),
-      invoke: (input) => u.Ai.Text("universalAi").invoke(input),
-    }, context, prompt, imagePath);
     const roleReferences = type === "role" ? await ensureRoleReferenceMedia(imagePath, name, "four_view") : [];
     const imageData = await u.db("o_image").where("id", imageId).select("*").first();
     if (!imageData) return res.status(500).send(error("资产已被删除"));
