@@ -257,7 +257,8 @@ function compileReferencePrompt(config: VideoConfig): string {
   if (!refs.length) return config.prompt;
 
   const expected = refs.map((_, index) => index + 1);
-  const rawTags = config.prompt.match(/<Picture\s*\d+\s*>/gi) || [];
+  // Quoted dialogue may literally mention a label; it does not allocate a reference.
+  const rawTags = config.prompt.replace(/<d>[\s\S]*?<\/d>/g, "").match(/<Picture\s*\d+\s*>/gi) || [];
 
   // A dedicated H3 Prompt Skill owns Picture semantics. If it emitted any Picture tags,
   // fail closed unless they exactly match Runtime reference slots 1..N.

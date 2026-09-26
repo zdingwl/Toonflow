@@ -1,0 +1,33 @@
+{
+  "event": "model_done",
+  "track": "1790319537445",
+  "call": 5,
+  "elapsedSeconds": 6.27,
+  "finishReason": "stop",
+  "usage": {
+    "inputTokens": 9407,
+    "inputTokenDetails": {
+      "noCacheTokens": 9407,
+      "cacheReadTokens": 0
+    },
+    "outputTokens": 5,
+    "outputTokenDetails": {
+      "textTokens": 5,
+      "reasoningTokens": 0
+    },
+    "totalTokens": 9412,
+    "raw": {
+      "prompt_tokens": 9407,
+      "completion_tokens": 5,
+      "total_tokens": 9412,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "reasoningTokens": 0,
+    "cachedInputTokens": 0
+  }
+}

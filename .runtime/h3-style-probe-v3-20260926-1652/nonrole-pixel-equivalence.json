@@ -1,0 +1,20 @@
+[
+  {
+    "picture": 3,
+    "assetId": 118,
+    "width": 1344,
+    "height": 768,
+    "identicalFloat32Pixels": true,
+    "oldSha256": "c576d958ea0d84deeeb9f0b7f59ba6494b00c12255da0fa11c5f57e9b1a60887",
+    "candidateSha256": "c576d958ea0d84deeeb9f0b7f59ba6494b00c12255da0fa11c5f57e9b1a60887"
+  },
+  {
+    "picture": 4,
+    "assetId": 128,
+    "width": 1024,
+    "height": 1024,
+    "identicalFloat32Pixels": true,
+    "oldSha256": "a7fbed104ef32acb1670e6f2fd09d89975a455dd5ca75b4f04bad40d0dd891ab",
+    "candidateSha256": "a7fbed104ef32acb1670e6f2fd09d89975a455dd5ca75b4f04bad40d0dd891ab"
+  }
+]

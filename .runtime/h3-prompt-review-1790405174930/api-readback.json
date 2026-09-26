@@ -1,0 +1,30 @@
+{
+  "verifiedAt": "2026-09-26T07:25:51.684Z",
+  "endpoint": "/production/workbench/getGenerateData",
+  "tracks": [
+    {
+      "id": 1790319537445,
+      "state": "已完成",
+      "englishState": "已完成",
+      "historyVideos": 8,
+      "currentReferences": [
+        115,
+        116,
+        118,
+        128
+      ]
+    },
+    {
+      "id": 1790319543870,
+      "state": "已完成",
+      "englishState": "已完成",
+      "historyVideos": 2,
+      "currentReferences": [
+        115,
+        118,
+        124,
+        128
+      ]
+    }
+  ]
+}

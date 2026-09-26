@@ -3,7 +3,7 @@ import u from "@/utils";
 import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
 import sharp from "sharp";
-import { ensureRoleReferenceMedia, roleReferenceDatabaseFields, roleReferenceFingerprint } from "@/utils/assetReferenceMedia";
+import { roleReferenceFingerprint } from "@/utils/assetReferenceMedia";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { buildAssetImagePrompt, buildFluxPromptTranslationRequest, needsFluxPromptTranslation } from "@/utils/assetPrompt";
@@ -75,26 +75,24 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
       aspectRatio: isQwenFourView ? "2:3" : type === "tool" || type === "role" ? "1:1" : "16:9",
     }, { taskClass: cfg.taskClass, describe, projectId, relatedObjects: JSON.stringify(relatedObjects) });
     await aiImage.save(imagePath);
-    // Persist the output before validating its file and creating reference crops.
+    // Persist the output before validating the complete image file.
     await u.db("o_image").where("id", imageId).update({ filePath: imagePath });
     const metadata = await sharp(await u.oss.getFile(imagePath)).metadata();
     const actualResolution = metadata.width && metadata.height ? `${metadata.width}x${metadata.height}` : resolution;
-    // A model reporting success is NOT a semantic quality review. Only derive stable reference crops
-    // for a four-column role board, and never mark face identity independently verified here.
+    // Validate the board geometry, without creating separate reference files.
     if (type === "role" && (!(metadata.width && metadata.height) || metadata.width / metadata.height < (isQwenFourView ? 1.7 : 0.95))) {
-      throw new Error("角色设定图画布比例异常，无法创建人物参考图");
+      throw new Error("角色设定图画布比例异常，请检查完整人物四视图");
     }
-    const roleReferences = type === "role" ? await ensureRoleReferenceMedia(imagePath, name, "four_view") : [];
     const imageData = await u.db("o_image").where("id", imageId).select("*").first();
     if (!imageData) return res.status(500).send(error("资产已被删除"));
     if (imageData.state === "生成失败") return res.status(400).send(error(imageData.errorReason || "图片生成已取消"));
     await u.db("o_image").where("id", imageId).update({ state: "已完成", filePath: imagePath, type, model: selectedModelName, resolution: actualResolution });
     await u.db("o_assets").where({ id, projectId, type }).update({
       imageId,
-      ...(type === "role" && roleReferences.length >= 2 ? {
-        // ready only means usable reference files, not human approval.
+      ...(type === "role" ? {
+        // ready means the complete image is usable, not human approval.
         designStatus: "ready", designVersion: u.db.raw("COALESCE(designVersion, 0) + 1"),
-        ...roleReferenceDatabaseFields(roleReferences, "four_view"),
+        referenceLayout: "four_view",
         referenceFingerprint: await roleReferenceFingerprint(imagePath),
       } : {}),
     });

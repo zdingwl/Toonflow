@@ -1,0 +1,76 @@
+{
+  "trackId": 1790319537445,
+  "duration": 4,
+  "request": {
+    "trackId": 1790319537445,
+    "projectId": 1790218938911,
+    "model": "comfyui_local:MiniMax-H3-local",
+    "mode": "[\"imageReference:9\"]",
+    "info": [
+      {
+        "id": 115,
+        "sources": "assets"
+      },
+      {
+        "id": 116,
+        "sources": "assets"
+      },
+      {
+        "id": 118,
+        "sources": "assets"
+      },
+      {
+        "id": 128,
+        "sources": "assets"
+      },
+      {
+        "id": 23,
+        "sources": "storyboard",
+        "reference": false
+      }
+    ],
+    "languages": [
+      "en-US"
+    ],
+    "regenerate": true,
+    "replaceBasePrompt": true
+  },
+  "assets": [
+    {
+      "id": 115,
+      "name": "艾娃",
+      "type": "role",
+      "imageId": 705,
+      "filePath": "/1790218938911/role/fc772f94-3b6d-4612-a048-3c84a08125f1.jpg"
+    },
+    {
+      "id": 116,
+      "name": "麦迪逊",
+      "type": "role",
+      "imageId": 706,
+      "filePath": "/1790218938911/role/6a38b782-be0e-4d55-8b25-5f1525f0c5e6.jpg"
+    },
+    {
+      "id": 118,
+      "name": "末世海洋",
+      "type": "scene",
+      "imageId": 694,
+      "filePath": "/1790218938911/scene/98ddc9bc-8c4b-4df1-a3ad-b905aeec7d89.jpg"
+    },
+    {
+      "id": 128,
+      "name": "巨鲨",
+      "type": "tool",
+      "imageId": 690,
+      "filePath": "/1790218938911/props/05cc3d61-5649-4452-9996-8edd15011120.jpg"
+    }
+  ],
+  "story": [
+    {
+      "id": 23,
+      "duration": "4",
+      "videoDesc": "【风格核验样片，4秒，单一连续近景】\n使用当前四个参考资产：艾娃(115)、麦迪逊(116)、末世海洋(118)、巨鲨(128)。每个人物使用现有完整四视图板，不拆图。\n场景：风暴海面上的倾斜船舷，人物不坠落、不受伤。镜头固定在两位人物胸部以上的近景，艾娃在前，麦迪逊在旁。两张脸以正面至轻微三分之二侧面可见，保持参考图的脸部结构、眼睛相对面部的比例和现有服装。麦迪逊的手轻搭艾娃肩部，4秒内人物仅轻微转动视线，风轻轻带动发丝。背景船舷和海面保持与场景参考一致，远处海面只露出同一条巨鲨的一小段背鳍，不靠近人物。\n人物的写实程度及皮肤、发丝、布料的表面表现沿用当前角色参考图；风暴冷光改变受光，不重新设计人物。保持嘴闭，无对白、无笑声或惨叫；只有海风和远处波浪声，无配乐。\n此为独立风格测试，不承接正式片段的坠落动作。"
+    }
+  ],
+  "model": "volcengine:doubao-seed-2-1-pro-260915"
+}

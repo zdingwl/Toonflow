@@ -1,0 +1,12 @@
+{
+  "status": "downloaded",
+  "startedAt": "2026-09-26T08:38:44.156Z",
+  "baseUrl": "http://127.0.0.1:8188",
+  "clientId": "toonflow-h3-style-probe-5ffca586-fe71-4e7a-a743-e8a3a33be99a",
+  "graphSha256": "4a6377a1d0dbf40ccaaa63974dabed29b0e9edc75ee7a54fe5dd813ba20e66fc",
+  "promptId": "433529ff-3149-4fe9-9b9c-1a17636bbbdb",
+  "submittedAt": "2026-09-26T08:38:44.665Z",
+  "output": "D:\\Toonflow-app-master\\.runtime\\h3-style-probe-v2-20260926-1638\\style-probe-output.mp4",
+  "outputSha256": "29f1fe6464c9c71a937238789e013198cf258296d6b9ddab353d03300eb12b9d",
+  "completedAt": "2026-09-26T09:06:01.535Z"
+}

@@ -30,7 +30,7 @@ export function assertH3ActiveStates(assets: H3SelectedAsset[]): void {
 /** Picture tags refer to the actual allocated image slots, not the number of assets. */
 export function assertH3PictureSlots(prompt: string, slotCount: number): void {
   if (!Number.isInteger(slotCount) || slotCount < 0 || slotCount > 9) throw new Error(`MiniMax H3 参考图数量无效：${slotCount}，最多9张`);
-  const raw = [...prompt.matchAll(/<Picture\s*(\d+)\s*>/gi)];
+  const raw = [...prompt.replace(/<d>[\s\S]*?<\/d>/g, "").matchAll(/<Picture\s*(\d+)\s*>/gi)];
   if (!slotCount) {
     if (raw.length) throw new Error('当前没有上传 H3 参考图，但提示词仍引用了 Picture 槽位');
     return;

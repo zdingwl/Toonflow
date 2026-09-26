@@ -74,14 +74,10 @@ export default router.post(
           })),
         );
         return {
-          ...parent,
+          ...Object.fromEntries(Object.entries(parent).filter(([key]) => !["faceReferencePath", "fullBodyReferencePath", "sideReferencePath", "backReferencePath"].includes(key))),
           state: displayState,
           errorReason: displayErrorReason,
           filePath: parent.filePath && (await u.oss.getSmallImageUrl(parent.filePath!)),
-          faceReferenceUrl: parent.faceReferencePath && (await u.oss.getFileUrl(parent.faceReferencePath)),
-          fullBodyReferenceUrl: parent.fullBodyReferencePath && (await u.oss.getFileUrl(parent.fullBodyReferencePath)),
-          sideReferenceUrl: parent.sideReferencePath && (await u.oss.getFileUrl(parent.sideReferencePath)),
-          backReferenceUrl: parent.backReferencePath && (await u.oss.getFileUrl(parent.backReferencePath)),
           historyImages: historyImagesWithUrl,
           relepedAudio: repleAssets[parent.id] ?? [],
         };

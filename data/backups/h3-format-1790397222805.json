@@ -1,0 +1,52 @@
+{
+  "track": {
+    "id": 1790319537445,
+    "videoId": null,
+    "projectId": 1790218938911,
+    "scriptId": 31,
+    "state": "生成失败",
+    "reason": "en-US: H3 提示词格式：必须按官方顺序输出六个章节，不能有前言或代码块",
+    "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1> (face) and <Picture 2> (front full body), retaining long straight black hair, a muted beige tank top, matching trousers, and pale sneakers.\n<Subject 2> is Madison from <Picture 3> (face) and <Picture 4> (front full body), retaining wavy brown hair, pink pajamas with white piping, and beige slippers.\n<Subject 3> is the post-apocalyptic ocean from <Picture 5>, retaining the storm-dark sea, wreckage, tilting rusted liner, and crushing wave walls.\n<Subject 4> is the giant shark from <Picture 6>, retaining its massive blue-gray body, white underbelly, tall dorsal fin, and rows of sharp teeth.\n\nsummary:\n[reference generation] On the storm-torn deck of <Subject 3>, <Subject 2> deliberately pushes <Subject 1> over the rail while <Subject 4> rises from the sea to meet her fall.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - Ava’s black hair, beige outfit, build, and identity remain consistent through the confrontation and fall.\n<Subject 2> (appears in [Shot 1], [Shot 2]): fully_preserved - Madison’s wavy brown hair and pink pajamas remain stable as she grabs and pushes Ava.\n<Subject 3> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - The slanted wrecked liner, debris, storm clouds, and violent ocean layout stay coherent.\n<Subject 4> (appears in [Shot 1], [Shot 3]): partially_preserved - Its dorsal fin is distant in the first shot, then its full open-mouthed head and body proportions appear below Ava.\n\ndetailed_description:\nCinematic semi-realistic 3D animation with Chinese donghua-inspired character design, preserving the reference faces and natural human proportions. Natural skin texture, layered hair strands, physically based fabric, wet metal, ocean spray, cinematic lighting, and stable contact shadows maintain a coherent three-dimensional film look.\n\n[Shot 1] In an extreme long take, the giant liner of <Subject 3> lies sharply tilted across a black-green sea, its rusted hull groaning as waves slam into exposed plates. The camera glides slowly along the sloped deck toward the starboard rail, passing loose cables and sliding debris while storm clouds press overhead. Near the edge, <Subject 2> forces <Subject 1> backward, their silhouettes small against the enormous drop; Ava’s beige outfit and long black hair are wind-whipped, while Madison’s pink pajamas flare around her wrists and ankles. Below them, between mountainous swells, the tall dorsal fin of <Subject 4> cuts through foam and disappears. The continuous push ends with a slight downward tilt past the rail, revealing the churning water far below. Huge waves thunder against the hull, twisted metal groans in long strains, and sea wind shriels through the rigging.\n\n[Shot 2] At 00:04.000, the cut holds a close, near-static two-shot at the rail, with the camera giving only a short forward surge at the shove. <Subject 2> grips <Subject 1> near the upper chest, her brown wavy hair blown across her temples and a cold smile forming on her lips. <Subject 1> braces her heels against the tilted deck, shoulders tense, fingers trying to pull Madison’s hands away as the rail presses into the back of her legs. Fabric pulls taut and scrapes at the contact point. Madison’s smile sharpens; she keeps eye contact and speaks with malicious calm, <d>[Chinese] 姐姐，下去喂鱼吧。</d> Then both of her arms drive forward and slam into Ava’s shoulders. The hull gives a violent creak beneath them, Madison lets out a low cold laugh, and the cloth snaps under the sudden force.\n\n[Shot 3] At 00:08.000, a steep full-shot camera follows <Subject 1> as her balance breaks. Her upper body snaps backward from the push, her feet leave the slippery deck, and she pivots over the rail with one hand reaching back too late. <Subject 2> remains above at the ship’s edge, leaning forward with both hands still extended from the deliberate push. The camera dives after Ava, tracking her rapid descent past the rusted hull as her black hair whips upward and her beige clothes flatten in the rushing air. She draws a sharp, desperate breath. Below, <Subject 4> surges out of the dark water, its blue-gray head rising against sheets of white foam; its white underbelly and gill plates become clear as the massive jaws open wide, revealing rows of triangular teeth. Wind roars past Ava, the ocean’s thunder expands violently, and the shot ends a beat before contact as spray leaps upward toward her.\n\noverall_soundscape:\nContinuous storm wind, pounding waves, and the deep groan of the distressed hull run beneath the sequence. Metallic strain, sliding debris, rushing fall air, and shark-splash water build toward the final threat.\n\nnon_diegetic_music:\nN/A",
+    "selectVideoId": null,
+    "duration": 11,
+    "archived": 0
+  },
+  "variant": {
+    "trackId": 1790319537445,
+    "language": "en-US",
+    "prompt": "summary:\n[reference generation] On the storm-wrecked liner in <Subject 3>, <Subject 2> confronts and deliberately pushes <Subject 1> over the tilted rail while <Subject 4> rises through the waves below to meet her fall.\n\nretention_analysis:\n<Subject 1> appears in [Shot 1], [Shot 2], and [Shot 3]: fully_preserved - Ava's black hair, facial identity, proportions, gray tank top, trousers, and sneakers remain stable through the confrontation and fall.\n<Subject 2> appears in [Shot 1] and [Shot 2]: fully_preserved - Madison's brown wavy hair, facial identity, and pink pajamas with white piping remain consistent while she threatens and pushes Ava.\n<Subject 3> appears in [Shot 1], [Shot 2], and [Shot 3]: fully_preserved - The wrecked liner, storm clouds, heaving gray-blue sea, wreckage, and cold lighting preserve the reference location.\n<Subject 4> appears in [Shot 1] and [Shot 3]: fully_preserved - The shark's blue-gray body, white underside, dorsal fin, and open triangular-toothed jaws remain true to the reference.\n\ndetailed_description:\nCinematic semi-realistic 3D rendering preserves the reference facial proportions and clothing while giving skin soft volumetric shading, hair fine moving strands, fabric readable folds, and grounded contact shadows. The characters, wrecked ship, storm water, and shark share the same cold lighting and physically coherent materials.\n[Shot 1] A sweeping extreme-wide establishing shot looks along the sharply tilted deck of <Subject 3>. The massive rusted liner groans into mountainous gray-blue waves beneath black storm clouds, with broken wooden wreckage pitching in the foam. <Subject 2> stands higher on the sloping deck and forces <Subject 1> backward toward the rail; Madison's pink pajamas with white piping and Ava's gray tank top, gray trousers, and sneakers are clearly readable against the dark metal. The camera glides slowly down the incline toward the ship's side over the first four seconds, ending with a slight downward tilt. Far below, the tall dorsal fin of <Subject 4> cuts through a wave and disappears beneath the surface. Wind presses both women's hair and clothing toward the sea. The continuous sound is the deep roar of waves striking the hull, twisting metal, and screaming ocean wind. Spoken language: en-US.\n[Shot 2] At 00:04.000, the view cuts to a close, nearly static medium shot at the rail. Madison grips Ava's clothing with both hands, her weight braced uphill on the tilted deck while Ava's shoulders are pinned near the railing. A cold smile forms on Madison's face; Ava stays tense, eyes fixed on her, feet trying to find traction. <Subject 2> says, <d>[English] Sister, go on down and feed the fish.</d> Her mouth moves with the line while the hull creaks violently around them. A sharp fabric strain sounds under her grip. Then Madison shoves Ava hard in both shoulders, the camera lunging forward briefly with the impact. Ava's upper body snaps backward, her hands lift to recover, and one foot slips on the wet deck. The sea wind and groaning metal swell under the dialogue. Spoken language: en-US.\n[Shot 3] At 00:08.000, the shot cuts to a steep high-angle full view as Ava loses balance and tumbles backward over the ship's rail. The camera follows her immediately in a rapid downward tracking move, keeping her centered against the vast hull and churning water. Her long black hair whips upward, her gray top and trousers snap in the wind, and her arms twist as she falls toward the waves. She draws one sharp involuntary breath. Below her, <Subject 4> surges out of the storm-dark sea, lifting its blue-gray head and opening its white under-jaw to reveal rows of triangular teeth. Spray erupts around the shark as the rushing wind and thunder of approaching waves fill the final frame. Spoken language: en-US.\n\noverall_soundscape:\nThe scene is dominated by continuous storm wind, mountainous waves battering the liner, and the low groan of stressed metal. Fabric strain, Ava's sharp intake of breath, rushing fall air, and the shark's explosive splash are synchronized to the action.\n\nnon_diegetic_music:\nN/A",
+    "state": "生成失败",
+    "reason": "H3 提示词格式：必须按官方顺序输出六个章节，不能有前言或代码块",
+    "videoId": null
+  },
+  "assets": [
+    {
+      "id": 115,
+      "name": "艾娃",
+      "type": "role",
+      "assetsId": null,
+      "filePath": "/1790218938911/role/fc772f94-3b6d-4612-a048-3c84a08125f1.jpg"
+    },
+    {
+      "id": 116,
+      "name": "麦迪逊",
+      "type": "role",
+      "assetsId": null,
+      "filePath": "/1790218938911/role/6a38b782-be0e-4d55-8b25-5f1525f0c5e6.jpg"
+    },
+    {
+      "id": 118,
+      "name": "末世海洋",
+      "type": "scene",
+      "assetsId": null,
+      "filePath": "/1790218938911/scene/98ddc9bc-8c4b-4df1-a3ad-b905aeec7d89.jpg"
+    },
+    {
+      "id": 128,
+      "name": "巨鲨",
+      "type": "tool",
+      "assetsId": null,
+      "filePath": "/1790218938911/props/05cc3d61-5649-4452-9996-8edd15011120.jpg"
+    }
+  ]
+}

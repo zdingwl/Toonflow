@@ -6,6 +6,16 @@ import test from "node:test";
 
 const source = await readFile(new URL("../data/vendor/comfyui_local.ts", import.meta.url), "utf8");
 
+test("H3 submission preserves spoken Picture labels without mistaking them for uploaded sources", () => {
+  const body = source.match(/function compileReferencePrompt\([\s\S]*?(?=\/\/ Same native)/)?.[0];
+  assert.ok(body);
+  const compile = vm.runInNewContext(`${transform(body, { transforms: ["typescript"] }).code}; compileReferencePrompt`, { referenceLabel: () => "character" });
+  const prompt = 'subject_definitions:\n<Subject 1> is the character in <Picture 1>.\ndetailed_description:\n[Shot 1] <Subject 1> (S1) says <d>[English] The label is <Picture 99>.</d>';
+  const config = { prompt, referenceList: [{ type: "image", path: "character.png" }] };
+  assert.equal(compile(config), prompt);
+  assert.throws(() => compile({ ...config, prompt: prompt.replace("in <Picture 1>", "in <Picture 2>") }), /槽位/);
+});
+
 test("native MiniMax H3 workflows do not load Turbo LoRA", () => {
   assert.doesNotMatch(source, /LoraLoaderModelOnly/);
   assert.doesNotMatch(source, /h3RefLora|h3RefSteps|turbo_4step/i);

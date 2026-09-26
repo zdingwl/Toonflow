@@ -6,7 +6,7 @@ import { validateFields } from "@/middleware/middleware";
 import { getOperationReceipt, withOperationReceipt } from "@/utils/agent/runtime/operationReceipt";
 
 import { generateAssetPrompt, loadAssetPromptContext } from "@/utils/assetPromptGeneration";
-import { ensureRoleReferenceMedia, roleReferenceDatabaseFields, roleReferenceFingerprint } from "@/utils/assetReferenceMedia";
+import { roleReferenceFingerprint } from "@/utils/assetReferenceMedia";
 
 const router = express.Router();
 const activeAssetGenerationRequests = new Set<string>();
@@ -165,12 +165,10 @@ export default router.post(
           await u.db("o_image").where({ id: imageId, assetsId: item.id }).update({ filePath: savePath });
           // Generated role prompts use the four-column contract regardless of canvas ratio.
           const layout = "four_view" as const;
-          const roleReferences = item.type === "role" ? await ensureRoleReferenceMedia(savePath, item.name, layout) : [];
-          if (item.type === "role" && roleReferences.length < 2) throw new Error("新角色图片无法建立脸部和全身参考，已保留原图");
           const referenceFields = item.type === "role" ? {
             designStatus: "ready",
             designVersion: u.db.raw("COALESCE(designVersion, 0) + 1"),
-            ...roleReferenceDatabaseFields(roleReferences, layout),
+            referenceLayout: layout,
             referenceFingerprint: await roleReferenceFingerprint(savePath),
           } : null;
           await u.db.transaction(async (trx) => {
@@ -178,7 +176,7 @@ export default router.post(
               state: "已完成", filePath: savePath, errorReason: null,
             });
             // A later generation or manual selection may now own this asset. Its
-            // selected image and reference crops must remain together.
+            // selected image and its metadata must remain together.
             if (completed && referenceFields) {
               await trx("o_assets").where({ id: item.id, projectId, imageId }).update(referenceFields);
             }

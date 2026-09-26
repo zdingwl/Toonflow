@@ -1,0 +1,76 @@
+{
+  "trackId": 1790319543870,
+  "duration": 13,
+  "request": {
+    "trackId": 1790319543870,
+    "projectId": 1790218938911,
+    "model": "comfyui_local:MiniMax-H3-local",
+    "mode": "[\"imageReference:9\"]",
+    "info": [
+      {
+        "id": 115,
+        "sources": "assets"
+      },
+      {
+        "id": 118,
+        "sources": "assets"
+      },
+      {
+        "id": 124,
+        "sources": "assets"
+      },
+      {
+        "id": 128,
+        "sources": "assets"
+      },
+      {
+        "id": 24,
+        "sources": "storyboard",
+        "reference": false
+      }
+    ],
+    "languages": [
+      "en-US"
+    ],
+    "regenerate": true,
+    "replaceBasePrompt": true
+  },
+  "assets": [
+    {
+      "id": 115,
+      "name": "艾娃",
+      "type": "role",
+      "imageId": 705,
+      "filePath": "/1790218938911/role/fc772f94-3b6d-4612-a048-3c84a08125f1.jpg"
+    },
+    {
+      "id": 118,
+      "name": "末世海洋",
+      "type": "scene",
+      "imageId": 694,
+      "filePath": "/1790218938911/scene/98ddc9bc-8c4b-4df1-a3ad-b905aeec7d89.jpg"
+    },
+    {
+      "id": 124,
+      "name": "海洋基建系统手机",
+      "type": "tool",
+      "imageId": 665,
+      "filePath": "/1790218938911/props/081366dc-b912-421d-bde8-041e7d123d75.jpg"
+    },
+    {
+      "id": 128,
+      "name": "巨鲨",
+      "type": "tool",
+      "imageId": 690,
+      "filePath": "/1790218938911/props/05cc3d61-5649-4452-9996-8edd15011120.jpg"
+    }
+  ],
+  "story": [
+    {
+      "id": 24,
+      "duration": "13",
+      "videoDesc": "【场景】场1：末世海洋·邮轮坠落与重生\n【关联资产】末世海洋(118)、艾娃(115)、巨鲨(128)、海洋基建系统手机(124)\n【片段二（约13s）】\n承接上镜：上镜定格于艾娃翻出船舷、头朝海面急速下坠、巨鲨在下方抬头张口的姿态与机位，本镜由鲨口咬合瞬间延续。\n4｜中景｜水下半仰拍，短促晃动后骤停｜时长4s｜画面描述：巨鲨利齿合拢咬住艾娃小腿，暗红血色在她身侧海水中散开，艾娃上身绷紧、张口惨叫，双手徒劳拍向水面。｜台词：无台词｜音效：巨鲨沉重咬合声；艾娃惨叫；血水翻涌声；沉闷心跳“咚”\n5｜特写｜缓慢推近艾娃紧盯弹窗的神情｜时长6s｜画面描述：艾娃视线开始模糊，眼前弹出海洋基建系统的全息倒计时窗口，数字从三逐项跳至一。｜台词：手机系统女声说：『重生倒计时，三，二，一。』｜音效：手机倒计时滴答声；沉重心跳；水下嗡鸣逐渐压低\n6｜近景｜静止，界面扩散瞬间镜头短促一震｜时长3s｜画面描述：艾娃在剧痛中死死盯住弹窗，抬手颤抖着触向“重生”选项，系统界面从弹窗中心急速扩大并吞没鲨口。｜台词：艾娃说：『我选重生。』｜音效：艾娃气声喘息；系统确认提示音；界面扩散的巨大嗡鸣"
+    }
+  ],
+  "model": "volcengine:doubao-seed-2-1-pro-260915"
+}

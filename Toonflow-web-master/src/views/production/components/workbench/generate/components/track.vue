@@ -70,6 +70,7 @@ import projectStore from "@/stores/project";
 import imageListCacheStore from "@/stores/imageListCache";
 import JSZip from "jszip";
 import settingStore from "@/stores/setting";
+import { getH3ReferenceGuardError } from "@/utils/h3ReferenceGuard";
 
 const { otherSetting } = storeToRefs(settingStore());
 const { project } = storeToRefs(projectStore());
@@ -360,6 +361,12 @@ async function batchGenVideo() {
         audio: Boolean(props.modelParmas.audio),
         trackData,
       };
+      const referenceError = getH3ReferenceGuardError(requestData.model, requestData.mode, trackData.map((item) => ({
+        label: `视频段 #${trackList.value.findIndex((track) => track.id === item.trackId) + 1}（${props.languageName(item.language)}）`,
+        prompt: checkedTrackData.find((track) => track.id === item.trackId)?.variants?.find((variant) => variant.language === item.language)?.prompt || "",
+        uploadData: item.uploadData,
+      })));
+      if (referenceError) return window.$message.warning(referenceError);
       generateVideoLoad.value = true;
       try {
         const { data } = await axios.post("/production/workbench/batchGenerateVideo", requestData);

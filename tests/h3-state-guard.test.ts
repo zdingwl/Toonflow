@@ -42,4 +42,6 @@ test("picture slots must exactly cover the expanded upload order", () => {
   assert.throws(() => assertH3PictureSlots("<Picture 1> <Picture 3>", 3), /槽位/);
   assert.throws(() => assertH3PictureSlots("<Picture 1>", 0), /没有上传/);
   assert.throws(() => assertH3PictureSlots("<Picture 1>", 10), /最多9张/);
+  assert.doesNotThrow(() => assertH3PictureSlots("<Picture 1> <d>[English] The tag is <Picture 99>.</d>", 1));
+  assert.throws(() => assertH3PictureSlots("<d>[English] The tag is <Picture 1>.</d>", 1), /槽位/);
 });

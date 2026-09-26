@@ -17,7 +17,7 @@ async function until(check: () => Promise<boolean> | boolean) {
   throw new Error("mock production worker did not reach expected state");
 }
 
-async function fixture(options: { reject?: boolean; blockPrompt?: boolean; switchSelection?: boolean; fourView?: boolean; brokenCrops?: boolean } = {}) {
+async function fixture(options: { reject?: boolean; blockPrompt?: boolean; switchSelection?: boolean; fourView?: boolean; unreadableBoard?: boolean } = {}) {
   const db = knex({ client: "better-sqlite3", connection: { filename: ":memory:" }, useNullAsDefault: true });
   await db.schema.createTable("o_project", t => { t.integer("id"); for (const key of ["imageModel", "imageQuality", "artStyle"]) t.text(key); });
   await db.schema.createTable("o_script", t => { t.integer("id"); t.integer("projectId"); });
@@ -65,22 +65,17 @@ async function fixture(options: { reject?: boolean; blockPrompt?: boolean; switc
     "@/utils/agent/runtime/operationReceipt": { getOperationReceipt, withOperationReceipt },
     "@/utils/assetImageModel": { isRoleFourViewModel: (model: string) => model === "comfyui_qwen21_fourview:qwen-image-2.1-fourview-local" },
     "@/utils/assetReferenceMedia": {
-      ensureRoleReferenceMedia: async (path: string, name: string, layout: string) => {
+      ensureRoleReferenceMedia: async () => { calls.crops.push({}); throw new Error("Retired crop path invoked"); },
+      roleReferenceFingerprint: async (path: string) => {
         assert.ok(calls.saved.includes(path));
         if (options.switchSelection) {
-          const [selectedImageId] = await db("o_image").insert({ assetsId: (await db("o_image").where({ filePath: path }).first()).assetsId, type: "role", state: "已完成", filePath: "/newer-selected.jpg" });
-          await db("o_assets").where({ id: (await db("o_image").where({ filePath: path }).first()).assetsId }).update({ imageId: selectedImageId, faceReferencePath: "/newer-face.png", fullBodyReferencePath: "/newer-body.png", referenceFingerprint: "newer-hash", designVersion: 8 });
+          const assetId = (await db("o_image").where({ filePath: path }).first()).assetsId;
+          const [selectedImageId] = await db("o_image").insert({ assetsId: assetId, type: "role", state: "已完成", filePath: "/newer-selected.jpg" });
+          await db("o_assets").where({ id: assetId }).update({ imageId: selectedImageId, faceReferencePath: "/newer-face.png", fullBodyReferencePath: "/newer-body.png", referenceFingerprint: "newer-hash", designVersion: 8 });
         }
-        calls.crops.push({ path, name, layout });
-        if (options.brokenCrops) return [];
-        const kinds = layout === "four_view" ? ["FACE", "FULL_BODY_FRONT", "FULL_BODY_SIDE", "FULL_BODY_BACK"] : ["FACE", "FULL_BODY_FRONT", "FULL_BODY_BACK"];
-        return kinds.map(kind => ({ path: path + "." + kind + ".png", referenceKind: kind }));
+        if (options.unreadableBoard) throw new Error("完整人物图片不可读取");
+        return "hash:" + path;
       },
-      roleReferenceDatabaseFields: (references: any[], layout: string) => {
-        const fieldKinds = { faceReferencePath: "FACE", fullBodyReferencePath: "FULL_BODY_FRONT", sideReferencePath: "FULL_BODY_SIDE", backReferencePath: "FULL_BODY_BACK" };
-        return { referenceLayout: layout, ...Object.fromEntries(Object.entries(fieldKinds).map(([field, kind]) => [field, references.find(ref => ref.referenceKind === kind)?.path || null])) };
-      },
-      roleReferenceFingerprint: async (path: string) => "hash:" + path,
     },
     "@/utils/assetPromptGeneration": {
       loadAssetPromptContext: async (database: any, input: any, overrides: any) => {
@@ -150,8 +145,8 @@ test("production receipt snapshots selected base and derivative images before bi
     for (const id of [10, 11]) {
       const asset = await f.db("o_assets").where({ id }).first();
       const image = await f.db("o_image").where({ id: asset.imageId }).first();
-      assert.equal(asset.faceReferencePath, image.filePath + ".FACE.png");
-      assert.equal(asset.fullBodyReferencePath, image.filePath + ".FULL_BODY_FRONT.png");
+      assert.equal(asset.faceReferencePath, id === 10 ? "/old-face.png" : null);
+      assert.equal(asset.fullBodyReferencePath, id === 10 ? "/old-body.png" : null);
       assert.equal(asset.referenceFingerprint, "hash:" + image.filePath);
       assert.equal(asset.referenceLayout, "four_view");
       assert.equal(asset.designVersion, id === 10 ? 4 : 1);
@@ -243,10 +238,10 @@ test("production reference adoption uses the four-view layout of the selected mo
     assert.equal((await f.request()).status, 200); await f.settle(1);
     const asset = await f.db("o_assets").where({ id: 10 }).first();
     const candidate = await f.db("o_image").where({ id: asset.imageId }).first();
-    assert.equal(f.calls.crops[0].layout, "four_view");
+    assert.deepEqual(f.calls.crops, []);
     assert.equal(asset.referenceLayout, "four_view");
-    assert.equal(asset.sideReferencePath, candidate.filePath + ".FULL_BODY_SIDE.png");
-    assert.equal(asset.backReferencePath, candidate.filePath + ".FULL_BODY_BACK.png");
+    assert.equal(asset.sideReferencePath, null);
+    assert.equal(asset.backReferencePath, null);
   } finally { await f.close(); }
 });
 
@@ -266,14 +261,14 @@ test("a late production result never replaces the references of a newer selectio
   } finally { await f.close(); }
 });
 
-test("failed production reference creation preserves the prior image and reference fields", async () => {
-  const f = await fixture({ brokenCrops: true });
+test("unreadable production board preserves the prior image and reference fields", async () => {
+  const f = await fixture({ unreadableBoard: true });
   try {
     const before = await f.db("o_assets").where({ id: 10 }).first();
     assert.equal((await f.request()).status, 200); await f.settle(1);
     const asset = await f.db("o_assets").where({ id: 10 }).first();
     for (const key of ["imageId", "faceReferencePath", "fullBodyReferencePath", "referenceFingerprint", "designVersion"]) assert.equal(asset[key], before[key]);
     const candidate = await f.db("o_image").where("id", ">", 5).first();
-    assert.equal(candidate.state, "生成失败"); assert.match(candidate.errorReason, /无法建立/); assert.ok(candidate.filePath);
+    assert.equal(candidate.state, "生成失败"); assert.match(candidate.errorReason, /完整人物图片不可读取/); assert.ok(candidate.filePath);
   } finally { await f.close(); }
 });

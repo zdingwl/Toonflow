@@ -146,12 +146,78 @@ test("overlapping requests do not duplicate translation, and base failures remai
   }
 });
 
-test("format rejection shows the rejected draft rather than unrelated old text", async () => {
- const db=await fixture();try {
- await db("o_videoPromptVariant").insert({trackId:1,language:"en-US",prompt:"old English",state:"已完成"});
- const rejected=Object.assign(new Error("H3 format error"),{candidatePrompt:"actual rejected draft"});
- await generateLanguageVariants(db,1,["en-US"],async()=>"fresh base",async()=>{throw rejected},true);
- const row=await db("o_videoPromptVariant").first();assert.equal(row.prompt,rejected.candidatePrompt);assert.equal(row.state,"生成失败");assert.equal(row.reason,rejected.message);
- assert.equal((await db("o_videoTrack").first()).prompt,'<Picture 1> 女孩说：“你好。”');
- }finally{await db.destroy()}
+test("a rejected base never overwrites saved language text or becomes a new language draft", async () => {
+  const db = await fixture();
+  try {
+    await db("o_videoPromptVariant").insert([
+      { trackId: 1, language: "en-US", prompt: "saved English", state: "已完成", videoId: 91 },
+      { trackId: 1, language: "ja-JP", prompt: "saved Japanese", state: "已完成", videoId: 92 },
+    ]);
+    await db("o_videoLanguage").insert({ videoId: 91, language: "en-US", prompt: "completed video snapshot" });
+    const failure = Object.assign(new Error("H3 content review: wrong event order"), { candidatePrompt: "未经校验的中文基版" });
+    let translations = 0;
+    await assert.rejects(generateLanguageVariants(db, 1, ["en-US", "ko-KR"], async () => { throw failure; }, async () => {
+      translations++;
+      return "unexpected";
+    }, true), /wrong event order/);
+    const english = await db("o_videoPromptVariant").where({ language: "en-US" }).first();
+    assert.equal(english.prompt, "saved English");
+    assert.equal(english.state, "生成失败");
+    assert.equal(english.reason, failure.message);
+    assert.equal(english.videoId, 91);
+    const korean = await db("o_videoPromptVariant").where({ language: "ko-KR" }).first();
+    assert.equal(korean.prompt, "");
+    assert.equal(korean.state, "生成失败");
+    assert.equal(korean.reason, failure.message);
+    const japanese = await db("o_videoPromptVariant").where({ language: "ja-JP" }).first();
+    assert.equal(japanese.prompt, "saved Japanese");
+    assert.equal(japanese.state, "已完成");
+    assert.equal(japanese.videoId, 92);
+    assert.equal((await db("o_videoLanguage").first()).prompt, "completed video snapshot");
+    assert.equal((await db("o_videoTrack").first()).prompt, '<Picture 1> 女孩说：“你好。”');
+    assert.equal(translations, 0);
+  } finally { await db.destroy(); }
+});
+
+test("rejected translations preserve any saved prompt, other languages and existing video links", async () => {
+  const db = await fixture();
+  try {
+    await db("o_videoPromptVariant").insert([
+      { trackId: 1, language: "en-US", prompt: "human-corrected text after earlier failure", state: "生成失败", videoId: 91 },
+      { trackId: 1, language: "ja-JP", prompt: "saved Japanese", state: "已完成", videoId: 92 },
+    ]);
+    const failure = Object.assign(new Error("H3 semantic review: wrong speaker"), { candidatePrompt: "rejected translated candidate" });
+    await generateLanguageVariants(db, 1, ["en-US", "ko-KR"], async () => "<Picture 1> fresh validated base", async () => { throw failure; }, true);
+    const english = await db("o_videoPromptVariant").where({ language: "en-US" }).first();
+    assert.equal(english.prompt, "human-corrected text after earlier failure");
+    assert.equal(english.state, "生成失败");
+    assert.equal(english.reason, failure.message);
+    assert.equal(english.videoId, 91);
+    const korean = await db("o_videoPromptVariant").where({ language: "ko-KR" }).first();
+    assert.equal(korean.prompt, "");
+    assert.equal(korean.state, "生成失败");
+    assert.equal(korean.reason, failure.message);
+    const japanese = await db("o_videoPromptVariant").where({ language: "ja-JP" }).first();
+    assert.equal(japanese.prompt, "saved Japanese");
+    assert.equal(japanese.state, "已完成");
+    assert.equal(japanese.videoId, 92);
+    assert.equal((await db("o_videoTrack").first()).prompt, '<Picture 1> 女孩说：“你好。”');
+  } finally { await db.destroy(); }
+});
+
+test("translation compares unique structural reference labels, not repeats or spoken literal tags", async () => {
+  const db = await fixture();
+  try {
+    await db("o_videoTrack").where({ id: 1 }).update({ prompt: '<Subject 1> is the woman in <Picture 1>. <Subject 1> says <d>[Chinese] 标记写着 <Picture 99>。</d>' });
+    const translation = '<Subject 1> is the woman in <Picture 1>. <Subject 1> turns. <Subject 1> says <d>[English] The label says <Subject 8>.</d>';
+    await generateLanguageVariants(db, 1, ["en-US"], async () => "unexpected", async () => translation);
+    const saved = await db("o_videoPromptVariant").where({ language: "en-US" }).first();
+    assert.equal(saved.state, "已完成", saved.reason);
+    assert.equal(saved.prompt, translation);
+    await generateLanguageVariants(db, 1, ["ja-JP"], async () => "unexpected", async () => '<Subject 1> says <d>[Japanese] <Picture 1></d>');
+    const missing = await db("o_videoPromptVariant").where({ language: "ja-JP" }).first();
+    assert.equal(missing.state, "生成失败");
+    assert.match(missing.reason, /参考图编号/);
+    assert.equal(missing.prompt, "");
+  } finally { await db.destroy(); }
 });

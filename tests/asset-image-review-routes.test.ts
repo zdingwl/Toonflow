@@ -102,7 +102,7 @@ for (const mode of ["single", "batch"] as Mode[]) {
       const asset = await f.db("o_assets").where({ id: 10 }).first();
       const candidate = await f.db("o_image").where("id", ">", 4).first();
       assert.equal(candidate.state, "已完成"); assert.equal(asset.imageId, candidate.id); assert.equal(asset.designVersion, 4);
-      assert.equal(asset.faceReferencePath, "/new-face.png"); assert.deepEqual(f.events, ["generate", "save", "references"]);
+      assert.equal(asset.faceReferencePath, "/old-face.png"); assert.equal(asset.referenceFingerprint, "new-hash"); assert.deepEqual(f.events, ["generate", "save"]);
     } finally { await f.close(); }
   });
 

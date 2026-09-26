@@ -10,6 +10,20 @@ import { assertH3ReferenceBindings, type H3ReferenceBindingSlot } from "../src/u
 import { assertH3PromptContract } from "../src/utils/h3PromptContract";
 import type { H3SlotItem } from "../src/utils/h3ReferenceSlots";
 
+test("complete character boards have one Picture each and explicit sheet semantics", () => {
+  const slots = [{ id: 1, type: "role", name: "Ava" }, { id: 2, type: "role", name: "Madison" }, { id: 3, type: "scene", name: "Deck" }];
+  const subjects = buildH3ReferenceSubjects(slots);
+  assert.deepEqual(subjects.map(s => s.pictures), [
+    [{ picture: "<Picture 1>", view: "CHARACTER_SHEET" }],
+    [{ picture: "<Picture 2>", view: "CHARACTER_SHEET" }],
+    [{ picture: "<Picture 3>" }],
+  ]);
+  const input = buildH3PromptInput(slots, [], 8);
+  assert.match(input, /ONE complete reference sheet in ONE Picture slot/);
+  assert.match(input, /not multiple people or separate uploaded Pictures/);
+  assert.doesNotMatch(input, /Side\/back views remain optional/);
+});
+
 type View = "FACE" | "FULL_BODY_FRONT" | "FULL_BODY_SIDE" | "FULL_BODY_BACK";
 const role = (id: number, view: View, more: Record<string, unknown> = {}): H3SlotItem => ({
   id, type: "role", name: "Ava", _referenceRole: view, ...more,

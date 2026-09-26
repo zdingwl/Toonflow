@@ -8,7 +8,6 @@ import knex from "knex";
 import { z } from "zod";
 import * as referencePlans from "../src/utils/h3ReferencePlan";
 import * as referenceBindings from "../src/utils/h3ReferenceBindings";
-import * as referenceMedia from "../src/utils/assetReferenceMedia";
 import * as guards from "../src/utils/h3VisualStateGuard";
 import { validateFields } from "../src/middleware/middleware";
 
@@ -88,7 +87,7 @@ async function fixture() {
       "@/utils/videoLanguages": { dialogueLanguageSchema: z.string(), resolveLanguagePrompt: async (_db: unknown, _id: number, _language: unknown, prompt: string) => prompt },
       "@/utils/h3ReferencePlan": referencePlans,
       "@/utils/h3ReferenceBindings": referenceBindings,
-      "@/utils/assetReferenceMedia": { persistedRoleReferencesForVideo: (item: any, prompt: string) => { legacyCalls.push(prompt); return referenceMedia.persistedRoleReferencesForVideo(item, prompt); } },
+      "@/utils/assetReferenceMedia": { persistedRoleReferencesForVideo: (item: any, prompt: string) => { legacyCalls.push(prompt); throw new Error("Retired crop path invoked"); } },
       "@/utils/h3VisualStateGuard": guards,
       "@/utils/videoQuality": { inspectVideoQuality: async () => ({}) },
       "@/middleware/middleware": { validateFields },
@@ -129,16 +128,15 @@ async function snapshotDatabase(db: any) {
 }
 
 for (const route of ["generateVideo", "batchGenerateVideo"]) {
-  test(route + " uploads saved nine-slot order despite side/back prose and shuffled selected assets", async () => {
+  test(route + " uploads saved whole-board order despite side/back prose and shuffled selected assets", async () => {
     const f = await fixture();
     try {
       await f.addAssets([asset(1), asset(2), asset(3), asset(4, "scene"), asset(5, "tool"), asset(6, "tool"), asset(7, "tool")]);
       const plan = { version: 1 as const, slots: [
-        planSlot(1, "role", "FACE"), planSlot(1, "role", "FULL_BODY_FRONT"),
-        planSlot(2, "role", "FACE"), planSlot(2, "role", "FULL_BODY_FRONT"), planSlot(3, "role", "FULL_BODY_FRONT"),
+        planSlot(1, "role"), planSlot(2, "role"), planSlot(3, "role"),
         planSlot(4, "scene"), planSlot(5, "tool"), planSlot(6, "tool"), planSlot(7, "tool"),
       ] };
-      const prompt = picturePrompt(9, [1, 1, 2, 2, 3, 4, 5, 6, 7]) + " Camera sees a side view and back view of the shopping cart.";
+      const prompt = picturePrompt(7) + " Camera sees a side view and back view of the shopping cart.";
       await savePlan(f.db, 1, prompt, plan);
       const response = await f.post(route, [{ trackId: 1, prompt, uploadData: [7, 3, 2, 6, 4, 1, 5].map(id => ({ id, sources: "assets" })) }]);
       assert.equal(response.status, 200, JSON.stringify(response.body));
@@ -146,7 +144,7 @@ for (const route of ["generateVideo", "batchGenerateVideo"]) {
       assert.equal(f.legacyCalls.length, 0);
       assert.deepEqual(f.loaded, plan.slots.map(slot => slot.path));
       assert.deepEqual(f.submitted[0].referenceList.map((item: any) => Buffer.from(item.base64.split(",")[1], "base64").toString()), plan.slots.map(slot => slot.path));
-      assert.equal(f.submitted[0].referenceList.length, 9);
+      assert.equal(f.submitted[0].referenceList.length, 7);
     } finally { await f.done(); await f.close(); }
   });
 
@@ -155,7 +153,7 @@ for (const route of ["generateVideo", "batchGenerateVideo"]) {
     try {
       await f.addAssets([asset(1), asset(2, "scene"), asset(3, "audio"), asset(4, "video")]);
       await f.db("o_storyboard").insert({ id: 8, projectId: 7, filePath: "storyboard.png", prompt: "composition" });
-      const plan = { version: 1 as const, slots: [planSlot(1, "role", "FULL_BODY_FRONT"), planSlot(2, "scene")] };
+      const plan = { version: 1 as const, slots: [planSlot(1, "role"), planSlot(2, "scene")] };
       const prompt = picturePrompt(2);
       await savePlan(f.db, 1, prompt, plan);
       const response = await f.post(route, [{ trackId: 1, prompt, uploadData: [
@@ -164,11 +162,11 @@ for (const route of ["generateVideo", "batchGenerateVideo"]) {
       ] }]);
       assert.equal(response.status, 200, JSON.stringify(response.body)); await f.done();
       assert.deepEqual(f.submitted[0].referenceList.map((item: any) => item.type), ["image", "image", "audio", "video"]);
-      assert.deepEqual(f.loaded, ["1-front.png", "2-sheet.png", "3-sheet.png", "4-sheet.png"]);
+      assert.deepEqual(f.loaded, ["1-sheet.png", "2-sheet.png", "3-sheet.png", "4-sheet.png"]);
     } finally { await f.done(); await f.close(); }
   });
 
-  for (const failure of ["changed crop", "changed selection", "unreadable image", "legacy missing plan"]) {
+  for (const failure of ["changed board", "changed selection", "unreadable image", "legacy missing plan"]) {
     test(route + " fails preflight for " + failure + " with a persisted reason and no video attempt", async () => {
       const f = await fixture();
       try {
@@ -176,11 +174,11 @@ for (const route of ["generateVideo", "batchGenerateVideo"]) {
         const prompt = failure === "legacy missing plan" ? picturePrompt(3) + " side view" : picturePrompt(1);
         const uploadData = [{ id: 1, sources: "assets" }];
         if (failure !== "legacy missing plan") {
-          await savePlan(f.db, 1, prompt, { version: 1, slots: [planSlot(1, "role", "FULL_BODY_FRONT")] });
+          await savePlan(f.db, 1, prompt, { version: 1, slots: [planSlot(1, "role")] });
         }
-        if (failure === "changed crop") await f.db("o_assets").where({ id: 1 }).update({ fullBodyReferencePath: "replacement-front.png" });
+        if (failure === "changed board") await f.db("o_image").where({ id: 1 }).update({ filePath: "replacement-sheet.png" });
         if (failure === "changed selection") uploadData.push({ id: 2, sources: "assets" });
-        if (failure === "unreadable image") f.unreadable.add("1-front.png");
+        if (failure === "unreadable image") f.unreadable.add("1-sheet.png");
         if (failure === "legacy missing plan") await f.db("o_assets").where({ id: 1 }).update({ sideReferencePath: null });
         const response = await f.post(route, [{ trackId: 1, prompt, uploadData }]);
         assert.equal(response.status, 409, JSON.stringify(response.body));
@@ -211,9 +209,9 @@ test("batch preflights every image before creating any video record", async () =
   try {
     await f.addAssets([asset(1), asset(2)]);
     const prompt = picturePrompt(1);
-    await savePlan(f.db, 1, prompt, { version: 1, slots: [planSlot(1, "role", "FULL_BODY_FRONT")] });
-    await savePlan(f.db, 2, prompt, { version: 1, slots: [planSlot(2, "role", "FULL_BODY_FRONT")] });
-    f.unreadable.add("2-front.png");
+    await savePlan(f.db, 1, prompt, { version: 1, slots: [planSlot(1, "role")] });
+    await savePlan(f.db, 2, prompt, { version: 1, slots: [planSlot(2, "role")] });
+    f.unreadable.add("2-sheet.png");
     const response = await f.post("batchGenerateVideo", [1, 2].map(id => ({ trackId: id, prompt, uploadData: [{ id, sources: "assets" }] })));
     assert.equal(response.status, 409, JSON.stringify(response.body));
     assert.equal((await f.db("o_video")).length, 0); assert.equal(f.submitted.length, 0);
@@ -227,12 +225,12 @@ for (const route of ["generateVideo", "batchGenerateVideo"]) {
     try {
       await f.addAssets([asset(1), asset(2, "scene")]);
       const prompt = picturePrompt(2) + " profile and from behind";
-      await savePlan(f.db, 1, prompt, { version: 1, slots: [planSlot(1, "role", "FULL_BODY_FRONT"), planSlot(2, "scene")] });
+      await savePlan(f.db, 1, prompt, { version: 1, slots: [planSlot(1, "role"), planSlot(2, "scene")] });
       const before = await snapshotDatabase(f.db);
       const response = await f.post(route, [{ trackId: 1, language: "en-US", prompt, uploadData: [{ id: 2, sources: "assets" }, { id: 1, sources: "assets" }] }], { validateOnly: true });
       assert.equal(response.status, 200, JSON.stringify(response.body));
       assert.deepEqual(response.body.data, { valid: true, tracks: [{ trackId: 1, language: "en-US", valid: true, pictureCount: 2, referenceCount: 2 }] });
-      assert.deepEqual(f.loaded, ["1-front.png", "2-sheet.png"]);
+      assert.deepEqual(f.loaded, ["1-sheet.png", "2-sheet.png"]);
       assert.deepEqual(await snapshotDatabase(f.db), before);
       assert.equal(f.providerCreations(), 0); assert.equal(f.submitted.length, 0);
     } finally { await f.close(); }
@@ -272,9 +270,9 @@ test("validateOnly reports all 23 tracks, including every failure, without modif
     await f.db("o_videoTrack").insert(Array.from({ length: 21 }, (_, index) => ({ id: index + 3, projectId: 7, scriptId: 2, prompt: "keep persisted prompt", state: "已完成", reason: "keep reason" })));
     await f.addAssets(Array.from({ length: 23 }, (_, index) => asset(index + 1)));
     const prompt = picturePrompt(1);
-    for (let id = 1; id <= 22; id++) await savePlan(f.db, id, id === 22 ? "<Picture 2>" : prompt, { version: 1, slots: [planSlot(id, "role", "FULL_BODY_FRONT")] });
-    f.unreadable.add("20-front.png");
-    await f.db("o_assets").where({ id: 21 }).update({ fullBodyReferencePath: "changed-front.png" });
+    for (let id = 1; id <= 22; id++) await savePlan(f.db, id, id === 22 ? "<Picture 2>" : prompt, { version: 1, slots: [planSlot(id, "role")] });
+    f.unreadable.add("20-sheet.png");
+    await f.db("o_image").where({ id: 21 }).update({ filePath: "changed-sheet.png" });
     const before = await snapshotDatabase(f.db);
     const mutations: string[] = [];
     f.db.on("query", query => { if (/^\s*(?:insert|update|delete|create|alter|drop|replace)\b/i.test(query.sql)) mutations.push(query.sql); });
@@ -296,36 +294,33 @@ test("validateOnly reports all 23 tracks, including every failure, without modif
 });
 
 for (const route of ["generateVideo", "batchGenerateVideo"]) {
-  for (const failure of ["split identity", "mixed characters"]) {
-    for (const validateOnly of [false, true]) {
-      test(route + " rejects " + failure + " with unchanged Picture count before provider creation" + (validateOnly ? " in read-only validation" : ""), async () => {
-        const f = await fixture();
-        try {
-          await f.addAssets([asset(1), asset(2)]);
-          const plan = { version: 1 as const, slots: [
-            planSlot(1, "role", "FACE"), planSlot(1, "role", "FULL_BODY_FRONT"),
-            planSlot(2, "role", "FACE"), planSlot(2, "role", "FULL_BODY_FRONT"),
-          ] };
-          const prompt = failure === "split identity" ? picturePrompt(4) : picturePrompt(4, [1, 2, 1, 2]);
-          await savePlan(f.db, 1, prompt, plan);
-          const before = await snapshotDatabase(f.db);
-          const mutations: string[] = [];
-          f.db.on("query", query => { if (/^\s*(?:insert|update|delete|create|alter|drop|replace)\b/i.test(query.sql)) mutations.push(query.sql); });
-          const response = await f.post(route, [{ trackId: 1, prompt, uploadData: [{ id: 2, sources: "assets" }, { id: 1, sources: "assets" }] }], { validateOnly });
-          assert.equal(response.status, 409, JSON.stringify(response.body));
-          assert.match(response.body.message, failure === "split identity" ? /同一资产.*拆成多个 Subject/ : /混用了不同资产/);
-          assert.equal(response.body.data.valid, false);
-          assert.equal(response.body.data.tracks[0].valid, false);
-          assert.equal(f.providerCreations(), 0); assert.equal(f.submitted.length, 0);
-          assert.equal((await f.db("o_video")).length, 0); assert.deepEqual(f.loaded, []);
-          if (validateOnly) {
-            assert.deepEqual(mutations, []); assert.deepEqual(await snapshotDatabase(f.db), before);
-          } else {
-            const track = await f.db("o_videoTrack").where({ id: 1 }).first();
-            assert.equal(track.state, "生成失败"); assert.match(track.reason, /H3 参考图绑定/);
-          }
-        } finally { await f.close(); }
-      });
-    }
+  for (const validateOnly of [false,true]) {
+    test(route+" rejects old crop plans without uploading or creating videos", async()=>{
+      const f=await fixture();
+      try {
+        await f.addAssets([asset(1)]);
+        const prompt=picturePrompt(2,[1,1]);
+        const slots=[planSlot(1,'role','FACE'),planSlot(1,'role','FULL_BODY_FRONT')];
+        await savePlan(f.db,1,prompt,{version:1,slots});
+        const before=await snapshotDatabase(f.db);
+        const response=await f.post(route,[{trackId:1,prompt,uploadData:[{id:1,sources:'assets'}]}],{validateOnly});
+        assert.equal(response.status,409);
+        assert.match(response.body.message,/人物独立视图.*重新生成视频提示词/);
+        assert.deepEqual(f.loaded,[]); assert.equal(f.providerCreations(),0);
+        assert.equal((await f.db('o_video')).length,0);
+        if(validateOnly) assert.deepEqual(await snapshotDatabase(f.db),before);
+      } finally {await f.close();}
+    });
+    test(route+" rejects mixing character boards into one Subject",async()=>{
+      const f=await fixture();
+      try {
+        await f.addAssets([asset(1),asset(2)]);
+        const prompt=picturePrompt(2,[1,1]);
+        await savePlan(f.db,1,prompt,{version:1,slots:[planSlot(1,'role'),planSlot(2,'role')]});
+        const response=await f.post(route,[{trackId:1,prompt,uploadData:[{id:1,sources:'assets'},{id:2,sources:'assets'}]}],{validateOnly});
+        assert.equal(response.status,409); assert.match(response.body.message,/混用了不同资产/);
+        assert.deepEqual(f.loaded,[]); assert.equal(f.providerCreations(),0);
+      } finally {await f.close();}
+    });
   }
 }

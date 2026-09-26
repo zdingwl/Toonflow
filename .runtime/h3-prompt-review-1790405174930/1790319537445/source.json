@@ -1,0 +1,76 @@
+{
+  "trackId": 1790319537445,
+  "duration": 11,
+  "request": {
+    "trackId": 1790319537445,
+    "projectId": 1790218938911,
+    "model": "comfyui_local:MiniMax-H3-local",
+    "mode": "[\"imageReference:9\"]",
+    "info": [
+      {
+        "id": 115,
+        "sources": "assets"
+      },
+      {
+        "id": 116,
+        "sources": "assets"
+      },
+      {
+        "id": 118,
+        "sources": "assets"
+      },
+      {
+        "id": 128,
+        "sources": "assets"
+      },
+      {
+        "id": 23,
+        "sources": "storyboard",
+        "reference": false
+      }
+    ],
+    "languages": [
+      "en-US"
+    ],
+    "regenerate": true,
+    "replaceBasePrompt": true
+  },
+  "assets": [
+    {
+      "id": 115,
+      "name": "艾娃",
+      "type": "role",
+      "imageId": 705,
+      "filePath": "/1790218938911/role/fc772f94-3b6d-4612-a048-3c84a08125f1.jpg"
+    },
+    {
+      "id": 116,
+      "name": "麦迪逊",
+      "type": "role",
+      "imageId": 706,
+      "filePath": "/1790218938911/role/6a38b782-be0e-4d55-8b25-5f1525f0c5e6.jpg"
+    },
+    {
+      "id": 118,
+      "name": "末世海洋",
+      "type": "scene",
+      "imageId": 694,
+      "filePath": "/1790218938911/scene/98ddc9bc-8c4b-4df1-a3ad-b905aeec7d89.jpg"
+    },
+    {
+      "id": 128,
+      "name": "巨鲨",
+      "type": "tool",
+      "imageId": 690,
+      "filePath": "/1790218938911/props/05cc3d61-5649-4452-9996-8edd15011120.jpg"
+    }
+  ],
+  "story": [
+    {
+      "id": 23,
+      "duration": "11",
+      "videoDesc": "【场景】场1：末世海洋·邮轮坠落与重生\n【关联资产】末世海洋(118)、麦迪逊(116)、艾娃(115)、巨鲨(128)\n【片段一（约11s）】\n1｜大远景｜一镜到底：沿倾斜甲板缓推至船舷，末尾轻微下压｜时长4s｜画面描述：倾斜的巨型邮轮压向翻涌海面，麦迪逊把艾娃逼到甲板边缘，船下浪涛间隐约有巨鲨背鳍掠过。｜台词：无台词｜音效：巨浪拍船的轰鸣；金属船体扭曲声；海风呼啸\n2｜近景｜静止，推人瞬间短促前冲｜时长4s｜画面描述：麦迪逊揪住艾娃，嘴角带着冷笑，随即双手猛推艾娃肩头。｜台词：麦迪逊说：『姐姐，下去喂鱼吧。』｜音效：衣料撕扯声；麦迪逊冷笑；船身剧烈嘎吱作响\n3｜全景｜急俯跟坠，镜头随艾娃快速下沉｜时长3s｜画面描述：艾娃失去平衡向后翻出船舷，身体朝海面急速坠落，下方巨鲨抬起头部、张开满口利齿。｜台词：无台词｜音效：艾娃急促吸气；坠落风声；浪涛轰鸣骤然逼近"
+    }
+  ],
+  "model": "volcengine:doubao-seed-2-1-pro-260915"
+}

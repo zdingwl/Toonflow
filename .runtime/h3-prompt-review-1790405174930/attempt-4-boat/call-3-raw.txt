@@ -1,0 +1,1 @@
+{"issues":[{"code":"SPEAKER_IDENTITY","evidence":"<Subject 2> (S1) says in a cold, taunting voice","reason":"The visible speaker is Madison, who is defined as <Subject 2>; labeling her voice as S1 conflicts with the established Subject identity and could bind the line to Ava/<Subject 1>."}]}

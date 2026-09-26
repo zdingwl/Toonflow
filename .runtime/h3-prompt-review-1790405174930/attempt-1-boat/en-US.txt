@@ -1,0 +1,26 @@
+subject_definitions:
+<Subject 1> is Ava from <Picture 1> face and <Picture 2> front full-body, views of the same person; recognition cues are long black hair, a small left cheek beauty mark, and a fitted beige tank top with matching trousers.
+<Subject 2> is Madison from <Picture 3> face and <Picture 4> front full-body, views of the same person; recognition cues are wavy shoulder-length brown hair, a cold smile, and pink piped pajamas with beige slippers.
+<Subject 3> is the post-apocalyptic ocean from <Picture 5>, retaining the storm clouds, ruined tilted ocean liner, churning gray-blue waves, and floating wreckage.
+<Subject 4> is the giant shark from <Picture 6>, a multi-view creature design of one animal; recognition cues are blue-gray upper skin, white underbelly, tall dorsal fin, and massive triangular teeth.
+
+summary:
+[reference generation] On the storm-wracked deck of <Subject 3>, <Subject 2> deliberately forces <Subject 1> to the railing and shoves her overboard, while <Subject 4> rises from the waves below.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - Ava’s facial structure, long black hair, beige outfit, proportions, and cheek mark remain stable through the fall.
+<Subject 2> (appears in [Shot 1], [Shot 2]): fully_preserved - Madison’s face, wavy brown hair, pink pajamas, slippers, and cold expression remain consistent during the attack.
+<Subject 3> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - The liner’s tilt, storm clouds, wreckage, rough sea, and gloomy light retain the reference layout.
+<Subject 4> (appears in [Shot 1], [Shot 3]): partially_preserved - Its back, dorsal fin, raised head, colors, skin texture, and teeth are shown, while not every sheet view appears in motion.
+
+detailed_description:
+Cinematic semi-realistic 3D rendering preserves the references with soft skin shading, fine hair strands, physically textured fabric, wet metal, and coherent contact shadows. The characters and storm-lit ship share the same volumetric light and three-dimensional material quality.
+[Shot 1] In a vast establishing shot, the ruined ocean liner of <Subject 3> leans sharply into mountainous gray-blue waves under a torn black storm sky. <Subject 2> stands uphill on the slanted deck, forcing <Subject 1> backward toward the open rail; Ava’s beige outfit and long black hair distinguish her against the wet steel, while Madison’s pink pajamas catch the cold wind. The camera moves in one slow push along the tilted deck toward the ship’s side, passing dangling cables and corroded railings, then tilts slightly downward at the end. Between the hull and floating wreckage, the tall dorsal fin of <Subject 4> cuts through a swell and disappears beneath foam. Waves slam the hull with a deep roar, metal groans and twists under the strain, and sea wind screams across the deck.
+[Shot 2] At 00:04.000, a close shot holds the two women at the railing, with a brief forward camera thrust as the shove begins. <Subject 2> grips <Subject 1>, her wavy brown hair blowing across a satisfied smirk; her feet brace on the angled deck and her weight shifts forward. Fabric pulls taut with a sharp tearing-rub sound. <Subject 2> (S1): <d>[English] Go on, big sister—down to feed the fish.</d> Madison gives a low cold chuckle, then drives both hands hard into Ava’s shoulders. The ship emits a violent creak around them. Ava’s arms lift in a desperate balance reaction, her shoulders driven back, and her eyes lock on Madison as her heels slide toward the rail.
+[Shot 3] At 00:08.000, a full high-angle shot follows the fall without cutting. <Subject 1> loses balance and tips backward over the railing, her hands grasping empty air; her hair whips upward and her clothes snap in the rushing wind. The camera dives after her along the hull, keeping her centered as she plunges toward the churning sea. Below, <Subject 4> rises through the waves, lifting its blue-gray head and white underbelly as its jaws open wide, rows of triangular teeth clearly visible. Ava takes one sharp involuntary breath. Wind rushes past her with increasing intensity, and the thunder of the waves surges upward as the shark’s open mouth fills the lower frame.
+
+overall_soundscape:
+Continuous storm wind, crashing waves against steel, and the low structural groan of the sinking liner dominate throughout, with rushing fall wind and spray becoming dominant in the final shot.
+
+non_diegetic_music:
+N/A

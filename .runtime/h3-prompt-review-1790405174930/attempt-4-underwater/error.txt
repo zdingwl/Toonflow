@@ -1,0 +1,1 @@
+H3 提示词格式：Shot 2 应以 [Shot 2] At MM:SS.mmm, 开始，当前开头：At 04.000, medium close-up: the camera cuts to Ava's face and slowly pushes toward her eyes. <Subjec

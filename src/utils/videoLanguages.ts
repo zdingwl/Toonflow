@@ -56,11 +56,11 @@ export async function migrateVideoLanguages(db: Knex) {
 
 export function translationInstruction(language: string) {
   return `制作同一视频的${languageLabel(language)}（${language}）对白版本。只返回完整视频提示词，不要解释。
-将所有人物对白、独白和旁白翻译成该地区自然地道的目标语言，并明确标注 spoken language 为 ${language}；口型与目标语言同步。
+将所有人物对白、独白和旁白翻译成该地区自然地道的目标语言；存在发声台词时明确标注 spoken language 为 ${language}，画面内实际开口说话的人物才需要口型与目标语言同步。没有发声台词的片段保持原样，不必给风声、海浪等环境音添加地区语言标签。系统电子声、旁白、画外音保持原声源方式，不附加口型同步，不让界面或手机张嘴，也不让听者替声源动嘴。
 保持原提示词的章节名称、结构和视觉指令语言（原来是英文就仍用英文）。如使用 <d>[Chinese] 台词</d>，仅把发声台词及其语言标记改为目标语言；不要翻译明确标注为可见场景文字的内容。
 H3 对白必须保持 <d>[Language] 台词</d>，语言名称用 English、Chinese、Japanese 等英文名称；地区和口音写在标签外，禁止把地区编码写成 d 标签的属性。retention_analysis 保持原先定义的 Subject/锚点条目，不改为逐张来源图片分析；保留 detailed_description 开头的全部具体画风要求，不能用泛化的 cinematic 或 high quality 替换。
 保持剧情、角色姓名与身份、场景、服装、镜头顺序、视觉描述、参考图编号和素材标记不变；不能将角色或场景搬到目标国家。
-对白称谓和亲属关系必须准确保留，例如姐姐/妹妹不能改成 darling 等泛称；不添加原文没有的调侃、昵称或新台词。
+对白称谓和亲属关系必须准确保留，例如姐姐/妹妹不能改成 darling 等泛称；原文区分长幼时，目标语也要保留这个区别，例如英语的 Big sister / little sister，不能只用不区分长幼的 sister；不添加原文没有的调侃、昵称或新台词。
 视觉描述保留以全局内容表现约束为前提：旧文的红色血液、红色伤口及血色环境须改为遮挡包扎、必要的少量绿色或黑色血迹、自然环境色，并同步修正反射光；已有绿色或黑色沿用，不得在翻译中还原成红色。此例外不改变剧情因果、对白含义、正常红衣红灯或参考图编号。
 原文无对白的镜头保持无对白，不得添加台词。不要把原语言对白或中文译文混入发声内容。声音参考只用于音色，不得复制其原语言台词。
 保留时长和时间轴，在给定时长内自然表达，不可加速塞入过长台词、删去剧情信息或截断对白；如果无法容纳，返回以 LANGUAGE_TIMING_REVIEW: 开头的简短原因，不要生成不完整提示词。`;
@@ -123,7 +123,8 @@ async function generateMissingVariants(
     await db("o_videoPromptVariant")
       .where({ trackId })
       .whereIn("language", missing)
-      .update({ state: "生成失败", reason: (cause as Error).message, ...((cause as any).candidatePrompt ? { prompt: (cause as any).candidatePrompt } : {}) });
+      // A rejected base may be in another language. Keep every prior variant and video link.
+      .update({ state: "生成失败", reason: (cause as Error).message });
     throw cause;
   }
   for (const language of missing) {
@@ -131,8 +132,8 @@ async function generateMissingVariants(
       const prompt = (await translate(translationInstruction(language), base)).trim();
       if (!prompt || prompt.startsWith("LANGUAGE_TIMING_REVIEW:")) throw new Error(prompt || "模型未返回提示词");
       const slots = (text: string) =>
-        [...text.matchAll(/<(?:Picture|Subject|Image|Video|Audio)\s+\d+>/g)]
-          .map((match) => match[0])
+        [...new Set([...text.replace(/<d\b[^>]*>[\s\S]*?<\/d>/g, "").matchAll(/<(?:Picture|Subject|Image|Video|Audio)\s+\d+>/g)]
+          .map((match) => match[0]))]
           .sort()
           .join(",");
       if (slots(base) !== slots(prompt)) throw new Error("翻译改变了参考图编号，请重试该语言");
@@ -140,7 +141,8 @@ async function generateMissingVariants(
     } catch (cause) {
       await db("o_videoPromptVariant")
         .where({ trackId, language })
-        .update({ state: "生成失败", reason: (cause as Error).message, ...((cause as any).candidatePrompt ? { prompt: (cause as any).candidatePrompt } : {}) });
+        // Failed candidates are diagnostic output, not a replacement for saved language text.
+        .update({ state: "生成失败", reason: (cause as Error).message });
     }
   }
   return db("o_videoPromptVariant").where({ trackId });

@@ -1,0 +1,20 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const WebSocket = require('ws');
+const receipt = JSON.parse(fs.readFileSync(path.join(__dirname, 'style-probe-receipt.json'), 'utf8'));
+const ws = new WebSocket(receipt.baseUrl.replace(/^http/, 'ws') + '/ws?clientId=' + encodeURIComponent(receipt.clientId));
+const log = path.join(__dirname, 'style-probe-progress.jsonl');
+ws.on('message', (raw, binary) => {
+  if (binary) return;
+  const event = JSON.parse(raw.toString());
+  const d = event.data || {};
+  if (d.prompt_id && d.prompt_id !== receipt.promptId) return;
+  if (!['progress', 'executing', 'execution_start', 'execution_success', 'execution_error'].includes(event.type)) return;
+  const safe = { time: new Date().toISOString(), type: event.type, promptId: d.prompt_id, node: d.node, value: d.value, max: d.max };
+  fs.appendFileSync(log, JSON.stringify(safe) + '\n');
+  console.log(JSON.stringify(safe));
+  if (event.type === 'execution_success' || event.type === 'execution_error' || (event.type === 'executing' && d.node === null)) ws.close();
+});
+ws.on('error', e => { console.error(e.message); process.exitCode = 1; });
+ws.on('close', () => process.exit());
+setTimeout(() => ws.close(), 30 * 60 * 1000);

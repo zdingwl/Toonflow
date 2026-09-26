@@ -15,10 +15,12 @@ export function getArtPrompt(styleName: string, source: string, fileName: string
     return "";
   }
 
-  // 获取 prefix.md 内容
-  // Video rendering may deliberately differ from the illustration medium of asset sheets.
-  const prefixFile = (fileName.replace(/\.md$/, "") === "art_storyboard_video"
-    ? findFileRecursive(baseDir, "video_prefix.md") : null) || findFileRecursive(baseDir, "prefix.md");
+  const isVideoPrompt = fileName.replace(/\.md$/, "") === "art_storyboard_video";
+  // The video prefix orders Character Reference -> Environment Reference -> Video Style.
+  // Append action/camera/sound guidance afterwards; never also prepend the asset style prefix.
+  // Actual images and Subject/Picture allocations are supplied by the video prompt caller.
+  const videoPrefix = isVideoPrompt ? findFileRecursive(baseDir, "video_prefix.md") : null;
+  const prefixFile = videoPrefix || findFileRecursive(baseDir, "prefix.md");
   const prefixContent = prefixFile ? fs.readFileSync(prefixFile, "utf-8") : "";
 
   const target = fileName.endsWith(".md") ? fileName : `${fileName}.md`;

@@ -24,9 +24,6 @@ interface ResolvedReference {
   assetId?: number; parentAssetId?: number | null;
   assetType?: string; fileType?: string; referenceType?: Type;
   label?: string; prompt?: string;
-  faceReferencePath?: string | null; fullBodyReferencePath?: string | null;
-  sideReferencePath?: string | null; backReferencePath?: string | null;
-  referenceLayout?: string | null;
 }
 const isMiniMaxH3 = (model: string) => {
   const value = String(model || "").toLowerCase();
@@ -87,8 +84,6 @@ export default router.post("/", validateFields({
                 .select(
                   "o_image.filePath", "o_image.type as imageType", "o_assets.id as assetId",
                   "o_assets.assetsId as parentAssetId", "o_assets.name", "o_assets.prompt", "o_assets.type as assetType",
-                  "o_assets.faceReferencePath", "o_assets.fullBodyReferencePath", "o_assets.sideReferencePath",
-                  "o_assets.backReferencePath", "o_assets.referenceLayout",
                 )
                 .first();
               return found ? {
@@ -96,9 +91,6 @@ export default router.post("/", validateFields({
                 parentAssetId: found.parentAssetId, assetType: found.assetType,
                 fileType: item.fileType || found.imageType || "image", referenceType: item.type,
                 label: item.label || found.name, prompt: item.prompt || found.prompt || undefined,
-                faceReferencePath: found.faceReferencePath, fullBodyReferencePath: found.fullBodyReferencePath,
-                sideReferencePath: found.sideReferencePath, backReferencePath: found.backReferencePath,
-                referenceLayout: found.referenceLayout,
               } : null;
             }
             return null;
@@ -120,7 +112,7 @@ export default router.post("/", validateFields({
             const otherMedia = images.filter(item => item.sourceType !== "storyboard" && referenceMediaType(item) !== "image");
             runtimeReferences = [...pictureReferences, ...otherMedia];
           }
-          // Read the exact references during preflight so a failed crop never creates a video attempt.
+          // Read the exact references during preflight so a missing image never creates a video attempt.
           const loaded = await Promise.all(runtimeReferences.map(async item => {
             if (!item.path) return null;
             return {

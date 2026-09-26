@@ -1,0 +1,1 @@
+{"issues":[{"code":"SOURCE_BINDING","evidence":"sharp fabric-straining sound","reason":"Shot 2 of the storyboard specifically requires the synchronized sound effect “衣料撕扯声” (cloth tearing/rending), but the candidate replaces it with mere fabric strain and does not include the required tearing sound."}]}

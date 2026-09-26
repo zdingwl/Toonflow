@@ -13,7 +13,7 @@ import * as guards from "../src/utils/h3VisualStateGuard";
 import { validateFields } from "../src/middleware/middleware";
 
 const validPrompt = [
-  "subject_definitions:", "<Subject 1> is Ava from <Picture 1> and <Picture 2>, with a red sweater and black skirt.",
+  "subject_definitions:", "<Subject 1> is Ava from the character sheet in <Picture 1>, with a red sweater and black skirt.",
   "summary:", "[reference generation] <Subject 1> stands on deck.",
   "retention_analysis:", "<Subject 1> (appears in [Shot 1]): fully_preserved - Face and wardrobe retained.",
   "detailed_description:", "Detailed stylized 3D with fine hair and skin texture.", "[Shot 1] <Subject 1> stands still.",
@@ -39,7 +39,8 @@ async function fixture() {
   const u = { db, error: (error: unknown) => error instanceof Error ? error : new Error(String(error)),
     getArtPrompt: () => "Detailed stylized 3D.", getPath: () => "data/modelPrompt",
     oss: { getImageBase64: async (path: string) => "data:image/png;base64," + Buffer.from(path).toString("base64") },
-    Ai: { Text: () => ({ invoke: async () => {
+    Ai: { Text: () => ({ invoke: async (request: any) => {
+      if (String(request.system).startsWith("H3_SEMANTIC_REVIEW")) return { text: '{"issues":[]}' };
       calls++;
       if (calls === 1) { entered(); await held; }
       return { text: validPrompt };
@@ -110,7 +111,7 @@ for (const firstRoute of ["generateVideoPrompt", "batchGeneratePrompt"]) {
         const edited = await f.post("updateVideoPrompt", { id: 2, prompt: manual });
         assert.equal(edited.status, 200, JSON.stringify(edited.body));
         assert.equal((await f.db("o_videoTrack").where({ id: 2 }).first()).prompt, manual);
-        assert.equal((await plans.loadH3ReferencePlan(f.db, 2, manual))?.slots.length, 2);
+        assert.equal((await plans.loadH3ReferencePlan(f.db, 2, manual))?.slots.length, 1);
         assert.equal(f.callCount(), 1);
       } finally { f.release(); await requestA; await f.finish(); await f.close(); }
     });

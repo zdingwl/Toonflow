@@ -1,0 +1,7 @@
+{
+  "comparison": "Only the opening rendering-source text changes; all shots, references, sound, seed, duration and settings stay identical to probe 1.",
+  "firstProbe": "D:\\Toonflow-app-master\\.runtime\\h3-style-review-20260926-1604\\style-probe-manifest.json",
+  "styleSource": "D:\\Toonflow-app-master\\.runtime\\h3-style-review-20260926-1604\\formal-prompt-v2\\1790319537445\\en-US.txt",
+  "before": "The clip uses cinematic semi-realistic 3D rendering with coherent physical lighting, soft skin shading, defined hair strands and visible woven fabric texture. The characters and storm-worn ship share the same contact shadows, cold reflected light and material realism, without reproducing the character-sheet layout or neutral display backgrounds.",
+  "after": "The scene uses cinematic semi-realistic three-dimensional rendering at the realism level of the character sheets, preserving Ava's and Madison's observed facial proportions, skin shading, hair bundles and visible fabric textures. The characters, liner, storm sea and giant shark share physically coherent cold lighting, contact shadows and wind-driven surface motion."
+}

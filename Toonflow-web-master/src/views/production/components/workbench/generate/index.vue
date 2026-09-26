@@ -84,6 +84,7 @@ import axios from "@/utils/axios";
 import projectStore from "@/stores/project";
 import promptEditor from "@/components/promptEditor.vue";
 import imageListCacheStore from "@/stores/imageListCache";
+import { getH3ReferenceGuardError } from "@/utils/h3ReferenceGuard";
 
 const { project } = storeToRefs(projectStore());
 const episodesId = inject<Ref<number>>("episodesId")!;
@@ -555,6 +556,12 @@ async function generateVideo() {
           audio: modelParmas.value.audio,
           trackId: track.id,
         };
+        const referenceError = getH3ReferenceGuardError(request.model, request.mode, languages.map((language) => ({
+          label: `视频段 #${trackList.value.findIndex((item) => item.id === track.id) + 1}（${languageName(language)}）`,
+          prompt: track.variants?.find((variant) => variant.language === language)?.prompt || "",
+          uploadData: request.uploadData,
+        })));
+        if (referenceError) return window.$message.warning(referenceError);
         const { data } = await axios.post("/production/workbench/batchGenerateVideo", {
           ...request,
           trackData: languages.map((language) => ({ trackId: track.id, language, prompt: "", duration: request.duration, uploadData: request.uploadData })),

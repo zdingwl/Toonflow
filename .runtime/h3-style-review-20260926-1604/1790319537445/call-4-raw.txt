@@ -1,0 +1,1 @@
+{"issues":[{"code":"SOURCE_BINDING","evidence":"The scene contains no vocalization.","reason":"The en-US translation requirement explicitly asks for the prompt to mark spoken language as en-US. The candidate only states that there is no vocalization and omits the required spoken-language designation, even though the scene has no dialogue."}]}

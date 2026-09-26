@@ -4,7 +4,7 @@ export function h3BindingSlots(slots: H3SlotItem[]) {
   return slots.map(item => ({ assetId: Number(item.assetId ?? item.id), assetType: h3AssetType(item), kind: item._referenceRole ?? item.referenceKind }));
 }
 
-/** A display board is one asset; its selected crops jointly define one Subject. */
+/** A character display board occupies one Picture and defines one Subject. */
 export function buildH3ReferenceSubjects(slots: H3SlotItem[]) {
   const groups = new Map<number, { subject: string; assetId: number; assetType: string; name: string; parentAssetId?: number; pictures: { picture: string; view?: string }[] }>();
   slots.forEach((item, index) => {
@@ -18,7 +18,7 @@ export function buildH3ReferenceSubjects(slots: H3SlotItem[]) {
       };
       groups.set(id, group);
     }
-    group.pictures.push({ picture: `<Picture ${index + 1}>`, ...(item._referenceRole || item.referenceKind ? { view: item._referenceRole || item.referenceKind } : {}) });
+    group.pictures.push({ picture: `<Picture ${index + 1}>`, ...(item._referenceRole || item.referenceKind ? { view: item._referenceRole || item.referenceKind } : h3AssetType(item) === "role" ? { view: "CHARACTER_SHEET" } : {}) });
   });
   return [...groups.values()];
 }
@@ -29,7 +29,7 @@ export function buildH3PromptInput(slots: H3SlotItem[], storyboards: { id?: numb
   const references = slots.map((item, index) => `<reference slot="${index + 1}" sources="assets" id="${Number(item.assetId ?? item.id)}" />`).join("\n");
   return `Mode: MiniMax H3 Ref2VA. target_duration: ${duration}s.
 appearanceAuthority=the actual attached current image. Images establish appearance; storyboard facts establish events, dialogue and timing.
-The grouped sources below are authoritative. All listed views of one asset depict ONE subject in ONE current state. Define that subject once; cite every allocated Picture, not unallocated views. A four-view display board is one character design, not four characters. Side/back views remain optional when the nine-image budget is shared with other assets.
+The grouped sources below are authoritative. Each character uses ONE complete reference sheet in ONE Picture slot. Its face, front, side and back panels depict the SAME person in ONE current state, not multiple people or separate uploaded Pictures. Define one Subject per asset and cite its actual Picture. Describe only views visible in the attached sheet. Preserve identity and outfit; never render the panel layout, repeated figures or display background in the video. Each selected image asset consumes one of the nine available image slots.
 <referenceSlots>
 ${references}
 </referenceSlots>
@@ -39,7 +39,7 @@ ${JSON.stringify(subjects)}
 ${otherReferences.length ? `<otherReferences>${JSON.stringify(otherReferences)}</otherReferences>\n` : ""}<storyboardFacts>
 ${JSON.stringify(storyboards.map(item => ({ id: item.id, duration: item.duration, videoDesc: item.videoDesc || "" })))}
 </storyboardFacts>
-Write concise reference definitions and preservation statements; spend description detail on visible actions, positions, camera, physical reactions and synchronized sound. Preserve the supplied cause and effect, speaker, exact dialogue and event order. Do not replace an intentional action with an accident to simplify the prose.`;
+Write the full six-section Ref2VA prompt from these images and storyboard facts. Definitions must identify each source, its role and visible characteristics; preservation instructions alone are not an appearance description. In the shots, use the defined Subject labels at their first clear appearance and reuse them later. Establish composition, visible appearance and position, environment/light, actions and state changes, camera, synchronized sound and where each reference takes effect. Cross-check retention shot lists against this timeline. Preserve the supplied cause and effect, speaker, exact dialogue and event order. Do not replace an intentional action with an accident to simplify the prose.`;
 }
 
 export function h3PromptWordCounts(prompt: string) {

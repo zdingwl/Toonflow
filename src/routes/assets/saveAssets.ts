@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import sharp from "sharp";
-import { ensureRoleReferenceMedia, roleReferenceDatabaseFields, roleReferenceFingerprint } from "@/utils/assetReferenceMedia";
+import { roleReferenceFingerprint } from "@/utils/assetReferenceMedia";
 const router = express.Router();
 
 // These failures describe a finished candidate rejected by the new visual review,
@@ -80,14 +80,13 @@ export default router.post(
       // two-panel layout only while keeping the very same selected image, or by explicit request.
       const referenceLayout: "four_view" | "front_back" = requestedLayout
         ?? (adoptedImageId === asset.imageId && asset.referenceLayout === "front_back" ? "front_back" : "four_view");
-      const references = type === "role" && adoptedPath ? await ensureRoleReferenceMedia(adoptedPath, asset.name || "role", referenceLayout) : [];
       await u.db("o_assets").where({ id, projectId, type }).update({
         ...(prompt !== undefined ? { prompt: prompt ?? "" } : {}),
         imageId: adoptedImageId,
-        ...(type === "role" && adoptedPath && references.length >= 2 ? {
+        ...(type === "role" && adoptedPath ? {
           designStatus: "ready",
           designVersion: u.db.raw("COALESCE(designVersion, 0) + 1"),
-          ...roleReferenceDatabaseFields(references, referenceLayout),
+          referenceLayout,
           referenceFingerprint: await roleReferenceFingerprint(adoptedPath),
         } : {}),
       });

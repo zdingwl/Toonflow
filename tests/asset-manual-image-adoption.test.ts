@@ -74,7 +74,7 @@ test("explicit human adoption of a reviewed candidate creates a usable copy and 
     assert.deepEqual(await f.db("o_image").where({ id: 5 }).first(), failedBefore);
     assert.deepEqual(f.files.get("/candidate.png"), originalBytes);
     assert.equal(asset.prompt, "保留已确认提示词"); assert.equal(asset.designVersion, 3);
-    assert.deepEqual(f.referenceCalls, [{ path: accepted.filePath, layout: "four_view" }]);
+    assert.deepEqual(f.referenceCalls, []);
   } finally { await f.close(); }
 });
 
@@ -122,7 +122,7 @@ for (const model of ["comfyui_local:qwen-image-2.1-fourview-local", "comfyui_loc
     const f = await fixture({ state: "已完成", reason: "", model, width: 2048, height: 1152 });
     try {
       const result = await f.request(); assert.equal(result.status, 200);
-      assert.deepEqual(f.referenceCalls, [{ path: "/candidate.png", layout: "four_view" }]);
+      assert.deepEqual(f.referenceCalls, []);
       assert.equal((await f.db("o_assets").where({ id: 10 }).first()).referenceLayout, "four_view");
     } finally { await f.close(); }
   });
@@ -150,10 +150,10 @@ test("known legacy two-view layout is preserved only for the same selected image
   try {
     await f.db("o_assets").where({ id: 10 }).update({ referenceLayout: "front_back" });
     assert.equal((await f.request({ imageId: 4 })).status, 200);
-    assert.deepEqual(f.referenceCalls, [{ path: "/old.png", layout: "front_back" }]);
+    assert.deepEqual(f.referenceCalls, []);
     assert.equal((await f.db("o_assets").where({ id: 10 }).first()).referenceLayout, "front_back");
     assert.equal((await f.request({ imageId: 5 })).status, 200);
-    assert.deepEqual(f.referenceCalls.at(-1), { path: "/candidate.png", layout: "four_view" });
+    assert.deepEqual(f.referenceCalls, []);
     assert.equal((await f.db("o_assets").where({ id: 10 }).first()).referenceLayout, "four_view");
   } finally { await f.close(); }
 });
@@ -162,7 +162,7 @@ test("legacy callers can explicitly specify two views without an automatic aspec
   const f = await fixture({ state: "已完成", reason: "", width: 2048, height: 1152 });
   try {
     assert.equal((await f.request({ referenceLayout: "front_back" })).status, 200);
-    assert.deepEqual(f.referenceCalls, [{ path: "/candidate.png", layout: "front_back" }]);
+    assert.deepEqual(f.referenceCalls, []);
     assert.equal((await f.db("o_assets").where({ id: 10 }).first()).referenceLayout, "front_back");
   } finally { await f.close(); }
 });
@@ -174,7 +174,7 @@ test("uploaded character sheets default to four views without inheriting the pre
     const source = f.files.get("/old.png")!;
     const result = await f.request({ imageId: undefined, base64: `data:image/png;base64,${source.toString("base64")}` });
     assert.equal(result.status, 200); assert.ok(result.body.data.imageId > 5);
-    assert.equal(f.referenceCalls[0].layout, "four_view");
+    assert.deepEqual(f.referenceCalls, []);
     assert.equal((await f.db("o_assets").where({ id: 10 }).first()).referenceLayout, "four_view");
   } finally { await f.close(); }
 });

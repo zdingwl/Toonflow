@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "slots": [
+    {
+      "assetId": 115,
+      "assetType": "role",
+      "path": "/1790218938911/role/fc772f94-3b6d-4612-a048-3c84a08125f1.jpg",
+      "label": "艾娃"
+    },
+    {
+      "assetId": 118,
+      "assetType": "scene",
+      "path": "/1790218938911/scene/98ddc9bc-8c4b-4df1-a3ad-b905aeec7d89.jpg",
+      "label": "末世海洋"
+    },
+    {
+      "assetId": 124,
+      "assetType": "tool",
+      "path": "/1790218938911/props/081366dc-b912-421d-bde8-041e7d123d75.jpg",
+      "label": "海洋基建系统手机"
+    },
+    {
+      "assetId": 128,
+      "assetType": "tool",
+      "path": "/1790218938911/props/05cc3d61-5649-4452-9996-8edd15011120.jpg",
+      "label": "巨鲨"
+    }
+  ]
+}

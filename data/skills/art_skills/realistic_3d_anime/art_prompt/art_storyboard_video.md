@@ -1,13 +1,25 @@
 # 视频画风与动作 · 电影级半写实三维
 
-目标为电影级半写实三维动画，采用国漫式精致人物设计、自然面部比例、立体皮肤明暗与可信衣料，以当前参考图锁定人物身份和衣装。视频渲染媒介服从 video_prefix.md，不沿用资产设定板的插画渲染要求。
+## Video storytelling rules
 
-将画风压缩为开头一至两句英文，先明确 cinematic semi-realistic 3D animation，再按本镜选择自然面部比例、细密发丝、自然皮肤、physically based materials、稳定接触阴影或电影光照。只建立一次，不在人物定义、保留分析和每个镜头重复整段手册；避免用笼统的 cinematic 或 high quality 替代明确的三维渲染目标。
+Generate cinematic visual descriptions. Prioritize character consistency, physical motion, camera movement, then environment. Preserve the Shot, Camera and Action information of the supplied storyboard; render it inside the selected model's existing output structure, not as additional H3 sections.
 
-实际选用的人物参考图决定当前脸、发型、体型、衣装与配饰；场景图决定空间结构，道具图决定物体造型。每个资产只写简短识别锚点并绑定正确参考，不把图片绘制时的完整外观清单复制成视频正文。四视图是一人的同一状态，各角度共同定义一个主体。尚未应用到选图的资产文字不能当作当前外观。
+Reference characters retain the same face, facial proportions, hairstyle, hair length, body proportions, costume structure and accessories in every frame. The complete character sheet occupies one Picture and defines one Subject; its panels are different views of the same person, not separate uploads. The environment reference establishes architecture, background, spatial layout, lighting and atmosphere. Asset drawing requests do not override the selected images.
 
-正文用于可见事件：谁位于哪里、谁对谁做了什么、动作先后与结果、镜头怎样运动、身体与环境怎样反应、声音何时发生。首次清晰出场时用少量外观线索定位人物，后续保持同一标签；衣料和发丝只在受风、惯性或接触影响时补充动态，不重列服装。眼神、呼吸、停顿与动作表现情绪，面部比例和材质保持稳定，口型匹配目标语言。
+The video uses cinematic semi-realistic 3D animation. Use the rendering medium from video_prefix.md at the current character images' level of realism and stylization: retain their eye-to-face size, nose structure, jaw shape and observed skin, hair and fabric surface appearance. Scene lighting and required wetness adapt those existing surfaces without changing the character design or inventing unresolved skin detail. Establish a few observed qualities once, in one or two English opening sentences. Characters and environment share coherent lighting and three-dimensional treatment.
 
-保持剧情动作的主动者、接受者与因果关系；压缩重复描述不能把推人改成自行跌倒，也不能新增撕衣、换装或额外伤害。状态变化按剧本的时间边界展开，只修改明确变化项。机位改变不等于环境结构或资产状态改变。
+## Action
 
-语言和镜头格式遵循所选视频模型的官方规则。H3 Ref2VA 保留六节、Subject/Picture 绑定和切镜时间；镜头正文通常按其官方 350–500 英文词建议分配细节，完整对白与必要动作优先，不机械凑字数。其余章节保持简短，普通画面不重复列出大段否定词。
+Describe visible results with short, concrete action sentences. Prefer “The character loses balance near the railing” when loss of balance is the supplied event. If the story explicitly includes a push, write “A pushes B. B loses balance at the railing” rather than a long nested chain; do not erase the actor, reverse roles or change a deliberate act into an accident. Keep one principal action beat at a time. Do not add a clothing tear, secondary injury, extra gesture or new plot event to fill a word count.
+
+Avoid overly detailed static character inventories, excessive artistic adjectives and long causal action chains. Use physical contact, weight transfer and a clear before/after state to make the action readable. Hair, fabric and environmental motion support the main action rather than compete for attention.
+
+## Camera
+
+Use cinematic framing: wide establishing shot, medium interaction shot, close facial shot, tracking shot, high angle shot. One continuous shot can move from a wide view toward a medium view without inventing a cut. Keep one feasible main camera path and stable screen direction. Shot count and required cut syntax follow the H3 template.
+
+## Sound and continuity
+
+Keep the supplied dialogue complete, preserve its speaker and meaning, and synchronize mouth movement with the selected language. Use concise physical sounds and continuous ambience; do not add speech or music without a story requirement. Preserve identity and clothing through motion and occlusion. Explicit transformations change only the stated attributes at the supplied story boundary.
+
+Keep the H3 six-section output and exact Subject/Picture mapping. Spend detail on the visible scene, not repeated static descriptions; do not expand a simple event into multiple actions to reach a word target.

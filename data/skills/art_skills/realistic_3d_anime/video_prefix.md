@@ -1,11 +1,21 @@
-# 视频渲染目标 · 电影级半写实三维
+# 视频渲染目标 · 参考优先的半写实三维
 
-视频采用 cinematic semi-realistic 3D animation with Chinese donghua-inspired character design。保留参考图的脸型、五官关系、年龄、发型、身体比例、衣装、配饰与当前状态，以有体积的三维人物、自然皮肤质感、分层发丝、可信布料和物理光照呈现。美型来自适度的造型设计，不放大眼睛或简化鼻梁。
+## Character Reference
 
-人物设定板与场景、道具原画提供身份和设计；其插画绘制媒介、四栏排版及展示背景不是视频渲染目标。不要把资产绘图词 premium anime-realistic concept art、polished illustration rendering、clean premium shading 当作视频正向风格锚点。不要转成二维赛璐璐、平面线稿动画、塑料玩偶或真人实拍。
+Each character uses one complete reference sheet in one Picture slot. Face close-up, front full body, side full body and back full body panels, when visible, show the same person, never separate characters. Explicitly state this relationship in the character definition. Keep the same facial proportions, including the observed eye-to-face size, nose structure and jaw shape, hairstyle, body proportions, clothing structure and accessories throughout motion. Do not copy the sheet layout, repeated figures or display background into the video. Changes require an explicit timed story transition; rendering style must not override identity.
 
-视频风格开头可用：Cinematic semi-realistic 3D animation with Chinese donghua-inspired character design, preserving the reference faces and natural human proportions. Natural skin texture, layered hair strands, physically based fabric and environmental materials, cinematic lighting and stable contact shadows maintain a coherent three-dimensional film look.
+## Environment Reference
 
-场景与生物遵循同一三维电影材质和光照。按画面需要描述湿金属、锈蚀、海水体积、泡沫或皮肤反射，不把整个视频改成纪录片，不改变参考生物的轮廓和比例。无关场景不套用海难、暴雨或冷色。角色服装的名称和颜色是身份事实，不因调整渲染媒介而换装。
+The provided environment image defines the location: preserve its architecture, spatial layout, background landmarks, lighting direction and atmosphere. Do not substitute a generic scene. Weather and illumination change only as required by the story; maintain coherent lighting on characters and surroundings.
 
-画风在 detailed_description 的开头建立一次。主体定义保持简短并绑定实际 Picture；一个人物的多个角度共同定义一个 Subject。各镜头以必要动作、明确空间关系和一条主要镜头运动为重点，头发、衣料和环境反应服从动作，不把细节堆成额外事件。保持剧本因果、对白、切镜时间与 H3 官方六章节结构。
+## Video Style
+
+Cinematic semi-realistic 3D rendering at the current character references' observed level of realism and stylization. Preserve their facial proportions, skin shading and highlights, hair strand and bundle structure, and visible fabric texture and drape. Apply physically based scene lighting and story-required wetness as illumination and surface-state changes while preserving these observed facial and material characteristics; describe only details resolved in the references. Characters and surroundings share coherent lighting and contact shadows.
+
+In the final detailed_description, use one or two opening sentences to explicitly connect the characters' level of realism and stylization, facial proportions and visible material appearance to their current reference images. Express that source relationship naturally; generic 3D quality adjectives alone do not convey it, and no fixed English wording is required. Do not stack engine names, game-quality slogans or additional artistic genre labels. Characters and environment share the same rendering quality, contact shadows and lighting. Preserve the selected character designs; do not turn material refinement into new facial anatomy, a different outfit or a live-action actor. Use positive three-dimensional style anchors rather than repeating rejected style labels in the final prompt.
+
+## Action, Camera, Sound
+
+Prioritize character consistency, physical motion, camera movement, then environmental detail. Describe observable actions and results in short sentences, with one main action and one main camera path at a time. Preserve who acts on whom; avoid long nested cause-and-effect clauses and invented secondary events. Hair, cloth and water respond naturally to the main motion. Establish framing using wide establishing shot, medium interaction shot, close facial shot, tracking shot or high angle shot as appropriate. Add synchronized physical sounds and only supplied speech.
+
+Place character definitions first, then environment definitions in subject_definitions. Express Character consistency in the corresponding retention_analysis entries instead of adding a seventh H3 section. Place the style opening before [Shot 1], then action, camera and sound within the official detailed_description structure. Reference priority is not a reason to rename or reorder the six official H3 sections.

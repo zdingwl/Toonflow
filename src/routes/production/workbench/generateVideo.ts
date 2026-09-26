@@ -33,11 +33,6 @@ interface ResolvedReference {
   referenceType?: Type;
   label?: string;
   prompt?: string;
-  faceReferencePath?: string | null;
-  fullBodyReferencePath?: string | null;
-  sideReferencePath?: string | null;
-  backReferencePath?: string | null;
-  referenceLayout?: string | null;
 }
 function isMiniMaxH3(model: string): boolean {
   const value = String(model || "").toLowerCase();
@@ -95,8 +90,6 @@ export default router.post(
               .select(
                 "o_image.filePath", "o_image.type as imageType", "o_assets.id as assetId",
                 "o_assets.assetsId as parentAssetId", "o_assets.name", "o_assets.prompt", "o_assets.type as assetType",
-                "o_assets.faceReferencePath", "o_assets.fullBodyReferencePath", "o_assets.sideReferencePath",
-                "o_assets.backReferencePath", "o_assets.referenceLayout",
               )
               .first();
             return source ? {
@@ -104,9 +97,6 @@ export default router.post(
               assetId: source.assetId, parentAssetId: source.parentAssetId, assetType: source.assetType,
               fileType: item.fileType || source.imageType || "image", referenceType: item.type,
               label: item.label || source.name, prompt: item.prompt || source.prompt || undefined,
-              faceReferencePath: source.faceReferencePath, fullBodyReferencePath: source.fullBodyReferencePath,
-              sideReferencePath: source.sideReferencePath, backReferencePath: source.backReferencePath,
-              referenceLayout: source.referenceLayout,
             } : null;
           }
           return null;
@@ -123,7 +113,7 @@ export default router.post(
         })));
         const plan = await loadH3ReferencePlan(u.db, trackId, prompt);
         if (assetImages.length && !plan) throw new Error("该视频段使用旧版参考图规则，请重新生成视频提示词后再生成视频");
-        // The persisted plan is the only authority for Picture order and crop selection.
+        // The persisted plan is the only authority for Picture order and complete-image selection.
         const pictureReferences: ResolvedReference[] = plan ? resolveH3ReferencePlan(assetImages, plan) : [];
         assertH3PictureSlots(prompt, pictureReferences.length);
         if (plan) assertH3ReferenceBindings(prompt, plan.slots);
