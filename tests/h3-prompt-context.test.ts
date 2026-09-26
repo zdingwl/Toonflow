@@ -136,7 +136,7 @@ test("prompt input carries each storyboard once with exact dialogue and causal o
   assert.doesNotMatch(buildH3PromptInput(slots, [], 5), /<otherReferences>/);
 });
 
-test("binding slots feed the real validator without allowing two crops to become different Subjects", () => {
+test("binding slots feed the free-form validator without requiring Subject definitions", () => {
   const slots: H3SlotItem[] = [
     { assetId: 115, assetType: "character", referenceKind: "FULL_BODY_FRONT" },
     { id: 119, type: "scene", name: "Room" },
@@ -149,20 +149,9 @@ test("binding slots feed the real validator without allowing two crops to become
     { assetId: 115, assetType: "role", kind: "FACE" },
   ];
   assert.deepEqual(bindings, expectedBindings);
-  const correct = [
-    "subject_definitions:",
-    "<Subject 1> is Ava in <Picture 1> (front) and <Picture 3> (face).",
-    "<Subject 2> is the room in <Picture 2>.",
-    "summary:",
-    "[reference generation] <Subject 1> walks across <Subject 2>.",
-  ].join("\n");
+  const correct = "Ava uses <Picture 1> and <Picture 3> while crossing the room from <Picture 2>.";
   assert.doesNotThrow(() => assertH3ReferenceBindings(correct, bindings));
-  const split = correct.replace("<Subject 1> is Ava in <Picture 1> (front) and <Picture 3> (face).",
-    "<Subject 1> is Ava in <Picture 1>.\n<Subject 3> is the portrait person in <Picture 3>.");
-  assert.throws(() => assertH3ReferenceBindings(split, bindings), /同一资产 115.*拆成多个 Subject/);
-  const mixed = correct.replace("<Picture 3> (face)", "<Picture 2> (face)").replace("room in <Picture 2>", "room in <Picture 3>");
-  // The putative room steals Ava's other crop; a contextual scene mention cannot hide that split.
-  assert.throws(() => assertH3ReferenceBindings(mixed, bindings), /混用了不同资产|同一资产 115.*拆成多个 Subject/);
+  assert.throws(() => assertH3ReferenceBindings(correct.replace(" and <Picture 3>", ""), bindings), /Picture 槽位/);
 });
 
 test("word counts distinguish detailed_description from the whole prompt without imposing a length gate", () => {

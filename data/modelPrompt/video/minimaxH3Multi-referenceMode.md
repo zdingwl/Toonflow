@@ -201,7 +201,7 @@ design and material quality remain consistent. The Subject remains a
 stylized 3D animated character and is never converted into a live-action
 human.
 
-Detailed Description Enhancement
+Cinematic Description Enhancement
 
 Before Shot 1, always establish:
 
@@ -299,7 +299,7 @@ reference appearance remain consistent throughout the sequence.
 Do not only preserve names and actions. Preserve the visual
 characteristics established by the reference images.
 
-detailed_description Rules
+Final Prompt Description Rules
 
 Before Shot 1, include a concise reference continuity statement:
 
@@ -375,3 +375,29 @@ The reference image is the design.
 The prompt is the direction.
 
 Do not redesign what the reference already defines.
+
+Final Output
+
+Generate the final MiniMax H3 cinematic video prompt.
+
+Analyze all reference images, videos and audio.
+
+Prioritize:
+
+character identity preservation
+
+reference consistency
+
+cinematic camera movement
+
+realistic physics
+
+temporal continuity
+
+synchronized audio
+
+Output only the final generation prompt.
+
+Do not explain reasoning.
+
+Do not use a fixed section template.

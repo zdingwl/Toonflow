@@ -29,7 +29,7 @@ export function buildH3PromptInput(slots: H3SlotItem[], storyboards: { id?: numb
   const references = slots.map((item, index) => `<reference slot="${index + 1}" sources="assets" id="${Number(item.assetId ?? item.id)}" />`).join("\n");
   return `Mode: MiniMax H3 Ref2VA. target_duration: ${duration}s.
 appearanceAuthority=the actual attached current image. Images establish appearance; storyboard facts establish events, dialogue and timing.
-The grouped sources below are authoritative. Each character uses ONE complete reference sheet in ONE Picture slot. Its face, front, side and back panels depict the SAME person in ONE current state, not multiple people or separate uploaded Pictures. Define one Subject per asset and cite its actual Picture. Describe only views visible in the attached sheet. Preserve identity and outfit; never render the panel layout, repeated figures or display background in the video. Each selected image asset consumes one of the nine available image slots.
+The grouped sources below are authoritative. Each character uses ONE complete reference sheet in ONE Picture slot. Its face, front, side and back panels depict the SAME person in ONE current state, not multiple people or separate uploaded Pictures. Treat each asset as one consistent subject and cite its actual Picture where it affects the video. Describe only views visible in the attached sheet. Preserve identity and outfit; never render the panel layout, repeated figures or display background in the video. Each selected image asset consumes one of the nine available image slots.
 <referenceSlots>
 ${references}
 </referenceSlots>
@@ -39,11 +39,30 @@ ${JSON.stringify(subjects)}
 ${otherReferences.length ? `<otherReferences>${JSON.stringify(otherReferences)}</otherReferences>\n` : ""}<storyboardFacts>
 ${JSON.stringify(storyboards.map(item => ({ id: item.id, duration: item.duration, videoDesc: item.videoDesc || "" })))}
 </storyboardFacts>
-Write the full six-section Ref2VA prompt from these images and storyboard facts. Definitions must identify each source, its role and visible characteristics; preservation instructions alone are not an appearance description. In the shots, use the defined Subject labels at their first clear appearance and reuse them later. Establish composition, visible appearance and position, environment/light, actions and state changes, camera, synchronized sound and where each reference takes effect. Cross-check retention shot lists against this timeline. Preserve the supplied cause and effect, speaker, exact dialogue and event order. Do not replace an intentional action with an accident to simplify the prose.`;
+Generate the final MiniMax H3 cinematic video prompt.
+
+Analyze all reference images, videos and audio.
+
+Prioritize:
+- character identity preservation
+- reference consistency
+- cinematic camera movement
+- realistic physics
+- temporal continuity
+- synchronized audio
+
+Describe each source's visible role where it affects the video. Establish composition, appearance, position, environment and lighting, actions and state changes, camera movement, synchronized sound and reference usage. Preserve the supplied cause and effect, speaker, exact dialogue, timing and event order. Do not replace an intentional action with an accident.
+
+Output only the final generation prompt.
+Do not explain reasoning.
+Do not use a fixed section template.`;
 }
 
 export function h3PromptWordCounts(prompt: string) {
-  const sections = [...prompt.matchAll(/^(subject_definitions|summary|retention_analysis|detailed_description|overall_soundscape|non_diegetic_music):\s*/gm)];
   const words = (text: string) => (text.replace(/<(?:Subject|Picture|Video|Audio)\s+\d+>/g, "reference").match(/[A-Za-z]+(?:['’-][A-Za-z]+)*/g) || []).length;
-  return { total: words(prompt), sections: Object.fromEntries(sections.map((entry, index) => [entry[1], words(prompt.slice(entry.index! + entry[0].length, sections[index + 1]?.index ?? prompt.length))])) };
+  const headings = [...prompt.matchAll(/^(?:#{1,6}\s+([^\r\n]+)|([A-Za-z][A-Za-z0-9 _-]{1,80}):)\s*(?:\r?\n)?/gm)];
+  return { total: words(prompt), sections: Object.fromEntries(headings.map((entry, index) => {
+    const name = (entry[1] || entry[2]).trim();
+    return [name, words(prompt.slice(entry.index! + entry[0].length, headings[index + 1]?.index ?? prompt.length))];
+  })) };
 }

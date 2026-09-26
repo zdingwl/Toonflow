@@ -2,7 +2,7 @@
 
 ## Video storytelling rules
 
-Generate cinematic visual descriptions. Prioritize character consistency, physical motion, camera movement, then environment. Preserve the Shot, Camera and Action information of the supplied storyboard; render it inside the selected model's existing output structure, not as additional H3 sections.
+Generate cinematic visual descriptions. Prioritize character consistency, physical motion, camera movement, then environment. Preserve the Shot, Camera and Action information of the supplied storyboard without imposing a fixed H3 section structure.
 
 Reference characters retain the same face, facial proportions, hairstyle, hair length, body proportions, costume structure and accessories in every frame. The complete character sheet occupies one Picture and defines one Subject; its panels are different views of the same person, not separate uploads. The environment reference establishes architecture, background, spatial layout, lighting and atmosphere. Asset drawing requests do not override the selected images.
 
@@ -16,10 +16,10 @@ Avoid overly detailed static character inventories, excessive artistic adjective
 
 ## Camera
 
-Use cinematic framing: wide establishing shot, medium interaction shot, close facial shot, tracking shot, high angle shot. One continuous shot can move from a wide view toward a medium view without inventing a cut. Keep one feasible main camera path and stable screen direction. Shot count and required cut syntax follow the H3 template.
+Use cinematic framing: wide establishing shot, medium interaction shot, close facial shot, tracking shot, high angle shot. One continuous shot can move from a wide view toward a medium view without inventing a cut. Keep one feasible main camera path and stable screen direction. Use cuts only when the storyboard requires them.
 
 ## Sound and continuity
 
 Keep the supplied dialogue complete, preserve its speaker and meaning, and synchronize mouth movement with the selected language. Use concise physical sounds and continuous ambience; do not add speech or music without a story requirement. Preserve identity and clothing through motion and occlusion. Explicit transformations change only the stated attributes at the supplied story boundary.
 
-Keep the H3 six-section output and exact Subject/Picture mapping. Spend detail on the visible scene, not repeated static descriptions; do not expand a simple event into multiple actions to reach a word target.
+Keep exact Subject/Picture mapping while allowing a free-form final prompt. Spend detail on the visible scene, not repeated static descriptions; do not expand a simple event into multiple actions to reach a word target.

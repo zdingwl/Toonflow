@@ -217,20 +217,23 @@ test("H3 always loads its Ref2VA rules even when a vendor is bound to a legacy t
     await f.db("o_modelPrompt").insert({ vendorId: "test", model: "MiniMax-H3-local", path: "video/universalFirstAndLastFrameMode.md" });
     const result = await f.post("generateVideoPrompt", { ...budgetBody, trackId: 2 });
     assert.equal(result.status, 200, JSON.stringify(result.body));
-    assert.match(f.calls[0].system, /MiniMax H3 Ref2VA prompt writer/);
-    assert.match(f.calls[0].system, /references\/ref-en\.txt/);
-    assert.match(f.calls[0].system, /references\/base-en\.txt/);
+    assert.match(f.calls[0].system, /MiniMax H3 Ref2VA Prompt Writer/i);
+    assert.match(f.calls[0].system, /Generate the final MiniMax H3 cinematic video prompt/);
+    assert.match(f.calls[0].system, /Do not use a fixed section template/);
   } finally { await f.close(); }
 });
 
 test("H3 generation no longer hard-rejects a prompt because fixed sections are missing", async () => {
-  const f = await makeBudgetFixture((draft, call) => call === 1 ? draft.slice(draft.indexOf("summary:")) : draft);
+  const pictures = Array.from({ length: 7 }, (_, index) => `<Picture ${index + 1}>`).join(", ");
+  const f = await makeBudgetFixture((draft, call) => call === 1 ? `Free cinematic prompt using ${pictures}.\n${draft.slice(draft.indexOf("summary:"))}` : draft);
   try {
     const result = await f.post("generateVideoPrompt", { ...budgetBody, trackId: 2 });
     assert.equal(result.status, 200, JSON.stringify(result.body));
     assert.equal(f.calls.length, 1);
     assert.doesNotMatch(f.calls[0].system, /Mandatory H3 output syntax|ALL SIX SECTIONS/);
-    assert.ok(result.body.data.startsWith("summary:"));
+    assert.match(f.calls[0].system, /write all prompt prose and section headings in English/i);
+    assert.match(f.calls[0].system, /does not require fixed section names, a fixed section count, a fixed section order/i);
+    assert.ok(result.body.data.startsWith("Free cinematic prompt"));
     assert.equal((await plans.loadH3ReferencePlan(f.db, 2, result.body.data))?.slots.length, 7);
   } finally { await f.close(); }
 });
@@ -250,22 +253,41 @@ test("H3 generation persists the selected template output without fixed-format r
   } finally { await f.close(); }
 });
 
+test("Chinese H3 prose is rewritten in English without imposing fixed sections", async () => {
+  const chinese = `${Array.from({ length: 7 }, (_, index) => `<Picture ${index + 1}>`).join(", ")}\n## 1. 视频构思\n${"这是中文视频提示词正文，描述角色、场景、动作和镜头运动。".repeat(12)}`;
+  const f = await makeBudgetFixture((draft, call) => call === 1 ? chinese : draft);
+  try {
+    const result = await f.post("generateVideoPrompt", { ...budgetBody, trackId: 2 });
+    assert.equal(result.status, 200, JSON.stringify(result.body));
+    assert.equal(f.calls.length, 2);
+    assert.equal(f.audits.length, 0, "semantic reviewer is disabled");
+    assert.match(f.calls[1].messages.at(-1).content, /PROMPT_LANGUAGE/);
+    assert.match(f.calls[1].messages.at(-1).content, /write all prompt prose and section headings in English/i);
+    assert.doesNotMatch(f.calls[1].messages.at(-1).content, /ALL SIX SECTIONS|Mandatory H3 output syntax/);
+    assert.ok(result.body.data.startsWith("subject_definitions:"));
+  } finally { await f.close(); }
+});
+
 test("translation also accepts the source template structure without fixed-section repair", async () => {
-  const f = await makeBudgetFixture((draft, call) => call === 2 ? draft.slice(draft.indexOf("summary:")) : draft);
+  const pictures = Array.from({ length: 7 }, (_, index) => `<Picture ${index + 1}>`).join(", ");
+  const f = await makeBudgetFixture((draft, call) => call === 2 ? `Free translated prompt using ${pictures}.\n${draft.slice(draft.indexOf("summary:"))}` : draft);
   try {
     const result = await f.post("generateVideoPrompt", { ...budgetBody, trackId: 2, languages: ["en-US"], regenerate: true });
     assert.equal(result.status, 200, JSON.stringify(result.body));
     assert.equal(f.calls.length, 2);
     assert.doesNotMatch(f.calls[1].system, /Mandatory H3 output syntax|ALL SIX SECTIONS/);
+    assert.match(f.calls[1].system, /write all prompt prose and section headings in English/i);
+    assert.match(f.calls[1].system, /If the source prompt's non-dialogue prose is Chinese or another language/i);
+    assert.match(f.calls[1].system, /Preserve the exact relative order of every vocal event and physical action/i);
     const variant = await f.db("o_videoPromptVariant").where({ trackId: 2, language: "en-US" }).first();
     assert.equal(variant.state, "已完成", variant.reason);
-    assert.ok(variant.prompt.startsWith("summary:"));
+    assert.ok(variant.prompt.startsWith("Free translated prompt"));
     assert.equal((await plans.loadH3ReferencePlan(f.db, 2, variant.prompt))?.slots.length, 7);
     assert.equal((await f.db("o_videoTrack").where({ id: 2 }).first()).prompt, "keep old prompt");
   } finally { await f.close(); }
 });
 
-test("translation review restores the saved Picture order when the request supplies the same assets in reverse", async () => {
+test("translation copies the saved Picture plan without invoking a semantic reviewer", async () => {
   const f = await makeBudgetFixture();
   try {
     const originalInfo = [{ id: 2, sources: "assets" }, { id: 1, sources: "assets" }];
@@ -281,15 +303,8 @@ test("translation review restores the saved Picture order when the request suppl
     assert.equal(translated.status, 200, JSON.stringify(translated.body));
     assert.equal(f.calls.length, 2, "existing base is translated without regeneration");
     assert.equal(f.calls[1].messages[0].content, source);
-    const audit = f.audits[1];
-    assert.deepEqual(audit.messages[0].content.filter((part: any) => part.type === "image").map((part: any) => Buffer.from(part.image).toString()), ["asset-2.png", "asset-1.png"]);
-    const context = audit.messages[0].content[0].text;
-    assert.match(context, /<reference slot="1" sources="assets" id="2"/);
-    assert.match(context, /<reference slot="2" sources="assets" id="1"/);
-    const groups = JSON.parse(/<referenceSubjects>\s*([\s\S]*?)\s*<\/referenceSubjects>/.exec(context)![1]);
-    assert.deepEqual(groups.map((group: any) => [group.assetId, group.pictures[0].picture]), [[2, "<Picture 1>"], [1, "<Picture 2>"]]);
-    assert.match(audit.messages[0].content[1].text, /<Picture 1>: asset2;/);
-    assert.match(audit.messages[0].content[3].text, /<Picture 2>: asset1;/);
+    assert.equal(f.audits.length, 0);
+    assert.match(f.calls[1].system, /surgical H3 dialogue localizer/i);
     const variant = await f.db("o_videoPromptVariant").where({ trackId: 2, language: "en-US" }).first();
     assert.equal(variant.state, "已完成", variant.reason);
     assert.deepEqual(await plans.loadH3ReferencePlan(f.db, 2, variant.prompt), originalPlan);
@@ -309,56 +324,59 @@ test("out-of-range H3 duration is reported instead of silently clamped before wr
   } finally { await f.close(); }
 });
 
-test("semantic review sees actual images and rejects a structurally valid draft before persistence", async () => {
+test("semantic reviewer is not called and cannot reject event ordering", async () => {
   const f = await makeBudgetFixture(undefined, call => call === 1
     ? JSON.stringify({ issues: [{ code: "EVENT_ORDER", evidence: "The warning follows the completed push.", reason: "The source requires the warning before the push." }] })
     : '{"issues":[]}');
   try {
     const result = await f.post("generateVideoPrompt", { ...budgetBody, trackId: 2 });
     assert.equal(result.status, 200, JSON.stringify(result.body));
-    assert.equal(f.calls.length, 2);
-    assert.equal(f.audits.length, 2);
-    assert.equal(f.audits[0].messages[0].content.filter((part: any) => part.type === "image").length, 7);
-    assert.match(f.calls[1].messages.at(-1).content, /EVENT_ORDER/);
-    assert.match(f.calls[1].messages.at(-1).content, /warning before the push/);
+    assert.equal(f.calls.length, 1);
+    assert.equal(f.audits.length, 0);
     assert.equal((await f.db("o_videoTrack").where({ id: 2 }).first()).state, "已完成");
   } finally { await f.close(); }
 });
 
-test("persistent semantic contradictions remain failed and preserve the prior prompt", async () => {
-  const f = await makeBudgetFixture(undefined, () => JSON.stringify({ issues: [{ code: "STATE_CONTINUITY", evidence: "closed bite then open jaws", reason: "The source contains no release event." }] }));
+test("image-only injury color guesses do not force recoloring a faint closed reference mark", async () => {
+  const f = await makeBudgetFixture((draft) => draft.replace("stand still", "stand still with a faint pale closed scratch on one arm"), () => JSON.stringify({
+    issues: [{ code: "INJURY_COLOR", evidence: "Faint reddish lines are visible in Picture 1.", reason: "The prompt must recolor the reference mark gray-brown." }],
+  }));
   try {
     const result = await f.post("generateVideoPrompt", { ...budgetBody, trackId: 2 });
-    assert.equal(result.status, 400);
-    assert.equal(f.calls.length, 3); assert.equal(f.audits.length, 3);
-    assert.match(result.body.message, /STATE_CONTINUITY/);
-    const saved = await f.db("o_videoTrack").where({ id: 2 }).first();
-    assert.equal(saved.state, "生成失败"); assert.equal(saved.prompt, "keep old prompt");
+    assert.equal(result.status, 200, JSON.stringify(result.body));
+    assert.equal(f.calls.length, 1);
+    assert.equal(f.audits.length, 0);
+    assert.match(result.body.data, /faint pale closed scratch/);
+    assert.equal((await f.db("o_videoTrack").where({ id: 2 }).first()).state, "已完成");
   } finally { await f.close(); }
 });
 
-test("base and translation audits receive the selected visual manual without adding model calls", async () => {
+test("semantic contradictions no longer create failed prompt records", async () => {
+  const f = await makeBudgetFixture(undefined, () => JSON.stringify({ issues: [{ code: "STATE_CONTINUITY", evidence: "closed bite then open jaws", reason: "The source contains no release event." }] }));
+  try {
+    const result = await f.post("generateVideoPrompt", { ...budgetBody, trackId: 2 });
+    assert.equal(result.status, 200, JSON.stringify(result.body));
+    assert.equal(f.calls.length, 1); assert.equal(f.audits.length, 0);
+    const saved = await f.db("o_videoTrack").where({ id: 2 }).first();
+    assert.equal(saved.state, "已完成"); assert.notEqual(saved.prompt, "keep old prompt");
+  } finally { await f.close(); }
+});
+
+test("base writer receives the selected visual manual without semantic reviewer calls", async () => {
   const manual = "Retain the current character images' degree of realism, facial proportions and visible skin, hair and fabric appearance; adapt only the scene lighting.";
   const f = await makeBudgetFixture(undefined, undefined, manual);
   try {
     const result = await f.post("generateVideoPrompt", { ...budgetBody, trackId: 2, languages: ["en-US"], regenerate: true });
     assert.equal(result.status, 200, JSON.stringify(result.body));
     assert.equal(f.calls.length, 2, "one base writer and one translator");
-    assert.equal(f.audits.length, 2, "reuse the existing base and translation reviews");
+    assert.equal(f.audits.length, 0);
     assert.ok(f.calls[0].system.includes(manual));
-    for (const audit of f.audits) {
-      const parts = audit.messages[0].content;
-      const requirements = parts.filter((part: any) => part.type === "text" && part.text.includes(manual));
-      assert.equal(requirements.length, 1);
-      assert.match(requirements[0].text, /selected video manual/);
-      assert.equal(parts.filter((part: any) => part.type === "image").length, 7);
-    }
     const saved = await f.db("o_videoPromptVariant").where({ trackId: 2, language: "en-US" }).first();
     assert.equal(saved.state, "已完成", saved.reason);
   } finally { await f.close(); }
 });
 
-test("a requested rendering-source omission follows the existing bounded repair path", async () => {
+test("rendering-source reviewer issues no longer trigger repair retries", async () => {
   const manual = "The final style opening must inherit the current character images' rendering appearance.";
   const f = await makeBudgetFixture(undefined, call => call === 1
     ? JSON.stringify({ issues: [{ code: "REFERENCE_RENDERING", evidence: "Detailed stylized 3D.", reason: "The supplied visual manual requires the reference-rendering relationship, which this generic description omits." }] })
@@ -366,9 +384,7 @@ test("a requested rendering-source omission follows the existing bounded repair 
   try {
     const result = await f.post("generateVideoPrompt", { ...budgetBody, trackId: 2 });
     assert.equal(result.status, 200, JSON.stringify(result.body));
-    assert.equal(f.calls.length, 2);
-    assert.equal(f.audits.length, 2);
-    assert.match(f.calls[1].messages.at(-1).content, /REFERENCE_RENDERING/);
-    assert.match(f.calls[1].messages.at(-1).content, /supplied visual manual/);
+    assert.equal(f.calls.length, 1);
+    assert.equal(f.audits.length, 0);
   } finally { await f.close(); }
 });

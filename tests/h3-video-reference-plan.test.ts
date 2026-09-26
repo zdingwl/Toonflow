@@ -311,15 +311,15 @@ for (const route of ["generateVideo", "batchGenerateVideo"]) {
         if(validateOnly) assert.deepEqual(await snapshotDatabase(f.db),before);
       } finally {await f.close();}
     });
-    test(route+" rejects mixing character boards into one Subject",async()=>{
+    test(route+" accepts free-form Picture prose without parsing Subject definitions",async()=>{
       const f=await fixture();
       try {
         await f.addAssets([asset(1),asset(2)]);
         const prompt=picturePrompt(2,[1,1]);
         await savePlan(f.db,1,prompt,{version:1,slots:[planSlot(1,'role'),planSlot(2,'role')]});
         const response=await f.post(route,[{trackId:1,prompt,uploadData:[{id:1,sources:'assets'},{id:2,sources:'assets'}]}],{validateOnly});
-        assert.equal(response.status,409); assert.match(response.body.message,/混用了不同资产/);
-        assert.deepEqual(f.loaded,[]); assert.equal(f.providerCreations(),0);
+        assert.equal(response.status,200,JSON.stringify(response.body));
+        assert.deepEqual(f.loaded.sort(),["1-sheet.png","2-sheet.png"]);
       } finally {await f.close();}
     });
   }
