@@ -34,7 +34,7 @@ export function assertH3PromptContract(prompt: string, duration: number, picture
   const headings = [...prompt.matchAll(/^(subject_definitions|summary|retention_analysis|detailed_description|overall_soundscape|non_diegetic_music):\s*/gm)];
   const missing = sections.filter(section => !headings.some(m => m[1] === section));
   if (missing.length) fail(`六个章节不完整，缺少：${missing.join(", ")}。请返回完整提示词`);
-  if (headings.map(m => m[1]).join() !== sections.join() || prompt.slice(0, headings[0]?.index).trim()) fail("必须按官方顺序输出六个章节，不能有前言或代码块");
+  if (new Set(headings.map(m => m[1])).size !== headings.length) fail("章节不能重复");
   const body = Object.fromEntries(headings.map((m, i) => [m[1], prompt.slice(m.index! + m[0].length, headings[i + 1]?.index ?? prompt.length).trim()]));
   if (Object.values(body).some(value => !value)) fail("章节内容不能为空");
   // Parse tags before masking spoken content. Equal open/close counts do not detect nesting.
@@ -57,9 +57,11 @@ export function assertH3PromptContract(prompt: string, duration: number, picture
   // Keep offsets stable so literal [Shot N] and <Subject N> spoken by a character are not structure.
   const shotDescription = maskDialogue(body.detailed_description);
   // Dialogue and explicitly quoted visible scene text retain their source language.
-  const prose = prompt.replace(/<d\b[^>]*>[\s\S]*?<\/d>/g, "").replace(/"[^"\n]*"|“[^”\n]*”/g, "");
+  // Explanatory text before the first section is not part of the H3 prompt contract.
+  const structuredPrompt = sections.map(section => body[section]).join("\n");
+  const prose = structuredPrompt.replace(/<d\b[^>]*>[\s\S]*?<\/d>/g, "").replace(/"[^"\n]*"|“[^”\n]*”/g, "");
   if (/[\u3400-\u9fff]/.test(prose)) fail("六段说明必须用英文；中文仅可保留在对白或明确引用的可见文字中，画风手册也要译成英文");
-  assertH3PictureSlots(maskDialogue(prompt), pictureCount);
+  assertH3PictureSlots(maskDialogue(structuredPrompt), pictureCount);
   const label = /<(Subject|Picture|Video|Audio)\s+\d+>/g;
   const definitionLines = [...body.subject_definitions.matchAll(/^(<(?:Subject|Picture|Video|Audio) \d+>)\s+.+$/gm)];
   const definitions = definitionLines.map(m => m[1]);

@@ -75,6 +75,7 @@ export async function generateLanguageVariants(
   generateBase: () => Promise<string>,
   translate: (system: string, source: string) => Promise<string>,
   regenerate = false,
+  validateReferenceLabels = true,
 ) {
   let pending = pendingVariants.get(db);
   if (!pending) {
@@ -82,7 +83,7 @@ export async function generateLanguageVariants(
     pendingVariants.set(db, pending);
   }
   const previous = pending.get(trackId) || Promise.resolve();
-  const next = previous.catch(() => {}).then(() => generateMissingVariants(db, trackId, languages, generateBase, translate, regenerate));
+  const next = previous.catch(() => {}).then(() => generateMissingVariants(db, trackId, languages, generateBase, translate, regenerate, validateReferenceLabels));
   pending.set(trackId, next);
   try {
     return await next;
@@ -99,6 +100,7 @@ async function generateMissingVariants(
   generateBase: () => Promise<string>,
   translate: (system: string, source: string) => Promise<string>,
   regenerate: boolean,
+  validateReferenceLabels: boolean,
 ) {
   dialogueLanguagesSchema.parse(languages);
   const track = await db("o_videoTrack").where({ id: trackId }).first();
@@ -136,7 +138,7 @@ async function generateMissingVariants(
           .map((match) => match[0]))]
           .sort()
           .join(",");
-      if (slots(base) !== slots(prompt)) throw new Error("翻译改变了参考图编号，请重试该语言");
+      if (validateReferenceLabels && slots(base) !== slots(prompt)) throw new Error("翻译改变了参考图编号，请重试该语言");
       await db("o_videoPromptVariant").where({ trackId, language }).update({ prompt, state: "已完成", reason: null });
     } catch (cause) {
       await db("o_videoPromptVariant")

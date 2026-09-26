@@ -6,9 +6,8 @@ import { h3SlotPath, saveH3ReferencePlan, loadH3ReferencePlan, copyH3ReferencePl
 import { assertH3ActiveStates } from "@/utils/h3VisualStateGuard";
 import { db as languageDb } from "@/utils/db";
 import { generateLanguageVariants } from "@/utils/videoLanguages";
-import { assertH3PromptContract, normalizeH3PromptFormat, h3FormatChecklist } from "@/utils/h3PromptContract";
-import { buildH3PromptInput, h3BindingSlots } from "@/utils/h3PromptContext";
-import { assertH3ReferenceBindings } from "@/utils/h3ReferenceBindings";
+import { normalizeH3PromptFormat } from "@/utils/h3PromptContract";
+import { buildH3PromptInput } from "@/utils/h3PromptContext";
 import { prepareH3VisionImage } from "@/utils/h3VisionImage";
 import { h3SemanticReviewInstruction, parseH3SemanticReview } from "@/utils/h3SemanticReview";
 
@@ -302,7 +301,7 @@ async function generateForTrack(input: VideoPromptRequest) {
       if (issues.length) throw new Error("H3 内容审核未通过：" + issues.map(issue => `${issue.code}: ${issue.reason} Evidence: ${issue.evidence}`).join("\n"));
     };
     const generateBase = async () => {
-      const system = h3PromptMode ? `${videoPromptGeneration}\n\n${h3FormatChecklist}\n\nProject visual requirements (rendering guidance only; the H3 rules above govern references, shots, speech and output structure. Use relevant qualities in the style opening; do not import a competing output format or compress the required shot detail):\n${visualManual}` : videoPromptGeneration;
+      const system = h3PromptMode ? `${videoPromptGeneration}\n\nProject visual requirements (rendering guidance only; use relevant qualities without replacing the selected H3 prompt template's output structure):\n${visualManual}` : videoPromptGeneration;
       const messages: any[] = h3PromptMode
         ? [{ role: "user", content: userContent }]
         : [{ role: "assistant", content: visualManual }, { role: "user", content }];
@@ -312,13 +311,11 @@ async function generateForTrack(input: VideoPromptRequest) {
         result.text = normalizeH3PromptFormat(result.text.trim());
         if (/^(REFERENCE_STATE_REVIEW|LANGUAGE_TIMING_REVIEW):/.test(result.text.trim())) throw new Error(result.text);
         try {
-          assertH3PromptContract(result.text, targetDuration, pictureSourceItems.length);
-          assertH3ReferenceBindings(result.text, h3BindingSlots(pictureSourceItems));
           await reviewH3Content(result.text);
         }
         catch (cause) {
           if (attempt === 2) throw Object.assign(cause as Error, { candidatePrompt: result.text });
-          messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Rewrite and return ALL SIX SECTIONS as one complete prompt against the H3 rules. Do not return a patch or only changed sections. Reinspect the attached images for missing definitions; do not replace observed characteristics with generic preservation instructions. Keep the original image bindings, story events, speakers, exact dialogue and timing. Check reference labels inside shots and agreement with retention_analysis. ${h3FormatChecklist} Validation error: ${u.error(cause).message}` });
+          messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Rewrite and return one complete prompt using the selected H3 template. Do not return a patch. Reinspect the attached images and fix only the reported content contradiction while preserving the story events, speakers, exact dialogue and timing. Review error: ${u.error(cause).message}` });
           continue;
         }
         await saveH3ReferencePlan(languageDb, trackId, result.text, pictureSourceItems);
@@ -354,31 +351,27 @@ async function generateForTrack(input: VideoPromptRequest) {
                 reviewReferenceContent.push({ type: "image", ...preparedImage });
               }
             }
-            assertH3PromptContract(source, targetDuration, sourcePlan?.slots.length ?? pictureSourceItems.length);
-            assertH3ReferenceBindings(source, sourcePlan?.slots ?? h3BindingSlots(pictureSourceItems));
           }
           const messages: any[] = [{ role: "user", content: source }];
           for (let attempt = 0; attempt < 3; attempt++) {
-            const result = { text: (await u.Ai.Text("universalAi", h3PromptMode ? true : undefined, h3PromptMode ? 2 : undefined).invoke({ system: h3PromptMode ? `${videoPromptGeneration}\n\nTranslation task: preserve the validated reference definitions, shot events and bindings; translate speech according to the following target-language instructions. Return all six sections, including unchanged sections.\n${system}\n${h3FormatChecklist}` : system, messages })).text };
+            const result = { text: (await u.Ai.Text("universalAi", h3PromptMode ? true : undefined, h3PromptMode ? 2 : undefined).invoke({ system: h3PromptMode ? `${videoPromptGeneration}\n\nTranslation task: preserve the source prompt's complete structure, reference definitions, shot events and bindings; translate speech according to the following target-language instructions.\n${system}` : system, messages })).text };
             if (!h3PromptMode || result.text.trim().startsWith("LANGUAGE_TIMING_REVIEW:")) return result.text;
             result.text = normalizeH3PromptFormat(result.text.trim());
             try {
-              const sourcePlan = await loadH3ReferencePlan(languageDb, trackId, source);
-              assertH3PromptContract(result.text, targetDuration, sourcePlan?.slots.length ?? pictureSourceItems.length);
-              assertH3ReferenceBindings(result.text, sourcePlan?.slots ?? h3BindingSlots(pictureSourceItems), source);
               await reviewH3Content(result.text, source, system, reviewReferenceContent);
             }
             catch (cause) {
               if (attempt === 2) throw Object.assign(cause as Error, { candidatePrompt: result.text });
-              messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Return ALL SIX SECTIONS of the corrected translation, including unchanged sections. Do not return a patch. Preserve visual facts, speakers, target-language dialogue, timing and reference bindings; recheck their consistency across sections. ${h3FormatChecklist} Validation error: ${u.error(cause).message}` });
+              messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Return the complete corrected translation using the source prompt's structure. Do not return a patch. Preserve visual facts, speakers, target-language dialogue, timing and reference bindings; fix only the reported content contradiction. Review error: ${u.error(cause).message}` });
               continue;
             }
-            await copyH3ReferencePlan(languageDb, trackId, source, result.text);
+            await copyH3ReferencePlan(languageDb, trackId, source, result.text, false);
             return result.text;
           }
           throw new Error("H3 翻译格式校验失败");
         },
         input.regenerate === true,
+        !h3PromptMode,
       );
       const failed = variants.filter((v: any) => input.languages!.includes(v.language) && v.state === "生成失败");
       await u

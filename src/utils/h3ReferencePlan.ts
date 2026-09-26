@@ -141,11 +141,13 @@ function pictureNumbers(prompt: string): number[] {
 }
 
 /** Translation and manual edits may copy a plan only while the numbered Picture set stays identical. */
-export async function copyH3ReferencePlan(db: any, trackId: number, sourcePrompt: string, targetPrompt: string): Promise<H3ReferencePlan | null> {
+export async function copyH3ReferencePlan(db: any, trackId: number, sourcePrompt: string, targetPrompt: string, validatePrompt = true): Promise<H3ReferencePlan | null> {
   const plan = await loadH3ReferencePlan(db, trackId, sourcePrompt);
   if (!plan) return null;
-  const expected = plan.slots.map((_, index) => index + 1);
-  if (JSON.stringify(pictureNumbers(sourcePrompt)) !== JSON.stringify(expected) || JSON.stringify(pictureNumbers(targetPrompt)) !== JSON.stringify(expected)) throw regenerate("参考图编号已变化");
-  assertH3ReferenceBindings(targetPrompt, plan.slots, sourcePrompt);
+  if (validatePrompt) {
+    const expected = plan.slots.map((_, index) => index + 1);
+    if (JSON.stringify(pictureNumbers(sourcePrompt)) !== JSON.stringify(expected) || JSON.stringify(pictureNumbers(targetPrompt)) !== JSON.stringify(expected)) throw regenerate("参考图编号已变化");
+    assertH3ReferenceBindings(targetPrompt, plan.slots, sourcePrompt);
+  }
   return persistPlan(db, trackId, targetPrompt, plan);
 }

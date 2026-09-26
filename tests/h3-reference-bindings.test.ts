@@ -39,6 +39,11 @@ test("four crops of the same asset belong to one Subject independently of its nu
 test("different assets permit nonsequential Subjects and reordered definitions", () => {
   assert.doesNotThrow(() => assertH3ReferenceBindings(prompt(`${cole}\n${ava}`), twoRoles, source));
 });
+test("reference binding does not require subject_definitions to be the first section", () => {
+  const definitions = /^(subject_definitions:[\s\S]*?)(?=^summary:)/m.exec(source)![1].trim();
+  const reordered = source.replace(/^(subject_definitions:[\s\S]*?)(?=^summary:)/m, "").replace(/^retention_analysis:/m, `${definitions}\nretention_analysis:`);
+  assert.doesNotThrow(() => assertH3ReferenceBindings(`这是生成的视频提示词：\n${reordered}`, twoRoles));
+});
 test("rejects splitting a four-view identity into separate Subjects", () => {
   const split = prompt(`${ava}\n<Subject 3> is the side and back figure in <Picture 3> and <Picture 4>.`);
   assert.throws(() => assertH3ReferenceBindings(split, fourViews), /同一资产 115.*拆成多个 Subject/);

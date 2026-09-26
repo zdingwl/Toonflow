@@ -19,7 +19,7 @@ export default router.post(
     const track = await u.db("o_videoTrack").where({ id }).first();
     if (!track) return res.status(404).send(error("视频段不存在"));
     const preservePlan = async (source: string) => {
-      if (typeof prompt === "string" && prompt.trim()) await copyH3ReferencePlan(languageDb, id, source || "", prompt);
+      if (typeof prompt === "string" && prompt.trim()) await copyH3ReferencePlan(languageDb, id, source || "", prompt, false);
     };
     if (req.body.language) {
       if (!(await u.db("o_videoTrack").where({ id }).first())) return res.status(404).send(error("视频段不存在"));

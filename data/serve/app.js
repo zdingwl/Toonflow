@@ -54910,12 +54910,12 @@ var require_matcher = __commonJS({
       _fillStorage() {
         for (const pattern of this._patterns) {
           const segments = this._getPatternSegments(pattern);
-          const sections2 = this._splitSegmentsIntoSections(segments);
+          const sections = this._splitSegmentsIntoSections(segments);
           this._storage.push({
-            complete: sections2.length <= 1,
+            complete: sections.length <= 1,
             pattern,
             segments,
-            sections: sections2
+            sections
           });
         }
       }
@@ -95976,13 +95976,13 @@ var require_trace_mapping_umd = __commonJS({
         return presortedDecodedMap(joined);
       };
       function recurse(input, mapUrl, mappings, sources, sourcesContent, names, ignoreList, lineOffset, columnOffset, stopLine, stopColumn) {
-        const { sections: sections2 } = input;
-        for (let i = 0; i < sections2.length; i++) {
-          const { map: map3, offset } = sections2[i];
+        const { sections } = input;
+        for (let i = 0; i < sections.length; i++) {
+          const { map: map3, offset } = sections[i];
           let sl = stopLine;
           let sc = stopColumn;
-          if (i + 1 < sections2.length) {
-            const nextOffset = sections2[i + 1].offset;
+          if (i + 1 < sections.length) {
+            const nextOffset = sections[i + 1].offset;
             sl = Math.min(stopLine, lineOffset + nextOffset.line);
             if (sl === stopLine) {
               sc = Math.min(stopColumn, columnOffset + nextOffset.column);
@@ -120450,7 +120450,7 @@ H3 \u5BF9\u767D\u5FC5\u987B\u4FDD\u6301 <d>[Language] \u53F0\u8BCD</d>\uFF0C\u8B
 \u539F\u6587\u65E0\u5BF9\u767D\u7684\u955C\u5934\u4FDD\u6301\u65E0\u5BF9\u767D\uFF0C\u4E0D\u5F97\u6DFB\u52A0\u53F0\u8BCD\u3002\u4E0D\u8981\u628A\u539F\u8BED\u8A00\u5BF9\u767D\u6216\u4E2D\u6587\u8BD1\u6587\u6DF7\u5165\u53D1\u58F0\u5185\u5BB9\u3002\u58F0\u97F3\u53C2\u8003\u53EA\u7528\u4E8E\u97F3\u8272\uFF0C\u4E0D\u5F97\u590D\u5236\u5176\u539F\u8BED\u8A00\u53F0\u8BCD\u3002
 \u4FDD\u7559\u65F6\u957F\u548C\u65F6\u95F4\u8F74\uFF0C\u5728\u7ED9\u5B9A\u65F6\u957F\u5185\u81EA\u7136\u8868\u8FBE\uFF0C\u4E0D\u53EF\u52A0\u901F\u585E\u5165\u8FC7\u957F\u53F0\u8BCD\u3001\u5220\u53BB\u5267\u60C5\u4FE1\u606F\u6216\u622A\u65AD\u5BF9\u767D\uFF1B\u5982\u679C\u65E0\u6CD5\u5BB9\u7EB3\uFF0C\u8FD4\u56DE\u4EE5 LANGUAGE_TIMING_REVIEW: \u5F00\u5934\u7684\u7B80\u77ED\u539F\u56E0\uFF0C\u4E0D\u8981\u751F\u6210\u4E0D\u5B8C\u6574\u63D0\u793A\u8BCD\u3002`;
 }
-async function generateLanguageVariants(db2, trackId, languages, generateBase, translate, regenerate2 = false) {
+async function generateLanguageVariants(db2, trackId, languages, generateBase, translate, regenerate2 = false, validateReferenceLabels = true) {
   let pending = pendingVariants.get(db2);
   if (!pending) {
     pending = /* @__PURE__ */ new Map();
@@ -120458,7 +120458,7 @@ async function generateLanguageVariants(db2, trackId, languages, generateBase, t
   }
   const previous = pending.get(trackId) || Promise.resolve();
   const next = previous.catch(() => {
-  }).then(() => generateMissingVariants(db2, trackId, languages, generateBase, translate, regenerate2));
+  }).then(() => generateMissingVariants(db2, trackId, languages, generateBase, translate, regenerate2, validateReferenceLabels));
   pending.set(trackId, next);
   try {
     return await next;
@@ -120466,7 +120466,7 @@ async function generateLanguageVariants(db2, trackId, languages, generateBase, t
     if (pending.get(trackId) === next) pending.delete(trackId);
   }
 }
-async function generateMissingVariants(db2, trackId, languages, generateBase, translate, regenerate2) {
+async function generateMissingVariants(db2, trackId, languages, generateBase, translate, regenerate2, validateReferenceLabels) {
   dialogueLanguagesSchema.parse(languages);
   const track = await db2("o_videoTrack").where({ id: trackId }).first();
   if (!track) throw new Error("\u89C6\u9891\u6BB5\u4E0D\u5B58\u5728");
@@ -120492,7 +120492,7 @@ async function generateMissingVariants(db2, trackId, languages, generateBase, tr
       const prompt = (await translate(translationInstruction(language), base)).trim();
       if (!prompt || prompt.startsWith("LANGUAGE_TIMING_REVIEW:")) throw new Error(prompt || "\u6A21\u578B\u672A\u8FD4\u56DE\u63D0\u793A\u8BCD");
       const slots = (text2) => [...new Set([...text2.replace(/<d\b[^>]*>[\s\S]*?<\/d>/g, "").matchAll(/<(?:Picture|Subject|Image|Video|Audio)\s+\d+>/g)].map((match) => match[0]))].sort().join(",");
-      if (slots(base) !== slots(prompt)) throw new Error("\u7FFB\u8BD1\u6539\u53D8\u4E86\u53C2\u8003\u56FE\u7F16\u53F7\uFF0C\u8BF7\u91CD\u8BD5\u8BE5\u8BED\u8A00");
+      if (validateReferenceLabels && slots(base) !== slots(prompt)) throw new Error("\u7FFB\u8BD1\u6539\u53D8\u4E86\u53C2\u8003\u56FE\u7F16\u53F7\uFF0C\u8BF7\u91CD\u8BD5\u8BE5\u8BED\u8A00");
       await db2("o_videoPromptVariant").where({ trackId, language }).update({ prompt, state: "\u5DF2\u5B8C\u6210", reason: null });
     } catch (cause) {
       await db2("o_videoPromptVariant").where({ trackId, language }).update({ state: "\u751F\u6210\u5931\u8D25", reason: cause.message });
@@ -129156,7 +129156,7 @@ var require_source_map_consumer = __commonJS({
         sourceMap = util4.parseSourceMapInput(aSourceMap);
       }
       var version3 = util4.getArg(sourceMap, "version");
-      var sections2 = util4.getArg(sourceMap, "sections");
+      var sections = util4.getArg(sourceMap, "sections");
       if (version3 != this._version) {
         throw new Error("Unsupported version: " + version3);
       }
@@ -129166,7 +129166,7 @@ var require_source_map_consumer = __commonJS({
         line: -1,
         column: 0
       };
-      this._sections = sections2.map(function(s) {
+      this._sections = sections.map(function(s) {
         if (s.url) {
           throw new Error("Support for url field in sections not implemented.");
         }
@@ -243498,8 +243498,15 @@ var init_h3ReferenceSlots = __esm({
 });
 
 // src/utils/h3ReferenceBindings.ts
+function subjectDefinitions(prompt) {
+  const headings = [...prompt.matchAll(/^(subject_definitions|summary|retention_analysis|detailed_description|overall_soundscape|non_diegetic_music):\s*/gm)];
+  const index = headings.findIndex((heading2) => heading2[1] === "subject_definitions");
+  if (index < 0) return void 0;
+  const heading = headings[index];
+  return prompt.slice(heading.index + heading[0].length, headings[index + 1]?.index ?? prompt.length).trim();
+}
 function subjectAssets(prompt, slots) {
-  const section = /^subject_definitions:[ \t]*(?:\r?\n)?([\s\S]*?)(?=^summary:)/m.exec(prompt)?.[1];
+  const section = subjectDefinitions(prompt);
   if (section == null) fail("\u7F3A\u5C11\u5B8C\u6574\u7684 subject_definitions \u5B9A\u4E49");
   const definitions = [...section.matchAll(/^<(Subject|Picture|Video|Audio)\s+(\d+)>[ \t]+/gm)];
   const owners = /* @__PURE__ */ new Map();
@@ -243687,12 +243694,14 @@ function resolveH3ReferencePlan(items, plan) {
 function pictureNumbers(prompt) {
   return [...new Set([...prompt.replace(/<d>[\s\S]*?<\/d>/g, "").matchAll(/<Picture\s+(\d+)>/g)].map((match) => Number(match[1])))].sort((a, b) => a - b);
 }
-async function copyH3ReferencePlan(db2, trackId, sourcePrompt, targetPrompt) {
+async function copyH3ReferencePlan(db2, trackId, sourcePrompt, targetPrompt, validatePrompt = true) {
   const plan = await loadH3ReferencePlan(db2, trackId, sourcePrompt);
   if (!plan) return null;
-  const expected = plan.slots.map((_, index) => index + 1);
-  if (JSON.stringify(pictureNumbers(sourcePrompt)) !== JSON.stringify(expected) || JSON.stringify(pictureNumbers(targetPrompt)) !== JSON.stringify(expected)) throw regenerate("\u53C2\u8003\u56FE\u7F16\u53F7\u5DF2\u53D8\u5316");
-  assertH3ReferenceBindings(targetPrompt, plan.slots, sourcePrompt);
+  if (validatePrompt) {
+    const expected = plan.slots.map((_, index) => index + 1);
+    if (JSON.stringify(pictureNumbers(sourcePrompt)) !== JSON.stringify(expected) || JSON.stringify(pictureNumbers(targetPrompt)) !== JSON.stringify(expected)) throw regenerate("\u53C2\u8003\u56FE\u7F16\u53F7\u5DF2\u53D8\u5316");
+    assertH3ReferenceBindings(targetPrompt, plan.slots, sourcePrompt);
+  }
   return persistPlan(db2, trackId, targetPrompt, plan);
 }
 var import_node_crypto15, fields, labels, canonicalPath, promptHash, regenerate, pendingTables;
@@ -243773,136 +243782,16 @@ function normalizeH3PromptFormat(prompt) {
   );
   return normalized.replace(/(^retention_analysis:\s*\n)([\s\S]*?)(?=^detailed_description:)/m, (_, heading, body) => heading + body.replace(/^(<(?:Subject|Picture|Video|Audio) \d+>) (appears in \[Shot \d+\](?:,? (?:and )?\[Shot \d+\])*):/gm, "$1 ($2):"));
 }
-function assertH3PromptContract(prompt, duration4, pictureCount) {
-  const fail2 = (reason) => {
-    throw new Error(`H3 \u63D0\u793A\u8BCD\u683C\u5F0F\uFF1A${reason}`);
-  };
-  const headings = [...prompt.matchAll(/^(subject_definitions|summary|retention_analysis|detailed_description|overall_soundscape|non_diegetic_music):\s*/gm)];
-  const missing = sections.filter((section) => !headings.some((m) => m[1] === section));
-  if (missing.length) fail2(`\u516D\u4E2A\u7AE0\u8282\u4E0D\u5B8C\u6574\uFF0C\u7F3A\u5C11\uFF1A${missing.join(", ")}\u3002\u8BF7\u8FD4\u56DE\u5B8C\u6574\u63D0\u793A\u8BCD`);
-  if (headings.map((m) => m[1]).join() !== sections.join() || prompt.slice(0, headings[0]?.index).trim()) fail2("\u5FC5\u987B\u6309\u5B98\u65B9\u987A\u5E8F\u8F93\u51FA\u516D\u4E2A\u7AE0\u8282\uFF0C\u4E0D\u80FD\u6709\u524D\u8A00\u6216\u4EE3\u7801\u5757");
-  const body = Object.fromEntries(headings.map((m, i) => [m[1], prompt.slice(m.index + m[0].length, headings[i + 1]?.index ?? prompt.length).trim()]));
-  if (Object.values(body).some((value) => !value)) fail2("\u7AE0\u8282\u5185\u5BB9\u4E0D\u80FD\u4E3A\u7A7A");
-  const dialogueRanges = [];
-  let dialogueStart;
-  for (const tag of body.detailed_description.matchAll(/<\/?d\b[^>]*>/g)) {
-    if (tag[0] === "<d>") {
-      if (dialogueStart !== void 0) fail2("\u5BF9\u767D\u6807\u7B7E\u4E0D\u5F97\u5D4C\u5957");
-      dialogueStart = tag.index;
-    } else if (tag[0] === "</d>") {
-      if (dialogueStart === void 0) fail2("\u5BF9\u767D\u7ED3\u675F\u6807\u7B7E\u6CA1\u6709\u5BF9\u5E94\u7684\u5F00\u59CB\u6807\u7B7E");
-      const content = body.detailed_description.slice(dialogueStart + 3, tag.index);
-      if (!/^\[[A-Za-z][A-Za-z -]*\]\s*\S/.test(content)) fail2("\u5BF9\u767D\u5FC5\u987B\u4F7F\u7528 <d>[English] ...</d> \u683C\u5F0F\uFF0C\u5730\u533A/\u53E3\u97F3\u5199\u5728\u6807\u7B7E\u5916");
-      dialogueRanges.push({ start: dialogueStart, end: tag.index + tag[0].length });
-      dialogueStart = void 0;
-    } else fail2("\u5BF9\u767D\u5FC5\u987B\u4F7F\u7528 <d>[English] ...</d> \u683C\u5F0F\uFF0C\u5730\u533A/\u53E3\u97F3\u5199\u5728\u6807\u7B7E\u5916");
-  }
-  if (dialogueStart !== void 0) fail2("\u5BF9\u767D\u6807\u7B7E\u672A\u95ED\u5408");
-  if (sections.filter((s) => s !== "detailed_description").some((s) => /<\/?d\b/.test(body[s]))) fail2("\u5B8C\u6574\u5BF9\u767D\u53EA\u80FD\u51FA\u73B0\u5728 detailed_description");
-  const shotDescription = maskDialogue(body.detailed_description);
-  const prose = prompt.replace(/<d\b[^>]*>[\s\S]*?<\/d>/g, "").replace(/"[^"\n]*"|“[^”\n]*”/g, "");
-  if (/[\u3400-\u9fff]/.test(prose)) fail2("\u516D\u6BB5\u8BF4\u660E\u5FC5\u987B\u7528\u82F1\u6587\uFF1B\u4E2D\u6587\u4EC5\u53EF\u4FDD\u7559\u5728\u5BF9\u767D\u6216\u660E\u786E\u5F15\u7528\u7684\u53EF\u89C1\u6587\u5B57\u4E2D\uFF0C\u753B\u98CE\u624B\u518C\u4E5F\u8981\u8BD1\u6210\u82F1\u6587");
-  assertH3PictureSlots(maskDialogue(prompt), pictureCount);
-  const label = /<(Subject|Picture|Video|Audio)\s+\d+>/g;
-  const definitionLines = [...body.subject_definitions.matchAll(/^(<(?:Subject|Picture|Video|Audio) \d+>)\s+.+$/gm)];
-  const definitions = definitionLines.map((m) => m[1]);
-  if (!definitions.length || new Set(definitions).size !== definitions.length) fail2("\u5F15\u7528\u5B9A\u4E49\u7F3A\u5931\u6216\u91CD\u590D");
-  const sourceVideos = new Set(definitionLines.flatMap((line) => [...line[0].matchAll(/<Video \d+>/g)].map((match) => match[0])));
-  for (const [section, text2] of Object.entries(body)) {
-    for (const m of maskDialogue(text2).matchAll(label)) {
-      if (m[1] === "Picture" || definitions.includes(m[0])) continue;
-      if (section === "subject_definitions" && m[1] === "Video" && sourceVideos.has(m[0])) continue;
-      fail2(`\u672A\u5B9A\u4E49\u5F15\u7528 ${m[0]}`);
-    }
-  }
-  const rows = body.retention_analysis.split(/\r?\n/).filter((line) => line.trim());
-  const retained = [];
-  for (const row of rows) {
-    const m = /^(<(Subject|Picture|Video|Audio) \d+>)(?:\s*\([^\n]*\))?\s*:\s*(\w+)\s*[-–—]/.exec(row);
-    if (!m || !definitions.includes(m[1])) fail2("\u4FDD\u7559\u5206\u6790\u5FC5\u987B\u5BF9\u5E94\u5DF2\u5B9A\u4E49\u7684 Subject \u6216\u72EC\u7ACB\u951A\u70B9\uFF1B\u4E0D\u80FD\u4E3A\u4EC5\u4F5C\u6765\u6E90\u7684 Picture \u5EFA\u7ACB\u6761\u76EE");
-    const entry = m;
-    const allowed = entry[2] === "Audio" ? ["fully_copy", "partially_copy", "reference", "weak_reference"] : ["fully_preserved", "partially_preserved", "attribute_transfer", "weak_reference"];
-    if (!allowed.includes(entry[3]) || /\(S\d+(?:\s*,\s*S\d+)*\)/.test(row)) fail2("\u4FDD\u7559\u5173\u7CFB\u6807\u8BB0\u6216\u8BF4\u8BDD\u4EBA\u6807\u8BB0\u4E0D\u7B26\u5408\u89C4\u8303");
-    retained.push(entry[1]);
-  }
-  if (retained.length !== definitions.length || new Set(retained).size !== definitions.length) fail2("\u6BCF\u4E2A\u5B9A\u4E49\u9700\u8981\u4E14\u53EA\u80FD\u6709\u4E00\u6761\u4FDD\u7559\u5206\u6790");
-  if (!/^\[(?:reference generation|keyframe completion|video editing|video continuation|audio reuse|audio reference)(?: \+ (?:reference generation|keyframe completion|video editing|video continuation|audio reuse|audio reference))*\]/.test(body.summary)) fail2("summary \u7F3A\u5C11\u5B98\u65B9\u4EFB\u52A1\u7C7B\u578B\u524D\u7F00");
-  if (definitions.some((d) => d.startsWith("<Subject ")) && !/<Subject \d+>/.test(body.summary)) fail2("summary \u5E94\u4F7F\u7528\u5DF2\u5B9A\u4E49\u7684 Subject \u6807\u7B7E\u63CF\u8FF0\u4E3B\u4F53\u5173\u7CFB");
-  const shots = [...shotDescription.matchAll(/\[Shot (\d+)\]/g)];
-  if (!shots.length || !shotDescription.slice(0, shots[0].index).trim()) fail2("\u7B2C\u4E00\u955C\u4E4B\u524D\u9700\u8981\u5177\u4F53\u753B\u98CE\u63CF\u8FF0");
-  let previousTime = 0;
-  shots.forEach((shot, i) => {
-    if (Number(shot[1]) !== i + 1) fail2("\u955C\u5934\u7F16\u53F7\u5FC5\u987B\u8FDE\u7EED");
-    const tail = shotDescription.slice(shot.index + shot[0].length);
-    const time4 = /^\s*At (\d{2}):([0-5]\d)\.(\d{3}),/.exec(tail);
-    if (i === 0) {
-      if (/^\s*At\s+\d/.test(tail)) fail2("Shot 1 \u4E0D\u80FD\u5E26\u65F6\u95F4\u6233");
-      return;
-    }
-    if (!time4) fail2(`Shot ${i + 1} \u5E94\u4EE5 [Shot ${i + 1}] At MM:SS.mmm, \u5F00\u59CB\uFF0C\u5F53\u524D\u5F00\u5934\uFF1A${tail.trim().slice(0, 100)}`);
-    const seconds = Number(time4[1]) * 60 + Number(time4[2]) + Number(time4[3]) / 1e3;
-    if (seconds <= previousTime || seconds >= duration4) fail2("\u5207\u955C\u65F6\u95F4\u5FC5\u987B\u9012\u589E\u4E14\u5728\u76EE\u6807\u65F6\u957F\u4EE5\u5185");
-    previousTime = seconds;
-  });
-  for (const definition of definitions.filter((item) => item.startsWith("<Subject "))) {
-    if (!shotDescription.includes(definition)) fail2(`${definition} \u5DF2\u5B9A\u4E49\u4F46\u672A\u5728 detailed_description \u4E2D\u4F7F\u7528\uFF0C\u8BF7\u5728\u53C2\u8003\u5B9E\u9645\u751F\u6548\u7684\u4F4D\u7F6E\u5F15\u7528\u6807\u7B7E`);
-  }
-  const shotNumbers = new Set(shots.map((shot) => Number(shot[1])));
-  for (const row of rows) {
-    for (const mention of row.matchAll(/\[Shot (\d+)\]/g)) {
-      if (!shotNumbers.has(Number(mention[1]))) fail2(`\u4FDD\u7559\u5206\u6790\u5F15\u7528\u4E86\u4E0D\u5B58\u5728\u7684 ${mention[0]}`);
-    }
-  }
-  if (normalizeH3DialogueLocales(prompt) !== prompt) fail2("\u5BF9\u767D\u5F00\u5934\u7684\u5730\u533A\u6807\u8BB0\u5FC5\u987B\u5199\u5728\u6807\u7B7E\u5916");
-  const copiedAudio = new Set(rows.flatMap((row) => /^(<Audio \d+>)(?:\s*\([^\n]*\))?\s*:\s*(?:fully_copy|partially_copy)\s*[-–—]/.exec(row)?.slice(1, 2) ?? []));
-  const introducedSpeakers = /* @__PURE__ */ new Set();
-  const subjectSpeakers = /* @__PURE__ */ new Map();
-  const speakerSubjects = /* @__PURE__ */ new Map();
-  const shotProse = shotDescription.slice(shots[0].index);
-  for (const speaker of shotProse.matchAll(/\(S\d+(?:\s*,\s*S\d+)*\)/g)) {
-    const ids = [...speaker[0].matchAll(/S(\d+)/g)].map((match) => Number(match[1]));
-    if (new Set(ids).size !== ids.length) fail2("\u7EC4\u5408\u8BF4\u8BDD\u4EBA\u6807\u8BB0\u4E0D\u80FD\u91CD\u590D\u540C\u4E00\u7F16\u53F7");
-    if (ids.length > 1 && ids.some((id) => !introducedSpeakers.has(id))) fail2("\u7EC4\u5408\u8BF4\u8BDD\u4EBA\u6807\u8BB0\u53EA\u80FD\u4F7F\u7528\u4E4B\u524D\u5DF2\u5355\u72EC\u6807\u660E\u7684\u8BF4\u8BDD\u4EBA\u7F16\u53F7");
-    for (const id of ids) introducedSpeakers.add(id);
-    const subject = /(<Subject \d+>)\s*$/.exec(shotProse.slice(0, speaker.index))?.[1];
-    if (subject && ids.length === 1) {
-      const id = ids[0];
-      if (subjectSpeakers.has(subject) && subjectSpeakers.get(subject) !== id || speakerSubjects.has(id) && speakerSubjects.get(id) !== subject) fail2("\u540C\u4E00 Subject \u5FC5\u987B\u4FDD\u6301\u540C\u4E00\u8BF4\u8BDD\u4EBA\u7F16\u53F7\uFF0C\u4E0D\u540C Subject \u4E0D\u80FD\u5171\u7528\u540C\u4E00\u7F16\u53F7");
-      subjectSpeakers.set(subject, id);
-      speakerSubjects.set(id, subject);
-    }
-  }
-  if ([...introducedSpeakers].sort((a, b) => a - b).some((id, index) => id !== index + 1)) fail2("\u8BF4\u8BDD\u4EBA\u7F16\u53F7\u5FC5\u987B\u4ECE (S1) \u8FDE\u7EED\u7F16\u53F7\uFF0C\u4E0D\u80FD\u7F3A\u53F7");
-  let previousDialogueEnd = 0;
-  for (const dialogue of dialogueRanges) {
-    const currentShot = shots.filter((shot) => shot.index < dialogue.start).at(-1);
-    if (!currentShot) fail2("\u5BF9\u767D\u5FC5\u987B\u4F4D\u4E8E\u5B9E\u9645\u955C\u5934\u4E2D");
-    const prelude = shotDescription.slice(Math.max(previousDialogueEnd, currentShot.index + currentShot[0].length), dialogue.start);
-    previousDialogueEnd = dialogue.end;
-    const speaker = [...prelude.matchAll(/\(S\d+(?:\s*,\s*S\d+)*\)/g)].at(-1);
-    if (!speaker) {
-      const audio = [...prelude.matchAll(/<Audio \d+>/g)].at(-1)?.[0];
-      if (audio && copiedAudio.has(audio)) continue;
-      fail2("\u6BCF\u6B21\u5BF9\u767D\u9700\u8981\u660E\u786E\u7684 (Sx) \u8BF4\u8BDD\u4EBA\u6807\u8BB0\uFF1B\u76F4\u63A5\u590D\u7528\u97F3\u8F68\u4E2D\u7684\u6B4C\u8BCD\u63D0\u793A\u5E94\u5F15\u7528\u5BF9\u5E94 Audio");
-    }
-  }
-}
-var sections, maskDialogue, dialogueLocalePrefix, h3FormatChecklist;
+var dialogueLocalePrefix;
 var init_h3PromptContract = __esm({
   "src/utils/h3PromptContract.ts"() {
     "use strict";
     init_h3VisualStateGuard();
-    sections = ["subject_definitions", "summary", "retention_analysis", "detailed_description", "overall_soundscape", "non_diegetic_music"];
-    maskDialogue = (text2) => text2.replace(/<d>[\s\S]*?<\/d>/g, (content) => content.replace(/[^\r\n]/g, " "));
     dialogueLocalePrefix = /(<d>\[[A-Za-z][A-Za-z -]*\])\s*\(([a-z]{2,3}-(?:[A-Z][a-z]{3}(?:-(?:[A-Z]{2}|\d{3}))?|[A-Z]{2}|\d{3}))\)\s*/g;
-    h3FormatChecklist = `Mandatory H3 output syntax: return all six complete English sections, except speech inside <d> and explicitly quoted visible screen/sign text. Translate visual-manual terms into English. summary starts with the applicable official task prefix and uses defined reference labels. Use Subject labels where they take effect in detailed_description, not only in definitions and retention. Put every shot heading on a new line: [Shot 1] without time; later [Shot N] At MM:SS.mmm, with sequential numbers and increasing cut times inside target_duration. Preserve specified timings; when cuts are needed without specified times, plan feasible times from the supplied events and speech. Return LANGUAGE_TIMING_REVIEW if these cannot fit. Retention shot lists must agree with the timeline. Give each vocal event its stable (Sx) and use <Subject N> (Sx) for referenced speakers; copied soundtrack cues use their Audio source. Keep actual image bindings, spoken lines and event order. Return the whole prompt on correction, never a partial patch.`;
   }
 });
 
 // src/utils/h3PromptContext.ts
-function h3BindingSlots(slots) {
-  return slots.map((item) => ({ assetId: Number(item.assetId ?? item.id), assetType: h3AssetType(item), kind: item._referenceRole ?? item.referenceKind }));
-}
 function buildH3ReferenceSubjects(slots) {
   const groups = /* @__PURE__ */ new Map();
   slots.forEach((item, index) => {
@@ -244287,9 +244176,7 @@ ${candidate}` }
     const generateBase = async () => {
       const system = h3PromptMode ? `${videoPromptGeneration}
 
-${h3FormatChecklist}
-
-Project visual requirements (rendering guidance only; the H3 rules above govern references, shots, speech and output structure. Use relevant qualities in the style opening; do not import a competing output format or compress the required shot detail):
+Project visual requirements (rendering guidance only; use relevant qualities without replacing the selected H3 prompt template's output structure):
 ${visualManual}` : videoPromptGeneration;
       const messages = h3PromptMode ? [{ role: "user", content: userContent }] : [{ role: "assistant", content: visualManual }, { role: "user", content }];
       for (let attempt = 0; attempt < 3; attempt++) {
@@ -244298,12 +244185,10 @@ ${visualManual}` : videoPromptGeneration;
         result.text = normalizeH3PromptFormat(result.text.trim());
         if (/^(REFERENCE_STATE_REVIEW|LANGUAGE_TIMING_REVIEW):/.test(result.text.trim())) throw new Error(result.text);
         try {
-          assertH3PromptContract(result.text, targetDuration, pictureSourceItems.length);
-          assertH3ReferenceBindings(result.text, h3BindingSlots(pictureSourceItems));
           await reviewH3Content(result.text);
         } catch (cause) {
           if (attempt === 2) throw Object.assign(cause, { candidatePrompt: result.text });
-          messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Rewrite and return ALL SIX SECTIONS as one complete prompt against the H3 rules. Do not return a patch or only changed sections. Reinspect the attached images for missing definitions; do not replace observed characteristics with generic preservation instructions. Keep the original image bindings, story events, speakers, exact dialogue and timing. Check reference labels inside shots and agreement with retention_analysis. ${h3FormatChecklist} Validation error: ${utils_default.error(cause).message}` });
+          messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Rewrite and return one complete prompt using the selected H3 template. Do not return a patch. Reinspect the attached images and fix only the reported content contradiction while preserving the story events, speakers, exact dialogue and timing. Review error: ${utils_default.error(cause).message}` });
           continue;
         }
         await saveH3ReferencePlan(db, trackId, result.text, pictureSourceItems);
@@ -244339,34 +244224,29 @@ ${visualManual}` : videoPromptGeneration;
                 reviewReferenceContent.push({ type: "image", ...preparedImage });
               }
             }
-            assertH3PromptContract(source, targetDuration, sourcePlan?.slots.length ?? pictureSourceItems.length);
-            assertH3ReferenceBindings(source, sourcePlan?.slots ?? h3BindingSlots(pictureSourceItems));
           }
           const messages = [{ role: "user", content: source }];
           for (let attempt = 0; attempt < 3; attempt++) {
             const result = { text: (await utils_default.Ai.Text("universalAi", h3PromptMode ? true : void 0, h3PromptMode ? 2 : void 0).invoke({ system: h3PromptMode ? `${videoPromptGeneration}
 
-Translation task: preserve the validated reference definitions, shot events and bindings; translate speech according to the following target-language instructions. Return all six sections, including unchanged sections.
-${system}
-${h3FormatChecklist}` : system, messages })).text };
+Translation task: preserve the source prompt's complete structure, reference definitions, shot events and bindings; translate speech according to the following target-language instructions.
+${system}` : system, messages })).text };
             if (!h3PromptMode || result.text.trim().startsWith("LANGUAGE_TIMING_REVIEW:")) return result.text;
             result.text = normalizeH3PromptFormat(result.text.trim());
             try {
-              const sourcePlan = await loadH3ReferencePlan(db, trackId, source);
-              assertH3PromptContract(result.text, targetDuration, sourcePlan?.slots.length ?? pictureSourceItems.length);
-              assertH3ReferenceBindings(result.text, sourcePlan?.slots ?? h3BindingSlots(pictureSourceItems), source);
               await reviewH3Content(result.text, source, system, reviewReferenceContent);
             } catch (cause) {
               if (attempt === 2) throw Object.assign(cause, { candidatePrompt: result.text });
-              messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Return ALL SIX SECTIONS of the corrected translation, including unchanged sections. Do not return a patch. Preserve visual facts, speakers, target-language dialogue, timing and reference bindings; recheck their consistency across sections. ${h3FormatChecklist} Validation error: ${utils_default.error(cause).message}` });
+              messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Return the complete corrected translation using the source prompt's structure. Do not return a patch. Preserve visual facts, speakers, target-language dialogue, timing and reference bindings; fix only the reported content contradiction. Review error: ${utils_default.error(cause).message}` });
               continue;
             }
-            await copyH3ReferencePlan(db, trackId, source, result.text);
+            await copyH3ReferencePlan(db, trackId, source, result.text, false);
             return result.text;
           }
           throw new Error("H3 \u7FFB\u8BD1\u683C\u5F0F\u6821\u9A8C\u5931\u8D25");
         },
-        input.regenerate === true
+        input.regenerate === true,
+        !h3PromptMode
       );
       const failed = variants.filter((v) => input.languages.includes(v.language) && v.state === "\u751F\u6210\u5931\u8D25");
       await utils_default.db("o_videoTrack").where({ id: trackId }).update({ state: failed.length ? "\u751F\u6210\u5931\u8D25" : "\u5DF2\u5B8C\u6210", reason: failed.map((v) => `${v.language}: ${v.reason}`).join("\uFF1B") });
@@ -244401,7 +244281,6 @@ var init_videoPromptGeneration = __esm({
     init_videoLanguages();
     init_h3PromptContract();
     init_h3PromptContext();
-    init_h3ReferenceBindings();
     init_h3VisionImage();
     init_h3SemanticReview();
     runningTracks = /* @__PURE__ */ new Set();
@@ -245494,7 +245373,7 @@ var init_updateVideoPrompt = __esm({
         const track = await utils_default.db("o_videoTrack").where({ id }).first();
         if (!track) return res.status(404).send(error50("\u89C6\u9891\u6BB5\u4E0D\u5B58\u5728"));
         const preservePlan = async (source) => {
-          if (typeof prompt === "string" && prompt.trim()) await copyH3ReferencePlan(db, id, source || "", prompt);
+          if (typeof prompt === "string" && prompt.trim()) await copyH3ReferencePlan(db, id, source || "", prompt, false);
         };
         if (req.body.language) {
           if (!await utils_default.db("o_videoTrack").where({ id }).first()) return res.status(404).send(error50("\u89C6\u9891\u6BB5\u4E0D\u5B58\u5728"));
@@ -261874,7 +261753,7 @@ function buildMemoryPrompt(memory, maxTokens = 2400) {
   const summaries = take(memory.summaries.map((m) => m.content), summaryBudget);
   const used = recent.reduce((sum, item) => sum + estimateTokens(item), 0) + summaries.reduce((sum, item) => sum + estimateTokens(item), 0);
   const related = take(memory.rag.map((m) => m.content), Math.max(0, usable - used));
-  const sections2 = [
+  const sections = [
     related.length ? `[\u76F8\u5173\u8BB0\u5FC6]
 ${related.join("\n")}` : "",
     summaries.length ? `[\u5386\u53F2\u6458\u8981]
@@ -261882,8 +261761,8 @@ ${summaries.join("\n")}` : "",
     recent.length ? `[\u8FD1\u671F\u5BF9\u8BDD]
 ${recent.join("\n")}` : ""
   ].filter(Boolean);
-  if (!sections2.length) return "";
-  const prompt = prefix + sections2.join("\n\n");
+  if (!sections.length) return "";
+  const prompt = prefix + sections.join("\n\n");
   return estimateTokens(prompt) <= maxTokens ? prompt : truncateToTokens(prompt, maxTokens);
 }
 

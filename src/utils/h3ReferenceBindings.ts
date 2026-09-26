@@ -4,8 +4,16 @@ export type H3ReferenceBindingSlot = Pick<H3ReferencePlanSlot, "assetId" | "asse
 const hasDefinitions = (prompt: string) => /^subject_definitions:\s*/m.test(prompt);
 const fail = (reason: string): never => { throw new Error(`H3 参考图绑定：${reason}，请重新生成视频提示词`); };
 
+function subjectDefinitions(prompt: string): string | undefined {
+  const headings = [...prompt.matchAll(/^(subject_definitions|summary|retention_analysis|detailed_description|overall_soundscape|non_diegetic_music):\s*/gm)];
+  const index = headings.findIndex(heading => heading[1] === "subject_definitions");
+  if (index < 0) return undefined;
+  const heading = headings[index];
+  return prompt.slice(heading.index! + heading[0].length, headings[index + 1]?.index ?? prompt.length).trim();
+}
+
 function subjectAssets(prompt: string, slots: readonly H3ReferenceBindingSlot[]): Map<string, number> {
-  const section = /^subject_definitions:[ \t]*(?:\r?\n)?([\s\S]*?)(?=^summary:)/m.exec(prompt)?.[1];
+  const section = subjectDefinitions(prompt);
   if (section == null) fail("缺少完整的 subject_definitions 定义");
   const definitions = [...section!.matchAll(/^<(Subject|Picture|Video|Audio)\s+(\d+)>[ \t]+/gm)];
   const owners = new Map<number, string>();

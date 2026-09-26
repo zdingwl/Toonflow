@@ -34,13 +34,30 @@ test("rejects the observed locale attribute dialogue and malformed timelines", (
   assert.throws(() => assertH3PromptContract(valid.replace('00:03.000', '00:06.000'), 6, 2), /目标时长/);
   assert.throws(() => assertH3PromptContract(valid.replace('[Shot 1] A', '[Shot 1] At 00:00.000, A'), 6, 2), /Shot 1/);
 });
-test("rejects undefined subjects, missing style opening, reordered sections and wrong source slots", () => {
+test("rejects undefined subjects, missing style opening, missing sections and wrong source slots", () => {
   assert.throws(() => assertH3PromptContract(valid.replace('follows <Subject 1>', 'follows <Subject 2>'), 6, 2), /未定义/);
   assert.throws(() => assertH3PromptContract(valid.replace(/Semi-realistic[^\n]+\n/, ''), 6, 2), /画风/);
   assert.throws(() => assertH3PromptContract(valid.replace('summary:', 'summary_wrong:'), 6, 2), /六个章节/);
   assert.throws(() => assertH3PromptContract(valid, 6, 3), /槽位/);
   assert.throws(() => assertH3PromptContract(valid.replace('Semi-realistic 3D', '半写实3D'), 6, 2), /英文/);
   assert.doesNotThrow(() => assertH3PromptContract(valid.replace('[English] Hello.', '[Chinese] 你好。'), 6, 2));
+});
+
+test("allows explanatory text, code fences and a different six-section order", () => {
+  const found = [...valid.matchAll(/^(subject_definitions|summary|retention_analysis|detailed_description|overall_soundscape|non_diegetic_music):\n/gm)];
+  const blocks = Object.fromEntries(found.map((match, index) => [match[1], valid.slice(match.index!, found[index + 1]?.index ?? valid.length).trim()]));
+  const reordered = [
+    "这是生成的视频提示词：",
+    "```text",
+    blocks.summary,
+    blocks.subject_definitions,
+    blocks.detailed_description,
+    blocks.retention_analysis,
+    blocks.overall_soundscape,
+    blocks.non_diegetic_music,
+    "```",
+  ].join("\n");
+  assert.doesNotThrow(() => assertH3PromptContract(reordered, 6, 2));
 });
 
 for (const { language, locale, dialogue } of [
