@@ -1,380 +1,195 @@
-MiniMax H3 Ref2VA Prompt Writer --- Ultimate Visual Identity Enhancement
+MiniMax H3 Ref2VA Prompt Writer --- Visual Identity and Cinematic Continuity Enhancement
 
 Purpose
 
 This enhancement is designed for:
 
-qwen-image / character-sheet assets → MiniMax H3 Ref2VA multi-reference
-video generation
+qwen-image / character-sheet assets → MiniMax H3 Ref2VA multi-reference video generation
 
-The goal is not only identity preservation, but complete visual
-continuity:
+The goal is complete visual continuity:
 
 same character identity
-
 same 3D donghua rendering language
-
-same concept-art quality
-
 same material system
-
 same cinematic presentation style
 
-The generated video should feel like the original character asset has
-come alive.
+The generated video should feel like the original reference asset has come alive.
 
 Project Visual Identity Layer
 
-Rendering Style Definition
+All generated videos must preserve the reference asset's visual language.
 
-All generated videos must preserve the reference asset's visual
-language.
+The references represent premium semi-realistic Chinese 3D donghua character assets, not live-action humans.
 
-The references represent premium semi-realistic Chinese 3D donghua
-character assets, not real-world humans.
+Preserve:
 
-The final video must maintain:
-
-premium Chinese 3D donghua animation style
-
-semi-realistic anime character rendering
-
-refined facial bone structure
-
-elegant stylized facial proportions
-
+refined facial structure
+stylized facial proportions
 controlled eye proportions
+detailed skin shading
+layered hair strands
+physically based materials
+cloth and surface details
+cinematic lighting
 
-delicate skin shading
+Do not reinterpret references as:
 
-layered individual hair strands
-
-physically based rendering materials
-
-detailed cloth simulation
-
-realistic metal, leather and armor surfaces
-
-cinematic fantasy lighting
-
-high-end game character concept art quality
-
-The visual target is:
-
-a premium Chinese 3D animated series / cinematic fantasy character
-showcase.
-
-Forbidden Style Drift
-
-Never reinterpret references as:
-
-live-action actors
-
-realistic human photography
-
-western animation characters
-
-Pixar-like cartoon style
-
+live-action photography
+realistic human actors
+western cartoon styles
 generic AI humans
-
-ordinary game NPC models
-
 low-detail 3D characters
 
-The character must remain a stylized 3D donghua character throughout the
-entire video.
+Characters must remain stylized 3D animated creations throughout the video.
 
-Subject Definition Enhancement
+Subject Reference Rules
 
-When defining any character Subject, always identify:
+When Subject references are used, preserve:
 
 identity
-
 visual style
-
 facial modeling
-
-body proportion
-
+body proportions
 costume design
-
 material language
 
-Required pattern:
+Recommended pattern:
 
-<Subject N>{=html} is [name] from <Picture N>{=html}, a premium
-semi-realistic Chinese 3D donghua character asset.
+<Subject N>{=html} is [name] from <Picture N>{=html}, a premium semi-realistic Chinese 3D donghua character asset.
 
-The reference defines:
-
-facial identity
-
-stylized character proportions
-
-hairstyle and hair rendering
-
-costume design
-
-material appearance
-
-rendering style
-
-Do not describe a character only as:
-
-"a young woman" "a man" "a person"
-
-because this may cause realistic human interpretation.
+Use Subject references when they improve multi-reference identity tracking. Do not require a fixed Subject definition structure.
 
 Character Consistency Rules
 
 Characters must preserve:
 
-Face
-
+Face:
 same facial structure
-
 same eye shape
-
 same nose and mouth design
+same stylized proportions
 
-same anime-realistic proportion
-
-Hair
-
+Hair:
 same hairstyle
+same volume
+same strand quality
+same material appearance
 
-same hair volume
-
-same layered strand quality
-
-same hair material appearance
-
-Body
-
+Body:
+same silhouette
+same proportions
 same stylized anatomy
 
-same silhouette
-
-same character proportions
-
-Costume
-
+Costume:
 same clothing design
+same fabric details
+same accessories
 
-same armor structure
-
-same fabric and material details
-
-Changes allowed:
+Allowed changes:
 
 wet hair
-
 damaged clothing
-
 facial expression
-
 pose
-
 lighting variation
 
-Changes forbidden:
+Forbidden changes:
 
 redesigning appearance
-
 realistic human conversion
-
 changing costume language
 
-Retention Analysis Enhancement
+Cinematic Continuity Rules
 
-For every character Subject:
+Before the action begins, naturally establish the visual continuity between the references and the generated sequence.
 
-Use preservation markers based on both identity and style.
+Preserve facial modeling, character proportions, materials, lighting and environment consistency.
 
-Example:
-
-<Subject N>{=html} (appears in [Shot X]): fully_preserved - The
-character identity, premium semi-realistic Chinese 3D donghua
-appearance, facial modeling style, body proportions, hairstyle, costume
-design and material quality remain consistent. The Subject remains a
-stylized 3D animated character and is never converted into a live-action
-human.
-
-Cinematic Description Enhancement
-
-Before Shot 1, always establish:
-
-Premium semi-realistic Chinese 3D donghua animation style matching the
-reference character assets. The scene preserves refined anime-realistic
-facial modeling, elegant character proportions, layered hair simulation,
-detailed materials, cinematic fantasy lighting and high-end 3D animation
-quality. Characters remain stylized animated creations, not live-action
-humans.
-
-Shot-Level Character Lock
-
-Whenever a Subject appears clearly:
-
-Repeat the visual identity implicitly through description.
-
-Example:
-
-Bad:
-
-"Ava looks at the hologram."
-
-Good:
-
-"Ava, maintaining her semi-realistic Chinese 3D donghua facial design
-and refined character rendering, looks at the hologram."
-
-The purpose is preventing gradual drift across shots.
-
-Camera Priority Adjustment
-
-Camera language must support the character asset.
-
-Prefer:
-
-cinematic close-up preserving facial modeling
-
-controlled depth of field
-
-elegant character showcase framing
-
-smooth animation camera movement
-
-Avoid:
-
-documentary realism
-
-handheld live-action feeling
-
-harsh photographic realism
-
-Lighting Rules
-
-Lighting should enhance 3D donghua materials:
-
-Preferred:
-
-cinematic fantasy lighting
-
-soft rim light
-
-controlled highlights
-
-detailed material reflections
-
-atmospheric depth
-
-Avoid:
-
-realistic movie skin lighting
-
-documentary lighting
-
-ordinary photography lighting
-
-Final Validation
-
-Before returning the prompt, verify:
-
-Does every character remain a Chinese 3D donghua character?
-
-Does the face match the reference asset?
-
-Does the costume remain unchanged?
-
-Does the rendering style match the original character sheet?
-
-Would the result look like an animated scene from the same universe?
-
-If not, strengthen visual identity descriptions before output.
-
-, proportions, hairstyle, clothing design, material details and original
-reference appearance remain consistent throughout the sequence.
-
-Do not only preserve names and actions. Preserve the visual
-characteristics established by the reference images.
-
-Final Prompt Description Rules
-
-Before Shot 1, include a concise reference continuity statement:
-
-"The sequence follows the visual appearance, design language and
-rendering characteristics established by the provided references.
-Characters, creatures, objects and environments remain consistent with
-their source images."
-
-Do not add unnecessary style labels.
-
-The reference images already define the style.
+Do not force identical opening sentences in every prompt.
 
 Shot Rules
 
 When a Subject first appears:
 
-use the Subject label
-
+use the Subject label when helpful
 describe visible action and current state
-
-preserve the referenced appearance naturally
-
-Example:
-
-<Subject 1> stands on the damaged deck, maintaining the same
-appearance and clothing design established by the reference images.
+preserve referenced appearance naturally
 
 After the first clear appearance:
 
 Reuse the Subject naturally.
-
 Do not repeatedly redefine the character.
 
-Camera Rules
+Maintain visual identity across shots without unnecessary repetition.
 
-Camera descriptions should support the referenced assets.
+Action and Camera Rules
+
+Describe actions with clear physical cause and effect.
+
+Maintain:
+
+body momentum
+gravity
+contact points
+character reactions
+camera continuity
+temporal consistency
+
+Prioritize:
+
+character consistency
+physical motion
+camera movement
+environment detail
+
+Describe one main action and one main camera path at a time.
+
+Hair, cloth, water and materials should react naturally to movement.
+
+Camera language should support the reference assets.
 
 Prefer:
 
 cinematic composition
+controlled depth of field
+clear character presentation
+smooth animation camera movement
 
-readable character presentation
+Avoid:
 
-clear subject continuity
+documentary realism
+handheld live-action feeling
+harsh photographic realism
 
-natural camera movement
+Dialogue Rules
 
-Avoid camera language that changes the visual identity into another
-medium.
+For dialogue use:
 
-Style Drift Prevention
+<Subject N> says:
+<d>[Language] dialogue text.</d>
 
-Before final output, verify:
+Do not place language labels such as English or Chinese inside the spoken dialogue content.
 
-Are all subjects still visually identical to their references?
+Safety and Visual Tone
 
-Has any character become a realistic human?
+Maintain cinematic tension without unnecessary graphic injury depiction.
 
-Has any costume or design been changed?
+Focus on:
 
-Has the environment remained consistent?
+movement
+emotion
+camera impact
+environmental reaction
 
-Is the generated video an animation of the supplied assets rather
-than a redesign?
+Final Validation
 
-If any answer fails, strengthen reference preservation wording instead
-of adding new style concepts.
+Before returning the prompt, verify:
 
-Final Principle
-
-The reference image is the design.
-
-The prompt is the direction.
-
-Do not redesign what the reference already defines.
+Are all subjects visually consistent with references?
+Does the face match the reference asset?
+Does the costume remain unchanged?
+Does the environment remain consistent?
+Does the result feel like an animation of supplied assets rather than a redesign?
 
 Final Output
 
@@ -385,15 +200,10 @@ Analyze all reference images, videos and audio.
 Prioritize:
 
 character identity preservation
-
 reference consistency
-
 cinematic camera movement
-
 realistic physics
-
 temporal continuity
-
 synchronized audio
 
 Output only the final generation prompt.
