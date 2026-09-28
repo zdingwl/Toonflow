@@ -33,26 +33,17 @@ test("单剧本批次自动修复模型遗漏或幻觉的 scriptIds，多剧本�
   assert.deepEqual(normalizeScriptIdsForBatch([32], [31, 32]), [32]);
 });
 
-test("资产提取入库前必须归一化模型返回的 scriptIds，不能直接 for-of 未校验值", () => {
-  assert.match(routeSource, /normalizeScriptIdsForBatch\(\(asset as \{ scriptIds\?: unknown \}\)\.scriptIds, allowedScriptIds\)/);
-  assert.match(routeSource, /normalizeScriptIdsForBatch\(\(ref as \{ scriptIds\?: unknown \}\)\.scriptIds, allowedScriptIds\)/);
-  assert.doesNotMatch(routeSource, /for \(const asset of newAssets\)[\s\S]{0,200}for \(const sid of asset\.scriptIds\)/);
-  assert.match(routeSource, /AI 返回的资产关联剧本ID无效/);
-});
+// Extraction persistence, batching, ID validation and retry behavior are exercised
+// against SQLite by asset-description-refresh.test.ts.
 
-
-test("资产批次大小必须就是 groupSize，5 不能膨胀成 25 集", () => {
-  assert.match(routeSource, /export function chunkArray\(arr: number\[\], groupSize: number\): number\[\]\[\]/);
-  assert.match(routeSource, /arr\.slice\(i, i \+ safeGroupSize\)/);
-  assert.doesNotMatch(routeSource, /i \+= 5[\s\S]{0,300}i \+= groupSize/);
-});
-
-test("资产提取必须强制 resultTool，单步结束，并在空结果时自动重试一次", () => {
-  const forcedCalls = routeSource.match(/toolChoice: \{ type: "tool", toolName: "resultTool" \}/g) ?? [];
-  const oneStepStops = routeSource.match(/stopWhen: stepCountIs\(1\)/g) ?? [];
-  assert.equal(forcedCalls.length, 2);
-  assert.equal(oneStepStops.length, 2);
-  assert.match(routeSource, /await invokeExtraction\(\);/);
-  assert.match(routeSource, /AI 连续两次未调用资产结果工具或返回空资产/);
-  assert.doesNotMatch(routeSource, /参考技能 script_assets_extract/);
+test("资产提取在 desc 源头完成差异化成年主角审美设计并保持场景为纯环境", () => {
+  assert.match(routeSource, /资产 desc 不是剧情摘要/);
+  assert.match(routeSource, /脸型与下颌、眉眼鼻唇关系/);
+  assert.match(routeSource, /成年女性主角保留健康成熟曲线与清楚腰臀轮廓/);
+  assert.match(routeSource, /成年男性主角保留俊朗骨相、宽肩收腰和运动型胸背/);
+  assert.match(routeSource, /一个大轮廓、一个功能结构和一个克制识别点/);
+  assert.match(routeSource, /未成年、儿童或年龄无法确认/);
+  assert.match(routeSource, /网文封面\/精品幻想动画/);
+  assert.match(routeSource, /具名人物、人影、动物、怪物、独立生物/);
+  assert.match(routeSource, /assetExtractionDesignRules/);
 });

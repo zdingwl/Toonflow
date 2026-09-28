@@ -28,6 +28,54 @@ export const dialogueLanguagesSchema = z
   .refine((values) => new Set(values).size === values.length, "对白语言不能重复");
 export const languageLabel = (language: string) => dialogueLanguages.find((item) => item.value === language)?.label || "原版（未标注语言）";
 
+const h3DialogueLanguageNames: Record<string, string> = {
+  "zh-CN": "Chinese",
+  "en-US": "English",
+  "en-GB": "English",
+  "ja-JP": "Japanese",
+  "ko-KR": "Korean",
+  "fr-FR": "French",
+  "de-DE": "German",
+  "es-ES": "Spanish",
+  "es-MX": "Spanish",
+  "pt-BR": "Portuguese",
+  "it-IT": "Italian",
+  "ru-RU": "Russian",
+  "ar-SA": "Arabic",
+  "hi-IN": "Hindi",
+  "th-TH": "Thai",
+  "vi-VN": "Vietnamese",
+  "id-ID": "Indonesian",
+};
+
+// A completed language variant must contain target-language dialogue, not merely English prose
+// surrounding dialogue copied from the source language.
+export function assertTranslatedDialogueLanguage(prompt: string, language: string) {
+  const expected = h3DialogueLanguageNames[language];
+  if (!expected) return;
+  const dialogue = [...String(prompt || "").matchAll(/<d(?:\s[^>]*)?>([\s\S]*?)<\/d>/gi)].map((match) => match[1].trim());
+  for (const line of dialogue) {
+    const tag = line.match(/^\[([^\]]+)\]/)?.[1]?.trim();
+    if (tag !== expected) throw new Error(`PROMPT_DIALOGUE_LANGUAGE: ${language} 对白必须使用 [${expected}] 标签，不能保留 ${tag ? `[${tag}]` : "源语言"} 对白`);
+    if (expected === "English" && /\p{Script=Han}/u.test(line.replace(/^\[[^\]]+\]\s*/, ""))) {
+      throw new Error(`PROMPT_DIALOGUE_LANGUAGE: ${language} 对白仍包含中文字符`);
+    }
+  }
+  const localeCodes = [...String(prompt || "").matchAll(/spoken\s+(?:language|locale)\s*:\s*([a-z]{2}-[A-Z]{2})/gi)].map((match) => match[1].toLowerCase());
+  if (localeCodes.some((code) => code !== language.toLowerCase())) {
+    throw new Error(`PROMPT_DIALOGUE_LANGUAGE: spoken language 必须全部为 ${language}`);
+  }
+  if (expected === "English" && /\p{Script=Han}/u.test(String(prompt || ""))) {
+    throw new Error(`PROMPT_VISIBLE_TEXT_LANGUAGE: ${language} 版本仍包含中文画面文字`);
+  }
+  if (expected === "English" && (
+    /\bChinese\s+(?:system\s+lines?|interface\s+text|warning\s+text|characters?|text|labels?|buttons?|subtitles?|signs?)\b/i.test(prompt)
+    || /\b(?:visible|required|on-screen|screen|display|interface|button|label|subtitle|sign)\s+(?:\w+[\s-]+){0,3}Chinese\s+(?:text|characters?|lines?|labels?|buttons?)\b/i.test(prompt)
+  )) {
+    throw new Error(`PROMPT_VISIBLE_TEXT_LANGUAGE: ${language} 版本仍要求生成中文画面文字`);
+  }
+}
+
 export async function migrateVideoLanguages(db: Knex) {
   if (!(await db.schema.hasTable("o_videoLanguageSelection")))
     await db.schema.createTable("o_videoLanguageSelection", (table) => {
@@ -57,7 +105,8 @@ export async function migrateVideoLanguages(db: Knex) {
 export function translationInstruction(language: string) {
   return `制作同一视频的${languageLabel(language)}（${language}）对白版本。只返回完整视频提示词，不要解释。
 将所有人物对白、独白和旁白翻译成该地区自然地道的目标语言；存在发声台词时明确标注 spoken language 为 ${language}，画面内实际开口说话的人物才需要口型与目标语言同步。没有发声台词的片段保持原样，不必给风声、海浪等环境音添加地区语言标签。系统电子声、旁白、画外音保持原声源方式，不附加口型同步，不让界面或手机张嘴，也不让听者替声源动嘴。
-保持原提示词的章节名称、结构和视觉指令语言（原来是英文就仍用英文）。如使用 <d>[Chinese] 台词</d>，仅把发声台词及其语言标记改为目标语言；不要翻译明确标注为可见场景文字的内容。
+保持原提示词的章节名称、结构和视觉指令语言（原来是英文就仍用英文）。如使用 <d>[Chinese] 台词</d>，把发声台词及其语言标记改为目标语言；画面中明确可见的按钮、界面、招牌、字幕和屏幕文字也必须翻译成目标语言，目标语言版本不得残留源语言文字。
+英语版本中不得保留“Chinese text”“Chinese system lines”“Chinese interface text”“Chinese characters”等要求画面生成中文文字的英文描述；必须同步改成 English text/lines/interface wording。描述“中国风三维动画”等画风的 Chinese 3D donghua 不属于文字语言指令，可以保留。
 H3 对白必须保持 <d>[Language] 台词</d>，语言名称用 English、Chinese、Japanese 等英文名称；地区和口音写在标签外，禁止把地区编码写成 d 标签的属性。保持原提示词的自由结构、Subject/Picture 对应关系和具体画风要求；不要新增固定章节，也不能用泛化的 cinematic 或 high quality 替换具体视觉描述。
 保持剧情、角色姓名与身份、场景、服装、镜头顺序、视觉描述、参考图编号和素材标记不变；不能将角色或场景搬到目标国家。
 对白称谓和亲属关系必须准确保留，例如姐姐/妹妹不能改成 darling 等泛称；原文区分长幼时，目标语也要保留这个区别，例如英语的 Big sister / little sister，不能只用不区分长幼的 sister；不添加原文没有的调侃、昵称或新台词。
@@ -73,9 +122,11 @@ export async function generateLanguageVariants(
   trackId: number,
   languages: string[],
   generateBase: () => Promise<string>,
-  translate: (system: string, source: string) => Promise<string>,
+  translate: (system: string, source: string, language: string) => Promise<string>,
   regenerate = false,
   validateReferenceLabels = true,
+  validateCompletedPrompt?: (prompt: string, language: string) => void | Promise<void>,
+  validateBasePrompt?: (prompt: string) => void | Promise<void>,
 ) {
   let pending = pendingVariants.get(db);
   if (!pending) {
@@ -83,7 +134,7 @@ export async function generateLanguageVariants(
     pendingVariants.set(db, pending);
   }
   const previous = pending.get(trackId) || Promise.resolve();
-  const next = previous.catch(() => {}).then(() => generateMissingVariants(db, trackId, languages, generateBase, translate, regenerate, validateReferenceLabels));
+  const next = previous.catch(() => {}).then(() => generateMissingVariants(db, trackId, languages, generateBase, translate, regenerate, validateReferenceLabels, validateCompletedPrompt, validateBasePrompt));
   pending.set(trackId, next);
   try {
     return await next;
@@ -98,15 +149,32 @@ async function generateMissingVariants(
   trackId: number,
   languages: string[],
   generateBase: () => Promise<string>,
-  translate: (system: string, source: string) => Promise<string>,
+  translate: (system: string, source: string, language: string) => Promise<string>,
   regenerate: boolean,
   validateReferenceLabels: boolean,
+  validateCompletedPrompt?: (prompt: string, language: string) => void | Promise<void>,
+  validateBasePrompt?: (prompt: string) => void | Promise<void>,
 ) {
   dialogueLanguagesSchema.parse(languages);
   const track = await db("o_videoTrack").where({ id: trackId }).first();
   if (!track) throw new Error("视频段不存在");
   const existing = await db("o_videoPromptVariant").where({ trackId });
-  const missing = languages.filter((language) => regenerate || !existing.some((row) => row.language === language && row.prompt?.trim() && row.state === "已完成"));
+  const completedVariantIsValid = async (row: any, language: string) => {
+    if (row.language !== language || !row.prompt?.trim() || row.state !== "已完成") return false;
+    try {
+      assertTranslatedDialogueLanguage(row.prompt, language);
+      await validateCompletedPrompt?.(row.prompt, language);
+      return true;
+    } catch { return false; }
+  };
+  const missing: string[] = [];
+  for (const language of languages) {
+    let valid = false;
+    for (const row of existing) {
+      if (await completedVariantIsValid(row, language)) { valid = true; break; }
+    }
+    if (regenerate || !valid) missing.push(language);
+  }
   if (!missing.length) return existing;
   for (const language of missing) {
     await db("o_videoPromptVariant")
@@ -116,7 +184,11 @@ async function generateMissingVariants(
   }
   let base = track.prompt;
   try {
-    if (regenerate || !base?.trim()) {
+    let baseIsValid = Boolean(base?.trim());
+    if (baseIsValid && validateBasePrompt) {
+      try { await validateBasePrompt(base); } catch { baseIsValid = false; }
+    }
+    if (regenerate || !baseIsValid) {
       base = await generateBase();
       if (!base?.trim()) throw new Error("原版提示词为空");
       if (!track.prompt?.trim()) await db("o_videoTrack").where({ id: trackId }).update({ prompt: base });
@@ -131,8 +203,9 @@ async function generateMissingVariants(
   }
   for (const language of missing) {
     try {
-      const prompt = (await translate(translationInstruction(language), base)).trim();
+      const prompt = (await translate(translationInstruction(language), base, language)).trim();
       if (!prompt || prompt.startsWith("LANGUAGE_TIMING_REVIEW:")) throw new Error(prompt || "模型未返回提示词");
+      assertTranslatedDialogueLanguage(prompt, language);
       const slots = (text: string) =>
         [...new Set([...text.replace(/<d\b[^>]*>[\s\S]*?<\/d>/g, "").matchAll(/<(?:Picture|Subject|Image|Video|Audio)\s+\d+>/g)]
           .map((match) => match[0]))]

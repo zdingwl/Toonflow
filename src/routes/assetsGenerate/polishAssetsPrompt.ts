@@ -5,6 +5,7 @@ import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { type AssetPromptType } from "@/utils/assetPrompt";
 import { generateAssetPrompt, loadAssetPromptContext } from "@/utils/assetPromptGeneration";
+import { saveGeneratedAssetPrompt } from "@/utils/assetDescriptionVersion";
 const router = express.Router();
 
 
@@ -71,7 +72,7 @@ export default router.post(
         loadImage: path => u.oss.getImageBase64(path),
         invoke: input => u.Ai.Text("universalAi").invoke(input),
       }, context, visualManual);
-      await u.db("o_assets").where({ id: assetsId, projectId }).update({ prompt, promptState: "已完成", promptErrorReason: null });
+      await saveGeneratedAssetPrompt(u.db, context.asset, prompt);
       res.status(200).send(success({ prompt, assetsId }));
     } catch (e: any) {
       await u

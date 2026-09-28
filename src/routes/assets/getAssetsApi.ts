@@ -3,6 +3,7 @@ import u from "@/utils";
 import { z } from "zod";
 import { success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
+import { promptIsStale, imageIsStale } from "@/utils/assetDescriptionVersion";
 const router = express.Router();
 
 // 获取资产
@@ -47,6 +48,7 @@ export default router.post(
     const childAssetsWithSrc = await Promise.all(
       childAssets.map(async (child) => ({
         ...child,
+        descriptionNeedsPrompt: promptIsStale(child), descriptionNeedsImage: imageIsStale(child),
         src: child.filePath && (await filterTypeGetFileUrl(child.filePath!, child.type)),
       })),
     );
@@ -55,6 +57,7 @@ export default router.post(
     const result = await Promise.all(
       parentAssets.map(async (parent) => ({
         ...parent,
+        descriptionNeedsPrompt: promptIsStale(parent), descriptionNeedsImage: imageIsStale(parent),
         sonAssets: childAssetsWithSrc.filter((child) => child.assetsId === parent.id),
         src: parent.filePath && (await filterTypeGetFileUrl(parent.filePath!, parent.type)),
         ...(parent.type == "audio" ? { sex: parent.describe?.split("|")[0], describe: parent.describe?.split("|")[1] } : {}),

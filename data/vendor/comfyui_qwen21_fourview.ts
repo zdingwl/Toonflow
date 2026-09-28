@@ -69,13 +69,21 @@ function identityFactsOnly(prompt: string): string {
   // doing so discards names, outfits and state facts before any view is rendered.
   // Strip presentation instructions, not the identity/wardrobe that may share
   // their sentence. Replacing 四栏 with 各视角 still requests a multi-view image.
-  const viewName = "(?:正面(?:脸部至肩胸|头肩|脸部)特写|脸部正面特写|脸部特写|(?:严格)?90[°度]左侧(?:面)?全身|正后方全身|正面全身|左侧面全身|左侧全身|侧面全身|背面全身|脸部|正面|侧面|背面)";
+  const portraitView = "(?:正面(?:脸部至肩胸|头肩|脸部)特写|脸部(?:正面)?特写(?:正面)?|脸部特写)(?:[（(][^）)]*[）)])?(?:，?(?:完整)?头部(?:至|到|与)?肩胸?)?";
+  const frontView = "正面全身(?:中性站姿)?(?:，?头顶(?:至|到)脚底完整)?";
+  const sideView = "(?:(?:严格)?90[°度])?(?:严格)?左侧(?:面)?全身(?:严格侧面)?(?:，?头脚完整)?";
+  const backView = "(?:正后方|背面)全身(?:展示(?:披发、)?(?:(?:后脑)(?:与|、))?后背(?:与鞋后跟)?|展示后脑与后背)?(?:，?头脚完整)?";
+  const viewName = `(?:${portraitView}|${frontView}|${sideView}|${backView}|脸部|正面|侧面|背面)`;
   const numberedView = "(?:第[一二三四1-4]栏[：:]?\\s*)?" + viewName + "(?:视图|视角)?(?=[、，,；;。.!?\\s]|$)";
   const orderedViews = new RegExp(
-    "(?:(?:(?:四栏|四格|四宫格|四视图|四个视角)\\s*)?从左到右(?:固定)?(?:排列)?(?:分别|依次)?(?:为)?[：:]?|(?:四栏|四格|四宫格|四视图|四个视角)(?:固定)?(?:分别为|依次为|为|[：:]))\\s*" + numberedView + "(?:[、，,]\\s*" + numberedView + "){1,}",
+    "(?:(?:(?:四栏|四格|四宫格|四视图|四个视角|展示板)(?:角色设定(?:展示)?(?:图|板)|角色设定|设定板|展示板)?[，,]?\\s*)?从左到右(?:固定)?(?:排列)?(?:分别|依次)?(?:为)?[：:]?|(?:四栏|四格|四宫格|四视图|四个视角)(?:固定)?(?:分别为|依次为|为|[：:]))\\s*" + numberedView + "(?:[、，,；;]\\s*" + numberedView + "){1,}",
     "g",
   );
   return prompt
+    // New prompts may delimit the presentation block. It is never identity input
+    // for a single-view job, so remove it before handling legacy prose.
+    .replace(/【展示板布局】[\s\S]*?(?=【\/展示板布局】|$)/g, "")
+    .replace(/【\/展示板布局】/g, "")
     .replace(orderedViews, "")
     .replace(/(?:四栏|四格|四宫格|四视图|四个视角)从左到右(?:固定)?(?:排列)?(?:分别|依次)?(?:为)?[：:]?/g, "")
     // Consume ordinal markers before 四栏, otherwise 第四栏 becomes 第各视角.
@@ -91,8 +99,11 @@ function identityFactsOnly(prompt: string): string {
     .replace(/(?:first|second|third|fourth)\s+panel/gi, "")
     .replace(/(?:portrait|front\s+view|side\s+view|back\s+view)(?:\s*[,/+、]\s*(?:portrait|front\s+view|side\s+view|back\s+view)){1,}/gi, "")
     .replace(/(?:四栏|四格|四宫格|四视图|四(?:个|名)视角|四视角|各视角|跨视角|多个视角)(?:角色设定(?:展示)?(?:图|板)|角色设定|设定板|展示板)?/g, "本角色")
+    .replace(/(?:一张)?展示板(?:呈现|展示)同一个人的本角色/g, "同一角色")
+    .replace(/同一角色([^，。；]{0,30})的本角色/g, "同一角色$1")
     .replace(/不是四个角色/g, "仅一个人物")
     .replace(/背面(?:可见|展示)|能看到/g, "")
+    .replace(/同一角色(?:、同一[^，。；]+)?的(?=[。！？])/g, "同一角色")
     .replace(/[,，;；、]\s*[,，;；、]+/g, "，")
     .replace(/\s{2,}/g, " ")
     .trim();

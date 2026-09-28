@@ -39,23 +39,21 @@ ${JSON.stringify(subjects)}
 ${otherReferences.length ? `<otherReferences>${JSON.stringify(otherReferences)}</otherReferences>\n` : ""}<storyboardFacts>
 ${JSON.stringify(storyboards.map(item => ({ id: item.id, duration: item.duration, videoDesc: item.videoDesc || "" })))}
 </storyboardFacts>
-Generate the final MiniMax H3 cinematic video prompt.
+Write the complete MiniMax H3 Ref2VA generation prompt using exactly these six non-empty sections in this order:
+subject_definitions:
+summary:
+retention_analysis:
+detailed_description:
+overall_soundscape:
+non_diegetic_music:
 
-Analyze all reference images, videos and audio.
+Define every reusable visible asset as one stable <Subject N> and cite the actual source <Picture N> in its definition. Use the same Subject/Picture meaning everywhere. summary must start with the applicable official task-type prefix. retention_analysis must contain exactly one valid preservation entry for every definition.
 
-Prioritize:
-- character identity preservation
-- reference consistency
-- cinematic camera movement
-- realistic physics
-- temporal continuity
-- synchronized audio
+In detailed_description, establish the requested rendering style before [Shot 1]. [Shot 1] has no timestamp. Every later explicit cut uses [Shot N] At MM:SS.mmm, with sequential numbers and increasing times inside target_duration. Give every vocal source a stable consecutive (S1), (S2), etc.; a referenced speaker is written <Subject N> (Sx). Dialogue uses <d>[Language] complete sentence.</d> and stays in the requested spoken language.
 
-Describe each source's visible role where it affects the video. Establish composition, appearance, position, environment and lighting, actions and state changes, camera movement, synchronized sound and reference usage. Preserve the supplied cause and effect, speaker, exact dialogue, timing and event order. Do not replace an intentional action with an accident.
+Analyze the attached reference images and describe composition, appearance, position, environment and lighting, actions and state changes, camera movement, synchronized physical sound and reference usage. Preserve supplied cause and effect, speaker, exact dialogue, timing and event order. Do not replace an intentional action with an accident.
 
-Output only the final generation prompt.
-Do not explain reasoning.
-Do not use a fixed section template.`;
+Output only the complete six-section prompt. Do not explain reasoning.`;
 }
 
 export function h3PromptWordCounts(prompt: string) {

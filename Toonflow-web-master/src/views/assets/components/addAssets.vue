@@ -66,6 +66,7 @@ function onConfirm() {
         await axios
           .post(`/assets/updateAssets`, {
             id: props.formData.id,
+            projectId: project.value?.id,
             name: props.formData.name,
             describe: props.formData.describe,
             remark: props.formData.remark,

@@ -6,6 +6,7 @@ import { transform } from "sucrase";
 import express from "express";
 import knex from "knex";
 import { validateFields } from "../src/middleware/middleware";
+import * as assetDescriptionVersion from "../src/utils/assetDescriptionVersion";
 
 type Mode = "single" | "batch";
 async function fixture(mode: Mode, options: { reject?: boolean; brokenFile?: boolean; derivative?: boolean } = {}) {
@@ -32,6 +33,7 @@ async function fixture(mode: Mode, options: { reject?: boolean; brokenFile?: boo
     },
   };
   const imports: Record<string, unknown> = {
+    "@/utils/assetDescriptionVersion": assetDescriptionVersion,
     "@/utils": u,
     "sharp": () => ({ metadata: async () => { if (options.brokenFile) throw new Error("图片文件损坏"); return { width: 1200, height: 400 }; } }),
     "@/middleware/middleware": { validateFields },
@@ -81,6 +83,28 @@ async function fixture(mode: Mode, options: { reject?: boolean; brokenFile?: boo
 }
 
 for (const mode of ["single", "batch"] as Mode[]) {
+  test(`${mode} outdated prompts are rejected before provider calls or image records`, async () => {
+    const f = await fixture(mode);
+    try {
+      await assetDescriptionVersion.migrateAssetDescriptions(f.db);
+      await f.db("o_assets").where({ id: 10 }).update({ descriptionVersion: 2, promptDescriptionVersion: 1 });
+      const result = await f.request();
+      assert.ok(result.status >= 400); assert.match(result.body.message, /描述已更新/);
+      assert.equal((await f.db("o_image")).length, 1); assert.deepEqual(f.events, []);
+    } finally { await f.close(); }
+  });
+
+  test(`${mode} new images record the description version and still adopt directly`, async () => {
+    const f = await fixture(mode);
+    try {
+      await assetDescriptionVersion.migrateAssetDescriptions(f.db);
+      await f.db("o_assets").where({ id: 10 }).update({ descriptionVersion: 2, promptDescriptionVersion: 2 });
+      assert.equal((await f.request()).status, 200);
+      const current = await f.db("o_assets").where({ id: 10 }).first();
+      assert.equal(current.imageDescriptionVersion, 2);
+      assert.equal((await f.db("o_image").where({ id: current.imageId }).first()).descriptionVersion, 2);
+    } finally { await f.close(); }
+  });
   test(`${mode} invalid image files preserve the selected image and references`, async () => {
     const f = await fixture(mode, { brokenFile: true });
     try {

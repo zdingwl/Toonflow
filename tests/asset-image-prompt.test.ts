@@ -44,6 +44,9 @@ test("scene and prop prompts do not receive a character turnaround contract", ()
   assert.doesNotMatch(scene, /CHARACTER TURNAROUND SHEET/);
   assert.doesNotMatch(prop, /CHARACTER TURNAROUND SHEET/);
   assert.match(scene, /production-ready scene design reference render/);
+  assert.match(scene, /EMPTY ENVIRONMENT PLATE/);
+  assert.match(scene, /Do not render named characters, people, silhouettes, animals, monsters, independent creatures/);
+  assert.match(scene, /preset id "电影感" is metadata only/);
   assert.match(prop, /production-ready prop or creature design reference render/);
   assert.doesNotMatch(scene, /phone camera|DSLR photography|not a photograph/);
   assert.doesNotMatch(prop, /phone camera|DSLR photography|not a photograph/);

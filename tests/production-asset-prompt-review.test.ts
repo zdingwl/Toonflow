@@ -7,6 +7,7 @@ import express from "express";
 import knex from "knex";
 import { validateFields } from "../src/middleware/middleware";
 import { loadAssetPromptContext } from "../src/utils/assetPromptGeneration";
+import * as assetDescriptionVersion from "../src/utils/assetDescriptionVersion";
 import { getOperationReceipt, withOperationReceipt } from "../src/utils/agent/runtime/operationReceipt";
 
 const requestId = "asset_review_1234";
@@ -59,6 +60,7 @@ async function fixture(options: { reject?: boolean; blockPrompt?: boolean; switc
     },
   };
   const imports: Record<string, unknown> = {
+    "@/utils/assetDescriptionVersion": assetDescriptionVersion,
     "@/utils": u,
     "@/middleware/middleware": { validateFields },
     "@/lib/responseFormat": { success: (data: unknown) => ({ data }), error: (message: string) => ({ message }) },

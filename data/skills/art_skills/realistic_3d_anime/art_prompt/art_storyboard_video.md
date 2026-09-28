@@ -22,4 +22,4 @@ Use cinematic framing: wide establishing shot, medium interaction shot, close fa
 
 Keep the supplied dialogue complete, preserve its speaker and meaning, and synchronize mouth movement with the selected language. Use concise physical sounds and continuous ambience; do not add speech or music without a story requirement. Preserve identity and clothing through motion and occlusion. Explicit transformations change only the stated attributes at the supplied story boundary.
 
-Keep exact Subject/Picture mapping while allowing a free-form final prompt. Spend detail on the visible scene, not repeated static descriptions; do not expand a simple event into multiple actions to reach a word target.
+Keep exact Subject/Picture mapping inside the official six-section Ref2VA structure. Spend detail on the visible scene, not repeated static descriptions; do not expand a simple event into multiple actions only to reach a word target.

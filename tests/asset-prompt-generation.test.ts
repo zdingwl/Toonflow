@@ -17,22 +17,22 @@ const validPrompt = "同一角色的四栏角色设定图，艾娃保持马尾�
 const pass = JSON.stringify({ passed: true, issues: [] });
 const fail = (issue: string) => JSON.stringify({ passed: false, issues: [issue] });
 
-test("selected concept-art manual reaches both writer and auditor while old images retain identity only", async t => {
+test("selected 3D manual reaches both writer and auditor while old images retain identity only", async t => {
   const db = await fixture(t);
   const context = await loadAssetPromptContext(db, input);
   const selectedManual = getArtPrompt("realistic_3d_anime", "art_skills", "art_character");
   const vision = fakeVision([validPrompt, pass]);
   await generateAssetPrompt(vision.deps, context, selectedManual);
-  assert.match(vision.calls[0].system, /premium anime-realistic concept art/);
-  assert.match(vision.calls[0].system, /polished illustration rendering/);
+  assert.match(vision.calls[0].system, /电影级半写实三维国漫/);
+  assert.match(vision.calls[0].system, /自然次表面透光/);
   assert.match(vision.calls[0].system, /冷灰蓝/);
-  assert.doesNotMatch(vision.calls[0].system, /cinematic semi-realistic Chinese 3D donghua|可信PBR|受控次表面散射|采用纯净浅灰背景/);
+  assert.doesNotMatch(vision.calls[0].system, /premium anime-realistic concept art|polished illustration rendering/);
   for (const call of vision.calls) {
     const text = call.messages[0].content.filter((part: any) => part.type === "text").map((part: any) => part.text).join("\n");
     assert.match(text, /不能把旧图的棚拍、塑料CG或其他旧画风锁成身份/);
     assert.match(text, /画风调整不得擅改脸型、年龄、发型、服装与状态/);
   }
-  assert.match(vision.calls[1].messages[0].content.at(-1).text, /premium anime-realistic concept art/);
+  assert.match(vision.calls[1].messages[0].content.at(-1).text, /电影级半写实三维国漫/);
   assert.deepEqual(vision.loaded, ["selected-sheet.png"]);
   assert.equal((await db("o_assets").where({id:10}).first()).prompt, "已有正文");
 });

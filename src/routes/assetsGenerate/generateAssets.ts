@@ -8,6 +8,7 @@ import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { buildAssetImagePrompt, buildFluxPromptTranslationRequest, needsFluxPromptTranslation } from "@/utils/assetPrompt";
 import { isRoleFourViewModel, resolveAssetImageModel } from "@/utils/assetImageModel";
+import { descriptionVersion, requireCurrentAssetPrompt } from "@/utils/assetDescriptionVersion";
 
 const router = express.Router();
 type AssetType = "role" | "scene" | "tool";
@@ -33,6 +34,8 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
   if (!cfg) return res.status(400).send(error("不支持的资产类型"));
   const asset = await u.db("o_assets").where({ id, projectId, type }).select("*").first();
   if (!asset) return res.status(404).send(error("资产不存在或不属于当前项目和类型"));
+  try { requireCurrentAssetPrompt(asset, prompt); }
+  catch (cause) { return res.status(409).send(error(u.error(cause).message)); }
   const runtimeModel = await resolveAssetImageModel(model, type);
   const [vendorId, selectedModelName] = runtimeModel.split(/:(.+)/);
   const isQwenFourView = isRoleFourViewModel(runtimeModel);
@@ -44,7 +47,8 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
     if (asset.assetsId && !base64) return res.status(400).send(error("衍生形态必须传入同一角色的已确认参考图；不能从文本静默猜测父角色身份"));
   }
 
-  const [imageId] = await u.db("o_image").insert({ type, state: "生成中", assetsId: id, model: selectedModelName, resolution });
+  const [imageId] = await u.db("o_image").insert({ type, state: "生成中", assetsId: id, model: selectedModelName, resolution,
+    ...(asset.descriptionVersion !== undefined ? { descriptionVersion: descriptionVersion(asset) } : {}) });
   const imagePath = `/${projectId}/${cfg.dir}/${uuidv4()}.jpg`;
   const describe = `生成${cfg.label}图，名称：${name}，提示词：${prompt}`;
   const relatedObjects = { id, projectId, type: cfg.label };
@@ -64,7 +68,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
     // The Qwen four-view provider performs four SINGLE-VIEW jobs itself.
     // Do not prepend the generic four-panel composition contract to each of its jobs.
     const userPrompt = isQwenFourView
-      ? `Project style preset: ${runtimeArtStyle || "use the rendering style specified in the asset prompt"}. Current character and state: ${runtimeName}. Authoritative visible identity, wardrobe and state facts: ${runtimePrompt}`
+      ? `The visible rendering medium and art direction stated in CURRENT ASSET FACTS are authoritative. Internal project preset id "${runtimeArtStyle || "unspecified"}" is metadata only and must not change that medium. Current character and state: ${runtimeName}. Authoritative visible identity, wardrobe and state facts: ${runtimePrompt}`
       : buildAssetImagePrompt(type as AssetType, runtimeArtStyle, runtimeName, runtimePrompt);
     const references = base64 ? [{ type: "image" as const, base64 }] : [];
     if (isQwenFourView && styleBase64) references.push({ type: "image" as const, base64: styleBase64 });
@@ -89,6 +93,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
     await u.db("o_image").where("id", imageId).update({ state: "已完成", filePath: imagePath, type, model: selectedModelName, resolution: actualResolution });
     await u.db("o_assets").where({ id, projectId, type }).update({
       imageId,
+      ...(asset.descriptionVersion !== undefined ? { imageDescriptionVersion: descriptionVersion(asset) } : {}),
       ...(type === "role" ? {
         // ready means the complete image is usable, not human approval.
         designStatus: "ready", designVersion: u.db.raw("COALESCE(designVersion, 0) + 1"),

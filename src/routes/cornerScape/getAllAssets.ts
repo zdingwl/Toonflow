@@ -4,6 +4,7 @@ import { z } from "zod";
 import { success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { latestAssetImageAttempts } from "@/utils/latestAssetImageAttempts";
+import { promptIsStale, imageIsStale } from "@/utils/assetDescriptionVersion";
 const router = express.Router();
 
 export default router.post(
@@ -76,6 +77,8 @@ export default router.post(
         return {
           ...Object.fromEntries(Object.entries(parent).filter(([key]) => !["faceReferencePath", "fullBodyReferencePath", "sideReferencePath", "backReferencePath"].includes(key))),
           state: displayState,
+          descriptionNeedsPrompt: promptIsStale(parent),
+          descriptionNeedsImage: imageIsStale(parent),
           errorReason: displayErrorReason,
           filePath: parent.filePath && (await u.oss.getSmallImageUrl(parent.filePath!)),
           historyImages: historyImagesWithUrl,

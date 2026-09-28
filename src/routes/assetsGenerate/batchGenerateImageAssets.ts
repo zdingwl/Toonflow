@@ -9,6 +9,7 @@ import { error, success } from "@/lib/responseFormat";
 import { buildAssetImagePrompt } from "@/utils/assetPrompt";
 import { validateFields } from "@/middleware/middleware";
 import { isRoleFourViewModel, resolveAssetImageModel } from "@/utils/assetImageModel";
+import { descriptionVersion, requireCurrentAssetPrompt } from "@/utils/assetDescriptionVersion";
 
 const router = express.Router();
 type AssetType = "role" | "scene" | "tool";
@@ -42,6 +43,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
   // Validate every target before creating jobs. A mixed-project item must not acquire a candidate.
   const prepared: Array<{
     item: BatchItem;
+    asset: any;
     runtimeModel: Awaited<ReturnType<typeof resolveAssetImageModel>>;
   }> = [];
   try {
@@ -49,28 +51,30 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
       if (!assetTypeConfig[item.type as AssetType]) throw new Error("不支持的资产类型");
       const asset = await u.db("o_assets").where({ id: item.id, projectId, type: item.type }).select("*").first();
       if (!asset) throw new Error(`${item.name}：资产不存在或不属于当前项目和类型`);
+      requireCurrentAssetPrompt(asset, item.prompt);
       const runtimeModel = await resolveAssetImageModel(model, item.type);
       const isQwenFourView = isRoleFourViewModel(runtimeModel);
       if (isQwenFourView && item.type !== "role") throw new Error("Qwen 四视图工作流仅支持角色资产，场景和道具请选对应模型");
       if (isQwenFourView && asset.assetsId && !item.base64) throw new Error(`${asset.name || item.name}：衍生形态必须传入同一角色的已确认参考图；不能从文本静默猜测父角色身份`);
       if (item.styleBase64 && (!isQwenFourView || !item.base64)) throw new Error("第二张风格参考图仅用于 Qwen 四视图，且必须先提供当前状态的正面全身锚点图");
-      prepared.push({ item, runtimeModel });
+      prepared.push({ item, asset, runtimeModel });
     }
   } catch (cause) {
     return res.status(400).send(error(u.error(cause).message));
   }
 
   const imageIds: number[] = [];
-  for (const { item, runtimeModel } of prepared) {
+  for (const { item, asset, runtimeModel } of prepared) {
     const [imageId] = await u.db("o_image").insert({
       type: item.type, state: "生成中", assetsId: item.id,
       model: runtimeModel.split(/:(.+)/)[1], resolution,
+      ...(asset.descriptionVersion !== undefined ? { descriptionVersion: descriptionVersion(asset) } : {}),
     });
     imageIds.push(imageId);
   }
 
   const limit = pLimit(concurrentCount ?? 1);
-  const tasks = prepared.map(({ item, runtimeModel }, index) => limit(async () => {
+  const tasks = prepared.map(({ item, asset, runtimeModel }, index) => limit(async () => {
     const imageId = imageIds[index];
     const cfg = assetTypeConfig[item.type as AssetType];
     const imagePath = `/${projectId}/${cfg.dir}/${uuidv4()}.jpg`;
@@ -81,7 +85,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
       if (!data || data.state === "生成失败") return;
       const isQwenFourView = isRoleFourViewModel(runtimeModel);
       const userPrompt = isQwenFourView
-        ? `Project style preset: ${project.artStyle || "use the rendering style specified in the asset prompt"}. Current character and state: ${item.name}. Authoritative visible identity, wardrobe and state facts: ${item.prompt}`
+        ? `The visible rendering medium and art direction stated in CURRENT ASSET FACTS are authoritative. Internal project preset id "${project.artStyle || "unspecified"}" is metadata only and must not change that medium. Current character and state: ${item.name}. Authoritative visible identity, wardrobe and state facts: ${item.prompt}`
         : buildAssetImagePrompt(item.type as AssetType, project.artStyle ?? "", item.name, item.prompt);
       const references = item.base64 ? [{ base64: item.base64, type: "image" as const }] : [];
       if (isQwenFourView && item.styleBase64) references.push({ base64: item.styleBase64, type: "image" as const });
@@ -108,6 +112,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
       });
       await u.db("o_assets").where({ id: item.id, projectId, type: item.type }).update({
         imageId,
+        ...(asset.descriptionVersion !== undefined ? { imageDescriptionVersion: descriptionVersion(asset) } : {}),
         ...(item.type === "role" ? {
           // ready indicates a usable complete image, not human approval.
           designStatus: "ready", designVersion: u.db.raw("COALESCE(designVersion, 0) + 1"),

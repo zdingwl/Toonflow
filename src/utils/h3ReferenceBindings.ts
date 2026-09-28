@@ -10,12 +10,17 @@ const fail = (reason: string): never => {
 /** Optional semantic anchors: free-form prompts may use Subject labels anywhere. */
 function subjectPictureBindings(prompt: string, pictureCount: number): Map<number, number[]> {
   const bindings = new Map<number, number[]>();
-  const mentions = [...prompt.matchAll(/<Subject\s+(\d+)>/gi)];
+  // Official Ref2VA prompts own their bindings in subject_definitions. Later
+  // prose may mention a Picture for lighting/style immediately before another
+  // Subject, which must not be interpreted as redefining the previous Subject.
+  const definitions = prompt.match(/^subject_definitions:\s*\r?\n([\s\S]*?)(?=^summary:\s*$)/im)?.[1];
+  const bindingText = definitions ?? prompt;
+  const mentions = [...bindingText.matchAll(/<Subject\s+(\d+)>/gi)];
   for (let index = 0; index < mentions.length; index++) {
     const subject = Number(mentions[index][1]);
     const start = mentions[index].index!;
-    const end = mentions[index + 1]?.index ?? prompt.length;
-    const pictures = [...new Set([...prompt.slice(start, end).matchAll(/<Picture\s+(\d+)>/gi)].map(match => Number(match[1])))].sort((a, b) => a - b);
+    const end = mentions[index + 1]?.index ?? bindingText.length;
+    const pictures = [...new Set([...bindingText.slice(start, end).matchAll(/<Picture\s+(\d+)>/gi)].map(match => Number(match[1])))].sort((a, b) => a - b);
     for (const picture of pictures) {
       if (picture < 1 || picture > pictureCount) fail(`<Subject ${subject}> 引用了不存在的 <Picture ${picture}>`);
     }

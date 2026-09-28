@@ -34,6 +34,49 @@ test('character prompt and code use the same four canonical positions', () => {
   assert.match(code, /full-body straight back view/);
 });
 
+test('scene prompt contracts keep reusable environment plates free of independent subjects', () => {
+  const visual = read('data/skills/asset_visual_design.md');
+  const scene = read('data/skills/art_skills/realistic_3d_anime/art_prompt/art_scene.md');
+  const runtime = read('src/utils/assetPrompt.ts');
+  for (const text of [visual, scene]) {
+    assert.match(text, /纯环境/);
+    assert.match(text, /独立(?:资产|生物)/);
+  }
+  assert.match(runtime, /EMPTY ENVIRONMENT PLATE/);
+  assert.match(runtime, /Internal project preset id/);
+});
+
+test('asset design skill applies differentiated adult lead aesthetics without sexualizing unknown ages', () => {
+  const visual = read('data/skills/asset_visual_design.md');
+  const character = read('data/skills/art_skills/realistic_3d_anime/art_prompt/art_character.md');
+  assert.match(visual, /胸部丰满但自然承托/);
+  assert.match(visual, /腰臀比清楚/);
+  assert.match(visual, /宽肩窄腰/);
+  assert.match(visual, /运动型胸背与腹部轮廓/);
+  assert.match(visual, /冷静强势型/);
+  assert.match(visual, /冷峻精英型/);
+  assert.match(visual, /每套衣装至少具备一个清楚的大轮廓、一个功能结构和一个克制的识别点/);
+  assert.match(visual, /年龄无法确认/);
+  assert.match(character, /大众审美设计补全/);
+  assert.match(character, /至少有两项稳定外观差异/);
+  assert.match(character, /不为展示身材擅自裸露/);
+});
+
+test('realistic_3d_anime asset manuals use the project 3D medium and Qwen observable-description structure', () => {
+  const prefix = read('data/skills/art_skills/realistic_3d_anime/prefix.md');
+  const character = read('data/skills/art_skills/realistic_3d_anime/art_prompt/art_character.md');
+  const scene = read('data/skills/art_skills/realistic_3d_anime/art_prompt/art_scene.md');
+  for (const text of [prefix, character, scene]) {
+    assert.match(text, /半写实三维国漫/);
+    assert.doesNotMatch(text, /polished illustration rendering|clean premium shading/);
+  }
+  assert.match(prefix, /成片描述/);
+  assert.match(prefix, /体型、姿态、视线、表情/);
+  assert.match(prefix, /灯光必须有明确来源、方向、软硬、阴影与高光结果/);
+  assert.match(character, /自然次表面透光/);
+  assert.match(scene, /PBR 材质/);
+});
+
 test('Qwen four-view provider removes layout sentences from every single-view prompt', () => {
   const source = read('data/vendor/comfyui_qwen21_fourview.ts');
   const exports = {};

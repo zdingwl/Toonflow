@@ -269,7 +269,9 @@ async function batchGenText() {
   });
   axios
     .post("/production/workbench/batchGeneratePrompt", {
-      regenerate: true,
+      // Batch generation fills missing/failed language variants and must not overwrite
+      // completed prompts or their existing video lineage.
+      regenerate: false,
       projectId: project.value?.id,
       trackData,
       model: props.modelParmas.model,

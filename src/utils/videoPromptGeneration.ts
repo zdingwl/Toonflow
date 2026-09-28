@@ -2,12 +2,13 @@ import u from "@/utils";
 import fs from "fs/promises";
 import path from "path";
 import { expandH3AssetSlots } from "@/utils/h3ReferenceSlots";
-import { h3SlotPath, saveH3ReferencePlan, copyH3ReferencePlan } from "@/utils/h3ReferencePlan";
+import { h3SlotPath, saveH3ReferencePlan, loadH3ReferencePlan, copyH3ReferencePlan } from "@/utils/h3ReferencePlan";
 import { assertH3ActiveStates } from "@/utils/h3VisualStateGuard";
 import { db as languageDb } from "@/utils/db";
-import { generateLanguageVariants } from "@/utils/videoLanguages";
-import { assertH3PromptContract, normalizeH3PromptFormat } from "@/utils/h3PromptContract";
-import { buildH3PromptInput } from "@/utils/h3PromptContext";
+import { assertTranslatedDialogueLanguage, generateLanguageVariants } from "@/utils/videoLanguages";
+import { assertH3PromptContract, h3FormatChecklist, normalizeH3PromptFormat } from "@/utils/h3PromptContract";
+import { buildH3PromptInput, h3BindingSlots } from "@/utils/h3PromptContext";
+import { assertH3ReferenceBindings } from "@/utils/h3ReferenceBindings";
 import { prepareH3VisionImage } from "@/utils/h3VisionImage";
 
 export interface VideoPromptRequest {
@@ -41,7 +42,7 @@ function escapeXmlAttr(value: unknown): string {
 const runningTracks = new Set<number>();
 export const isVideoPromptRunning = (trackId: number) => runningTracks.has(trackId);
 
-const h3EnglishPromptInstruction = `H3 prompt language requirement (independent of structure): write all prompt prose and section headings in English. Only spoken dialogue inside <d>...</d> and explicitly required visible on-screen or sign text may use their required language. This language rule does not require fixed section names, a fixed section count, a fixed section order, or any specific Markdown format.`;
+const h3EnglishPromptInstruction = `${h3FormatChecklist} All section prose must be English. Only spoken dialogue inside <d>...</d> and explicitly required visible screen/sign text may use their requested language.`;
 
 function hasUnexpectedH3ChineseProse(prompt: string): boolean {
   const prose = String(prompt || "").replace(/<d(?:\s[^>]*)?>[\s\S]*?<\/d>/gi, "");
@@ -156,6 +157,10 @@ async function generateForTrack(input: VideoPromptRequest) {
     const [id, modelData] = model.split(/:(.+)/);
     const modelLower = (modelData ?? "").toLowerCase();
     const h3PromptMode = isMiniMaxH3(modelData ?? "");
+    const h3RefPromptMode = h3PromptMode && typeof mode === "string" && /^\s*\[/.test(mode);
+    const h3PromptInstruction = h3RefPromptMode
+      ? h3EnglishPromptInstruction
+      : "Write the complete H3 prompt prose in English. Preserve requested dialogue language, event order, timing and camera instructions.";
     const projectData = await u.db("o_project").select("*").where({ id: projectId }).first();
     const videoTrackData = await u.db("o_videoTrack").select("duration").where({ id: trackId }).first();
     const videoPrompt = await u.db("o_prompt").where("type", "videoPromptGeneration").first();
@@ -163,7 +168,7 @@ async function generateForTrack(input: VideoPromptRequest) {
 
     const modelPromptData = await u.db("o_modelPrompt").where("vendorId", id).where("model", modelData).first();
     //查询到 有绑定对应视频提示词
-    if (h3PromptMode) {
+    if (h3RefPromptMode) {
       // Ref2VA grammar is required, even when this vendor has an older bound template.
       // A missing H3 template must not silently fall through to another model's rules.
       videoPromptGeneration = await fs.readFile(path.join(u.getPath(["modelPrompt"]), "video", "minimaxH3Multi-referenceMode.md"), "utf-8");
@@ -184,7 +189,7 @@ async function generateForTrack(input: VideoPromptRequest) {
 
       let fileName: string | null = null;
 
-      if (modelLower.includes("minimax") && modelLower.includes("h3")) {
+      if (h3RefPromptMode) {
         // MiniMax H3 / local Ref2VA => dedicated ordered <Picture N> prompt skill
         fileName = "minimaxH3Multi-referenceMode.md";
       } else if (modelLower.includes("wan") && modelLower.includes("2.6")) {
@@ -293,22 +298,26 @@ async function generateForTrack(input: VideoPromptRequest) {
       }
     }
     const generateBase = async () => {
-      const system = h3PromptMode ? `${videoPromptGeneration}\n\n${h3EnglishPromptInstruction}\n\nProject visual requirements (rendering guidance only; use relevant qualities without replacing the selected H3 prompt template's output structure):\n${visualManual}` : videoPromptGeneration;
+      const system = h3PromptMode ? `${videoPromptGeneration}\n\n${h3PromptInstruction}\n\nProject visual requirements (rendering guidance only; use relevant qualities without replacing the selected H3 prompt template's output structure):\n${visualManual}` : videoPromptGeneration;
       const messages: any[] = h3PromptMode
         ? [{ role: "user", content: userContent }]
         : [{ role: "assistant", content: visualManual }, { role: "user", content }];
-      for (let attempt = 0; attempt < 3; attempt++) {
+      const maxAttempts = h3RefPromptMode ? 5 : 3;
+      for (let attempt = 0; attempt < maxAttempts; attempt++) {
         const result = { text: (await u.Ai.Text("universalAi", h3PromptMode ? true : undefined, h3PromptMode ? 2 : undefined).invoke({ system, messages })).text };
         if (!h3PromptMode) return result.text;
         result.text = normalizeH3PromptFormat(result.text.trim());
         if (/^(REFERENCE_STATE_REVIEW|LANGUAGE_TIMING_REVIEW):/.test(result.text.trim())) throw new Error(result.text);
         try {
-          assertH3PromptContract(result.text, targetDuration, pictureSourceItems.length);
+          if (h3RefPromptMode) {
+            assertH3PromptContract(result.text, targetDuration, pictureSourceItems.length);
+            assertH3ReferenceBindings(result.text, h3BindingSlots(pictureSourceItems));
+          }
           if (hasUnexpectedH3ChineseProse(result.text)) throw new Error("PROMPT_LANGUAGE: section headings and non-dialogue prompt prose must be English; keep only required dialogue or visible text in its required language");
         }
         catch (cause) {
-          if (attempt === 2) throw Object.assign(cause as Error, { candidatePrompt: result.text });
-          messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Rewrite and return one complete prompt using the selected H3 template. Do not return a patch. ${h3EnglishPromptInstruction} Reinspect the attached images and fix only the reported content contradiction while preserving the story events, speakers, exact dialogue and timing. Review error: ${u.error(cause).message}` });
+          if (attempt === maxAttempts - 1) throw Object.assign(cause as Error, { candidatePrompt: result.text });
+          messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Rewrite and return one complete prompt using the selected H3 template. Do not return a patch. ${h3PromptInstruction} Reinspect the attached images and fix only the reported content contradiction while preserving the story events, speakers, exact dialogue and timing. Review error: ${u.error(cause).message}` });
           continue;
         }
         await saveH3ReferencePlan(languageDb, trackId, result.text, pictureSourceItems);
@@ -328,28 +337,50 @@ async function generateForTrack(input: VideoPromptRequest) {
           }
           return prompt;
         },
-        async (system, source) => {
+        async (system, source, language) => {
           const messages: any[] = [{ role: "user", content: source }];
-          for (let attempt = 0; attempt < 3; attempt++) {
-            const result = { text: (await u.Ai.Text("universalAi", h3PromptMode ? true : undefined, h3PromptMode ? 2 : undefined).invoke({ system: h3PromptMode ? `You are a surgical H3 dialogue localizer. The source prompt is already complete. Copy every non-dialogue passage, heading, reference definition, shot description, sound cue and camera instruction without reorganizing, summarizing or moving it. Preserve the exact relative order of every vocal event and physical action; never move a laugh or spoken line to after an action that follows it in the source. Change only the contents of <d>...</d> and the directly associated spoken-language or locale wording needed for the requested language. Return the entire prompt and nothing else.\n\n${h3EnglishPromptInstruction}\n\nIf the source prompt's non-dialogue prose is Chinese or another language, translate that prose to English while preserving its sentence and event order.\n\n${system}` : system, messages })).text };
+          const maxAttempts = h3RefPromptMode ? 5 : 3;
+          for (let attempt = 0; attempt < maxAttempts; attempt++) {
+            const result = { text: (await u.Ai.Text("universalAi", h3PromptMode ? true : undefined, h3PromptMode ? 2 : undefined).invoke({ system: h3PromptMode ? `You are a surgical H3 dialogue localizer and visible-text localizer. The source prompt is already complete. Copy every heading, reference definition, shot description, sound cue and camera instruction without reorganizing, summarizing or moving it. Preserve the exact relative order of every vocal event and physical action; never move a laugh or spoken line to after an action that follows it in the source. Translate the contents of <d>...</d>, the directly associated spoken-language or locale wording, and every story-required visible button, interface, sign, subtitle or screen label into the requested target language. Return the entire prompt and nothing else.\n\n${h3PromptInstruction}\n\nFor an English language variant, no Chinese characters may remain anywhere in the returned prompt, including quoted visible on-screen text. Do not leave semantic instructions such as \"Chinese text\", \"Chinese system lines\", \"Chinese interface text\", or \"Chinese characters\"; rewrite those instructions to require English visible text. A visual-style phrase such as \"Chinese 3D donghua\" may remain because it describes art style, not text language. If the source prompt's non-dialogue prose is Chinese or another language, translate it to English while preserving sentence and event order. Translate visible Chinese text to English as well.\n\n${system}` : system, messages })).text };
             if (!h3PromptMode || result.text.trim().startsWith("LANGUAGE_TIMING_REVIEW:")) return result.text;
             result.text = normalizeH3PromptFormat(result.text.trim());
             try {
-              assertH3PromptContract(result.text, targetDuration, pictureSourceItems.length);
+              if (h3RefPromptMode) {
+                assertH3PromptContract(result.text, targetDuration, pictureSourceItems.length);
+                const sourcePlan = await loadH3ReferencePlan(languageDb, trackId, source);
+                if (!sourcePlan) throw new Error("H3 参考图绑定：源提示词缺少保存的参考图计划，请重新生成视频提示词");
+                assertH3ReferenceBindings(result.text, sourcePlan.slots, source);
+              }
               if (hasUnexpectedH3ChineseProse(result.text)) throw new Error("PROMPT_LANGUAGE: section headings and non-dialogue prompt prose must be English; keep only required dialogue or visible text in its required language");
+              assertTranslatedDialogueLanguage(result.text, language);
             }
             catch (cause) {
-              if (attempt === 2) throw Object.assign(cause as Error, { candidatePrompt: result.text });
-              messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Return the complete corrected translation. Do not return a patch. Copy the source prompt's non-dialogue text and event order without reorganizing it. ${h3EnglishPromptInstruction} Fix only this language requirement: ${u.error(cause).message}` });
+              if (attempt === maxAttempts - 1) throw Object.assign(cause as Error, { candidatePrompt: result.text });
+              messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Return the complete corrected translation. Do not return a patch. Copy the source prompt's non-dialogue text and event order without reorganizing it. ${h3PromptInstruction} Fix only this language requirement: ${u.error(cause).message}` });
               continue;
             }
-            await copyH3ReferencePlan(languageDb, trackId, source, result.text, false);
+            await copyH3ReferencePlan(languageDb, trackId, source, result.text, h3RefPromptMode);
             return result.text;
           }
           throw new Error("H3 翻译格式校验失败");
         },
         input.regenerate === true,
-        !h3PromptMode,
+        true,
+        h3RefPromptMode ? async (prompt, language) => {
+          assertTranslatedDialogueLanguage(prompt, language);
+          const plan = await loadH3ReferencePlan(languageDb, trackId, prompt);
+          if (!plan) throw new Error("H3 参考图绑定：提示词缺少保存的参考图计划");
+          if (plan.slots.some(slot => slot.kind)) throw new Error("H3 参考图绑定：仍使用人物独立视图旧计划");
+          assertH3PromptContract(prompt, targetDuration, plan.slots.length);
+          assertH3ReferenceBindings(prompt, plan.slots);
+        } : undefined,
+        h3RefPromptMode ? async (prompt) => {
+          const plan = await loadH3ReferencePlan(languageDb, trackId, prompt);
+          if (!plan) throw new Error("H3 参考图绑定：原版提示词缺少保存的参考图计划");
+          if (plan.slots.some(slot => slot.kind)) throw new Error("H3 参考图绑定：原版仍使用人物独立视图旧计划");
+          assertH3PromptContract(prompt, targetDuration, plan.slots.length);
+          assertH3ReferenceBindings(prompt, plan.slots);
+        } : undefined,
       );
       const failed = variants.filter((v: any) => input.languages!.includes(v.language) && v.state === "生成失败");
       await u

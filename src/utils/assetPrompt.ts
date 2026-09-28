@@ -21,6 +21,7 @@ const typeGuides: Record<AssetPromptType, string> = {
 - 一张单画面主视图，明确可行动空间、主要出入口及物件相对位置，供后续视频继承；不写 design sheet、多宫格、多视图等容易触发拼图的词。
 - 只保留对空间、材质、光线和叙事有作用的镜头术语；不要机械堆叠 depth of field、vignette、chromatic aberration、bokeh 等同类词。
 - 用户没有指定朝代、季节、天气或精确色值时，不要为了“丰富”而擅自补充具体设定。
+- 场景图是可复用的纯环境底图。描述中出现的具名角色、人物、人影、动物、怪物、独立生物或正在发生的角色动作不进入场景图片提示词；它们应作为独立角色/道具资产，在分镜和视频阶段组合。只保留这些事件对固定环境造成的结构、天气、光线、破损和陈设后果。
 - 最后明确无人物、无人影、无文字、无水印、无 logo。
 `,
   tool: `
@@ -99,9 +100,9 @@ export function buildAssetImagePrompt(
 
   const label = type === "scene" ? "scene" : "prop or creature";
   const presentation = type === "scene"
-    ? "Use one coherent scene image with readable spatial relationships and access paths."
+    ? "Render a reusable EMPTY ENVIRONMENT PLATE with one coherent scene image with readable spatial relationships and access paths. Do not render named characters, people, silhouettes, animals, monsters, independent creatures, or character actions mentioned in the design facts; those are separate assets for storyboard/video composition. Preserve only fixed environmental structure, lighting, weather, damage and set dressing."
     : "Default to one clear main view of a single subject. Use a multi-view layout only when explicitly required by the design facts; all views depict the same asset and state. For living creatures preserve natural anatomy and posture.";
-  return `Create one production-ready ${label} design reference render. Style: ${artStyle || "unspecified"}. Name: ${name}. Design facts: ${prompt.trim()}. ${presentation} Use a controlled design-presentation view with coherent materials and lighting. No text, no labels, no watermark.`;
+  return `Create one production-ready ${label} design reference render. The visible rendering medium and art direction stated in Design facts are authoritative. Internal project preset id "${artStyle || "unspecified"}" is metadata only and must not change that medium. Name: ${name}. Design facts: ${prompt.trim()}. ${presentation} Use a controlled design-presentation view with coherent materials and lighting. No text, no labels, no watermark.`;
 }
 
 export function needsFluxPromptTranslation(text: string): boolean {

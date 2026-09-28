@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import knex from "knex";
-import { migrateVideoLanguages, generateLanguageVariants, resolveLanguagePrompt, dialogueLanguagesSchema } from "../src/utils/videoLanguages";
+import { migrateVideoLanguages, generateLanguageVariants, resolveLanguagePrompt, dialogueLanguagesSchema, assertTranslatedDialogueLanguage } from "../src/utils/videoLanguages";
 
 async function fixture() {
   const db = knex({ client: "better-sqlite3", connection: { filename: ":memory:" }, useNullAsDefault: true });
@@ -57,6 +57,51 @@ test("migration is repeatable and preserves original prompts and language select
   } finally {
     await db.destroy();
   }
+});
+
+test("rejects source-language dialogue that is mislabeled as a completed English variant", async () => {
+  assert.throws(
+    () => assertTranslatedDialogueLanguage("<d>[Chinese] 你好。</d>", "en-US"),
+    /PROMPT_DIALOGUE_LANGUAGE/,
+  );
+  assert.throws(
+    () => assertTranslatedDialogueLanguage("spoken language: zh-CN\n<d>[English] Hello.</d>", "en-US"),
+    /spoken language/,
+  );
+  assert.throws(
+    () => assertTranslatedDialogueLanguage('The visible button reads "领取". spoken language: en-US\n<d>[English] Claim.</d>', "en-US"),
+    /PROMPT_VISIBLE_TEXT_LANGUAGE/,
+  );
+  assert.throws(
+    () => assertTranslatedDialogueLanguage('Clean Chinese system lines appear: "Claim". <d>[English] Claim.</d>', "en-US"),
+    /PROMPT_VISIBLE_TEXT_LANGUAGE/,
+  );
+  assert.throws(
+    () => assertTranslatedDialogueLanguage('The screen shows the required Chinese characters: "Claim". <d>[English] Claim.</d>', "en-US"),
+    /PROMPT_VISIBLE_TEXT_LANGUAGE/,
+  );
+  assert.doesNotThrow(() => assertTranslatedDialogueLanguage(
+    'Premium semi-realistic Chinese 3D donghua. The visible English button reads "Claim". spoken language: en-US\n<d>[English] Claim.</d>', "en-US",
+  ));
+});
+
+test("batch fill treats completed English variants with Chinese visible text as incomplete", async () => {
+  const db = await fixture();
+  try {
+    await db("o_videoPromptVariant").insert({
+      trackId: 1, language: "en-US", state: "已完成",
+      prompt: '<Picture 1> The screen reads "领取". <d>[English] Claim.</d>',
+    });
+    let calls = 0;
+    await generateLanguageVariants(db, 1, ["en-US"], async () => "unused", async () => {
+      calls++;
+      return '<Picture 1> The screen reads "Claim". <d>[English] Claim.</d>';
+    });
+    assert.equal(calls, 1);
+    const saved = await db("o_videoPromptVariant").where({ trackId: 1, language: "en-US" }).first();
+    assert.equal(saved.state, "已完成");
+    assert.doesNotMatch(saved.prompt, /\p{Script=Han}/u);
+  } finally { await db.destroy(); }
 });
 
 test("generates independent languages, retries only failures, and preserves manually edited variants", async () => {

@@ -6,6 +6,7 @@ import { validateFields } from "@/middleware/middleware";
 import { getOperationReceipt, withOperationReceipt } from "@/utils/agent/runtime/operationReceipt";
 
 import { generateAssetPrompt, loadAssetPromptContext } from "@/utils/assetPromptGeneration";
+import { descriptionVersion, saveGeneratedAssetPrompt } from "@/utils/assetDescriptionVersion";
 import { roleReferenceFingerprint } from "@/utils/assetReferenceMedia";
 
 const router = express.Router();
@@ -140,7 +141,7 @@ export default router.post(
           const manual = u.getArtPrompt(projectSettingData.artStyle!, "art_skills", `art_${manualKind}${context.parent ? "_derivative" : ""}`);
           if (!manual) throw new Error("视觉手册未定义");
           const text = await generateAssetPrompt(visionDeps, context, manual);
-          await u.db("o_assets").where({ id: item.id, projectId }).update({ prompt: text, promptState: "已完成", promptErrorReason: null });
+          await saveGeneratedAssetPrompt(u.db, context.asset, text);
           const sourcePath = context.parent?.selectedImagePath || context.asset.selectedImagePath;
           const imageBase64 = sourcePath ? await u.oss.getImageBase64(sourcePath) : null;
           const repeloadObj = {
@@ -174,11 +175,13 @@ export default router.post(
           await u.db.transaction(async (trx) => {
             const completed = await trx("o_image").where({ id: imageId, assetsId: item.id, state: "生成中" }).update({
               state: "已完成", filePath: savePath, errorReason: null,
+              ...(context.asset.descriptionVersion !== undefined ? { descriptionVersion: descriptionVersion(context.asset) } : {}),
             });
             // A later generation or manual selection may now own this asset. Its
             // selected image and its metadata must remain together.
-            if (completed && referenceFields) {
-              await trx("o_assets").where({ id: item.id, projectId, imageId }).update(referenceFields);
+            if (completed && (referenceFields || context.asset.descriptionVersion !== undefined)) {
+              await trx("o_assets").where({ id: item.id, projectId, imageId }).update({ ...referenceFields,
+                ...(context.asset.descriptionVersion !== undefined ? { imageDescriptionVersion: descriptionVersion(context.asset) } : {}) });
             }
           });
         } catch (reason) {

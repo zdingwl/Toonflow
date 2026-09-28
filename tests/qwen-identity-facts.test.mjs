@@ -39,6 +39,19 @@ test('Qwen retains character facts on both sides of a Chinese layout list in the
   assert.doesNotMatch(result, /四栏|从左到右|脸部特写|正面全身|90°左侧面全身|正后方全身/);
 });
 
+for (const [name, prompt] of [
+  ['艾娃-current', '精品二次元写实角色原画，同一角色艾娃普通态的四栏角色设定图，一张展示板呈现同一个人的四个视角。艾娃，黑色长发，浅灰褐上衣。四栏从左到右固定为：脸部特写正面，完整头部与肩胸；正面全身中性站姿，头顶到脚底完整；90°左侧面全身严格侧面，头脚完整；正后方全身展示披发、后背与鞋后跟，头脚完整。低干扰深蓝灰背景。'],
+  ['麦迪逊-current', '精品二次元写实角色原画，麦迪逊，棕色卷发，柔粉色睡衣。同一角色、同一普通状态的四栏角色设定图，从左到右固定为：脸部正面特写（头顶至肩胸完整）、正面全身中性站姿、90°严格左侧面全身、正后方全身；后三栏头脚完整。低干扰深蓝灰背景。'],
+  ['科尔-current', '精品二次元写实角色原画，科尔，黑色短发，深灰蓝交领布衣，赤足。展示板从左到右固定为：脸部正面特写，完整头部至肩胸；正面全身中性站姿；90°左侧面全身严格侧面；正后方全身展示后脑与后背。后三栏头脚完整。低干扰深蓝灰背景。'],
+]) {
+  test('Qwen removes the current project layout wording without losing identity: ' + name, () => {
+    const cleaned = identityFactsOnly(prompt);
+    assert.doesNotMatch(cleaned, /四栏|展示板|从左到右|头脚完整|后三栏|正面全身|侧面全身|正后方全身|后脑与后背|鞋后跟/);
+    assert.match(cleaned, /精品二次元写实角色原画/);
+    assert.match(cleaned, /低干扰深蓝灰背景/);
+  });
+}
+
 test('Qwen preserves identity and state inside a cross-view consistency clause', () => {
   const result = identityFactsOnly('四栏保持同一个艾娃，深棕色马尾、琥珀色眼睛、红上衣与黑裙完全一致；第一栏也保留左眼下泪痣。');
   for (const fact of ['艾娃', '深棕色马尾', '琥珀色眼睛', '红上衣', '黑裙', '完全一致', '左眼下泪痣']) assert.ok(result.includes(fact), fact);

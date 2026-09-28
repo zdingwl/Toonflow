@@ -27,7 +27,7 @@ export default router.post(
   }),
   async (req, res) => {
     const { id, base64, type, prompt, projectId, imageId, referenceLayout: requestedLayout } = req.body;
-    const asset = await u.db("o_assets").where({ id, projectId, type }).select("name", "imageId", "referenceLayout").first();
+    const asset = await u.db("o_assets").where({ id, projectId, type }).select("*").first();
     if (!asset) return res.status(404).send(error("资产不存在、类型不符或不属于当前项目"));
     try {
       // A prompt blur/save does not select an image. Preserve every selected-image and reference field.
@@ -38,7 +38,9 @@ export default router.post(
       let adoptedImageId = imageId ?? null;
       let adoptedPath: string | null = null;
       let adoptedModel: string | null = null;
+      let adoptedDescriptionVersion = 0;
       if (base64) {
+        adoptedDescriptionVersion = Number(asset.descriptionVersion || 0);
         const realBase64 = base64.replace(/^data:image\/[^;]+;base64,/, "");
         const source = Buffer.from(realBase64, "base64");
         const metadata = await sharp(source).metadata();
@@ -48,12 +50,14 @@ export default router.post(
         const [newImageId] = await u.db("o_image").insert({
           assetsId: id, filePath: savePath, type, state: "已完成",
           resolution: `${metadata.width}x${metadata.height}`,
+          ...(asset.descriptionVersion !== undefined ? { descriptionVersion: adoptedDescriptionVersion } : {}),
         });
         adoptedImageId = newImageId;
         adoptedPath = savePath;
       } else if (adoptedImageId !== null) {
         const selected = await u.db("o_image").where({ id: adoptedImageId, assetsId: id, type }).first();
         if (!selected) throw new Error("所选图片不存在或不属于当前资产和类型");
+        adoptedDescriptionVersion = Number(selected.descriptionVersion || 0);
         if (!selected.filePath) throw new Error("所选图片没有可用文件，不能采用");
         const manuallyAcceptedCandidate = selected.state === "生成失败" && isVisualReviewFailure(selected.errorReason);
         if (selected.state !== "已完成" && !manuallyAcceptedCandidate) throw new Error("所选图片尚未完成或不是可人工采用的审核候选");
@@ -71,6 +75,7 @@ export default router.post(
             assetsId: id, filePath: acceptedPath, type, state: "已完成", model: adoptedModel,
             resolution: `${metadata.width}x${metadata.height}`,
             errorReason: `人工采用审核候选 #${selected.id}；原审核意见：${selected.errorReason}`,
+            ...(asset.descriptionVersion !== undefined ? { descriptionVersion: adoptedDescriptionVersion } : {}),
           });
           adoptedImageId = acceptedId;
           adoptedPath = acceptedPath;
@@ -83,6 +88,7 @@ export default router.post(
       await u.db("o_assets").where({ id, projectId, type }).update({
         ...(prompt !== undefined ? { prompt: prompt ?? "" } : {}),
         imageId: adoptedImageId,
+        ...(asset.descriptionVersion !== undefined ? { imageDescriptionVersion: adoptedDescriptionVersion } : {}),
         ...(type === "role" && adoptedPath ? {
           designStatus: "ready",
           designVersion: u.db.raw("COALESCE(designVersion, 0) + 1"),

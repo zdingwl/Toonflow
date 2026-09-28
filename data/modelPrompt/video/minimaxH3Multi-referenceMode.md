@@ -55,9 +55,9 @@ material language
 
 Recommended pattern:
 
-<Subject N>{=html} is [name] from <Picture N>{=html}, a premium semi-realistic Chinese 3D donghua character asset.
+<Subject N> is [name] from <Picture N>, a premium semi-realistic Chinese 3D donghua character asset.
 
-Use Subject references when they improve multi-reference identity tracking. Do not require a fixed Subject definition structure.
+Define every reusable visible reference as a stable Subject in subject_definitions and preserve that exact Subject/Picture relationship throughout all six sections.
 
 Character Consistency Rules
 
@@ -193,21 +193,34 @@ Does the result feel like an animation of supplied assets rather than a redesign
 
 Final Output
 
-Generate the final MiniMax H3 cinematic video prompt.
+Return exactly six complete sections in this order:
 
-Analyze all reference images, videos and audio.
+subject_definitions
+summary
+retention_analysis
+detailed_description
+overall_soundscape
+non_diegetic_music
 
-Prioritize:
+Follow the official MiniMax H3 Ref2VA label, task-prefix, retention-marker,
+shot-timestamp, speaker-ID and dialogue syntax. Keep every Subject/Picture
+binding stable. Output only the complete six-section generation prompt and
+do not explain reasoning.
 
-character identity preservation
-reference consistency
-cinematic camera movement
-realistic physics
-temporal continuity
-synchronized audio
+Use these exact structural forms:
 
-Output only the final generation prompt.
+subject_definitions contains one unbulleted definition per line:
+<Subject 1> is the character or visible asset from <Picture 1>, followed by its visible features and reference role.
 
-Do not explain reasoning.
+summary begins with an official bracketed task type, normally:
+[reference generation] ...
 
-Do not use a fixed section template.
+retention_analysis contains one unbulleted entry for every definition:
+<Subject 1> (appears in [Shot 1]): fully_preserved - ...
+
+Use only official visible-content markers: fully_preserved,
+partially_preserved, attribute_transfer, or weak_reference. Never write a
+plain "preserve" bullet in place of the marker. Never output `{=html}`.
+
+Write [Shot 1] without a timestamp. Every later cut begins exactly like:
+[Shot 2] At 00:04.000, ...

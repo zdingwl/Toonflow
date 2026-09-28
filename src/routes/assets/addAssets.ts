@@ -25,6 +25,7 @@ export default router.post(
       projectId,
       remark,
       prompt,
+      descriptionMeta: JSON.stringify({ source: "user", userConstraints: describe, updatedAt: Date.now() }),
       startTime: Date.now(),
     });
     res.status(200).send(success({ message: "新增资产成功" }));

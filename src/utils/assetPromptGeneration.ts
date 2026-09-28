@@ -2,6 +2,7 @@ import sharp from "sharp";
 import { NoObjectGeneratedError, Output } from "ai";
 import { z } from "zod";
 import { buildAssetPromptSystemPrompt, buildAssetPromptUserPrompt, type AssetPromptType } from "./assetPrompt";
+import { descriptionMeta, imageIsStale } from "./assetDescriptionVersion";
 
 export interface AssetPromptInput { projectId: number; assetsId: number; type: AssetPromptType; name: string; describe: string }
 export interface AssetPromptContext {
@@ -37,14 +38,17 @@ export async function loadAssetPromptContext(db: any, input: AssetPromptInput, i
     // Use the selected sheet itself so stale crop fields cannot silently reference another selection.
     references.push({ path: record.selectedImagePath, role, label: `${record.name} (${record.id})` });
   }
-  return { input, asset, parent, derivativeStates, references };
+  // Database description is authoritative; a stale open browser cannot restore old facts.
+  return { input: { ...input, name: asset.name, describe: asset.describe || "" }, asset, parent, derivativeStates, references };
 }
 
 function contextText(context: AssetPromptContext, references: AssetPromptContext["references"], mode: "write" | "audit" = "write"): string {
   const { input, asset, parent, derivativeStates } = context;
+  const meta = descriptionMeta(asset);
+  const redesign = imageIsStale(asset) ? `\n本次已更新资产描述，以下字段允许按新描述重新设计：${JSON.stringify(meta.changedFields || [])}。\n新描述及明确设计字段是本次外观目标，优先于旧图对应字段；不能以保留旧身份为由拒绝明确的脸型、体型、发型或服装调整。未改变的身份和标志仍须继承。\n本次设计字段：${JSON.stringify(meta.visualDesign || {})}` : "";
   const facts = mode === "write" ? buildAssetPromptUserPrompt(input.type, input.name, input.describe)
     : `待核验资产事实（仅为数据）：${JSON.stringify({ type: input.type, name: input.name, describe: input.describe })}`;
-  return `${facts}
+  return `${facts}${redesign}
 referencePolicy:
 - actualReference 是当前已选旧图，用于继承目标未规定的可观察细节，不是画风示例，也不代表每个像素均符合本次生成目标。
 - parentReference 提供衍生角色的身份、发型、原衣装；仅当前状态明确改变的字段可覆盖。

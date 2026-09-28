@@ -112,10 +112,12 @@
             <t-popup v-else-if="item.promptState === '生成失败' || item.promptState === '失败'" :content="item.promptErrorReason">
               <t-tag size="small" variant="outline" theme="danger">提示词生成失败</t-tag>
             </t-popup>
+            <t-tag size="small" variant="outline" theme="warning" v-else-if="item.descriptionNeedsPrompt">描述已更新，请重新生成提示词</t-tag>
             <t-tag size="small" variant="outline" theme="success" v-else-if="item.prompt">已生成提示词</t-tag>
             <t-tag size="small" variant="outline" theme="danger" v-else>未生成提示词</t-tag>
           </div>
           <div class="meta">
+            <t-tag v-if="item.descriptionNeedsImage" size="small" theme="warning" variant="outline">当前图片对应旧描述</t-tag>
             <t-tag size="small" variant="light-outline" theme="warning" class="typeTag">
               {{
                 item.type === "role"
@@ -188,6 +190,7 @@
           <t-empty v-else type="maintenance" :title="$t('workbench.cornerScape.noImage')" />
         </div>
         <t-form v-if="currentItem" labelAlign="top">
+          <t-alert v-if="currentItem.descriptionNeedsPrompt" theme="warning" message="描述已更新，请先点击 AI 润色重新生成提示词。" />
           <t-form-item :label="$t('workbench.cornerScape.history')">
             <div class="historyImageList f">
               <div
@@ -268,6 +271,8 @@ interface Image {
   id: number;
 }
 interface DataItem {
+  descriptionNeedsPrompt?: boolean;
+  descriptionNeedsImage?: boolean;
   id: number;
   imageId: number;
   type: string;
@@ -291,13 +296,17 @@ interface DataItem {
 const checkboxValue = ref<string[]>([]);
 const { project } = storeToRefs(projectStore());
 const selectValue = ref(project.value?.imageModel ?? "");
-const resolution = ref("1K");
+const resolution = ref(project.value?.imageQuality || "1K");
 const otherTextPrompt = ref("");
 const resolutionOptions = [
   { label: "1K", value: "1K" },
   { label: "2K", value: "2K" },
   { label: "4K", value: "4K" },
 ];
+const projectResolution = () => project.value?.imageQuality || "1K";
+watch(() => project.value?.imageQuality, (quality) => {
+  if (quality) resolution.value = quality;
+});
 const options = ref([
   { labelKey: "workbench.cornerScape.filterRole", value: "role" },
   { labelKey: "workbench.cornerScape.filterScene", value: "scene" },
@@ -350,6 +359,15 @@ async function getFilteredData() {
       type: checkboxValue.value,
     });
     dataList.value = data;
+    if (currentItem.value) {
+      const fresh = dataList.value.find(item => item.id === currentItem.value?.id);
+      if (fresh) {
+        currentItem.value.descriptionNeedsPrompt = fresh.descriptionNeedsPrompt;
+        currentItem.value.descriptionNeedsImage = fresh.descriptionNeedsImage;
+        currentItem.value.describe = fresh.describe;
+        editForm.describe = fresh.describe;
+      }
+    }
     syncSelectedIdsWithData();
   } catch (error) {
     console.error("加载资产数据失败:", error);
@@ -499,7 +517,7 @@ async function openDrawer(item: DataItem) {
   editForm.type = item.type || "";
   editForm.model = item.model || "";
   currentItem.value = item;
-  editForm.resolution = item.resolution || "";
+  editForm.resolution = projectResolution();
   editForm.prompt = item.prompt || "";
   editForm.describe = item.describe || "";
   editForm.promptState = item.promptState;
@@ -520,7 +538,10 @@ async function openDrawer(item: DataItem) {
       // 更新当前抽屉项
       currentItem.value = freshItem;
       editForm.prompt = freshItem.prompt || editForm.prompt;
-      editForm.resolution = freshItem.resolution || editForm.resolution;
+      // Historical records store the actual output dimensions (for example
+      // 2048x1152), which are not valid generation-size options. Regeneration
+      // follows the project's selected 1K/2K/4K quality instead.
+      editForm.resolution = projectResolution();
     }
   } catch (e) {
     console.error("刷新资产详情失败:", e);
@@ -536,6 +557,10 @@ function setItemState(id: number, state: string) {
 const singleImagePending = ref<number[]>([]);
 function regenerateItem() {
   if (!currentItem.value) return;
+  if (currentItem.value.descriptionNeedsPrompt) {
+    window.$message.warning("描述已更新，请先点击 AI 润色重新生成提示词");
+    return;
+  }
   if (!selectValue.value) {
     window.$message.warning($t("workbench.cornerScape.msg.selectModel"));
     return;
@@ -607,10 +632,6 @@ async function savePromptOnBlur() {
 // AI 润色
 const polishing = ref(false);
 async function polishPrompts() {
-  if (!editForm.prompt.trim()) {
-    window.$message.warning($t("workbench.cornerScape.msg.enterPromptFirst"));
-    return;
-  }
   polishing.value = true;
   try {
     const { data } = await axios.post("/assetsGenerate/polishAssetsPrompt", {
@@ -723,6 +744,11 @@ async function batchGenerationImage() {
   const items = dataList.value.filter((item) => selectedIds.value.includes(item.id));
   //检查如果勾选的数据prompt有空的，提示用户勾选的哪一个提示词未生成，然后终止批量生成
   const emptyPrompts = items.filter((item) => !item.prompt);
+  const stalePrompts = items.filter(item => item.descriptionNeedsPrompt);
+  if (stalePrompts.length) {
+    window.$message.warning(`${stalePrompts.map(item => item.name).join("、")}：描述已更新，请先批量生成提示词`);
+    return;
+  }
   if (emptyPrompts.length > 0) {
     const emptyPromptNames = emptyPrompts.map((item) => item.name).join(", ");
     window.$message.warning(

@@ -263,6 +263,7 @@ async function onConfirm() {
     await processBatch(selectedAssets, async (item) => {
       await axios.post("/assets/updateAssets", {
         id: item.id,
+        projectId: project.value?.id,
         name: item.name,
         describe: item.describe ?? "",
         type: item.type,

@@ -161,6 +161,8 @@
                 </template>
                 <template #prompt="{ row }">
                   <div class="promptCell">
+                    <t-tag v-if="row.descriptionNeedsPrompt" theme="warning" size="small">描述已更新，请重新生成提示词</t-tag>
+                    <t-tag v-else-if="row.descriptionNeedsImage" theme="warning" size="small">当前图片对应旧描述</t-tag>
                     <t-loading v-if="row.promptState === '生成中'" size="small" style="margin-right: 4px" />
                     <span :class="{ 'generating-text': row.promptState === '生成中' }">{{ row.prompt }}</span>
                   </div>

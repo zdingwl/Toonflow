@@ -24,6 +24,9 @@
           <template #icon><i-export /></template>
           {{ $t("workbench.script.exportScript") }}{{ selectedIds.length ? `(${selectedIds.length})` : "" }}
         </t-button>
+        <t-tooltip content="重新设计所选剧本涉及的已有基础资产描述，保留资产、图片与历史；完成后需重新生成提示词。">
+          <t-checkbox v-model="updateExistingDescriptions" :disabled="scriptLoad">更新已有资产描述</t-checkbox>
+        </t-tooltip>
         <t-button theme="primary" @click="handleExtractAssets" :loading="scriptLoad" :disabled="selectedIds.length === 0">
           <template #icon><i-export /></template>
           {{ $t("workbench.script.extractAssets") }}{{ selectedIds.length ? `(${selectedIds.length})` : "" }}
@@ -214,6 +217,7 @@ async function handleDeleteScript(scriptId: number) {
   });
 }
 //提取资产
+const updateExistingDescriptions = ref(false);
 async function handleExtractAssets() {
   if (!project.value) return window.$message.error($t("workbench.script.msg.projectNotFound"));
   //判断是否有资产正在提取中
@@ -222,6 +226,7 @@ async function handleExtractAssets() {
     await axios.post("/script/extractAssets", {
       scriptIds: selectedIds.value,
       projectId: project.value!.id,
+      updateExistingDescriptions: updateExistingDescriptions.value,
       groupSize: otherSetting.value.assetsBatchGenereateSize,
     });
     searchScripts();

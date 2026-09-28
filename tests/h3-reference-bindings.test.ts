@@ -38,6 +38,28 @@ test("Subject labels are optional but keep their Picture mapping consistent", ()
   ), /翻译前后对应了不同的 Picture/);
 });
 
+test("official subject definitions own bindings; later style Pictures do not redefine them", () => {
+  const prompt = `subject_definitions:
+<Subject 1> is Ava from <Picture 1> and <Picture 2>.
+<Subject 2> is the storm from <Picture 3>.
+
+summary:
+[reference generation] <Subject 1> crosses <Subject 2>.
+
+retention_analysis:
+<Subject 2> (appears in [Shot 1]): fully_preserved - Keep the storm.
+
+detailed_description:
+Use the rendering quality of <Picture 1> before <Subject 1> enters <Subject 2>.
+
+overall_soundscape:
+Wind.
+
+non_diegetic_music:
+N/A`;
+  assert.doesNotThrow(() => assertH3ReferenceBindings(prompt, slots));
+});
+
 test("explicit Picture tags must still match every saved upload slot", () => {
   assert.throws(() => assertH3ReferenceBindings("Use <Picture 1> and <Picture 2>.", slots), /Picture 槽位/);
   assert.throws(() => assertH3ReferenceBindings("Use <Picture 1>, <Picture 2> and <Picture 4>.", slots), /Picture 槽位/);
