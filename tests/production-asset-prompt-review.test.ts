@@ -142,6 +142,7 @@ test("production receipt snapshots selected base and derivative images before bi
     assert.equal(f.calls.prompts.length, 2);
     assert.equal(f.calls.prompts[0].manual, "manual:art_character");
     assert.equal(f.calls.prompts[1].manual, "manual:art_character_derivative");
+    assert.deepEqual(f.calls.renders[1].referenceList, [{ type: "image", base64: "data:image/png;base64," + Buffer.from("/old-base.jpg").toString("base64") }]);
     assert.equal((await f.db("o_assets").where({ id: 11 }).first()).prompt, "新资产提示词:11");
     assert.equal(f.calls.reviews.length, 0);
     for (const id of [10, 11]) {
@@ -155,6 +156,20 @@ test("production receipt snapshots selected base and derivative images before bi
     }
   } finally { await f.close(); }
 });
+
+for (const type of ["role", "scene", "tool"]) {
+  test(`production ${type} derivative cannot use its old image when its parent image is missing`, async () => {
+    const f = await fixture();
+    try {
+      await f.db("o_assets").update({ type });
+      await f.db("o_assets").where({ id: 10 }).update({ imageId: null });
+      assert.equal((await f.request([11])).status, 200); await f.settle(1);
+      assert.equal(f.calls.renders.length, 0); assert.equal(f.calls.prompts.length, 0);
+      assert.equal((await f.db("o_assets").where({ id: 11 }).first()).imageId, 5);
+      assert.match((await f.db("o_image").where("id", ">", 5).first()).errorReason, /缺少.*参考图/);
+    } finally { await f.close(); }
+  });
+}
 
 test("production save failure restores the prior selection", async () => {
   const f = await fixture({ reject: true });

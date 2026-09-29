@@ -134,10 +134,32 @@ test("out-of-scope IDs and concurrent edits cannot overwrite data", async t => {
   const db = await fixture(t);
   await assert.rejects(extractScriptAssets({ db, ...model([ref(12, [1])]), system: "rules" }, { ...options, scriptIds: [1] }), /不属于当前项目/);
   await assert.rejects(extractScriptAssets({ db, ...model([]), system: "rules" }, { ...options, scriptIds: [4] }), /不属于当前项目/);
-  await assert.rejects(extractScriptAssets({ db, ...model([ref(10, [999])]), system: "rules" }, { ...options, scriptIds: [1] }), /剧本ID无效/);
+  await assert.rejects(extractScriptAssets({ db, ...model([ref(10, [999]), ref(10, [999])]), system: "rules" }, { ...options, scriptIds: [1] }), /scriptIds/);
   const ai = model([ref(10, [1]), ref(10, [2]), async () => { await db("o_assets").where({ id: 10 }).update({ describe: "用户正在编辑" }); return design(); }]);
   await assert.rejects(extractScriptAssets({ db, ...ai, system: "rules" }, options), /提取期间资产已被修改/);
   assert.equal((await db("o_assets").where({ id: 10 }).first()).describe, "用户正在编辑");
+});
+
+test("scene numbers mistaken for script IDs retry before any design or persistence", async t => {
+  const db = await fixture(t), before = await db("o_assets");
+  const ai = model([ref(10, [1, 2, 3]), ref(10, [1])]);
+  await extractScriptAssets({ db, ...ai, system: "rules" }, { projectId: 1, scriptIds: [1] });
+  assert.equal(ai.calls.length, 2);
+  assert.match(ai.calls[1].system, /scriptIds/);
+  assert.deepEqual(await db("o_assets"), before);
+  assert.deepEqual(await db("o_scriptAssets").where({ scriptId: 1 }), [{ scriptId: 1, assetId: 10 }]);
+});
+
+test("re-extraction drops background-role links without deleting saved assets or images", async t => {
+  const db = await fixture(t);
+  await db("o_assets").insert({ id: 20, projectId: 1, name: "主角的两个朋友", type: "role", describe: "错误合并的背景人物" });
+  await db("o_scriptAssets").insert({ scriptId: 1, assetId: 20 });
+  const before = await db("o_assets"), images = await db("o_image");
+  await extractScriptAssets({ db, ...model([ref(10, [1])]), system: "rules" }, { projectId: 1, scriptIds: [1] });
+  assert.deepEqual(await db("o_scriptAssets").where({ scriptId: 1 }), [{ scriptId: 1, assetId: 10 }]);
+  assert.deepEqual(await db("o_assets"), before);
+  assert.deepEqual(await db("o_image"), images);
+  assert.deepEqual(await db("o_scriptAssets").where({ scriptId: 3 }), [{ scriptId: 3, assetId: 10 }]);
 });
 
 test("prompt writer and auditor use current database facts and explicit redesign fields, stale completion cannot overwrite a newer description", async t => {

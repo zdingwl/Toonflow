@@ -249,7 +249,7 @@ export default async (knex: Knex): Promise<void> => {
     u.vendor.writeCode("toonflow", vendorData["toonflow.ts"]);
   }
   const comfyuiLocalVer = await u.vendor.getVendor("comfyui_local").version;
-  if (Number(comfyuiLocalVer) < 2.0) {
+  if (Number(comfyuiLocalVer) < 2.1) {
     u.vendor.writeCode("comfyui_local", vendorData["comfyui_local.ts"]);
   }
   const comfyuiLocalData = await u.db("o_vendorConfig").where("id", "comfyui_local").first();
@@ -260,9 +260,11 @@ export default async (knex: Knex): Promise<void> => {
         name: "Qwen Image 2.1 本机",
         modelName: "qwen-image-2.1-local",
         type: "image",
-        mode: ["text"],
+        mode: ["text", "singleImage", "multiReference"],
       });
     }
+    const qwenImageModel = models.find((item: any) => item.modelName === "qwen-image-2.1-local");
+    qwenImageModel.mode = ["text", "singleImage", "multiReference"];
     const h3Model = models.find((item: any) => item.modelName === "MiniMax-H3-local");
     if (h3Model) {
       for (const item of h3Model.durationResolutionMap || []) {

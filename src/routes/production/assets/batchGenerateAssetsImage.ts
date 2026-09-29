@@ -142,8 +142,9 @@ export default router.post(
           if (!manual) throw new Error("视觉手册未定义");
           const text = await generateAssetPrompt(visionDeps, context, manual);
           await saveGeneratedAssetPrompt(u.db, context.asset, text);
-          const sourcePath = context.parent?.selectedImagePath || context.asset.selectedImagePath;
+          const sourcePath = context.parent ? context.parent.selectedImagePath : context.asset.selectedImagePath;
           const imageBase64 = sourcePath ? await u.oss.getImageBase64(sourcePath) : null;
+          if (context.parent && !imageBase64) throw new Error("衍生资产缺少可读取的原资产图片，不能使用文生图");
           const repeloadObj = {
             prompt: text,
             size: projectSettingData.imageQuality as "1K" | "2K" | "4K",
@@ -157,7 +158,8 @@ export default router.post(
             {
               taskClass: "生成图片",
               describe: "资产图片生成",
-              relatedObjects: JSON.stringify(repeloadObj),
+              relatedObjects: JSON.stringify({ ...repeloadObj, assetId: item.id, parentAssetId: context.parent?.id ?? null,
+                referenceImagePath: sourcePath ?? null, generationMode: imageBase64 ? "image-to-image" : "text-to-image" }),
               projectId,
             },
           );

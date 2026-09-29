@@ -2,6 +2,10 @@ type ImageModel = {
   name: string; modelName: string; type: "image";
   mode: ("text" | "singleImage" | "multiReference")[];
 };
+type ImageConfig = {
+  prompt: string; aspectRatio: string; size?: string;
+  referenceList?: { type: "image"; base64: string }[];
+};
 type VideoModel = {
   name: string; modelName: string; type: "video";
   mode: ("text" | "singleImage" | "startFrameOptional" | (`imageReference:${number}`)[])[];
@@ -27,7 +31,7 @@ declare const Buffer: any;
 declare const pollTask: (fn: () => Promise<{ completed: boolean; data?: string; error?: string }>, interval?: number, timeout?: number) => Promise<{ completed: boolean; data?: string; error?: string }>;
 
 const vendor = {
-  id: "comfyui_local", version: "2.0", author: "Local ComfyUI",
+  id: "comfyui_local", version: "2.1", author: "Local ComfyUI",
   name: "本机 ComfyUI（FLUX + Qwen Image + MiniMax H3）",
   description: "FLUX 与 Qwen-Image-2.1 图片走 ComfyUI；MiniMax H3 视频直连原生 Ref2VA/FL2VA。角色/场景/道具资产作为 <Picture N>，分镜图仅作文本构图指导，避免覆盖人物身份。",
   inputs: [
@@ -63,7 +67,7 @@ const vendor = {
   } as Record<string, string>,
   models: [
     { name: "FLUX Schnell 本机", modelName: "flux-schnell-local", type: "image" as const, mode: ["text"] },
-    { name: "Qwen Image 2.1 本机", modelName: "qwen-image-2.1-local", type: "image" as const, mode: ["text"] },
+    { name: "Qwen Image 2.1 本机", modelName: "qwen-image-2.1-local", type: "image" as const, mode: ["text", "singleImage", "multiReference"] },
     {
       name: "MiniMax H3 本机（多图参考）", modelName: "MiniMax-H3-local", type: "video" as const,
       mode: ["text", "startFrameOptional", ["imageReference:9"]], audio: "optional" as const,
@@ -106,7 +110,8 @@ async function submitImageGraph(prompt: Record<string, any>, outputNode: string,
   return `${baseUrl()}/view?filename=${encodeURIComponent(filename)}&subfolder=${encodeURIComponent(subfolder)}&type=${encodeURIComponent(type)}`;
 }
 
-async function fluxImageRequest(config: { prompt: string; aspectRatio: string }): Promise<string> {
+async function fluxImageRequest(config: ImageConfig): Promise<string> {
+  if (config.referenceList?.length) throw new Error("FLUX Schnell 仅支持文生图，不能忽略参考图生成衍生资产；请使用 Qwen Image 2.1 图生图");
   const { width, height } = dimensions(config.aspectRatio);
   const prompt = {
     "1": { class_type: "CheckpointLoaderSimple", inputs: { ckpt_name: vendor.inputValues.checkpoint } },
@@ -123,11 +128,19 @@ async function fluxImageRequest(config: { prompt: string; aspectRatio: string })
   return submitImageGraph(prompt, "7", "toonflow-flux");
 }
 
-async function qwenImageRequest(config: { prompt: string; aspectRatio: string; size?: string }): Promise<string> {
+async function qwenImageRequest(config: ImageConfig): Promise<string> {
+  const references = config.referenceList || [];
+  if (references.length > 16 || references.some(item => item.type !== "image" || !/^data:image\/(?:png|jpeg|webp);base64,\S+$/i.test(item.base64))) {
+    throw new Error("Qwen Image 2.1 最多接收16张 PNG/JPEG/WebP 参考图，参考图无效时不能退回文生图");
+  }
   const info = await getObjectInfo("Qwen Image 2.1 Runtime");
   const required = ["UNETLoader", "CLIPLoader", "VAELoader", "TextEncodeQwenImage21", "EmptyLatentImage", "KSampler", "VAEDecode", "SaveImage"];
+  if (references.length) required.push("LoadImage");
   const missing = required.filter(name => !info[name]);
   if (missing.length) throw new Error(`ComfyUI 缺少 Qwen Image 2.1 节点：${missing.join("、")}；请更新 ComfyUI`);
+  if (references.length && (!info.TextEncodeQwenImage21.input?.required?.images || info.TextEncodeQwenImage21.output?.[2] !== "LATENT")) {
+    throw new Error("当前 Qwen Image 2.1 节点不支持图片编辑，请更新 ComfyUI；不能退回文生图");
+  }
   const unet = setting("qwenImageUnet", "qwen_image_2.1_int8_convrot.safetensors");
   const clip = setting("qwenImageClip", "qwen3vl_8b_int8_convrot.safetensors");
   const vae = setting("qwenImageVae", "qwen_image_2.1_vae_bf16.safetensors");
@@ -141,7 +154,7 @@ async function qwenImageRequest(config: { prompt: string; aspectRatio: string; s
   const a = rw > 0 ? rw : 1; const b = rh > 0 ? rh : 1;
   const width = a >= b ? maxSide : Math.max(32, Math.round(maxSide * a / b / 32) * 32);
   const height = a >= b ? Math.max(32, Math.round(maxSide * b / a / 32) * 32) : maxSide;
-  const graph = {
+  const graph: Record<string, any> = {
     "1": { class_type: "UNETLoader", inputs: { unet_name: unet, weight_dtype: "default" } },
     "2": { class_type: "CLIPLoader", inputs: { clip_name: clip, type: "qwen_image", device: "default" } },
     "3": { class_type: "VAELoader", inputs: { vae_name: vae } },
@@ -151,10 +164,22 @@ async function qwenImageRequest(config: { prompt: string; aspectRatio: string; s
     "7": { class_type: "VAEDecode", inputs: { samples: ["6", 0], vae: ["3", 0] } },
     "8": { class_type: "SaveImage", inputs: { images: ["7", 0], filename_prefix: "Toonflow/QwenImage21" } },
   };
+  if (references.length) {
+    // The native encoder conditions on the complete reference images and returns
+    // a canvas matching the first image. An unrelated empty canvas shifts edits.
+    graph["4"].inputs.vae = ["3", 0];
+    for (const [index, reference] of references.entries()) {
+      const nodeId = String(10 + index);
+      graph[nodeId] = { class_type: "LoadImage", inputs: { image: await uploadImage(reference.base64, index) } };
+      graph["4"].inputs[`images.image_${index + 1}`] = [nodeId, 0];
+    }
+    graph["6"].inputs.latent_image = ["4", 2];
+    delete graph["5"];
+  }
   return submitImageGraph(graph, "8", "toonflow-qwen-image-2.1");
 }
 
-const imageRequest = async (config: { prompt: string; aspectRatio: string; size?: string }, model: ImageModel): Promise<string> => {
+const imageRequest = async (config: ImageConfig, model: ImageModel): Promise<string> => {
   if (model.modelName === "qwen-image-2.1-local") return qwenImageRequest(config);
   if (model.modelName === "flux-schnell-local") return fluxImageRequest(config);
   throw new Error(`本机 ComfyUI 不支持图片模型 ${model.modelName}`);

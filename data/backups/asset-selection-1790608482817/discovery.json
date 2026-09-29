@@ -1,0 +1,152 @@
+{
+  "newAssets": [
+    {
+      "name": "邮轮",
+      "desc": "巨型远洋邮轮，船体严重倾斜，甲板与栏杆形成压迫性斜线，金属外壳布满锈蚀和水渍，冷灰蓝色调，海浪翻涌，灾难氛围强烈。",
+      "type": "tool",
+      "scriptIds": [
+        31
+      ]
+    },
+    {
+      "name": "小型游艇",
+      "desc": "白色流线型小型游艇，船舱玻璃透亮，配有方向盘驾驶位，船身光洁带蓝色系统光纹，体型紧凑可一人操控，漂浮于海面。",
+      "type": "tool",
+      "scriptIds": [
+        31
+      ]
+    }
+  ],
+  "existingAssetRefs": [
+    {
+      "assetId": 115,
+      "scriptIds": [
+        31
+      ]
+    },
+    {
+      "assetId": 116,
+      "scriptIds": [
+        31
+      ]
+    },
+    {
+      "assetId": 117,
+      "scriptIds": [
+        31
+      ]
+    },
+    {
+      "assetId": 136,
+      "scriptIds": [
+        31
+      ]
+    },
+    {
+      "assetId": 118,
+      "scriptIds": [
+        31
+      ]
+    },
+    {
+      "assetId": 119,
+      "scriptIds": [
+        31
+      ]
+    },
+    {
+      "assetId": 120,
+      "scriptIds": [
+        31
+      ]
+    },
+    {
+      "assetId": 121,
+      "scriptIds": [
+        31
+      ]
+    },
+    {
+      "assetId": 122,
+      "scriptIds": [
+        31
+      ]
+    },
+    {
+      "assetId": 123,
+      "scriptIds": [
+        31
+      ]
+    },
+    {
+      "assetId": 132,
+      "scriptIds": [
+        31
+      ]
+    },
+    {
+      "assetId": 124,
+      "scriptIds": [
+        31
+      ]
+    },
+    {
+      "assetId": 125,
+      "scriptIds": [
+        31
+      ]
+    },
+    {
+      "assetId": 126,
+      "scriptIds": [
+        31
+      ]
+    },
+    {
+      "assetId": 128,
+      "scriptIds": [
+        31
+      ]
+    },
+    {
+      "assetId": 130,
+      "scriptIds": [
+        31
+      ]
+    },
+    {
+      "assetId": 131,
+      "scriptIds": [
+        31
+      ]
+    },
+    {
+      "assetId": 133,
+      "scriptIds": [
+        31
+      ]
+    }
+  ],
+  "selectedNames": [
+    "艾娃",
+    "麦迪逊",
+    "科尔",
+    "收银员",
+    "末世海洋",
+    "小公寓",
+    "大型超市",
+    "超市门口",
+    "虚拟海面",
+    "公寓天台",
+    "喷泉水池",
+    "海洋基建系统手机",
+    "木筏模型",
+    "购物车",
+    "巨鲨",
+    "海兽王觉醒",
+    "堆满物资",
+    "海兽",
+    "邮轮",
+    "小型游艇"
+  ]
+}

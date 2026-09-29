@@ -814,14 +814,17 @@ async function pollingPromptAssets() {
     const { data } = await axios.post("/assets/pollingPromptAssets", { ids });
     let hasCompleted = false;
     if (Array.isArray(data) && data.length) {
-      data.forEach((item: { id: number; promptState: string; prompt: string; promptErrorReason?: string }) => {
+      data.forEach((item: { id: number; promptState: string; prompt: string; promptErrorReason?: string; descriptionVersion?: number; promptDescriptionVersion?: number }) => {
         const target = dataList.value.find((row) => row.id === item.id);
         if (target) {
           if (target.promptState === "生成中" && item.promptState !== "生成中") hasCompleted = true;
           target.promptState = item.promptState;
           target.promptErrorReason = item.promptErrorReason ?? "";
           if (item.prompt !== undefined) target.prompt = item.prompt;
+          // 轮询返回数据库版本；同时更新过期标记，避免完成后仍被旧描述状态挡住。
+          target.descriptionNeedsPrompt = Number(item.descriptionVersion || 0) > Number(item.promptDescriptionVersion || 0);
           if (currentItem.value?.id === item.id) {
+            currentItem.value.descriptionNeedsPrompt = target.descriptionNeedsPrompt;
             currentItem.value.promptState = item.promptState;
             currentItem.value.promptErrorReason = item.promptErrorReason ?? "";
             editForm.promptState = item.promptState;

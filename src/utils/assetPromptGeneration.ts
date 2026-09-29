@@ -30,7 +30,9 @@ export async function loadAssetPromptContext(db: any, input: AssetPromptInput, i
   if (!asset || asset.type !== input.type) throw new Error("资产不存在、类型不符或不属于当前项目");
   const parent = asset.assetsId ? await readAsset(Number(asset.assetsId)) : null;
   if (asset.assetsId && (!parent || parent.type !== input.type)) throw new Error("父资产缺失、类型不符或不属于当前项目");
-  if (parent && input.type === "role" && !parent.selectedImagePath) throw new Error("衍生人物缺少父角色参考图，请先确认父角色图片");
+  if (parent && !parent.selectedImagePath) throw new Error(input.type === "role"
+    ? "衍生人物缺少父角色参考图，请先确认父角色图片"
+    : "衍生资产缺少原资产参考图，请先确认原资产图片，不能使用文生图");
   const derivativeStates = parent ? [] : await db("o_assets").where({ projectId: input.projectId, assetsId: input.assetsId }).select("id", "name", "describe");
   const references: AssetPromptContext["references"] = [];
   for (const [record, role] of [[parent, "parentReference"], [asset, "actualReference"]] as const) {
