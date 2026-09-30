@@ -370,13 +370,18 @@ async function createSubAgent(parentCtx: AgentContext) {
       const productionSkills = await loadProductionSkills();
       const systemPrompt = await readSkill(path.join(u.getPath("skills"), "production_execution_storyboard_table.md"));
       const workspace = await u.db("o_agentWorkData").where({ projectId: Number(resTool.data.projectId), episodesId: Number(resTool.data.scriptId), key: "productionAgent" }).select("data").first();
-      const plan = workspace?.data ? JSON.parse(workspace.data).scriptPlan ?? "" : "";
+      const workspaceData = workspace?.data ? JSON.parse(workspace.data) : {};
+      const plan = workspaceData.scriptPlan ?? "";
+      const previousScene = workspaceData.storyboardTableProgress?.scenes?.[String(scene - 1)] ?? "";
+      const previousHandoff = previousScene ? continuityHandoff(previousScene) : "";
       const revisionPrompt = `【已有场次修订，不是首次生成】仅修订第${scene}场（共${total}场），task=${taskId}。` +
         `保持原剧本必须呈现的内容，不得擅自删除剧情或台词。只输出完整闭合的 ` +
         `<storyboardTable scene="${scene}" total="${total}" task="${taskId}">修订后第${scene}场完整Markdown</storyboardTable>。\n` +
         `【程序核对事实与逐场制作预算】\n${screenplayFacts(sourceScene ?? "", plan)}\n` +
+        `【最新导演规划：场间连续性契约必须保留】\n${plan}\n` +
+        (previousHandoff ? `【上一场机器连续性出口】\n${previousHandoff}\n` : "") +
         `【本场需解决的审核问题和用户要求】\n${instruction}\n` +
-        `【本场已保存旧稿：必须在此基础上修改】\n${original}\n` +
+        `【本场已保存旧稿：必须在此基础上修改，连续性契约也要保留或正确更新】\n${original}\n` +
         (sourceScene ? `【对应原剧本：必须完整覆盖】\n${sourceScene}\n` :
           `【注意】原剧本本场边界未定位；不得声称已核验全部剧情，请调用 get_flowData(script) 核对。\n`);
       return runAgent({
