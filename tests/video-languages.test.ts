@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import knex from "knex";
-import { migrateVideoLanguages, generateLanguageVariants, resolveLanguagePrompt, dialogueLanguagesSchema, assertTranslatedDialogueLanguage } from "../src/utils/videoLanguages";
+import { migrateVideoLanguages, generateLanguageVariants, resolveLanguagePrompt, resolveLanguageVariant, dialogueLanguagesSchema, assertTranslatedDialogueLanguage } from "../src/utils/videoLanguages";
 
 async function fixture() {
   const db = knex({ client: "better-sqlite3", connection: { filename: ":memory:" }, useNullAsDefault: true });
@@ -323,5 +323,27 @@ test("language timing review fails instead of speed-reading a translation beyond
     assert.equal(saved.state, "生成失败");
     assert.match(saved.reason, /LANGUAGE_TIMING_REVIEW/);
     assert.ok(!saved.prompt);
+  } finally { await db.destroy(); }
+});
+
+
+test("old completed variant cannot bypass target-language retiming when generating video directly", async () => {
+  const db = await fixture();
+  try {
+    await db("o_videoTrack").where({ id: 1 }).update({
+      prompt: '<Picture 1> <d>[Chinese] 快走。</d>',
+      duration: 5,
+    });
+    await db("o_videoPromptVariant").insert({
+      trackId: 1,
+      language: "en-US",
+      state: "已完成",
+      prompt: '<Picture 1> <d>[English] We need to get out of here right now before they find us.</d>',
+      duration: null,
+    });
+    await assert.rejects(
+      resolveLanguageVariant(db, 1, "en-US", "wrong", 5, true),
+      /需要按目标语言重新规划时间轴/,
+    );
   } finally { await db.destroy(); }
 });
