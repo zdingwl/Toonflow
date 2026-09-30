@@ -5,6 +5,7 @@ import { success, error } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { db as languageDb } from "@/utils/db";
 import { dialogueLanguageSchema } from "@/utils/videoLanguages";
+import { planLanguageVariantDuration } from "@/utils/videoLanguageTiming";
 import { copyH3ReferencePlan } from "@/utils/h3ReferencePlan";
 const router = express.Router();
 export default router.post(
@@ -13,6 +14,7 @@ export default router.post(
     id: z.number(),
     language: dialogueLanguageSchema.optional(),
     prompt: z.string().optional(),
+    duration: z.number().min(4).max(15).optional(),
   }),
   async (req, res) => {
     const { id, prompt } = req.body;
@@ -25,13 +27,18 @@ export default router.post(
       if (!(await u.db("o_videoTrack").where({ id }).first())) return res.status(404).send(error("视频段不存在"));
       const variant = await languageDb("o_videoPromptVariant").where({ trackId: id, language: req.body.language }).first();
       if (variant?.state === "生成中") return res.status(409).send(error("该语言提示词正在生成，请完成后再编辑"));
-      try { await preservePlan(variant?.prompt || ""); }
-      catch (cause: any) { return res.status(409).send(error(cause.message)); }
+      let duration: number | null = null;
+      try {
+        await preservePlan(variant?.prompt || "");
+        if (prompt?.trim()) duration = req.body.duration ?? planLanguageVariantDuration(
+          track.prompt || "", prompt, req.body.language, Number(track.duration) || 5,
+        );
+      } catch (cause: any) { return res.status(409).send(error(cause.message)); }
       await languageDb("o_videoPromptVariant")
-        .insert({ trackId: id, language: req.body.language, prompt: prompt || "", state: prompt?.trim() ? "已完成" : "未生成", reason: null })
+        .insert({ trackId: id, language: req.body.language, prompt: prompt || "", duration, state: prompt?.trim() ? "已完成" : "未生成", reason: null })
         .onConflict(["trackId", "language"])
         .merge();
-      return res.status(200).send(success("更新成功"));
+      return res.status(200).send(success({ message: "更新成功", duration }));
     }
     if (track.state === "生成中") return res.status(409).send(error("提示词正在生成，请完成后再编辑"));
     try { await preservePlan(track.prompt || ""); }
