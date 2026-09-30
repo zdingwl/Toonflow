@@ -9,6 +9,7 @@ const router = express.Router();
 
 interface VideoItem {
   id: number;
+  duration?: number;
   src: string;
   state: "未生成" | "生成中" | "已完成" | "生成失败";
 }
