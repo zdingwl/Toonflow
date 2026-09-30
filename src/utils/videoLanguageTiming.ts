@@ -57,7 +57,7 @@ export function planLanguageVariantDuration(
   // Legacy free-form prompts have no reliable way to distinguish speech time from visual time.
   if (!sourceSpeech || !targetSpeech) return base;
   const visualBudget = Math.max(0.75, base - sourceSpeech);
-  const planned = Math.ceil((visualBudget + targetSpeech) * 2) / 2;
+  const planned = Math.ceil(Math.max(base, visualBudget + targetSpeech));
   if (planned > 15) {
     throw new Error("LANGUAGE_TIMING_REVIEW: " + language + " natural dialogue requires about " + planned.toFixed(1) + "s, exceeding the 15s clip limit; split the clip or revise the dialogue structure");
   }
