@@ -1,0 +1,5 @@
+# New runtime output is local-only. Tracked historical evidence remains tracked.
+*
+!/.gitignore
+!/README.md
+!/inventory.json

@@ -1,0 +1,1518 @@
+{
+  "sourceCommit": "6d9bfbbeccecb5c0df77a7a39e76ead12f046289",
+  "note": "逐文件历史资料分类；sha256 对应原始字节。所有资料保留，操作脚本仅改路径和扩展名。",
+  "files": [
+    {
+      "originalPath": "asset-selection-1790608482817/asset-discovery-probe.json",
+      "path": "asset-selection-1790608482817/asset-discovery-probe.json",
+      "category": "真实运行快照",
+      "reason": "实际资产选择结果或页面验收；含真实资产关联，不直接作为 fixture",
+      "sha256": "bdaab749dc6eb96232363419c67262ab98cec4d6d301cc567d7abc6ade693374"
+    },
+    {
+      "originalPath": "asset-selection-1790608482817/asset-discovery-probe.ts",
+      "path": "archive/operations/asset-selection-1790608482817/asset-discovery-probe.ts.txt",
+      "category": "一次性操作脚本",
+      "reason": "绑定真实项目/本机环境；会读写数据库、调用模型或观察本机渲染，不是通用测试",
+      "sha256": "f1a6999bc1b4c1da26ab90f86beb0e80ae054430ef63d9b2071c220b41569632"
+    },
+    {
+      "originalPath": "asset-selection-1790608482817/discovery.json",
+      "path": "asset-selection-1790608482817/discovery.json",
+      "category": "真实运行快照",
+      "reason": "实际资产选择结果或页面验收；含真实资产关联，不直接作为 fixture",
+      "sha256": "bdaab749dc6eb96232363419c67262ab98cec4d6d301cc567d7abc6ade693374"
+    },
+    {
+      "originalPath": "asset-selection-1790608482817/repair-asset-selection.ts",
+      "path": "archive/operations/asset-selection-1790608482817/repair-asset-selection.ts.txt",
+      "category": "一次性操作脚本",
+      "reason": "绑定真实项目/本机环境；会读写数据库、调用模型或观察本机渲染，不是通用测试",
+      "sha256": "24e4b07abf4c3ebd48fefcb95e5f457fa4b9fa509dd9e2b13f19071b4ac02506"
+    },
+    {
+      "originalPath": "asset-selection-1790608482817/verified-page.png",
+      "path": "asset-selection-1790608482817/verified-page.png",
+      "category": "真实运行快照",
+      "reason": "实际资产选择结果或页面验收；含真实资产关联，不直接作为 fixture",
+      "sha256": "00e467aa2d2be189dc1e3d87de7714722b4f9364cbfacd2797e574c6b64f9544"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/asset-evidence.json",
+      "path": "director-storyboard-audit-20260930/asset-evidence.json",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "7aaab83d742b9b872f15206419e6f7b09ddafa1d62a7ddbc6738aa0c9a7b3ee8"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/dialogue-coverage.json",
+      "path": "director-storyboard-audit-20260930/dialogue-coverage.json",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "8c5d47554fe782836af9b7629634e2b79fd5e201138290df1ce3168b089000c7"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/execution-segment-2.md",
+      "path": "director-storyboard-audit-20260930/execution-segment-2.md",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "dc555fc8e1de46d2ad798378eed57fd6942c01bbb98ea98d5b05c6831d498a16"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/scene-prop-evidence.json",
+      "path": "director-storyboard-audit-20260930/scene-prop-evidence.json",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "6464f6a515e1934b5070f9dadd09cfd970387f955ae38e287a2f95c01593277e"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-1.md",
+      "path": "director-storyboard-audit-20260930/script-1.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "3511ec30fe2c96151b71d5ee8b9f52e145d2075b3d72eef8865ac5769fcdce91"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-10.md",
+      "path": "director-storyboard-audit-20260930/script-10.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "ed189e1e8a21b9f047b99fd6a9ad0ae7cb36fa94c56258c72ff04a7d7560cab7"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-11.md",
+      "path": "director-storyboard-audit-20260930/script-11.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "51cf7fc2f9e4a482a3860f4decc65f5dc291d95cfd9277239e0d29a3b7622179"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-12.md",
+      "path": "director-storyboard-audit-20260930/script-12.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "3492214b2760b3b14ad40b7849c74edfc0587e2d1384a2b04c9cb8159feb951f"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-13.md",
+      "path": "director-storyboard-audit-20260930/script-13.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "ce7bf51eb95967495248a4795aeb2b67e20bc4059023af6a660221a28707d0e2"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-14.md",
+      "path": "director-storyboard-audit-20260930/script-14.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "0f211001b4dc66e568a7713e416643d7f600e644aee1a974e8afe4b514ebc906"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-15.md",
+      "path": "director-storyboard-audit-20260930/script-15.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "c4844e63f84c774fe38d7a95f0c337f97fd798414eca48b1c1d9c12dc656b8f9"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-16.md",
+      "path": "director-storyboard-audit-20260930/script-16.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "40e38b6fae8f404af04257baa49ba545afbacd7d397fc8152b73a940fbaf887c"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-17.md",
+      "path": "director-storyboard-audit-20260930/script-17.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "d02e97970993e167c13858a6c90ba37cd71ba7474fa9ccb68c1e688f2a864f38"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-18.md",
+      "path": "director-storyboard-audit-20260930/script-18.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "b77e2ca70d2c6ee87126368753f9925f3bfe8a46026ac727856a016f49a65c04"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-19.md",
+      "path": "director-storyboard-audit-20260930/script-19.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "24a6f66a8394d5798db65f4648c6dd2e04a6a68702ce7efcbb7e87be84c3fd35"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-2.md",
+      "path": "director-storyboard-audit-20260930/script-2.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "4e37e21b7d13357d8d8c6d11524d75817bd37fe145988e9143d1b05c7a45b4ae"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-20.md",
+      "path": "director-storyboard-audit-20260930/script-20.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "adf508b7496d8a4357a25bb145734592d4d6592198ef7a6127e9341461c618ee"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-21.md",
+      "path": "director-storyboard-audit-20260930/script-21.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "5242399411bcad181648f898d9f2c5f5c2dd9118037596bfeb07a69d9e24ccfc"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-22.md",
+      "path": "director-storyboard-audit-20260930/script-22.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "85205ec0997641e63a45550b587a63634d52cf0c746e26bfd45cd485892cb7df"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-23.md",
+      "path": "director-storyboard-audit-20260930/script-23.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "0ec1e1c2018971cdaf894004759aed63eb80da4fdf0dd7fac7429dfd7580f2a9"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-24.md",
+      "path": "director-storyboard-audit-20260930/script-24.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "1c79d8985d88b822227492af8bc23410ae0a55d9684e7572f7758f2a37afc9ae"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-25.md",
+      "path": "director-storyboard-audit-20260930/script-25.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "bb732aac9cc47fd14d3907e2f55ad7e5ebc076303a42e3a37668afbd4d3bc43e"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-26.md",
+      "path": "director-storyboard-audit-20260930/script-26.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "cb60ff5929913c7922ea9b8b2b5c5f60d2e8b0cc96775f67d08453e75abc4ab7"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-27.md",
+      "path": "director-storyboard-audit-20260930/script-27.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "2a109ca06b7fc6c35d706479282f328ec20e3f9a0c758d86c906942cdf18f871"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-28.md",
+      "path": "director-storyboard-audit-20260930/script-28.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "9ac0492c6e45b56c0d3f97e791ff30af5f325c17ae499900bb4bd896c3a65472"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-29.md",
+      "path": "director-storyboard-audit-20260930/script-29.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "1375a03224eabb1686c7d9502cb2fd8114b9901a128cb008df2ab35d80f5282d"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-3.md",
+      "path": "director-storyboard-audit-20260930/script-3.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "4069bd6aeb1ecdddb055c0ab222e1cf9074c973030444fe03a2a81f55e6d4ecf"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-30.md",
+      "path": "director-storyboard-audit-20260930/script-30.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "dde14756233f6255f12709ca520ea89adeb10487963e53c415627da8891d39ae"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-31.md",
+      "path": "director-storyboard-audit-20260930/script-31.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "e992c197a42cb58e9768d103f470f7169ba4e2b31beb49816a2a1a70f805bf6f"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-32.md",
+      "path": "director-storyboard-audit-20260930/script-32.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "6e28e5a7d3c22af3527a3df0ed70709e11331b1c7349eeb2804b87a3894bcfeb"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-33.md",
+      "path": "director-storyboard-audit-20260930/script-33.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "36d04b9193db693ef2c57b28a27ff61852fecd692f2d182e47f7213797615009"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-34.md",
+      "path": "director-storyboard-audit-20260930/script-34.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "b779f00edd98f6a25845fc8594f5e8add00adab123b6ecd8a233188955d078ab"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-35.md",
+      "path": "director-storyboard-audit-20260930/script-35.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "1fa71281636a7b2387b8f3817954e8c4a630b9b25605e79e4251a884287b1652"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-36.md",
+      "path": "director-storyboard-audit-20260930/script-36.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "8feae65b0f45988fac8a140a7390a94df2912b3ea8ca73aff2b8256786c73e44"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-37.md",
+      "path": "director-storyboard-audit-20260930/script-37.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "5ba5d073f60219337a9c18be1e01863f9b385666db5698cccc7c6dd41bcc4841"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-38.md",
+      "path": "director-storyboard-audit-20260930/script-38.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "214ca35b6cae8ec162d60c66549a2c830eba455aa677f2d9d4bb853ef0886f84"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-39.md",
+      "path": "director-storyboard-audit-20260930/script-39.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "95e0348f866b994b02fcfa11da0dfac586ef431e2c0e300fcff97eafe34a8f88"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-4.md",
+      "path": "director-storyboard-audit-20260930/script-4.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "b4757b26f905c23bd6a243f6c23b33d2e5915cfc399fa16f276468b1d01f8c60"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-40.md",
+      "path": "director-storyboard-audit-20260930/script-40.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "26b2d2fc72056670fa0803e657ed39670b953e409b03ff41e244831690223aaf"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-41.md",
+      "path": "director-storyboard-audit-20260930/script-41.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "9462e1318eb9319f5c7dfa206219dd13eb32eb993fa3859bb2aff8639460d236"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-42.md",
+      "path": "director-storyboard-audit-20260930/script-42.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "bc6a34a3591023cbc7ae9129d6cecb25b9a2c533ea66a930d2bd000fe7a0cf9c"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-43.md",
+      "path": "director-storyboard-audit-20260930/script-43.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "faeb366b788eca9ef79a605d5637308285f659db9d2104338004221732f72cba"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-44.md",
+      "path": "director-storyboard-audit-20260930/script-44.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "de5deb370d0f9850c55814e544be823947213d9f0d95af0a97df73945daaea5c"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-45.md",
+      "path": "director-storyboard-audit-20260930/script-45.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "a7efedf3f634efa2f2e3d97e616fcc5dcf4209f77ebb2a0366aa3e9e64d9a7b3"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-46.md",
+      "path": "director-storyboard-audit-20260930/script-46.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "8be76768b51da775922b0cb31a5363dde6c108db7f4c74333bc8b6278d12c956"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-47.md",
+      "path": "director-storyboard-audit-20260930/script-47.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "8c7aec15a0702237450e3093e7eb5ac6c216ef307c19846999e0c8d47bb2113d"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-48.md",
+      "path": "director-storyboard-audit-20260930/script-48.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "5c82522935062a5adf64ba69e2a9bce4b4f1c70b6662329d8b574ad00ab2931a"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-49.md",
+      "path": "director-storyboard-audit-20260930/script-49.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "d24689aeaec9f96e47a51b8b18b64ff91785d7e9c271012f11d2bb7bf4facc20"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-5.md",
+      "path": "director-storyboard-audit-20260930/script-5.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "8ec9f3e97d233ba4fbe26f22cbf62222a16ac5bf1454af636b75c0fd05d3b1cf"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-50.md",
+      "path": "director-storyboard-audit-20260930/script-50.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "e66680050b8bf0bf2e170bf979ef9e801bd151c73f2d1ca995884a63d371608d"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-51.md",
+      "path": "director-storyboard-audit-20260930/script-51.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "6e8c2cd0f6aa62424cc5ca234cf64f7d5be088eefbc828a6a2955c5a9b4bd8dc"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-52.md",
+      "path": "director-storyboard-audit-20260930/script-52.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "a21659f2346f644a64a8117613eaac9427d767e502ba6d18ecc96668aaf7d4d5"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-53.md",
+      "path": "director-storyboard-audit-20260930/script-53.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "ec47820a79b2f690a1708c0f3e6d82a06cfb879b0ebb2c255b3b3a7ce1ef6648"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-54.md",
+      "path": "director-storyboard-audit-20260930/script-54.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "4560e5f2c38f3467b0b17a35a90c61cb44dd50d220ce3b14f42cda31da5a77ad"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-55.md",
+      "path": "director-storyboard-audit-20260930/script-55.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "5ef484f1d8add59a30e4e79bf982fc5ef5be6d6552c5d96fb2fd3301d14b3b88"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-56.md",
+      "path": "director-storyboard-audit-20260930/script-56.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "db1b67b600e454a705be7fea5b208e4c78a5db48d2c771013479b03cbc787f8d"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-57.md",
+      "path": "director-storyboard-audit-20260930/script-57.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "81f5b90b0c8d6eb8a9ed7e6dc57355f231d41224078ff24e1a28ea9255821b0f"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-58.md",
+      "path": "director-storyboard-audit-20260930/script-58.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "ec53cc65b5b6150ba735e8ee97c6773ba1966cc06de17f76b0c514136aa71b2a"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-59.md",
+      "path": "director-storyboard-audit-20260930/script-59.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "f8dd3d8e874bc007b99e678994279ed4961dac568a000d17f34bb4db45dc5e96"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-6.md",
+      "path": "director-storyboard-audit-20260930/script-6.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "31a1665b6c5b121f2ab44af3c45a02051fdd5555bdd501cb165a30a7643829a8"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-60.md",
+      "path": "director-storyboard-audit-20260930/script-60.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "50fc9626c478fbeeb5912a49779abe1eefb418f8109feafa41bc57b9465124a1"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-7.md",
+      "path": "director-storyboard-audit-20260930/script-7.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "6a1933bf5b627588ea2ec45917614133875e7971444bedfcd0afe34c90ae85f1"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-8.md",
+      "path": "director-storyboard-audit-20260930/script-8.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "e09df8a849190c2d54cd1d832937193b021b708e2e9f874442ca68a080c64ab8"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/script-9.md",
+      "path": "director-storyboard-audit-20260930/script-9.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "90fec2117f2999e28a7f0b35277dd00411d9b30992b986b51f917909a73e2443"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/scriptPlan-1.md",
+      "path": "director-storyboard-audit-20260930/scriptPlan-1.md",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "b79c25118212a43e70d769c547f170395e16431a5a51ae13c6fbc891fd1d406b"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/storyboardTable-1.md",
+      "path": "director-storyboard-audit-20260930/storyboardTable-1.md",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "674486bb66bb8d2216b96aba791407099e0c030dc9ace1c103f9e569d06cd33a"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/storyboards.json",
+      "path": "director-storyboard-audit-20260930/storyboards.json",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "fe46fd4f3dfb50ddfdb4d0339be6bf5dc95689912b8f4c81c266261acdf98414"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/timing-audit.json",
+      "path": "director-storyboard-audit-20260930/timing-audit.json",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "05283c5b2bad8b967f5ae9585c3d5c42965a05cff2fd59155e45952bd2748249"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/tracks.json",
+      "path": "director-storyboard-audit-20260930/tracks.json",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "bda80f28897cb781c4e5921026c6ee5ad01e816cc1f38e92b28960cb046de7e5"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/validator-audit.json",
+      "path": "director-storyboard-audit-20260930/validator-audit.json",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "19570b570c3485716ab6f472487c9749f1040bd2b7113b8c11cdec1ed956bf2b"
+    },
+    {
+      "originalPath": "director-storyboard-audit-20260930/workspace-1.json",
+      "path": "director-storyboard-audit-20260930/workspace-1.json",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "144dc705099cd19226849a1124eed0dce94933a05d744a3da59f1212c50d0ca6"
+    },
+    {
+      "originalPath": "director-storyboard-repair-20260930/apply-correction.ts",
+      "path": "archive/operations/director-storyboard-repair-20260930/apply-correction.ts.txt",
+      "category": "一次性操作脚本",
+      "reason": "绑定真实项目/本机环境；会读写数据库、调用模型或观察本机渲染，不是通用测试",
+      "sha256": "fd86e938717de15783cb7464efcaed55b4da36169d0a21b2eb5d43dc49a7650e"
+    },
+    {
+      "originalPath": "director-storyboard-repair-20260930/build.log",
+      "path": "director-storyboard-repair-20260930/build.log",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "3d439a67b2cc4c4e9ec4c397879a37ba8b3ccd72a18a25d4d087b7c451b009b1"
+    },
+    {
+      "originalPath": "director-storyboard-repair-20260930/corrected-plan.md",
+      "path": "director-storyboard-repair-20260930/corrected-plan.md",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "93b60d8cf3ae3a9750bb2426bfb10232518cbc60265805c354b5577b136b6c39"
+    },
+    {
+      "originalPath": "director-storyboard-repair-20260930/corrected-scenes.json",
+      "path": "director-storyboard-repair-20260930/corrected-scenes.json",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "943db9a76484e85183ab3d451ff8a15ed85e70145af9462794d84331ad3f6640"
+    },
+    {
+      "originalPath": "director-storyboard-repair-20260930/corrected-storyboard.md",
+      "path": "director-storyboard-repair-20260930/corrected-storyboard.md",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "95075dda8844eb79bfb603ae473d0e14b508b6eb0612dda67fcb93fa157a6900"
+    },
+    {
+      "originalPath": "director-storyboard-repair-20260930/final-verification.json",
+      "path": "director-storyboard-repair-20260930/final-verification.json",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "7b698bf797bcf77f173198415998307991dd6e3e9bf067e4fad5fdca2e1dfb7a"
+    },
+    {
+      "originalPath": "director-storyboard-repair-20260930/live-verification.json",
+      "path": "director-storyboard-repair-20260930/live-verification.json",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "8ecc9f36f8f167b7d8b9e9f2083c4a73a5bb9f15f6e713dae6cf5c4e385e9345"
+    },
+    {
+      "originalPath": "director-storyboard-repair-20260930/live-workspace-after.json",
+      "path": "director-storyboard-repair-20260930/live-workspace-after.json",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "60e9139d9d8495d65371ebf11c46fbe75fbcdbdf6108c0902e8d833aa82f460a"
+    },
+    {
+      "originalPath": "director-storyboard-repair-20260930/live-workspace-before.json",
+      "path": "director-storyboard-repair-20260930/live-workspace-before.json",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "144dc705099cd19226849a1124eed0dce94933a05d744a3da59f1212c50d0ca6"
+    },
+    {
+      "originalPath": "director-storyboard-repair-20260930/model-director-plan.md",
+      "path": "director-storyboard-repair-20260930/model-director-plan.md",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "f7be738d5222a81038f82be3123ba537bcb94e4eb606b9b251447acf619b738f"
+    },
+    {
+      "originalPath": "director-storyboard-repair-20260930/model-director-response.txt",
+      "path": "director-storyboard-repair-20260930/model-director-response.txt",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "517d39713cc7485803fc33a9d605cd95781f10a05406785039bb34c483563fbf"
+    },
+    {
+      "originalPath": "director-storyboard-repair-20260930/model-probe-validation.json",
+      "path": "director-storyboard-repair-20260930/model-probe-validation.json",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "2000323641a617187ed6490e1e3c99fb4bb3597d50332dd72d000148c404f668"
+    },
+    {
+      "originalPath": "director-storyboard-repair-20260930/model-probe.log",
+      "path": "director-storyboard-repair-20260930/model-probe.log",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "642145d558a8441ecc6f6823ca5b9f242a857e2ac005f7939ad4635289905c03"
+    },
+    {
+      "originalPath": "director-storyboard-repair-20260930/model-probe.ts",
+      "path": "archive/operations/director-storyboard-repair-20260930/model-probe.ts.txt",
+      "category": "一次性操作脚本",
+      "reason": "绑定真实项目/本机环境；会读写数据库、调用模型或观察本机渲染，不是通用测试",
+      "sha256": "6278ab8c1269557005f454be52ae5d2e4ab8aeaa932a9426ad7da50da2543b99"
+    },
+    {
+      "originalPath": "director-storyboard-repair-20260930/model-storyboard-request.txt",
+      "path": "director-storyboard-repair-20260930/model-storyboard-request.txt",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "52046e87b98c6ec26ae83d4288976d97bfe339c0397d25ee53655e481f78da8c"
+    },
+    {
+      "originalPath": "director-storyboard-repair-20260930/model-storyboard-response.txt",
+      "path": "director-storyboard-repair-20260930/model-storyboard-response.txt",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "921160ca7e10db12e5bed958849a2a5345ab7647d09b3b0c27b26598d1f4e3a5"
+    },
+    {
+      "originalPath": "director-storyboard-repair-20260930/prompt-invalidation.json",
+      "path": "director-storyboard-repair-20260930/prompt-invalidation.json",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "2309282018acba9a61b1a9a5b8fca9b385503c0da1894b139e1d71e91811025d"
+    },
+    {
+      "originalPath": "director-storyboard-repair-20260930/test-verification.json",
+      "path": "director-storyboard-repair-20260930/test-verification.json",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "3f5a39aadb9db29797f1983ec7a3f65c9d3340c9886577aa7959d4a253292c16"
+    },
+    {
+      "originalPath": "director-storyboard-repair-20260930/tests.log",
+      "path": "director-storyboard-repair-20260930/tests.log",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "5ee208f098772a963984f8dcde8c50e5a83f70af68129f1154e0eb3c12c97bcc"
+    },
+    {
+      "originalPath": "director-storyboard-repair-20260930/typecheck.log",
+      "path": "director-storyboard-repair-20260930/typecheck.log",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "80b9d00c2a55a8e311c11a46ce1b2cc5948a4351ba7ce612df4cbcc16430b233"
+    },
+    {
+      "originalPath": "director-storyboard-repair-20260930/ui-verification.json",
+      "path": "director-storyboard-repair-20260930/ui-verification.json",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "7d34e5d1db6f78ca83a4ecd1cee973b32f1cfc4244e56b6224111e5fe94b5bd1"
+    },
+    {
+      "originalPath": "h3-format-1790397222805.json",
+      "path": "h3-format-1790397222805.json",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "68ebf0b8d0ba907bff42964a7d48aa53d514d4e07eb0bc2d07d3e419d3ad6e00"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/candidate-generation.log",
+      "path": "h3-hanging-action-20260930/candidate-generation.log",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "3877abfe2ea4870ffbe3a7f0c8d9275dd0cc8264b597ebc842817fa936372f6d"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/candidate-graph.json",
+      "path": "h3-hanging-action-20260930/candidate-graph.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "7726f0e5c4b7551a5375ca6f85df25b50224d995708ad317c8ce54c64280e75d"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/candidate-history.json",
+      "path": "h3-hanging-action-20260930/candidate-history.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "d12f166807f08ba0177d4d20e43e4532ec56b52936aaf58e61073f74349047f4"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/candidate-prompt.txt",
+      "path": "h3-hanging-action-20260930/candidate-prompt.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "58f04f57255a06d71f0b97d1ac10660bdb140c5f1fd73aaad3a4349996af58c1"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/candidate-response-1.txt",
+      "path": "h3-hanging-action-20260930/candidate-response-1.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "9aa4c9131a68dae7b1c61e4c87a5fddfa94828ac8beaa6ae5d4fa4101bc97137"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/candidate-response-2.txt",
+      "path": "h3-hanging-action-20260930/candidate-response-2.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "a2d19648cffb2ed11c7073a92853bd6eaffa3dcffa85853f36e357dfd463c8da"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/candidate-response-3.txt",
+      "path": "h3-hanging-action-20260930/candidate-response-3.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "58f04f57255a06d71f0b97d1ac10660bdb140c5f1fd73aaad3a4349996af58c1"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/candidate-result.json",
+      "path": "h3-hanging-action-20260930/candidate-result.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "3145056cc6a1714fc509a537e4b0c83ccd1b47b89f6b1d48b449c01a2532df00"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/candidate-submission.json",
+      "path": "h3-hanging-action-20260930/candidate-submission.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "463f4a6ec3fc09452ebb298f0b8a472ecbcb8ce620fb93314662052f8c8c30f6"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/candidate-system-1.txt",
+      "path": "h3-hanging-action-20260930/candidate-system-1.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "96c340623e0272b0d5247c45eb8a095c71a5fce92992762483a08d59681767b1"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/candidate-system-2.txt",
+      "path": "h3-hanging-action-20260930/candidate-system-2.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "96c340623e0272b0d5247c45eb8a095c71a5fce92992762483a08d59681767b1"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/candidate-system-3.txt",
+      "path": "h3-hanging-action-20260930/candidate-system-3.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "b4b52c2d1556d06b95f216ec7a9497d128052a30266c837a9241e97ac7012940"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/clarify-storyboard.mjs",
+      "path": "archive/operations/h3-hanging-action-20260930/clarify-storyboard.mjs.txt",
+      "category": "一次性操作脚本",
+      "reason": "绑定真实项目/本机环境；会读写数据库、调用模型或观察本机渲染，不是通用测试",
+      "sha256": "29012c05ee32615a2231d90e4a535118ed3e7a9832d6d11e3edf52dd789cb078"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/frame-0.2.jpg",
+      "path": "h3-hanging-action-20260930/frame-0.2.jpg",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "68f1898597b21d9f2a162c39d3c8f03a8fda5eae8e6b72f69ed21d6bdef3fb9f"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/frame-1.2.jpg",
+      "path": "h3-hanging-action-20260930/frame-1.2.jpg",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "1b60fbb6405d7bf2f7487fd50eae592d0e1e51a37ed0740cae11a27a0b521d7c"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/frame-2.5.jpg",
+      "path": "h3-hanging-action-20260930/frame-2.5.jpg",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "5b4ea6af5dbe6b1d813d1e92ae2756830bbef66e59568484c878aef7c380791c"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/frame-4.2.jpg",
+      "path": "h3-hanging-action-20260930/frame-4.2.jpg",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "9fb6ddfbe7c03a884f2a837b3829652714e3619ebc226822275dbe8f6fc8e1bc"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/generate-candidate.ts",
+      "path": "archive/operations/h3-hanging-action-20260930/generate-candidate.ts.txt",
+      "category": "一次性操作脚本",
+      "reason": "绑定真实项目/本机环境；会读写数据库、调用模型或观察本机渲染，不是通用测试",
+      "sha256": "57106941afeecd73e439de6de7ee0f587fd4c568f74e265750e024f9f4502f06"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/model-template-before.md",
+      "path": "h3-hanging-action-20260930/model-template-before.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "35b104c0a2699dc3023a351bd8d67cff05ffad512c7b0ba005ba844a6ea853f0"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/prompts-before.json",
+      "path": "h3-hanging-action-20260930/prompts-before.json",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "16dcc843f45b935c17b9d7190f9bc01c536744580453d258a6278bacf96861c8"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/save-verified-version.mjs",
+      "path": "archive/operations/h3-hanging-action-20260930/save-verified-version.mjs.txt",
+      "category": "一次性操作脚本",
+      "reason": "绑定真实项目/本机环境；会读写数据库、调用模型或观察本机渲染，不是通用测试",
+      "sha256": "160b6f675bcadcf4cad51965e96eff3441f85d3d1fdc7cfbace7ec63fea5189d"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/storyboard-after.json",
+      "path": "h3-hanging-action-20260930/storyboard-after.json",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "4a7a28d906391a722450a11ded84987163030da13a00671329ab0cf0aa419daa"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/storyboard-before.json",
+      "path": "h3-hanging-action-20260930/storyboard-before.json",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "a41081af8b438d8da08ed15a08da2abdbfabbd74f51402dfe9633a1f733e0873"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/tests.log",
+      "path": "h3-hanging-action-20260930/tests.log",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "8e568678b3b366222f42f3984ea11b39dcc305920dd0cadf288d779faa59c17c"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial2/cancelled.json",
+      "path": "h3-hanging-action-20260930/trial2/cancelled.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "c4859d10f31c8635df4c079e6a90590963241f5f62837f5375cb983680b31241"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial2/candidate-graph.json",
+      "path": "h3-hanging-action-20260930/trial2/candidate-graph.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "c41034989b71b5c427def2dcb1336e121ddcd23842d38144e7855c69326d7f67"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial2/candidate-prompt.txt",
+      "path": "h3-hanging-action-20260930/trial2/candidate-prompt.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "2d7e1ca7e84e8c25752086893a87bca02648cb3ac9502b133841e93b44799fe0"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial2/candidate-response-1.txt",
+      "path": "h3-hanging-action-20260930/trial2/candidate-response-1.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "3df43332e6f9412528500de405dcfe79e5fb74f0c42fd3a50d6b7c5e21cb11ce"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial2/candidate-response-2.txt",
+      "path": "h3-hanging-action-20260930/trial2/candidate-response-2.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "f53ac27183871f017e10ea2bbdf3040a5b668c5e18157243b98f62176399b745"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial2/candidate-response-3.txt",
+      "path": "h3-hanging-action-20260930/trial2/candidate-response-3.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "2d7e1ca7e84e8c25752086893a87bca02648cb3ac9502b133841e93b44799fe0"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial2/candidate-result.json",
+      "path": "h3-hanging-action-20260930/trial2/candidate-result.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "6c2c656c5e9b9c546bd48bfd33220f08ecf70f639c700578f2fb316c2ef3a088"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial2/candidate-submission.json",
+      "path": "h3-hanging-action-20260930/trial2/candidate-submission.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "7c4ece5cf5cdbbe05692e2bfc35943199cf3430df4fc2fbfc668b689127b7de9"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial2/candidate-system-1.txt",
+      "path": "h3-hanging-action-20260930/trial2/candidate-system-1.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "c774da24fd2354b253143ec3c54a70f1b548df2b124aecfe172a0e10d2cf73be"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial2/candidate-system-2.txt",
+      "path": "h3-hanging-action-20260930/trial2/candidate-system-2.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "c774da24fd2354b253143ec3c54a70f1b548df2b124aecfe172a0e10d2cf73be"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial2/candidate-system-3.txt",
+      "path": "h3-hanging-action-20260930/trial2/candidate-system-3.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "b4b52c2d1556d06b95f216ec7a9497d128052a30266c837a9241e97ac7012940"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial2/generate-candidate.ts",
+      "path": "archive/operations/h3-hanging-action-20260930/trial2/generate-candidate.ts.txt",
+      "category": "一次性操作脚本",
+      "reason": "绑定真实项目/本机环境；会读写数据库、调用模型或观察本机渲染，不是通用测试",
+      "sha256": "259713972d39308ab5ccbd02dd4f18c5faed5e6aca518d48843e900a3c8e1de2"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial2/prompts-before.json",
+      "path": "h3-hanging-action-20260930/trial2/prompts-before.json",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "16dcc843f45b935c17b9d7190f9bc01c536744580453d258a6278bacf96861c8"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial2/save-verified-version.mjs",
+      "path": "archive/operations/h3-hanging-action-20260930/trial2/save-verified-version.mjs.txt",
+      "category": "一次性操作脚本",
+      "reason": "绑定真实项目/本机环境；会读写数据库、调用模型或观察本机渲染，不是通用测试",
+      "sha256": "cc1db65787724ca1526925e51487e4e945aeadd8ee3ce5968640d654e05c28bc"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial2/storyboard-after.json",
+      "path": "h3-hanging-action-20260930/trial2/storyboard-after.json",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "5b0fb0fff6adc37cfd43227fb5162de27c4951c3a33a92e63afa20b89725d180"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial2/storyboard-before.json",
+      "path": "h3-hanging-action-20260930/trial2/storyboard-before.json",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "4a7a28d906391a722450a11ded84987163030da13a00671329ab0cf0aa419daa"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/candidate-graph.json",
+      "path": "h3-hanging-action-20260930/trial3/candidate-graph.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "799490e8e667b7020a91bb90d239c86cb204d4334cfeebda7c9cb40734c95fda"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/candidate-history.json",
+      "path": "h3-hanging-action-20260930/trial3/candidate-history.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "0e842db0abcb980781941dfcdf5fae4892f52fa2a6644cd6c0822b8d76d3954c"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/candidate-prompt.txt",
+      "path": "h3-hanging-action-20260930/trial3/candidate-prompt.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "fed9e773b5c35af04b72f5e030ead75e90876e1ed6544dd5c5b565131d361282"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/candidate-response-1.txt",
+      "path": "h3-hanging-action-20260930/trial3/candidate-response-1.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "326c022608a83dd9d0ddbbcdf11f65556843e5e889f9c31d3a3c568071a076e5"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/candidate-response-2.txt",
+      "path": "h3-hanging-action-20260930/trial3/candidate-response-2.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "193b6a1cb8bd9e6e9fa1803ff00285cd6d027c88ff6360a45caa9cf8e59941e6"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/candidate-response-3.txt",
+      "path": "h3-hanging-action-20260930/trial3/candidate-response-3.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "a568d7505334ccf0fb9cf131446310339f453379a8a3526421d506015a43ab5f"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/candidate-response-4.txt",
+      "path": "h3-hanging-action-20260930/trial3/candidate-response-4.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "fed9e773b5c35af04b72f5e030ead75e90876e1ed6544dd5c5b565131d361282"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/candidate-result.json",
+      "path": "h3-hanging-action-20260930/trial3/candidate-result.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "1f5d99d43f512fae534a06539bb2a9ba4f9b307af4f90eabbe5b6aa7a9bf58b9"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/candidate-submission.json",
+      "path": "h3-hanging-action-20260930/trial3/candidate-submission.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "8278a24a1376e0e420999cf54a7d44b0792876b1ebda29ccd86af8b9d51ecbac"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/candidate-system-1.txt",
+      "path": "h3-hanging-action-20260930/trial3/candidate-system-1.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "f86b069130d1190635c22cebe58dc035c03ec335f05930220f3e66465e033e0e"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/candidate-system-2.txt",
+      "path": "h3-hanging-action-20260930/trial3/candidate-system-2.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "f86b069130d1190635c22cebe58dc035c03ec335f05930220f3e66465e033e0e"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/candidate-system-3.txt",
+      "path": "h3-hanging-action-20260930/trial3/candidate-system-3.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "f86b069130d1190635c22cebe58dc035c03ec335f05930220f3e66465e033e0e"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/candidate-system-4.txt",
+      "path": "h3-hanging-action-20260930/trial3/candidate-system-4.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "b4b52c2d1556d06b95f216ec7a9497d128052a30266c837a9241e97ac7012940"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/frame-0.2.jpg",
+      "path": "h3-hanging-action-20260930/trial3/frame-0.2.jpg",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "b6ec97d499bb51ca95e94fa0528e66cba3e41f86e3fee6d0d8abbbbc91866721"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/frame-0.8.jpg",
+      "path": "h3-hanging-action-20260930/trial3/frame-0.8.jpg",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "e6c289b32edcc6d976ebb9a445d583f0c2988107d0ca664218c2be19b1b11863"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/frame-1.5.jpg",
+      "path": "h3-hanging-action-20260930/trial3/frame-1.5.jpg",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "a69bde21e63a390c41c411f5becb91dbb4f0f846c4696beb299b1be7ec5d59d2"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/frame-2.5.jpg",
+      "path": "h3-hanging-action-20260930/trial3/frame-2.5.jpg",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "b683bf9326e3a50042d559e1ca169696371858b04a8d8129147b413e08ebe4e0"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/frame-3.5.jpg",
+      "path": "h3-hanging-action-20260930/trial3/frame-3.5.jpg",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "42bc2a29e3a301a68003d5104cb46fab56f6c0e25dbc992dc0f91d409c24d3be"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/frame-4.6.jpg",
+      "path": "h3-hanging-action-20260930/trial3/frame-4.6.jpg",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "fddbfc5b0b5f5594b3da382bb860cf4471dd2a69e3e4ba721ee362cb8b87628a"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/generate-candidate.ts",
+      "path": "archive/operations/h3-hanging-action-20260930/trial3/generate-candidate.ts.txt",
+      "category": "一次性操作脚本",
+      "reason": "绑定真实项目/本机环境；会读写数据库、调用模型或观察本机渲染，不是通用测试",
+      "sha256": "2ca918243e0562d0ec43429971824a2becf97e5d74b345e6b2347e0483409ce2"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/prompts-before.json",
+      "path": "h3-hanging-action-20260930/trial3/prompts-before.json",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "16dcc843f45b935c17b9d7190f9bc01c536744580453d258a6278bacf96861c8"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/review-render.mjs",
+      "path": "archive/operations/h3-hanging-action-20260930/trial3/review-render.mjs.txt",
+      "category": "一次性操作脚本",
+      "reason": "绑定真实项目/本机环境；会读写数据库、调用模型或观察本机渲染，不是通用测试",
+      "sha256": "d92c8b9d8c248b19172d46960d30d672b62b0492631b3e2fa559b065a21e44b7"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/save-verified-version.mjs",
+      "path": "archive/operations/h3-hanging-action-20260930/trial3/save-verified-version.mjs.txt",
+      "category": "一次性操作脚本",
+      "reason": "绑定真实项目/本机环境；会读写数据库、调用模型或观察本机渲染，不是通用测试",
+      "sha256": "ffba579eada94973aa2733d207bc5c7998e6574ef9368d5a0952c4dd32506557"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/saved-version.json",
+      "path": "h3-hanging-action-20260930/trial3/saved-version.json",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "7cfdbd9b2dc374e5d0ab39c74f8212b88043accb8edf8eb07ab27e7e2f79f4e9"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/storyboard-after.json",
+      "path": "h3-hanging-action-20260930/trial3/storyboard-after.json",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "1f1bd67c1a1c546dbba654f65c0eb68529c248196258164bdf03ebb888b0cdd3"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/storyboard-before.json",
+      "path": "h3-hanging-action-20260930/trial3/storyboard-before.json",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "5b0fb0fff6adc37cfd43227fb5162de27c4951c3a33a92e63afa20b89725d180"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/ui-hanging-opening.png",
+      "path": "h3-hanging-action-20260930/trial3/ui-hanging-opening.png",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "f6f2018ac40bbe1603b4fa4b75caf4d1a3724816181a3e92a63845691a6539eb"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/ui-saved-preview.png",
+      "path": "h3-hanging-action-20260930/trial3/ui-saved-preview.png",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "352732f1a0c40bf84a76b0beba5a72f0ef9a48733132d2b4763d73d03e85aae8"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/trial3/visual-review.json",
+      "path": "h3-hanging-action-20260930/trial3/visual-review.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "ceaddfce85ce15164cd9192da9188d5bb16aeb735a3071eda1a50443877f1be7"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/video-manual-before.md",
+      "path": "h3-hanging-action-20260930/video-manual-before.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "2f8c08d87ec64fe56f3046915d30709a7340188b0eb4bbfa6dced6bbc3face2c"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/video-prefix-before.md",
+      "path": "h3-hanging-action-20260930/video-prefix-before.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "457a78621feaa9ba76050a33d1ccccee929d7ad4e4009c9ae09fe30757aa0b73"
+    },
+    {
+      "originalPath": "h3-hanging-action-20260930/visual-review.json",
+      "path": "h3-hanging-action-20260930/visual-review.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "abcd2720ba4805cd16f7e4da794ee2daaa5b2c0f813a9de4e55b33f06999ed09"
+    },
+    {
+      "originalPath": "h3-reference-refresh-20260930/before.json",
+      "path": "h3-reference-refresh-20260930/before.json",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "46eb47e972150ce79d56a4149c02f1dc6c561df5c1e56764bf7180ba2c3f45bf"
+    },
+    {
+      "originalPath": "h3-reference-refresh-20260930/data-after.json",
+      "path": "h3-reference-refresh-20260930/data-after.json",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "34bb2cb68c2d0bcab6426ec73514eae911b6fafea8edc095c8367159d7652eee"
+    },
+    {
+      "originalPath": "h3-reference-refresh-20260930/preflight-after.json",
+      "path": "h3-reference-refresh-20260930/preflight-after.json",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "cd77d9bff854b5efd0d5e1be9050e1a4201777c2e3b089146aee8607d0c861f4"
+    },
+    {
+      "originalPath": "h3-reference-refresh-20260930/preflight-before.json",
+      "path": "h3-reference-refresh-20260930/preflight-before.json",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "2928c68cb8160113db65958bf6ffc32faa65cbf5061d887eef69b0388d279069"
+    },
+    {
+      "originalPath": "h3-reference-refresh-20260930/repair.ts",
+      "path": "archive/operations/h3-reference-refresh-20260930/repair.ts.txt",
+      "category": "一次性操作脚本",
+      "reason": "绑定真实项目/本机环境；会读写数据库、调用模型或观察本机渲染，不是通用测试",
+      "sha256": "aae8cb1f200a781be1eab820d3273b139d37a88402720ee0d6ab00bf8ab3c160"
+    },
+    {
+      "originalPath": "h3-reference-refresh-20260930/request.json",
+      "path": "h3-reference-refresh-20260930/request.json",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "04c942029b5e1909a152fa12da959f034a3787e50b0517378b86cbef393ccca4"
+    },
+    {
+      "originalPath": "h3-reference-refresh-20260930/run.log",
+      "path": "h3-reference-refresh-20260930/run.log",
+      "category": "审计/修复验证证据",
+      "reason": "保留导演/分镜问题与修复的审计、校验、模型输出及日志；不是独立可重放 fixture",
+      "sha256": "d196fb4cc4c2c3215b9146c55c7e0d9314195723692295c19a5b32c494c652ed"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/baseline-3.8s.png",
+      "path": "h3-style-research-20260930/baseline-3.8s.png",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "a85782068e08f4efe908bea4309ab8ea19972f071303c683b9daa8145567ea69"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/baseline-history.json",
+      "path": "h3-style-research-20260930/baseline-history.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "67b0ed86c208386938453d4dfcc6c614dbd0e69cb5139159c5595255245e5743"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/baseline-prompt.txt",
+      "path": "h3-style-research-20260930/baseline-prompt.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "226b7b54bdea19f263e608700c9d39fc08c30e2c8a17ce3ed0f761ef7a27f461"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/candidate-1.0s.png",
+      "path": "h3-style-research-20260930/candidate-1.0s.png",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "d227ae0de1a0dba8cdb254ef0aed96383987738735b5bdb36a550e0b15fe4ca6"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/candidate-3.8s.png",
+      "path": "h3-style-research-20260930/candidate-3.8s.png",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "9b688796c9ae205d542471759036f2271b7f62ac10a982816a7dfa83f3ca55a3"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/candidate-4.5s.png",
+      "path": "h3-style-research-20260930/candidate-4.5s.png",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "42dce3004a8d8e819f944cfcb4624acdf0cae635f63016f4093ed2dec4911628"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/candidate-generation.log",
+      "path": "h3-style-research-20260930/candidate-generation.log",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "7ef643b55adc5c9145551cf698f81c2d852bc2a9e93806c922498a3cd7de46f2"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/candidate-graph.json",
+      "path": "h3-style-research-20260930/candidate-graph.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "fd27b0a73f30bc1936d35f9aa34b2ef44175ddbec16622356328230533345b59"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/candidate-history.json",
+      "path": "h3-style-research-20260930/candidate-history.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "e480afaa6f5f2298bfb98a5bbe193cad4c97ecddfbcc8aca74dd4bfa9f1dff86"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/candidate-prompt.txt",
+      "path": "h3-style-research-20260930/candidate-prompt.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "f5ae0b1612e94e0be4414562d401dac6c5bacaf205384316619b6139a4fb3bf7"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/candidate-response-1.txt",
+      "path": "h3-style-research-20260930/candidate-response-1.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "3ae7dfafc631ec8c11e257a00ee7bcf50738bf631cd8140f2d637ea6eefa9ed2"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/candidate-response-2.txt",
+      "path": "h3-style-research-20260930/candidate-response-2.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "b97b7bf047d17bee40101552c5b28dc88ff2b42aad140d537b64cb19007452e2"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/candidate-response-3.txt",
+      "path": "h3-style-research-20260930/candidate-response-3.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "f5ae0b1612e94e0be4414562d401dac6c5bacaf205384316619b6139a4fb3bf7"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/candidate-result.json",
+      "path": "h3-style-research-20260930/candidate-result.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "f7c4c8d76f0b281e872b562c86d97e33703d74fe01e74d505bed0a00a69afccf"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/candidate-submission.json",
+      "path": "h3-style-research-20260930/candidate-submission.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "57bc306f0d66e866d02fbe790c7db721bb33f8c0d712bce3e2b78ef18233e60f"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/candidate-system-1.txt",
+      "path": "h3-style-research-20260930/candidate-system-1.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "e0995983be9bff9ba5fccee77a07e29d755ff1eb48c1502760a77d0c2509ef53"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/candidate-system-2.txt",
+      "path": "h3-style-research-20260930/candidate-system-2.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "e0995983be9bff9ba5fccee77a07e29d755ff1eb48c1502760a77d0c2509ef53"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/candidate-system-3.txt",
+      "path": "h3-style-research-20260930/candidate-system-3.txt",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "b4b52c2d1556d06b95f216ec7a9497d128052a30266c837a9241e97ac7012940"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/comfy-issue-comments.json",
+      "path": "h3-style-research-20260930/comfy-issue-comments.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "457a17f6b1088d4c2a1e99b545142bfc7111ffddea561f55d3b7928f60e6e0d6"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/comparison-controls.json",
+      "path": "h3-style-research-20260930/comparison-controls.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "08d118e802bec86a7e3016d731c91242a1937f5783790c86cb59499b3d5d3625"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/diagnostic-state-restoration.json",
+      "path": "h3-style-research-20260930/diagnostic-state-restoration.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "fb0a35d3e74541541df7697e9cd367f5925b0821bad95b41999ffbac9a91fd81"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/generate-candidate.ts",
+      "path": "archive/operations/h3-style-research-20260930/generate-candidate.ts.txt",
+      "category": "一次性操作脚本",
+      "reason": "绑定真实项目/本机环境；会读写数据库、调用模型或观察本机渲染，不是通用测试",
+      "sha256": "08896531ad41a051347f39161f31556a155859f7f4cd38090073f82c56674cc4"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/live-input-probe.json",
+      "path": "h3-style-research-20260930/live-input-probe.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "99f8507c2a70713d60630253396dd25a69c1d222419b08139cf9d8894f2ab8a6"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/model-template-before.md",
+      "path": "h3-style-research-20260930/model-template-before.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "6ea7b65997db74ace9c7d24a25ddb6ea80c4b6a7556f8483247b3de54a7a4b81"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/official-prompt-skill.md",
+      "path": "h3-style-research-20260930/official-prompt-skill.md",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "a7000443588ca3f145e3b3fd8900f14e0325dc460bd811268fac89a9dc8e56d0"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/preservation-check.json",
+      "path": "h3-style-research-20260930/preservation-check.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "555af1663c39071845b7d95be902075c4bec52f3f7d2fc7587291801f021dcc6"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/reference-only-1.0s.png",
+      "path": "h3-style-research-20260930/reference-only-1.0s.png",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "7dd8515ab6ffd609b5d662a0b2cb9fa6e864257d067e6eb5e360982d75f418fb"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/reference-only-3.8s.png",
+      "path": "h3-style-research-20260930/reference-only-3.8s.png",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "f512e205e86620a41b074deacfa42998988639078e241bdc333148e9180fad74"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/reference-only-4.5s.png",
+      "path": "h3-style-research-20260930/reference-only-4.5s.png",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "32be279fcc115a8fd66abb7da4c51c1f760114ceea55ed234c2403906d885dc6"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/reference-only-graph.json",
+      "path": "h3-style-research-20260930/reference-only-graph.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "4c78c4750c5d77458c044601adc7a1a5e3ebb72f3bcf29e2043b7e01aaf21272"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/reference-only-history.json",
+      "path": "h3-style-research-20260930/reference-only-history.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "cba39bb10fa9a3f3963184abe03c5060103b72413ee99d18f3c58386bb89595f"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/reference-only-submission.json",
+      "path": "h3-style-research-20260930/reference-only-submission.json",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "8fd21fcbbe1c84ef9dc9879b596796292955e6dbb1b3e61bc337d3b71382a192"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/tests.log",
+      "path": "h3-style-research-20260930/tests.log",
+      "category": "人工视觉回归证据",
+      "reason": "保留帧、提示词、工作流、生成上下文或评审链；不是自动测试通过的证明",
+      "sha256": "bf8185debe5975cd134946954b1d679fa093bfdea8a0bad171b82b826c9e5d96"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/video-manual-before.md",
+      "path": "h3-style-research-20260930/video-manual-before.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "2e47769e4d2e43f290b70e488ea564ff2fed6c417df6ca4295dfe03f03d2fddb"
+    },
+    {
+      "originalPath": "h3-style-research-20260930/video-prefix-before.md",
+      "path": "h3-style-research-20260930/video-prefix-before.md",
+      "category": "真实运行快照",
+      "reason": "真实项目输入/状态/修订或旧模板；仅用于历史追溯，提炼脱敏后才能成为 fixture",
+      "sha256": "6f8e66fc568c1a4075aae591a6d5f4d8a7cc0579691c00a972b66fe895faa55f"
+    },
+    {
+      "originalPath": "qwen38-integration-20260930/before.json",
+      "path": "qwen38-integration-20260930/before.json",
+      "category": "真实运行快照",
+      "reason": "接入前真实配置备份，不是测试输入",
+      "sha256": "93de0c7c5cc2ce421a12c517760e1994ce24425a832ee0ce3d97e2e16e97e7e9"
+    },
+    {
+      "originalPath": "qwen38-integration-20260930/sdk-live-tests.json",
+      "path": "qwen38-integration-20260930/sdk-live-tests.json",
+      "category": "集成 smoke 证据",
+      "reason": "保留 SDK 工具调用/流式、HTTP 或设置页实测；只证明当时环境",
+      "sha256": "088c8212932d633ee24d3f47a404c325f073b31b00d6be5371f319b6d0bad7eb"
+    },
+    {
+      "originalPath": "qwen38-integration-20260930/settings.png",
+      "path": "qwen38-integration-20260930/settings.png",
+      "category": "集成 smoke 证据",
+      "reason": "保留 SDK 工具调用/流式、HTTP 或设置页实测；只证明当时环境",
+      "sha256": "c23883a916041a46d0d3cb46800d10d5620089a36c3ccb7fabaa2d552d2b7844"
+    },
+    {
+      "originalPath": "qwen38-integration-20260930/text-api-test.json",
+      "path": "qwen38-integration-20260930/text-api-test.json",
+      "category": "集成 smoke 证据",
+      "reason": "保留 SDK 工具调用/流式、HTTP 或设置页实测；只证明当时环境",
+      "sha256": "58887b542e9ff6869fdfe71ecb33759148404801f362873a605da2f8fe4fc5d8"
+    }
+  ]
+}
