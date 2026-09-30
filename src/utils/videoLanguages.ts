@@ -222,9 +222,15 @@ async function generateMissingVariants(
       assertTranslatedDialogueLanguage(prompt, language);
       const duration = planLanguageVariantDuration(base, prompt, language, baseDuration);
       if (Math.abs(duration - baseDuration) > 0.05) {
+        const translatedPrompt = prompt;
+        const dialogueLines = (text: string) =>
+          [...String(text || "").matchAll(/<d(?:\s[^>]*)?>([\s\S]*?)<\/d>/gi)].map((match) => match[1].trim());
         prompt = (await translate(retimeLanguagePromptInstruction(language, duration), prompt, language, duration)).trim();
         if (!prompt || prompt.startsWith("LANGUAGE_TIMING_REVIEW:")) throw new Error(prompt || "模型未返回重排后的完整提示词");
         assertTranslatedDialogueLanguage(prompt, language);
+        if (JSON.stringify(dialogueLines(prompt)) !== JSON.stringify(dialogueLines(translatedPrompt))) {
+          throw new Error("LANGUAGE_TIMING_REVIEW: 时间轴重排改写或重排了目标语言对白；必须逐句保持完全相同");
+        }
       }
       const slots = (text: string) =>
         [...new Set([...text.replace(/<d\b[^>]*>[\s\S]*?<\/d>/g, "").matchAll(/<(?:Picture|Subject|Image|Video|Audio)\s+\d+>/g)]
