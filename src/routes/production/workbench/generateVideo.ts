@@ -11,7 +11,7 @@ import { assertH3ReferenceBindings } from "@/utils/h3ReferenceBindings";
 import { inspectVideoQuality } from "@/utils/videoQuality";
 import { assertH3ActiveStates, assertH3PictureSlots } from "@/utils/h3VisualStateGuard";
 import { db as languageDb } from "@/utils/db";
-import { dialogueLanguageSchema, resolveLanguagePrompt } from "@/utils/videoLanguages";
+import { dialogueLanguageSchema, resolveLanguageVariant } from "@/utils/videoLanguages";
 const router = express.Router();
 
 type Type = "imageReference" | "startImage" | "endImage" | "videoReference" | "audioReference";
@@ -64,6 +64,7 @@ export default router.post(
     const ownedTrack = await u.db("o_videoTrack").where({ id: trackId, projectId, scriptId }).first();
     if (!ownedTrack) return res.status(404).send(error("视频段不存在"));
     let prompt: string;
+    let generationDuration = duration;
     let modeData: any[] = [];
     if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
       try { modeData = JSON.parse(mode); } catch {}
@@ -73,7 +74,9 @@ export default router.post(
     const h3 = isMiniMaxH3(model);
     let base64: ReferenceList[];
     try {
-      prompt = await resolveLanguagePrompt(languageDb, trackId, language, req.body.prompt, audio);
+      const languageVariant = await resolveLanguageVariant(languageDb, trackId, language, req.body.prompt, duration, audio);
+      prompt = languageVariant.prompt;
+      generationDuration = languageVariant.duration;
       await assertStoryboardPromptFresh(u.db, projectId, trackId, prompt);
       const resolved = await Promise.all(
         (uploadData as UploadItem[]).map(async (item): Promise<ResolvedReference | null> => {
@@ -137,19 +140,19 @@ export default router.post(
       return res.status(409).send(error(reason, { valid: false, tracks: [{ trackId, language, valid: false, reason }] }));
     }
     if (validateOnly) return res.status(200).send(success({ valid: true, tracks: [{
-      trackId, language, valid: true, pictureCount: base64.filter(item => item.type === "image").length, referenceCount: base64.length,
+      trackId, language, duration: generationDuration, valid: true, pictureCount: base64.filter(item => item.type === "image").length, referenceCount: base64.length,
     }] }));
     const [videoId] = await u.db("o_video").insert({
       filePath: videoPath, time: Date.now(), state: "生成中", scriptId, projectId, videoTrackId: trackId,
     });
-    if (language) await languageDb("o_videoLanguage").insert({ videoId, language, prompt });
+    if (language) await languageDb("o_videoLanguage").insert({ videoId, language, prompt, duration: generationDuration });
     await u.db("o_videoTrack").where({ id: trackId, projectId }).update({ state: "生成中", reason: null });
     res.status(200).send(success(videoId));
     const relatedObjects = { projectId, videoId, scriptId, type: "视频" };
     const aiVideo = u.Ai.Video(model);
     aiVideo.run({
       prompt, referenceList: base64,
-      mode: modeData.length > 0 ? modeData : mode, duration,
+      mode: modeData.length > 0 ? modeData : mode, duration: generationDuration,
       aspectRatio: (ratio?.videoRatio as "16:9" | "9:16") || "16:9", resolution, audio,
     }, {
       projectId, taskClass: "视频生成", describe: "根据提示词生成视频", relatedObjects: JSON.stringify(relatedObjects),
