@@ -13,12 +13,16 @@ export async function guardStoryboardContent(
   // Old workspaces can contain non-tabular notes. Keep those readable, without certifying coverage.
   if (!/^###\s*片段/m.test(markdown) && !facts?.dialogue.length && !facts?.sourceDuration && !facts?.screenText.length) return;
   const assets = await trx.schema.hasTable("o_assets") ? await trx("o_assets").where({ projectId }).select("id") : undefined;
+  const expectedSceneTransition = scene > 1 ? readDirectorSceneTransition(plan, scene - 1, scene) : undefined;
+  if (options.requireContinuityContract && scene > 1 && !expectedSceneTransition) {
+    throw new Error(`第${scene}场需要场间连续性契约，但当前导演计划缺少 Sc${scene - 1} → Sc${scene}；请先重新生成/升级导演计划`);
+  }
   const validation = validateStoryboardScene(scene, markdown, source, {
     targetDuration: productionSceneBudget(plan, scene, source),
     assetIds: assets?.map(asset => Number(asset.id)),
     previousScene: options.previousScene,
     requireContinuityContract: options.requireContinuityContract,
-    expectedSceneTransition: scene > 1 ? readDirectorSceneTransition(plan, scene - 1, scene) : undefined,
+    expectedSceneTransition,
   });
   if (!validation.valid) throw new Error(`第${scene}场未通过内容校验：${validation.errors.join("；")}`);
 }
