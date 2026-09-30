@@ -14,6 +14,13 @@ export type StoryboardContinuityContract = {
   screenDirection: string;
 };
 
+export type DirectorSceneTransition = {
+  fromScene: number;
+  toScene: number;
+  continuityMode: ContinuityMode;
+  cutType: Exclude<ContinuityCutType, "SCENE_START">;
+};
+
 export type StoryboardContinuityValidation = {
   errors: string[];
   warnings: string[];
@@ -80,10 +87,25 @@ export function extractStoryboardSceneMarkdown(table: string, scene: number): st
   return text.slice(current.index, headings[currentIndex + 1]?.index ?? text.length).trim();
 }
 
+export function readDirectorSceneTransition(plan: string, fromScene: number, toScene: number): DirectorSceneTransition | undefined {
+  const rows = String(plan || "").split(/\r?\n/).filter(line => /^\s*\|\s*Sc\s*\d+\s*(?:→|->)\s*Sc\s*\d+\s*\|/i.test(line));
+  for (const line of rows) {
+    const cells = line.split("|").slice(1, -1).map(cell => cell.trim());
+    const edge = /^Sc\s*(\d+)\s*(?:→|->)\s*Sc\s*(\d+)$/i.exec(cells[0] || "");
+    if (!edge || Number(edge[1]) !== fromScene || Number(edge[2]) !== toScene) continue;
+    const continuityMode = String(cells[1] || "").toUpperCase() as ContinuityMode;
+    const cutType = String(cells[2] || "").toUpperCase() as DirectorSceneTransition["cutType"];
+    if (!["PRESERVE", "RESET"].includes(continuityMode)) return undefined;
+    if (!["CONTINUOUS_ACTION", "HARD_CUT", "MATCH_CUT", "TIME_JUMP", "FX_TRANSITION"].includes(cutType)) return undefined;
+    return { fromScene, toScene, continuityMode, cutType };
+  }
+  return undefined;
+}
+
 export function validateStoryboardContinuity(
   markdown: string,
   previousScene?: string,
-  options: { requireContracts?: boolean } = {},
+  options: { requireContracts?: boolean; expectedSceneTransition?: DirectorSceneTransition } = {},
 ): StoryboardContinuityValidation {
   const errors: string[] = [];
   const warnings: string[] = [];
@@ -113,6 +135,14 @@ export function validateStoryboardContinuity(
     }
   }
   const first = parsed[0];
+  if (first && options.expectedSceneTransition) {
+    if (first.continuityMode !== options.expectedSceneTransition.continuityMode) {
+      errors.push("本场首片段 continuityMode 与导演规划不一致：应为 " + options.expectedSceneTransition.continuityMode);
+    }
+    if (first.cutType !== options.expectedSceneTransition.cutType) {
+      errors.push("本场首片段 cutType 与导演规划不一致：应为 " + options.expectedSceneTransition.cutType);
+    }
+  }
   const previousExit = previousScene ? extractSceneExitContinuity(previousScene) : undefined;
   if (first && previousExit) {
     if (first.continuityMode === "PRESERVE") {
