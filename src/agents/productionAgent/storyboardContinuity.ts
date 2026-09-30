@@ -10,8 +10,10 @@ export type StoryboardContinuityContract = {
   exitStateId: string;
   entrySummary: string;
   exitSummary: string;
-  axisLock: string;
-  screenDirection: string;
+  entryAxisLock: string;
+  exitAxisLock: string;
+  entryScreenDirection: string;
+  exitScreenDirection: string;
 };
 
 export type DirectorSceneTransition = {
@@ -54,8 +56,10 @@ function validateContractShape(contract: StoryboardContinuityContract, label: st
   if (!idPattern.test(contract.exitStateId || "")) errors.push(label + "连续性契约 exitStateId 无效");
   if (!contract.entrySummary?.trim()) errors.push(label + "连续性契约 entrySummary 不能为空");
   if (!contract.exitSummary?.trim()) errors.push(label + "连续性契约 exitSummary 不能为空");
-  if (!contract.axisLock?.trim()) errors.push(label + "连续性契约 axisLock 不能为空");
-  if (!contract.screenDirection?.trim()) errors.push(label + "连续性契约 screenDirection 不能为空");
+  if (!contract.entryAxisLock?.trim()) errors.push(label + "连续性契约 entryAxisLock 不能为空");
+  if (!contract.exitAxisLock?.trim()) errors.push(label + "连续性契约 exitAxisLock 不能为空");
+  if (!contract.entryScreenDirection?.trim()) errors.push(label + "连续性契约 entryScreenDirection 不能为空");
+  if (!contract.exitScreenDirection?.trim()) errors.push(label + "连续性契约 exitScreenDirection 不能为空");
 }
 
 export function extractSceneContinuityContracts(markdown: string): StoryboardContinuityContract[] {
@@ -73,8 +77,8 @@ export function continuityHandoff(markdown: string): string {
     continuityGroup: last.continuityGroup,
     exitStateId: last.exitStateId,
     exitSummary: last.exitSummary,
-    axisLock: last.axisLock,
-    screenDirection: last.screenDirection,
+    exitAxisLock: last.exitAxisLock,
+    exitScreenDirection: last.exitScreenDirection,
   });
 }
 
@@ -129,9 +133,12 @@ export function validateStoryboardContinuity(
     if (prior && current.continuityMode === "PRESERVE") {
       if (current.entryStateId !== prior.exitStateId) errors.push("片段" + (i + 1) + "声明 PRESERVE，但 entryStateId 未继承上一片段 exitStateId");
       if (current.continuityGroup !== prior.continuityGroup) errors.push("片段" + (i + 1) + "声明 PRESERVE，但 continuityGroup 与上一片段不一致");
+      if (current.entryAxisLock !== prior.exitAxisLock) errors.push("片段" + (i + 1) + "声明 PRESERVE，但 entryAxisLock 未继承上一片段 exitAxisLock");
+      if (current.entryScreenDirection !== prior.exitScreenDirection) errors.push("片段" + (i + 1) + "声明 PRESERVE，但 entryScreenDirection 未继承上一片段 exitScreenDirection");
     }
-    if (prior && current.continuityMode === "RESET" && current.entryStateId === prior.exitStateId) {
-      errors.push("片段" + (i + 1) + "声明 RESET，但仍复用了上一片段 exitStateId");
+    if (prior && current.continuityMode === "RESET") {
+      if (current.entryStateId === prior.exitStateId) errors.push("片段" + (i + 1) + "声明 RESET，但仍复用了上一片段 exitStateId");
+      if (current.continuityGroup === prior.continuityGroup) errors.push("片段" + (i + 1) + "声明 RESET，但仍复用了上一片段 continuityGroup");
     }
   }
   const first = parsed[0];
@@ -148,8 +155,11 @@ export function validateStoryboardContinuity(
     if (first.continuityMode === "PRESERVE") {
       if (first.entryStateId !== previousExit.exitStateId) errors.push("本场首片段声明跨场 PRESERVE，但 entryStateId 未继承上一场 exitStateId");
       if (first.continuityGroup !== previousExit.continuityGroup) errors.push("本场首片段声明跨场 PRESERVE，但 continuityGroup 与上一场不一致");
-    } else if (first.entryStateId === previousExit.exitStateId) {
-      errors.push("本场首片段声明 RESET，但仍复用了上一场 exitStateId");
+      if (first.entryAxisLock !== previousExit.exitAxisLock) errors.push("本场首片段声明跨场 PRESERVE，但 entryAxisLock 未继承上一场 exitAxisLock");
+      if (first.entryScreenDirection !== previousExit.exitScreenDirection) errors.push("本场首片段声明跨场 PRESERVE，但 entryScreenDirection 未继承上一场 exitScreenDirection");
+    } else {
+      if (first.entryStateId === previousExit.exitStateId) errors.push("本场首片段声明 RESET，但仍复用了上一场 exitStateId");
+      if (first.continuityGroup === previousExit.continuityGroup) errors.push("本场首片段声明 RESET，但仍复用了上一场 continuityGroup");
     }
   } else if (first && first.continuityMode === "PRESERVE" && !previousExit && previousScene) {
     errors.push("本场首片段要求跨场 PRESERVE，但上一场没有可读取的连续性出口契约");
