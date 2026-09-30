@@ -32,6 +32,17 @@ on:
       - "scripts/reranker-server.py"
       - "package.json"
       - "tests/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/agent-contracts.yml"
+      - "src/agents/**"
+      - "src/routes/production/**"
+      - "src/utils/**"
+      - "data/skills/**"
+      - "Toonflow-web-master/src/views/production/components/workbench/**"
+      - "tests/**"
+      - "package.json"
   workflow_dispatch:
 
 jobs:
