@@ -93,6 +93,7 @@ export async function migrateVideoLanguages(db: Knex) {
       table.text("state").notNullable().defaultTo("未生成");
       table.text("reason");
       table.integer("videoId");
+      table.float("duration");
       table.primary(["trackId", "language"]);
     });
   if (!(await db.schema.hasTable("o_videoLanguage")))
@@ -100,6 +101,7 @@ export async function migrateVideoLanguages(db: Knex) {
       table.integer("videoId").primary();
       table.text("language").notNullable();
       table.text("prompt").notNullable();
+      table.float("duration");
     });
   await migrateLanguageDurationColumns(db);
 }
