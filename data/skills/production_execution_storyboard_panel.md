@@ -60,9 +60,9 @@ description: >-
 
 **第 2 步 · 逐片段写入视频描述（videoDesc）**
 以分镜表的每个 `### 片段` 为单位，按以下固定顺序写入：
-1. **连续性契约原文**：完整保留该片段的单行 `**连续性契约**：{...}`，不得改写 JSON、状态 ID、group、axisLock 或 screenDirection。
+1. **连续性契约原文**：完整保留该片段的单行 `**连续性契约**：{...}`，不得改写 JSON、状态 ID、continuityGroup、entry/exitAxisLock 或 entry/exitScreenDirection。
 2. **承接说明**：
-   - `continuityMode=PRESERVE`：必须从契约的 `entryStateId / entrySummary / axisLock / screenDirection` 开始，明确“本片段首帧继承该状态”。这条规则**允许并要求跨场承接**；场界本身不能把连续动作清零。
+   - `continuityMode=PRESERVE`：必须从契约的 `entryStateId / entrySummary / entryAxisLock / entryScreenDirection` 开始，明确“本片段首帧继承该状态”。这条规则**允许并要求跨场承接**；场界本身不能把连续动作清零。
    - `continuityMode=RESET`：明确这是导演规划允许的新状态建立，不继承上一片段即时姿态；但角色身份、服装状态和剧情事实仍遵守当前资产/剧本。
 3. **该片段分镜行原文**：完整保留 7 列表格中的序号、画面描述、时长、景别、运镜、台词、音效；不擅自补不存在的“角色动作/朝向/空间关系”独立列。
 
@@ -98,7 +98,7 @@ add_flowData_storyboard({ videoDesc: "连续性契约 + 承接说明 + 片段原
 **第 2 步 · 连续性与首帧预分析**
 正式写入前通读全部分镜表，以每个片段的 `**连续性契约**` 建立状态链：
 - `entryStateId / entrySummary` 是该片段第一帧的权威起始状态；`exitStateId / exitSummary` 是该片段结束状态。
-- `PRESERVE` 片段必须沿用上一片段（包括跨场）的 continuityGroup、axisLock、screenDirection 以及契约指定的姿态/支撑/道具状态；不得因为生成一张新分镜图而把人物恢复成资产设定图站姿。
+- `PRESERVE` 片段必须把上一片段的 `continuityGroup / exitStateId / exitAxisLock / exitScreenDirection` 精确继承到当前 `continuityGroup / entryStateId / entryAxisLock / entryScreenDirection`；不得因为生成一张新分镜图而把人物恢复成资产设定图站姿。
 - `RESET` 片段才允许建立新的时空构图；仍要服从角色当前有效资产状态。
 - 具体画面左右位置、面向、支撑关系优先读 entrySummary/exitSummary 和 7 列中的“画面描述”；不要寻找不存在的独立 orientation / spatialRelation / action 列。
 - 若契约与画面描述矛盾，停止并报告分镜表冲突，不自行选择一个版本继续生成。
@@ -114,7 +114,7 @@ add_flowData_storyboard({ videoDesc: "连续性契约 + 承接说明 + 片段原
 
 **第 6 步 · 生成提示词（prompt）并忠实性校验**
 逐行读取 `storyboardTable` 对应片段的连续性契约，以及该行「画面描述 / 景别 / 运镜 / 台词 / 音效」，严格按已加载技法中的内容忠实性原则映射为提示词；首帧必须先满足契约的 entryState，再表现本镜动作。**提示词正文不得包含光影/色温/明暗/色调描述**。**生成每条提示词后须立即逐字段比对分镜表原始内容**，确认：
-1. 连续性契约的 entryStateId / entrySummary / axisLock / screenDirection 已落实，PRESERVE 没有状态复位
+1. 连续性契约的 entryStateId / entrySummary / entryAxisLock / entryScreenDirection 已落实，PRESERVE 没有状态复位；若片段内发生方向/越轴变化，末帧应与 exitAxisLock / exitScreenDirection 对齐
 2. 画面描述中的所有可见主体、动作因果和空间关系均完整保留
 3. 提示词中无光影/色调相关词汇
 4. 景别与运镜匹配
