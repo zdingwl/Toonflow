@@ -5,7 +5,29 @@ import { commitStoryboardTableOutput, extractStoryboardTable } from "../src/agen
 import { storyboardSceneHash, reviseStoryboardScene } from "../src/agents/productionAgent/storyboardRevision";
 import { readStoryboardProgress } from "../src/agents/productionAgent/storyboardProgress";
 
-const sceneText = (number: number, duration: number) => {\n  const continuity = number === 1\n    ? { version: 1, continuityMode: "RESET", cutType: "SCENE_START", continuityGroup: "fixture-flow", entryStateId: "sc1-start", exitStateId: "sc1-end", entrySummary: "艾娃低头站定", exitSummary: "艾娃抬头并保持站位", entryAxisLock: "fixture-axis", exitAxisLock: "fixture-axis", entryScreenDirection: "艾娃面朝右", exitScreenDirection: "艾娃面朝右" }\n    : { version: 1, continuityMode: "PRESERVE", cutType: "CONTINUOUS_ACTION", continuityGroup: "fixture-flow", entryStateId: "sc1-end", exitStateId: "sc2-end", entrySummary: "艾娃承接抬头站位", exitSummary: "艾娃继续保持抬头", entryAxisLock: "fixture-axis", exitAxisLock: "fixture-axis", entryScreenDirection: "艾娃面朝右", exitScreenDirection: "艾娃面朝右" };\n  return `## 场${number}：场景\\n### 片段一（约${duration}s）\\n**连续性契约**：${JSON.stringify(continuity)}\\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\\n|---|---|---|---|---|---|---|\\n| 1 | 艾娃抬头 | ${duration} | 近景 | 固定 |  | 水声 |`;\n};
+const sceneText = (number: number, duration: number) => {
+  const continuity = number === 1
+    ? {
+        version: 1, continuityMode: "RESET", cutType: "SCENE_START", continuityGroup: "fixture-flow",
+        entryStateId: "sc1-start", exitStateId: "sc1-end",
+        entrySummary: "艾娃低头站定", exitSummary: "艾娃抬头并保持站位",
+        entryAxisLock: "fixture-axis", exitAxisLock: "fixture-axis",
+        entryScreenDirection: "艾娃面朝右", exitScreenDirection: "艾娃面朝右",
+      }
+    : {
+        version: 1, continuityMode: "PRESERVE", cutType: "CONTINUOUS_ACTION", continuityGroup: "fixture-flow",
+        entryStateId: "sc1-end", exitStateId: "sc2-end",
+        entrySummary: "艾娃承接抬头站位", exitSummary: "艾娃继续保持抬头",
+        entryAxisLock: "fixture-axis", exitAxisLock: "fixture-axis",
+        entryScreenDirection: "艾娃面朝右", exitScreenDirection: "艾娃面朝右",
+      };
+  return `## 场${number}：场景
+### 片段一（约${duration}s）
+**连续性契约**：${JSON.stringify(continuity)}
+| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |
+|---|---|---|---|---|---|---|
+| 1 | 艾娃抬头 | ${duration} | 近景 | 固定 |  | 水声 |`;
+};
 
 async function setup() {
   const db = knex({ client: "better-sqlite3", connection: { filename: ":memory:" }, useNullAsDefault: true });
@@ -15,7 +37,16 @@ async function setup() {
   await db.schema.createTable("o_agentWorkData", (t) => {
     t.increments("id").primary(); t.integer("projectId"); t.integer("episodesId"); t.string("key"); t.text("data");
   });
-  const script = "场1：测试\\n场2：测试";\n  const plan = `| 场间 | continuity_mode | transition_type | 承接要求 | 可重置项 |\\n|---|---|---|---|---|\\n| Sc1 → Sc2 | PRESERVE | CONTINUOUS_ACTION | 艾娃保持站位、抬头状态和视轴 | 无 |`;\n  await db("o_script").insert({ id: 2, projectId: 7, content: script });\n  await db("o_agentWorkData").insert({\n    projectId: 7, episodesId: 2, key: "productionAgent",\n    data: JSON.stringify({ script, scriptPlan: plan, assets: [], storyboardTable: "", storyboard: [], workbench: { videoList: [] } }),\n  });\n  for (const scene of [1, 2]) {
+  const script = "场1：测试\n场2：测试";
+  const plan = `| 场间 | continuity_mode | transition_type | 承接要求 | 可重置项 |
+|---|---|---|---|---|
+| Sc1 → Sc2 | PRESERVE | CONTINUOUS_ACTION | 艾娃保持站位、抬头状态和视轴 | 无 |`;
+  await db("o_script").insert({ id: 2, projectId: 7, content: script });
+  await db("o_agentWorkData").insert({
+    projectId: 7, episodesId: 2, key: "productionAgent",
+    data: JSON.stringify({ script, scriptPlan: plan, assets: [], storyboardTable: "", storyboard: [], workbench: { videoList: [] } }),
+  });
+  for (const scene of [1, 2]) {
     await commitStoryboardTableOutput(db, 7, 2,
       extractStoryboardTable(`<storyboardTable scene="${scene}" total="2" task="storyboard_run_01">${sceneText(scene, 2)}</storyboardTable>`));
   }
