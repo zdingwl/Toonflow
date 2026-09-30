@@ -21,7 +21,7 @@ description: >-
 - 情绪只作为导演判断，不新增表格列；应通过可见表情、动作节奏和台词表现。
 
 连续性契约字段为：
-`version / continuityMode / cutType / continuityGroup / entryStateId / exitStateId / entrySummary / exitSummary / axisLock / screenDirection`。
+`version / continuityMode / cutType / continuityGroup / entryStateId / exitStateId / entrySummary / exitSummary / entryAxisLock / exitAxisLock / entryScreenDirection / exitScreenDirection`。
 
 其中 `PRESERVE` 必须让当前 `entryStateId` 精确等于上一片段 `exitStateId`；`RESET` 只允许在导演场间契约明确允许状态重建时使用。硬切本身不代表 RESET。
 
@@ -117,11 +117,11 @@ description: >-
 
 - 动作写成连续物理链：起始状态 → 动作发生 → 接触/支撑变化 → 结束状态。不可只写终态。
 - 多角色动作必须保留施力者、受力者和接触对象；不能把主动行为改成自然滑脱或事故。
-- 同一空间遵守 180° 视轴。需要跨轴时，画面描述中必须有可见的绕行/转向过程，连续性契约同步更新 `axisLock`。
+- 同一空间遵守 180° 视轴。需要跨轴时，画面描述中必须有可见的绕行/转向过程；`entryAxisLock` 保留进入片段时的轴，只有动作真正完成后才在 `exitAxisLock` 写新轴。
 - 朝向变化必须有动作原因；人物从画面左移到右、由站立变悬挂、道具换手等变化，都必须在画面描述中实际发生，不能只让下一镜突然出现新状态。
 - 多角色位置用具象语言写入画面描述，例如“角色A在画面左前、面朝右；角色B在右后、面朝左”。不要新增独立列。
 - 每个片段的 `entrySummary` 至少覆盖对下一镜有影响的姿态/支撑、相对位置、关键道具状态与主要运动方向；`exitSummary` 写片段最后可作为下一片段首帧的定态。
-- `screenDirection` 记录主要运动/对峙方向；`axisLock` 记录稳定视轴。只在画面内发生合理变化后更新。
+- `entryScreenDirection / exitScreenDirection` 记录首尾主要运动/对峙方向；`entryAxisLock / exitAxisLock` 记录首尾视轴。PRESERVE 时当前 entry 必须精确继承上一片段 exit；只有画面内发生合理变化后，当前 exit 才允许不同。
 - 场景名称与资产引用由场头及片段资产块表达，不新增 `scene` 或 `associateAssetsNames` 表格列。
 
 **duration**：基础参考——特写/表情 2~3s · 对话近景 3~5s · 全身亮相 3~5s · 动作 2~4s · 远景/空镜/过渡 3~5s · 复杂场景 5~8s。**单镜不超过 8s**，超过须拆分。
