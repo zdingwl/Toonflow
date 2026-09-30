@@ -19,7 +19,7 @@ description: 分镜表：逐场完整输出、时长可行性检查和资产状�
 每个 `### 片段` 标题下、资产引用之前，必须输出且只能输出一条单行 JSON：
 
 ```text
-**连续性契约**：{"version":1,"continuityMode":"PRESERVE","cutType":"CONTINUOUS_ACTION","continuityGroup":"sc1-deck-a","entryStateId":"sc1-p2-end","exitStateId":"sc1-p3-end","entrySummary":"角色A仍悬在船外，左手承重，身体继续向下摆，角色B位于栏杆内侧上方","exitSummary":"角色A最后抓握解除后向下坠落，角色B仍留在栏杆内侧上方","axisLock":"ship-rail-axis-01","screenDirection":"角色A运动方向=画面下方"}
+**连续性契约**：{"version":1,"continuityMode":"PRESERVE","cutType":"CONTINUOUS_ACTION","continuityGroup":"sc1-deck-a","entryStateId":"sc1-p2-end","exitStateId":"sc1-p3-end","entrySummary":"角色A仍悬在船外，左手承重，身体继续向下摆，角色B位于栏杆内侧上方","exitSummary":"角色A最后抓握解除后向下坠落，角色B仍留在栏杆内侧上方","entryAxisLock":"ship-rail-axis-01","exitAxisLock":"ship-rail-axis-01","entryScreenDirection":"角色A运动方向=画面下方","exitScreenDirection":"角色A运动方向=画面下方"}
 ```
 
 字段规则：
@@ -29,11 +29,11 @@ description: 分镜表：逐场完整输出、时长可行性检查和资产状�
 - `continuityGroup` 是一段物理连续事件的稳定标识；连续片段及跨场连续动作必须沿用同一 group。
 - `entryStateId` / `exitStateId` 是机器状态节点，必须唯一、稳定、可读。若本片段为 `PRESERVE`，`entryStateId` 必须与上一片段的 `exitStateId` 完全相同。
 - `entrySummary` / `exitSummary` 写**可见物理状态**：人物相对位置、姿态/支撑点、正在进行的动作阶段、关键道具/界面状态、运动方向。不要写“紧张”“悲伤”等纯心理词代替状态。
-- `axisLock` 标识当前视轴/空间轴；未发生合理越轴动作时保持不变。新时空 RESET 后可建立新轴。
-- `screenDirection` 明确主要运动或对峙方向，例如“角色A左→右”“人物向画面下方坠落”“水面保持在画面上方”。
+- `entryAxisLock / exitAxisLock` 分别标识片段首帧和末帧的视轴/空间轴。未发生可见的合理越轴动作时二者必须相同；若画面内明确完成越轴/绕行动作，才允许末帧建立新的 exitAxisLock。
+- `entryScreenDirection / exitScreenDirection` 分别记录片段首帧和末帧的主要运动/对峙方向，例如“角色A左→右”“人物向画面下方坠落”“水面保持在画面上方”。方向改变必须在画面描述中真的发生。
 - JSON 必须在**一行**内有效解析，不加代码围栏、不加注释、不使用中文引号。
 - **HARD_CUT 不等于 RESET**。同一动作跨切点仍用 `PRESERVE`；只有导演规划明确允许状态重置时才用 `RESET`。
-- 场内相邻片段默认优先 `PRESERVE`。跨场则严格读取导演规划和后端提供的上一场机器出口；导演标记连续动作时，第一片段必须继承上一场的 exact `exitStateId / continuityGroup / axisLock / screenDirection`。
+- 场内相邻片段默认优先 `PRESERVE`。跨场则严格读取导演规划和后端提供的上一场机器出口；导演标记连续动作时，第一片段必须精确继承上一场的 `exitStateId / continuityGroup / exitAxisLock / exitScreenDirection`，分别写入当前 `entryStateId / continuityGroup / entryAxisLock / entryScreenDirection`。
 - 连续性契约优先于题材 Skill 的镜头偏好。任何景别、手持、快切、空镜建议不得破坏状态链。
 
 **当前执行格式固定为 7 列**：`序号 / 画面描述 / 时长 / 景别 / 运镜 / 台词 / 音效`。角色动作、朝向、空间关系不要新增独立列；需要机器继承的状态进入连续性契约，需要观众看到的具体动作写进“画面描述”。
@@ -68,7 +68,7 @@ description: 分镜表：逐场完整输出、时长可行性检查和资产状�
 ```text
 ## 场N：场景名 ｜ 参演角色：角色A、角色B
 ### 片段一（约10s）
-**连续性契约**：{"version":1,"continuityMode":"RESET","cutType":"SCENE_START","continuityGroup":"scN-space-a","entryStateId":"scN-p1-start","exitStateId":"scN-p1-end","entrySummary":"角色A站在门内，右手靠近门把，角色B位于走廊另一侧","exitSummary":"角色A右手握住门把并看向走廊，角色B位置不变","axisLock":"door-axis-01","screenDirection":"角色A视线=画面右侧"}
+**连续性契约**：{"version":1,"continuityMode":"RESET","cutType":"SCENE_START","continuityGroup":"scN-space-a","entryStateId":"scN-p1-start","exitStateId":"scN-p1-end","entrySummary":"角色A站在门内，右手靠近门把，角色B位于走廊另一侧","exitSummary":"角色A右手握住门把并看向走廊，角色B位置不变","entryAxisLock":"door-axis-01","exitAxisLock":"door-axis-01","entryScreenDirection":"角色A视线=画面右侧","exitScreenDirection":"角色A视线=画面右侧"}
 **引用资产名称**：[角色A·当前状态, 场景B·当前状态]
 **引用资产ID**：[101, 300]
 | 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |
