@@ -16,6 +16,7 @@
           :key="v.id"
           @click="previewVideo(v)">
           <t-tag size="small" class="languageTag">{{ languageLabel }}</t-tag>
+          <t-tag v-if="v.duration" size="small" class="durationTag">{{ v.duration }}s</t-tag>
           <template v-if="videoCoverMap[v.src]">
             <img :src="videoCoverMap[v.src]" class="videoCover" />
           </template>
@@ -243,6 +244,12 @@ function previewVideo(v: HistoryVideoItem) {
   position: absolute;
   top: 4px;
   left: 4px;
+  z-index: 2;
+}
+.durationTag {
+  position: absolute;
+  top: 4px;
+  right: 4px;
   z-index: 2;
 }
 .history {

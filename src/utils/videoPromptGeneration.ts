@@ -338,7 +338,7 @@ async function generateForTrack(input: VideoPromptRequest) {
           }
           return prompt;
         },
-        async (system, source, language) => {
+        async (system, source, language, variantDuration) => {
           const messages: any[] = [{ role: "user", content: source }];
           const maxAttempts = h3RefPromptMode ? 5 : 3;
           for (let attempt = 0; attempt < maxAttempts; attempt++) {
@@ -347,7 +347,7 @@ async function generateForTrack(input: VideoPromptRequest) {
             result.text = normalizeH3PromptFormat(result.text.trim());
             try {
               if (h3RefPromptMode) {
-                assertH3PromptContract(result.text, targetDuration, pictureSourceItems.length);
+                assertH3PromptContract(result.text, variantDuration ?? targetDuration, pictureSourceItems.length);
                 const sourcePlan = await loadH3ReferencePlan(languageDb, trackId, source);
                 if (!sourcePlan) throw new Error("H3 参考图绑定：源提示词缺少保存的参考图计划，请重新生成视频提示词");
                 assertH3ReferenceBindings(result.text, sourcePlan.slots, source);
@@ -367,7 +367,7 @@ async function generateForTrack(input: VideoPromptRequest) {
         },
         input.regenerate === true,
         true,
-        async (prompt, language) => {
+        async (prompt, language, variantDuration) => {
           await assertStoryboardPromptFresh(languageDb, projectId, trackId, prompt);
           if (!h3RefPromptMode) return;
           assertTranslatedDialogueLanguage(prompt, language);
@@ -375,7 +375,7 @@ async function generateForTrack(input: VideoPromptRequest) {
           if (!plan) throw new Error("H3 参考图绑定：提示词缺少保存的参考图计划");
           resolveH3ReferencePlan(pictureSourceItems, plan);
           if (plan.slots.some(slot => slot.kind)) throw new Error("H3 参考图绑定：仍使用人物独立视图旧计划");
-          assertH3PromptContract(prompt, targetDuration, plan.slots.length);
+          assertH3PromptContract(prompt, variantDuration, plan.slots.length);
           assertH3ReferenceBindings(prompt, plan.slots);
         },
         async (prompt) => {

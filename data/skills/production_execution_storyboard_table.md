@@ -13,6 +13,31 @@ description: 分镜表：逐场完整输出、时长可行性检查和资产状�
 - 人物形象由所选角色资产决定，不在每个镜头重复一份可能冲突的外貌词；同一角色每一时刻只能选一套有效外观状态，普通态与觉醒态不可作为两名角色并列引用。状态切换镜头明确切换时点与前态→后态，不将两套图同时引用。
 - 每场场景拓扑、人物位置、轴线、动作与音画衔接一致；场景衍生状态仅在其触发时段生效。所有 `引用资产ID` 与名称都要从当前资产工作区核实，不根据名称自行拼凑 ID。
 
+
+## 片段连续性契约（强制）
+
+每个 `### 片段` 标题下、资产引用之前，必须输出且只能输出一条单行 JSON：
+
+```text
+**连续性契约**：{"version":1,"continuityMode":"PRESERVE","cutType":"CONTINUOUS_ACTION","continuityGroup":"sc1-deck-a","entryStateId":"sc1-p2-end","exitStateId":"sc1-p3-end","entrySummary":"角色A仍悬在船外，左手承重，身体继续向下摆，角色B位于栏杆内侧上方","exitSummary":"角色A最后抓握解除后向下坠落，角色B仍留在栏杆内侧上方","entryAxisLock":"ship-rail-axis-01","exitAxisLock":"ship-rail-axis-01","entryScreenDirection":"角色A运动方向=画面下方","exitScreenDirection":"角色A运动方向=画面下方"}
+```
+
+字段规则：
+- `version` 固定为 `1`。
+- `continuityMode` 只能是 `PRESERVE` 或 `RESET`。
+- `cutType` 只能是 `SCENE_START / CONTINUOUS_ACTION / HARD_CUT / MATCH_CUT / TIME_JUMP / FX_TRANSITION`。
+- `continuityGroup` 是一段物理连续事件的稳定标识；连续片段及跨场连续动作必须沿用同一 group。
+- `entryStateId` / `exitStateId` 是机器状态节点，必须唯一、稳定、可读。若本片段为 `PRESERVE`，`entryStateId` 必须与上一片段的 `exitStateId` 完全相同。
+- `entrySummary` / `exitSummary` 写**可见物理状态**：人物相对位置、姿态/支撑点、正在进行的动作阶段、关键道具/界面状态、运动方向。不要写“紧张”“悲伤”等纯心理词代替状态。
+- `entryAxisLock / exitAxisLock` 分别标识片段首帧和末帧的视轴/空间轴。未发生可见的合理越轴动作时二者必须相同；若画面内明确完成越轴/绕行动作，才允许末帧建立新的 exitAxisLock。
+- `entryScreenDirection / exitScreenDirection` 分别记录片段首帧和末帧的主要运动/对峙方向，例如“角色A左→右”“人物向画面下方坠落”“水面保持在画面上方”。方向改变必须在画面描述中真的发生。
+- JSON 必须在**一行**内有效解析，不加代码围栏、不加注释、不使用中文引号。
+- **HARD_CUT 不等于 RESET**。同一动作跨切点仍用 `PRESERVE`；只有导演规划明确允许状态重置时才用 `RESET`。
+- 场内相邻片段默认优先 `PRESERVE`。跨场则严格读取导演规划和后端提供的上一场机器出口；导演标记连续动作时，第一片段必须精确继承上一场的 `exitStateId / continuityGroup / exitAxisLock / exitScreenDirection`，分别写入当前 `entryStateId / continuityGroup / entryAxisLock / entryScreenDirection`。
+- 连续性契约优先于题材 Skill 的镜头偏好。任何景别、手持、快切、空镜建议不得破坏状态链。
+
+**当前执行格式固定为 7 列**：`序号 / 画面描述 / 时长 / 景别 / 运镜 / 台词 / 音效`。角色动作、朝向、空间关系不要新增独立列；需要机器继承的状态进入连续性契约，需要观众看到的具体动作写进“画面描述”。
+
 ## 强制前置：时长可行性检查
 
 后端会提供逐场事实（source_duration、target_duration、dialogue、screen_text）。原剧本时段是来源；target_duration 是本场制作预算。逐镜时长之和必须等于本场预算，每个片段标题时长也必须等于其镜头合计。不能只检查每段 ≤15 秒而漏掉整场超时。未标时长的场次不伪造“已满足目标”。
@@ -32,8 +57,8 @@ description: 分镜表：逐场完整输出、时长可行性检查和资产状�
 - 首次倒计时用剧本数字，后续按本场实际经过时间递减。3、2、1之间若插入长对白，明确为主观时间伸展而非真实秒计时。重要界面要有足够可读时间，不把多个必要信息压在一秒内。
 
 1. 调用 `get_flowData("script" / "assets" / "scriptPlan" / "storyboardTable")`，核对总场数和已保存场头 `## 场N：`。中断后以 `get_storyboard_progress` 返回的数据库状态为准，只处理后端指定的下一缺失场次。
-2. 逐场根据预算设计完整片段：片段 ≤15 秒，长台词按语义拆镜，镜头景别与运动有叙事动机，台词与动作衔接。逐镜核实在场人物、当前状态、有效场景和道具资产。**不能为同一身份同时引用默认态和与其互斥的衍生态**，包括同一片段资产数组。
-3. 核对本次目标场的全部对白和 VO 是否覆盖、片段顺序、最低时长/目标时长、角色状态切换边界、资产 ID 是否真实。无法满足则报告缺失/冲突，禁止生成伪完整分镜。
+2. 逐场根据预算设计完整片段：片段 ≤15 秒，长台词按语义拆镜，镜头景别与运动有叙事动机，台词与动作衔接。每个片段先建立连续性契约，再写镜头行；逐镜核实在场人物、当前状态、有效场景和道具资产。**不能为同一身份同时引用默认态和与其互斥的衍生态**，包括同一片段资产数组。
+3. 核对本次目标场的全部对白和 VO 是否覆盖、片段顺序、最低时长/目标时长、角色状态切换边界、资产 ID 是否真实；同时逐片段核对 entryStateId→exitStateId 状态链。若第一片段为跨场 PRESERVE，必须与后端上一场机器出口完全匹配。无法满足则报告缺失/冲突，禁止生成伪完整分镜。
 4. 输出协议：旧版短篇整表模式，只有本次全部场次确实能完整输出时，输出唯一闭合的 `<storyboardTable>完整 Markdown</storyboardTable>`。逐场模式一次调用只输出一场，唯一闭合的 `<storyboardTable scene="N" total="M" task="后端下发taskId">本场完整 Markdown</storyboardTable>`；N、M、task 与后端一致，不使用示例值、不得跨场或输出第二组同名标签。开头必须是 `## 场N：场景名 ｜ 参演角色：…`。标签内只放 Markdown，不附加 XML 或声明。
 5. 已保存场次只允许相同 task/内容幂等重试，不静默覆盖人工编辑或新 revision。首次逐场写入发现不带进度的旧版整表时停止并请求明确处理旧任务数据；确认后由后端重置，不绕过冲突。上一场确认落库后才能继续下一场。
 6. 子 Agent 输出完整闭合标签后结束本次任务。只有数据库 `1…M` 场均已保存且无时长/状态冲突，才可报告全剧分镜表完成；工具失败、无回执、预览变化均不得说“已完成”。
@@ -43,6 +68,7 @@ description: 分镜表：逐场完整输出、时长可行性检查和资产状�
 ```text
 ## 场N：场景名 ｜ 参演角色：角色A、角色B
 ### 片段一（约10s）
+**连续性契约**：{"version":1,"continuityMode":"RESET","cutType":"SCENE_START","continuityGroup":"scN-space-a","entryStateId":"scN-p1-start","exitStateId":"scN-p1-end","entrySummary":"角色A站在门内，右手靠近门把，角色B位于走廊另一侧","exitSummary":"角色A右手握住门把并看向走廊，角色B位置不变","entryAxisLock":"door-axis-01","exitAxisLock":"door-axis-01","entryScreenDirection":"角色A视线=画面右侧","exitScreenDirection":"角色A视线=画面右侧"}
 **引用资产名称**：[角色A·当前状态, 场景B·当前状态]
 **引用资产ID**：[101, 300]
 | 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |

@@ -25,6 +25,7 @@
             @click.stop
             @change="(val: boolean) => toggleCheck(track.id, val)" />
           <t-tag class="indexTag" size="small">#{{ index + 1 }}</t-tag>
+          <t-tag class="durationTag" size="small">{{ activeDuration(track) }}s</t-tag>
           <t-tag class="selectTag" theme="success" size="small" v-if="selectedVideoId(track)">已选择</t-tag>
           <!-- 优先展示选中视频的首帧 -->
           <div class="thumbGroup" v-if="selectedVideoId(track) && getSelectedVideoSrc(track)">
@@ -104,6 +105,11 @@ const videoCoverMap = ref<Record<string, string>>({});
 
 function selectedVideoId(track: TrackItem) {
   return props.activeLanguage ? track.variants?.find((v) => v.language === props.activeLanguage)?.videoId : track.selectVideoId;
+}
+
+function activeDuration(track: TrackItem): number {
+  if (!props.activeLanguage) return track.duration;
+  return track.variants?.find((v) => v.language === props.activeLanguage)?.duration ?? track.duration;
 }
 
 /** 获取轨道选中视频的 src */
@@ -333,7 +339,7 @@ async function batchGenVideo() {
   const selectedTracks = trackList.value.filter((track) => checkedTrackIds.value.includes(track.id));
   const dlg = DialogPlugin.confirm({
     header: $t("workbench.generate.generateConfirm"),
-    body: `将为 ${selectedTracks.length} 段视频分别生成 ${languages.map(props.languageName).join("、")}，共 ${selectedTracks.length * languages.length} 个视频。`,
+    body: `将为 ${selectedTracks.length} 段视频分别生成 ${languages.map(props.languageName).join("、")}，共 ${selectedTracks.length * languages.length} 个视频；每个语言使用各自重新规划的目标时长。`,
     onConfirm: async () => {
       dlg.destroy();
 
@@ -348,7 +354,7 @@ async function batchGenVideo() {
         const uploadData = props.modelParmas.mode === "text" ? [] : getTrackUploadInfo(track, true);
         return languages.map((language) => ({
           language,
-          duration: props.clampDuration(track.duration || props.modelParmas.duration),
+          duration: props.clampDuration(track.variants?.find((variant) => variant.language === language)?.duration ?? track.duration ?? props.modelParmas.duration),
           prompt: "",
           uploadData,
           trackId,
@@ -373,7 +379,9 @@ async function batchGenVideo() {
       try {
         const { data } = await axios.post("/production/workbench/batchGenerateVideo", requestData);
         data.forEach((item: { videoId: number; trackId: number; language: string }) => {
-          checkedTrackData.find((track) => track.id === item.trackId)?.videoList.push({ id: item.videoId, language: item.language, state: "生成中", src: "" });
+          const target = checkedTrackData.find((track) => track.id === item.trackId);
+          const duration = target?.variants?.find((variant) => variant.language === item.language)?.duration ?? target?.duration;
+          target?.videoList.push({ id: item.videoId, language: item.language, duration, state: "生成中", src: "" });
         });
         checkedTrackIds.value = [];
         window.$message.success($t("workbench.generate.generateStarted"));
@@ -475,6 +483,13 @@ watch(
         position: absolute;
         bottom: 4px;
         left: 4px;
+        z-index: 2;
+      }
+      .durationTag {
+        position: absolute;
+        bottom: 4px;
+        left: 50%;
+        transform: translateX(-50%);
         z-index: 2;
       }
       .selectTag {

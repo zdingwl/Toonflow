@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import knex from "knex";
 import { extractDirectorPlan, reconcileDirectorPlanOutput, saveDirectorPlan } from "../src/agents/productionAgent/directorPlan";
+import { validateDirectorFacts } from "../src/agents/productionAgent/screenplay";
 
 test("导演计划只有完整单份 XML 才可提交", () => {
   assert.equal(extractDirectorPlan("说明<scriptPlan>第一场\n第二场</scriptPlan>完成"), "第一场\n第二场");
@@ -70,4 +71,31 @@ test("导演计划恢复核对只接受已经提交到当前剧集的数据", as
   } finally {
     await db.destroy();
   }
+});
+
+
+test("导演规划必须覆盖每个相邻场界的连续性契约", () => {
+  const script = `场景一 外·甲板（0-5秒）
+艾娃
+回去。
+场景二 水下（5-10秒）
+艾娃
+我要回去！
+场景三 内·公寓（10-15秒）
+艾娃
+七十二小时。`;
+  const plan = `| 场次 | 场景名 | 台词条数 | 台词字数 | 情绪浓度 | 情绪基调（含 X→Y） | 原剧本时段 | 制作预算（秒） |
+|---|---|---:|---:|---:|---|---|---:|
+| Sc1 | 甲板 | 1 | 2 | 8 | 求生 | 0-5秒 | 5 |
+| Sc2 | 水下 | 1 | 4 | 9 | 濒死 | 5-10秒 | 5 |
+| Sc3 | 公寓 | 1 | 5 | 7 | 决绝 | 10-15秒 | 5 |
+
+| 场间 | continuity_mode | transition_type | 承接要求 | 可重置项 |
+|---|---|---|---|---|
+| Sc1 → Sc2 | PRESERVE | CONTINUOUS_ACTION | 坠落方向和人物姿态连续，水面保持在上方 | 无 |
+| Sc2 → Sc3 | RESET | TIME_JUMP | 保留艾娃身份，重新建立公寓时空 | 时间、地点、即时姿态 |`;
+  assert.deepEqual(validateDirectorFacts(script, plan), []);
+  assert.match(validateDirectorFacts(script, plan.replace(/\| Sc1 → Sc2[^\n]+\n/, "")).join("；"), /完整列出全部2个/);
+  assert.match(validateDirectorFacts(script, plan.replace("PRESERVE", "MAYBE")).join("；"), /continuity_mode/);
+  assert.match(validateDirectorFacts(script, plan.replace("TIME_JUMP", "MONTAGE")).join("；"), /transition_type/);
 });

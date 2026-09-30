@@ -36,7 +36,8 @@
     "license": "node scripts/license.ts",
     "vendor2json": "node scripts/vendor2json.ts",
     "build:web": "yarn --cwd Toonflow-web-master install --frozen-lockfile && yarn --cwd Toonflow-web-master build-only",
-    "build:backend": "cross-env NODE_ENV=prod tsx scripts/build.ts"
+    "build:backend": "cross-env NODE_ENV=prod tsx scripts/build.ts",
+    "test:production-contracts": "tsx --test --test-force-exit --test-timeout=120000 tests/director-plan.test.ts tests/screenplay-continuity.test.ts tests/storyboard-continuity.test.ts tests/storyboard-table.test.ts tests/storyboard-revision.test.ts tests/video-languages.test.ts tests/video-language-routes.test.ts tests/h3-prompt-context.test.ts tests/h3-prompt-contract.test.ts tests/h3-prompt-generation.test.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.35",

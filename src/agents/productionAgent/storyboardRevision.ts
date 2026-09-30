@@ -5,6 +5,7 @@ import { inspectStoryboardProgress, hashStoryboardSource } from "./storyboardPro
 import { extractSourceScene, validateStoryboardScene } from "./storyboardValidator";
 import { guardStoryboardContent } from "./storyboardContentGuard";
 import { syncRevisedStoryboardPanels } from "./storyboardPanelSync";
+import { validateStoryboardContinuity } from "./storyboardContinuity";
 
 export type StoryboardRevisionRequest = {
   projectId: number;
@@ -60,9 +61,22 @@ export async function reviseStoryboardScene(db: Knex, request: StoryboardRevisio
     if (!original || storyboardSceneHash(original) !== expectedSceneHash) {
       throw new Error("原场次已变化或不存在，禁止覆盖；请重新读取分镜");
     }
-    const validation = validateStoryboardScene(scene, revised, extractSourceScene(script.content ?? "", scene));
+    const previousScene = progress.scenes[String(scene - 1)];
+    const originalHasContinuityContract = /\*\*连续性契约\*\*/.test(original);
+    const validation = validateStoryboardScene(scene, revised, extractSourceScene(script.content ?? "", scene), {
+      previousScene,
+      requireContinuityContract: originalHasContinuityContract,
+    });
     if (!validation.valid) throw new Error(`第${scene}场修订未通过校验：${validation.errors.join("；")}`);
-    await guardStoryboardContent(trx, projectId, script.content ?? "", data.scriptPlan ?? "", scene, revised);
+    const nextScene = progress.scenes[String(scene + 1)];
+    if (nextScene && /\*\*连续性契约\*\*/.test(nextScene)) {
+      const nextContinuity = validateStoryboardContinuity(nextScene, revised, { requireContracts: true });
+      if (nextContinuity.errors.length) throw new Error(`第${scene}场修订会破坏第${scene + 1}场连续性：${nextContinuity.errors.join("；")}`);
+    }
+    await guardStoryboardContent(trx, projectId, script.content ?? "", data.scriptPlan ?? "", scene, revised, {
+      previousScene,
+      requireContinuityContract: originalHasContinuityContract,
+    });
     if (revised === original) {
       return { changed: false, revision: progress.revision, scene, taskId,
         storyboardTable: data.storyboardTable as string, storyboardTableProgress: progress,

@@ -93,5 +93,25 @@ export function validateDirectorFacts(script: string, plan: string): string[] {
     }
     try { productionSceneBudget(plan, source.scene, source.text); } catch (error) { errors.push((error as Error).message); }
   }
+
+  const transitionRows = plan.split(/\r?\n/).filter(line => /^\s*\|\s*Sc\s*\d+\s*(?:→|->)\s*Sc\s*\d+\s*\|/i.test(line))
+    .map(line => line.split("|").slice(1, -1).map(cell => cell.trim()));
+  const expectedTransitions = Math.max(0, scenes.length - 1);
+  if (transitionRows.length !== expectedTransitions) {
+    errors.push(`导演规划必须完整列出全部${expectedTransitions}个相邻场间连续性契约`);
+  }
+  const allowedModes = new Set(["PRESERVE", "RESET"]);
+  const allowedTypes = new Set(["CONTINUOUS_ACTION", "HARD_CUT", "MATCH_CUT", "TIME_JUMP", "FX_TRANSITION"]);
+  for (let i = 0; i < expectedTransitions; i++) {
+    const expected = `sc${scenes[i]?.scene}->sc${scenes[i + 1]?.scene}`;
+    const row = transitionRows[i];
+    if (!row) continue;
+    const actual = String(row[0] || "").replace(/\s+/g, "").replace("→", "->").toLowerCase();
+    if (actual !== expected) errors.push(`场间连续性契约顺序错误：应为 Sc${scenes[i]?.scene} → Sc${scenes[i + 1]?.scene}`);
+    if (!allowedModes.has(String(row[1] || "").toUpperCase())) errors.push(`${row[0]} continuity_mode 必须为 PRESERVE 或 RESET`);
+    if (!allowedTypes.has(String(row[2] || "").toUpperCase())) errors.push(`${row[0]} transition_type 无效`);
+    if (!String(row[3] || "").trim()) errors.push(`${row[0]} 缺少具体承接要求`);
+    if (!String(row[4] || "").trim()) errors.push(`${row[0]} 缺少可重置项说明`);
+  }
   return errors;
 }

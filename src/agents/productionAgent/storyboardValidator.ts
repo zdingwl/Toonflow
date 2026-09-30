@@ -1,4 +1,5 @@
 import { extractDialogue, normalizeSpokenText, parseScriptScenes } from "./screenplay";
+import { validateStoryboardContinuity, type DirectorSceneTransition } from "./storyboardContinuity";
 
 export type SceneValidation = {
   valid: boolean;
@@ -9,7 +10,7 @@ export type SceneValidation = {
 };
 
 /** 严格校验结构与可辨识原文；无法定位原场次时不能宣称内容已全面覆盖。 */
-export function validateStoryboardScene(scene: number, markdown: string, sourceScene?: string, options: { targetDuration?: number; assetIds?: number[] } = {}): SceneValidation {
+export function validateStoryboardScene(scene: number, markdown: string, sourceScene?: string, options: { targetDuration?: number; assetIds?: number[]; previousScene?: string; requireContinuityContract?: boolean; expectedSceneTransition?: DirectorSceneTransition } = {}): SceneValidation {
   const errors: string[] = [];
   const warnings: string[] = [];
   const text = markdown.trim();
@@ -81,6 +82,12 @@ export function validateStoryboardScene(scene: number, markdown: string, sourceS
   if (screens.some(screen => !shown.includes(screen))) {
     errors.push("遗漏或改写原剧本必须呈现的屏幕文字"); coverageVerified = false;
   }
+  const continuity = validateStoryboardContinuity(text, options.previousScene, {
+    requireContracts: options.requireContinuityContract,
+    expectedSceneTransition: options.expectedSceneTransition,
+  });
+  errors.push(...continuity.errors);
+  warnings.push(...continuity.warnings);
   if (coverageVerified) warnings.push("已核对可解析的台词和屏幕文字；人物动作、空间关系及参考图状态仍需审阅");
   return { valid: errors.length === 0, scene, errors, warnings, coverageVerified };
 }

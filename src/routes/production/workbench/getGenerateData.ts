@@ -9,6 +9,7 @@ const router = express.Router();
 
 interface VideoItem {
   id: number;
+  duration?: number;
   src: string;
   state: "未生成" | "生成中" | "已完成" | "生成失败";
 }
@@ -205,13 +206,17 @@ export default router.post(
         videoList: await Promise.all(
           videoList
             .filter((v) => v.videoTrackId === trackId)
-            .map(async (v) => ({
-              id: v.id!,
-              language: videoLanguages.find(meta => meta.videoId === v.id)?.language || "",
-              src: v.filePath ? await u.oss.getFileUrl(v.filePath) : "",
-              state: v.state === "已完成" || v.state === "生成成功" ? "已完成" : v.state === "生成中" ? "生成中" : v.state === "生成失败" ? "生成失败" : "未生成",
-              errorReason: v?.errorReason ?? "",
-            })),
+            .map(async (v) => {
+              const languageMeta = videoLanguages.find(meta => meta.videoId === v.id);
+              return {
+                id: v.id!,
+                language: languageMeta?.language || "",
+                duration: Number(v.actualDuration) || Number(languageMeta?.duration) || undefined,
+                src: v.filePath ? await u.oss.getFileUrl(v.filePath) : "",
+                state: v.state === "已完成" || v.state === "生成成功" ? "已完成" : v.state === "生成中" ? "生成中" : v.state === "生成失败" ? "生成失败" : "未生成",
+                errorReason: v?.errorReason ?? "",
+              };
+            }),
         ),
       });
     }

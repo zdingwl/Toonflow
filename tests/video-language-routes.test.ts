@@ -10,6 +10,7 @@ import * as h3Contract from "../src/utils/h3PromptContract";
 import * as plans from "../src/utils/h3ReferencePlan";
 import * as referenceBindings from "../src/utils/h3ReferenceBindings";
 import * as stateGuard from "../src/utils/h3VisualStateGuard";
+import * as languageTiming from "../src/utils/videoLanguageTiming";
 import { validateFields } from "../src/middleware/middleware";
 
 const requireModule = createRequire(import.meta.url);
@@ -45,10 +46,10 @@ test("real video routes keep each language prompt, video ID and selection separa
   });
   await languages.migrateVideoLanguages(db);
   await db("o_project").insert({ id: 7, videoRatio: "16:9" });
-  await db("o_videoTrack").insert({ id: 1, projectId: 7, scriptId: 2, prompt: "original", videoId: 88 });
+  await db("o_videoTrack").insert({ id: 1, projectId: 7, scriptId: 2, prompt: "original", videoId: 88, duration: 5 });
   await db("o_videoPromptVariant").insert([
-    { trackId: 1, language: "en-US", prompt: "English dialogue: Hello", state: "已完成" },
-    { trackId: 1, language: "ja-JP", prompt: "Japanese dialogue: こんにちは", state: "已完成" },
+    { trackId: 1, language: "en-US", prompt: "English dialogue: Hello", duration: 7, state: "已完成" },
+    { trackId: 1, language: "ja-JP", prompt: "Japanese dialogue: こんにちは", duration: 9, state: "已完成" },
   ]);
   const submitted: any[] = [];
   const textCalls: any[] = [];
@@ -87,6 +88,7 @@ test("real video routes keep each language prompt, video ID and selection separa
       "@/utils": u,
       "@/utils/db": { db },
       "@/utils/videoLanguages": languages,
+      "@/utils/videoLanguageTiming": languageTiming,
       "@/utils/h3PromptContract": h3Contract,
       "@/utils/h3ReferencePlan": plans,
       "@/utils/h3ReferenceBindings": referenceBindings,
@@ -121,7 +123,8 @@ test("real video routes keep each language prompt, video ID and selection separa
     assert.equal((await db("o_videoTrack").first()).prompt, "original");
     assert.equal((await post("generateVideoPrompt", { ...refreshBody, regenerate: false })).status, 200);
     assert.equal(textCalls.length, 2);
-    await db("o_videoPromptVariant").where({ language: "en-US" }).update({ prompt: "English dialogue: Hello" });
+    await db("o_videoPromptVariant").where({ language: "en-US" }).update({ prompt: "English dialogue: Hello", duration: 7 });
+    await db("o_videoPromptVariant").where({ language: "ja-JP" }).update({ duration: 9 });
     assert.equal((await post("saveDialogueLanguages", { ...settings, languages: ["en-US", "ja-JP"] })).status, 200);
     assert.deepEqual(JSON.parse((await db("o_videoLanguageSelection").first()).languages), ["en-US", "ja-JP"]);
     const rejected = await post("batchGenerateVideo", {
@@ -144,18 +147,22 @@ test("real video routes keep each language prompt, video ID and selection separa
     assert.equal(maxRunning, 1);
     assert.match(submitted[0].prompt, /English/);
     assert.match(submitted[1].prompt, /Japanese/);
+    assert.equal(submitted[0].duration, 7);
+    assert.equal(submitted[1].duration, 9);
     assert.ok((await db("o_video")).every((row) => row.state === "生成成功"));
     assert.equal((await db("o_videoLanguage")).length, 2);
+    assert.deepEqual((await db("o_videoLanguage").orderBy("videoId")).map((row) => row.duration), [7, 9]);
     await post("selectVideo", { trackId: 1, videoId: batch.body.data[1].videoId });
     assert.equal((await db("o_videoPromptVariant").where({ language: "ja-JP" }).first()).videoId, batch.body.data[1].videoId);
     assert.equal((await db("o_videoTrack").first()).videoId, 88);
-    await post("updateVideoPrompt", { id: 1, language: "en-US", prompt: "Edited English" });
+    await post("updateVideoPrompt", { id: 1, language: "en-US", prompt: "Edited English", duration: 8 });
     assert.equal((await db("o_videoTrack").first()).prompt, "original");
     assert.match((await db("o_videoPromptVariant").where({ language: "ja-JP" }).first()).prompt, /Japanese/);
     const single = await post("generateVideo", { ...settings, trackId: 1, language: "en-US", prompt: "wrong", uploadData: [], duration: 5 });
     assert.equal(single.status, 200);
     for (let i = 0; i < 50 && (await db("o_video").where({ state: "生成中" })).length; i++) await new Promise((resolve) => setTimeout(resolve, 10));
     assert.equal(submitted[2].prompt, "Edited English");
+    assert.equal(submitted[2].duration, 8);
     assert.equal((await db("o_videoLanguage").where({ videoId: single.body.data }).first()).language, "en-US");
   } finally {
     await new Promise<void>((resolve) => server.close(() => resolve()));
