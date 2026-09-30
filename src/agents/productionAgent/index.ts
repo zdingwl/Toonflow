@@ -335,7 +335,7 @@ async function createSubAgent(parentCtx: AgentContext) {
               `当前剧本未识别到明确的第${scene}场边界；先调用 get_flowData(script) 定位本场，不得凭空补剧情。\n`) +
             `【程序核对事实与逐场制作预算】\n${screenplayFacts(sourceScene ?? "", String(plan))}\n` +
             `【最新导演规划：场间过渡与连续性优先于题材化镜头偏好】\n${String(plan)}\n` +
-            (handoff ? `【上一场机器连续性出口：本场若为连续动作必须继承 exitStateId/continuityGroup/axisLock】\n${handoff}\n` : "") +
+            (handoff ? `【上一场机器连续性出口：本场若为连续动作必须把 exitStateId/continuityGroup/exitAxisLock/exitScreenDirection 继承为本场 entry 状态】\n${handoff}\n` : "") +
             (legacyTail ? `【上一场为旧版分镜，无机器契约；以下仅作兼容参考，重建后应消除此降级路径】\n${legacyTail}\n` : "") +
             `创作要求：${prompt}`;
           await runAgent({
