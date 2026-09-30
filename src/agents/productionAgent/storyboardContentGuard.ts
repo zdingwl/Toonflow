@@ -1,6 +1,7 @@
 import type { Knex } from "knex";
 import { parseScriptScenes, productionSceneBudget } from "./screenplay";
 import { extractSourceScene, validateStoryboardScene } from "./storyboardValidator";
+import { readDirectorSceneTransition } from "./storyboardContinuity";
 
 /** Validate inside the write transaction, so revisions and full-table saves cannot bypass it. */
 export async function guardStoryboardContent(
@@ -17,6 +18,7 @@ export async function guardStoryboardContent(
     assetIds: assets?.map(asset => Number(asset.id)),
     previousScene: options.previousScene,
     requireContinuityContract: options.requireContinuityContract,
+    expectedSceneTransition: scene > 1 ? readDirectorSceneTransition(plan, scene - 1, scene) : undefined,
   });
   if (!validation.valid) throw new Error(`第${scene}场未通过内容校验：${validation.errors.join("；")}`);
 }
