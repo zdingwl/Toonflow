@@ -16,6 +16,7 @@ import { runStoryboardTask } from "./storyboardTaskRunner";
 import { extractSourceScene, validateStoryboardScene } from "./storyboardValidator";
 import { screenplayFacts } from "./screenplay";
 import { storyboardPlanSceneCount } from "./storyboardRebuildDispatch";
+import { continuityHandoff } from "./storyboardContinuity";
 import { createStoryboardRevisionTool } from "./storyboardRevisionTool";
 import { wrapAgentTools } from "@/utils/agent/runtime/toolExecutor";
 import { buildMemoryPrompt } from "@/utils/agent/contextManager";
@@ -101,7 +102,7 @@ async function createSubAgent(parentCtx: AgentContext) {
     memoryKey: string;
     tools?: Record<string, any>;
     messages?: { role: "user" | "assistant" | "system"; content: string }[];
-    expectedScene?: { scene: number; total: number; taskId: string; sourceScene?: string };
+    expectedScene?: { scene: number; total: number; taskId: string; sourceScene?: string; previousScene?: string };
     readOnlyTools?: boolean;
   }) {
     const stepInput = JSON.stringify({ key, prompt, messages: messages ?? null, expectedScene: expectedScene ?? null });
@@ -160,7 +161,10 @@ async function createSubAgent(parentCtx: AgentContext) {
             if (parsed.mode !== "scene" || parsed.scene !== expectedScene.scene || parsed.total !== expectedScene.total || parsed.taskId !== expectedScene.taskId) {
               throw new Error(`当前只允许输出第${expectedScene.scene}场及固定 task/total，拒绝其他场次或整表`);
             }
-            const validation = validateStoryboardScene(parsed.scene, parsed.content, expectedScene.sourceScene);
+            const validation = validateStoryboardScene(parsed.scene, parsed.content, expectedScene.sourceScene, {
+              previousScene: expectedScene.previousScene,
+              requireContinuityContract: true,
+            });
             if (!validation.valid) throw new Error(`第${parsed.scene}场内容校验失败：${validation.errors.join("；")}`);
             if (!validation.coverageVerified) subMsg.text(`第${parsed.scene}场通过结构校验；原剧本逐项覆盖尚待人工或后续核验。`).complete();
           }
@@ -321,18 +325,23 @@ async function createSubAgent(parentCtx: AgentContext) {
         generate: async ({ scene, taskId, total }) => {
           const sourceScene = extractSourceScene(sourceScript, scene);
           const before = await readStoryboardTableSnapshot(u.db, projectId, episodesId);
-          const previous = before.storyboardTableProgress?.scenes[String(scene - 1)]?.slice(-800) ?? "";
+          const previousScene = before.storyboardTableProgress?.scenes[String(scene - 1)] ?? "";
+          const handoff = previousScene ? continuityHandoff(previousScene) : "";
+          const legacyTail = previousScene && !handoff ? previousScene.slice(-1200) : "";
           const protocol = `\n【后端固定任务协议】只处理第${scene}场，共${total}场，task=${taskId}。` +
             `必须仅输出一份完整闭合的 <storyboardTable scene="${scene}" total="${total}" task="${taskId}">该场完整Markdown</storyboardTable>；` +
             `不要生成其他场次，不要自行变更 task/total。\n` +
             (sourceScene ? `本场原剧本（必须完整覆盖）：\n${sourceScene}\n` :
               `当前剧本未识别到明确的第${scene}场边界；先调用 get_flowData(script) 定位本场，不得凭空补剧情。\n`) +
             `【程序核对事实与逐场制作预算】\n${screenplayFacts(sourceScene ?? "", String(plan))}\n` +
-            (previous ? `上一场末尾连续性参考：\n${previous}\n` : "") + `创作要求：${prompt}`;
+            `【最新导演规划：场间过渡与连续性优先于题材化镜头偏好】\n${String(plan)}\n` +
+            (handoff ? `【上一场机器连续性出口：本场若为连续动作必须继承 exitStateId/continuityGroup/axisLock】\n${handoff}\n` : "") +
+            (legacyTail ? `【上一场为旧版分镜，无机器契约；以下仅作兼容参考，重建后应消除此降级路径】\n${legacyTail}\n` : "") +
+            `创作要求：${prompt}`;
           await runAgent({
             key: "productionAgent:storyboardTableAgent", prompt: protocol, system: systemPrompt,
             name: "执行导演", memoryKey: "assistant:execution",
-            expectedScene: { scene, total, taskId, sourceScene },
+            expectedScene: { scene, total, taskId, sourceScene, previousScene },
             messages: [
               { role: "assistant", content: productionSkills.prompt + `\n${modelInfo}` },
               { role: "user", content: protocol },
