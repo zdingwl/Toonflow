@@ -253,11 +253,16 @@ export async function resolveLanguageVariant(
   const variant = await db("o_videoPromptVariant").where({ trackId, language }).first();
   if (!variant?.prompt?.trim() || variant.state !== "已完成") throw new Error(`${languageLabel(language)}提示词尚未就绪，请先生成并检查提示词`);
   const track = await db("o_videoTrack").where({ id: trackId }).select("prompt", "duration").first();
-  const duration = Number(variant.duration) || planLanguageVariantDuration(
-    track?.prompt || fallbackPrompt, variant.prompt, language, Number(track?.duration) || Number(fallbackDuration) || 5,
+  const baseDuration = Number(track?.duration) || Number(fallbackDuration) || 5;
+  const storedDuration = Number(variant.duration);
+  const plannedDuration = storedDuration || planLanguageVariantDuration(
+    track?.prompt || fallbackPrompt, variant.prompt, language, baseDuration,
   );
-  if (!Number(variant.duration)) await db("o_videoPromptVariant").where({ trackId, language }).update({ duration });
-  return { prompt: variant.prompt, duration };
+  if (!storedDuration && Math.abs(plannedDuration - baseDuration) > 0.05) {
+    throw new Error(`${languageLabel(language)}旧版提示词需要按目标语言重新规划时间轴，请先重新生成该语言提示词`);
+  }
+  if (!storedDuration) await db("o_videoPromptVariant").where({ trackId, language }).update({ duration: plannedDuration });
+  return { prompt: variant.prompt, duration: plannedDuration };
 }
 
 export async function resolveLanguagePrompt(db: Knex, trackId: number, language: string | undefined, fallback: string, audio?: boolean) {
