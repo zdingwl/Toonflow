@@ -11,7 +11,7 @@ import { assertH3ReferenceBindings } from "@/utils/h3ReferenceBindings";
 import { inspectVideoQuality } from "@/utils/videoQuality";
 import { assertH3ActiveStates, assertH3PictureSlots } from "@/utils/h3VisualStateGuard";
 import { db as languageDb } from "@/utils/db";
-import { dialogueLanguageSchema, resolveLanguagePrompt } from "@/utils/videoLanguages";
+import { dialogueLanguageSchema, resolveLanguageVariant } from "@/utils/videoLanguages";
 const router = express.Router();
 
 type Type = "imageReference" | "startImage" | "endImage" | "videoReference" | "audioReference";
@@ -68,7 +68,9 @@ export default router.post("/", validateFields({
         const ownedTrack = await u.db("o_videoTrack").where({ id: track.trackId, projectId, scriptId }).first();
         if (!ownedTrack) throw new Error("视频段不存在");
         try {
-          track.prompt = await resolveLanguagePrompt(languageDb, track.trackId, track.language, track.prompt, audio);
+          const languageVariant = await resolveLanguageVariant(languageDb, track.trackId, track.language, track.prompt, track.duration, audio);
+          track.prompt = languageVariant.prompt;
+          const generationDuration = languageVariant.duration;
           await assertStoryboardPromptFresh(u.db, projectId, track.trackId, track.prompt);
           const resolved = await Promise.all(track.uploadData.map(async (item): Promise<ResolvedReference | null> => {
             if (item.sources === "storyboard") {
@@ -123,7 +125,7 @@ export default router.post("/", validateFields({
             };
           }));
           if (h3 && loaded.some(item => !item)) throw new Error("H3 参考素材缺失：不能跳过某个 Picture 槽位继续生成");
-          return { language: track.language, trackId: track.trackId, prompt: track.prompt, duration: track.duration, referenceList: loaded.filter(Boolean) as ReferenceList[] };
+          return { language: track.language, trackId: track.trackId, prompt: track.prompt, duration: generationDuration, referenceList: loaded.filter(Boolean) as ReferenceList[] };
         } catch (cause) {
           const reason = "视频参考检查失败：" + u.error(cause).message;
           if (!validateOnly) await u.db("o_videoTrack").where({ id: track.trackId, projectId, scriptId }).update({ state: "生成失败", reason });
@@ -151,7 +153,7 @@ export default router.post("/", validateFields({
     const [videoId] = await u.db("o_video").insert({
       filePath: videoPath, time: Date.now(), state: "生成中", scriptId, projectId, videoTrackId: item.trackId,
     });
-    if (item.language) await languageDb("o_videoLanguage").insert({ videoId, language: item.language, prompt: item.prompt });
+    if (item.language) await languageDb("o_videoLanguage").insert({ videoId, language: item.language, prompt: item.prompt, duration: item.duration });
     return { ...item, videoId, videoPath };
   }));
   res.status(200).send(success(tasks.map(item => ({ videoId: item.videoId, trackId: item.trackId, language: item.language }))));
