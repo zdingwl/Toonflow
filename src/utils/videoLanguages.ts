@@ -167,6 +167,10 @@ async function generateMissingVariants(
     try {
       assertTranslatedDialogueLanguage(row.prompt, language);
       const duration = Number(row.duration) || planLanguageVariantDuration(track.prompt || "", row.prompt, language, baseDuration);
+      // Old variants had no language-specific duration. If natural target speech changes
+      // the clip length, force one regeneration/retiming pass instead of silently
+      // blessing old timestamps against the new budget.
+      if (!Number(row.duration) && Math.abs(duration - baseDuration) > 0.05) return false;
       if (!Number(row.duration)) {
         await db("o_videoPromptVariant").where({ trackId, language }).update({ duration });
         row.duration = duration;
