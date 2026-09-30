@@ -62,9 +62,10 @@ export async function reviseStoryboardScene(db: Knex, request: StoryboardRevisio
       throw new Error("原场次已变化或不存在，禁止覆盖；请重新读取分镜");
     }
     const previousScene = progress.scenes[String(scene - 1)];
+    const originalHasContinuityContract = /\*\*连续性契约\*\*/.test(original);
     const validation = validateStoryboardScene(scene, revised, extractSourceScene(script.content ?? "", scene), {
       previousScene,
-      requireContinuityContract: true,
+      requireContinuityContract: originalHasContinuityContract,
     });
     if (!validation.valid) throw new Error(`第${scene}场修订未通过校验：${validation.errors.join("；")}`);
     const nextScene = progress.scenes[String(scene + 1)];
@@ -74,7 +75,7 @@ export async function reviseStoryboardScene(db: Knex, request: StoryboardRevisio
     }
     await guardStoryboardContent(trx, projectId, script.content ?? "", data.scriptPlan ?? "", scene, revised, {
       previousScene,
-      requireContinuityContract: true,
+      requireContinuityContract: originalHasContinuityContract,
     });
     if (revised === original) {
       return { changed: false, revision: progress.revision, scene, taskId,
