@@ -16,6 +16,7 @@ on:
 
 env:
   NODE_VERSION: "24"
+  NODE_OPTIONS: "--max-old-space-size=6144"
 
 jobs:
   # ==================== Windows 构建 ====================
