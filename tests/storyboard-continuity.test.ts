@@ -27,8 +27,10 @@ const base = {
   exitStateId: "sc1-p1-end",
   entrySummary: "角色A站在栏杆内侧，右手抬起",
   exitSummary: "角色A右手搭上栏杆",
-  axisLock: "rail-axis-01",
-  screenDirection: "角色A左→右",
+  entryAxisLock: "rail-axis-01",
+  exitAxisLock: "rail-axis-01",
+  entryScreenDirection: "角色A左→右",
+  exitScreenDirection: "角色A左→右",
 };
 
 test("片段内 PRESERVE 必须继承上一片段 exitStateId 与 continuityGroup", () => {
@@ -59,7 +61,7 @@ ${segment("片段一", {
     ...base,
     exitStateId: "fall-enter-water",
     exitSummary: "艾娃从船舷向下坠入浪面，运动方向保持向下",
-    screenDirection: "艾娃=画面下方",
+    exitScreenDirection: "艾娃=画面下方",
   })}`;
   const next = `## 场2：水下
 ${segment("片段一", {
@@ -71,7 +73,10 @@ ${segment("片段一", {
     exitStateId: "underwater-sink-01",
     entrySummary: "艾娃刚穿过浪面进入水下，身体继续向下运动，水面在上方",
     exitSummary: "艾娃继续下沉，气泡上浮",
-    screenDirection: "艾娃=画面下方",
+    entryAxisLock: "rail-axis-01",
+    exitAxisLock: "rail-axis-01",
+    entryScreenDirection: "艾娃=画面下方",
+    exitScreenDirection: "艾娃=画面下方",
   })}`;
   assert.deepEqual(validateStoryboardContinuity(next, previous, { requireContracts: true }).errors, []);
   assert.equal(extractSceneExitContinuity(previous)?.exitStateId, "fall-enter-water");
