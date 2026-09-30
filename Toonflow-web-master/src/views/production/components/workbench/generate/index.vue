@@ -36,7 +36,10 @@
           </template>
           <div v-if="activeVariant?.reason" class="languageError">{{ activeVariant.reason }}</div>
           <div v-if="activeLanguage" class="languageHint">
-            {{ languageName(activeLanguage) }} · {{ activeVariant?.state || "未生成" }} · 可编辑台词和提示词后再生成视频
+            {{ languageName(activeLanguage) }} · {{ activeVariant?.state || "未生成" }}
+            <template v-if="activeVariant?.duration"> · 目标时长 {{ activeVariant.duration }} 秒</template>
+            <template v-else> · 时长待规划</template>
+            · 可编辑台词和提示词后再生成视频
           </div>
           <div class="promptData fc">
             <div class="promptInput" :inert="currentTrack.state === '生成中'" @focusout="handlePromptBlur">
@@ -380,7 +383,8 @@ async function handlePromptBlur() {
   if (!dirtyPrompts.has(key)) return;
   if (language && !activeVariant.value) return;
   try {
-    await axios.post("/production/workbench/updateVideoPrompt", { id: trackId, prompt, language });
+    const { data } = await axios.post("/production/workbench/updateVideoPrompt", { id: trackId, prompt, language });
+    if (language && activeVariant.value && data?.duration != null) activeVariant.value.duration = data.duration;
     if (currentTrack.value?.id === trackId && visiblePrompt.value === prompt) dirtyPrompts.delete(key);
   } catch (e: any) {
     window.$message.error(e?.message || "提示词保存失败");
@@ -518,7 +522,7 @@ async function generateVideo() {
     return window.$message.warning("请先生成并检查所有已选语言的提示词");
   const dlg = DialogPlugin.confirm({
     header: $t("workbench.generate.generateConfirm"),
-    body: `将为当前视频段生成 ${languages.length} 个版本：${languages.map(languageName).join("、")}。`,
+    body: `将为当前视频段生成 ${languages.length} 个版本：${languages.map((language) => { const duration = track.variants?.find((v) => v.language === language)?.duration; return `${languageName(language)}${duration ? ` ${duration}s` : ""}`; }).join("、")}。`,
     onConfirm: async () => {
       dlg.destroy();
       try {
@@ -564,12 +568,19 @@ async function generateVideo() {
         if (referenceError) return window.$message.warning(referenceError);
         const { data } = await axios.post("/production/workbench/batchGenerateVideo", {
           ...request,
-          trackData: languages.map((language) => ({ trackId: track.id, language, prompt: "", duration: request.duration, uploadData: request.uploadData })),
+          trackData: languages.map((language) => ({
+            trackId: track.id,
+            language,
+            prompt: "",
+            duration: track.variants?.find((variant) => variant.language === language)?.duration ?? request.duration,
+            uploadData: request.uploadData,
+          })),
         });
         window.$message.success($t("workbench.generate.generateStarted"));
-        data.forEach((item: { videoId: number; language: string }) =>
-          track.videoList.push({ id: item.videoId, language: item.language, state: "生成中", src: "" }),
-        );
+        data.forEach((item: { videoId: number; language: string }) => {
+          const duration = track.variants?.find((variant) => variant.language === item.language)?.duration;
+          track.videoList.push({ id: item.videoId, language: item.language, duration, state: "生成中", src: "" });
+        });
       } catch (e) {
         window.$message.error((e as any)?.message ?? "视频发起生成请求失败");
       } finally {
