@@ -311,7 +311,7 @@ async function generateForTrack(input: VideoPromptRequest) {
         if (/^(REFERENCE_STATE_REVIEW|LANGUAGE_TIMING_REVIEW):/.test(result.text.trim())) throw new Error(result.text);
         try {
           if (h3RefPromptMode) {
-            assertH3PromptContract(result.text, variantDuration ?? targetDuration, pictureSourceItems.length);
+            assertH3PromptContract(result.text, targetDuration, pictureSourceItems.length);
             assertH3ReferenceBindings(result.text, h3BindingSlots(pictureSourceItems));
           }
           if (hasUnexpectedH3ChineseProse(result.text)) throw new Error("PROMPT_LANGUAGE: section headings and non-dialogue prompt prose must be English; keep only required dialogue or visible text in its required language");
@@ -347,7 +347,7 @@ async function generateForTrack(input: VideoPromptRequest) {
             result.text = normalizeH3PromptFormat(result.text.trim());
             try {
               if (h3RefPromptMode) {
-                assertH3PromptContract(result.text, targetDuration, pictureSourceItems.length);
+                assertH3PromptContract(result.text, variantDuration ?? targetDuration, pictureSourceItems.length);
                 const sourcePlan = await loadH3ReferencePlan(languageDb, trackId, source);
                 if (!sourcePlan) throw new Error("H3 参考图绑定：源提示词缺少保存的参考图计划，请重新生成视频提示词");
                 assertH3ReferenceBindings(result.text, sourcePlan.slots, source);
