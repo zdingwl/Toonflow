@@ -1,5 +1,6 @@
 import type { Knex } from "knex";
 import { z } from "zod";
+import { migrateLanguageDurationColumns, planLanguageVariantDuration, retimeLanguagePromptInstruction } from "./videoLanguageTiming";
 
 export const dialogueLanguages = [
   { value: "zh-CN", label: "中文（普通话）" },
@@ -100,6 +101,7 @@ export async function migrateVideoLanguages(db: Knex) {
       table.text("language").notNullable();
       table.text("prompt").notNullable();
     });
+  await migrateLanguageDurationColumns(db);
 }
 
 export function translationInstruction(language: string) {
@@ -112,7 +114,7 @@ H3 对白必须保持 <d>[Language] 台词</d>，语言名称用 English、Chine
 对白称谓和亲属关系必须准确保留，例如姐姐/妹妹不能改成 darling 等泛称；原文区分长幼时，目标语也要保留这个区别，例如英语的 Big sister / little sister，不能只用不区分长幼的 sister；不添加原文没有的调侃、昵称或新台词。
 视觉描述保留以全局内容表现约束为前提：旧文的红色血液、红色伤口及血色环境须改为遮挡包扎、必要的少量绿色或黑色血迹、自然环境色，并同步修正反射光；已有绿色或黑色沿用，不得在翻译中还原成红色。此例外不改变剧情因果、对白含义、正常红衣红灯或参考图编号。
 原文无对白的镜头保持无对白，不得添加台词。不要把原语言对白或中文译文混入发声内容。声音参考只用于音色，不得复制其原语言台词。
-保留时长和时间轴，在给定时长内自然表达，不可加速塞入过长台词、删去剧情信息或截断对白；如果无法容纳，返回以 LANGUAGE_TIMING_REVIEW: 开头的简短原因，不要生成不完整提示词。`;
+不要为了迁就源语言时长而加速、删减或截断目标语言对白。先按目标语言自然表达并保留原有镜头顺序；后端会根据译文重新计算该语言的独立时长，并在需要时进行第二次时间轴重排。`;
 }
 
 const pendingVariants = new WeakMap<Knex, Map<number, Promise<unknown>>>();
@@ -122,10 +124,10 @@ export async function generateLanguageVariants(
   trackId: number,
   languages: string[],
   generateBase: () => Promise<string>,
-  translate: (system: string, source: string, language: string) => Promise<string>,
+  translate: (system: string, source: string, language: string, targetDuration?: number) => Promise<string>,
   regenerate = false,
   validateReferenceLabels = true,
-  validateCompletedPrompt?: (prompt: string, language: string) => void | Promise<void>,
+  validateCompletedPrompt?: (prompt: string, language: string, duration: number) => void | Promise<void>,
   validateBasePrompt?: (prompt: string) => void | Promise<void>,
 ) {
   let pending = pendingVariants.get(db);
@@ -149,21 +151,27 @@ async function generateMissingVariants(
   trackId: number,
   languages: string[],
   generateBase: () => Promise<string>,
-  translate: (system: string, source: string, language: string) => Promise<string>,
+  translate: (system: string, source: string, language: string, targetDuration?: number) => Promise<string>,
   regenerate: boolean,
   validateReferenceLabels: boolean,
-  validateCompletedPrompt?: (prompt: string, language: string) => void | Promise<void>,
+  validateCompletedPrompt?: (prompt: string, language: string, duration: number) => void | Promise<void>,
   validateBasePrompt?: (prompt: string) => void | Promise<void>,
 ) {
   dialogueLanguagesSchema.parse(languages);
   const track = await db("o_videoTrack").where({ id: trackId }).first();
   if (!track) throw new Error("视频段不存在");
   const existing = await db("o_videoPromptVariant").where({ trackId });
+  const baseDuration = Number(track.duration) || 5;
   const completedVariantIsValid = async (row: any, language: string) => {
     if (row.language !== language || !row.prompt?.trim() || row.state !== "已完成") return false;
     try {
       assertTranslatedDialogueLanguage(row.prompt, language);
-      await validateCompletedPrompt?.(row.prompt, language);
+      const duration = Number(row.duration) || planLanguageVariantDuration(track.prompt || "", row.prompt, language, baseDuration);
+      if (!Number(row.duration)) {
+        await db("o_videoPromptVariant").where({ trackId, language }).update({ duration });
+        row.duration = duration;
+      }
+      await validateCompletedPrompt?.(row.prompt, language, duration);
       return true;
     } catch { return false; }
   };
@@ -203,16 +211,23 @@ async function generateMissingVariants(
   }
   for (const language of missing) {
     try {
-      const prompt = (await translate(translationInstruction(language), base, language)).trim();
+      let prompt = (await translate(translationInstruction(language), base, language, baseDuration)).trim();
       if (!prompt || prompt.startsWith("LANGUAGE_TIMING_REVIEW:")) throw new Error(prompt || "模型未返回提示词");
       assertTranslatedDialogueLanguage(prompt, language);
+      const duration = planLanguageVariantDuration(base, prompt, language, baseDuration);
+      if (Math.abs(duration - baseDuration) > 0.05) {
+        prompt = (await translate(retimeLanguagePromptInstruction(language, duration), prompt, language, duration)).trim();
+        if (!prompt || prompt.startsWith("LANGUAGE_TIMING_REVIEW:")) throw new Error(prompt || "模型未返回重排后的完整提示词");
+        assertTranslatedDialogueLanguage(prompt, language);
+      }
       const slots = (text: string) =>
         [...new Set([...text.replace(/<d\b[^>]*>[\s\S]*?<\/d>/g, "").matchAll(/<(?:Picture|Subject|Image|Video|Audio)\s+\d+>/g)]
           .map((match) => match[0]))]
           .sort()
           .join(",");
       if (validateReferenceLabels && slots(base) !== slots(prompt)) throw new Error("翻译改变了参考图编号，请重试该语言");
-      await db("o_videoPromptVariant").where({ trackId, language }).update({ prompt, state: "已完成", reason: null });
+      await validateCompletedPrompt?.(prompt, language, duration);
+      await db("o_videoPromptVariant").where({ trackId, language }).update({ prompt, duration, state: "已完成", reason: null });
     } catch (cause) {
       await db("o_videoPromptVariant")
         .where({ trackId, language })
@@ -223,11 +238,22 @@ async function generateMissingVariants(
   return db("o_videoPromptVariant").where({ trackId });
 }
 
-export async function resolveLanguagePrompt(db: Knex, trackId: number, language: string | undefined, fallback: string, audio?: boolean) {
-  if (!language) return fallback;
+export async function resolveLanguageVariant(
+  db: Knex, trackId: number, language: string | undefined, fallbackPrompt: string, fallbackDuration?: number, audio?: boolean,
+): Promise<{ prompt: string; duration: number }> {
+  if (!language) return { prompt: fallbackPrompt, duration: Number(fallbackDuration) || 5 };
   dialogueLanguageSchema.parse(language);
   if (audio === false) throw new Error("生成对白语言版本前，请开启声音");
   const variant = await db("o_videoPromptVariant").where({ trackId, language }).first();
   if (!variant?.prompt?.trim() || variant.state !== "已完成") throw new Error(`${languageLabel(language)}提示词尚未就绪，请先生成并检查提示词`);
-  return variant.prompt;
+  const track = await db("o_videoTrack").where({ id: trackId }).select("prompt", "duration").first();
+  const duration = Number(variant.duration) || planLanguageVariantDuration(
+    track?.prompt || fallbackPrompt, variant.prompt, language, Number(track?.duration) || Number(fallbackDuration) || 5,
+  );
+  if (!Number(variant.duration)) await db("o_videoPromptVariant").where({ trackId, language }).update({ duration });
+  return { prompt: variant.prompt, duration };
+}
+
+export async function resolveLanguagePrompt(db: Knex, trackId: number, language: string | undefined, fallback: string, audio?: boolean) {
+  return (await resolveLanguageVariant(db, trackId, language, fallback, undefined, audio)).prompt;
 }
