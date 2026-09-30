@@ -1,0 +1,10 @@
+{
+  "status": 200,
+  "elapsedMs": 6738,
+  "code": 200,
+  "data": {
+    "thinking": "The user is asking me to simply reply with \"本地模型接入成功。\" and explicitly instructing me not to call any tools. This is a straightforward request - I should comply.",
+    "content": "本地模型接入成功。"
+  },
+  "message": "成功"
+}

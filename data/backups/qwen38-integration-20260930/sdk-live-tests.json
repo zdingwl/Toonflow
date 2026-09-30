@@ -1,0 +1,13 @@
+{
+  "tool": {
+    "calls": 1,
+    "steps": 2,
+    "text": "QWEN38_TOOL_OK"
+  },
+  "stream": {
+    "chunks": 2,
+    "text": "STREAM_OK",
+    "reasoningPresent": true
+  },
+  "elapsedMs": 1620
+}
