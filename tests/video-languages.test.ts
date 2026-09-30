@@ -347,3 +347,30 @@ test("old completed variant cannot bypass target-language retiming when generati
     );
   } finally { await db.destroy(); }
 });
+
+
+test("retiming pass must not rewrite already translated dialogue", async () => {
+  const db = await fixture();
+  try {
+    await db("o_videoTrack").where({ id: 1 }).update({
+      prompt: '<Picture 1> <d>[Chinese] 快走。</d>',
+      duration: 5,
+    });
+    let calls = 0;
+    const variants = await generateLanguageVariants(
+      db,
+      1,
+      ["en-US"],
+      async () => { throw new Error("base should already exist"); },
+      async () => {
+        calls++;
+        if (calls === 1) return '<Picture 1> <d>[English] We need to get out of here right now before they find us.</d>';
+        return '<Picture 1> <d>[English] We have to leave immediately before they find us.</d>';
+      },
+    );
+    const saved = variants.find((v: any) => v.language === "en-US");
+    assert.equal(saved.state, "生成失败");
+    assert.match(saved.reason, /时间轴重排改写或重排了目标语言对白/);
+    assert.equal(calls, 2);
+  } finally { await db.destroy(); }
+});
