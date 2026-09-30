@@ -53,7 +53,9 @@ export function planLanguageVariantDuration(
   const base = Number.isFinite(baseDuration) && baseDuration > 0 ? baseDuration : 5;
   const sourceSpeech = estimateDialogueSeconds(sourcePrompt);
   const targetSpeech = estimateDialogueSeconds(translatedPrompt, language);
-  if (!targetSpeech) return base;
+  // Only retime when the source prompt exposes machine-readable dialogue timing.
+  // Legacy free-form prompts have no reliable way to distinguish speech time from visual time.
+  if (!sourceSpeech || !targetSpeech) return base;
   const visualBudget = Math.max(0.75, base - sourceSpeech);
   const planned = Math.ceil(Math.max(base, visualBudget + targetSpeech) * 2) / 2;
   if (planned > 15) {
