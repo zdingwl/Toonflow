@@ -31,7 +31,7 @@ description: >-
 
 | 参数 | 类型 | 说明 |
 |------|------|------|
-| `videoDesc` | `string` | 画面描述、场景、关联资产名称、时长、景别、运镜、角色动作、情绪、光影氛围、台词、音效、关联资产ID（**故事板辅助多参模式**为固定文本） |
+| `videoDesc` | `string` | 当前片段的连续性契约、首帧承接说明、7列表格原文（画面描述/时长/景别/运镜/台词/音效）及关联资产ID；不得虚构运行时不存在的额外列 |
 | `prompt` | `string \| null` | 分镜图片提示词；本模式无 prompt 时传 `null` |
 | `track` | `string` | 分组 |
 | `duration` | `number` | 视频推荐时长（秒） |
@@ -146,7 +146,7 @@ add_flowData_storyboard({ videoDesc: "视频描述", prompt: "提示词内容", 
 以下约束取值跨模式恒定，**所有流程（A/B/C）均须遵守**：
 
 - **前置条件**：分镜表已构建完成且用户已确认
-- **videoDesc 必填**：每个写入单位的 `videoDesc` 必须包含对应的连续性契约、首帧承接说明、7列分镜信息与关联资产；不得虚构当前执行表中不存在的独立 action/orientation/spatialRelation/emotion 字段（**故事板辅助多参模式例外**——`videoDesc` 为固定文本 `参考故事板内容进行视频生成`，画面信息由故事板图承载）
+- **videoDesc 必填**：每个写入单位的 `videoDesc` 必须包含对应的连续性契约、首帧承接说明、7列分镜信息与关联资产；不得虚构当前执行表中不存在的独立 action/orientation/spatialRelation/emotion 字段
 - **光影/色调排除**：`videoDesc` 与 `prompt` 中均**禁止包含任何光影方向/色温/明暗/色调描述**——这些视觉参数由视频模型从场景图参考自动推导，agent 显式描述会与场景图原生光影冲突
 - **音乐排除**：`videoDesc` 与 `prompt` 中均**禁止包含任何音乐/配乐描述**，仅可承载「音效」列对应的环境音/动作音
 - **逐条写入**：必须调用 `add_flowData_storyboard` 写入工作区分镜面板，**每个写入单位调用一次**（不再输出 `<storyboardItem>` XML）；逐条写入，不遗漏、不重复、不合并多个写入单位
