@@ -8,8 +8,9 @@ async function fixture() {
   await db.schema.createTable("o_videoTrack", (t) => {
     t.integer("id").primary();
     t.text("prompt");
+    t.float("duration");
   });
-  await db("o_videoTrack").insert({ id: 1, prompt: "<Picture 1> 女孩说：“你好。”" });
+  await db("o_videoTrack").insert({ id: 1, prompt: "<Picture 1> 女孩说：“你好。”", duration: 5 });
   await migrateVideoLanguages(db);
   return db;
 }
@@ -264,5 +265,63 @@ test("translation compares unique structural reference labels, not repeats or sp
     assert.equal(missing.state, "生成失败");
     assert.match(missing.reason, /参考图编号/);
     assert.equal(missing.prompt, "");
+  } finally { await db.destroy(); }
+});
+
+
+test("target language gets its own duration and a second timing pass when natural speech is longer", async () => {
+  const db = await fixture();
+  try {
+    const source = '<Picture 1> <d>[Chinese] 快走。</d>';
+    await db("o_videoTrack").where({ id: 1 }).update({ prompt: source, duration: 5 });
+    const english = '<Picture 1> <d>[English] We need to get out of here right now before they find us.</d>';
+    let calls = 0;
+    const variants = await generateLanguageVariants(
+      db,
+      1,
+      ["en-US"],
+      async () => { throw new Error("base should already exist"); },
+      async (system, current, language, targetDuration) => {
+        calls++;
+        assert.equal(language, "en-US");
+        if (calls === 1) {
+          assert.equal(current, source);
+          assert.equal(targetDuration, 5);
+          return english;
+        }
+        assert.match(system, /new target duration/i);
+        assert.equal(current, english);
+        assert.ok(Number(targetDuration) > 5);
+        return english;
+      },
+    );
+    const saved = variants.find((v: any) => v.language === "en-US");
+    assert.equal(saved.state, "已完成", saved.reason);
+    assert.ok(saved.duration > 5);
+    assert.equal(calls, 2);
+    const columns = await db("o_videoPromptVariant").columnInfo();
+    assert.ok(columns.duration);
+  } finally { await db.destroy(); }
+});
+
+test("language timing review fails instead of speed-reading a translation beyond the 15 second clip limit", async () => {
+  const db = await fixture();
+  try {
+    await db("o_videoTrack").where({ id: 1 }).update({
+      prompt: '<Picture 1> <d>[Chinese] 走。</d>',
+      duration: 5,
+    });
+    const veryLong = '<Picture 1> <d>[English] ' + Array.from({ length: 45 }, (_, i) => 'word' + i).join(' ') + '.</d>';
+    const variants = await generateLanguageVariants(
+      db,
+      1,
+      ["en-US"],
+      async () => { throw new Error("base should already exist"); },
+      async () => veryLong,
+    );
+    const saved = variants.find((v: any) => v.language === "en-US");
+    assert.equal(saved.state, "生成失败");
+    assert.match(saved.reason, /LANGUAGE_TIMING_REVIEW/);
+    assert.ok(!saved.prompt);
   } finally { await db.destroy(); }
 });
