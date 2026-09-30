@@ -45,7 +45,7 @@ interface StoryboardItem {
   videoDesc?: string | null;
 }
 
-interface VideoPromptVariant { language: string; prompt: string; state: string; reason?: string; videoId?: number | null; }
+interface VideoPromptVariant { language: string; prompt: string; state: string; reason?: string; videoId?: number | null; duration?: number | null; }
 
 interface TrackItem {
   variants?: VideoPromptVariant[];
@@ -61,6 +61,7 @@ interface TrackItem {
 
 interface VideoItem {
   language?: string;
+  duration?: number | null;
   id: number;
   src: string;
   state: "未生成" | "生成中" | "已完成" | "生成失败";
