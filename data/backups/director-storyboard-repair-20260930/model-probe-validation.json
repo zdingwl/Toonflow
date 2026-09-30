@@ -1,0 +1,12 @@
+{
+  "planErrors": [],
+  "storyboard": {
+    "valid": true,
+    "scene": 1,
+    "errors": [],
+    "warnings": [
+      "已核对可解析的台词和屏幕文字；人物动作、空间关系及参考图状态仍需审阅"
+    ],
+    "coverageVerified": true
+  }
+}

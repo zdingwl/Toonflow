@@ -1,0 +1,35 @@
+{
+  "live": true,
+  "revision": 13,
+  "complete": true,
+  "valid": true,
+  "totalDuration": 109.5,
+  "videosPreserved": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ],
+  "selectionsPreserved": true,
+  "staleTracks": [
+    "storyboardPromptStale:1790715600051",
+    "storyboardPromptStale:1790715608760",
+    "storyboardPromptStale:1790715620120",
+    "storyboardPromptStale:1790715631864",
+    "storyboardPromptStale:1790715641964",
+    "storyboardPromptStale:1790715654150",
+    "storyboardPromptStale:1790715663461",
+    "storyboardPromptStale:1790715671994",
+    "storyboardPromptStale:1790715681264",
+    "storyboardPromptStale:1790715690854"
+  ]
+}

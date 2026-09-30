@@ -14,6 +14,8 @@ import { TaskStore } from "@/utils/agent/runtime/taskStore";
 import { readStoryboardProgress } from "./storyboardProgress";
 import { runStoryboardTask } from "./storyboardTaskRunner";
 import { extractSourceScene, validateStoryboardScene } from "./storyboardValidator";
+import { screenplayFacts } from "./screenplay";
+import { storyboardPlanSceneCount } from "./storyboardRebuildDispatch";
 import { createStoryboardRevisionTool } from "./storyboardRevisionTool";
 import { wrapAgentTools } from "@/utils/agent/runtime/toolExecutor";
 import { buildMemoryPrompt } from "@/utils/agent/contextManager";
@@ -122,14 +124,14 @@ async function createSubAgent(parentCtx: AgentContext) {
         ? await readStoryboardTableSnapshot(u.db, scope.projectId, scope.episodesId) : undefined;
       const activeTools = useTools({
         resTool, msg: subMsg,
-        ...(readOnlyTools ? { toolsNames: ["get_flowData", "get_storyboard_progress"] } : {}),
+        ...(isDirectorPlan ? { toolsNames: ["get_flowData"] } : readOnlyTools ? { toolsNames: ["get_flowData", "get_storyboard_progress"] } : {}),
       });
       const { fullStream } = await u.Ai.Text(modelKey ?? key, parentCtx.thinkConfig.think, parentCtx.thinkConfig.thinlLevel).stream({
         system,
         messages: messages ?? [{ role: "user", content: prompt }],
         abortSignal,
         tools: {
-          ...extraTools,
+          ...(isDirectorPlan ? {} : extraTools),
           ...wrapAgentTools(activeTools, {
             db: u.db, runId: parentCtx.runId, stepKey, sideEffectTools: PRODUCTION_SIDE_EFFECT_TOOLS,
           }),
@@ -247,13 +249,16 @@ async function createSubAgent(parentCtx: AgentContext) {
     description: "运行执行subAgent来完成导演规划相关任务",
     inputSchema: jsonSchema<{ prompt: string }>(promptInput),
     execute: async ({ prompt }) => {
-      const artSkills = await loadArtSkills();
       const systemPrompt = await readSkill(path.join(u.getPath("skills"), "production_execution_director_plan.md"));
+      const source = await u.db("o_script").where({ id: Number(resTool.data.scriptId), projectId: Number(resTool.data.projectId) }).select("content").first();
+      const workspace = await u.db("o_agentWorkData").where({ projectId: Number(resTool.data.projectId), episodesId: Number(resTool.data.scriptId), key: "productionAgent" }).select("data").first();
+      const currentPlan = workspace?.data ? JSON.parse(workspace.data).scriptPlan ?? "" : "";
+      const facts = `\n【程序解析的剧本事实：统计不含标点和空格，屏幕文字不计入口播】\n${screenplayFacts(source?.content ?? "", currentPlan)}`;
       const addPrompt = "\n你必须使用如下XML格式写入工作区：\n```\n<scriptPlan>内容</scriptPlan>\n```";
       return runAgent({ key: "productionAgent:directorPlanAgent", prompt, system: systemPrompt + addPrompt,
         name: "执行导演", memoryKey: "assistant:execution", messages: [
-          { role: "assistant", content: artSkills.prompt + `\n${modelInfo}` }, { role: "user", content: prompt + addPrompt },
-        ], tools: { ...artSkills.tools } });
+          { role: "user", content: prompt + addPrompt + facts },
+        ] });
     },
   });
 
@@ -302,10 +307,7 @@ async function createSubAgent(parentCtx: AgentContext) {
       const scriptRow = await u.db("o_script").where({ id: episodesId, projectId }).select("content").first();
       const workspace = await u.db("o_agentWorkData").where({ projectId, episodesId, key: "productionAgent" }).select("data").first();
       const plan = workspace?.data ? (JSON.parse(workspace.data).scriptPlan ?? "") : "";
-      const declaredTotal = String(plan).match(/共规划\s*(\d+)\s*个?场/);
-      const planHeadings = [...String(plan).matchAll(/^\s*(?:\d+[.、]\s*)?场\s*(\d+)\s*[：:]/gm)].map((m) => Number(m[1]));
-      const planTotal = declaredTotal ? Number(declaredTotal[1]) :
-        (planHeadings.length && planHeadings.every((n, i) => n === i + 1) ? planHeadings.length : undefined);
+      const planTotal = String(plan).trim() ? storyboardPlanSceneCount(String(plan)) : undefined;
       const total = progress.total ?? requestedTotal ?? planTotal;
       if (!total || !Number.isSafeInteger(total) || total > 1000) throw new Error("无法从已有进度或导演计划确定总场数，请先核对导演计划");
       if (requestedTotal !== undefined && requestedTotal !== total) throw new Error("输入总场数与已保存进度不一致");
@@ -325,6 +327,7 @@ async function createSubAgent(parentCtx: AgentContext) {
             `不要生成其他场次，不要自行变更 task/total。\n` +
             (sourceScene ? `本场原剧本（必须完整覆盖）：\n${sourceScene}\n` :
               `当前剧本未识别到明确的第${scene}场边界；先调用 get_flowData(script) 定位本场，不得凭空补剧情。\n`) +
+            `【程序核对事实与逐场制作预算】\n${screenplayFacts(sourceScene ?? "", String(plan))}\n` +
             (previous ? `上一场末尾连续性参考：\n${previous}\n` : "") + `创作要求：${prompt}`;
           await runAgent({
             key: "productionAgent:storyboardTableAgent", prompt: protocol, system: systemPrompt,
@@ -357,9 +360,12 @@ async function createSubAgent(parentCtx: AgentContext) {
     generate: async ({ instruction, scene, total, taskId, original, sourceScene }) => {
       const productionSkills = await loadProductionSkills();
       const systemPrompt = await readSkill(path.join(u.getPath("skills"), "production_execution_storyboard_table.md"));
+      const workspace = await u.db("o_agentWorkData").where({ projectId: Number(resTool.data.projectId), episodesId: Number(resTool.data.scriptId), key: "productionAgent" }).select("data").first();
+      const plan = workspace?.data ? JSON.parse(workspace.data).scriptPlan ?? "" : "";
       const revisionPrompt = `【已有场次修订，不是首次生成】仅修订第${scene}场（共${total}场），task=${taskId}。` +
         `保持原剧本必须呈现的内容，不得擅自删除剧情或台词。只输出完整闭合的 ` +
         `<storyboardTable scene="${scene}" total="${total}" task="${taskId}">修订后第${scene}场完整Markdown</storyboardTable>。\n` +
+        `【程序核对事实与逐场制作预算】\n${screenplayFacts(sourceScene ?? "", plan)}\n` +
         `【本场需解决的审核问题和用户要求】\n${instruction}\n` +
         `【本场已保存旧稿：必须在此基础上修改】\n${original}\n` +
         (sourceScene ? `【对应原剧本：必须完整覆盖】\n${sourceScene}\n` :

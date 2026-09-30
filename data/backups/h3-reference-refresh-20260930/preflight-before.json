@@ -1,0 +1,91 @@
+{
+  "status": 409,
+  "body": {
+    "code": 400,
+    "data": {
+      "valid": false,
+      "tracks": [
+        {
+          "trackId": 1790715565974,
+          "language": "en-US",
+          "valid": false,
+          "reason": "轨道 1790715565974：视频参考检查失败：沉城远景的参考图片已变化，请重新生成视频提示词"
+        },
+        {
+          "trackId": 1790715576565,
+          "language": "en-US",
+          "valid": false,
+          "reason": "轨道 1790715576565：视频参考检查失败：雨夜坠海的参考图片已变化，请重新生成视频提示词"
+        },
+        {
+          "trackId": 1790715600051,
+          "language": "en-US",
+          "valid": false,
+          "reason": "轨道 1790715600051：视频参考检查失败：雨夜坠海的参考图片已变化，请重新生成视频提示词"
+        },
+        {
+          "trackId": 1790715608760,
+          "language": "en-US",
+          "valid": false,
+          "reason": "轨道 1790715608760：视频参考检查失败：雨夜坠海的参考图片已变化，请重新生成视频提示词"
+        },
+        {
+          "trackId": 1790715620120,
+          "language": "en-US",
+          "valid": false,
+          "reason": "轨道 1790715620120：视频参考检查失败：水下濒死的参考图片已变化，请重新生成视频提示词"
+        },
+        {
+          "trackId": 1790715631864,
+          "language": "en-US",
+          "valid": true,
+          "pictureCount": 3,
+          "referenceCount": 3
+        },
+        {
+          "trackId": 1790715641964,
+          "language": "en-US",
+          "valid": true,
+          "pictureCount": 5,
+          "referenceCount": 5
+        },
+        {
+          "trackId": 1790715654150,
+          "language": "en-US",
+          "valid": true,
+          "pictureCount": 5,
+          "referenceCount": 5
+        },
+        {
+          "trackId": 1790715663461,
+          "language": "en-US",
+          "valid": true,
+          "pictureCount": 4,
+          "referenceCount": 4
+        },
+        {
+          "trackId": 1790715671994,
+          "language": "en-US",
+          "valid": true,
+          "pictureCount": 4,
+          "referenceCount": 4
+        },
+        {
+          "trackId": 1790715681264,
+          "language": "en-US",
+          "valid": true,
+          "pictureCount": 3,
+          "referenceCount": 3
+        },
+        {
+          "trackId": 1790715690854,
+          "language": "en-US",
+          "valid": true,
+          "pictureCount": 4,
+          "referenceCount": 4
+        }
+      ]
+    },
+    "message": "批量视频检查失败：轨道 1790715565974：视频参考检查失败：沉城远景的参考图片已变化，请重新生成视频提示词；轨道 1790715576565：视频参考检查失败：雨夜坠海的参考图片已变化，请重新生成视频提示词；轨道 1790715600051：视频参考检查失败：雨夜坠海的参考图片已变化，请重新生成视频提示词；轨道 1790715608760：视频参考检查失败：雨夜坠海的参考图片已变化，请重新生成视频提示词；轨道 1790715620120：视频参考检查失败：水下濒死的参考图片已变化，请重新生成视频提示词"
+  }
+}

@@ -1,0 +1,256 @@
+{
+  "69c15a47-cbae-4e99-af3c-65460cce339a": {
+    "prompt": [
+      387,
+      "69c15a47-cbae-4e99-af3c-65460cce339a",
+      {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+            "type": "minimax",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+          }
+        },
+        "5": {
+          "class_type": "MiniMaxH3ReferenceToVideo",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "audio_vae": [
+              "4",
+              0
+            ],
+            "ref_image_size": "match",
+            "prompt": "subject_definitions:\n<Subject 1> is Ava, the single woman from <Picture 1>, whose face, front, side and back panels show the same person in one current state; the sheet defines identity, wardrobe and rendering only, not the display pose, rail prop, panel layout or background. She has near-natural facial proportions, controlled brown eye size, defined eyelids, a straight nose bridge, balanced nose-to-mouth spacing, firm cheek and jaw contours, detailed damp skin shading, and wet dark brown hair tied in a ponytail with loose strands. She wears a black wet-textured leather jacket over a black T-shirt, dark cargo pants, a dark belt, a small hip/thigh pouch, worn lace-up boots, and a dark blue wrap with intact pant fabric covering her left lower leg.\n<Subject 2> is the tilted storm-damaged cruise liner from <Picture 2>, used as the location reference for its sloping wet deck, rust-streaked pale hull, metal railings and vertical stanchions, lifeboat davits, dark turbulent sea, lightning-lit storm clouds, and cold blue night illumination; its wide whole-ship framing does not determine the video composition.\n\nsummary:\n[reference generation] <Subject 1> is already suspended from the exterior railing of <Subject 2>, while <Subject 2> supplies the tilted hull, wet deck edge, storm sea, lifeboat davits and violent night lighting. As <Subject 2> shudders in the waves, <Subject 1>’s grip slips slightly but she remains hanging over open water, then looks upward and shouts for Madison to pull her aboard.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - Ava’s identity, facial geometry, eye and nose proportions, cheek and jaw contours, wet ponytail, body proportions, black jacket, black shirt, cargo pants, belt, pouch, boots, covered left lower leg and damp physically based material rendering are retained, while the sheet’s standing display pose and panel layout are replaced by the storyboard-required hanging action.\n<Subject 2> (appears in [Shot 1]): fully_preserved - the cruise liner’s tilted wet deck, rust-streaked hull, connected railing and stanchions, lifeboat-davit area, stormy ocean, cold lightning lighting and rainy atmosphere are retained, with only the local hull section and deck edge framed rather than the reference’s wide whole-ship view.\n\ndetailed_description:\nThe video preserves the near-natural three-dimensional rendering visible in <Picture 1>: <Subject 1> has controlled facial proportions, defined eyelids, a straight nose, firm cheek and jaw structure, detailed wet skin, layered dark ponytail strands, glossy soaked leather and matte wet fabric. The cold lightning-driven illumination from <Subject 2>, as established in <Picture 2>, relights those same surfaces and the surrounding ship without altering her facial structure, costume or material language.\n\n[Shot 1] <Subject 1> begins already suspended on the outboard side of <Subject 2>. Both hands grip the wet upper railing above her head, and both straightened arms bear her full weight. Her torso, hips and legs hang below her hands, with both boots dangling over the churning open sea beside <Subject 2>’s hull. Clear gaps separate her feet from every support, and her body also hangs clear of the hull and railing. The upper rail is visibly attached by vertical stanchions to <Subject 2>’s actual deck edge; the deck remains behind her on the inboard side of the railing, while the hull drops toward the sea on her side. The dark blue wrap and intact pant leg continue to cover her left lower leg without exposing an injury. High above, only the one story-specified remaining lifeboat-davit position on <Subject 2> is visible. The camera is outside <Subject 2>, over the sea and close to the hull in an oblique side view, framing Ava’s gripping hands, complete suspended body, boots and the water beneath them together. It makes a slight handheld downward drift while keeping the grip point, full body and sea in one full-person composition. Rain strikes the deck and hull, waves crash below, distant voices cry out in alarm, and the lifeboat davit rattles mechanically.\n\n[Shot 2] At 00:02.000, <Subject 1> remains hanging outside <Subject 2> with both hands overhead and both feet unsupported above the water. <Subject 2> vibrates through the hull, causing Ava’s fingers to tighten on the slippery rail and her body to sink a little as her grip slips. She tilts her head back and looks upward toward <Subject 2>’s deck above her grip, her wet hair and jacket moving in the wind. The camera travels urgently downward along her load-bearing arms from the hands clamped to the upper rail to her upturned face, preserving the upward arm angle and the body’s suspension below. The storm surges in volume and the stressed railing gives a sharp metallic friction whine.\n<Subject 1> (S1), spoken language en-US with synchronized lip movement, says:\n<d>[English] Madison, pull me up!</d>\nHer shout is breathless and tearful, with its final sound partly swallowed by wind and waves.\n\noverall_soundscape:\nHeavy rain, rushing wind and crashing waves form a continuous storm bed around <Subject 2>. Rain hammers the wet deck and hull, loose ship components and the lifeboat davit rattle and clang, and distant crowd exclamations carry from above. In the second shot, the wind and rain intensify, the railing emits a high strained metallic friction sound, and Ava’s wet, sobbing shout is partly lost in the storm.\n\nnon_diegetic_music:\nA minimal low sustained tension drone underlies the storm without competing with the diegetic sound. It deepens subtly when Ava slips against <Subject 2>’s hull and calls upward, leaving the wind, waves, metal stress and her voice as the dominant sonic elements.",
+            "width": 1344,
+            "height": 768,
+            "length": 124,
+            "ref_images.ref_image_0": [
+              "15",
+              0
+            ],
+            "ref_images.ref_image_1": [
+              "16",
+              0
+            ]
+          }
+        },
+        "6": {
+          "class_type": "RandomNoise",
+          "inputs": {
+            "noise_seed": 4692851871700402
+          }
+        },
+        "7": {
+          "class_type": "BasicGuider",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "conditioning": [
+              "5",
+              0
+            ]
+          }
+        },
+        "8": {
+          "class_type": "KSamplerSelect",
+          "inputs": {
+            "sampler_name": "res_multistep"
+          }
+        },
+        "9": {
+          "class_type": "BasicScheduler",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "scheduler": "simple",
+            "steps": 20,
+            "denoise": 1
+          }
+        },
+        "10": {
+          "class_type": "SamplerCustomAdvanced",
+          "inputs": {
+            "noise": [
+              "6",
+              0
+            ],
+            "guider": [
+              "7",
+              0
+            ],
+            "sampler": [
+              "8",
+              0
+            ],
+            "sigmas": [
+              "9",
+              0
+            ],
+            "latent_image": [
+              "5",
+              1
+            ]
+          }
+        },
+        "11": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "10",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "12": {
+          "class_type": "VAEDecodeAudio",
+          "inputs": {
+            "samples": [
+              "10",
+              0
+            ],
+            "vae": [
+              "4",
+              0
+            ]
+          }
+        },
+        "13": {
+          "class_type": "CreateVideo",
+          "inputs": {
+            "images": [
+              "11",
+              0
+            ],
+            "audio": [
+              "12",
+              0
+            ],
+            "fps": 24,
+            "bit_depth": 8
+          }
+        },
+        "14": {
+          "class_type": "SaveVideo",
+          "inputs": {
+            "video": [
+              "13",
+              0
+            ],
+            "filename_prefix": "Toonflow/verification/H3_hanging_ship_edge_v2",
+            "format": "mp4"
+          }
+        },
+        "15": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "toonflow_h3_1790718858763_0_268308295.jpg"
+          }
+        },
+        "16": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "toonflow_h3_1790718863761_1_631496927.jpg"
+          }
+        }
+      },
+      {
+        "create_time": 1790723211313
+      },
+      [
+        "14"
+      ]
+    ],
+    "outputs": {
+      "14": {
+        "images": [
+          {
+            "filename": "H3_hanging_ship_edge_v2_00001_.mp4",
+            "subfolder": "Toonflow\\verification",
+            "type": "output"
+          }
+        ],
+        "animated": [
+          true
+        ]
+      }
+    },
+    "status": {
+      "status_str": "success",
+      "completed": true,
+      "messages": [
+        [
+          "execution_start",
+          {
+            "prompt_id": "69c15a47-cbae-4e99-af3c-65460cce339a",
+            "timestamp": 1790723516609
+          }
+        ],
+        [
+          "execution_cached",
+          {
+            "nodes": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "8",
+              "9"
+            ],
+            "prompt_id": "69c15a47-cbae-4e99-af3c-65460cce339a",
+            "timestamp": 1790723516643
+          }
+        ],
+        [
+          "execution_success",
+          {
+            "prompt_id": "69c15a47-cbae-4e99-af3c-65460cce339a",
+            "timestamp": 1790723846525
+          }
+        ]
+      ]
+    },
+    "meta": {
+      "14": {
+        "node_id": "14",
+        "display_node": "14",
+        "parent_node": null,
+        "real_node_id": "14"
+      }
+    }
+  }
+}

@@ -1,0 +1,185 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ReferenceToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "audio_vae": [
+        "4",
+        0
+      ],
+      "ref_image_size": "match",
+      "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>; the face close-up, front, side and back panels depict the same woman in one current state, with controlled eye-to-face proportions, defined eyelid and nose structure, balanced nose-to-mouth distance, firm cheek and jaw contours, detailed wet skin shading, dark hair tied in a ponytail with loose wet strands, a black worn leather jacket over a black T-shirt, dark cargo trousers, sturdy boots, and intact dark blue wrapping around the left lower leg; the sheet supplies identity, wardrobe and rendering only, not its display pose, panel layout, repeated figures, prop rail or plain background.\n<Subject 2> is the tilted ocean liner from <Picture 2>, with a rust-streaked pale hull, wet sloping metal decks, railings and stanchions, weathered lifeboats and davits, dark turbulent sea, heavy rain, lightning, cold night lighting and a distant city skyline; the reference supplies the ship architecture, materials, layout and storm atmosphere, while the video uses only the local hull and deck edge required for the action.\n\nsummary:\n[reference generation] In this 5-second storm sequence, <Subject 1> is already suspended from the exterior railing of <Subject 2>, with both hands bearing her weight above her head and both boots hanging over open water. The first shot shows <Subject 1>, her grip, the connected railing and deck edge, and the sea below; the second shot moves from her slipping hands to her upturned face as she shouts to Madison while <Subject 2> shudders in the storm.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - Ava retains the same facial structure, eye shape and scale, nose and mouth design, cheek and jaw contours, dark ponytail, body proportions, black jacket, black T-shirt, cargo trousers, boots, intact left-leg wrapping and wet physically based material appearance; only pose, facial expression, grip strain and the required hanging action change, while the sheet layout and neutral display pose are excluded.\n<Subject 2> (appears in [Shot 1], [Shot 2]): fully_preserved - The liner retains its rust-streaked hull, wet metal deck and rail construction, stanchions, lifeboat davits, storm-damaged surfaces, rain, lightning, dark sea and cold night atmosphere, with the wide reference composition adapted to the required local ship-side framing.\n\ndetailed_description:\nThe rendering follows <Picture 1>: near-natural facial geometry with restrained eye size, clear eyelid structure, a straight nose bridge, balanced lips and jaw, and detailed wet skin shading. Ava’s dark hair forms a soaked ponytail with separated loose strands, while her worn leather jacket, cotton T-shirt, heavy trousers and boots show realistic wet sheen, fabric weight and contact shadows; <Picture 2> supplies the rain-darkened metal, rust-streaked hull, cold storm light and physically coherent ship environment.\n\n[Shot 1] <Subject 1> is already suspended on the outboard side of <Subject 2>. Both hands grip the wet upper rail above her head, and her arms bear the full weight of her body. Her torso, hips and legs hang below the deck edge, while both boots dangle over open sea with a clear gap from the deck, hull, rail and any supporting surface. The gripped upper rail is attached by vertical stanchions to the actual deck edge; the deck lies only inside and above the grip, and the outside of the rail drops into exposed air beside the vertical hull. The camera is positioned over the sea in a close oblique side view, holding Ava’s hands, complete body, boots and the churning water beneath her in one full-person frame. Only this short hull section is shown rather than placing the whole ship behind her. A single remaining lifeboat-davit position is visible far above and inboard. Rain streaks through the frame, wind pulls at her ponytail and jacket, and waves break directly below her feet.\n\n[Shot 2] At 00:02.000, <Subject 1> remains suspended by both hands above her head. The camera starts tight on her pressure-whitened fingers locked around the upper rail, then moves urgently down along her wet, straining sleeves and arms to her upturned face. She looks toward the deck above the grip with drawn brows and an open, desperate mouth, preserving the same facial geometry as the reference. A vibration through <Subject 2> shudders through the railing; her hands slip a fraction on the wet metal and her whole body sinks slightly lower, while both boots remain clear of the hull and sea. <Subject 1> (S1) says in en-US:\n<d>[English] Madison, pull me up!</d>\nThe ending of the cry is swallowed by wind and wave noise as rain continues to run over her face and clothing.\n\noverall_soundscape:\nContinuous heavy rain hammers the deck and railing, strong wind roars across the hull, and dark waves crash below Ava’s boots. Faint crowd cries and the metallic clank of the swaying lifeboat davit come from above the deck. In the second shot, the storm surges louder, the loaded railing emits a sharp friction whine, and Ava’s shout is breathless, tearful and partly lost in the wind.\n\nnon_diegetic_music:\nNo non-diegetic music is used; the scene relies on rain, wind, crashing waves, ship vibration, metal friction and Ava’s shouted plea for tension.",
+      "width": 1344,
+      "height": 768,
+      "length": 124,
+      "ref_images.ref_image_0": [
+        "15",
+        0
+      ],
+      "ref_images.ref_image_1": [
+        "16",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 4692851871700402
+    }
+  },
+  "7": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "6",
+        0
+      ],
+      "guider": [
+        "7",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "12": {
+    "class_type": "VAEDecodeAudio",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "4",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "audio": [
+        "12",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "Toonflow/verification/H3_hanging_ship_edge",
+      "format": "mp4"
+    }
+  },
+  "15": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "toonflow_h3_1790718858763_0_268308295.jpg"
+    }
+  },
+  "16": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "toonflow_h3_1790718863761_1_631496927.jpg"
+    }
+  }
+}

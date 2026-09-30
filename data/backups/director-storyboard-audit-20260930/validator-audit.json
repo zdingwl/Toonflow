@@ -1,0 +1,32 @@
+[
+  {
+    "scene": 1,
+    "sourceLocated": false,
+    "valid": true,
+    "errors": [],
+    "warnings": [
+      "未识别可逐字核对的原场次台词；只完成结构校验，不能宣称剧情内容完全覆盖"
+    ],
+    "coverageVerified": false
+  },
+  {
+    "scene": 2,
+    "sourceLocated": false,
+    "valid": true,
+    "errors": [],
+    "warnings": [
+      "未识别可逐字核对的原场次台词；只完成结构校验，不能宣称剧情内容完全覆盖"
+    ],
+    "coverageVerified": false
+  },
+  {
+    "scene": 3,
+    "sourceLocated": false,
+    "valid": true,
+    "errors": [],
+    "warnings": [
+      "未识别可逐字核对的原场次台词；只完成结构校验，不能宣称剧情内容完全覆盖"
+    ],
+    "coverageVerified": false
+  }
+]

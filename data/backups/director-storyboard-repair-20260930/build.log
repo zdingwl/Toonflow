@@ -1,0 +1,12 @@
+
+> toonflow@1.1.8 build:backend
+> cross-env NODE_ENV=prod tsx scripts/build.ts
+
+Done, saved vendor.json
+🔨 开始构建...
+
+✅ 后端服务构建完成: data/serve/app.js
+✅ Electron主进程构建完成: build/main.js
+
+🎉 所有构建任务完成!
+

@@ -1,0 +1,325 @@
+{
+  "scenes": {
+    "1": 25,
+    "2": 22,
+    "3": 62.5
+  },
+  "total": 109.5,
+  "rows": [
+    {
+      "scene": 1,
+      "segment": "片段一A·沉城远景（约4s）",
+      "row": "1",
+      "seconds": 4,
+      "dialogue": "无台词",
+      "line": 12
+    },
+    {
+      "scene": 1,
+      "segment": "片段一B·甲板求救（约5s）",
+      "row": "2",
+      "seconds": 2,
+      "dialogue": "无台词",
+      "line": 21
+    },
+    {
+      "scene": 1,
+      "segment": "片段一B·甲板求救（约5s）",
+      "row": "3",
+      "seconds": 3,
+      "dialogue": "艾娃：『麦迪逊，拉我上去！』",
+      "line": 22
+    },
+    {
+      "scene": 1,
+      "segment": "片段二（约10s）",
+      "row": "4",
+      "seconds": 5,
+      "dialogue": "麦迪逊：『姐姐……位置只有一个。』",
+      "line": 30
+    },
+    {
+      "scene": 1,
+      "segment": "片段二（约10s）",
+      "row": "5",
+      "seconds": 2,
+      "dialogue": "艾娃：『你干什么？！』",
+      "line": 31
+    },
+    {
+      "scene": 1,
+      "segment": "片段二（约10s）",
+      "row": "6",
+      "seconds": 3,
+      "dialogue": "麦迪逊：『我只是想活。』",
+      "line": 32
+    },
+    {
+      "scene": 1,
+      "segment": "片段三（约6s）",
+      "row": "7",
+      "seconds": 2,
+      "dialogue": "无台词",
+      "line": 40
+    },
+    {
+      "scene": 1,
+      "segment": "片段三（约6s）",
+      "row": "8",
+      "seconds": 2,
+      "dialogue": "无台词",
+      "line": 41
+    },
+    {
+      "scene": 1,
+      "segment": "片段三（约6s）",
+      "row": "9",
+      "seconds": 2,
+      "dialogue": "无台词",
+      "line": 42
+    },
+    {
+      "scene": 2,
+      "segment": "片段一（约6s）",
+      "row": "1",
+      "seconds": 3,
+      "dialogue": "无台词",
+      "line": 54
+    },
+    {
+      "scene": 2,
+      "segment": "片段一（约6s）",
+      "row": "2",
+      "seconds": 3,
+      "dialogue": "无台词",
+      "line": 55
+    },
+    {
+      "scene": 2,
+      "segment": "片段二（约8s）",
+      "row": "1",
+      "seconds": 3,
+      "dialogue": "无台词",
+      "line": 63
+    },
+    {
+      "scene": 2,
+      "segment": "片段二（约8s）",
+      "row": "2",
+      "seconds": 2,
+      "dialogue": "无台词",
+      "line": 64
+    },
+    {
+      "scene": 2,
+      "segment": "片段二（约8s）",
+      "row": "3",
+      "seconds": 3,
+      "dialogue": "无台词",
+      "line": 65
+    },
+    {
+      "scene": 2,
+      "segment": "片段三（约8s）",
+      "row": "1",
+      "seconds": 2,
+      "dialogue": "无台词",
+      "line": 73
+    },
+    {
+      "scene": 2,
+      "segment": "片段三（约8s）",
+      "row": "2",
+      "seconds": 2,
+      "dialogue": "艾娃（带水下回声）：『回去。』",
+      "line": 74
+    },
+    {
+      "scene": 2,
+      "segment": "片段三（约8s）",
+      "row": "3",
+      "seconds": 3,
+      "dialogue": "艾娃（带水下回声）：『我要回去！』",
+      "line": 75
+    },
+    {
+      "scene": 2,
+      "segment": "片段三（约8s）",
+      "row": "4",
+      "seconds": 1,
+      "dialogue": "屏幕文字：【1】",
+      "line": 76
+    },
+    {
+      "scene": 3,
+      "segment": "片段一（约13s）",
+      "row": "1",
+      "seconds": 2,
+      "dialogue": "无台词",
+      "line": 88
+    },
+    {
+      "scene": 3,
+      "segment": "片段一（约13s）",
+      "row": "2",
+      "seconds": 2,
+      "dialogue": "屏幕文字：【灾变前72小时】",
+      "line": 89
+    },
+    {
+      "scene": 3,
+      "segment": "片段一（约13s）",
+      "row": "3",
+      "seconds": 3,
+      "dialogue": "电视新闻字幕：【近海异常高潮位，部分港区暂停夜间作业】",
+      "line": 90
+    },
+    {
+      "scene": 3,
+      "segment": "片段一（约13s）",
+      "row": "4",
+      "seconds": 3,
+      "dialogue": "无台词",
+      "line": 91
+    },
+    {
+      "scene": 3,
+      "segment": "片段一（约13s）",
+      "row": "5",
+      "seconds": 1,
+      "dialogue": "屏幕文字：【核心07已重启】【初始仓储：30m³】【初始蓝图：一级应急浮台】",
+      "line": 92
+    },
+    {
+      "scene": 3,
+      "segment": "片段一（约13s）",
+      "row": "6",
+      "seconds": 2,
+      "dialogue": "屏幕文字：【距离第一轮极端风暴：71:58:41】",
+      "line": 93
+    },
+    {
+      "scene": 3,
+      "segment": "片段二（约12s）",
+      "row": "1",
+      "seconds": 3,
+      "dialogue": "无台词",
+      "line": 101
+    },
+    {
+      "scene": 3,
+      "segment": "片段二（约12s）",
+      "row": "2",
+      "seconds": 3,
+      "dialogue": "艾娃：『七十二小时。』",
+      "line": 102
+    },
+    {
+      "scene": 3,
+      "segment": "片段二（约12s）",
+      "row": "3",
+      "seconds": 2,
+      "dialogue": "无台词",
+      "line": 103
+    },
+    {
+      "scene": 3,
+      "segment": "片段二（约12s）",
+      "row": "4",
+      "seconds": 4,
+      "dialogue": "艾娃：『卖车。今天成交。』",
+      "line": 104
+    },
+    {
+      "scene": 3,
+      "segment": "片段三（约15s）",
+      "row": "1",
+      "seconds": 2,
+      "dialogue": "无台词",
+      "line": 112
+    },
+    {
+      "scene": 3,
+      "segment": "片段三（约15s）",
+      "row": "2",
+      "seconds": 6,
+      "dialogue": "艾娃：『仓库我要短租，位置越偏越好。』",
+      "line": 113
+    },
+    {
+      "scene": 3,
+      "segment": "片段三（约15s）",
+      "row": "3",
+      "seconds": 7,
+      "dialogue": "艾娃：『工业滤芯、移动储水罐、』",
+      "line": 114
+    },
+    {
+      "scene": 3,
+      "segment": "片段四（约9s）",
+      "row": "1",
+      "seconds": 9,
+      "dialogue": "艾娃：『救生设备，有现货的全部给我报价。』",
+      "line": 122
+    },
+    {
+      "scene": 3,
+      "segment": "片段五（约13.5s）",
+      "row": "1",
+      "seconds": 2,
+      "dialogue": "无台词",
+      "line": 130
+    },
+    {
+      "scene": 3,
+      "segment": "片段五（约13.5s）",
+      "row": "2",
+      "seconds": 3,
+      "dialogue": "屏幕文字：【距离第一轮极端风暴：71:58:41】",
+      "line": 131
+    },
+    {
+      "scene": 3,
+      "segment": "片段五（约13.5s）",
+      "row": "3",
+      "seconds": 2,
+      "dialogue": "无台词",
+      "line": 132
+    },
+    {
+      "scene": 3,
+      "segment": "片段五（约13.5s）",
+      "row": "4",
+      "seconds": 5.5,
+      "dialogue": "艾娃：『这一次，我不等世界告诉我该逃了。』",
+      "line": 133
+    },
+    {
+      "scene": 3,
+      "segment": "片段五（约13.5s）",
+      "row": "5",
+      "seconds": 1,
+      "dialogue": "无台词",
+      "line": 134
+    }
+  ],
+  "dialogue": {
+    "1": [
+      "麦迪逊，拉我上去！",
+      "姐姐……位置只有一个。",
+      "你干什么？！",
+      "我只是想活。"
+    ],
+    "2": [
+      "回去。",
+      "我要回去！"
+    ],
+    "3": [
+      "七十二小时。",
+      "卖车。今天成交。",
+      "仓库我要短租，位置越偏越好。",
+      "工业滤芯、移动储水罐、救生设备，有现货的全部给我报价。",
+      "这一次，我不等世界告诉我该逃了。"
+    ]
+  }
+}

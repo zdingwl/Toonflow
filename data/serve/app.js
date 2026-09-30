@@ -488,12 +488,12 @@ var require_common = __commonJS({
       createDebug.skips = [];
       createDebug.formatters = {};
       function selectColor(namespace) {
-        let hash3 = 0;
+        let hash4 = 0;
         for (let i = 0; i < namespace.length; i++) {
-          hash3 = (hash3 << 5) - hash3 + namespace.charCodeAt(i);
-          hash3 |= 0;
+          hash4 = (hash4 << 5) - hash4 + namespace.charCodeAt(i);
+          hash4 |= 0;
         }
-        return createDebug.colors[Math.abs(hash3) % createDebug.colors.length];
+        return createDebug.colors[Math.abs(hash4) % createDebug.colors.length];
       }
       createDebug.selectColor = selectColor;
       function createDebug(namespace) {
@@ -19206,9 +19206,9 @@ var require_etag = __commonJS({
       if (entity.length === 0) {
         return '"0-2jmj7l5rSw0yVb/vlWAYkK/YBwk"';
       }
-      var hash3 = crypto7.createHash("sha1").update(entity, "utf8").digest("base64").substring(0, 27);
+      var hash4 = crypto7.createHash("sha1").update(entity, "utf8").digest("base64").substring(0, 27);
       var len = typeof entity === "string" ? Buffer.byteLength(entity, "utf8") : entity.length;
-      return '"' + len.toString(16) + "-" + hash3 + '"';
+      return '"' + len.toString(16) + "-" + hash4 + '"';
     }
     function etag(entity, options) {
       if (entity == null) {
@@ -37286,7 +37286,7 @@ var require_websocket2 = __commonJS({
     var http4 = require("http");
     var net = require("net");
     var tls = require("tls");
-    var { randomBytes, createHash: createHash10 } = require("crypto");
+    var { randomBytes, createHash: createHash11 } = require("crypto");
     var { Duplex, Readable: Readable2 } = require("stream");
     var { URL: URL2 } = require("url");
     var PerMessageDeflate = require_permessage_deflate();
@@ -37943,7 +37943,7 @@ var require_websocket2 = __commonJS({
           abortHandshake(websocket, socket, "Invalid Upgrade header");
           return;
         }
-        const digest = createHash10("sha1").update(key + GUID).digest("base64");
+        const digest = createHash11("sha1").update(key + GUID).digest("base64");
         if (res.headers["sec-websocket-accept"] !== digest) {
           abortHandshake(websocket, socket, "Invalid Sec-WebSocket-Accept header");
           return;
@@ -38310,7 +38310,7 @@ var require_websocket_server = __commonJS({
     var EventEmitter3 = require("events");
     var http4 = require("http");
     var { Duplex } = require("stream");
-    var { createHash: createHash10 } = require("crypto");
+    var { createHash: createHash11 } = require("crypto");
     var extension = require_extension();
     var PerMessageDeflate = require_permessage_deflate();
     var subprotocol = require_subprotocol();
@@ -38607,7 +38607,7 @@ var require_websocket_server = __commonJS({
           );
         }
         if (this._state > RUNNING) return abortHandshake(socket, 503);
-        const digest = createHash10("sha1").update(key + GUID).digest("base64");
+        const digest = createHash11("sha1").update(key + GUID).digest("base64");
         const headers = [
           "HTTP/1.1 101 Switching Protocols",
           "Upgrade: websocket",
@@ -47436,7 +47436,7 @@ var require_websocket4 = __commonJS({
     var http4 = require("http");
     var net = require("net");
     var tls = require("tls");
-    var { randomBytes, createHash: createHash10 } = require("crypto");
+    var { randomBytes, createHash: createHash11 } = require("crypto");
     var { Readable: Readable2 } = require("stream");
     var { URL: URL2 } = require("url");
     var PerMessageDeflate = require_permessage_deflate2();
@@ -48010,7 +48010,7 @@ var require_websocket4 = __commonJS({
           abortHandshake(websocket, socket, "Invalid Upgrade header");
           return;
         }
-        const digest = createHash10("sha1").update(key + GUID).digest("base64");
+        const digest = createHash11("sha1").update(key + GUID).digest("base64");
         if (res.headers["sec-websocket-accept"] !== digest) {
           abortHandshake(websocket, socket, "Invalid Sec-WebSocket-Accept header");
           return;
@@ -48318,7 +48318,7 @@ var require_websocket_server2 = __commonJS({
     var https2 = require("https");
     var net = require("net");
     var tls = require("tls");
-    var { createHash: createHash10 } = require("crypto");
+    var { createHash: createHash11 } = require("crypto");
     var PerMessageDeflate = require_permessage_deflate2();
     var WebSocket = require_websocket4();
     var { format, parse: parse4 } = require_extension2();
@@ -48539,7 +48539,7 @@ var require_websocket_server2 = __commonJS({
           );
         }
         if (this._state > RUNNING) return abortHandshake(socket, 503);
-        const digest = createHash10("sha1").update(key + GUID).digest("base64");
+        const digest = createHash11("sha1").update(key + GUID).digest("base64");
         const headers = [
           "HTTP/1.1 101 Switching Protocols",
           "Upgrade: websocket",
@@ -49075,12 +49075,12 @@ var require_debug = __commonJS({
     exports2.formatters = {};
     var prevTime;
     function selectColor(namespace) {
-      var hash3 = 0, i;
+      var hash4 = 0, i;
       for (i in namespace) {
-        hash3 = (hash3 << 5) - hash3 + namespace.charCodeAt(i);
-        hash3 |= 0;
+        hash4 = (hash4 << 5) - hash4 + namespace.charCodeAt(i);
+        hash4 |= 0;
       }
-      return exports2.colors[Math.abs(hash3) % exports2.colors.length];
+      return exports2.colors[Math.abs(hash4) % exports2.colors.length];
     }
     function createDebug(namespace) {
       function debug() {
@@ -59007,12 +59007,12 @@ var require_common4 = __commonJS({
       createDebug.skips = [];
       createDebug.formatters = {};
       function selectColor(namespace) {
-        let hash3 = 0;
+        let hash4 = 0;
         for (let i = 0; i < namespace.length; i++) {
-          hash3 = (hash3 << 5) - hash3 + namespace.charCodeAt(i);
-          hash3 |= 0;
+          hash4 = (hash4 << 5) - hash4 + namespace.charCodeAt(i);
+          hash4 |= 0;
         }
-        return createDebug.colors[Math.abs(hash3) % createDebug.colors.length];
+        return createDebug.colors[Math.abs(hash4) % createDebug.colors.length];
       }
       createDebug.selectColor = selectColor;
       function createDebug(namespace) {
@@ -82574,8 +82574,8 @@ var require_types = __commonJS({
       TokenType2[TokenType2["dollarBraceL"] = dollarBraceL] = "dollarBraceL";
       const at = 27648;
       TokenType2[TokenType2["at"] = at] = "at";
-      const hash3 = 29184;
-      TokenType2[TokenType2["hash"] = hash3] = "hash";
+      const hash4 = 29184;
+      TokenType2[TokenType2["hash"] = hash4] = "hash";
       const eq2 = 29728;
       TokenType2[TokenType2["eq"] = eq2] = "eq";
       const assign = 30752;
@@ -95579,7 +95579,7 @@ var require_resolve_uri_umd = __commonJS({
         const path34 = match[2];
         return makeUrl("file:", "", match[1] || "", "", isAbsolutePath(path34) ? path34 : "/" + path34, match[3] || "", match[4] || "");
       }
-      function makeUrl(scheme, user, host, port, path34, query, hash3) {
+      function makeUrl(scheme, user, host, port, path34, query, hash4) {
         return {
           scheme,
           user,
@@ -95587,7 +95587,7 @@ var require_resolve_uri_umd = __commonJS({
           port,
           path: path34,
           query,
-          hash: hash3,
+          hash: hash4,
           type: 7
         };
       }
@@ -126558,7 +126558,7 @@ var require_parser3 = __commonJS({
         },
         table: [{ 3: 1, 4: 2, 5: [2, 46], 6: 3, 14: [2, 46], 15: [2, 46], 19: [2, 46], 29: [2, 46], 34: [2, 46], 48: [2, 46], 51: [2, 46], 55: [2, 46], 60: [2, 46] }, { 1: [3] }, { 5: [1, 4] }, { 5: [2, 2], 7: 5, 8: 6, 9: 7, 10: 8, 11: 9, 12: 10, 13: 11, 14: [1, 12], 15: [1, 20], 16: 17, 19: [1, 23], 24: 15, 27: 16, 29: [1, 21], 34: [1, 22], 39: [2, 2], 44: [2, 2], 47: [2, 2], 48: [1, 13], 51: [1, 14], 55: [1, 18], 59: 19, 60: [1, 24] }, { 1: [2, 1] }, { 5: [2, 47], 14: [2, 47], 15: [2, 47], 19: [2, 47], 29: [2, 47], 34: [2, 47], 39: [2, 47], 44: [2, 47], 47: [2, 47], 48: [2, 47], 51: [2, 47], 55: [2, 47], 60: [2, 47] }, { 5: [2, 3], 14: [2, 3], 15: [2, 3], 19: [2, 3], 29: [2, 3], 34: [2, 3], 39: [2, 3], 44: [2, 3], 47: [2, 3], 48: [2, 3], 51: [2, 3], 55: [2, 3], 60: [2, 3] }, { 5: [2, 4], 14: [2, 4], 15: [2, 4], 19: [2, 4], 29: [2, 4], 34: [2, 4], 39: [2, 4], 44: [2, 4], 47: [2, 4], 48: [2, 4], 51: [2, 4], 55: [2, 4], 60: [2, 4] }, { 5: [2, 5], 14: [2, 5], 15: [2, 5], 19: [2, 5], 29: [2, 5], 34: [2, 5], 39: [2, 5], 44: [2, 5], 47: [2, 5], 48: [2, 5], 51: [2, 5], 55: [2, 5], 60: [2, 5] }, { 5: [2, 6], 14: [2, 6], 15: [2, 6], 19: [2, 6], 29: [2, 6], 34: [2, 6], 39: [2, 6], 44: [2, 6], 47: [2, 6], 48: [2, 6], 51: [2, 6], 55: [2, 6], 60: [2, 6] }, { 5: [2, 7], 14: [2, 7], 15: [2, 7], 19: [2, 7], 29: [2, 7], 34: [2, 7], 39: [2, 7], 44: [2, 7], 47: [2, 7], 48: [2, 7], 51: [2, 7], 55: [2, 7], 60: [2, 7] }, { 5: [2, 8], 14: [2, 8], 15: [2, 8], 19: [2, 8], 29: [2, 8], 34: [2, 8], 39: [2, 8], 44: [2, 8], 47: [2, 8], 48: [2, 8], 51: [2, 8], 55: [2, 8], 60: [2, 8] }, { 5: [2, 9], 14: [2, 9], 15: [2, 9], 19: [2, 9], 29: [2, 9], 34: [2, 9], 39: [2, 9], 44: [2, 9], 47: [2, 9], 48: [2, 9], 51: [2, 9], 55: [2, 9], 60: [2, 9] }, { 20: 25, 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 20: 36, 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 4: 37, 6: 3, 14: [2, 46], 15: [2, 46], 19: [2, 46], 29: [2, 46], 34: [2, 46], 39: [2, 46], 44: [2, 46], 47: [2, 46], 48: [2, 46], 51: [2, 46], 55: [2, 46], 60: [2, 46] }, { 4: 38, 6: 3, 14: [2, 46], 15: [2, 46], 19: [2, 46], 29: [2, 46], 34: [2, 46], 44: [2, 46], 47: [2, 46], 48: [2, 46], 51: [2, 46], 55: [2, 46], 60: [2, 46] }, { 15: [2, 48], 17: 39, 18: [2, 48] }, { 20: 41, 56: 40, 64: 42, 65: [1, 43], 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 4: 44, 6: 3, 14: [2, 46], 15: [2, 46], 19: [2, 46], 29: [2, 46], 34: [2, 46], 47: [2, 46], 48: [2, 46], 51: [2, 46], 55: [2, 46], 60: [2, 46] }, { 5: [2, 10], 14: [2, 10], 15: [2, 10], 18: [2, 10], 19: [2, 10], 29: [2, 10], 34: [2, 10], 39: [2, 10], 44: [2, 10], 47: [2, 10], 48: [2, 10], 51: [2, 10], 55: [2, 10], 60: [2, 10] }, { 20: 45, 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 20: 46, 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 20: 47, 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 20: 41, 56: 48, 64: 42, 65: [1, 43], 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 33: [2, 78], 49: 49, 65: [2, 78], 72: [2, 78], 80: [2, 78], 81: [2, 78], 82: [2, 78], 83: [2, 78], 84: [2, 78], 85: [2, 78] }, { 23: [2, 33], 33: [2, 33], 54: [2, 33], 65: [2, 33], 68: [2, 33], 72: [2, 33], 75: [2, 33], 80: [2, 33], 81: [2, 33], 82: [2, 33], 83: [2, 33], 84: [2, 33], 85: [2, 33] }, { 23: [2, 34], 33: [2, 34], 54: [2, 34], 65: [2, 34], 68: [2, 34], 72: [2, 34], 75: [2, 34], 80: [2, 34], 81: [2, 34], 82: [2, 34], 83: [2, 34], 84: [2, 34], 85: [2, 34] }, { 23: [2, 35], 33: [2, 35], 54: [2, 35], 65: [2, 35], 68: [2, 35], 72: [2, 35], 75: [2, 35], 80: [2, 35], 81: [2, 35], 82: [2, 35], 83: [2, 35], 84: [2, 35], 85: [2, 35] }, { 23: [2, 36], 33: [2, 36], 54: [2, 36], 65: [2, 36], 68: [2, 36], 72: [2, 36], 75: [2, 36], 80: [2, 36], 81: [2, 36], 82: [2, 36], 83: [2, 36], 84: [2, 36], 85: [2, 36] }, { 23: [2, 37], 33: [2, 37], 54: [2, 37], 65: [2, 37], 68: [2, 37], 72: [2, 37], 75: [2, 37], 80: [2, 37], 81: [2, 37], 82: [2, 37], 83: [2, 37], 84: [2, 37], 85: [2, 37] }, { 23: [2, 38], 33: [2, 38], 54: [2, 38], 65: [2, 38], 68: [2, 38], 72: [2, 38], 75: [2, 38], 80: [2, 38], 81: [2, 38], 82: [2, 38], 83: [2, 38], 84: [2, 38], 85: [2, 38] }, { 23: [2, 39], 33: [2, 39], 54: [2, 39], 65: [2, 39], 68: [2, 39], 72: [2, 39], 75: [2, 39], 80: [2, 39], 81: [2, 39], 82: [2, 39], 83: [2, 39], 84: [2, 39], 85: [2, 39] }, { 23: [2, 43], 33: [2, 43], 54: [2, 43], 65: [2, 43], 68: [2, 43], 72: [2, 43], 75: [2, 43], 80: [2, 43], 81: [2, 43], 82: [2, 43], 83: [2, 43], 84: [2, 43], 85: [2, 43], 87: [1, 50] }, { 72: [1, 35], 86: 51 }, { 23: [2, 45], 33: [2, 45], 54: [2, 45], 65: [2, 45], 68: [2, 45], 72: [2, 45], 75: [2, 45], 80: [2, 45], 81: [2, 45], 82: [2, 45], 83: [2, 45], 84: [2, 45], 85: [2, 45], 87: [2, 45] }, { 52: 52, 54: [2, 82], 65: [2, 82], 72: [2, 82], 80: [2, 82], 81: [2, 82], 82: [2, 82], 83: [2, 82], 84: [2, 82], 85: [2, 82] }, { 25: 53, 38: 55, 39: [1, 57], 43: 56, 44: [1, 58], 45: 54, 47: [2, 54] }, { 28: 59, 43: 60, 44: [1, 58], 47: [2, 56] }, { 13: 62, 15: [1, 20], 18: [1, 61] }, { 33: [2, 86], 57: 63, 65: [2, 86], 72: [2, 86], 80: [2, 86], 81: [2, 86], 82: [2, 86], 83: [2, 86], 84: [2, 86], 85: [2, 86] }, { 33: [2, 40], 65: [2, 40], 72: [2, 40], 80: [2, 40], 81: [2, 40], 82: [2, 40], 83: [2, 40], 84: [2, 40], 85: [2, 40] }, { 33: [2, 41], 65: [2, 41], 72: [2, 41], 80: [2, 41], 81: [2, 41], 82: [2, 41], 83: [2, 41], 84: [2, 41], 85: [2, 41] }, { 20: 64, 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 26: 65, 47: [1, 66] }, { 30: 67, 33: [2, 58], 65: [2, 58], 72: [2, 58], 75: [2, 58], 80: [2, 58], 81: [2, 58], 82: [2, 58], 83: [2, 58], 84: [2, 58], 85: [2, 58] }, { 33: [2, 64], 35: 68, 65: [2, 64], 72: [2, 64], 75: [2, 64], 80: [2, 64], 81: [2, 64], 82: [2, 64], 83: [2, 64], 84: [2, 64], 85: [2, 64] }, { 21: 69, 23: [2, 50], 65: [2, 50], 72: [2, 50], 80: [2, 50], 81: [2, 50], 82: [2, 50], 83: [2, 50], 84: [2, 50], 85: [2, 50] }, { 33: [2, 90], 61: 70, 65: [2, 90], 72: [2, 90], 80: [2, 90], 81: [2, 90], 82: [2, 90], 83: [2, 90], 84: [2, 90], 85: [2, 90] }, { 20: 74, 33: [2, 80], 50: 71, 63: 72, 64: 75, 65: [1, 43], 69: 73, 70: 76, 71: 77, 72: [1, 78], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 72: [1, 79] }, { 23: [2, 42], 33: [2, 42], 54: [2, 42], 65: [2, 42], 68: [2, 42], 72: [2, 42], 75: [2, 42], 80: [2, 42], 81: [2, 42], 82: [2, 42], 83: [2, 42], 84: [2, 42], 85: [2, 42], 87: [1, 50] }, { 20: 74, 53: 80, 54: [2, 84], 63: 81, 64: 75, 65: [1, 43], 69: 82, 70: 76, 71: 77, 72: [1, 78], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 26: 83, 47: [1, 66] }, { 47: [2, 55] }, { 4: 84, 6: 3, 14: [2, 46], 15: [2, 46], 19: [2, 46], 29: [2, 46], 34: [2, 46], 39: [2, 46], 44: [2, 46], 47: [2, 46], 48: [2, 46], 51: [2, 46], 55: [2, 46], 60: [2, 46] }, { 47: [2, 20] }, { 20: 85, 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 4: 86, 6: 3, 14: [2, 46], 15: [2, 46], 19: [2, 46], 29: [2, 46], 34: [2, 46], 47: [2, 46], 48: [2, 46], 51: [2, 46], 55: [2, 46], 60: [2, 46] }, { 26: 87, 47: [1, 66] }, { 47: [2, 57] }, { 5: [2, 11], 14: [2, 11], 15: [2, 11], 19: [2, 11], 29: [2, 11], 34: [2, 11], 39: [2, 11], 44: [2, 11], 47: [2, 11], 48: [2, 11], 51: [2, 11], 55: [2, 11], 60: [2, 11] }, { 15: [2, 49], 18: [2, 49] }, { 20: 74, 33: [2, 88], 58: 88, 63: 89, 64: 75, 65: [1, 43], 69: 90, 70: 76, 71: 77, 72: [1, 78], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 65: [2, 94], 66: 91, 68: [2, 94], 72: [2, 94], 80: [2, 94], 81: [2, 94], 82: [2, 94], 83: [2, 94], 84: [2, 94], 85: [2, 94] }, { 5: [2, 25], 14: [2, 25], 15: [2, 25], 19: [2, 25], 29: [2, 25], 34: [2, 25], 39: [2, 25], 44: [2, 25], 47: [2, 25], 48: [2, 25], 51: [2, 25], 55: [2, 25], 60: [2, 25] }, { 20: 92, 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 20: 74, 31: 93, 33: [2, 60], 63: 94, 64: 75, 65: [1, 43], 69: 95, 70: 76, 71: 77, 72: [1, 78], 75: [2, 60], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 20: 74, 33: [2, 66], 36: 96, 63: 97, 64: 75, 65: [1, 43], 69: 98, 70: 76, 71: 77, 72: [1, 78], 75: [2, 66], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 20: 74, 22: 99, 23: [2, 52], 63: 100, 64: 75, 65: [1, 43], 69: 101, 70: 76, 71: 77, 72: [1, 78], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 20: 74, 33: [2, 92], 62: 102, 63: 103, 64: 75, 65: [1, 43], 69: 104, 70: 76, 71: 77, 72: [1, 78], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 33: [1, 105] }, { 33: [2, 79], 65: [2, 79], 72: [2, 79], 80: [2, 79], 81: [2, 79], 82: [2, 79], 83: [2, 79], 84: [2, 79], 85: [2, 79] }, { 33: [2, 81] }, { 23: [2, 27], 33: [2, 27], 54: [2, 27], 65: [2, 27], 68: [2, 27], 72: [2, 27], 75: [2, 27], 80: [2, 27], 81: [2, 27], 82: [2, 27], 83: [2, 27], 84: [2, 27], 85: [2, 27] }, { 23: [2, 28], 33: [2, 28], 54: [2, 28], 65: [2, 28], 68: [2, 28], 72: [2, 28], 75: [2, 28], 80: [2, 28], 81: [2, 28], 82: [2, 28], 83: [2, 28], 84: [2, 28], 85: [2, 28] }, { 23: [2, 30], 33: [2, 30], 54: [2, 30], 68: [2, 30], 71: 106, 72: [1, 107], 75: [2, 30] }, { 23: [2, 98], 33: [2, 98], 54: [2, 98], 68: [2, 98], 72: [2, 98], 75: [2, 98] }, { 23: [2, 45], 33: [2, 45], 54: [2, 45], 65: [2, 45], 68: [2, 45], 72: [2, 45], 73: [1, 108], 75: [2, 45], 80: [2, 45], 81: [2, 45], 82: [2, 45], 83: [2, 45], 84: [2, 45], 85: [2, 45], 87: [2, 45] }, { 23: [2, 44], 33: [2, 44], 54: [2, 44], 65: [2, 44], 68: [2, 44], 72: [2, 44], 75: [2, 44], 80: [2, 44], 81: [2, 44], 82: [2, 44], 83: [2, 44], 84: [2, 44], 85: [2, 44], 87: [2, 44] }, { 54: [1, 109] }, { 54: [2, 83], 65: [2, 83], 72: [2, 83], 80: [2, 83], 81: [2, 83], 82: [2, 83], 83: [2, 83], 84: [2, 83], 85: [2, 83] }, { 54: [2, 85] }, { 5: [2, 13], 14: [2, 13], 15: [2, 13], 19: [2, 13], 29: [2, 13], 34: [2, 13], 39: [2, 13], 44: [2, 13], 47: [2, 13], 48: [2, 13], 51: [2, 13], 55: [2, 13], 60: [2, 13] }, { 38: 55, 39: [1, 57], 43: 56, 44: [1, 58], 45: 111, 46: 110, 47: [2, 76] }, { 33: [2, 70], 40: 112, 65: [2, 70], 72: [2, 70], 75: [2, 70], 80: [2, 70], 81: [2, 70], 82: [2, 70], 83: [2, 70], 84: [2, 70], 85: [2, 70] }, { 47: [2, 18] }, { 5: [2, 14], 14: [2, 14], 15: [2, 14], 19: [2, 14], 29: [2, 14], 34: [2, 14], 39: [2, 14], 44: [2, 14], 47: [2, 14], 48: [2, 14], 51: [2, 14], 55: [2, 14], 60: [2, 14] }, { 33: [1, 113] }, { 33: [2, 87], 65: [2, 87], 72: [2, 87], 80: [2, 87], 81: [2, 87], 82: [2, 87], 83: [2, 87], 84: [2, 87], 85: [2, 87] }, { 33: [2, 89] }, { 20: 74, 63: 115, 64: 75, 65: [1, 43], 67: 114, 68: [2, 96], 69: 116, 70: 76, 71: 77, 72: [1, 78], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 33: [1, 117] }, { 32: 118, 33: [2, 62], 74: 119, 75: [1, 120] }, { 33: [2, 59], 65: [2, 59], 72: [2, 59], 75: [2, 59], 80: [2, 59], 81: [2, 59], 82: [2, 59], 83: [2, 59], 84: [2, 59], 85: [2, 59] }, { 33: [2, 61], 75: [2, 61] }, { 33: [2, 68], 37: 121, 74: 122, 75: [1, 120] }, { 33: [2, 65], 65: [2, 65], 72: [2, 65], 75: [2, 65], 80: [2, 65], 81: [2, 65], 82: [2, 65], 83: [2, 65], 84: [2, 65], 85: [2, 65] }, { 33: [2, 67], 75: [2, 67] }, { 23: [1, 123] }, { 23: [2, 51], 65: [2, 51], 72: [2, 51], 80: [2, 51], 81: [2, 51], 82: [2, 51], 83: [2, 51], 84: [2, 51], 85: [2, 51] }, { 23: [2, 53] }, { 33: [1, 124] }, { 33: [2, 91], 65: [2, 91], 72: [2, 91], 80: [2, 91], 81: [2, 91], 82: [2, 91], 83: [2, 91], 84: [2, 91], 85: [2, 91] }, { 33: [2, 93] }, { 5: [2, 22], 14: [2, 22], 15: [2, 22], 19: [2, 22], 29: [2, 22], 34: [2, 22], 39: [2, 22], 44: [2, 22], 47: [2, 22], 48: [2, 22], 51: [2, 22], 55: [2, 22], 60: [2, 22] }, { 23: [2, 99], 33: [2, 99], 54: [2, 99], 68: [2, 99], 72: [2, 99], 75: [2, 99] }, { 73: [1, 108] }, { 20: 74, 63: 125, 64: 75, 65: [1, 43], 72: [1, 35], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 5: [2, 23], 14: [2, 23], 15: [2, 23], 19: [2, 23], 29: [2, 23], 34: [2, 23], 39: [2, 23], 44: [2, 23], 47: [2, 23], 48: [2, 23], 51: [2, 23], 55: [2, 23], 60: [2, 23] }, { 47: [2, 19] }, { 47: [2, 77] }, { 20: 74, 33: [2, 72], 41: 126, 63: 127, 64: 75, 65: [1, 43], 69: 128, 70: 76, 71: 77, 72: [1, 78], 75: [2, 72], 78: 26, 79: 27, 80: [1, 28], 81: [1, 29], 82: [1, 30], 83: [1, 31], 84: [1, 32], 85: [1, 34], 86: 33 }, { 5: [2, 24], 14: [2, 24], 15: [2, 24], 19: [2, 24], 29: [2, 24], 34: [2, 24], 39: [2, 24], 44: [2, 24], 47: [2, 24], 48: [2, 24], 51: [2, 24], 55: [2, 24], 60: [2, 24] }, { 68: [1, 129] }, { 65: [2, 95], 68: [2, 95], 72: [2, 95], 80: [2, 95], 81: [2, 95], 82: [2, 95], 83: [2, 95], 84: [2, 95], 85: [2, 95] }, { 68: [2, 97] }, { 5: [2, 21], 14: [2, 21], 15: [2, 21], 19: [2, 21], 29: [2, 21], 34: [2, 21], 39: [2, 21], 44: [2, 21], 47: [2, 21], 48: [2, 21], 51: [2, 21], 55: [2, 21], 60: [2, 21] }, { 33: [1, 130] }, { 33: [2, 63] }, { 72: [1, 132], 76: 131 }, { 33: [1, 133] }, { 33: [2, 69] }, { 15: [2, 12], 18: [2, 12] }, { 14: [2, 26], 15: [2, 26], 19: [2, 26], 29: [2, 26], 34: [2, 26], 47: [2, 26], 48: [2, 26], 51: [2, 26], 55: [2, 26], 60: [2, 26] }, { 23: [2, 31], 33: [2, 31], 54: [2, 31], 68: [2, 31], 72: [2, 31], 75: [2, 31] }, { 33: [2, 74], 42: 134, 74: 135, 75: [1, 120] }, { 33: [2, 71], 65: [2, 71], 72: [2, 71], 75: [2, 71], 80: [2, 71], 81: [2, 71], 82: [2, 71], 83: [2, 71], 84: [2, 71], 85: [2, 71] }, { 33: [2, 73], 75: [2, 73] }, { 23: [2, 29], 33: [2, 29], 54: [2, 29], 65: [2, 29], 68: [2, 29], 72: [2, 29], 75: [2, 29], 80: [2, 29], 81: [2, 29], 82: [2, 29], 83: [2, 29], 84: [2, 29], 85: [2, 29] }, { 14: [2, 15], 15: [2, 15], 19: [2, 15], 29: [2, 15], 34: [2, 15], 39: [2, 15], 44: [2, 15], 47: [2, 15], 48: [2, 15], 51: [2, 15], 55: [2, 15], 60: [2, 15] }, { 72: [1, 137], 77: [1, 136] }, { 72: [2, 100], 77: [2, 100] }, { 14: [2, 16], 15: [2, 16], 19: [2, 16], 29: [2, 16], 34: [2, 16], 44: [2, 16], 47: [2, 16], 48: [2, 16], 51: [2, 16], 55: [2, 16], 60: [2, 16] }, { 33: [1, 138] }, { 33: [2, 75] }, { 33: [2, 32] }, { 72: [2, 101], 77: [2, 101] }, { 14: [2, 17], 15: [2, 17], 19: [2, 17], 29: [2, 17], 34: [2, 17], 39: [2, 17], 44: [2, 17], 47: [2, 17], 48: [2, 17], 51: [2, 17], 55: [2, 17], 60: [2, 17] }],
         defaultActions: { 4: [2, 1], 54: [2, 55], 56: [2, 20], 60: [2, 57], 73: [2, 81], 82: [2, 85], 86: [2, 18], 90: [2, 89], 101: [2, 53], 104: [2, 93], 110: [2, 19], 111: [2, 77], 116: [2, 97], 119: [2, 63], 122: [2, 69], 135: [2, 75], 136: [2, 32] },
-        parseError: function parseError(str, hash3) {
+        parseError: function parseError(str, hash4) {
           throw new Error(str);
         },
         parse: function parse4(input) {
@@ -126664,9 +126664,9 @@ var require_parser3 = __commonJS({
       var lexer = (function() {
         var lexer2 = {
           EOF: 1,
-          parseError: function parseError(str, hash3) {
+          parseError: function parseError(str, hash4) {
             if (this.yy.parser) {
-              this.yy.parser.parseError(str, hash3);
+              this.yy.parser.parseError(str, hash4);
             } else {
               throw new Error(str);
             }
@@ -127102,8 +127102,8 @@ var require_visitor = __commonJS({
       },
       NullLiteral: function NullLiteral() {
       },
-      Hash: function Hash2(hash3) {
-        this.acceptArray(hash3.pairs);
+      Hash: function Hash2(hash4) {
+        this.acceptArray(hash4.pairs);
       },
       HashPair: function HashPair(pair) {
         this.acceptRequired(pair, "value");
@@ -127359,14 +127359,14 @@ var require_helpers4 = __commonJS({
         loc
       };
     }
-    function prepareMustache(path34, params, hash3, open, strip, locInfo) {
+    function prepareMustache(path34, params, hash4, open, strip, locInfo) {
       var escapeFlag = open.charAt(3) || open.charAt(2), escaped = escapeFlag !== "{" && escapeFlag !== "&";
       var decorator = /\*/.test(open);
       return {
         type: decorator ? "Decorator" : "MustacheStatement",
         path: path34,
         params,
-        hash: hash3,
+        hash: hash4,
         escaped,
         strip,
         loc: this.locInfo(locInfo)
@@ -127805,8 +127805,8 @@ var require_compiler3 = __commonJS({
       NullLiteral: function NullLiteral() {
         this.opcode("pushLiteral", "null");
       },
-      Hash: function Hash2(hash3) {
-        var pairs = hash3.pairs, i = 0, l = pairs.length;
+      Hash: function Hash2(hash4) {
+        var pairs = hash4.pairs, i = 0, l = pairs.length;
         this.opcode("pushHash");
         for (; i < l; i++) {
           this.pushParam(pairs[i].value);
@@ -130336,16 +130336,16 @@ var require_javascript_compiler = __commonJS({
         this.hash = { values: {}, types: [], contexts: [], ids: [] };
       },
       popHash: function popHash() {
-        var hash3 = this.hash;
+        var hash4 = this.hash;
         this.hash = this.hashes.pop();
         if (this.trackIds) {
-          this.push(this.objectLiteral(hash3.ids));
+          this.push(this.objectLiteral(hash4.ids));
         }
         if (this.stringParams) {
-          this.push(this.objectLiteral(hash3.contexts));
-          this.push(this.objectLiteral(hash3.types));
+          this.push(this.objectLiteral(hash4.contexts));
+          this.push(this.objectLiteral(hash4.types));
         }
-        this.push(this.objectLiteral(hash3.values));
+        this.push(this.objectLiteral(hash4.values));
       },
       // [pushString]
       //
@@ -130508,17 +130508,17 @@ var require_javascript_compiler = __commonJS({
           type = this.popStack();
           context2 = this.popStack();
         }
-        var hash3 = this.hash;
+        var hash4 = this.hash;
         if (context2) {
-          hash3.contexts[key] = context2;
+          hash4.contexts[key] = context2;
         }
         if (type) {
-          hash3.types[key] = type;
+          hash4.types[key] = type;
         }
         if (id) {
-          hash3.ids[key] = id;
+          hash4.ids[key] = id;
         }
-        hash3.values[key] = value;
+        hash4.values[key] = value;
       },
       pushId: function pushId(type, name28, child) {
         if (type === "BlockParam") {
@@ -130956,13 +130956,13 @@ var require_printer = __commonJS({
       return this.pad("{{! '" + comment.value + "' }}");
     };
     PrintVisitor.prototype.SubExpression = function(sexpr) {
-      var params = sexpr.params, paramStrings = [], hash3 = void 0;
+      var params = sexpr.params, paramStrings = [], hash4 = void 0;
       for (var i = 0, l = params.length; i < l; i++) {
         paramStrings.push(this.accept(params[i]));
       }
       params = "[" + paramStrings.join(", ") + "]";
-      hash3 = sexpr.hash ? " " + this.accept(sexpr.hash) : "";
-      return this.accept(sexpr.path) + " " + params + hash3;
+      hash4 = sexpr.hash ? " " + this.accept(sexpr.hash) : "";
+      return this.accept(sexpr.path) + " " + params + hash4;
     };
     PrintVisitor.prototype.PathExpression = function(id) {
       var path34 = id.parts.join("/");
@@ -130983,8 +130983,8 @@ var require_printer = __commonJS({
     PrintVisitor.prototype.NullLiteral = function() {
       return "NULL";
     };
-    PrintVisitor.prototype.Hash = function(hash3) {
-      var pairs = hash3.pairs, joinedPairs = [];
+    PrintVisitor.prototype.Hash = function(hash4) {
+      var pairs = hash4.pairs, joinedPairs = [];
       for (var i = 0, l = pairs.length; i < l; i++) {
         joinedPairs.push(this.accept(pairs[i]));
       }
@@ -131220,8 +131220,8 @@ ${tableInterfaces.map((name28) => `  ${JSON.stringify(name28)}: ${name28};`).joi
     tableInterfaces,
     declBody
   });
-  const hash3 = import_crypto2.default.createHash("md5").update(hashSource).digest("hex");
-  const content = `// @db-hash ${hash3}
+  const hash4 = import_crypto2.default.createHash("md5").update(hashSource).digest("hex");
+  const content = `// @db-hash ${hash4}
 ${customHeader}
 
 ` + declBody + aggregateTypes;
@@ -131230,7 +131230,7 @@ ${customHeader}
     const current = await (0, import_promises2.readFile)(outFile, "utf8");
     const match = current.match(/^\/\/\s*@db-hash\s*([a-zA-Z0-9]+)\n/);
     const currentHash = match ? match[1] : null;
-    if (currentHash === hash3) {
+    if (currentHash === hash4) {
       needWrite = false;
     }
   } catch (err) {
@@ -190217,7 +190217,7 @@ var require_schemas2 = __commonJS({
     exports2.stringFormat = stringFormat3;
     exports2.hostname = hostname4;
     exports2.hex = hex4;
-    exports2.hash = hash3;
+    exports2.hash = hash4;
     exports2.number = number6;
     exports2.int = int3;
     exports2.float32 = float323;
@@ -190604,7 +190604,7 @@ var require_schemas2 = __commonJS({
     function hex4(_params) {
       return core._stringFormat(exports2.ZodCustomStringFormat, "hex", core.regexes.hex, _params);
     }
-    function hash3(alg, params) {
+    function hash4(alg, params) {
       const enc = params?.enc ?? "hex";
       const format = `${alg}_${enc}`;
       const regex = core.regexes[format];
@@ -238188,6 +238188,225 @@ var init_storyboardProgress = __esm({
   }
 });
 
+// src/agents/productionAgent/screenplay.ts
+function sceneNumber(raw) {
+  if (/^\d+$/.test(raw)) return Number(raw);
+  const digits = "\u96F6\u4E00\u4E8C\u4E09\u56DB\u4E94\u516D\u4E03\u516B\u4E5D";
+  let total = 0, digit = 0;
+  for (const char of raw.replace(/两/g, "\u4E8C")) {
+    if (digits.includes(char)) digit = digits.indexOf(char);
+    else {
+      total += (digit || 1) * ({ \u5341: 10, \u767E: 100 }[char] ?? 0);
+      digit = 0;
+    }
+  }
+  return total + digit;
+}
+function extractDialogue(text2) {
+  const lines = text2.split(/\r?\n/).map((line) => line.trim().replace(/^\*\*(.*?)\*\*$/, "$1")).filter(Boolean);
+  const result = [];
+  const label = /^([\p{L}][\p{L}\p{N}· ._-]{0,24}?)(?:[（(](?:VO|OS|旁白|画外音|独白)[）)])?$/u;
+  for (let i = 0; i < lines.length; i++) {
+    const inline = lines[i].match(/^([^：:【】。！？!?]{1,25}?)(?:[（(](?:VO|OS|旁白|画外音|独白)[）)])?[：:]\s*[『「“](.+)[』」”]$/);
+    if (inline) {
+      result.push({ speaker: inline[1].trim().replace(/说$/, ""), text: inline[2] });
+      continue;
+    }
+    const speaker = lines[i].match(label)?.[1]?.trim();
+    const next = lines[i + 1];
+    if (speaker && next && !/^【|^(?:#{1,4}\s*)?场(?:景)?[一二三四五六七八九十百\d]/.test(next) && /[。！？!?…『「“]/.test(next) && !label.test(next)) {
+      result.push({ speaker, text: next.replace(/^[『「“]|[』」”]$/g, "") });
+      i++;
+    }
+  }
+  return result;
+}
+function parseScriptScenes(script) {
+  const headings = [...script.matchAll(/^(?:#{1,4}\s*)?(?:\*\*)?场(?:景)?\s*([零一二三四五六七八九十百两\d]+)(?=[\s：:、.（(])[^\r\n]*/gm)];
+  return headings.map((heading, index) => {
+    const text2 = script.slice(heading.index, headings[index + 1]?.index ?? script.length).trim();
+    const range = heading[0].match(/[（(]\s*(\d+(?:\.\d+)?)\s*[–—\-~～至]\s*(\d+(?:\.\d+)?)\s*(?:秒|s)\s*[）)]/i);
+    const duration4 = range ? Number(range[2]) - Number(range[1]) : void 0;
+    return {
+      scene: sceneNumber(heading[1]),
+      title: heading[0],
+      text: text2,
+      sourceDuration: duration4 && duration4 > 0 ? duration4 : void 0,
+      dialogue: extractDialogue(text2),
+      screenText: [...text2.matchAll(/【([^】]+)】/g)].map((m) => m[1])
+    };
+  });
+}
+function productionSceneBudget(plan, scene, sourceScene) {
+  const rows = plan.split(/\r?\n/).filter((line) => /^\s*\|/.test(line)).map((line) => line.split("|").slice(1, -1).map((cell) => cell.trim()));
+  let budgetColumn = -1;
+  for (const row of rows) {
+    if (row[0] === "\u573A\u6B21") {
+      budgetColumn = row.findIndex((cell) => /^制作预算[（(]秒[）)]$/.test(cell));
+      continue;
+    }
+    if (budgetColumn >= 0 && new RegExp(`^(?:Sc|\u573A)\\s*${scene}$`, "i").test(row[0])) {
+      if (row[budgetColumn] === "\u5F85\u786E\u8BA4" && (!sourceScene || !parseScriptScenes(sourceScene)[0]?.sourceDuration)) return void 0;
+      const value = Number(row[budgetColumn]);
+      if (!Number.isFinite(value) || value <= 0) throw new Error(`\u7B2C${scene}\u573A\u5236\u4F5C\u9884\u7B97\u65E0\u6548`);
+      return value;
+    }
+  }
+  return sourceScene ? parseScriptScenes(sourceScene)[0]?.sourceDuration : void 0;
+}
+function screenplayFacts(script, plan = "") {
+  const scenes = parseScriptScenes(script);
+  if (!scenes.length) return "\u672A\u8BC6\u522B\u660E\u786E\u573A\u754C\uFF1B\u5148\u6838\u5BF9\u539F\u5267\u672C\uFF0C\u4E0D\u80FD\u5BA3\u79F0\u5DF2\u5B8C\u6210\u9010\u573A\u7EDF\u8BA1\u3002";
+  return JSON.stringify(scenes.map((scene) => ({
+    scene: scene.scene,
+    title: scene.title,
+    source_duration: scene.sourceDuration,
+    target_duration: productionSceneBudget(plan, scene.scene, scene.text),
+    dialogue_count: scene.dialogue.length,
+    dialogue_characters: scene.dialogue.reduce((sum, line) => sum + spokenCharacterCount(line.text), 0),
+    dialogue: scene.dialogue,
+    screen_text: scene.screenText
+  })), null, 2);
+}
+function validateDirectorFacts(script, plan) {
+  const scenes = parseScriptScenes(script);
+  if (!scenes.length) return [];
+  const rows = plan.split(/\r?\n/).filter((line) => /^\s*\|\s*Sc\d+\s*\|/i.test(line)).map((line) => line.split("|").slice(1, -1).map((cell) => cell.trim()));
+  const errors = [];
+  if (rows.length !== scenes.length || rows.some((row, i) => row[0].toLowerCase() !== `sc${scenes[i]?.scene}`)) errors.push("\u5BFC\u6F14\u89C4\u5212\u5206\u573A\u8868\u672A\u6309\u539F\u5267\u672C\u5B8C\u6574\u8FDE\u7EED\u5217\u51FA Sc \u573A\u6B21");
+  for (const source of scenes) {
+    const row = rows.find((row2) => row2[0].toLowerCase() === `sc${source.scene}`);
+    if (!row) continue;
+    if (source.dialogue.length && (Number(row[2]) !== source.dialogue.length || Number(row[3]) !== source.dialogue.reduce((sum, line) => sum + spokenCharacterCount(line.text), 0))) {
+      errors.push(`Sc${source.scene}\u53F0\u8BCD\u7EDF\u8BA1\u4E0E\u539F\u6587\u4E0D\u4E00\u81F4`);
+    }
+    try {
+      productionSceneBudget(plan, source.scene, source.text);
+    } catch (error73) {
+      errors.push(error73.message);
+    }
+  }
+  return errors;
+}
+var normalizeSpokenText, spokenCharacterCount;
+var init_screenplay = __esm({
+  "src/agents/productionAgent/screenplay.ts"() {
+    "use strict";
+    normalizeSpokenText = (text2) => text2.normalize("NFKC").replace(/[^\p{L}\p{N}]/gu, "");
+    spokenCharacterCount = (text2) => [...normalizeSpokenText(text2)].length;
+  }
+});
+
+// src/agents/productionAgent/storyboardValidator.ts
+function validateStoryboardScene(scene, markdown, sourceScene, options = {}) {
+  const errors = [];
+  const warnings = [];
+  const text2 = markdown.trim();
+  const headings = [...text2.matchAll(/^##\s*场\s*(\d+)\s*[：:]/gm)];
+  if (headings.length !== 1 || Number(headings[0]?.[1]) !== scene || headings[0]?.index !== 0) {
+    errors.push(`\u5FC5\u987B\u6709\u4E14\u53EA\u6709\u201C## \u573A${scene}\uFF1A\u201D\u573A\u5934`);
+  }
+  const parts = [...text2.matchAll(/^###\s*片段[^\n]*/gm)];
+  if (!parts.length) errors.push("\u5F53\u524D\u573A\u6CA1\u6709\u4EFB\u4F55\u5206\u955C\u7247\u6BB5");
+  const segments = parts.map((part, i) => text2.slice(part.index, parts[i + 1]?.index ?? text2.length));
+  const dialogueCells = [];
+  let sceneDuration = 0;
+  for (const [i, segment] of segments.entries()) {
+    if (!/\|\s*序号\s*\|\s*画面描述\s*\|/.test(segment)) errors.push(`\u7247\u6BB5${i + 1}\u7F3A\u5C11\u5206\u955C\u8868\u5934`);
+    const lines = segment.split("\n").filter((line) => /^\|\s*\d+\s*\|/.test(line));
+    if (!lines.length) errors.push(`\u7247\u6BB5${i + 1}\u6CA1\u6709\u955C\u5934\u884C`);
+    let duration4 = 0;
+    for (const line of lines) {
+      const cells = line.split("|").slice(1, -1).map((cell) => cell.trim());
+      if (cells.length !== 7) {
+        errors.push(`\u7247\u6BB5${i + 1}\u8868\u683C\u5FC5\u987B\u6070\u597D7\u5217`);
+        continue;
+      }
+      const seconds = Number(cells[2]);
+      dialogueCells.push(cells[5]);
+      if (!Number.isFinite(seconds) || seconds <= 0) errors.push(`\u7247\u6BB5${i + 1}\u5B58\u5728\u65E0\u6548\u65F6\u957F`);
+      else duration4 += seconds;
+    }
+    if (duration4 > 15) errors.push(`\u7247\u6BB5${i + 1}\u65F6\u957F${duration4}\u79D2\uFF0C\u8D85\u8FC715\u79D2`);
+    sceneDuration += duration4;
+    const declared = segment.split("\n")[0].match(/[（(]约?\s*(\d+(?:\.\d+)?)\s*(?:s|秒)[）)]/i);
+    if (declared && Math.abs(Number(declared[1]) - duration4) > 0.05) errors.push(`\u7247\u6BB5${i + 1}\u6807\u9898\u65F6\u957F\u4E0E\u955C\u5934\u5408\u8BA1${duration4}\u79D2\u4E0D\u4E00\u81F4`);
+    if (options.assetIds) {
+      const refs = segment.match(/引用资产ID(?:（[^）]*）)?\*\*\s*[：:]\s*\[([^\]]*)\]/i);
+      const ids = refs?.[1].split(/[,，]/).map((id) => Number(id.trim())) ?? [];
+      if (!ids.length || ids.some((id) => !Number.isSafeInteger(id) || !options.assetIds.includes(id))) {
+        errors.push(`\u7247\u6BB5${i + 1}\u5F15\u7528\u8D44\u4EA7\u7F3A\u5931\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE`);
+      }
+    }
+  }
+  if (options.targetDuration !== void 0 && Math.abs(sceneDuration - options.targetDuration) > 0.05) {
+    errors.push(`\u7B2C${scene}\u573A\u5408\u8BA1${sceneDuration}\u79D2\uFF0C\u4E0E\u5236\u4F5C\u9884\u7B97${options.targetDuration}\u79D2\u4E0D\u4E00\u81F4`);
+  }
+  const expectedDialogue = extractDialogue(sourceScene ?? "");
+  const expected = [...(sourceScene ?? "").matchAll(/[『「“]([^』」”]+)[』」”]/g)].map((match) => match[1]);
+  let coverageVerified = false;
+  if (expectedDialogue.length) {
+    const actualBySpeaker = /* @__PURE__ */ new Map();
+    for (const cell of dialogueCells) {
+      for (const match of cell.matchAll(/([^：:『「“；;]+?)[：:]\s*[『「“]([^』」”]+)[』」”]/g)) {
+        const speaker = match[1].trim().replace(/[（(][^）)]*[）)]/g, "").replace(/说$/, "");
+        actualBySpeaker.set(speaker, (actualBySpeaker.get(speaker) ?? "") + normalizeSpokenText(match[2]));
+      }
+    }
+    const expectedBySpeaker = /* @__PURE__ */ new Map();
+    for (const line of expectedDialogue) expectedBySpeaker.set(line.speaker, (expectedBySpeaker.get(line.speaker) ?? "") + normalizeSpokenText(line.text));
+    for (const [speaker, spoken] of expectedBySpeaker) {
+      if (actualBySpeaker.get(speaker) !== spoken) errors.push(`\u53F0\u8BCD\u9057\u6F0F\u3001\u6539\u5199\u3001\u987A\u5E8F\u6216\u8BF4\u8BDD\u4EBA\u4E0D\u7B26\uFF1A${speaker}`);
+    }
+    for (const speaker of actualBySpeaker.keys()) if (!expectedBySpeaker.has(speaker)) errors.push(`\u51FA\u73B0\u539F\u573A\u6B21\u6CA1\u6709\u7684\u8BF4\u8BDD\u4EBA\uFF1A${speaker}`);
+    coverageVerified = !errors.some((error73) => /台词|说话人/.test(error73));
+  } else if (sourceScene && expected.length) {
+    const actual = normalizeSpokenText(dialogueCells.join(""));
+    const missing = expected.filter((line) => !actual.includes(normalizeSpokenText(line)));
+    if (missing.length) errors.push(`\u7591\u4F3C\u9057\u6F0F\u539F\u5267\u672C\u53F0\u8BCD\u6216VO\uFF1A${missing.slice(0, 3).join("\uFF1B")}`);
+    else coverageVerified = true;
+  } else {
+    warnings.push("\u672A\u8BC6\u522B\u53EF\u9010\u5B57\u6838\u5BF9\u7684\u539F\u573A\u6B21\u53F0\u8BCD\uFF1B\u53EA\u5B8C\u6210\u7ED3\u6784\u6821\u9A8C\uFF0C\u4E0D\u80FD\u5BA3\u79F0\u5267\u60C5\u5185\u5BB9\u5B8C\u5168\u8986\u76D6");
+  }
+  const screens = [...(sourceScene ?? "").matchAll(/【([^】]+)】/g)].map((match) => normalizeSpokenText(match[1]));
+  const shown = [...text2.matchAll(/【([^】]+)】/g)].map((match) => normalizeSpokenText(match[1])).join("");
+  if (screens.some((screen) => !shown.includes(screen))) {
+    errors.push("\u9057\u6F0F\u6216\u6539\u5199\u539F\u5267\u672C\u5FC5\u987B\u5448\u73B0\u7684\u5C4F\u5E55\u6587\u5B57");
+    coverageVerified = false;
+  }
+  if (coverageVerified) warnings.push("\u5DF2\u6838\u5BF9\u53EF\u89E3\u6790\u7684\u53F0\u8BCD\u548C\u5C4F\u5E55\u6587\u5B57\uFF1B\u4EBA\u7269\u52A8\u4F5C\u3001\u7A7A\u95F4\u5173\u7CFB\u53CA\u53C2\u8003\u56FE\u72B6\u6001\u4ECD\u9700\u5BA1\u9605");
+  return { valid: errors.length === 0, scene, errors, warnings, coverageVerified };
+}
+function extractSourceScene(script, scene) {
+  return parseScriptScenes(script).find((item) => item.scene === scene)?.text;
+}
+var init_storyboardValidator = __esm({
+  "src/agents/productionAgent/storyboardValidator.ts"() {
+    "use strict";
+    init_screenplay();
+  }
+});
+
+// src/agents/productionAgent/storyboardContentGuard.ts
+async function guardStoryboardContent(trx, projectId, script, plan, scene, markdown) {
+  const source = extractSourceScene(script, scene);
+  const facts = source ? parseScriptScenes(source)[0] : void 0;
+  if (!/^###\s*片段/m.test(markdown) && !facts?.dialogue.length && !facts?.sourceDuration && !facts?.screenText.length) return;
+  const assets = await trx.schema.hasTable("o_assets") ? await trx("o_assets").where({ projectId }).select("id") : void 0;
+  const validation = validateStoryboardScene(scene, markdown, source, {
+    targetDuration: productionSceneBudget(plan, scene, source),
+    assetIds: assets?.map((asset) => Number(asset.id))
+  });
+  if (!validation.valid) throw new Error(`\u7B2C${scene}\u573A\u672A\u901A\u8FC7\u5185\u5BB9\u6821\u9A8C\uFF1A${validation.errors.join("\uFF1B")}`);
+}
+var init_storyboardContentGuard = __esm({
+  "src/agents/productionAgent/storyboardContentGuard.ts"() {
+    "use strict";
+    init_screenplay();
+    init_storyboardValidator();
+  }
+});
+
 // src/agents/productionAgent/storyboardTable.ts
 function readAttribute(raw, name28) {
   const match = raw.match(new RegExp(`\\b${name28}\\s*=\\s*(?:"([^"]*)"|'([^']*)')`));
@@ -238286,6 +238505,7 @@ async function commitStoryboardTableOutput(db2, projectId, episodesId, output, e
       if (currentProgress?.planHash && currentProgress.planHash !== planHash) {
         throw new Error("\u5BFC\u6F14\u8BA1\u5212\u81EA\u5206\u955C\u4EFB\u52A1\u5F00\u59CB\u540E\u5DF2\u4FEE\u6539\uFF0C\u4E0D\u80FD\u7EE7\u7EED\u6DF7\u5199\u65E7\u4EFB\u52A1");
       }
+      await guardStoryboardContent(trx, projectId, script.content ?? "", data.scriptPlan ?? "", output.scene, output.content);
       const merged = mergeStoryboardScene(
         currentTable,
         currentProgress,
@@ -238328,6 +238548,9 @@ async function commitStoryboardTableOutput(db2, projectId, episodesId, output, e
     } else if (currentTable) {
       throw new Error("\u5DE5\u4F5C\u533A\u5DF2\u6709\u5206\u955C\u8868\uFF0C\u6574\u8868\u5199\u5165\u9700\u8981\u5148\u6838\u5BF9\u5F53\u524D\u7248\u672C");
     }
+    const source = await trx("o_script").where({ id: episodesId, projectId }).select("content").first();
+    const parts = output.content.split(/(?=^##\s*场\s*\d+\s*[：:])/m).filter((part) => part.trim());
+    for (let i = 0; i < parts.length; i++) await guardStoryboardContent(trx, projectId, source?.content ?? "", data.scriptPlan ?? "", output.scenes[i], parts[i]);
     const nextData = { ...data, storyboardTable: output.content };
     delete nextData.storyboardTableProgress;
     await writeStoredData(trx, scope, row, nextData);
@@ -238356,60 +238579,92 @@ var init_storyboardTable = __esm({
   "src/agents/productionAgent/storyboardTable.ts"() {
     "use strict";
     init_storyboardProgress();
+    init_storyboardContentGuard();
     init_storyboardScenes();
   }
 });
 
-// src/agents/productionAgent/storyboardValidator.ts
-function validateStoryboardScene(scene, markdown, sourceScene) {
-  const errors = [];
-  const warnings = [];
-  const text2 = markdown.trim();
-  const headings = [...text2.matchAll(/^##\s*场\s*(\d+)\s*[：:]/gm)];
-  if (headings.length !== 1 || Number(headings[0]?.[1]) !== scene || headings[0]?.index !== 0) {
-    errors.push(`\u5FC5\u987B\u6709\u4E14\u53EA\u6709\u201C## \u573A${scene}\uFF1A\u201D\u573A\u5934`);
-  }
-  const parts = [...text2.matchAll(/^###\s*片段[^\n]*/gm)];
-  if (!parts.length) errors.push("\u5F53\u524D\u573A\u6CA1\u6709\u4EFB\u4F55\u5206\u955C\u7247\u6BB5");
-  const segments = parts.map((part, i) => text2.slice(part.index, parts[i + 1]?.index ?? text2.length));
-  for (const [i, segment] of segments.entries()) {
-    if (!/\|\s*序号\s*\|\s*画面描述\s*\|/.test(segment)) errors.push(`\u7247\u6BB5${i + 1}\u7F3A\u5C11\u5206\u955C\u8868\u5934`);
-    const lines = segment.split("\n").filter((line) => /^\|\s*\d+\s*\|/.test(line));
-    if (!lines.length) errors.push(`\u7247\u6BB5${i + 1}\u6CA1\u6709\u955C\u5934\u884C`);
-    let duration4 = 0;
-    for (const line of lines) {
-      const cells = line.split("|").slice(1, -1).map((cell) => cell.trim());
-      if (cells.length !== 7) {
-        errors.push(`\u7247\u6BB5${i + 1}\u8868\u683C\u5FC5\u987B\u6070\u597D7\u5217`);
-        continue;
-      }
-      const seconds = Number(cells[2]);
-      if (!Number.isFinite(seconds) || seconds <= 0) errors.push(`\u7247\u6BB5${i + 1}\u5B58\u5728\u65E0\u6548\u65F6\u957F`);
-      else duration4 += seconds;
-    }
-    if (duration4 > 15) errors.push(`\u7247\u6BB5${i + 1}\u65F6\u957F${duration4}\u79D2\uFF0C\u8D85\u8FC715\u79D2`);
-  }
-  const expected = [...(sourceScene ?? "").matchAll(/[『「“]([^』」”]+)[』」”]/g)].map((match) => match[1].replace(/\s+/g, ""));
-  let coverageVerified = false;
-  if (sourceScene && expected.length) {
-    const actual = text2.replace(/\s+/g, "");
-    const missing = expected.filter((line) => !actual.includes(line));
-    if (missing.length) errors.push(`\u7591\u4F3C\u9057\u6F0F\u539F\u5267\u672C\u53F0\u8BCD\u6216VO\uFF1A${missing.slice(0, 3).join("\uFF1B")}`);
-    else coverageVerified = true;
-  } else {
-    warnings.push("\u672A\u8BC6\u522B\u53EF\u9010\u5B57\u6838\u5BF9\u7684\u539F\u573A\u6B21\u53F0\u8BCD\uFF1B\u53EA\u5B8C\u6210\u7ED3\u6784\u6821\u9A8C\uFF0C\u4E0D\u80FD\u5BA3\u79F0\u5267\u60C5\u5185\u5BB9\u5B8C\u5168\u8986\u76D6");
-  }
-  return { valid: errors.length === 0, scene, errors, warnings, coverageVerified };
+// src/utils/storyboardPromptFreshness.ts
+async function markStoryboardPromptsStale(db2, projectId, episodesId, trackId) {
+  const scope = { projectId, episodesId, key: keyFor(trackId) };
+  const old = await db2("o_agentWorkData").where(scope).first();
+  const hashes = old?.data ? JSON.parse(old.data).hashes ?? [] : [];
+  const track = await db2("o_videoTrack").where({ id: trackId, projectId, scriptId: episodesId }).first();
+  const variants = await db2.schema.hasTable("o_videoPromptVariant") ? await db2("o_videoPromptVariant").where({ trackId }) : [];
+  if (track?.state === "\u751F\u6210\u4E2D" || variants.some((row) => row.state === "\u751F\u6210\u4E2D")) throw new Error("\u8BE5\u5206\u955C\u7684\u89C6\u9891\u63D0\u793A\u8BCD\u6B63\u5728\u751F\u6210\uFF0C\u8BF7\u5B8C\u6210\u540E\u518D\u4FEE\u8BA2\uFF0C\u907F\u514D\u8986\u76D6\u6B63\u5728\u5199\u5165\u7684\u65B0\u63D0\u793A\u8BCD");
+  const prompts = [track?.prompt, ...variants.map((row) => row.prompt)].filter((value) => typeof value === "string" && !!value.trim());
+  const history = old?.data ? JSON.parse(old.data).history ?? [] : [];
+  const data = JSON.stringify({
+    hashes: [.../* @__PURE__ */ new Set([...hashes, ...prompts.map(hash3)])],
+    history: [...history, { basePrompt: track?.prompt, variants, createTime: Date.now() }],
+    updatedAt: Date.now()
+  });
+  if (old) await db2("o_agentWorkData").where({ id: old.id }).update({ data });
+  else await db2("o_agentWorkData").insert({ ...scope, data });
+  const reason = "\u5206\u955C\u5DF2\u4FEE\u8BA2\uFF0C\u8BF7\u66F4\u65B0\u89C6\u9891\u63D0\u793A\u8BCD\uFF1B\u65E7\u63D0\u793A\u8BCD\u548C\u5DF2\u6709\u89C6\u9891\u5DF2\u4FDD\u7559";
+  if (track) await db2("o_videoTrack").where({ id: trackId, projectId, scriptId: episodesId }).update({ prompt: null, state: "\u672A\u751F\u6210", reason });
+  if (variants.length) await db2("o_videoPromptVariant").where({ trackId }).update({ state: "\u672A\u751F\u6210", reason });
 }
-function extractSourceScene(script, scene) {
-  const matches = [...script.matchAll(/^(?:#{1,4}\s*)?场\s*(\d+)\s*[：:、.\s]/gm)];
-  const index = matches.findIndex((match) => Number(match[1]) === scene);
-  if (index < 0) return void 0;
-  return script.slice(matches[index].index, matches[index + 1]?.index ?? script.length);
+async function assertStoryboardPromptFresh(db2, projectId, trackId, prompt) {
+  if (!await db2.schema.hasTable("o_agentWorkData")) return;
+  const row = await db2("o_agentWorkData").where({ projectId, key: keyFor(trackId) }).select("data").first();
+  if (row?.data && JSON.parse(row.data).hashes?.includes(hash3(prompt))) {
+    throw new Error("\u5206\u955C\u5185\u5BB9\u5DF2\u4FEE\u8BA2\uFF0C\u6B64\u63D0\u793A\u8BCD\u5C5E\u4E8E\u65E7\u5206\u955C\uFF0C\u8BF7\u91CD\u65B0\u751F\u6210\u89C6\u9891\u63D0\u793A\u8BCD\uFF1B\u5DF2\u6709\u89C6\u9891\u4FDD\u7559");
+  }
 }
-var init_storyboardValidator = __esm({
-  "src/agents/productionAgent/storyboardValidator.ts"() {
+var import_node_crypto10, hash3, keyFor;
+var init_storyboardPromptFreshness = __esm({
+  "src/utils/storyboardPromptFreshness.ts"() {
     "use strict";
+    import_node_crypto10 = require("node:crypto");
+    hash3 = (text2) => (0, import_node_crypto10.createHash)("sha256").update(text2.trim()).digest("hex");
+    keyFor = (trackId) => `storyboardPromptStale:${trackId}`;
+  }
+});
+
+// src/agents/productionAgent/storyboardPanelSync.ts
+async function syncRevisedStoryboardPanels(trx, projectId, episodesId, data, original, revised) {
+  if (!await trx.schema.hasTable("o_storyboard")) return data.storyboard;
+  const panels = await trx("o_storyboard").where({ projectId, scriptId: episodesId });
+  if (!panels.length) return data.storyboard;
+  const before = storyboardSegments(original), after = storyboardSegments(revised);
+  if (before.length !== after.length) throw new Error("\u4FEE\u8BA2\u6539\u53D8\u4E86\u7247\u6BB5\u6570\u91CF\uFF1B\u5DF2\u6709\u5206\u955C\u548C\u89C6\u9891\u9700\u8981\u660E\u786E\u91CD\u65B0\u7F16\u6392\uFF0C\u672A\u8986\u76D6\u539F\u9762\u677F");
+  const workspace = Array.isArray(data.storyboard) ? data.storyboard.map((item) => ({ ...item })) : [];
+  const used = /* @__PURE__ */ new Set();
+  for (let i = 0; i < before.length; i++) {
+    if (canonical(before[i]) === canonical(after[i])) continue;
+    const candidates = panels.filter((panel2) => canonical(panel2.videoDesc ?? "") === canonical(before[i]) || canonical(panel2.videoDesc ?? "") === canonical(after[i]));
+    if (candidates.length !== 1 || used.has(candidates[0].id)) throw new Error(`\u7247\u6BB5${i + 1}\u7684\u6267\u884C\u9762\u677F\u6709\u72EC\u7ACB\u4FEE\u6539\u6216\u6620\u5C04\u4E0D\u552F\u4E00\uFF0C\u8BF7\u6838\u5BF9\u540E\u4FEE\u8BA2\uFF0C\u672A\u8986\u76D6\u65B0\u7248\u672C`);
+    const panel = candidates[0];
+    used.add(panel.id);
+    const cells = after[i].split("\n").filter((line) => /^\|\s*\d+\s*\|/.test(line)).map((line) => line.split("|").slice(1, -1));
+    const duration4 = cells.reduce((sum, row) => sum + Number(row[2]), 0);
+    const refs = after[i].match(/引用资产ID(?:（[^）]*）)?\*\*\s*[：:]\s*\[([^\]]*)\]/i);
+    if (!refs || !duration4) throw new Error("\u4FEE\u8BA2\u7247\u6BB5\u7F3A\u5C11\u6709\u6548\u65F6\u957F\u6216\u8D44\u4EA7\u5F15\u7528");
+    const ids = [...new Set(refs[1].split(/[,，]/).map((id) => Number(id.trim())))];
+    const changed = canonical(panel.videoDesc ?? "") !== canonical(after[i]);
+    if (changed) {
+      if (panel.trackId) await markStoryboardPromptsStale(trx, projectId, episodesId, panel.trackId);
+      await trx("o_storyboard").where({ id: panel.id, projectId, scriptId: episodesId }).update({ videoDesc: after[i], duration: String(duration4) });
+      await trx("o_assets2Storyboard").where({ storyboardId: panel.id }).del();
+      if (ids.length) await trx("o_assets2Storyboard").insert(ids.map((assetId) => ({ storyboardId: panel.id, assetId })));
+      if (panel.trackId) {
+        const group = await trx("o_storyboard").where({ trackId: panel.trackId, projectId, scriptId: episodesId });
+        await trx("o_videoTrack").where({ id: panel.trackId, projectId, scriptId: episodesId }).update({ duration: group.reduce((sum, row) => sum + Number(row.duration), 0) });
+      }
+    }
+    const copy = workspace.find((item) => item.id === panel.id);
+    if (copy) Object.assign(copy, { videoDesc: after[i], duration: duration4, associateAssetsIds: ids });
+  }
+  return workspace;
+}
+var storyboardSegments, canonical;
+var init_storyboardPanelSync = __esm({
+  "src/agents/productionAgent/storyboardPanelSync.ts"() {
+    "use strict";
+    init_storyboardPromptFreshness();
+    storyboardSegments = (text2) => text2.split(/(?=^###\s*片段)/m).filter((part) => /^###\s*片段/.test(part.trim())).map((part) => part.trim());
+    canonical = (text2) => text2.replace(/\r\n/g, "\n").trim();
   }
 });
 
@@ -238449,6 +238704,7 @@ async function reviseStoryboardScene(db2, request) {
     }
     const validation = validateStoryboardScene(scene, revised, extractSourceScene(script.content ?? "", scene));
     if (!validation.valid) throw new Error(`\u7B2C${scene}\u573A\u4FEE\u8BA2\u672A\u901A\u8FC7\u6821\u9A8C\uFF1A${validation.errors.join("\uFF1B")}`);
+    await guardStoryboardContent(trx, projectId, script.content ?? "", data.scriptPlan ?? "", scene, revised);
     if (revised === original) {
       return {
         changed: false,
@@ -238473,6 +238729,7 @@ async function reviseStoryboardScene(db2, request) {
     const history = Array.isArray(data.storyboardRevisionHistory) ? data.storyboardRevisionHistory : [];
     const nextData = {
       ...data,
+      storyboard: await syncRevisedStoryboardPanels(trx, projectId, episodesId, data, original, revised),
       storyboardTable: renderStoryboardScenes(scenes),
       storyboardTableProgress: nextProgress,
       storyboardRevisionHistory: [...history, {
@@ -238503,15 +238760,17 @@ async function reviseStoryboardScene(db2, request) {
     };
   });
 }
-var import_node_crypto9, storyboardSceneHash;
+var import_node_crypto11, storyboardSceneHash;
 var init_storyboardRevision = __esm({
   "src/agents/productionAgent/storyboardRevision.ts"() {
     "use strict";
-    import_node_crypto9 = require("node:crypto");
+    import_node_crypto11 = require("node:crypto");
     init_storyboardScenes();
     init_storyboardProgress();
     init_storyboardValidator();
-    storyboardSceneHash = (text2) => (0, import_node_crypto9.createHash)("sha256").update(text2).digest("hex");
+    init_storyboardContentGuard();
+    init_storyboardPanelSync();
+    storyboardSceneHash = (text2) => (0, import_node_crypto11.createHash)("sha256").update(text2).digest("hex");
   }
 });
 
@@ -238709,7 +238968,7 @@ function stableJson(value) {
   return "{" + Object.keys(object4).sort().map((key) => JSON.stringify(key) + ":" + stableJson(object4[key])).join(",") + "}";
 }
 function operationInputHash(input) {
-  return (0, import_node_crypto12.createHash)("sha256").update(stableJson(input)).digest("hex");
+  return (0, import_node_crypto13.createHash)("sha256").update(stableJson(input)).digest("hex");
 }
 function operationReceiptKey(kind, requestId) {
   if (!/^[a-zA-Z0-9_-]{8,128}$/.test(requestId)) throw new Error("\u64CD\u4F5C requestId \u65E0\u6548");
@@ -238717,7 +238976,7 @@ function operationReceiptKey(kind, requestId) {
   return `agentReceipt:${kind}:${requestId}`;
 }
 function operationReceiptId(kind, requestId) {
-  const digest = (0, import_node_crypto12.createHash)("sha256").update(`${kind}
+  const digest = (0, import_node_crypto13.createHash)("sha256").update(`${kind}
 ${requestId}`).digest("hex");
   const value = Number.parseInt(digest.slice(0, 13), 16);
   return -(value + 1);
@@ -238749,7 +239008,7 @@ async function withOperationReceipt(db2, scope, kind, requestId, input, create) 
     const key = operationReceiptKey(kind, requestId);
     const inputHash = operationInputHash(input);
     const createTime = Date.now();
-    const claimToken = (0, import_node_crypto12.randomUUID)();
+    const claimToken = (0, import_node_crypto13.randomUUID)();
     const provisional = {
       version: 1,
       kind,
@@ -238799,11 +239058,11 @@ async function withOperationReceipt(db2, scope, kind, requestId, input, create) 
     return { duplicate: false, receipt: saved };
   });
 }
-var import_node_crypto12;
+var import_node_crypto13;
 var init_operationReceipt = __esm({
   "src/utils/agent/runtime/operationReceipt.ts"() {
     "use strict";
-    import_node_crypto12 = require("node:crypto");
+    import_node_crypto13 = require("node:crypto");
   }
 });
 
@@ -239641,14 +239900,14 @@ async function roleReferenceFingerprint(sourcePath) {
   const source = await oss_default.getFile(sourcePath);
   const metadata = await (0, import_sharp3.default)(source).metadata();
   if (!metadata.width || !metadata.height) throw new Error("\u5B8C\u6574\u4EBA\u7269\u56FE\u7247\u4E0D\u53EF\u8BFB\u53D6");
-  return import_node_crypto13.default.createHash("sha256").update(source).digest("hex");
+  return import_node_crypto14.default.createHash("sha256").update(source).digest("hex");
 }
-var import_node_crypto13, import_sharp3;
+var import_node_crypto14, import_sharp3;
 var init_assetReferenceMedia = __esm({
   "src/utils/assetReferenceMedia.ts"() {
     "use strict";
     init_oss();
-    import_node_crypto13 = __toESM(require("node:crypto"));
+    import_node_crypto14 = __toESM(require("node:crypto"));
     import_sharp3 = __toESM(require("sharp"));
   }
 });
@@ -242872,12 +243131,12 @@ var init_addStoryboard = __esm({
 });
 
 // src/routes/production/storyboard/batchAddStoryboardInfo.ts
-var import_express69, import_node_crypto14, router69, batchAddStoryboardInfo_default;
+var import_express69, import_node_crypto15, router69, batchAddStoryboardInfo_default;
 var init_batchAddStoryboardInfo = __esm({
   "src/routes/production/storyboard/batchAddStoryboardInfo.ts"() {
     "use strict";
     import_express69 = __toESM(require_express2());
-    import_node_crypto14 = require("node:crypto");
+    import_node_crypto15 = require("node:crypto");
     init_utils3();
     init_zod();
     init_responseFormat();
@@ -242907,7 +243166,7 @@ var init_batchAddStoryboardInfo = __esm({
         const { data, scriptId, projectId, requestId } = req.body;
         if (!data.length) return res.status(400).send(error50("\u6570\u636E\u4E0D\u80FD\u4E3A\u7A7A"));
         const requestKey = requestId ? `storyboardWrite:${requestId}` : null;
-        const payloadHash = requestKey ? (0, import_node_crypto14.createHash)("sha256").update(JSON.stringify(data)).digest("hex") : null;
+        const payloadHash = requestKey ? (0, import_node_crypto15.createHash)("sha256").update(JSON.stringify(data)).digest("hex") : null;
         try {
           const { stored, createdIds, associationMap } = await utils_default.db.transaction(async (trx) => {
             const script = await trx("o_script").where({ id: scriptId, projectId }).first();
@@ -243907,11 +244166,11 @@ async function copyH3ReferencePlan(db2, trackId, sourcePrompt, targetPrompt, val
   }
   return persistPlan(db2, trackId, targetPrompt, plan);
 }
-var import_node_crypto15, fields, labels, canonicalPath, promptHash, regenerate, pendingTables;
+var import_node_crypto16, fields, labels, canonicalPath, promptHash, regenerate, pendingTables;
 var init_h3ReferencePlan = __esm({
   "src/utils/h3ReferencePlan.ts"() {
     "use strict";
-    import_node_crypto15 = require("node:crypto");
+    import_node_crypto16 = require("node:crypto");
     init_h3ReferenceSlots();
     init_h3ReferenceBindings();
     fields = {
@@ -243927,7 +244186,7 @@ var init_h3ReferencePlan = __esm({
       FULL_BODY_BACK: "\u80CC\u9762\u5168\u8EAB\u53C2\u8003"
     };
     canonicalPath = (path34) => path34.replace(/\\/g, "/").replace(/^\/+/, "");
-    promptHash = (prompt) => (0, import_node_crypto15.createHash)("sha256").update(prompt, "utf8").digest("hex");
+    promptHash = (prompt) => (0, import_node_crypto16.createHash)("sha256").update(prompt, "utf8").digest("hex");
     regenerate = (reason) => new Error(`${reason}\uFF0C\u8BF7\u91CD\u65B0\u751F\u6210\u89C6\u9891\u63D0\u793A\u8BCD`);
     pendingTables = /* @__PURE__ */ new WeakMap();
   }
@@ -244478,21 +244737,27 @@ ${system}` : system, messages })).text };
         },
         input.regenerate === true,
         true,
-        h3RefPromptMode ? async (prompt, language) => {
+        async (prompt, language) => {
+          await assertStoryboardPromptFresh(db, projectId, trackId, prompt);
+          if (!h3RefPromptMode) return;
           assertTranslatedDialogueLanguage(prompt, language);
           const plan = await loadH3ReferencePlan(db, trackId, prompt);
           if (!plan) throw new Error("H3 \u53C2\u8003\u56FE\u7ED1\u5B9A\uFF1A\u63D0\u793A\u8BCD\u7F3A\u5C11\u4FDD\u5B58\u7684\u53C2\u8003\u56FE\u8BA1\u5212");
+          resolveH3ReferencePlan(pictureSourceItems, plan);
           if (plan.slots.some((slot) => slot.kind)) throw new Error("H3 \u53C2\u8003\u56FE\u7ED1\u5B9A\uFF1A\u4ECD\u4F7F\u7528\u4EBA\u7269\u72EC\u7ACB\u89C6\u56FE\u65E7\u8BA1\u5212");
           assertH3PromptContract(prompt, targetDuration, plan.slots.length);
           assertH3ReferenceBindings(prompt, plan.slots);
-        } : void 0,
-        h3RefPromptMode ? async (prompt) => {
+        },
+        async (prompt) => {
+          await assertStoryboardPromptFresh(db, projectId, trackId, prompt);
+          if (!h3RefPromptMode) return;
           const plan = await loadH3ReferencePlan(db, trackId, prompt);
           if (!plan) throw new Error("H3 \u53C2\u8003\u56FE\u7ED1\u5B9A\uFF1A\u539F\u7248\u63D0\u793A\u8BCD\u7F3A\u5C11\u4FDD\u5B58\u7684\u53C2\u8003\u56FE\u8BA1\u5212");
+          resolveH3ReferencePlan(pictureSourceItems, plan);
           if (plan.slots.some((slot) => slot.kind)) throw new Error("H3 \u53C2\u8003\u56FE\u7ED1\u5B9A\uFF1A\u539F\u7248\u4ECD\u4F7F\u7528\u4EBA\u7269\u72EC\u7ACB\u89C6\u56FE\u65E7\u8BA1\u5212");
           assertH3PromptContract(prompt, targetDuration, plan.slots.length);
           assertH3ReferenceBindings(prompt, plan.slots);
-        } : void 0
+        }
       );
       const failed = variants.filter((v) => input.languages.includes(v.language) && v.state === "\u751F\u6210\u5931\u8D25");
       await utils_default.db("o_videoTrack").where({ id: trackId }).update({ state: failed.length ? "\u751F\u6210\u5931\u8D25" : "\u5DF2\u5B8C\u6210", reason: failed.map((v) => `${v.language}: ${v.reason}`).join("\uFF1B") });
@@ -244518,6 +244783,7 @@ var init_videoPromptGeneration = __esm({
   "src/utils/videoPromptGeneration.ts"() {
     "use strict";
     init_utils3();
+    init_storyboardPromptFreshness();
     import_promises6 = __toESM(require("fs/promises"));
     import_path12 = __toESM(require("path"));
     init_h3ReferenceSlots();
@@ -244650,6 +244916,7 @@ var init_batchGenerateVideo = __esm({
   "src/routes/production/workbench/batchGenerateVideo.ts"() {
     "use strict";
     import_express81 = __toESM(require_express2());
+    init_storyboardPromptFreshness();
     init_utils3();
     init_zod();
     init_dist_node();
@@ -244709,6 +244976,7 @@ var init_batchGenerateVideo = __esm({
             if (!ownedTrack) throw new Error("\u89C6\u9891\u6BB5\u4E0D\u5B58\u5728");
             try {
               track.prompt = await resolveLanguagePrompt(db, track.trackId, track.language, track.prompt, audio);
+              await assertStoryboardPromptFresh(utils_default.db, projectId, track.trackId, track.prompt);
               const resolved = await Promise.all(track.uploadData.map(async (item) => {
                 if (item.sources === "storyboard") {
                   const found = await utils_default.db("o_storyboard").where({ id: item.id, projectId }).select("filePath", "prompt").first();
@@ -244977,6 +245245,7 @@ var init_generateVideo = __esm({
   "src/routes/production/workbench/generateVideo.ts"() {
     "use strict";
     import_express86 = __toESM(require_express2());
+    init_storyboardPromptFreshness();
     init_utils3();
     init_zod();
     init_dist_node();
@@ -245031,6 +245300,7 @@ var init_generateVideo = __esm({
         let base644;
         try {
           prompt = await resolveLanguagePrompt(db, trackId, language, req.body.prompt, audio);
+          await assertStoryboardPromptFresh(utils_default.db, projectId, trackId, prompt);
           const resolved = await Promise.all(
             uploadData.map(async (item) => {
               if (item.sources === "storyboard") {
@@ -260017,8 +260287,8 @@ async function generateRouter() {
     routeModulePairs.push({ routePath, varName, entry });
   });
   const routerData = JSON.stringify(routeModulePairs.map(({ routePath, varName }) => ({ routePath, varName })));
-  const hash3 = import_crypto.default.createHash("md5").update(routerData).digest("hex");
-  let content = `// @routes-hash ${hash3}
+  const hash4 = import_crypto.default.createHash("md5").update(routerData).digest("hex");
+  let content = `// @routes-hash ${hash4}
 import { Express } from "express";
 
 `;
@@ -260038,7 +260308,7 @@ import { Express } from "express";
     const current = await (0, import_promises.readFile)("src/router.ts", "utf8");
     const match = current.match(/^\/\/\s*@routes-hash\s*([a-z0-9]+)\n/);
     const currentHash = match ? match[1] : null;
-    if (currentHash === hash3) {
+    if (currentHash === hash4) {
       needWrite = false;
     }
   } catch {
@@ -261183,6 +261453,9 @@ var tools_default = (toolCpnfig) => {
 var fs12 = __toESM(require("fs"));
 var import_path10 = __toESM(require("path"));
 
+// src/agents/productionAgent/directorPlan.ts
+init_screenplay();
+
 // src/utils/agent/runtime/resultValidator.ts
 function extractSingleXmlResult(response, tag) {
   if (!/^[A-Za-z][\w-]*$/.test(tag)) throw new Error("\u7ED3\u679C\u6807\u7B7E\u65E0\u6548");
@@ -261214,6 +261487,8 @@ async function saveDirectorPlan(db2, projectId, episodesId, plan, expectedPlan) 
   await db2.transaction(async (trx) => {
     const script = await trx("o_script").where({ id: episodesId, projectId }).select("content").first();
     if (!script) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C");
+    const factErrors = validateDirectorFacts(script.content ?? "", plan);
+    if (factErrors.length) throw new Error(factErrors.join("\uFF1B"));
     const scope = { projectId, episodesId, key: "productionAgent" };
     const existing = await trx("o_agentWorkData").where(scope).first();
     const current = existing ? JSON.parse(existing.data || "{}") : {
@@ -261586,17 +261861,13 @@ async function runStoryboardTask(options) {
 
 // src/agents/productionAgent/index.ts
 init_storyboardValidator();
+init_screenplay();
 
-// src/agents/productionAgent/storyboardRevisionTool.ts
-init_dist22();
-init_zod();
+// src/agents/productionAgent/storyboardRebuildDispatch.ts
 init_storyboardProgress();
-init_storyboardTable();
-init_storyboardRevision();
-init_storyboardValidator();
 
 // src/agents/productionAgent/storyboardRebuild.ts
-var import_node_crypto10 = require("node:crypto");
+var import_node_crypto9 = require("node:crypto");
 init_storyboardProgress();
 async function rebuildStoryboardTask(db2, request) {
   const { projectId, episodesId, expectedTaskId, expectedRevision, expectedPlanHash, total, reason } = request;
@@ -261628,8 +261899,8 @@ async function rebuildStoryboardTask(db2, request) {
     if (declared && Number(declared[1]) !== total) throw new Error("\u91CD\u5EFA\u573A\u6570\u4E0E\u6700\u65B0\u5BFC\u6F14\u8BA1\u5212\u4E0D\u4E00\u81F4");
     const sourceHash = hashStoryboardSource(String(script.content ?? ""));
     const savedScenes = coherent.savedScenes;
-    const archiveId = `storyboard_archive_${(0, import_node_crypto10.randomUUID)().replace(/-/g, "")}`;
-    const newTaskId = `storyboard_${(0, import_node_crypto10.randomUUID)().replace(/-/g, "")}`;
+    const archiveId = `storyboard_archive_${(0, import_node_crypto9.randomUUID)().replace(/-/g, "")}`;
+    const newTaskId = `storyboard_${(0, import_node_crypto9.randomUUID)().replace(/-/g, "")}`;
     const archivedAt = Date.now();
     const archive = {
       archiveId,
@@ -261710,7 +261981,82 @@ async function getStoryboardRebuildContext(db2, projectId, episodesId) {
   };
 }
 
+// src/agents/productionAgent/storyboardRebuildDispatch.ts
+function isExplicitStoryboardRebuildRequest(input) {
+  const text2 = input.trim().replace(/[\s，。！!？?、]/g, "");
+  if (/^(重新构建|重新生成分镜(?:表)?|重新构建分镜(?:表)?|重建分镜(?:表)?|重新制作分镜(?:表)?)$/.test(text2)) return true;
+  return /^(?:请)?(?:以|按)(?:当前|最新)导演(?:计划|规划)(?:为准)?(?:重新构建|重新生成|重建)(?:全部|整集|所有|[一二三四五六七八九十百\d]+场|全部[一二三四五六七八九十百\d]+场)?分镜(?:表)?$/.test(text2);
+}
+function storyboardPlanSceneCount(plan) {
+  const declared = plan.match(/共规划\s*(\d+)\s*个?场/);
+  const tableScenes = [...plan.matchAll(/^\s*\|\s*Sc\s*(\d+)\s*\|/gim)].map((match) => Number(match[1]));
+  const headings = tableScenes.length ? tableScenes : [...plan.matchAll(/^\s*(?:\d+[.、]\s*)?场\s*(\d+)\s*[：:]/gm)].map((match) => Number(match[1]));
+  const ordered = headings.length > 0 && headings.every((n, index) => n === index + 1);
+  if (headings.length && !ordered) throw new Error("\u6700\u65B0\u5BFC\u6F14\u8BA1\u5212\u573A\u6B21\u7F16\u53F7\u4E0D\u8FDE\u7EED\uFF0C\u4E0D\u80FD\u81EA\u52A8\u91CD\u5EFA");
+  const count = declared ? Number(declared[1]) : ordered ? headings.length : 0;
+  if (!Number.isSafeInteger(count) || count < 1 || count > 1e3 || headings.length && headings.length !== count) {
+    throw new Error("\u65E0\u6CD5\u6838\u5BF9\u6700\u65B0\u5BFC\u6F14\u8BA1\u5212\u7684\u5B8C\u6574\u573A\u6B21\u6570\uFF0C\u672A\u4FEE\u6539\u65E7\u4EFB\u52A1");
+  }
+  return count;
+}
+async function prepareAuthorizedStoryboardRebuild(db2, projectId, episodesId, instruction, abortSignal) {
+  if (!isExplicitStoryboardRebuildRequest(instruction)) throw new Error("\u6CA1\u6709\u6536\u5230\u660E\u786E\u7684\u6574\u96C6\u5206\u955C\u91CD\u5EFA\u6307\u4EE4\uFF0C\u65E7\u7A3F\u4FDD\u6301\u4E0D\u53D8");
+  if (abortSignal?.aborted) throw new Error("\u5206\u955C\u91CD\u5EFA\u5DF2\u53D6\u6D88\uFF0C\u672A\u4FEE\u6539\u65E7\u4EFB\u52A1");
+  const scope = { projectId, episodesId, key: "productionAgent" };
+  const workspace = await db2("o_agentWorkData").where(scope).select("data").first();
+  if (!workspace?.data) throw new Error("\u5F53\u524D\u9879\u76EE\u5C1A\u65E0\u5206\u955C\u4EFB\u52A1\uFF0C\u4E0D\u80FD\u6E05\u7A7A\u6216\u91CD\u5EFA\uFF1B\u8BF7\u8D70\u9996\u6B21\u6784\u5EFA\u6D41\u7A0B");
+  const data = JSON.parse(workspace.data);
+  const plan = typeof data.scriptPlan === "string" ? data.scriptPlan : "";
+  const total = storyboardPlanSceneCount(plan);
+  const currentPlanHash = hashStoryboardSource(plan);
+  const context2 = await getStoryboardRebuildContext(db2, projectId, episodesId);
+  if (!context2.taskId || context2.actualSavedScenes === null) {
+    throw new Error("\u65E7\u4EFB\u52A1\u6B63\u6587\u548C\u8FDB\u5EA6\u672A\u901A\u8FC7\u4E00\u81F4\u6027\u6838\u9A8C\uFF0C\u672A\u4FEE\u6539\u65E7\u7A3F\uFF1B\u9700\u8981\u5148\u6838\u5BF9\u6570\u636E\u5E93");
+  }
+  const archives = Array.isArray(data.storyboardTaskArchives) ? data.storyboardTaskArchives : [];
+  const lastArchive = archives.length ? archives[archives.length - 1] : null;
+  const current = await readStoryboardProgress(db2, projectId, episodesId);
+  if (current.valid && current.mode === "scene" && current.total === total && current.planHash === currentPlanHash && lastArchive?.replacementTaskId === current.taskId) {
+    return {
+      taskId: current.taskId,
+      total,
+      archivedSceneCount: Number(lastArchive.previousSavedScenes?.length ?? 0),
+      archivedSavedScenes: Array.isArray(lastArchive.previousSavedScenes) ? lastArchive.previousSavedScenes : [],
+      archiveId: typeof lastArchive.archiveId === "string" ? lastArchive.archiveId : null,
+      newlyInitialized: false
+    };
+  }
+  if (abortSignal?.aborted) throw new Error("\u5206\u955C\u91CD\u5EFA\u5DF2\u53D6\u6D88\uFF0C\u672A\u4FEE\u6539\u65E7\u4EFB\u52A1");
+  const rebuilt = await rebuildStoryboardTask(db2, {
+    projectId,
+    episodesId,
+    expectedTaskId: context2.taskId,
+    expectedRevision: context2.revision,
+    expectedPlanHash: currentPlanHash,
+    total,
+    reason: instruction
+  });
+  const checked = await readStoryboardProgress(db2, projectId, episodesId);
+  if (!checked.valid || checked.taskId !== rebuilt.taskId || checked.total !== total || checked.revision !== 0 || checked.savedScenes.length !== 0 || checked.nextScene !== 1) {
+    throw new Error("\u65B0\u5206\u955C\u4EFB\u52A1\u5DF2\u521D\u59CB\u5316\uFF0C\u4F46\u6570\u636E\u5E93\u8BFB\u56DE\u5F02\u5E38\uFF1B\u505C\u6B62\u751F\u6210\uFF0C\u8BF7\u5148\u6838\u5BF9\u6570\u636E\u5E93");
+  }
+  return {
+    taskId: rebuilt.taskId,
+    total,
+    archivedSceneCount: rebuilt.archivedSceneCount,
+    archivedSavedScenes: rebuilt.archivedSavedScenes,
+    archiveId: rebuilt.archiveId,
+    newlyInitialized: true
+  };
+}
+
 // src/agents/productionAgent/storyboardRevisionTool.ts
+init_dist22();
+init_zod();
+init_storyboardProgress();
+init_storyboardTable();
+init_storyboardRevision();
+init_storyboardValidator();
 function createStoryboardRevisionTool(options) {
   return tool({
     description: "\u4FEE\u8BA2\u5DF2\u6709\u5206\u955C\u573A\u6B21\u3002\u82E5\u7528\u6237\u660E\u786E\u8981\u6C42\u4EE5\u6700\u65B0\u5BFC\u6F14\u8BA1\u5212\u91CD\u65B0\u6784\u5EFA\u5168\u90E8\u573A\u6B21\u4E14\u65E7\u4EFB\u52A1\u53D1\u751F\u8BA1\u5212\u51B2\u7A81\uFF0C\u53EF\u4F7F\u7528 rebuild=true\u3001scene=0\u3001confirmation=REBUILD_LATEST_PLAN \u5148\u5F52\u6863\u65E7\u7A3F\u5E76\u521D\u59CB\u5316\u5168\u65B0\u4EFB\u52A1\uFF1B\u7136\u540E\u5FC5\u987B\u8C03\u7528 run_sub_agent_storyboard_table \u4ECE\u7B2C1\u573A\u751F\u6210\u3002\u7981\u6B62\u628A PLAN_CHANGED \u5F53\u4F5C\u5DF2\u4FDD\u5B580\u573A\u3002\u666E\u901A\u5355\u573A\u4FEE\u6539\u5FC5\u987B\u4F7F\u7528 scene>=1\u3002",
@@ -261830,7 +262176,7 @@ function createStoryboardRevisionTool(options) {
 }
 
 // src/utils/agent/runtime/toolExecutor.ts
-var import_node_crypto11 = require("node:crypto");
+var import_node_crypto12 = require("node:crypto");
 var REQUEST_ID_TOOLS = /* @__PURE__ */ new Set([
   "add_flowData_storyboard",
   "add_deriveAsset",
@@ -261877,7 +262223,7 @@ function wrapAgentTools(tools, options) {
             args[0] = input;
             if (sideEffect && REQUEST_ID_TOOLS.has(toolName) && input && typeof input === "object" && !Array.isArray(input) && !(typeof input.requestId === "string" && input.requestId)) {
               const seed = json4(input);
-              const requestId = "agent_" + (0, import_node_crypto11.createHash)("sha256").update(`${options.runId}
+              const requestId = "agent_" + (0, import_node_crypto12.createHash)("sha256").update(`${options.runId}
 ${options.stepKey ?? "run"}
 ${toolName}
 ${seed}`).digest("hex").slice(0, 32);
@@ -261885,12 +262231,12 @@ ${seed}`).digest("hex").slice(0, 32);
               args[0] = input;
             }
             const inputJson = json4(input);
-            const inputHash = (0, import_node_crypto11.createHash)("sha256").update(inputJson).digest("hex");
-            const operationKey = sideEffect ? (0, import_node_crypto11.createHash)("sha256").update(`${options.runId}
+            const inputHash = (0, import_node_crypto12.createHash)("sha256").update(inputJson).digest("hex");
+            const operationKey = sideEffect ? (0, import_node_crypto12.createHash)("sha256").update(`${options.runId}
 ${options.stepKey ?? "run"}
 ${toolName}
 ${inputHash}`).digest("hex") : null;
-            let id = (0, import_node_crypto11.randomUUID)();
+            let id = (0, import_node_crypto12.randomUUID)();
             const now2 = Date.now();
             if (operationKey) {
               const prior = await options.db("o_agentToolCall").where({ operationKey }).first();
@@ -262121,14 +262467,14 @@ async function createSubAgent(parentCtx) {
       const activeTools = tools_default({
         resTool,
         msg: subMsg,
-        ...readOnlyTools ? { toolsNames: ["get_flowData", "get_storyboard_progress"] } : {}
+        ...isDirectorPlan ? { toolsNames: ["get_flowData"] } : readOnlyTools ? { toolsNames: ["get_flowData", "get_storyboard_progress"] } : {}
       });
       const { fullStream } = await utils_default.Ai.Text(modelKey ?? key, parentCtx.thinkConfig.think, parentCtx.thinkConfig.thinlLevel).stream({
         system,
         messages: messages ?? [{ role: "user", content: prompt }],
         abortSignal,
         tools: {
-          ...extraTools,
+          ...isDirectorPlan ? {} : extraTools,
           ...wrapAgentTools(activeTools, {
             db: utils_default.db,
             runId: parentCtx.runId,
@@ -262265,8 +262611,13 @@ ${modelInfo}` },
     description: "\u8FD0\u884C\u6267\u884CsubAgent\u6765\u5B8C\u6210\u5BFC\u6F14\u89C4\u5212\u76F8\u5173\u4EFB\u52A1",
     inputSchema: jsonSchema(promptInput),
     execute: async ({ prompt }) => {
-      const artSkills = await loadArtSkills();
       const systemPrompt = await readSkill(import_path10.default.join(utils_default.getPath("skills"), "production_execution_director_plan.md"));
+      const source = await utils_default.db("o_script").where({ id: Number(resTool.data.scriptId), projectId: Number(resTool.data.projectId) }).select("content").first();
+      const workspace = await utils_default.db("o_agentWorkData").where({ projectId: Number(resTool.data.projectId), episodesId: Number(resTool.data.scriptId), key: "productionAgent" }).select("data").first();
+      const currentPlan = workspace?.data ? JSON.parse(workspace.data).scriptPlan ?? "" : "";
+      const facts = `
+\u3010\u7A0B\u5E8F\u89E3\u6790\u7684\u5267\u672C\u4E8B\u5B9E\uFF1A\u7EDF\u8BA1\u4E0D\u542B\u6807\u70B9\u548C\u7A7A\u683C\uFF0C\u5C4F\u5E55\u6587\u5B57\u4E0D\u8BA1\u5165\u53E3\u64AD\u3011
+${screenplayFacts(source?.content ?? "", currentPlan)}`;
       const addPrompt = "\n\u4F60\u5FC5\u987B\u4F7F\u7528\u5982\u4E0BXML\u683C\u5F0F\u5199\u5165\u5DE5\u4F5C\u533A\uFF1A\n```\n<scriptPlan>\u5185\u5BB9</scriptPlan>\n```";
       return runAgent({
         key: "productionAgent:directorPlanAgent",
@@ -262275,11 +262626,8 @@ ${modelInfo}` },
         name: "\u6267\u884C\u5BFC\u6F14",
         memoryKey: "assistant:execution",
         messages: [
-          { role: "assistant", content: artSkills.prompt + `
-${modelInfo}` },
-          { role: "user", content: prompt + addPrompt }
-        ],
-        tools: { ...artSkills.tools }
+          { role: "user", content: prompt + addPrompt + facts }
+        ]
       });
     }
   });
@@ -262344,9 +262692,7 @@ ${modelInfo}` },
       const scriptRow = await utils_default.db("o_script").where({ id: episodesId, projectId }).select("content").first();
       const workspace = await utils_default.db("o_agentWorkData").where({ projectId, episodesId, key: "productionAgent" }).select("data").first();
       const plan = workspace?.data ? JSON.parse(workspace.data).scriptPlan ?? "" : "";
-      const declaredTotal = String(plan).match(/共规划\s*(\d+)\s*个?场/);
-      const planHeadings = [...String(plan).matchAll(/^\s*(?:\d+[.、]\s*)?场\s*(\d+)\s*[：:]/gm)].map((m) => Number(m[1]));
-      const planTotal = declaredTotal ? Number(declaredTotal[1]) : planHeadings.length && planHeadings.every((n, i) => n === i + 1) ? planHeadings.length : void 0;
+      const planTotal = String(plan).trim() ? storyboardPlanSceneCount(String(plan)) : void 0;
       const total = progress.total ?? requestedTotal ?? planTotal;
       if (!total || !Number.isSafeInteger(total) || total > 1e3) throw new Error("\u65E0\u6CD5\u4ECE\u5DF2\u6709\u8FDB\u5EA6\u6216\u5BFC\u6F14\u8BA1\u5212\u786E\u5B9A\u603B\u573A\u6570\uFF0C\u8BF7\u5148\u6838\u5BF9\u5BFC\u6F14\u8BA1\u5212");
       if (requestedTotal !== void 0 && requestedTotal !== total) throw new Error("\u8F93\u5165\u603B\u573A\u6570\u4E0E\u5DF2\u4FDD\u5B58\u8FDB\u5EA6\u4E0D\u4E00\u81F4");
@@ -262369,7 +262715,9 @@ ${modelInfo}` },
 ` + (sourceScene ? `\u672C\u573A\u539F\u5267\u672C\uFF08\u5FC5\u987B\u5B8C\u6574\u8986\u76D6\uFF09\uFF1A
 ${sourceScene}
 ` : `\u5F53\u524D\u5267\u672C\u672A\u8BC6\u522B\u5230\u660E\u786E\u7684\u7B2C${scene}\u573A\u8FB9\u754C\uFF1B\u5148\u8C03\u7528 get_flowData(script) \u5B9A\u4F4D\u672C\u573A\uFF0C\u4E0D\u5F97\u51ED\u7A7A\u8865\u5267\u60C5\u3002
-`) + (previous ? `\u4E0A\u4E00\u573A\u672B\u5C3E\u8FDE\u7EED\u6027\u53C2\u8003\uFF1A
+`) + `\u3010\u7A0B\u5E8F\u6838\u5BF9\u4E8B\u5B9E\u4E0E\u9010\u573A\u5236\u4F5C\u9884\u7B97\u3011
+${screenplayFacts(sourceScene ?? "", String(plan))}
+` + (previous ? `\u4E0A\u4E00\u573A\u672B\u5C3E\u8FDE\u7EED\u6027\u53C2\u8003\uFF1A
 ${previous}
 ` : "") + `\u521B\u4F5C\u8981\u6C42\uFF1A${prompt}`;
           await runAgent({
@@ -262408,7 +262756,11 @@ ${modelInfo}` },
     generate: async ({ instruction, scene, total, taskId, original, sourceScene }) => {
       const productionSkills = await loadProductionSkills();
       const systemPrompt = await readSkill(import_path10.default.join(utils_default.getPath("skills"), "production_execution_storyboard_table.md"));
+      const workspace = await utils_default.db("o_agentWorkData").where({ projectId: Number(resTool.data.projectId), episodesId: Number(resTool.data.scriptId), key: "productionAgent" }).select("data").first();
+      const plan = workspace?.data ? JSON.parse(workspace.data).scriptPlan ?? "" : "";
       const revisionPrompt = `\u3010\u5DF2\u6709\u573A\u6B21\u4FEE\u8BA2\uFF0C\u4E0D\u662F\u9996\u6B21\u751F\u6210\u3011\u4EC5\u4FEE\u8BA2\u7B2C${scene}\u573A\uFF08\u5171${total}\u573A\uFF09\uFF0Ctask=${taskId}\u3002\u4FDD\u6301\u539F\u5267\u672C\u5FC5\u987B\u5448\u73B0\u7684\u5185\u5BB9\uFF0C\u4E0D\u5F97\u64C5\u81EA\u5220\u9664\u5267\u60C5\u6216\u53F0\u8BCD\u3002\u53EA\u8F93\u51FA\u5B8C\u6574\u95ED\u5408\u7684 <storyboardTable scene="${scene}" total="${total}" task="${taskId}">\u4FEE\u8BA2\u540E\u7B2C${scene}\u573A\u5B8C\u6574Markdown</storyboardTable>\u3002
+\u3010\u7A0B\u5E8F\u6838\u5BF9\u4E8B\u5B9E\u4E0E\u9010\u573A\u5236\u4F5C\u9884\u7B97\u3011
+${screenplayFacts(sourceScene ?? "", plan)}
 \u3010\u672C\u573A\u9700\u89E3\u51B3\u7684\u5BA1\u6838\u95EE\u9898\u548C\u7528\u6237\u8981\u6C42\u3011
 ${instruction}
 \u3010\u672C\u573A\u5DF2\u4FDD\u5B58\u65E7\u7A3F\uFF1A\u5FC5\u987B\u5728\u6B64\u57FA\u7840\u4E0A\u4FEE\u6539\u3011
@@ -263170,77 +263522,6 @@ var resTool_default = ResTool;
 init_chatHistory();
 init_storyboardTable();
 init_operationReceipt();
-
-// src/agents/productionAgent/storyboardRebuildDispatch.ts
-init_storyboardProgress();
-function isExplicitStoryboardRebuildRequest(input) {
-  const text2 = input.trim().replace(/[\s，。！!？?、]/g, "");
-  if (/^(重新构建|重新生成分镜(?:表)?|重新构建分镜(?:表)?|重建分镜(?:表)?|重新制作分镜(?:表)?)$/.test(text2)) return true;
-  return /^(?:请)?(?:以|按)(?:当前|最新)导演(?:计划|规划)(?:为准)?(?:重新构建|重新生成|重建)(?:全部|整集|所有|[一二三四五六七八九十百\d]+场|全部[一二三四五六七八九十百\d]+场)?分镜(?:表)?$/.test(text2);
-}
-function storyboardPlanSceneCount(plan) {
-  const declared = plan.match(/共规划\s*(\d+)\s*个?场/);
-  const headings = [...plan.matchAll(/^\s*(?:\d+[.、]\s*)?场\s*(\d+)\s*[：:]/gm)].map((match) => Number(match[1]));
-  const ordered = headings.length > 0 && headings.every((n, index) => n === index + 1);
-  if (headings.length && !ordered) throw new Error("\u6700\u65B0\u5BFC\u6F14\u8BA1\u5212\u573A\u6B21\u7F16\u53F7\u4E0D\u8FDE\u7EED\uFF0C\u4E0D\u80FD\u81EA\u52A8\u91CD\u5EFA");
-  const count = declared ? Number(declared[1]) : ordered ? headings.length : 0;
-  if (!Number.isSafeInteger(count) || count < 1 || count > 1e3 || headings.length && headings.length !== count) {
-    throw new Error("\u65E0\u6CD5\u6838\u5BF9\u6700\u65B0\u5BFC\u6F14\u8BA1\u5212\u7684\u5B8C\u6574\u573A\u6B21\u6570\uFF0C\u672A\u4FEE\u6539\u65E7\u4EFB\u52A1");
-  }
-  return count;
-}
-async function prepareAuthorizedStoryboardRebuild(db2, projectId, episodesId, instruction, abortSignal) {
-  if (!isExplicitStoryboardRebuildRequest(instruction)) throw new Error("\u6CA1\u6709\u6536\u5230\u660E\u786E\u7684\u6574\u96C6\u5206\u955C\u91CD\u5EFA\u6307\u4EE4\uFF0C\u65E7\u7A3F\u4FDD\u6301\u4E0D\u53D8");
-  if (abortSignal?.aborted) throw new Error("\u5206\u955C\u91CD\u5EFA\u5DF2\u53D6\u6D88\uFF0C\u672A\u4FEE\u6539\u65E7\u4EFB\u52A1");
-  const scope = { projectId, episodesId, key: "productionAgent" };
-  const workspace = await db2("o_agentWorkData").where(scope).select("data").first();
-  if (!workspace?.data) throw new Error("\u5F53\u524D\u9879\u76EE\u5C1A\u65E0\u5206\u955C\u4EFB\u52A1\uFF0C\u4E0D\u80FD\u6E05\u7A7A\u6216\u91CD\u5EFA\uFF1B\u8BF7\u8D70\u9996\u6B21\u6784\u5EFA\u6D41\u7A0B");
-  const data = JSON.parse(workspace.data);
-  const plan = typeof data.scriptPlan === "string" ? data.scriptPlan : "";
-  const total = storyboardPlanSceneCount(plan);
-  const currentPlanHash = hashStoryboardSource(plan);
-  const context2 = await getStoryboardRebuildContext(db2, projectId, episodesId);
-  if (!context2.taskId || context2.actualSavedScenes === null) {
-    throw new Error("\u65E7\u4EFB\u52A1\u6B63\u6587\u548C\u8FDB\u5EA6\u672A\u901A\u8FC7\u4E00\u81F4\u6027\u6838\u9A8C\uFF0C\u672A\u4FEE\u6539\u65E7\u7A3F\uFF1B\u9700\u8981\u5148\u6838\u5BF9\u6570\u636E\u5E93");
-  }
-  const archives = Array.isArray(data.storyboardTaskArchives) ? data.storyboardTaskArchives : [];
-  const lastArchive = archives.length ? archives[archives.length - 1] : null;
-  const current = await readStoryboardProgress(db2, projectId, episodesId);
-  if (current.valid && current.mode === "scene" && current.total === total && current.planHash === currentPlanHash && lastArchive?.replacementTaskId === current.taskId) {
-    return {
-      taskId: current.taskId,
-      total,
-      archivedSceneCount: Number(lastArchive.previousSavedScenes?.length ?? 0),
-      archivedSavedScenes: Array.isArray(lastArchive.previousSavedScenes) ? lastArchive.previousSavedScenes : [],
-      archiveId: typeof lastArchive.archiveId === "string" ? lastArchive.archiveId : null,
-      newlyInitialized: false
-    };
-  }
-  if (abortSignal?.aborted) throw new Error("\u5206\u955C\u91CD\u5EFA\u5DF2\u53D6\u6D88\uFF0C\u672A\u4FEE\u6539\u65E7\u4EFB\u52A1");
-  const rebuilt = await rebuildStoryboardTask(db2, {
-    projectId,
-    episodesId,
-    expectedTaskId: context2.taskId,
-    expectedRevision: context2.revision,
-    expectedPlanHash: currentPlanHash,
-    total,
-    reason: instruction
-  });
-  const checked = await readStoryboardProgress(db2, projectId, episodesId);
-  if (!checked.valid || checked.taskId !== rebuilt.taskId || checked.total !== total || checked.revision !== 0 || checked.savedScenes.length !== 0 || checked.nextScene !== 1) {
-    throw new Error("\u65B0\u5206\u955C\u4EFB\u52A1\u5DF2\u521D\u59CB\u5316\uFF0C\u4F46\u6570\u636E\u5E93\u8BFB\u56DE\u5F02\u5E38\uFF1B\u505C\u6B62\u751F\u6210\uFF0C\u8BF7\u5148\u6838\u5BF9\u6570\u636E\u5E93");
-  }
-  return {
-    taskId: rebuilt.taskId,
-    total,
-    archivedSceneCount: rebuilt.archivedSceneCount,
-    archivedSavedScenes: rebuilt.archivedSavedScenes,
-    archiveId: rebuilt.archiveId,
-    newlyInitialized: true
-  };
-}
-
-// src/socket/routes/productionAgent.ts
 init_storyboardTable();
 async function verifyToken(rawToken) {
   const setting = await utils_default.db("o_setting").where("key", "tokenKey").select("value").first();

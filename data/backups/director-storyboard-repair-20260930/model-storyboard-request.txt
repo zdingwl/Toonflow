@@ -1,0 +1,124 @@
+仅生成第1场，共3场，task=storyboard_probe_20260930。输出一份 <storyboardTable scene="1" total="3" task="storyboard_probe_20260930">Markdown</storyboardTable>。
+原剧本：场景一 外·倾斜邮轮·暴雨夜（0–25秒）
+
+
+
+半座城市已经沉在远处黑色海面里。邮轮严重倾斜，甲板满是伤员与争抢救生艇的人。
+
+
+
+艾娃一条腿受伤，死死抓住栏杆。
+
+
+
+麦迪逊站在她上方，身后只剩一个救生位置。
+
+
+
+艾娃
+
+麦迪逊，拉我上去！
+
+
+
+麦迪逊眼里全是恐惧。
+
+
+
+麦迪逊
+
+姐姐……位置只有一个。
+
+
+
+她一根根掰开艾娃的手指。
+
+
+
+艾娃
+
+你干什么？！
+
+
+
+麦迪逊
+
+我只是想活。
+
+
+
+最后一根手指被掰开。
+
+
+
+艾娃坠入海里。
+
+
+
+巨大的变异鲨从浪下冲出，一口咬住她的腿。
+导演规划：| 场次 | 场景名 | 台词条数 | 台词字数 | 情绪浓度 | 情绪基调（含 X→Y） | 原剧本时段 | 制作预算（秒） |
+|---|---|---:|---:|---:|---|---|---:|
+| Sc1 | 外·倾斜邮轮暴雨夜·麦迪逊掰开艾娃手指致其坠海 | 4 | 24 | 10 | 求救→震惊绝望；麦迪逊恐惧→自私求生 | 0–25秒 | 25 |
+| Sc2 | 水下连续·艾娃濒死触发核心07回溯 | 2 | 6 | 9 | 濒死涣散→强撑求生意志 | 25–45秒 | 22 |
+| Sc3 | 内·艾娃公寓清晨·重生后72小时备战 | 5 | 60 | 8 | 惊醒确认→冷静决绝 | 45–95秒 | 62.5 |
+
+### 逐场注意事项
+
+- **Sc1**：
+  - 情感砸点：麦迪逊一根根掰开艾娃抓栏杆的手指，最后一根脱开时艾娃失去支撑坠海。
+  - 一致性锚点：艾娃开场即身体悬在船舷外、双脚无支撑，一手死抓栏杆、一条腿受伤；麦迪逊在她上方，身后只剩一个救生位置；严重倾斜邮轮、暴雨夜海面、远处半沉城市保持同场连续。
+  - 空间距离：麦迪逊必须位于艾娃上方且能直接触碰她的手；艾娃与甲板、救生位置之间有明确高度差，不能拍成两人并排站在栏杆旁。
+  - 环境音：暴雨砸击甲板与船体声；混乱人群争抢救生艇声、风浪冲击船身声。
+  - 易错提示：动作需呈现“逐根掰开手指—最后一根脱开—坠海”的因果；变异鲨从浪下冲出咬住伤腿，伤处不表现红色血液或开放创面，优先用浪涌遮挡、肢体姿态和剧烈挣扎表现。
+
+- **Sc2**：
+  - 情感砸点：艾娃意识模糊中看向上方邮轮，用尽求生意志说出“我要回去”，随后倒计时到1并触发回溯。
+  - 一致性锚点：紧接Sc1坠海与被咬事件；蓝色系统文字覆盖艾娃视野，顺序为“海洋基建核心·07 / 宿主生命终止确认 / 时序锚点仍可连接 / 是否执行一次回溯？ / 3……2…… / 1”。
+  - 空间距离：艾娃在水面以下，邮轮和麦迪逊只能作为其最后视野中的上方目标；系统文字贴近主观视野，鲨鱼威胁不抢核心倒计时。
+  - 环境音：水下闷响与气泡声；艾娃急促减弱的呼吸声。
+  - 易错提示：原文“鲜血散开”不得画成红色血雾或红色水体；如必须呈现，仅允许少量低饱和深绿色在水中快速散开，建议以水体扰动、艾娃模糊视线和遮挡替代。Sc2制作预算22秒，来源时长20秒，不能把超时写成符合原区间。
+
+- **Sc3**：
+  - 情感砸点：艾娃没有因重生兴奋，盯着新闻和倒计时后立刻打开资产资料、连续拨电话备战，最后一句转向主动掌控命运。
+  - 一致性锚点：艾娃从床上猛地坐起；手机日期显示灾变前72小时；电视新闻文字为“近海异常高潮位，部分港区暂停夜间作业”；系统文字依次为“核心07已重启 / 初始仓储：30m³ / 初始蓝图：一级应急浮台 / 距离第一轮极端风暴：71:58:41”。
+  - 空间距离：床、手机、电视、窗外正常车流形成屋内到城市的距离关系；艾娃连续打电话时以手机、银行账户、房产估值、车辆资料和系统倒计时为主要可见对象。
+  - 环境音：清晨室内手机拨号与接通提示声；窗外城市车流声、电视新闻播报声。
+  - 易错提示：五句台词均由艾娃说出，电话内容紧凑，需区分自言自语与对电话另一端下单；记忆闪回包含三天后停电、七天后抢水、四十七天后死亡，只服务艾娃判断，不新增剧情。倒计时首次按71:58:41呈现，后续若画面连续推进可变化，不锁成固定数字。Sc3制作预算62.5秒，来源时长50秒，需单独按制作预算安排节奏。
+
+### 场间过渡
+
+| 场间 | 过渡方式 | 说明 |
+|---|---|---|
+| Sc1 → Sc2 | 动作衔接 | 艾娃最后一根手指被掰开后直接失手下坠，穿过浪面进入水下；变异鲨冲击与浪涌遮挡接Sc2主观水下视野，保持同一连续事件。 |
+| Sc2 → Sc3 | 叠化 | 倒计时到1后以白光爆开为衔接，白光中气泡与黑暗退去，叠化至艾娃在清晨公寓床上猛地坐起，完成濒死到重生的时空跳转。 |
+程序事实：[
+  {
+    "scene": 1,
+    "title": "场景一 外·倾斜邮轮·暴雨夜（0–25秒）",
+    "source_duration": 25,
+    "target_duration": 25,
+    "dialogue_count": 4,
+    "dialogue_characters": 24,
+    "dialogue": [
+      {
+        "speaker": "艾娃",
+        "text": "麦迪逊，拉我上去！"
+      },
+      {
+        "speaker": "麦迪逊",
+        "text": "姐姐……位置只有一个。"
+      },
+      {
+        "speaker": "艾娃",
+        "text": "你干什么？！"
+      },
+      {
+        "speaker": "麦迪逊",
+        "text": "我只是想活。"
+      }
+    ],
+    "screen_text": []
+  }
+]
+当前资产：[{"id":1,"name":"艾娃","type":"role","assetsId":null},{"id":2,"name":"麦迪逊","type":"role","assetsId":null},{"id":3,"name":"维拉","type":"role","assetsId":null},{"id":4,"name":"银行经理","type":"role","assetsId":null},{"id":5,"name":"倾斜邮轮","type":"scene","assetsId":null},{"id":6,"name":"水下","type":"scene","assetsId":null},{"id":7,"name":"艾娃公寓","type":"scene","assetsId":null},{"id":8,"name":"银行","type":"scene","assetsId":null},{"id":9,"name":"偏僻仓库","type":"scene","assetsId":null},{"id":10,"name":"公寓楼下","type":"scene","assetsId":null},{"id":11,"name":"车内","type":"scene","assetsId":null},{"id":12,"name":"办公室区街道","type":"scene","assetsId":null},{"id":13,"name":"旧码头","type":"scene","assetsId":null},{"id":14,"name":"便利店加油站","type":"scene","assetsId":null},{"id":15,"name":"变异鲨","type":"tool","assetsId":null},{"id":16,"name":"手机","type":"tool","assetsId":null},{"id":17,"name":"系统蓝色全息界面","type":"tool","assetsId":null},{"id":18,"name":"旧浮箱","type":"tool","assetsId":null},{"id":19,"name":"隐藏摄像头","type":"tool","assetsId":null},{"id":20,"name":"琼","type":"role","assetsId":null},{"id":21,"name":"司机","type":"role","assetsId":null},{"id":22,"name":"混混头目","type":"role","assetsId":null},{"id":23,"name":"餐馆包间","type":"scene","assetsId":null},{"id":24,"name":"二号空仓","type":"scene","assetsId":null},{"id":25,"name":"一号仓库","type":"scene","assetsId":null},{"id":26,"name":"城市街道","type":"scene","assetsId":null},{"id":27,"name":"工业区","type":"scene","assetsId":null},{"id":28,"name":"城市高架","type":"scene","assetsId":null},{"id":29,"name":"排水泵站","type":"scene","assetsId":null},{"id":30,"name":"旧工业路","type":"scene","assetsId":null},{"id":31,"name":"灾变城市蒙太奇","type":"scene","assetsId":null},{"id":32,"name":"内河码头仓棚","type":"scene","assetsId":null},{"id":33,"name":"河口","type":"scene","assetsId":null},{"id":34,"name":"备用电源系统","type":"tool","assetsId":null},{"id":35,"name":"净水设备","type":"tool","assetsId":null},{"id":36,"name":"工程图纸","type":"tool","assetsId":null},{"id":37,"name":"救援绳索","type":"tool","assetsId":null},{"id":38,"name":"伊莱亚斯","type":"role","assetsId":null},{"id":39,"name":"库管","type":"role","assetsId":null},{"id":40,"name":"临时安置点","type":"scene","assetsId":null},{"id":41,"name":"码头棚区","type":"scene","assetsId":null},{"id":42,"name":"设备区","type":"scene","assetsId":null},{"id":43,"name":"市立医院","type":"scene","assetsId":null},{"id":44,"name":"医院后勤区","type":"scene","assetsId":null},{"id":45,"name":"医院后门","type":"scene","assetsId":null},{"id":46,"name":"体育馆避难中心","type":"scene","assetsId":null},{"id":47,"name":"体育馆地下卫生间","type":"scene","assetsId":null},{"id":48,"name":"沿海街区","type":"scene","assetsId":null},{"id":49,"name":"临时指挥棚","type":"scene","assetsId":null},{"id":50,"name":"地图前","type":"scene","assetsId":null},{"id":51,"name":"冷链中转库","type":"scene","assetsId":null},{"id":52,"name":"冷链库内部","type":"scene","assetsId":null},{"id":53,"name":"便携净水系统","type":"tool","assetsId":null},{"id":54,"name":"备用滤芯","type":"tool","assetsId":null},{"id":55,"name":"被割开的进水软管","type":"tool","assetsId":null},{"id":56,"name":"鲨鱼","type":"tool","assetsId":null},{"id":57,"name":"河水样本","type":"tool","assetsId":null},{"id":58,"name":"工业电池","type":"tool","assetsId":null},{"id":59,"name":"移动电源","type":"tool","assetsId":null},{"id":60,"name":"灰狼头目","type":"role","assetsId":null},{"id":61,"name":"西港泵站","type":"scene","assetsId":null},{"id":62,"name":"码头外围","type":"scene","assetsId":null},{"id":63,"name":"体育馆撤离队","type":"scene","assetsId":null},{"id":64,"name":"码头","type":"scene","assetsId":null},{"id":65,"name":"设备棚","type":"scene","assetsId":null},{"id":66,"name":"浮台","type":"scene","assetsId":null},{"id":67,"name":"临时实验台","type":"scene","assetsId":null},{"id":68,"name":"夜间水面","type":"scene","assetsId":null},{"id":69,"name":"废弃海洋研究站","type":"scene","assetsId":null},{"id":70,"name":"实验室","type":"scene","assetsId":null},{"id":71,"name":"研究站码头","type":"scene","assetsId":null},{"id":72,"name":"手绘地图","type":"tool","assetsId":null},{"id":73,"name":"柴油运输车","type":"tool","assetsId":null},{"id":74,"name":"柴油桶","type":"tool","assetsId":null},{"id":75,"name":"临时水泵","type":"tool","assetsId":null},{"id":76,"name":"水质检测仪","type":"tool","assetsId":null},{"id":77,"name":"变异鱼","type":"tool","assetsId":null},{"id":78,"name":"冷藏柜","type":"tool","assetsId":null},{"id":79,"name":"封存样本","type":"tool","assetsId":null},{"id":80,"name":"LEVIATHAN文件","type":"tool","assetsId":null},{"id":81,"name":"科尔","type":"role","assetsId":null},{"id":82,"name":"东港高架","type":"scene","assetsId":null},{"id":83,"name":"救援船队","type":"scene","assetsId":null},{"id":84,"name":"临时船舱","type":"scene","assetsId":null},{"id":85,"name":"施工区","type":"scene","assetsId":null},{"id":86,"name":"医疗舱","type":"scene","assetsId":null},{"id":87,"name":"异常鲨鱼","type":"tool","assetsId":null},{"id":88,"name":"海兽结晶","type":"tool","assetsId":null},{"id":89,"name":"抗炎药","type":"tool","assetsId":null},{"id":90,"name":"三级近岸生存艇","type":"tool","assetsId":null},{"id":91,"name":"封存容器","type":"tool","assetsId":null},{"id":92,"name":"维克多·凯恩","type":"role","assetsId":null},{"id":93,"name":"近岸生存艇","type":"tool","assetsId":null},{"id":94,"name":"临时补给点","type":"scene","assetsId":null},{"id":95,"name":"被淹体育馆外围","type":"scene","assetsId":null},{"id":96,"name":"商场屋顶","type":"scene","assetsId":null},{"id":97,"name":"船舱","type":"scene","assetsId":null},{"id":98,"name":"黑潮登记点","type":"scene","assetsId":null},{"id":99,"name":"旧离岸维护平台","type":"scene","assetsId":null},{"id":100,"name":"驾驶舱","type":"scene","assetsId":null},{"id":101,"name":"夜海","type":"scene","assetsId":null},{"id":102,"name":"甲板","type":"scene","assetsId":null},{"id":103,"name":"望远镜","type":"tool","assetsId":null},{"id":104,"name":"资源卡","type":"tool","assetsId":null},{"id":105,"name":"绳梯","type":"tool","assetsId":null},{"id":106,"name":"黑潮旗帜","type":"tool","assetsId":null},{"id":107,"name":"武装快艇","type":"tool","assetsId":null},{"id":108,"name":"海兽样本容器","type":"tool","assetsId":null},{"id":109,"name":"第一代海兽","type":"tool","assetsId":null},{"id":110,"name":"哈里斯","type":"role","assetsId":null},{"id":111,"name":"废弃客运码头","type":"scene","assetsId":null},{"id":112,"name":"浮海据点","type":"scene","assetsId":null},{"id":113,"name":"渡轮餐厅改造区","type":"scene","assetsId":null},{"id":114,"name":"临时议事区","type":"scene","assetsId":null},{"id":115,"name":"黑潮指挥室","type":"scene","assetsId":null},{"id":116,"name":"进水结构舱","type":"scene","assetsId":null},{"id":117,"name":"系统蓝图","type":"tool","assetsId":null},{"id":118,"name":"旧无线电","type":"tool","assetsId":null},{"id":119,"name":"资源账本","type":"tool","assetsId":null},{"id":120,"name":"金属物资箱","type":"tool","assetsId":null},{"id":121,"name":"蓝色结构线","type":"tool","assetsId":null},{"id":122,"name":"适配海兽","type":"tool","assetsId":null},{"id":123,"name":"维克多","type":"role","assetsId":null},{"id":124,"name":"艾娃父亲","type":"role","assetsId":null},{"id":125,"name":"据点议事区","type":"scene","assetsId":null},{"id":126,"name":"无线电舱","type":"scene","assetsId":null},{"id":127,"name":"黑潮前哨","type":"scene","assetsId":null},{"id":128,"name":"海面","type":"scene","assetsId":null},{"id":129,"name":"医疗实验区","type":"scene","assetsId":null},{"id":130,"name":"舱室","type":"scene","assetsId":null},{"id":131,"name":"夜海甲板","type":"scene","assetsId":null},{"id":132,"name":"黑潮平台","type":"scene","assetsId":null},{"id":133,"name":"中央甲板","type":"scene","assetsId":null},{"id":134,"name":"偷拍视频设备","type":"tool","assetsId":null},{"id":135,"name":"建造核心装置","type":"tool","assetsId":null},{"id":136,"name":"防水箱","type":"tool","assetsId":null},{"id":137,"name":"父亲旧照片","type":"tool","assetsId":null},{"id":138,"name":"低频信标","type":"tool","assetsId":null},{"id":139,"name":"标语牌","type":"tool","assetsId":null},{"id":140,"name":"黑潮观察员","type":"role","assetsId":null},{"id":141,"name":"医疗隔离舱","type":"scene","assetsId":null},{"id":142,"name":"城寨议事区","type":"scene","assetsId":null},{"id":143,"name":"黑潮主舰","type":"scene","assetsId":null},{"id":144,"name":"浮海城寨","type":"scene","assetsId":null},{"id":145,"name":"无线电室","type":"scene","assetsId":null},{"id":146,"name":"工程区","type":"scene","assetsId":null},{"id":147,"name":"资源舱","type":"scene","assetsId":null},{"id":148,"name":"空舱","type":"scene","assetsId":null},{"id":149,"name":"短距通信器","type":"tool","assetsId":null},{"id":150,"name":"旧银色指南针","type":"tool","assetsId":null},{"id":151,"name":"异常海兽","type":"tool","assetsId":null},{"id":152,"name":"控制区","type":"scene","assetsId":null},{"id":153,"name":"维修通道","type":"scene","assetsId":null},{"id":154,"name":"城寨广播室","type":"scene","assetsId":null},{"id":155,"name":"逃生艇","type":"scene","assetsId":null},{"id":156,"name":"城寨边缘","type":"scene","assetsId":null},{"id":157,"name":"黑潮高速艇","type":"scene","assetsId":null},{"id":158,"name":"黑潮主舰实验舱","type":"scene","assetsId":null},{"id":159,"name":"撤离船队","type":"scene","assetsId":null},{"id":160,"name":"资源图终端","type":"tool","assetsId":null},{"id":161,"name":"工程驳船","type":"tool","assetsId":null},{"id":162,"name":"广播设备","type":"tool","assetsId":null},{"id":163,"name":"武器","type":"tool","assetsId":null},{"id":164,"name":"通信记录芯片","type":"tool","assetsId":null},{"id":165,"name":"低频共振浮标","type":"tool","assetsId":null},{"id":166,"name":"电磁束缚装置","type":"tool","assetsId":null},{"id":167,"name":"信标开关","type":"tool","assetsId":null},{"id":168,"name":"新蓝图投影","type":"tool","assetsId":null},{"id":169,"name":"父亲","type":"role","assetsId":null},{"id":170,"name":"临时会议舱","type":"scene","assetsId":null},{"id":171,"name":"船队连接区","type":"scene","assetsId":null},{"id":172,"name":"海上侦察点","type":"scene","assetsId":null},{"id":173,"name":"临时指挥舱","type":"scene","assetsId":null},{"id":174,"name":"深蓝平台远景","type":"scene","assetsId":null},{"id":175,"name":"深蓝平台维修层","type":"scene","assetsId":null},{"id":176,"name":"资料室","type":"scene","assetsId":null},{"id":177,"name":"身份卡","type":"tool","assetsId":null},{"id":178,"name":"海洋基地一期需求投影","type":"tool","assetsId":null},{"id":179,"name":"无线电设备","type":"tool","assetsId":null},{"id":180,"name":"无人漂标","type":"tool","assetsId":null},{"id":181,"name":"水下培养槽","type":"tool","assetsId":null},{"id":182,"name":"旧金属钥匙扣","type":"tool","assetsId":null},{"id":183,"name":"旧主机","type":"tool","assetsId":null},{"id":184,"name":"父亲的视频文件","type":"tool","assetsId":null},{"id":185,"name":"深蓝平台实验层","type":"scene","assetsId":null},{"id":186,"name":"控制室外围","type":"scene","assetsId":null},{"id":187,"name":"深蓝平台中央甲板","type":"scene","assetsId":null},{"id":188,"name":"下层生活舱","type":"scene","assetsId":null},{"id":189,"name":"控制室","type":"scene","assetsId":null},{"id":190,"name":"深蓝平台残骸区","type":"scene","assetsId":null},{"id":191,"name":"新基地施工区","type":"scene","assetsId":null},{"id":192,"name":"海洋基地中央平台","type":"scene","assetsId":null},{"id":193,"name":"核心室","type":"scene","assetsId":null},{"id":194,"name":"陌生银灰平台","type":"scene","assetsId":null},{"id":195,"name":"液体维生舱","type":"tool","assetsId":null},{"id":196,"name":"银色指南针","type":"tool","assetsId":null},{"id":197,"name":"主信标","type":"tool","assetsId":null},{"id":198,"name":"逃生潜艇","type":"tool","assetsId":null},{"id":199,"name":"利维坦控制节点","type":"tool","assetsId":null},{"id":200,"name":"居民卡","type":"tool","assetsId":null},{"id":201,"name":"高速艇","type":"tool","assetsId":null},{"id":202,"name":"雨夜坠海","type":"role","assetsId":1},{"id":203,"name":"水下濒死","type":"role","assetsId":1},{"id":204,"name":"清晨便服","type":"role","assetsId":1},{"id":205,"name":"雨夜弃船","type":"role","assetsId":2},{"id":206,"name":"沉城远景","type":"scene","assetsId":5},{"id":207,"name":"回溯白光","type":"scene","assetsId":6},{"id":208,"name":"闪回叠影","type":"scene","assetsId":7},{"id":209,"name":"回溯提示框","type":"tool","assetsId":17},{"id":210,"name":"重启蓝图","type":"tool","assetsId":17},{"id":211,"name":"72时日期页","type":"tool","assetsId":16},{"id":212,"name":"银行交易页","type":"tool","assetsId":16},{"id":213,"name":"通话联络页","type":"tool","assetsId":16},{"id":214,"name":"仓库地图页","type":"tool","assetsId":16},{"id":215,"name":"咬腿剪影帧","type":"tool","assetsId":15}]
+原剧本要求艾娃在船舷外悬空抓住固定栏杆，双手在头上承重，身体和脚在船外无支撑，麦迪逊站在甲板内侧上方。保持因果：麦迪逊逐根掰开手指，另一只手也被掰离，最后一指被掰开后才坠海。资产202是艾娃雨夜状态、205是麦迪逊雨夜状态，215的攻击图时段不符，使用15仅参考鲨鱼外观。不得把当前设定图的站姿当剧情姿势。

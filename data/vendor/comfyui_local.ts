@@ -369,8 +369,9 @@ function nativeH3Graph(config: VideoConfig, uploaded: string[], info: Record<str
   uploaded.forEach((filename, index) => {
     const id = String(index + 15);
     graph[id] = { class_type: "LoadImage", inputs: { image: filename } };
-    graph["5"].inputs.ref_images = graph["5"].inputs.ref_images || {};
-    graph["5"].inputs.ref_images[`ref_image_${index}`] = [id, 0];
+    // Autogrow inputs must be flat dotted keys in /prompt API graphs. Nested
+    // ref_images objects are silently discarded by ComfyUI's V3 input parser.
+    graph["5"].inputs[`ref_images.ref_image_${index}`] = [id, 0];
   });
   return graph;
 }

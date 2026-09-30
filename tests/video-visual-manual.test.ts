@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {getArtPrompt} from '../src/utils/getArtPrompt';
-test('video manual uses its own rendering medium while asset design remains illustration',()=>{
+test('video manual derives rendering from references while asset design retains its own prefix',()=>{
  const video=getArtPrompt('realistic_3d_anime','art_skills','art_storyboard_video');
  const character=getArtPrompt('realistic_3d_anime','art_skills','art_character');
  assert.ok(video.startsWith('# 视频渲染目标'));
@@ -10,7 +10,8 @@ test('video manual uses its own rendering medium while asset design remains illu
  assert.match(video,/physically based/);
  assert.doesNotMatch(video,/统一目标为精品二次元写实幻想角色原画|保持有体积的插画渲染|维持插画质感/);
  assert.ok(character.startsWith('# 全局美学基础'));
- assert.match(character,/polished illustration rendering/);
+ assert.match(character,/cinematic semi-realistic Chinese 3D animation/);
+ assert.match(video,/Derive the target rendering from the current character images/);
  assert.doesNotMatch(character,/# 视频渲染目标/);
  assert.equal(getArtPrompt('realistic_3d_anime','art_skills','art_storyboard_video.md'),video);
 });

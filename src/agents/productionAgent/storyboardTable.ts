@@ -1,5 +1,6 @@
 import type { Knex } from "knex";
 import { hashStoryboardSource } from "./storyboardProgress";
+import { guardStoryboardContent } from "./storyboardContentGuard";
 import { mergeStoryboardScene, renderStoryboardScenes, type StoryboardTableProgress } from "@/utils/storyboardScenes";
 
 export type StoryboardTableOutput =
@@ -145,6 +146,7 @@ export async function commitStoryboardTableOutput(
       if (currentProgress?.planHash && currentProgress.planHash !== planHash) {
         throw new Error("导演计划自分镜任务开始后已修改，不能继续混写旧任务");
       }
+      await guardStoryboardContent(trx, projectId, script.content ?? "", data.scriptPlan ?? "", output.scene, output.content);
       const merged = mergeStoryboardScene(
         currentTable,
         currentProgress,
@@ -193,6 +195,9 @@ export async function commitStoryboardTableOutput(
       throw new Error("工作区已有分镜表，整表写入需要先核对当前版本");
     }
 
+    const source = await trx("o_script").where({ id: episodesId, projectId }).select("content").first();
+    const parts = output.content.split(/(?=^##\s*场\s*\d+\s*[：:])/m).filter(part => part.trim());
+    for (let i = 0; i < parts.length; i++) await guardStoryboardContent(trx, projectId, source?.content ?? "", data.scriptPlan ?? "", output.scenes[i], parts[i]);
     const nextData = { ...data, storyboardTable: output.content };
     delete nextData.storyboardTableProgress;
     await writeStoredData(trx, scope, row, nextData);

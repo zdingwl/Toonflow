@@ -6,6 +6,36 @@ import test from "node:test";
 
 const source = await readFile(new URL("../data/vendor/comfyui_local.ts", import.meta.url), "utf8");
 
+test("H3 API graph uses ComfyUI V3 dotted reference inputs instead of silently ignored nested objects", () => {
+  const sandbox = { exports: {} };
+  vm.runInNewContext(transform(source + "\nexports.testNativeGraph = nativeH3Graph;", { transforms: ["typescript", "imports"] }).code, sandbox);
+  const v = sandbox.exports.vendor.inputValues;
+  const info = Object.fromEntries(["UNETLoader", "CLIPLoader", "VAELoader", "MiniMaxH3ReferenceToVideo", "MiniMaxH3ImageToVideo", "RandomNoise", "BasicGuider", "KSamplerSelect", "BasicScheduler", "SamplerCustomAdvanced", "VAEDecode", "VAEDecodeAudio", "CreateVideo", "SaveVideo", "LoadImage"].map(key => [key, {}]));
+  info.UNETLoader.input = { required: { unet_name: [[v.h3RefUnet, v.h3Unet]] } };
+  info.CLIPLoader.input = { required: { clip_name: [[v.h3Clip]] } };
+  info.VAELoader.input = { required: { vae_name: [[v.h3VideoVae, v.h3AudioVae]] } };
+  for (const count of [1, 2, 9]) {
+    const uploaded = Array.from({ length: count }, (_, i) => `whole-board-${i}.png`);
+    const graph = sandbox.exports.testNativeGraph({ prompt: uploaded.map((_, i) => `<Picture ${i + 1}>`).join(" "), referenceList: uploaded.map(() => ({ type: "image" })), duration: 5, aspectRatio: "16:9", resolution: "768p" }, uploaded, info);
+    const inputs = JSON.parse(JSON.stringify(graph["5"].inputs));
+    assert.ok(!Object.hasOwn(inputs, "ref_images"), "nested groups do not reach ComfyUI execute()");
+    assert.equal(Object.keys(inputs).filter(key => key.startsWith("ref_images.")).length, count);
+    uploaded.forEach((filename, i) => {
+      assert.deepEqual(inputs[`ref_images.ref_image_${i}`], [String(i + 15), 0]);
+      assert.equal(graph[String(i + 15)].inputs.image, filename);
+    });
+  }
+});
+
+test("H3 prompt writer inherits observed proportions and rendering instead of assigning all references a fixed genre", async () => {
+  const template = await readFile(new URL("../data/modelPrompt/video/minimaxH3Multi-referenceMode.md", import.meta.url), "utf8");
+  assert.doesNotMatch(template, /The references represent premium|Characters must remain stylized|same stylized proportions|a premium semi-realistic Chinese 3D donghua character asset/);
+  assert.match(template, /project preset name\s+is not evidence/);
+  assert.match(template, /eye size relative to the face/);
+  assert.match(template, /geometry and rendering are to be retained/);
+  assert.match(template, /newly added actions or a new background do not by\s+themselves reduce preservation/);
+});
+
 test("H3 submission preserves spoken Picture labels without mistaking them for uploaded sources", () => {
   const body = source.match(/function compileReferencePrompt\([\s\S]*?(?=\/\/ Same native)/)?.[0];
   assert.ok(body);

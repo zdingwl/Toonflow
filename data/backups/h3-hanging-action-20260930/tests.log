@@ -1,0 +1,37 @@
+✔ H3 API graph uses ComfyUI V3 dotted reference inputs instead of silently ignored nested objects (20.464ms)
+✔ H3 prompt writer inherits observed proportions and rendering instead of assigning all references a fixed genre (2.2067ms)
+✔ H3 submission preserves spoken Picture labels without mistaking them for uploaded sources (2.5879ms)
+✔ native MiniMax H3 workflows do not load Turbo LoRA (0.2672ms)
+✔ Ref2VA and FL2VA use the standard 20-step setting (0.2253ms)
+✔ H3 only offers 768p and keeps native dimensions on the 32-pixel grid (1.3498ms)
+✔ Qwen Image 2.1 uses the official native ComfyUI text-to-image graph (0.1451ms)
+✔ Qwen Image 2.1 supports native 2K output and keeps FLUX as a separate model (0.0832ms)
+✔ H3 single prompt API preserves requested language isolation with replaceBasePrompt=undefined (107.9515ms)
+✔ H3 single prompt API preserves requested language isolation with replaceBasePrompt=true (20.6426ms)
+✔ H3 batch prompt API preserves requested language isolation with replaceBasePrompt=true (31.0054ms)
+✔ batch fill refreshes completed prompts with changed images without copying the stale base or touching other languages (61.2853ms)
+✔ single and batch prompt routes retain all seven assets in seven complete asset pictures and persist the identical reference plan (35.5603ms)
+✔ preflight overflow and missing boards finish failed without calling a model or replacing the saved prompt (40.4288ms)
+✔ H3 always loads its Ref2VA rules even when a vendor is bound to a legacy template (15.3962ms)
+✔ H3 generation retries a draft that is missing the official sections (11.2921ms)
+✔ H3 generation retries an invalid retention marker and saves only the corrected prompt (13.1627ms)
+✔ Chinese free-form H3 prose is rewritten into the complete English six-section structure (11.3868ms)
+✔ translation retries free-form output and saves the official source structure (13.6861ms)
+✔ English translation retries when dialogue is still Chinese before marking the variant complete (13.6648ms)
+✔ English translation retries when quoted visible screen text remains Chinese (12.6129ms)
+✔ English translation retries when English prose still requests Chinese screen text (15.0281ms)
+✔ translation copies the saved Picture plan without invoking a semantic reviewer (14.9098ms)
+✔ out-of-range H3 duration is reported instead of silently clamped before writing the prompt (10.6597ms)
+✔ semantic reviewer is not called and cannot reject event ordering (11.7541ms)
+✔ image-only injury color guesses do not force recoloring a faint closed reference mark (10.7209ms)
+✔ semantic contradictions no longer create failed prompt records (13.5257ms)
+✔ base writer receives the selected visual manual without semantic reviewer calls (11.1575ms)
+✔ rendering-source reviewer issues no longer trigger repair retries (9.3282ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 836.2794

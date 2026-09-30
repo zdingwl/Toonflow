@@ -3,6 +3,8 @@ import type { Knex } from "knex";
 import { renderStoryboardScenes, type StoryboardTableProgress } from "@/utils/storyboardScenes";
 import { inspectStoryboardProgress, hashStoryboardSource } from "./storyboardProgress";
 import { extractSourceScene, validateStoryboardScene } from "./storyboardValidator";
+import { guardStoryboardContent } from "./storyboardContentGuard";
+import { syncRevisedStoryboardPanels } from "./storyboardPanelSync";
 
 export type StoryboardRevisionRequest = {
   projectId: number;
@@ -60,6 +62,7 @@ export async function reviseStoryboardScene(db: Knex, request: StoryboardRevisio
     }
     const validation = validateStoryboardScene(scene, revised, extractSourceScene(script.content ?? "", scene));
     if (!validation.valid) throw new Error(`第${scene}场修订未通过校验：${validation.errors.join("；")}`);
+    await guardStoryboardContent(trx, projectId, script.content ?? "", data.scriptPlan ?? "", scene, revised);
     if (revised === original) {
       return { changed: false, revision: progress.revision, scene, taskId,
         storyboardTable: data.storyboardTable as string, storyboardTableProgress: progress,
@@ -74,6 +77,7 @@ export async function reviseStoryboardScene(db: Knex, request: StoryboardRevisio
     const history = Array.isArray(data.storyboardRevisionHistory) ? data.storyboardRevisionHistory : [];
     const nextData = {
       ...data,
+      storyboard: await syncRevisedStoryboardPanels(trx, projectId, episodesId, data, original, revised),
       storyboardTable: renderStoryboardScenes(scenes),
       storyboardTableProgress: nextProgress,
       storyboardRevisionHistory: [...history, {

@@ -19,7 +19,7 @@ async function makeDb() {
 }
 
 function sceneXml(index: number, total: number, taskId: string) {
-  return extractStoryboardTable(`<storyboardTable scene="${index}" total="${total}" task="${taskId}">## 场${index}：第${index}场\n内容${index}</storyboardTable>`);
+  return extractStoryboardTable(`<storyboardTable scene="${index}" total="${total}" task="${taskId}">## 场${index}：第${index}场\n### 片段一（约2s）\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n| 1 | 她回头 | 2 | 近景 | 固定 | ${index === 1 ? "她：『你好』" : "无台词"} | 环境音 |</storyboardTable>`);
 }
 
 test("已有第1场按事务进度继续到第3场，绝不重复生成已保存内容", async () => {
@@ -85,7 +85,7 @@ test("场次结构缺失及原台词遗漏不会通过内容核验", () => {
   const source = "场1：测试\n艾娃说：『你好』";
   const incomplete = validateStoryboardScene(1, "## 场1：测试\n### 片段一（约5s）\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|---|---|---|---|---|---|---|\n| 1 | 她回头 | 5 | 近景 | 固定 | 无 | 环境音 |", source);
   assert.equal(incomplete.valid, false);
-  assert.match(incomplete.errors.join("；"), /遗漏原剧本台词/);
+  assert.match(incomplete.errors.join("；"), /台词遗漏/);
   const complete = validateStoryboardScene(1, "## 场1：测试\n### 片段一（约5s）\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|---|---|---|---|---|---|---|\n| 1 | 她回头 | 5 | 近景 | 固定 | 艾娃：『你好』 | 环境音 |", source);
   assert.equal(complete.valid, true);
   assert.equal(complete.coverageVerified, true);

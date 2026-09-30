@@ -1,0 +1,10 @@
+{
+  "url": "http://localhost:50188/?verification=director-repair-14#/production",
+  "verifiedFields": [
+    "制作预算（秒）",
+    "双手在头顶抓紧固定栏杆",
+    "三条信息同时清晰停留",
+    "71:58:03"
+  ],
+  "method": "browser DOM after navigation"
+}

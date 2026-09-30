@@ -1,8 +1,9 @@
 import u from "@/utils";
+import { assertStoryboardPromptFresh } from "@/utils/storyboardPromptFreshness";
 import fs from "fs/promises";
 import path from "path";
 import { expandH3AssetSlots } from "@/utils/h3ReferenceSlots";
-import { h3SlotPath, saveH3ReferencePlan, loadH3ReferencePlan, copyH3ReferencePlan } from "@/utils/h3ReferencePlan";
+import { h3SlotPath, saveH3ReferencePlan, loadH3ReferencePlan, copyH3ReferencePlan, resolveH3ReferencePlan } from "@/utils/h3ReferencePlan";
 import { assertH3ActiveStates } from "@/utils/h3VisualStateGuard";
 import { db as languageDb } from "@/utils/db";
 import { assertTranslatedDialogueLanguage, generateLanguageVariants } from "@/utils/videoLanguages";
@@ -366,21 +367,27 @@ async function generateForTrack(input: VideoPromptRequest) {
         },
         input.regenerate === true,
         true,
-        h3RefPromptMode ? async (prompt, language) => {
+        async (prompt, language) => {
+          await assertStoryboardPromptFresh(languageDb, projectId, trackId, prompt);
+          if (!h3RefPromptMode) return;
           assertTranslatedDialogueLanguage(prompt, language);
           const plan = await loadH3ReferencePlan(languageDb, trackId, prompt);
           if (!plan) throw new Error("H3 参考图绑定：提示词缺少保存的参考图计划");
+          resolveH3ReferencePlan(pictureSourceItems, plan);
           if (plan.slots.some(slot => slot.kind)) throw new Error("H3 参考图绑定：仍使用人物独立视图旧计划");
           assertH3PromptContract(prompt, targetDuration, plan.slots.length);
           assertH3ReferenceBindings(prompt, plan.slots);
-        } : undefined,
-        h3RefPromptMode ? async (prompt) => {
+        },
+        async (prompt) => {
+          await assertStoryboardPromptFresh(languageDb, projectId, trackId, prompt);
+          if (!h3RefPromptMode) return;
           const plan = await loadH3ReferencePlan(languageDb, trackId, prompt);
           if (!plan) throw new Error("H3 参考图绑定：原版提示词缺少保存的参考图计划");
+          resolveH3ReferencePlan(pictureSourceItems, plan);
           if (plan.slots.some(slot => slot.kind)) throw new Error("H3 参考图绑定：原版仍使用人物独立视图旧计划");
           assertH3PromptContract(prompt, targetDuration, plan.slots.length);
           assertH3ReferenceBindings(prompt, plan.slots);
-        } : undefined,
+        },
       );
       const failed = variants.filter((v: any) => input.languages!.includes(v.language) && v.state === "生成失败");
       await u

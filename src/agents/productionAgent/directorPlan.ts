@@ -1,4 +1,5 @@
 import type { Knex } from "knex";
+import { validateDirectorFacts } from "./screenplay";
 import { extractSingleXmlResult } from "@/utils/agent/runtime/resultValidator";
 
 export function extractDirectorPlan(response: string): string {
@@ -16,6 +17,8 @@ export async function saveDirectorPlan(db: Knex, projectId: number, episodesId: 
   await db.transaction(async (trx) => {
     const script = await trx("o_script").where({ id: episodesId, projectId }).select("content").first();
     if (!script) throw new Error("当前项目不存在该集剧本");
+    const factErrors = validateDirectorFacts(script.content ?? "", plan);
+    if (factErrors.length) throw new Error(factErrors.join("；"));
     const scope = { projectId, episodesId, key: "productionAgent" };
     const existing = await trx("o_agentWorkData").where(scope).first();
     const current = existing ? JSON.parse(existing.data || "{}") : {

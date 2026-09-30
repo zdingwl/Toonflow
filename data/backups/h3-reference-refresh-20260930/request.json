@@ -1,0 +1,168 @@
+{
+  "projectId": 1790665121730,
+  "model": "comfyui_local:MiniMax-H3-local",
+  "mode": "[\"imageReference:9\",\"videoReference:3\",\"audioReference:3\"]",
+  "languages": [
+    "en-US"
+  ],
+  "regenerate": false,
+  "concurrentCount": 2,
+  "trackData": [
+    {
+      "trackId": 1790715565974,
+      "info": [
+        {
+          "id": 206,
+          "sources": "assets",
+          "reference": true,
+          "fileType": "image",
+          "slotType": "imageReference"
+        },
+        {
+          "id": 1,
+          "sources": "storyboard",
+          "reference": false,
+          "fileType": "image",
+          "prompt": "### 片段一A·沉城远景（约4s）\n**引用资产名称**：[倾斜邮轮·沉城远景]\n**引用资产ID**：[206]\n**资产说明**：本片段仅用沉城远景衍生场景，不含任何角色资产；艾娃、麦迪逊均不在本片段出镜。\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 1 | 倾斜邮轮退为前景一角，远处半座城市沉入黑色海面，雨幕横扫，间歇闪电显出破碎楼影。 | 4 | 大远景 | 缓推，带强烈船体倾斜感 | 无台词 | 暴雨轰鸣；远处巨浪拍击；船体金属低频挤压声 |",
+          "slotType": "imageReference"
+        }
+      ]
+    },
+    {
+      "trackId": 1790715576565,
+      "info": [
+        {
+          "id": 5,
+          "sources": "assets",
+          "reference": true,
+          "fileType": "image",
+          "slotType": "imageReference"
+        },
+        {
+          "id": 202,
+          "sources": "assets",
+          "reference": true,
+          "fileType": "image",
+          "slotType": "imageReference"
+        },
+        {
+          "id": 2,
+          "sources": "storyboard",
+          "reference": false,
+          "fileType": "image",
+          "prompt": "### 片段一B·甲板求救（约5s）\n**引用资产名称（出镜）**：[倾斜邮轮, 艾娃·雨夜坠海]\n**引用资产ID（出镜）**：[5, 202]\n**未出镜资产（分隔注明，不与艾娃同框）**：[麦迪逊·雨夜弃船]（ID：205，本片段不入画，于片段二出场）\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 2 | 湿滑甲板形成陡坡，艾娃悬在斜坡外侧，左腿缠裹的深色布条与裤料完整遮盖伤处，双手死死抓住斜栏杆；画面上方高处只露出仅剩一个位置的救生艇吊架。 | 2 | 全景 | 手持跟随甲板坡度下压 | 无台词 | 雨水砸甲板；人群惊呼；救生艇吊架机械晃动 |\n| 3 | 艾娃仰头望向斜坡上方，手指因用力发白，身体随船身震动外滑；她在风雨中嘶声呼喊，尾音被浪声吞没。 | 3 | 近景 | 从栏杆手部急促上摇到艾娃面部 | 艾娃：『麦迪逊，拉我上去！』 | 风雨声骤然增强；栏杆受力发出尖锐摩擦声；呼喊带哭腔的气音 |",
+          "slotType": "imageReference"
+        }
+      ]
+    },
+    {
+      "trackId": 1790715600051,
+      "info": [
+        {
+          "id": 5,
+          "sources": "assets",
+          "reference": true,
+          "fileType": "image",
+          "slotType": "imageReference"
+        },
+        {
+          "id": 202,
+          "sources": "assets",
+          "reference": true,
+          "fileType": "image",
+          "slotType": "imageReference"
+        },
+        {
+          "id": 205,
+          "sources": "assets",
+          "reference": true,
+          "fileType": "image",
+          "slotType": "imageReference"
+        },
+        {
+          "id": 3,
+          "sources": "storyboard",
+          "reference": false,
+          "fileType": "image",
+          "prompt": "### 片段二（约10s）\n**引用资产名称**：[倾斜邮轮, 麦迪逊·雨夜弃船, 艾娃·雨夜坠海]\n**引用资产ID**：[5, 205, 202]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 4 | 麦迪逊缩肩站在斜坡上方，随急喘剧烈起伏，含泪却不敢向下与艾娃直视，身后救生位被慌乱人群挤动；急喘、缩肩与人群推挤和念白并行，句中停顿自然。 | 5 | 中近景 | 缓推至麦迪逊脸侧，轻微手持晃动 | 麦迪逊：『姐姐……位置只有一个。』 | 暴雨声；麦迪逊急促呼吸；身后人群争抢救生艇的喊叫 |\n| 5 | 艾娃的手仍扣住栏杆，麦迪逊俯身抓住她的一根手指，犹豫半拍后向外侧掰开；艾娃身体随之一沉，惊问在掰指动作中急促出口。 | 2 | 特写 | 固定压近，跟随手指施力方向微移 | 艾娃：『你干什么？！』 | 金属栏杆摩擦；湿滑衣料摩擦；艾娃惊喘 |\n| 6 | 麦迪逊侧脸紧绷、视线闪躲，继续压住艾娃的手；艾娃其余手指一根根滑脱，只剩最后一指勉强扣住栏杆。 | 3 | 近景接手部特写 | 缓慢推近，在两双手之间硬切衔接 | 麦迪逊：『我只是想活。』 | 雨声压低；指节发力的细微摩擦；船体猛然倾斜发出巨响 |",
+          "slotType": "imageReference"
+        }
+      ]
+    },
+    {
+      "trackId": 1790715608760,
+      "info": [
+        {
+          "id": 5,
+          "sources": "assets",
+          "reference": true,
+          "fileType": "image",
+          "slotType": "imageReference"
+        },
+        {
+          "id": 6,
+          "sources": "assets",
+          "reference": true,
+          "fileType": "image",
+          "slotType": "imageReference"
+        },
+        {
+          "id": 202,
+          "sources": "assets",
+          "reference": true,
+          "fileType": "image",
+          "slotType": "imageReference"
+        },
+        {
+          "id": 215,
+          "sources": "assets",
+          "reference": true,
+          "fileType": "image",
+          "slotType": "imageReference"
+        },
+        {
+          "id": 4,
+          "sources": "storyboard",
+          "reference": false,
+          "fileType": "image",
+          "prompt": "### 片段三（约6s）\n**引用资产名称**：[倾斜邮轮, 艾娃·雨夜坠海, 水下, 变异鲨·咬腿剪影帧]\n**引用资产ID**：[5, 202, 6, 215]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 7 | 最后一根手指被掰开，艾娃的手脱离栏杆，身体沿邮轮外侧坠落；麦迪逊停在上方栏杆边，没有伸手。 | 2 | 中景 | 快速下坠跟拍，末端被浪花遮挡 | 无台词 | 艾娃短促吸气；身体划破雨幕；麦迪逊在上层发出压抑哭声 |\n| 8 | 艾娃砸入黑色浪中，翻涌海水吞没她的上半身，伤腿仍被深色布条和裤料完整遮盖。 | 2 | 全景 | 从船舷外侧急俯拍下，入水瞬间晃动 | 无台词 | 沉重入水声；水面风暴声瞬间闷化；气泡翻涌 |\n| 9 | 巨浪下巨大黑影自水下向上冲出，变异鲨张口咬向艾娃腿部；接触点被鲨口剪影、浪花和气泡完全遮挡，只留艾娃痛苦蜷缩的剪影，画面无血液、无开放伤口。 | 2 | 中远景 | 短促快推后被浪涛遮住切黑 | 无台词 | 低频水流轰鸣；巨浪炸裂；尖锐水下掠食声后骤然闷断 |",
+          "slotType": "imageReference"
+        }
+      ]
+    },
+    {
+      "trackId": 1790715620120,
+      "info": [
+        {
+          "id": 6,
+          "sources": "assets",
+          "reference": true,
+          "fileType": "image",
+          "slotType": "imageReference"
+        },
+        {
+          "id": 203,
+          "sources": "assets",
+          "reference": true,
+          "fileType": "image",
+          "slotType": "imageReference"
+        },
+        {
+          "id": 215,
+          "sources": "assets",
+          "reference": true,
+          "fileType": "image",
+          "slotType": "imageReference"
+        },
+        {
+          "id": 5,
+          "sources": "storyboard",
+          "reference": false,
+          "fileType": "image",
+          "prompt": "### 片段一（约6s）\n**引用资产名称**：[艾娃·水下濒死, 水下, 变异鲨·咬腿剪影帧]\n**引用资产ID**：[203, 6, 215]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 1 | 中远景里，艾娃在深青绿水中缓慢下沉，湿发与衣摆向上飘散；画面深处变异鲨剪影摆尾远去、没入昏暗水层，接触点被翻涌浪花与成片气泡完全遮住。她左腿磨破处仍由深色布条与裤料层层缠裹、伤处不可见，布条旁一缕低饱和暗绿色浊流在远景中淡淡散开、随即被水流稀释，无任何红色。 | 3 | 中全景 | 随下沉缓慢跟随，轻微旋动，鲨影在景深末端虚化消失 | 无台词 | 入水后风暴声闷化；气泡串上浮；远处尾鳍搅动水流；低频耳鸣与沉重心跳 |\n| 2 | 艾娃眼睑半垂、嘴唇微张闭气，意识涣散；悬浮颗粒与残余暗流从她脸侧缓缓漂过，身后水层空荡昏暗，只剩上浮的细碎气泡。 | 3 | 近景 | 缓推至面部，随水流轻微起伏 | 无台词 | 远处水流低鸣；气泡声渐稀；心跳变慢 |",
+          "slotType": "imageReference"
+        }
+      ]
+    }
+  ]
+}

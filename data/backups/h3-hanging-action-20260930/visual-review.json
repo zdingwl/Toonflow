@@ -1,0 +1,10 @@
+{
+  "hangingActionPassed": false,
+  "reason": "Arms overhead and feet lifted, but figure is over foreground deck; gripped bar has no clear attachment to ship. Exterior suspension over sea not achieved.",
+  "frames": [
+    0.2,
+    1.2,
+    2.5,
+    4.2
+  ]
+}

@@ -170,6 +170,38 @@ async function makeBudgetFixture(reply?: (prompt: string, call: number, request:
 }
 const budgetBody = { projectId: 1, model: "test:MiniMax-H3-local", mode: '["imageReference:9"]', info: Array.from({ length: 7 }, (_, i) => ({ id: i + 1, sources: "assets" })) };
 
+test("batch fill refreshes completed prompts with changed images without copying the stale base or touching other languages", async () => {
+  const f = await makeBudgetFixture((draft, call) => call > 2 ? draft.replace("stand still", "walk slowly") : draft);
+  try {
+    const request = { ...budgetBody, info: [{ id: 1, sources: "assets" }], languages: ["en-US"], regenerate: false };
+    assert.equal((await f.post("generateVideoPrompt", { ...request, trackId: 2 })).status, 200);
+    const old = await f.db("o_videoPromptVariant").where({ trackId: 2, language: "en-US" }).first();
+    const oldPlan = await plans.loadH3ReferencePlan(f.db, 2, old.prompt);
+    await f.db("o_videoTrack").where({ id: 2 }).update({ prompt: old.prompt });
+    await f.db("o_videoPromptVariant").where({ trackId: 2, language: "en-US" }).update({ videoId: 91 });
+    await f.db("o_videoPromptVariant").insert({ trackId: 2, language: "ja-JP", prompt: "keep manual translation", state: "已完成", videoId: 92 });
+    await f.db("o_image").where({ id: 1 }).update({ filePath: "new-current-sheet.png" });
+    const runBatch = async () => {
+      assert.equal((await f.post("batchGeneratePrompt", { ...request, trackData: [{ trackId: 2, info: request.info }] })).status, 200);
+      for (let i = 0; i < 200 && (await f.db("o_videoTrack").where({ id: 2 }).first()).state === "生成中"; i++) await new Promise(r => setTimeout(r, 10));
+      const track = await f.db("o_videoTrack").where({ id: 2 }).first();
+      assert.equal(track.state, "已完成", track.reason);
+      assert.equal(track.prompt, old.prompt, "preserve original prompt history");
+    };
+    await runBatch();
+    assert.equal(f.calls.length, 4, "regenerate from current images, then translate; never translate stale base");
+    assert.deepEqual(f.calls[2].messages[0].content.filter((part: any) => part.type === "image").map((part: any) => Buffer.from(part.image).toString()), ["new-current-sheet.png"]);
+    const current = await f.db("o_videoPromptVariant").where({ trackId: 2, language: "en-US" }).first();
+    assert.equal(current.state, "已完成"); assert.equal(current.videoId, 91);
+    assert.deepEqual((await plans.loadH3ReferencePlan(f.db, 2, current.prompt))?.slots.map(s => s.path), ["new-current-sheet.png"]);
+    assert.deepEqual(await plans.loadH3ReferencePlan(f.db, 2, old.prompt), oldPlan);
+    const japanese = await f.db("o_videoPromptVariant").where({ trackId: 2, language: "ja-JP" }).first();
+    assert.equal(japanese.prompt, "keep manual translation"); assert.equal(japanese.videoId, 92);
+    await runBatch();
+    assert.equal(f.calls.length, 4, "unchanged completed variants are still skipped");
+  } finally { await f.close(); }
+});
+
 test("single and batch prompt routes retain all seven assets in seven complete asset pictures and persist the identical reference plan", async () => {
   const f = await makeBudgetFixture();
   try {

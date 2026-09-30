@@ -1,4 +1,5 @@
 import express from "express";
+import { assertStoryboardPromptFresh } from "@/utils/storyboardPromptFreshness";
 import u from "@/utils";
 import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
@@ -68,6 +69,7 @@ export default router.post("/", validateFields({
         if (!ownedTrack) throw new Error("视频段不存在");
         try {
           track.prompt = await resolveLanguagePrompt(languageDb, track.trackId, track.language, track.prompt, audio);
+          await assertStoryboardPromptFresh(u.db, projectId, track.trackId, track.prompt);
           const resolved = await Promise.all(track.uploadData.map(async (item): Promise<ResolvedReference | null> => {
             if (item.sources === "storyboard") {
               const found = await u.db("o_storyboard").where({ id: item.id, projectId }).select("filePath", "prompt").first();

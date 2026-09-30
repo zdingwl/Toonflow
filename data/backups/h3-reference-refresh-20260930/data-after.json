@@ -1,0 +1,1019 @@
+{
+  "status": 200,
+  "body": {
+    "code": 200,
+    "data": {
+      "storyboardList": [
+        {
+          "id": 1,
+          "scriptId": 1,
+          "prompt": "",
+          "filePath": "",
+          "duration": "4",
+          "state": "未生成",
+          "trackId": 1790715565974,
+          "reason": null,
+          "track": "1",
+          "videoDesc": "### 片段一A·沉城远景（约4s）\n**引用资产名称**：[倾斜邮轮·沉城远景]\n**引用资产ID**：[206]\n**资产说明**：本片段仅用沉城远景衍生场景，不含任何角色资产；艾娃、麦迪逊均不在本片段出镜。\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 1 | 倾斜邮轮退为前景一角，远处半座城市沉入黑色海面，雨幕横扫，间歇闪电显出破碎楼影。 | 4 | 大远景 | 缓推，带强烈船体倾斜感 | 无台词 | 暴雨轰鸣；远处巨浪拍击；船体金属低频挤压声 |",
+          "shouldGenerateImage": 0,
+          "projectId": 1790665121730,
+          "flowId": null,
+          "index": 0,
+          "createTime": 1790715565957,
+          "src": ""
+        },
+        {
+          "id": 2,
+          "scriptId": 1,
+          "prompt": "",
+          "filePath": "",
+          "duration": "5",
+          "state": "未生成",
+          "trackId": 1790715576565,
+          "reason": null,
+          "track": "2",
+          "videoDesc": "### 片段一B·甲板求救（约5s）\n**引用资产名称（出镜）**：[倾斜邮轮, 艾娃·雨夜坠海]\n**引用资产ID（出镜）**：[5, 202]\n**未出镜资产（分隔注明，不与艾娃同框）**：[麦迪逊·雨夜弃船]（ID：205，本片段不入画，于片段二出场）\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 2 | 湿滑甲板形成陡坡，艾娃悬在斜坡外侧，左腿缠裹的深色布条与裤料完整遮盖伤处，双手死死抓住斜栏杆；画面上方高处只露出仅剩一个位置的救生艇吊架。 | 2 | 全景 | 手持跟随甲板坡度下压 | 无台词 | 雨水砸甲板；人群惊呼；救生艇吊架机械晃动 |\n| 3 | 艾娃仰头望向斜坡上方，手指因用力发白，身体随船身震动外滑；她在风雨中嘶声呼喊，尾音被浪声吞没。 | 3 | 近景 | 从栏杆手部急促上摇到艾娃面部 | 艾娃：『麦迪逊，拉我上去！』 | 风雨声骤然增强；栏杆受力发出尖锐摩擦声；呼喊带哭腔的气音 |",
+          "shouldGenerateImage": 0,
+          "projectId": 1790665121730,
+          "flowId": null,
+          "index": 1,
+          "createTime": 1790715576552,
+          "src": ""
+        },
+        {
+          "id": 3,
+          "scriptId": 1,
+          "prompt": "",
+          "filePath": "",
+          "duration": "10",
+          "state": "未生成",
+          "trackId": 1790715600051,
+          "reason": null,
+          "track": "3",
+          "videoDesc": "### 片段二（约10s）\n**引用资产名称**：[倾斜邮轮, 麦迪逊·雨夜弃船, 艾娃·雨夜坠海]\n**引用资产ID**：[5, 205, 202]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 4 | 麦迪逊缩肩站在斜坡上方，随急喘剧烈起伏，含泪却不敢向下与艾娃直视，身后救生位被慌乱人群挤动；急喘、缩肩与人群推挤和念白并行，句中停顿自然。 | 5 | 中近景 | 缓推至麦迪逊脸侧，轻微手持晃动 | 麦迪逊：『姐姐……位置只有一个。』 | 暴雨声；麦迪逊急促呼吸；身后人群争抢救生艇的喊叫 |\n| 5 | 艾娃的手仍扣住栏杆，麦迪逊俯身抓住她的一根手指，犹豫半拍后向外侧掰开；艾娃身体随之一沉，惊问在掰指动作中急促出口。 | 2 | 特写 | 固定压近，跟随手指施力方向微移 | 艾娃：『你干什么？！』 | 金属栏杆摩擦；湿滑衣料摩擦；艾娃惊喘 |\n| 6 | 麦迪逊侧脸紧绷、视线闪躲，继续压住艾娃的手；艾娃其余手指一根根滑脱，只剩最后一指勉强扣住栏杆。 | 3 | 近景接手部特写 | 缓慢推近，在两双手之间硬切衔接 | 麦迪逊：『我只是想活。』 | 雨声压低；指节发力的细微摩擦；船体猛然倾斜发出巨响 |",
+          "shouldGenerateImage": 0,
+          "projectId": 1790665121730,
+          "flowId": null,
+          "index": 2,
+          "createTime": 1790715600050,
+          "src": ""
+        },
+        {
+          "id": 4,
+          "scriptId": 1,
+          "prompt": "",
+          "filePath": "",
+          "duration": "6",
+          "state": "未生成",
+          "trackId": 1790715608760,
+          "reason": null,
+          "track": "4",
+          "videoDesc": "### 片段三（约6s）\n**引用资产名称**：[倾斜邮轮, 艾娃·雨夜坠海, 水下, 变异鲨·咬腿剪影帧]\n**引用资产ID**：[5, 202, 6, 215]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 7 | 最后一根手指被掰开，艾娃的手脱离栏杆，身体沿邮轮外侧坠落；麦迪逊停在上方栏杆边，没有伸手。 | 2 | 中景 | 快速下坠跟拍，末端被浪花遮挡 | 无台词 | 艾娃短促吸气；身体划破雨幕；麦迪逊在上层发出压抑哭声 |\n| 8 | 艾娃砸入黑色浪中，翻涌海水吞没她的上半身，伤腿仍被深色布条和裤料完整遮盖。 | 2 | 全景 | 从船舷外侧急俯拍下，入水瞬间晃动 | 无台词 | 沉重入水声；水面风暴声瞬间闷化；气泡翻涌 |\n| 9 | 巨浪下巨大黑影自水下向上冲出，变异鲨张口咬向艾娃腿部；接触点被鲨口剪影、浪花和气泡完全遮挡，只留艾娃痛苦蜷缩的剪影，画面无血液、无开放伤口。 | 2 | 中远景 | 短促快推后被浪涛遮住切黑 | 无台词 | 低频水流轰鸣；巨浪炸裂；尖锐水下掠食声后骤然闷断 |",
+          "shouldGenerateImage": 0,
+          "projectId": 1790665121730,
+          "flowId": null,
+          "index": 3,
+          "createTime": 1790715608758,
+          "src": ""
+        },
+        {
+          "id": 5,
+          "scriptId": 1,
+          "prompt": "",
+          "filePath": "",
+          "duration": "6",
+          "state": "未生成",
+          "trackId": 1790715620120,
+          "reason": null,
+          "track": "5",
+          "videoDesc": "### 片段一（约6s）\n**引用资产名称**：[艾娃·水下濒死, 水下, 变异鲨·咬腿剪影帧]\n**引用资产ID**：[203, 6, 215]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 1 | 中远景里，艾娃在深青绿水中缓慢下沉，湿发与衣摆向上飘散；画面深处变异鲨剪影摆尾远去、没入昏暗水层，接触点被翻涌浪花与成片气泡完全遮住。她左腿磨破处仍由深色布条与裤料层层缠裹、伤处不可见，布条旁一缕低饱和暗绿色浊流在远景中淡淡散开、随即被水流稀释，无任何红色。 | 3 | 中全景 | 随下沉缓慢跟随，轻微旋动，鲨影在景深末端虚化消失 | 无台词 | 入水后风暴声闷化；气泡串上浮；远处尾鳍搅动水流；低频耳鸣与沉重心跳 |\n| 2 | 艾娃眼睑半垂、嘴唇微张闭气，意识涣散；悬浮颗粒与残余暗流从她脸侧缓缓漂过，身后水层空荡昏暗，只剩上浮的细碎气泡。 | 3 | 近景 | 缓推至面部，随水流轻微起伏 | 无台词 | 远处水流低鸣；气泡声渐稀；心跳变慢 |",
+          "shouldGenerateImage": 0,
+          "projectId": 1790665121730,
+          "flowId": null,
+          "index": 4,
+          "createTime": 1790715620118,
+          "src": ""
+        },
+        {
+          "id": 6,
+          "scriptId": 1,
+          "prompt": "",
+          "filePath": "",
+          "duration": "8",
+          "state": "未生成",
+          "trackId": 1790715631864,
+          "reason": null,
+          "track": "6",
+          "videoDesc": "### 片段二（约8s）\n**引用资产名称**：[艾娃·水下濒死, 系统蓝色全息界面·回溯提示框, 水下]\n**引用资产ID**：[203, 209, 6]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 1 | 艾娃涣散的视野中，回溯提示框逐行亮起覆盖画面：【海洋基建核心·07】【宿主生命终止确认】。 | 3 | 主观POV近景 | 固定，文字浮现时带细微扫描线 | 无台词 | 冷静电子提示音两下；低频心跳；微弱扫描电流声 |\n| 2 | 提示框继续展开：【时序锚点仍可连接】【是否执行一次回溯？】；艾娃飘散的睫毛微动，视线仍无法聚焦。 | 2 | 主观POV接眼部特写 | 极缓压近，画面随气泡轻晃 | 无台词 | 电子提示音阶微升；气泡短促破裂；耳鸣声收窄 |\n| 3 | 提示框下方跳出倒数【3……2……】，界面随数字逐次脉冲，艾娃涣散的眼神出现一丝聚拢，飘散的手指微微蜷起。 | 3 | 近景叠主观界面 | 每个数字一次轻微震动推近 | 无台词 | 逐级电子脉冲；心跳随倒数重新加重；水流声被脉冲压过 |",
+          "shouldGenerateImage": 0,
+          "projectId": 1790665121730,
+          "flowId": null,
+          "index": 5,
+          "createTime": 1790715631861,
+          "src": ""
+        },
+        {
+          "id": 7,
+          "scriptId": 1,
+          "prompt": "",
+          "filePath": "",
+          "duration": "8",
+          "state": "未生成",
+          "trackId": 1790715641964,
+          "reason": null,
+          "track": "7",
+          "videoDesc": "### 片段三（约8s）\n**引用资产名称**：[艾娃·水下濒死, 水下, 倾斜邮轮, 麦迪逊·雨夜弃船, 水下·回溯白光]\n**引用资产ID**：[203, 6, 5, 205, 207]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 1 | 艾娃用尽最后的力气抬头，透过翻涌浪层，看见上方水面倾斜邮轮的巨大深色剪影，甲板高处有一个熟悉的模糊身影伏在栏杆边。 | 2 | 仰拍远景 | 沿艾娃视线缓慢上摇，船体剪影虚化压顶 | 无台词 | 水面风暴声遥远失真；船体金属闷响；一声拉长的低频耳鸣 |\n| 2 | 艾娃眼神骤然聚焦，湿发间面孔绷紧，向邮轮方向艰难抬手，气泡从唇边涌出；短台词在水中带起模糊回声，余响未散。 | 2 | 面部特写 | 缓慢压近，随抬手轻微上移 | 艾娃（带水下回声）：『回去。』 | 一声清晰心跳；气泡急促涌出；声音在水中层层回漾 |\n| 3 | 艾娃眉头紧锁、目光坚定，手指向邮轮剪影用力收拢，周身气泡被无形力量牵引；她在水中从容而用力地喊出整句，尾音与回声充分散开。 | 3 | 近景 | 硬切后急推，画面开始震动 | 艾娃（带水下回声）：『我要回去！』 | 心跳与电子音叠在一起上扬；喊声余响回荡；水流骤然加速 |\n| 4 | 提示框定格【1】，蓝色文字向边缘消散，放射状气泡与上方船体剪影转入水下·回溯白光态207，画面由207整体接管，硬切。 | 1 | 满屏特写 | 急速扩张后硬切 | 屏幕文字：【1】 | 短促高频电子爆音；瞬间全静默 |",
+          "shouldGenerateImage": 0,
+          "projectId": 1790665121730,
+          "flowId": null,
+          "index": 6,
+          "createTime": 1790715641949,
+          "src": ""
+        },
+        {
+          "id": 8,
+          "scriptId": 1,
+          "prompt": "",
+          "filePath": "",
+          "duration": "13",
+          "state": "未生成",
+          "trackId": 1790715654150,
+          "reason": null,
+          "track": "8",
+          "videoDesc": "### 片段一（约13s）\n**引用资产名称**：[艾娃·清晨便服, 艾娃公寓, 手机·72时日期页, 艾娃公寓·闪回叠影, 系统蓝色全息界面·重启蓝图]\n**引用资产ID**：[204, 7, 211, 208, 210]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 1 | 回溯白光骤然硬切到清晨卧室，艾娃猛地从床上坐起，手先按住被单急促喘息，冷汗沿鬓角滑下。 | 2 | 近景 | 轻微手持急停，随后迅速稳定 | 无台词 | 白光余音瞬间切断；急促呼吸；床褥摩擦声 |\n| 2 | 她抓起床头手机，屏幕亮起，清楚显示灾变前72小时与清晨时间；艾娃瞳孔收缩，呼吸仍未平复。 | 2 | 手部特写接面部近景 | 从屏幕缓抬到艾娃眼睛 | 屏幕文字：【灾变前72小时】 | 手机提示音；窗外遥远车流声进入 |\n| 3 | 落地窗外城市楼群与车流一切正常，电视在起居区亮起，底部滚动同一条不起眼新闻；艾娃站在卧室与客厅交界处盯住屏幕。 | 3 | 中景 | 缓推越过艾娃肩侧看向电视 | 电视新闻字幕：【近海异常高潮位，部分港区暂停夜间作业】 | 城市底噪；电视新闻声压低滚动 |\n| 4 | 窗玻璃与电视画面上叠印快速记忆碎片：同一条新闻、三天后大停电的黑暗楼群、七天后排长龙抢水的人群、四十七天后倾斜邮轮栏杆与水下白光；艾娃站在原地，脸上的惊惶一点点压下去。 | 3 | 近景叠化蒙太奇 | 固定机位，碎片以半透明硬闪切入 | 无台词 | 新闻声短暂失真；电流闪断声；远处人潮声与水下气泡声快速交叠后收住 |\n| 5 | 全息界面在她面前展开，模块依次亮起：核心重启、30m³仓储、一级应急浮台线框蓝图；艾娃没有后退，也没有兴奋，只直视界面。 | 1 | 中近景 | 稳定缓推，界面展开时轻微景深推进 | 屏幕文字：【核心07已重启】【初始仓储：30m³】【初始蓝图：一级应急浮台】 | 清冷电子启动音；扫描线轻响 |\n| 6 | 其余模块暗下，画面中央单独高亮极端风暴倒计时数字，字符边缘规律明暗起伏，占据艾娃与界面之间的视觉中心。 | 2 | 倒计时特写 | 急停锁定，高亮时极轻压近 | 屏幕文字：【距离第一轮极端风暴：71:58:41】 | 一声轻微脉冲提示音随高亮起伏 |",
+          "shouldGenerateImage": 0,
+          "projectId": 1790665121730,
+          "flowId": null,
+          "index": 7,
+          "createTime": 1790715654149,
+          "src": ""
+        },
+        {
+          "id": 9,
+          "scriptId": 1,
+          "prompt": "",
+          "filePath": "",
+          "duration": "12",
+          "state": "未生成",
+          "trackId": 1790715663461,
+          "reason": null,
+          "track": "9",
+          "videoDesc": "### 片段二（约12s）\n**引用资产名称**：[艾娃·清晨便服, 艾娃公寓, 手机·银行交易页, 手机·通话联络页]\n**引用资产ID**：[204, 7, 212, 213]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 1 | 艾娃坐到书桌前，先把全息窗口移到视野边缘，手机连续打开银行账户、房产估值和车辆资料；她的手指快速滑动核对数字，肩背逐渐挺直。 | 3 | 近景 | 固定俯拍桌面与手部，结尾轻推到侧脸 | 无台词 | 手机触屏连点；轻微吸气；窗外车流声稳定遥远 |\n| 2 | 艾娃停在账户与车辆资料页面，指尖按在资料边缘，目光在余额和倒计时方向之间一扫，语气低而确定；确认日期的念白从容，动作与台词并行。 | 3 | 面部近景 | 缓推至眼神 | 艾娃：『七十二小时。』 | 环境声压低；一声很轻的电子脉冲 |\n| 3 | 她不再犹豫，立刻切换通话联络页拨出第一通电话，另一只手把车辆资料调到屏幕上方，准备记录成交价。 | 2 | 手部特写 | 固定跟随拨号动作 | 无台词 | 拨号等待音；指尖敲桌面两下 |\n| 4 | 电话接通，艾娃起身走到窗边，目光落在正常车流上，声音果断压过初醒的沙哑。 | 4 | 中近景 | 随起身平滑横移，最后在窗边停稳 | 艾娃：『卖车。今天成交。』 | 电话接通提示；对方模糊话音；艾娃稳定呼吸 |",
+          "shouldGenerateImage": 0,
+          "projectId": 1790665121730,
+          "flowId": null,
+          "index": 8,
+          "createTime": 1790715663458,
+          "src": ""
+        },
+        {
+          "id": 10,
+          "scriptId": 1,
+          "prompt": "",
+          "filePath": "",
+          "duration": "15",
+          "state": "未生成",
+          "trackId": 1790715671994,
+          "reason": null,
+          "track": "10",
+          "videoDesc": "### 片段三（约15s）\n**引用资产名称**：[艾娃·清晨便服, 艾娃公寓, 手机·仓库地图页, 手机·通话联络页]\n**引用资产ID**：[204, 7, 214, 213]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 1 | 第一通电话刚断，艾娃立刻打开城市地图，港区与郊区偏远仓库候选点被逐一放大；她用指节点住其中一个远离城区的位置。 | 2 | 手机屏幕特写 | 快速推近地图标记 | 无台词 | 通话结束提示；地图缩放声 |\n| 2 | 她拨出第二通电话，边听边在地图上划出通往港区的路线，脸上没有多余表情，只强调短租和偏僻；划线与记录动作和念白并行，语速自然清晰。 | 6 | 侧脸近景接手部特写 | 稳定交替切换，视线与手指方向一致 | 艾娃：『仓库我要短租，位置越偏越好。』 | 拨号等待音；电话里含混回应；笔尖快速划过纸面 |\n| 3 | 第二通电话挂断，她立刻拨出第三通电话，身体站定在书桌与落地窗之间，目光投向即将开列的清单栏。 | 7 | 近景 | 固定机位起幅，拨号后随语气极缓推近 | 艾娃：『工业滤芯、移动储水罐、』 | 拨号等待音后接通；对方键盘敲击声隐约传来；艾娃落笔记录声 |",
+          "shouldGenerateImage": 0,
+          "projectId": 1790665121730,
+          "flowId": null,
+          "index": 9,
+          "createTime": 1790715671989,
+          "src": ""
+        },
+        {
+          "id": 11,
+          "scriptId": 1,
+          "prompt": "",
+          "filePath": "",
+          "duration": "9",
+          "state": "未生成",
+          "trackId": 1790715681264,
+          "reason": null,
+          "track": "11",
+          "videoDesc": "### 片段四（约9s）\n**引用资产名称**：[艾娃·清晨便服, 艾娃公寓, 手机·通话联络页]\n**引用资产ID**：[204, 7, 213]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 1 | 同一通物资电话继续，艾娃面前新建物资清单，清单栏随她口述逐项展开；机位从正面近景略转到侧前方近景，她视线逐项扫过清单，语速平稳却没有任何商量空隙。 | 9 | 侧前方近景 | 沿圆弧小幅横移，景别保持近景 | 艾娃：『救生设备，有现货的全部给我报价。』 | 电话持续连通；对方键盘敲击声隐约；连续触屏与落笔记录声 |",
+          "shouldGenerateImage": 0,
+          "projectId": 1790665121730,
+          "flowId": null,
+          "index": 10,
+          "createTime": 1790715681262,
+          "src": ""
+        },
+        {
+          "id": 12,
+          "scriptId": 1,
+          "prompt": "",
+          "filePath": "",
+          "duration": "13.5",
+          "state": "未生成",
+          "trackId": 1790715690854,
+          "reason": null,
+          "track": "12",
+          "videoDesc": "### 片段五（约13.5s）\n**引用资产名称**：[艾娃·清晨便服, 艾娃公寓, 系统蓝色全息界面·重启蓝图, 手机·通话联络页]\n**引用资产ID**：[204, 7, 210, 213]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 1 | 艾娃连续结束通话，把手机放在桌上，屏幕上留下卖车、仓库、物资三类联络记录；一级应急浮台蓝图仍悬在旁边，仓储容量模块安静闪烁。 | 2 | 桌面俯拍 | 从手机与蓝图上方缓慢拉开 | 无台词 | 手机放下的轻响；连续消息提示音；窗外车流仍旧平静 |\n| 2 | 她抬眼看向全息倒计时，数字正从71:58:41无声减少，艾娃与倒计时同框，神情专注。 | 3 | 近景 | 稳定缓推至艾娃与倒计时同框 | 屏幕文字：【距离第一轮极端风暴：71:58:41】 | 倒计时脉冲轻响；房间内只剩克制呼吸声 |\n| 3 | 艾娃合上车辆资料，把通话记录、地图位置和物资清单整理成一排，神情冷静决绝，没有迟疑。 | 2 | 中景 | 固定，构图对称收束 | 无台词 | 资料纸页合拢；笔放在桌面的清脆一声 |\n| 4 | 她望着仍在正常运转的城市，又看向倒计时，声音很轻却斩钉截铁；视线移动与念白并行，句末留出半拍停顿，窗外车流声在句末逐渐退远。 | 5.5 | 面部近景 | 最后一次缓推，话语结束后停住半拍 | 艾娃：『这一次，我不等世界告诉我该逃了。』 | 城市底噪随镜头压近而减弱，句末趋于安静 |\n| 5 | 艾娃坚定地看向全息倒计时，画面随即切黑，只保留资产210面板自身极短暂的电子脉冲效果。 | 1 | 眼部特写转黑屏 | 急停切黑 | 无台词 | 一声清晰电子脉冲后彻底静默 |",
+          "shouldGenerateImage": 0,
+          "projectId": 1790665121730,
+          "flowId": null,
+          "index": 11,
+          "createTime": 1790715690851,
+          "src": ""
+        }
+      ],
+      "trackList": [
+        {
+          "id": 1790715565974,
+          "variants": [
+            {
+              "trackId": 1790715565974,
+              "language": "en-US",
+              "prompt": "subject_definitions:\n<Subject 1> is the Sunken City Vista environment from <Picture 1>, featuring the sharply tilted rust-stained cruise ship in the right foreground, black storm waves, horizontally sweeping rain, partially submerged ruined skyscrapers, a distant flooded city skyline, and cold lightning from the left.\n\nsummary:\n[reference generation] <Subject 1> fills the entire four-second shot as the cruise ship leans in the foreground and the broken city sinks into the storm-black sea, with rain, wave impacts, and intermittent lightning establishing the scale of the disaster.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - The tilted foreground ship, ruined submerged skyscrapers, distant skyline, black sea, sweeping rain, cold lightning, foggy atmosphere, and blue-gray lighting from <Picture 1> retain their original composition and material appearance.\n\ndetailed_description:\n<Subject 1> is rendered in cinematic semi-realistic three-dimensional style matching <Picture 1>, with wet weathered metal on the ship, dark physically lit seawater, rain haze, and coherent cold illumination across the ruins. No characters appear.\n\n[Shot 1] A vast establishing view holds the severely tilted cruise ship in the lower-right foreground, showing its rust-streaked white hull, railings, mast, windows, and mounted lifeboat. Across the middle distance, fractured skyscrapers lean and sink into the churning black sea, while the distant city skyline dissolves into fog and falling rain. Rain sweeps horizontally through the frame, large waves strike the submerged building bases and throw white spray into the air, and lightning flashes from the left, briefly lighting the broken tower silhouettes and reflected paths on the water. The camera slowly pushes toward the sinking city while preserving the strong tilted composition, making the ship's instability and the flooded city's scale increasingly imposing.\n\noverall_soundscape:\nTorrential rain roars continuously across the open water. Heavy waves crash against the submerged skyscraper bases with deep impacts and splashing spray. The cruise ship emits low metallic groans, creaks, and structural pressure sounds, while thunder rumbles after each lightning flash. There is no dialogue.\n\nnon_diegetic_music:\nNo non-diegetic music is used. The sequence relies entirely on diegetic rain, crashing waves, thunder, and the ship's deep metallic sounds.",
+              "state": "已完成",
+              "reason": null,
+              "videoId": null
+            }
+          ],
+          "duration": 4,
+          "prompt": "subject_definitions:\n<Subject 1> is the sunken-city storm environment from <Picture 1>, with the sharply tilted wrecked ocean liner in the lower-right foreground, black churning sea, half-submerged ruined skyscrapers, sweeping rain, storm clouds, and intermittent lightning behind the broken skyline.\n\nsummary:\n[reference generation] Over four seconds, <Subject 1> from <Picture 1> is shown as a storm-battered sunken city beyond a listing ocean liner. The camera slowly pushes in, rain sweeps across the black sea, distant waves strike the ruins, and lightning briefly reveals the fractured towers. No characters appear and no dialogue is spoken.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - The tilted liner's foreground placement, black turbulent sea, half-submerged broken skyscrapers, heavy rain, lightning, cold blue-black lighting, and apocalyptic storm atmosphere are retained from <Picture 1>.\n\ndetailed_description:\nThe sequence uses cinematic semi-realistic 3D rendering matching <Picture 1>, preserving the wet metal hull, rain-filled air, dark ocean surface, broken concrete towers, and cold lightning illumination. All elements in <Subject 1> share coherent storm lighting, contact shadows, and physically based water reflections.\n\n[Shot 1] In an extreme wide shot of <Subject 1>, the sharply tilted ocean liner cuts across the lower-right foreground, its wet hull, railings, and worn superstructure looming over the black sea. The camera slowly pushes forward while preserving the vessel's severe list, creating a strong sense that the ship is drifting through the storm. Rain sweeps horizontally over the liner and water, while wave crests break into pale foam against the hull. Beyond the ship, the ruined skyline rises from the sea at unnatural angles, with fractured skyscrapers half-submerged and distant towers fading into the downpour. An intermittent lightning flash behind the central ruins silhouettes the broken buildings and briefly brightens the low storm clouds. Distant swells crash against submerged steel and concrete as the drowned city remains motionless beneath the storm. No characters are visible.\n\noverall_soundscape:\nTorrential rain continuously roars across the open water. Heavy waves crash against the ship and the distant submerged ruins, with deep impacts followed by rushing foam. The tilted liner produces low metallic groans, creaks, and sustained hull-pressure sounds. Thunder cracks with the lightning flash and then fades beneath the ongoing storm.\n\nnon_diegetic_music:\nNo non-diegetic music is used. The sequence is carried by rain, crashing waves, thunder, and the ocean liner's low metallic stress sounds.",
+          "state": "已完成",
+          "reason": "",
+          "selectVideoId": 0,
+          "medias": [
+            {
+              "id": 206,
+              "name": "沉城远景",
+              "describe": "相对邮轮默认态：视点拉至黑色远海，半座城市高楼倾斜半沉，仅余破碎楼影与零星冷窗光，厚重雨幕与间歇闪电；倾斜邮轮退为前景一角。全片开场首帧，不含人群与血。",
+              "type": "scene",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/scene/da6544b8-e91f-44cc-a4a7-9ff700f58eb2.jpg?size=20"
+            },
+            {
+              "src": "",
+              "fileType": "image",
+              "sources": "storyboard",
+              "prompt": "### 片段一A·沉城远景（约4s）\n**引用资产名称**：[倾斜邮轮·沉城远景]\n**引用资产ID**：[206]\n**资产说明**：本片段仅用沉城远景衍生场景，不含任何角色资产；艾娃、麦迪逊均不在本片段出镜。\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 1 | 倾斜邮轮退为前景一角，远处半座城市沉入黑色海面，雨幕横扫，间歇闪电显出破碎楼影。 | 4 | 大远景 | 缓推，带强烈船体倾斜感 | 无台词 | 暴雨轰鸣；远处巨浪拍击；船体金属低频挤压声 |",
+              "id": 1,
+              "index": 0
+            }
+          ],
+          "videoList": []
+        },
+        {
+          "id": 1790715576565,
+          "variants": [
+            {
+              "trackId": 1790715576565,
+              "language": "en-US",
+              "prompt": "subject_definitions:\n<Subject 1> is the woman from <Picture 1>, a premium semi-realistic Chinese 3D donghua character asset whose face, front, side and back sheet panels depict the same person; she has wet dark hair in a ponytail, controlled stylized facial proportions, a dark zip-up jacket over a black shirt, dark cargo pants, sturdy boots, a thigh holster, and a dark wrapped covering on her left lower leg.\n<Subject 2> is the tilted ocean-liner environment from <Picture 2>, featuring a storm-battered rust-streaked hull, a steep rain-soaked deck, slanted metal railings, loose chairs and ropes, lifeboats and davits, dark crashing waves, distant city lights, and lightning-lit storm clouds.\n\nsummary:\n[reference generation] Over five seconds, <Subject 1> clings to the slanted outer railing of <Subject 2> above the stormy sea, then looks up the steep deck as the hull shudders and shouts for Madison to pull her up.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - The same facial structure, eye shape, nose and jaw design, wet ponytail, body proportions, dark jacket, black shirt, cargo pants, boots, thigh holster, and covered left lower leg remain consistent, with only pose, grip, wetness, and fearful expression changing.\n<Subject 2> (appears in [Shot 1], [Shot 2]): fully_preserved - The sharply tilted liner, wet reflective deck, angled railings, lifeboat davits, rusted hull, storm-dark sea, distant city, and lightning atmosphere preserve the reference location and lighting.\n\ndetailed_description:\nThe sequence uses cinematic semi-realistic 3D animation matching <Picture 1>. <Subject 1> keeps the reference sheet’s observed facial proportions, refined facial modeling, wet skin sheen, layered hair strands, and dark fabric materials, while sharing coherent storm lighting and contact shadows with the ship from <Picture 2>. Rain and seawater make the existing surfaces glisten without changing her identity, outfit, or proportions.\n\n[Shot 1] Wide establishing shot. The slick deck of <Subject 2> slopes downward like a steep ramp under the lightning-lit clouds. <Subject 1> hangs outside the tilted railing above the churning dark sea, both hands locked around the wet metal bar. Her injured left lower leg remains fully covered by dark wrapping and trouser fabric, with no open wound visible. Rain streams over her jacket and ponytail as loose deck equipment shifts below. High above her, only the lifeboat davit with one remaining position is visible. The camera follows the deck’s downward angle in a controlled cinematic move, emphasizing the drop and the ship’s list. Rain strikes the deck, unseen people cry out in alarm, and the lifeboat davit creaks and clanks as it swings.\n\n[Shot 2] At 00:02.000, close facial shot. The camera tilts rapidly from <Subject 1>’s straining, pale fingers on the railing up to her rain-streaked face. The hull shudders, causing her body to slide a little farther outward, and her wet hair and jacket lash in the wind. She looks up the steep slope toward the davit and shouts through the storm in en-US with a tearful, breathy voice, her lip movements synchronized to the spoken line. <Subject 1> (S1) says:\n<d>[English] Madison, pull me up!</d>\nThe wind and rain surge, the stressed railing emits a sharp metallic friction whine, and the end of her cry is swallowed by the roar of waves.\n\noverall_soundscape:\nHeavy rain and rushing wind continue throughout, layered with waves striking the tilted hull, distant thunder, and faint panicked shouts from unseen passengers. The metal railing and lifeboat davit groan, creak, and clank with the ship’s movement. In the close shot, the storm grows louder, the railing gives a high scraping whine, and <Subject 1>’s desperate call sounds tearful and breathy before being overtaken by the sea.\n\nnon_diegetic_music:\nLow tense drones and restrained sustained strings run beneath the storm, creating a sense of imminent danger without overpowering the rain, metal sounds, or the spoken cry. The music tightens as <Subject 1> slips farther outward and fades into the final roar of the waves.",
+              "state": "已完成",
+              "reason": null,
+              "videoId": null
+            }
+          ],
+          "duration": 5,
+          "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, a premium semi-realistic Chinese 3D donghua character whose face, front, side and back reference panels depict the same woman; she has wet dark hair in a ponytail, refined stylized facial features, a soaked black jacket over a black shirt, black tactical cargo pants with belts and pouches, dark cloth wrappings fully covering her injured left leg, and wet lace-up boots.\n<Subject 2> is the tilted cruise ship from <Picture 2>, a storm-damaged ocean liner with a steep rain-slick deck, slanted railings, rust-streaked white hull plating, lifeboat davits, loose deck equipment, dark churning seas, a distant city skyline, and lightning-lit storm clouds.\n\nsummary:\n[reference generation] <Subject 1> clings to the outer railing of the sharply listing <Subject 2> during a violent night storm, with her injured left leg completely covered by dark wrappings and trouser fabric. As the vessel shudders and <Subject 1> slips farther outside the deck, she looks upward toward the lifeboat davits and shouts to the unseen Madison for help.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - Ava retains the exact face, facial proportions, wet dark ponytail, soaked black jacket, black shirt, tactical cargo pants, belts, pouches, boots, and covered left-leg wrappings shown in <Picture 1>, with only rain-soaked motion, strain, posture and expression changing.\n<Subject 2> (appears in [Shot 1]): fully_preserved - The cruise ship retains the tilted deck, sloped railings, rusted hull, lifeboat davits, stormy sea, distant city skyline, lightning atmosphere and cold wet lighting shown in <Picture 2>.\n\ndetailed_description:\nThe sequence uses cinematic semi-realistic 3D animation matching the visual level of <Picture 1> and <Picture 2>, preserving Ava’s stylized facial proportions, layered wet hair, skin shading, soaked fabric and the ship’s physically based wet metal surfaces. Characters and environment share the same cold storm lighting, rain highlights, contact shadows and three-dimensional rendering, without showing the reference-sheet layout.\n\n[Shot 1] Wide establishing shot on the steep, rain-covered deck of <Subject 2>. The ship lists hard, turning the deck into a slippery slope above the black churning sea. <Subject 1> hangs beyond the outer edge, both hands gripping a slanted metal railing while her wrapped left leg stays fully covered by dark cloth and trouser fabric. Her wet jacket and ponytail hang with the angle of the ship. High above her, a lifeboat davit at the upper edge of frame shows only one remaining position. The handheld camera follows the downward slope of the deck, pressing toward Ava and emphasizing the drop beneath her. Rain strikes the deck, panicked voices cry out from offscreen, and the lifeboat davit sways with heavy mechanical rattling.\n\n[Shot 2] At 00:02.000, close shot starting on Ava’s hands locked around the wet railing. Her fingers tighten and blanch with effort as the ship shudders, causing her body to slide a little farther outward. The camera tilts rapidly upward along the railing to Ava’s rain-covered face as she lifts her head toward the upper deck. Her wet hair and jacket pull in the wind, and her shoulders tremble with exhaustion and fear. <Subject 1> (S1) says:\n<d>[Chinese] 麦迪逊，拉我上去!</d>\nThe wind and rain surge, the stressed railing emits a sharp metallic friction whine, and the final sound of her desperate shout is swallowed by the waves.\n\noverall_soundscape:\nHeavy continuous rain hammers the deck, clothing and railings while strong wind and crashing waves roar beneath the hull. The damaged ship groans and creaks, loose deck objects scrape and clatter, and the lifeboat davit gives dull metallic rattles. Offscreen crowd exclamations suggest panic without other characters entering the frame. In Shot 2, the storm grows louder, the railing whines under Ava’s grip, and her tearful shout carries a strained, breathless edge before being overtaken by wind and surf.\n\nnon_diegetic_music:\nA low tense drone with sustained strings and a deep pulsing bass runs beneath the storm, tightening as Ava slips and lifting slightly under her desperate call. The score remains restrained so the rain, metal strain, waves and shouted dialogue remain clear, then fades into unresolved wind as the sequence ends.",
+          "state": "已完成",
+          "reason": "",
+          "selectVideoId": 0,
+          "medias": [
+            {
+              "id": 5,
+              "name": "倾斜邮轮",
+              "describe": "暴雨夜外海中一艘大型邮轮严重侧倾，整体甲板形成危险斜坡，栏杆与缆索斜向切割画面，救生艇吊架集中在较高一侧，空荡的吊艇位暗示撤离混乱。湿滑甲板分层布置应急舱门、倒伏桌椅、散落救生衣与固定缆桩，排水口涌进冷灰色海水。远景是半座沉入黑色海面的城市轮廓，楼体只余破碎剪影与微弱冷光；厚重雨幕、狂浪拍击船身、闪电间歇照亮云层。整体以深青灰、钢蓝和锈蚀白为主，船体有撞击凹痕与磨损，突出灾变、沉船与逃亡前的压迫感；不绘制伤员、人群或独立生物。",
+              "type": "scene",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/scene/7132af8d-96d6-45f4-b3e9-ace64d59c0ae.jpg?size=20"
+            },
+            {
+              "id": 202,
+              "name": "雨夜坠海",
+              "describe": "继承艾娃五官与低马尾。防水夹克工装全湿透，碎发贴脸，左腿裤管磨破以深色布条缠裹、伤口完全遮盖无血；面色苍白紧抓斜栏杆，暴雨冷蓝闪电。启用前世邮轮场，与日常工装态互斥。",
+              "type": "role",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/role/8778bba0-4658-4ee8-bcad-2d8619cd154a.jpg?size=20"
+            },
+            {
+              "src": "",
+              "fileType": "image",
+              "sources": "storyboard",
+              "prompt": "### 片段一B·甲板求救（约5s）\n**引用资产名称（出镜）**：[倾斜邮轮, 艾娃·雨夜坠海]\n**引用资产ID（出镜）**：[5, 202]\n**未出镜资产（分隔注明，不与艾娃同框）**：[麦迪逊·雨夜弃船]（ID：205，本片段不入画，于片段二出场）\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 2 | 湿滑甲板形成陡坡，艾娃悬在斜坡外侧，左腿缠裹的深色布条与裤料完整遮盖伤处，双手死死抓住斜栏杆；画面上方高处只露出仅剩一个位置的救生艇吊架。 | 2 | 全景 | 手持跟随甲板坡度下压 | 无台词 | 雨水砸甲板；人群惊呼；救生艇吊架机械晃动 |\n| 3 | 艾娃仰头望向斜坡上方，手指因用力发白，身体随船身震动外滑；她在风雨中嘶声呼喊，尾音被浪声吞没。 | 3 | 近景 | 从栏杆手部急促上摇到艾娃面部 | 艾娃：『麦迪逊，拉我上去！』 | 风雨声骤然增强；栏杆受力发出尖锐摩擦声；呼喊带哭腔的气音 |",
+              "id": 2,
+              "index": 1
+            }
+          ],
+          "videoList": []
+        },
+        {
+          "id": 1790715600051,
+          "variants": [
+            {
+              "trackId": 1790715600051,
+              "language": "en-US",
+              "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, a premium semi-realistic Chinese 3D donghua character asset presented in one complete character sheet; the face, front, side and back panels show the same woman in the same current state. She has dark wet hair tied in a ponytail, refined stylized facial proportions, a wet black leather jacket over a black T-shirt, black cargo pants, rugged boots, a thigh holster and a blue wrap around her ripped left knee.\n<Subject 2> is Madison from <Picture 2>, a premium semi-realistic Chinese 3D donghua character asset presented in one complete character sheet; the face, front, side and back panels show the same young woman in the same current state. She has wet light-brown shoulder-length hair, delicate stylized facial features, a glossy orange life vest over a pale knit sweater, gray cargo pants and brown lace-up boots.\n<Subject 3> is the severely listing ocean liner from <Picture 3>, featuring a sloped wet deck, rust-streaked white hull, metal railings, davit-mounted lifeboats, dark superstructure, crashing storm waves, distant city lights and lightning-filled clouds.\n\nsummary:\n[reference generation] Aboard <Subject 3>, <Subject 2> stands high on the tilted deck above <Subject 1>, who is clinging to the lower railing. While panicked passengers crowd the remaining lifeboat station behind <Subject 2>, she tells <Subject 1> that only one place remains. <Subject 2> then deliberately grips and pries open <Subject 1>'s finger from the railing; after <Subject 1> gasps a shocked question, <Subject 2> avoids her gaze and admits that she only wants to live as the remaining fingers slip and the ship lurches.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): partially_preserved - Her black wet sleeve, hand, ponytail edge and partial facial features match <Picture 1>; the full body is not shown because the story places her below the railing in close hand and reaction shots.\n<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - Her light-brown wet hair, facial proportions, orange life vest, pale sweater, gray cargo pants, boots and rain-soaked materials remain consistent with <Picture 2>.\n<Subject 3> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - The sloped deck, railings, weathered hull, lifeboats, storm sea, lightning, wet reflections and distant skyline remain consistent with <Picture 3>.\n\ndetailed_description:\nThe sequence uses the same cinematic semi-realistic 3D donghua rendering as the current reference images, preserving the characters' stylized eye-to-face proportions, refined facial structure, wet skin shading, layered soaked hair and physically based fabric surfaces. Characters and <Subject 3> share blue-gray storm lighting, hard contact shadows and glossy rain reflections without converting the figures into live-action people.\n\n[Shot 1] The camera opens in a medium-close view on the sharply sloped wet deck of <Subject 3>. <Subject 2> stands above the railing with her shoulders hunched and her chest rising rapidly with panicked breathing. Rain and tears cover her face as she glances downward toward <Subject 1> but immediately avoids direct eye contact. <Subject 1>'s black-sleeved hand and forearm are locked around the lower metal railing in the foreground. Behind <Subject 2>, indistinct passengers shove and crowd toward the last lifeboat position, their movement shifting her stance. The camera slowly pushes toward the side of <Subject 2>'s face with restrained, shipborne shake while wind moves her wet hair and vest straps. <Subject 2> (S1) says in spoken en-US:\n<d>[English] Big sister... there's only one spot left.</d>\nSynchronized sound includes dense rain, <Subject 2>'s rapid breathing, distant panicked shouts and bodies pressing against the lifeboat equipment.\n\n[Shot 2] At 00:05.000, the shot cuts to a tight close-up of <Subject 1>'s rain-slick hand gripping the railing. <Subject 2> leans into frame and deliberately wraps her hand around one of <Subject 1>'s fingers. She hesitates for half a beat, then bends the finger outward with sustained pressure. <Subject 1>'s shoulder drops and her body sinks lower from the force, her wet sleeve dragging against the metal. The camera stays compressed and close, following the direction of the pressure with only a small shift. <Subject 1> (S2) says in spoken en-US:\n<d>[English] What are you doing?!</d>\nThe line is delivered in a sharp startled gasp, synchronized with her weight dropping and the metal railing grinding under her grip.\n\n[Shot 3] At 00:07.000, the shot pushes toward <Subject 2>'s tense rain-soaked profile as she keeps her gaze averted and continues pressing down. A brief close view shows <Subject 1>'s widened eye and strained mouth, then the composition returns to the two hands. One after another, <Subject 1>'s fingers lose purchase on the wet railing, leaving only the last finger hooked over the metal. <Subject 2> keeps pressure on the hand while her soaked sweater and orange life vest tremble with effort. <Subject 2> (S1) says in spoken en-US:\n<d>[English] I just want to live.</d>\nThe rain sound momentarily narrows around the small friction of wet skin and cloth on metal. Then <Subject 3> suddenly lurches harder, the frame tilts, the deck gives a deep structural boom, and <Subject 1>'s final finger begins to slide. No wound or blood is shown; danger is conveyed through slipping contact, body tension and the violent movement of the ship.\n\noverall_soundscape:\nHeavy rainfall and rushing wind cover the deck throughout, with waves crashing against the tilted hull of <Subject 3>. The liner groans with low metallic stress, and distant thunder follows flashes of lightning. Panicked passengers shout and scramble near the lifeboat station behind <Subject 2>. Close sounds include <Subject 2>'s rapid breathing, soaked clothing rubbing together, wet skin dragging on metal and the strained friction of <Subject 1>'s grip on the railing. The final lurch ends in a loud hull boom and ringing metal vibration.\n\nnon_diegetic_music:\nLow sustained strings and a faint sub-bass pulse begin beneath <Subject 2>'s first line, creating dread without masking the storm. The music thins during the finger close-up, leaving tense silence around <Subject 1>'s shocked question. A single high sustained tone rises as <Subject 2> admits her wish to live. When <Subject 3> lurches, the bass strikes once with deep weight, then dissolves into wind, metallic resonance and lingering string tension.",
+              "state": "已完成",
+              "reason": null,
+              "videoId": null
+            }
+          ],
+          "duration": 10,
+          "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, a premium semi-realistic Chinese 3D donghua character whose face, front, side and back sheet panels show the same rain-soaked woman; she has wet dark hair in a low ponytail, controlled stylized facial proportions, pale shaded skin, a black wet jacket over a black shirt, black tactical cargo pants with belts and pouches, wrapped and torn fabric around her left lower leg, and dark lace-up boots, and she clings to the ship railing.\n<Subject 2> is Madison from <Picture 2>, a premium semi-realistic Chinese 3D donghua character whose face, front, side and back sheet panels show the same rain-soaked young woman; she has wet light-brown wavy shoulder-length hair, anxious stylized features, an orange life vest with black straps, a wet oatmeal-colored knit sweater, a short taupe skirt, and tan lace-up boots, and she stands on the sloped deck above Ava.\n<Subject 3> is the sharply tilted ocean liner from <Picture 3>, with a rust-streaked white hull, wet angled deck, cold metal railings, suspended lifeboats, dark bridge superstructure, churning storm waves, lightning-filled night clouds, and a distant city skyline.\n\nsummary:\n[reference generation] On the violently listing ocean liner <Subject 3> during a night storm, Madison <Subject 2> stands above Ava <Subject 1>, trembling and unable to meet her eyes. Over ten seconds, Madison reveals that only one evacuation place remains, then deliberately forces Ava’s fingers from the railing while Ava struggles to hold on and asks why she is doing it.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 2]): fully_preserved - Ava retains her exact facial structure, wet dark ponytail, black rain-soaked jacket and tactical outfit, wrapped left leg, body proportions, and semi-realistic 3D donghua material appearance while gripping the railing.\n<Subject 2> (appears in [Shot 1]): fully_preserved - Madison retains her exact young face, wet light-brown wavy hair, orange life vest, oatmeal sweater, taupe skirt, tan boots, proportions, and frightened rain-soaked appearance throughout her actions.\n<Subject 3> (appears in [Shot 1]): fully_preserved - the liner preserves its severe angle, rust-streaked hull, wet deck, railings, lifeboats, superstructure, lightning-lit storm atmosphere, distant skyline, and cold blue night lighting.\n\ndetailed_description:\nThe sequence uses the references’ premium semi-realistic 3D donghua rendering, preserving the characters’ observed eye-to-face proportions, nose and jaw structure, detailed skin shading, layered wet hair, and physically based fabric surfaces. Ava and Madison share the cold storm lighting of the tilted liner, with rain, wet sheen, contact shadows, hair movement and cloth motion reacting naturally without changing their designs.\n\n[Shot 1] On the steeply sloped deck of <Subject 3>, Madison <Subject 2> stands high above the railing with her shoulders hunched and her chest rising rapidly in desperate breaths. Rain and tears cover her face, but she does not look down at Ava. Behind her, panicked people press and shove around the remaining lifeboat position, their bodies surging in the storm. The camera begins in a medium-close shot and slowly pushes toward the side of Madison’s face, using only controlled cinematic sway from the shaking ship. <Subject 2> (S1) says:\n<d>[Chinese] 姐姐……位置只有一个.</d>\nThe storm roars continuously, Madison breathes hard, and the crowd behind her shouts and struggles near the lifeboat.\n\n[Shot 2] At 00:05.000, in a tight close-up, Ava’s <Subject 1> wet hand remains locked around the cold metal railing. Madison leans down and grips one of Ava’s fingers, hesitates for half a beat, then deliberately bends it outward away from the bar. Ava’s body sinks with the sudden loss of support. The camera holds in a compressed close view and shifts slightly in the direction of Madison’s forcing hand. <Subject 1> (S2) says:\n<d>[Chinese] 你干什么？!</d>\nWet metal grates under Ava’s grip, soaked fabric rubs against the railing, and Ava gives a sharp startled gasp.\n\n[Shot 3] At 00:07.000, Madison’s tense side profile fills a near close-up; her face is rigid and her eyes avoid Ava while she continues pressing down on Ava’s hand. The shot hard-cuts from her profile to an intimate close-up of their two hands. Ava’s fingers slip away from the railing one by one until only one last finger barely keeps its hold. The camera slowly pushes in on the struggle between their hands as the vessel gives another violent lurch. <Subject 2> (S1) says:\n<d>[Chinese] 我只是想活.</d>\nThe rain feels momentarily suppressed beneath the close sound of straining knuckles and wet skin on metal, then the hull booms and groans loudly as it tilts farther.\n\noverall_soundscape:\nHeavy rainfall, wind, waves striking the tilted hull, and the continuous creaking and groaning of the strained ocean liner dominate the scene. Shot 1 includes Madison’s rapid breathing, distant thunder, and chaotic crowd shouts near the lifeboat. Shot 2 emphasizes wet metal friction, soaked clothing, and Ava’s sharp gasp. Shot 3 narrows to subtle finger and knuckle friction before a deep hull lurch and metallic groan reassert the danger of the storm.\n\nnon_diegetic_music:\nLow, tense sustained strings and a quiet sub-bass pulse underscore Madison’s fear and guilt without overwhelming the storm. The music thins during the close-up of the fingers, leaving isolated high tension notes, then deepens with a low impact when the ship lurches in the final moment.",
+          "state": "已完成",
+          "reason": "",
+          "selectVideoId": 0,
+          "medias": [
+            {
+              "id": 5,
+              "name": "倾斜邮轮",
+              "describe": "暴雨夜外海中一艘大型邮轮严重侧倾，整体甲板形成危险斜坡，栏杆与缆索斜向切割画面，救生艇吊架集中在较高一侧，空荡的吊艇位暗示撤离混乱。湿滑甲板分层布置应急舱门、倒伏桌椅、散落救生衣与固定缆桩，排水口涌进冷灰色海水。远景是半座沉入黑色海面的城市轮廓，楼体只余破碎剪影与微弱冷光；厚重雨幕、狂浪拍击船身、闪电间歇照亮云层。整体以深青灰、钢蓝和锈蚀白为主，船体有撞击凹痕与磨损，突出灾变、沉船与逃亡前的压迫感；不绘制伤员、人群或独立生物。",
+              "type": "scene",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/scene/7132af8d-96d6-45f4-b3e9-ace64d59c0ae.jpg?size=20"
+            },
+            {
+              "id": 202,
+              "name": "雨夜坠海",
+              "describe": "继承艾娃五官与低马尾。防水夹克工装全湿透，碎发贴脸，左腿裤管磨破以深色布条缠裹、伤口完全遮盖无血；面色苍白紧抓斜栏杆，暴雨冷蓝闪电。启用前世邮轮场，与日常工装态互斥。",
+              "type": "role",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/role/8778bba0-4658-4ee8-bcad-2d8619cd154a.jpg?size=20"
+            },
+            {
+              "id": 205,
+              "name": "雨夜弃船",
+              "describe": "继承心形脸与浅棕微卷中长发。米白针织衫外扣橙色救生背心，全身湿透、碎刘海贴脸，缩肩后仰、圆眼含泪满是恐惧与闪躲；冷雨电光。邮轮撤离场，与灾后工装承担态互斥。",
+              "type": "role",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/workFlow/2e9bd00d-f8f2-47b7-8e2f-5273a8236971.jpg?size=20"
+            },
+            {
+              "src": "",
+              "fileType": "image",
+              "sources": "storyboard",
+              "prompt": "### 片段二（约10s）\n**引用资产名称**：[倾斜邮轮, 麦迪逊·雨夜弃船, 艾娃·雨夜坠海]\n**引用资产ID**：[5, 205, 202]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 4 | 麦迪逊缩肩站在斜坡上方，随急喘剧烈起伏，含泪却不敢向下与艾娃直视，身后救生位被慌乱人群挤动；急喘、缩肩与人群推挤和念白并行，句中停顿自然。 | 5 | 中近景 | 缓推至麦迪逊脸侧，轻微手持晃动 | 麦迪逊：『姐姐……位置只有一个。』 | 暴雨声；麦迪逊急促呼吸；身后人群争抢救生艇的喊叫 |\n| 5 | 艾娃的手仍扣住栏杆，麦迪逊俯身抓住她的一根手指，犹豫半拍后向外侧掰开；艾娃身体随之一沉，惊问在掰指动作中急促出口。 | 2 | 特写 | 固定压近，跟随手指施力方向微移 | 艾娃：『你干什么？！』 | 金属栏杆摩擦；湿滑衣料摩擦；艾娃惊喘 |\n| 6 | 麦迪逊侧脸紧绷、视线闪躲，继续压住艾娃的手；艾娃其余手指一根根滑脱，只剩最后一指勉强扣住栏杆。 | 3 | 近景接手部特写 | 缓慢推近，在两双手之间硬切衔接 | 麦迪逊：『我只是想活。』 | 雨声压低；指节发力的细微摩擦；船体猛然倾斜发出巨响 |",
+              "id": 3,
+              "index": 2
+            }
+          ],
+          "videoList": []
+        },
+        {
+          "id": 1790715608760,
+          "variants": [
+            {
+              "trackId": 1790715608760,
+              "language": "en-US",
+              "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, one premium semi-realistic Chinese 3D donghua character whose face close-up, front, side and back panels show the same woman in the same current state; she has wet dark hair in a ponytail, controlled stylized facial proportions, damp skin, a black leather jacket, black T-shirt, dark cargo pants, rugged boots, straps and pouches, with dark blue cloth and trouser fabric covering her injured lower left leg.\n<Subject 2> is the tilted storm-damaged ocean liner from <Picture 2>, featuring a sharply slanted rust-streaked hull, wet railings and decks, lifeboats, funnels, broken chains, black waves, lightning-filled storm clouds and a distant dark city skyline.\n<Subject 3> is the underwater ship-hull environment from <Picture 3>, showing the vast dark underside of the liner above a deep teal void, uneven seabed, floating particles, rippled surface light and pale sunlight beams through the water.\n<Subject 4> is the giant shark leg-attack silhouette asset from <Picture 4>, defining an enormous dark shark rising vertically with open jaws, rows of teeth, rough skin, broad fins and explosive spray, with the bite contact hidden by water and silhouettes.\n\nsummary:\n[reference generation] <Subject 1> loses her final grip on the railing of <Subject 2>, falls beside the tilted hull into the storm sea, then enters the underwater space of <Subject 3>; beneath her, <Subject 4> surges upward toward her covered injured leg while spray, bubbles and silhouettes conceal the contact without blood or an open wound.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - Ava retains the same facial structure, stylized proportions, wet ponytail, black jacket, black top, dark cargo pants, boots, straps, pouches and fully covered injured leg during the fall, water entry and underwater attack.\n<Subject 2> (appears in [Shot 1]): fully_preserved - the ocean liner retains its severe tilt, rusted hull, railings, lifeboats, wet deck, storm clouds, lightning and violent black-sea atmosphere.\n<Subject 3> (appears in [Shot 2]): fully_preserved - the underwater setting preserves the massive dark hull, deep teal water, seabed, suspended particles and rafty surface light beams.\n<Subject 4> (appears in [Shot 3]): attribute_transfer - the shark’s vertical upward rush, open jaws, teeth, rough dark surface, fin shapes and explosive water composition are transferred into the storm-lit underwater attack while the contact point remains obscured.\n\ndetailed_description:\nThe sequence matches the semi-realistic 3D donghua rendering level of <Picture 1>, preserving <Subject 1>’s observed eye-to-face proportions, nose and jaw structure, layered wet ponytail, skin sheen and damp fabric appearance. <Subject 2>, <Subject 3> and <Subject 4> share the same three-dimensional material quality, storm lighting, contact shadows and physically based water response, without showing the reference-sheet layout or repeated character panels.\n\n[Shot 1] On the rain-soaked outer side of <Subject 2>, <Subject 1> grips the slanted metal railing as the liner heaves. Her last finger is pried loose, her hand leaves the rail, and she falls along the tilted hull with her hair and jacket whipped upward by the wind. Her wrapped left leg stays covered and held tense. Above her, Madison remains by the upper railing and does not reach down, visible only as a rain-obscured partial figure behind the bars. The camera follows <Subject 1> in a fast descending medium shot, with the rusted hull sweeping past and black waves rising below until spray crosses the lens. <Subject 1> (S1) produces a short, sharp inhale. Madison (S2) produces a stifled crying sound from above. Rain strikes metal and fabric, the hull groans, and wind tears through the railings.\n\n[Shot 2] At 00:02.000, <Subject 1> strikes the black sea beside <Subject 2>. A heavy burst of white spray erupts on impact, and churning water swallows her upper body. Her jacket and pants stream in the water while the dark blue wrap and trouser fabric over her injured leg remain completely intact. The camera takes a steep high-angle full shot from outside the hull, jolts with the entry, and moves beneath the surface into <Subject 3>. The enormous hull looms overhead as pale light beams fracture through the agitated surface and bubbles rush past <Subject 1>’s sinking silhouette. The sound design carries a heavy entry boom, an immediate muffling of the surface storm, and a dense upward roar of bubbles.\n\n[Shot 3] At 00:04.000, a huge dark shadow rises from the deep under <Subject 1>, using the upward attack composition of <Subject 4>. The giant shark surges toward her covered leg with its jaws opening, fins cutting through the water and teeth rimmed by backlit foam. The exact contact point is completely hidden by the shark’s jaw silhouette, bursting bubbles, wave spray and <Subject 1>’s curled protective posture. She arches and draws inward in pain, but the leg remains clothed and wrapped, with no open wound and no blood shown. The camera makes a short fast push from medium-long distance, then a turbulent wave sweeps across the lens and cuts to black. A low underwater current rumbles, the wave bursts with crushing force, and a sharp predator sound is suddenly muffled into silence.\n\noverall_soundscape:\nThe opening is dominated by torrential rain, clanging liner metal, hull groans, wind through railings and distant thunder. <Subject 1> (S1) gives a short sharp inhale as she falls, while Madison (S2) makes a stifled crying sound from the upper deck. The sea entry produces a heavy impact and spray crash, followed by sudden underwater muffling, rising bubbles and deep pressure. The shark attack brings a low current rumble, an explosive water burst and a sharp underwater predatory sound that cuts off abruptly as the image turns black.\n\nnon_diegetic_music:\nLow sustained strings and a sub-bass pulse tighten during the fall from <Subject 2>, then thin into a hollow submerged tone after <Subject 1> enters <Subject 3>. As <Subject 4> rises, accelerating percussion and a dissonant swell build toward the obscured contact, ending in a sudden cut and a single low ominous resonance over the black frame.",
+              "state": "已完成",
+              "reason": null,
+              "videoId": null
+            }
+          ],
+          "duration": 6,
+          "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, a premium semi-realistic Chinese 3D donghua character asset whose face, front, side and back reference panels show the same woman; she has wet dark hair in a ponytail, refined stylized facial proportions, soaked black outerwear over a black shirt, black tactical cargo pants, rugged boots, and one injured leg completely covered by torn pant fabric and dark wrappings.\n<Subject 2> is the sharply tilted ocean liner from <Picture 2>, with a rust-streaked white hull, tilted decks, railings, lifeboats, broken chains, drenched metal surfaces, storm waves, distant city lights and lightning-lit rain.\n<Subject 3> is the underwater environment from <Picture 3>, containing the dark ship hull overhead, cold blue-green light beams from the surface, drifting particles, deep shadow and a dim rocky seabed.\n<Subject 4> is the giant mutated shark from <Picture 4>, a massive dark predator with rough scarred skin, a broad head, gill ridges, prominent dorsal fins and open jaws, used as the creature and bite-silhouette reference.\n\nsummary:\n[reference generation] <Subject 1> loses her final grip on the railing of <Subject 2>, falls along the tilted hull through the storm, and strikes the black sea above the submerged space defined by <Subject 3>; then <Subject 4> rises from the depths toward her wrapped leg, with the bite hidden entirely by shark silhouette, surf, bubbles and a final wave that cuts to black.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - Ava retains her reference face, wet ponytail, stylized proportions, black soaked jacket, black shirt, tactical pants, boots and fully covered wrapped injured leg throughout the fall, entry and underwater threat.\n<Subject 2> (appears in [Shot 1]): fully_preserved - the ocean liner retains its severe list, rusted white hull, railings, lifeboats, wet deck structure, storm surf, lightning atmosphere and distant city lights.\n<Subject 3> (appears in [Shot 2]): fully_preserved - the submerged hull, blue-green light shafts, suspended particles, deep-water darkness and rocky seabed atmosphere match the underwater reference after Ava enters the sea.\n<Subject 4> (appears in [Shot 3]): partially_preserved - the shark preserves its massive dark body, rough skin, dorsal structure and open-jawed design, while the intended bite contact is obscured by its silhouette, waves and bubbles.\n\ndetailed_description:\nThe sequence uses cinematic semi-realistic 3D animation matching the refinement of <Subject 1> in <Picture 1>, preserving her facial proportions, wet skin shading, bundled ponytail strands, soaked fabric sheen and tactical material response. <Subject 2>, <Subject 3> and <Subject 4> share the same physically based storm lighting, coherent contact shadows and dark blue-gray rain-and-sea color palette.\n\n[Shot 1] On the rain-slick outer railing of <Subject 2>, Ava’s last finger is forced free and her hand opens away from the wet metal. <Subject 1> falls along the tilted white hull, her wet ponytail and black jacket whipping upward with her momentum while her wrapped injured leg remains fully covered by dark cloth and pant fabric. Above her, an indistinct upper-deck figure identified as Madison stops at the railing and does not reach out. The camera follows Ava in a fast downward tracking shot past rusted plates and bursting spray until wave foam fills the lower frame. <Subject 1> (S1) makes a sharp short inhalation, her clothing cuts through the rain curtain, and Madison (S2) makes a suppressed crying sound from above.\n\n[Shot 2] At 00:02.000, <Subject 1> strikes the black waves beside <Subject 2>. The impact throws out a heavy crown of gray-white spray, and churning water surges over her upper body while her face and dark jacket remain briefly visible below the surface. The camera dives steeply along the hull, jolts on impact, and continues into the half-submerged world of <Subject 3>, where the dark hull looms overhead, blue-green light shafts pierce the water, and bubbles stream past. Her injured leg remains clothed and wrapped, with no exposed wound. The heavy entry sound gives way to muffled storm noise, rushing bubbles and deep hull vibrations.\n\n[Shot 3] At 00:04.000, a huge dark shadow rises through the blue-black water beneath <Subject 1>. <Subject 4> surges upward through the surf with its rough dark body, dorsal ridges and open jaws aimed at her wrapped leg. The shark’s mouth, breaking waves, foam and a burst of bubbles completely conceal the contact point; only Ava’s pained curled silhouette is visible as she tenses inward. There is no visible blood and no open wound, while the dark wrappings and pant leg continue to cover her injury. The camera gives a short fast push toward the rising shark and Ava, then a massive wave sweeps across the lens and cuts the image to black. A low underwater roar, exploding surf and a sharp predator rush sound together before being suddenly muffled into silence.\n\noverall_soundscape:\nTorrential rain, howling wind, groaning metal, rattling rails and distant thunder surround <Subject 2>. Ava’s short inhalation and the rush of her body through rain mark the release, followed by the faint suppressed cry from the upper railing. The sea entry lands with a heavy deep boom, after which the storm becomes thick and submerged under flowing bubbles, hull groans and low water pressure. The shark’s approach brings a powerful submerged rush and a wave detonation, ending in an abrupt muted cutoff as the frame goes black.\n\nnon_diegetic_music:\nSparse low dread drones and a thin rising tension line begin beneath the storm. As Ava loses her grip, high strings tighten and a deep percussion pulse accelerates with the fall. The water impact lands on a heavy low boom, then the score becomes hollow and submerged with echoing bass tones and fragile high-pressure notes. The shark’s upward rush triggers sharp brasses and a tense percussive stab until the wave covers the lens, at which point the music cuts instantly into low black silence.",
+          "state": "已完成",
+          "reason": "",
+          "selectVideoId": 0,
+          "medias": [
+            {
+              "id": 5,
+              "name": "倾斜邮轮",
+              "describe": "暴雨夜外海中一艘大型邮轮严重侧倾，整体甲板形成危险斜坡，栏杆与缆索斜向切割画面，救生艇吊架集中在较高一侧，空荡的吊艇位暗示撤离混乱。湿滑甲板分层布置应急舱门、倒伏桌椅、散落救生衣与固定缆桩，排水口涌进冷灰色海水。远景是半座沉入黑色海面的城市轮廓，楼体只余破碎剪影与微弱冷光；厚重雨幕、狂浪拍击船身、闪电间歇照亮云层。整体以深青灰、钢蓝和锈蚀白为主，船体有撞击凹痕与磨损，突出灾变、沉船与逃亡前的压迫感；不绘制伤员、人群或独立生物。",
+              "type": "scene",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/scene/7132af8d-96d6-45f4-b3e9-ace64d59c0ae.jpg?size=20"
+            },
+            {
+              "id": 6,
+              "name": "水下",
+              "describe": "暴雨夜近岸海面之下的昏暗水下环境，水体呈深青绿色并夹带冷灰蓝反光，上方浪层翻涌，微弱天光被切碎成斜向光柱，水中悬浮颗粒、细碎气泡与扰动暗流交织。中远景隐约可见倾斜邮轮的巨大船体轮廓压过水面，船底金属与模糊栏杆形成深色剪影，营造幽闭、窒息且充满压迫感的深海灾变空间；不呈现艾娃、变异鲨等独立主体，也不表现血色水体。",
+              "type": "scene",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/scene/a4f8fe9e-1044-4292-bf18-c070563fe451.jpg?size=20"
+            },
+            {
+              "id": 202,
+              "name": "雨夜坠海",
+              "describe": "继承艾娃五官与低马尾。防水夹克工装全湿透，碎发贴脸，左腿裤管磨破以深色布条缠裹、伤口完全遮盖无血；面色苍白紧抓斜栏杆，暴雨冷蓝闪电。启用前世邮轮场，与日常工装态互斥。",
+              "type": "role",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/role/8778bba0-4658-4ee8-bcad-2d8619cd154a.jpg?size=20"
+            },
+            {
+              "id": 215,
+              "name": "咬腿剪影帧",
+              "describe": "继承变异鲨外形。巨浪下自水下向上冲出，巨口咬向艾娃腿部，全程以背光黑剪影、浪花气泡和鲨口遮挡接触点；无血、无创面、无外露断肢。仅攻击关键帧，与默认完整游动态互斥。",
+              "type": "tool",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/tool/530138ad-31f0-4e7b-99d7-18d3884ef041.jpg?size=20"
+            },
+            {
+              "src": "",
+              "fileType": "image",
+              "sources": "storyboard",
+              "prompt": "### 片段三（约6s）\n**引用资产名称**：[倾斜邮轮, 艾娃·雨夜坠海, 水下, 变异鲨·咬腿剪影帧]\n**引用资产ID**：[5, 202, 6, 215]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 7 | 最后一根手指被掰开，艾娃的手脱离栏杆，身体沿邮轮外侧坠落；麦迪逊停在上方栏杆边，没有伸手。 | 2 | 中景 | 快速下坠跟拍，末端被浪花遮挡 | 无台词 | 艾娃短促吸气；身体划破雨幕；麦迪逊在上层发出压抑哭声 |\n| 8 | 艾娃砸入黑色浪中，翻涌海水吞没她的上半身，伤腿仍被深色布条和裤料完整遮盖。 | 2 | 全景 | 从船舷外侧急俯拍下，入水瞬间晃动 | 无台词 | 沉重入水声；水面风暴声瞬间闷化；气泡翻涌 |\n| 9 | 巨浪下巨大黑影自水下向上冲出，变异鲨张口咬向艾娃腿部；接触点被鲨口剪影、浪花和气泡完全遮挡，只留艾娃痛苦蜷缩的剪影，画面无血液、无开放伤口。 | 2 | 中远景 | 短促快推后被浪涛遮住切黑 | 无台词 | 低频水流轰鸣；巨浪炸裂；尖锐水下掠食声后骤然闷断 |",
+              "id": 4,
+              "index": 3
+            }
+          ],
+          "videoList": []
+        },
+        {
+          "id": 1790715620120,
+          "variants": [
+            {
+              "trackId": 1790715620120,
+              "language": "en-US",
+              "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, a premium semi-realistic Chinese 3D donghua character asset whose face close-up, front, side and back panels depict the same woman in one wet underwater state, with controlled stylized facial proportions, dark brown eyes, dark wet hair tied in a ponytail with loose strands, faint blue luminous markings across her cheeks and around her eyes, a dark worn zip-up jacket over a dark T-shirt, dark cargo pants, sturdy boots, thigh straps and a holster, and dark cloth wrappings layered over her left lower leg; she is the identity, wardrobe and performance reference.\n<Subject 2> is the underwater shipwreck environment from <Picture 2>, featuring a massive dark ship hull crossing the upper water, cold teal-green depths, sunlight and god rays descending from the surface, drifting particles, deep shadow below and a rough rocky seabed; it is the location, atmosphere and lighting reference.\n<Subject 3> is the mutated shark reference from <Picture 3>, a tool-reference frame showing a gigantic shark rising through churning bubbles with a conical head, multiple rows of teeth, broad pectoral fins, a powerful tail and partially visible human legs at the contact point; in the video only its massive scale, silhouette, fin shape and predatory presence are reused as a distant underwater shadow, without recreating the open-jaw contact composition.\n\nsummary:\n[reference generation] Over six seconds, <Subject 1> slowly sinks through the cold teal-green water of <Subject 2> while <Subject 3> appears only as a distant shark silhouette turning in the depths and disappearing. The left leg of <Subject 1> remains covered by dark wrappings and pant fabric, with only a faint muted dark-green turbid wisp briefly dispersing in the water; the sequence ends with a slow push toward the breath-holding, fading face of <Subject 1>.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - <Subject 1> retains the same stylized facial structure, eye proportions, dark wet ponytail, blue facial luminescence, dark jacket, T-shirt, cargo pants, boots, straps, holster and layered left-leg wrappings throughout the underwater sinking and weakening close-up.\n<Subject 2> (appears in [Shot 1]): fully_preserved - the teal-green underwater setting, massive dark overhead hull, descending surface rays, drifting particles, rocky seabed, deep shadows and cold cinematic lighting remain consistent across both shots.\n<Subject 3> (appears in [Shot 1]): partially_preserved - the gigantic scale, conical head, broad fins and tail movement are retained as a blurred distant silhouette swimming away, while the open jaws, visible human legs, direct bite contact and bright surface splash are omitted or fully hidden by bubbles and turbid water.\n\ndetailed_description:\nThe sequence uses cinematic semi-realistic 3D rendering at the same level of realism and stylization as <Subject 1>, preserving the facial proportions, layered wet hair strands, blue cheek luminescence and glossy wet fabric surfaces visible in <Picture 1>. <Subject 1> and the underwater shipwreck from <Subject 2> share the same teal light, contact shadows, particulate water and physically based wet-material appearance.\n\n[Shot 1] In a medium-wide underwater shot, <Subject 1> slowly sinks through the deep teal-green water. Her wet ponytail, loose strands and jacket hem drift upward with the current. Far behind her, at the blurred end of the depth field, <Subject 3> appears only as a massive shark silhouette; it sweeps its tail once and moves away into a darker water layer until it disappears. Churning water and dense clusters of rising bubbles completely conceal the prior contact point. The left lower leg of <Subject 1> remains covered by dark cloth strips and pant fabric, with no wound visible; beside the wrappings, one faint wisp of muted dark-green turbid water spreads thinly and is quickly diluted by the current. The dark hull from <Subject 2> looms above, cold rays descend from the surface, and suspended particles drift through the gloom. The camera slowly follows the descent of <Subject 1> with a slight rotational movement while keeping <Subject 3> out of focus. Muffled storm pressure surrounds the scene, bubble chains rise with soft watery pops, a distant tail fin stirs the current, and low-frequency ringing blends with a heavy heartbeat.\n\n[Shot 2] At 00:03.000, the cut moves to a close facial shot of <Subject 1>. Her eyelids are half lowered, her lips are slightly parted in a held breath, and her gaze is unfocused. Suspended particles and faint residual currents drift past her face. The water behind her is empty and dim, with only small bubbles continuing to rise. Her wet hair and jacket collar sway gently. The camera slowly pushes toward her face and rises and falls slightly with the current. A distant low water moan remains audible, the bubble sounds thin out, and the heartbeat becomes slower and heavier.\n\noverall_soundscape:\nThe six-second soundscape is continuously submerged and pressure-filled. Storm noise is muffled beyond the surface, bubble chains produce soft pops and watery rattles, and the distant tail movement of <Subject 3> creates a low surge through the water. In the final close shot, the bubbles around <Subject 1> become sparse, the current recedes into a faint low moan, and the slowing heartbeat dominates beneath quiet underwater ringing. There is no spoken dialogue.\n\nnon_diegetic_music:\nA minimal low drone supports the diegetic underwater sound, using cold sustained tones and a subtle pulse synchronized with the heartbeat. It barely swells as <Subject 3> vanishes into <Subject 2>, then thins into tense near-silence during the close-up of <Subject 1> so the fading bubbles and slowing heartbeat carry the ending.",
+              "state": "已完成",
+              "reason": null,
+              "videoId": null
+            }
+          ],
+          "duration": 6,
+          "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, a premium semi-realistic Chinese 3D donghua character asset; the face close-up, front, side and back panels depict the same woman in her current underwater state, with wet dark hair in a loose ponytail, pale refined facial features, a soaked black zip-up tactical jacket, black tactical pants, a utility belt, worn boots and layered gray cloth wrappings around her left lower leg, serving as the identity, body-proportion and wardrobe authority.\n<Subject 2> is the underwater environment from <Picture 2>, a deep teal-green submerged space beneath a large dark ship hull, with rippled surface light, faint sunbeams, drifting particles, sparse bubbles and a dim rocky seabed, serving as the architecture, lighting direction and atmosphere authority.\n<Subject 3> is the mutated shark from <Picture 3>, a massive dark shark-like creature with rough skin, a broad head, prominent fins and a powerful tail surrounded by churning water, serving as the creature-shape and tail-motion reference while appearing only as a distant underwater silhouette.\n\nsummary:\n[reference generation] <Subject 1> sinks slowly through <Subject 2> as wet hair, jacket fabric and bubbles rise around her; <Subject 3> appears in the far depth, sweeps its tail and retreats into the dark water while churned currents and bubbles hide the prior contact point. The wrapped left leg of <Subject 1> stays covered, with only a faint muted dark-green turbid wisp briefly dispersing before the water dilutes it. The sequence then moves close to <Subject 1>, whose half-closed eyes and parted lips show fading awareness while particles and thinning bubbles drift through <Subject 2>.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - The same facial structure, stylized eye and face proportions, wet ponytail, soaked tactical outfit, belt, boots, body proportions and left-leg wrappings remain consistent with <Picture 1>.\n<Subject 2> (appears in [Shot 1], [Shot 2]): fully_preserved - The deep teal-green water, overhead ship hull, surface light beams, drifting particles, bubbles, dim seabed and submerged atmosphere remain consistent with <Picture 2>.\n<Subject 3> (appears in [Shot 1]): partially_preserved - The bulky shark silhouette, dorsal shape, fins and tail movement from <Picture 3> are retained, while fine skin and teeth are obscured by underwater distance, darkness and bubbles.\n\ndetailed_description:\nThe sequence uses cinematic semi-realistic 3D rendering matching the realism and stylization of <Picture 1>, preserving <Subject 1>’s controlled facial proportions, refined skin shading, wet strand structure and soaked fabric surfaces. <Subject 1> and <Subject 2> share coherent teal underwater lighting, physical buoyancy, contact shadows and material response; the reference-sheet layout, repeated panels and display background are not rendered.\n\n[Shot 1] In a medium-wide underwater composition, <Subject 1> hangs vertically and sinks slowly through <Subject 2>. Her wet ponytail, loose hair strands, jacket hem and sleeve fabric drift upward with the current. Small bubbles rise past her shoulder. Far behind her, <Subject 3> is visible only as a dark mutated-shark silhouette; it sweeps its tail once and glides away into the dim water layer, becoming softer in shallow depth of field. Churned clouded water and dense bubbles completely conceal the implied contact point. The left leg of <Subject 1> remains covered by dark cloth strips and trouser fabric, with no wound visible; one faint low-saturation dark-green turbid wisp curls beside the wrappings, spreads thinly and is quickly diluted by the water, with no red present. The camera follows the slow descent, rotates slightly around <Subject 1>, and keeps the retreating silhouette blurred near the far background.\n\n[Shot 2] At 00:03.000, the shot cuts to a close facial view. <Subject 1> keeps her eyelids half lowered and her lips slightly parted while holding her breath, her awareness visibly weakening. Suspended particles and faint residual currents drift past her cheek. Behind her, <Subject 2> is empty and dark except for a few fine bubbles rising toward the distant surface. The camera pushes slowly toward her face and rises and falls gently with the water.\n\noverall_soundscape:\nThe storm above the surface is muffled into a dense underwater rumble. Rising bubble streams create soft popping and rushing sounds. The distant tail movement of <Subject 3> produces a deep, delayed surge of water. Low-frequency tinnitus and a slow, heavy heartbeat accompany the descent of <Subject 1>. In the close shot, distant water flow becomes a low moan, bubble sounds thin out and the heartbeat slows. There is no spoken dialogue.\n\nnon_diegetic_music:\nThe music is minimal and ominous, built from sustained sub-bass, distant aquatic tonal swells and almost imperceptible high-pressure textures. It remains restrained beneath the heartbeat and underwater ambience, then gradually thins during the close facial shot to emphasize the fading awareness of <Subject 1>.",
+          "state": "已完成",
+          "reason": "",
+          "selectVideoId": 0,
+          "medias": [
+            {
+              "id": 6,
+              "name": "水下",
+              "describe": "暴雨夜近岸海面之下的昏暗水下环境，水体呈深青绿色并夹带冷灰蓝反光，上方浪层翻涌，微弱天光被切碎成斜向光柱，水中悬浮颗粒、细碎气泡与扰动暗流交织。中远景隐约可见倾斜邮轮的巨大船体轮廓压过水面，船底金属与模糊栏杆形成深色剪影，营造幽闭、窒息且充满压迫感的深海灾变空间；不呈现艾娃、变异鲨等独立主体，也不表现血色水体。",
+              "type": "scene",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/scene/a4f8fe9e-1044-4292-bf18-c070563fe451.jpg?size=20"
+            },
+            {
+              "id": 203,
+              "name": "水下濒死",
+              "describe": "继承面部结构。全身浸没深青绿水下，湿发与衣摆飘散，伤腿被裤料布条完整遮盖、无血无开放创面；意识涣散闭气，蓝白系统光映脸，气泡上浮。接坠海后场次，与雨夜态为前后帧。",
+              "type": "role",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/role/773db2f2-8b9b-4fbd-986a-e52ad02c485f.jpg?size=20"
+            },
+            {
+              "id": 215,
+              "name": "咬腿剪影帧",
+              "describe": "继承变异鲨外形。巨浪下自水下向上冲出，巨口咬向艾娃腿部，全程以背光黑剪影、浪花气泡和鲨口遮挡接触点；无血、无创面、无外露断肢。仅攻击关键帧，与默认完整游动态互斥。",
+              "type": "tool",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/tool/530138ad-31f0-4e7b-99d7-18d3884ef041.jpg?size=20"
+            },
+            {
+              "src": "",
+              "fileType": "image",
+              "sources": "storyboard",
+              "prompt": "### 片段一（约6s）\n**引用资产名称**：[艾娃·水下濒死, 水下, 变异鲨·咬腿剪影帧]\n**引用资产ID**：[203, 6, 215]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 1 | 中远景里，艾娃在深青绿水中缓慢下沉，湿发与衣摆向上飘散；画面深处变异鲨剪影摆尾远去、没入昏暗水层，接触点被翻涌浪花与成片气泡完全遮住。她左腿磨破处仍由深色布条与裤料层层缠裹、伤处不可见，布条旁一缕低饱和暗绿色浊流在远景中淡淡散开、随即被水流稀释，无任何红色。 | 3 | 中全景 | 随下沉缓慢跟随，轻微旋动，鲨影在景深末端虚化消失 | 无台词 | 入水后风暴声闷化；气泡串上浮；远处尾鳍搅动水流；低频耳鸣与沉重心跳 |\n| 2 | 艾娃眼睑半垂、嘴唇微张闭气，意识涣散；悬浮颗粒与残余暗流从她脸侧缓缓漂过，身后水层空荡昏暗，只剩上浮的细碎气泡。 | 3 | 近景 | 缓推至面部，随水流轻微起伏 | 无台词 | 远处水流低鸣；气泡声渐稀；心跳变慢 |",
+              "id": 5,
+              "index": 4
+            }
+          ],
+          "videoList": []
+        },
+        {
+          "id": 1790715631864,
+          "variants": [
+            {
+              "trackId": 1790715631864,
+              "language": "en-US",
+              "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, a premium semi-realistic Chinese 3D donghua character represented by one complete character sheet whose face, front, side and back panels show the same woman in the same wet underwater state; she has wet dark-brown hair tied in a ponytail, stylized facial proportions, blue luminous cheek markings, a dark zip-up jacket, black shirt, dark tactical cargo pants, rugged boots and a right-thigh strap.\n<Subject 2> is the underwater shipwreck environment from <Picture 2>, with a dark diagonal vessel hull overhead, cold teal water, surface light beams, drifting particles, small bubbles and a dim rocky seabed.\n<Subject 3> is the blue holographic rewind prompt interface from <Picture 3>, a translucent square panel with a glowing border, fine scan lines, luminous cyan text and a soft underwater light.\n\nsummary:\n[reference generation] In the cold underwater environment of <Subject 2>, the near-death <Subject 1> sees the translucent interface <Subject 3> activate within her blurred subjective vision. <Subject 3> first confirms life termination, then reveals that a temporal anchor can still be connected and asks whether to execute one rewind. As its countdown pulses from 3 to 2, <Subject 1> shows a faint return of focus and a slight curl of her drifting hand.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): partially_preserved - Ava’s facial structure, eye shape, wet ponytail, blue cheek glow, dark jacket and tactical pants remain consistent with <Picture 1>, while [Shot 1] deliberately limits her visibility to peripheral hair and her subjective point of view.\n<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - the overhead wreck hull, cold teal water, surface light shafts, particles, bubbles and rocky seabed retain the architecture, lighting direction and atmosphere of <Picture 2>.\n<Subject 3> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - the translucent cyan square, bright border, scan-line texture, underwater glow and sequential holographic text behavior retain the design of <Picture 3>.\n\ndetailed_description:\nThe animation maintains the premium semi-realistic 3D donghua realism of <Picture 1>, including Ava’s controlled eye-to-face proportions, nose and jaw structure, detailed wet skin shading, strand-level dark hair and soaked cloth surfaces. <Subject 1> and <Subject 2> share coherent cold teal underwater lighting, physically based reflections, drifting particulate haze and soft contact shadows.\n\n[Shot 1] From <Subject 1>’s blurred subjective point of view, the dark wreck hull of <Subject 2> cuts diagonally across the upper frame. Weak surface beams fall through cold teal water, while the rocky seabed remains dim below. Wet strands from Ava’s hair drift at the edge of vision. The translucent square panel of <Subject 3> fades into view with subtle scan lines, and two lines illuminate one after another:\n\"Maritime Infrastructure Core · 07\"\n\"Host life termination confirmed\"\nThe camera holds fixed, with only a faint underwater sway. <Subject 3> (S1), spoken language: en-US, calm electronic prompt with no lip-sync: <d>[English] Maritime Infrastructure Core · 07.</d> <Subject 3> (S1), spoken language: en-US, calm electronic prompt with no lip-sync: <d>[English] Host life termination confirmed.</d> Two calm electronic prompts sound, layered with a low heartbeat and faint scanning-current noise.\n\n[Shot 2] At 00:03.000, <Subject 3> expands while the camera pushes in extremely slowly and rocks gently with rising bubbles. Two additional lines brighten on the panel:\n\"Temporal anchor still connectable\"\n\"Execute one rewind?\"\nThe image transitions from the subjective interface view into an extreme close-up of <Subject 1>’s eye and wet lashes. Her gaze remains unable to focus, the blue luminescence on her cheek shimmers underwater, and one drifting eyelash trembles slightly. <Subject 3> (S1), spoken language: en-US, calm electronic prompt with no lip-sync: <d>[English] Temporal anchor still connectable.</d> <Subject 3> (S1), spoken language: en-US, calm electronic prompt with no lip-sync: <d>[English] Execute one rewind?</d> A short bubble bursts nearby, the electronic tone rises a little, and the tinnitus narrows.\n\n[Shot 3] At 00:05.000, the close view of <Subject 1> remains layered with the subjective display of <Subject 3>. A countdown appears beneath the question:\n\"3......\"\nThe interface pulses once, the camera gives a subtle vibrating push, and Ava’s unfocused eyes begin to gather a faint trace of concentration. The number changes to:\n\"2......\"\nA second pulse and slight push follow. Ava’s drifting hand at the edge of frame curls very slightly, moving the water around her dark wet sleeve. Each electronic pulse grows stronger, her heartbeat becomes heavier, and the pulses temporarily overpower the surrounding water flow.\n\noverall_soundscape:\nThe scene is enclosed in muted underwater pressure, soft water movement, distant low rumble and drifting bubble sounds. Two clean electronic alerts introduce <Subject 3>, followed by thin scan-current texture and a slow heartbeat. A short bubble burst punctuates the eye close-up. During the countdown, each number produces a stronger electronic pulse and heartbeat thud, briefly suppressing the underwater ambience.\n\nnon_diegetic_music:\nNo melodic music is used. A sparse sub-bass drone and controlled electronic pulse layer support the countdown, staying subordinate to the heartbeat, holographic interface tones and underwater ambience.",
+              "state": "已完成",
+              "reason": null,
+              "videoId": null
+            }
+          ],
+          "duration": 8,
+          "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, a premium semi-realistic Chinese 3D donghua character represented by one complete character sheet whose face, front, side and back panels show the same woman in the same wet underwater state; she has wet dark-brown hair tied in a ponytail, stylized facial proportions, blue luminous cheek markings, a dark zip-up jacket, black shirt, dark tactical cargo pants, rugged boots and a right-thigh strap.\n<Subject 2> is the underwater shipwreck environment from <Picture 2>, with a dark diagonal vessel hull overhead, cold teal water, surface light beams, drifting particles, small bubbles and a dim rocky seabed.\n<Subject 3> is the blue holographic rewind prompt interface from <Picture 3>, a translucent square panel with a glowing border, fine scan lines, luminous cyan text and a soft underwater light.\n\nsummary:\n[reference generation] In the cold underwater environment of <Subject 2>, the near-death <Subject 1> sees the translucent interface <Subject 3> activate within her blurred subjective vision. <Subject 3> first confirms life termination, then reveals that a temporal anchor can still be connected and asks whether to execute one rewind. As its countdown pulses from 3 to 2, <Subject 1> shows a faint return of focus and a slight curl of her drifting hand.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): partially_preserved - Ava’s facial structure, eye shape, wet ponytail, blue cheek glow, dark jacket and tactical pants remain consistent with <Picture 1>, while [Shot 1] deliberately limits her visibility to peripheral hair and her subjective point of view.\n<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - the overhead wreck hull, cold teal water, surface light shafts, particles, bubbles and rocky seabed retain the architecture, lighting direction and atmosphere of <Picture 2>.\n<Subject 3> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - the translucent cyan square, bright border, scan-line texture, underwater glow and sequential holographic text behavior retain the design of <Picture 3>.\n\ndetailed_description:\nThe animation maintains the premium semi-realistic 3D donghua realism of <Picture 1>, including Ava’s controlled eye-to-face proportions, nose and jaw structure, detailed wet skin shading, strand-level dark hair and soaked cloth surfaces. <Subject 1> and <Subject 2> share coherent cold teal underwater lighting, physically based reflections, drifting particulate haze and soft contact shadows.\n\n[Shot 1] From <Subject 1>’s blurred subjective point of view, the dark wreck hull of <Subject 2> cuts diagonally across the upper frame. Weak surface beams fall through cold teal water, while the rocky seabed remains dim below. Wet strands from Ava’s hair drift at the edge of vision. The translucent square panel of <Subject 3> fades into view with subtle scan lines, and two lines illuminate one after another:\n\"海洋基建核心·07\"\n\"宿主生命终止确认\"\nThe camera holds fixed, with only a faint underwater sway. Two calm electronic prompts sound, layered with a low heartbeat and faint scanning-current noise.\n\n[Shot 2] At 00:03.000, <Subject 3> expands while the camera pushes in extremely slowly and rocks gently with rising bubbles. Two additional lines brighten on the panel:\n\"时序锚点仍可连接\"\n\"是否执行一次回溯？\"\nThe image transitions from the subjective interface view into an extreme close-up of <Subject 1>’s eye and wet lashes. Her gaze remains unable to focus, the blue luminescence on her cheek shimmers underwater, and one drifting eyelash trembles slightly. A short bubble bursts nearby, the electronic tone rises a little, and the tinnitus narrows.\n\n[Shot 3] At 00:05.000, the close view of <Subject 1> remains layered with the subjective display of <Subject 3>. A countdown appears beneath the question:\n\"3……\"\nThe interface pulses once, the camera gives a subtle vibrating push, and Ava’s unfocused eyes begin to gather a faint trace of concentration. The number changes to:\n\"2……\"\nA second pulse and slight push follow. Ava’s drifting hand at the edge of frame curls very slightly, moving the water around her dark wet sleeve. Each electronic pulse grows stronger, her heartbeat becomes heavier, and the pulses temporarily overpower the surrounding water flow.\n\noverall_soundscape:\nThe scene is enclosed in muted underwater pressure, soft water movement, distant low rumble and drifting bubble sounds. Two clean electronic alerts introduce <Subject 3>, followed by thin scan-current texture and a slow heartbeat. A short bubble burst punctuates the eye close-up. During the countdown, each number produces a stronger electronic pulse and heartbeat thud, briefly suppressing the underwater ambience.\n\nnon_diegetic_music:\nNo melodic music is used. A sparse sub-bass drone and controlled electronic pulse layer support the countdown, staying subordinate to the heartbeat, holographic interface tones and underwater ambience.",
+          "state": "已完成",
+          "reason": "",
+          "selectVideoId": 0,
+          "medias": [
+            {
+              "id": 6,
+              "name": "水下",
+              "describe": "暴雨夜近岸海面之下的昏暗水下环境，水体呈深青绿色并夹带冷灰蓝反光，上方浪层翻涌，微弱天光被切碎成斜向光柱，水中悬浮颗粒、细碎气泡与扰动暗流交织。中远景隐约可见倾斜邮轮的巨大船体轮廓压过水面，船底金属与模糊栏杆形成深色剪影，营造幽闭、窒息且充满压迫感的深海灾变空间；不呈现艾娃、变异鲨等独立主体，也不表现血色水体。",
+              "type": "scene",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/scene/a4f8fe9e-1044-4292-bf18-c070563fe451.jpg?size=20"
+            },
+            {
+              "id": 203,
+              "name": "水下濒死",
+              "describe": "继承面部结构。全身浸没深青绿水下，湿发与衣摆飘散，伤腿被裤料布条完整遮盖、无血无开放创面；意识涣散闭气，蓝白系统光映脸，气泡上浮。接坠海后场次，与雨夜态为前后帧。",
+              "type": "role",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/role/773db2f2-8b9b-4fbd-986a-e52ad02c485f.jpg?size=20"
+            },
+            {
+              "id": 209,
+              "name": "回溯提示框",
+              "describe": "相对默认全息界面：深青绿水下仅显冷蓝半透明提示框，列“核心07、生命终止、时序锚点、是否回溯”与3-2-1倒数；扫描线微弱。启用前世濒死场，与重启蓝图态互斥。",
+              "type": "tool",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/tool/60a0795f-dbfa-40e1-a4dc-62722bf15f86.jpg?size=20"
+            },
+            {
+              "src": "",
+              "fileType": "image",
+              "sources": "storyboard",
+              "prompt": "### 片段二（约8s）\n**引用资产名称**：[艾娃·水下濒死, 系统蓝色全息界面·回溯提示框, 水下]\n**引用资产ID**：[203, 209, 6]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 1 | 艾娃涣散的视野中，回溯提示框逐行亮起覆盖画面：【海洋基建核心·07】【宿主生命终止确认】。 | 3 | 主观POV近景 | 固定，文字浮现时带细微扫描线 | 无台词 | 冷静电子提示音两下；低频心跳；微弱扫描电流声 |\n| 2 | 提示框继续展开：【时序锚点仍可连接】【是否执行一次回溯？】；艾娃飘散的睫毛微动，视线仍无法聚焦。 | 2 | 主观POV接眼部特写 | 极缓压近，画面随气泡轻晃 | 无台词 | 电子提示音阶微升；气泡短促破裂；耳鸣声收窄 |\n| 3 | 提示框下方跳出倒数【3……2……】，界面随数字逐次脉冲，艾娃涣散的眼神出现一丝聚拢，飘散的手指微微蜷起。 | 3 | 近景叠主观界面 | 每个数字一次轻微震动推近 | 无台词 | 逐级电子脉冲；心跳随倒数重新加重；水流声被脉冲压过 |",
+              "id": 6,
+              "index": 5
+            }
+          ],
+          "videoList": []
+        },
+        {
+          "id": 1790715641964,
+          "variants": [
+            {
+              "trackId": 1790715641964,
+              "language": "en-US",
+              "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, a premium semi-realistic Chinese 3D donghua character shown in one complete underwater character sheet; the face, front, side and back panels depict the same woman with wet dark hair tied in a ponytail, controlled stylized facial proportions, faint blue luminous cheek markings, a dark wet jacket over a black shirt, dark cargo pants, rugged boots and a wrapped lower-leg covering.\n<Subject 2> is Madison from <Picture 2>, a premium semi-realistic Chinese 3D donghua character shown in one complete rainy-night character sheet; the face, front, side and back panels depict the same young woman with wet shoulder-length light-brown hair, a pale knit sweater, an orange life vest with dark straps, gray cargo pants and brown boots.\n<Subject 3> is the tilted ocean liner from <Picture 3>, a massive rust-streaked white passenger ship listing in a storm, with stacked decks, railings, lifeboats, a dark funnel, wet wreckage on the slanted deck, lightning-lit clouds and a distant city skyline.\n<Subject 4> is the underwater seascape from <Picture 4>, a deep teal-black submerged space with surface light rays, the liner’s dark hull looming overhead, drifting particles, a rocky seabed and slow-moving water.\n<Subject 5> is the underwater retrospective white-light state from <Picture 5>, preserving the same overhead hull and rocky seabed as <Picture 4> while adding a blinding central radiance, radial bubbles, suspended water shards and luminous streaks.\n\nsummary:\n[reference generation] In an eight-second underwater sequence, <Subject 1> floats within <Subject 4>, lifts her head toward <Subject 3>, and recognizes <Subject 2> as a distant blurred figure on the high deck. <Subject 1> reaches toward <Subject 3>, speaks through the water with rising determination, and accelerates as bubbles gather around her. A blue prompt then appears before the scene hard-cuts from <Subject 4> into the overwhelming retrospective state of <Subject 5>.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - Ava retains the same facial structure, controlled stylized proportions, wet ponytail, blue luminous cheek markings, dark jacket, black shirt, cargo pants, boots, wrapped lower-leg covering and wet physically based materials while her expression, pose and effort change.\n<Subject 2> (appears in [Shot 1]): partially_preserved - Madison preserves her identity, wet shoulder-length hair and orange life-vest silhouette from <Picture 2>, but she is intentionally distant, partially obscured by storm water and seen from far below.\n<Subject 3> (appears in [Shot 1], [Shot 4]): partially_preserved - the ocean liner preserves its massive tilted multi-deck silhouette, railings, lifeboats, funnel and storm-dark scale, viewed through the moving surface and later as a dark overhead hull outline during the transition.\n<Subject 4> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - the teal-black underwater space, overhead hull, surface light rays, drifting particles and rocky seabed remain spatially and atmospherically consistent until the final transition.\n<Subject 5> (appears in [Shot 4]): fully_preserved - the final state preserves the central blinding white radiance, radial bubbles, suspended shards, luminous streaks, teal water and dark overhead hull from <Picture 5>.\n\ndetailed_description:\nThe sequence uses the same premium semi-realistic 3D donghua rendering as the attached character and environment references. <Subject 1> keeps the observed facial proportions, wet skin shading, layered soaked hair and glistening fabric surfaces, while <Subject 2>, <Subject 3>, <Subject 4> and <Subject 5> share coherent underwater lighting, weight and contact shadows.\n\n[Shot 1] In a low upward wide shot within <Subject 4>, <Subject 1> floats beneath the churning surface with her body angled toward the faint light above. She uses her last strength to lift her head, wet hair drifting around her face and her dark jacket swaying in the current. Through the distorted wave layer, the enormous dark silhouette of <Subject 3> presses across the surface, its tilted decks and railings softened by turbulence. High on the deck, <Subject 2> leans over the railing as a blurred familiar figure, with her orange life vest barely visible in the storm. The camera slowly tilts upward along Ava’s line of sight, making the hull loom overhead while the foreground water darkens. Distant storm noise sounds muted and warped through the water, a dull metal groan rolls from the ship, and one long low-frequency ringing tone begins.\n\n[Shot 2] At 00:02.000, the shot cuts to a close facial shot of <Subject 1>. Her eyes suddenly focus, her wet face tightens, and the blue luminous markings on her cheeks catch the faint underwater light. She painfully raises one arm toward <Subject 3>, and a rush of bubbles escapes from her lips. The camera slowly pushes closer and rises slightly with her lifted hand, keeping her eyes and the surface light in shallow focus. A clear heartbeat thuds once, bubbles rush upward, and the water carries her voice in layered muffled echoes.\n<Subject 1> (S1) says:\n<d>[English] Go back.</d>\n\n[Shot 3] At 00:04.000, the shot hard-cuts to a nearer medium framing of <Subject 1>. Her brow locks into a determined frown and her gaze stays fixed on the ship silhouette above. She forcefully curls her outstretched fingers toward <Subject 3>, and the surrounding bubbles bend inward as if pulled by an unseen force. Her wet jacket and hair surge with the sudden acceleration of water. The camera rapidly pushes in and begins to shake with restrained cinematic impact. A heartbeat and an electronic tone merge and rise, the rushing current intensifies, and her shout spreads through the water in long echoing layers.\n<Subject 1> (S1) says:\n<d>[English] I have to go back!</d>\n\n[Shot 4] At 00:07.000, the shot cuts to a full-screen close view as a blue interface prompt freezes in the center with the visible text \"[1]\". The blue characters dissolve toward the edges while radial bubbles expand and the dark hull of <Subject 3> remains above within <Subject 4>. The image expands violently, then <Subject 5> takes over completely as a blinding retrospective white light bursts open beneath the hull, sending luminous streaks, suspended shards and bubbles through the teal water. A short high-frequency electronic burst strikes on the transition, followed by instantaneous total silence.\n\noverall_soundscape:\nThe opening shots are filled with submerged ambience: muted storm noise from above, distorted water pressure, slow currents, faint metallic groaning from <Subject 3>, drifting bubbles and a long low-frequency ring. <Subject 1> speaks twice with the same underwater voice, both lines muffled and surrounded by layered echoes. The second call is accompanied by a rising heartbeat, electronic tone and accelerated current, while the final transition delivers one sharp high-frequency electronic burst and then total silence.\n\nnon_diegetic_music:\nA low suspenseful drone underpins the sequence with deep sub-bass, distant metallic resonance and sparse heartbeat pulses. As <Subject 1> shouts with determination, the drone merges with a rising electronic tone that builds tension without overpowering her voice. All music and ambience cut abruptly to silence when the retrospective white light of <Subject 5> fills the screen.",
+              "state": "已完成",
+              "reason": null,
+              "videoId": null
+            }
+          ],
+          "duration": 8,
+          "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, a premium semi-realistic Chinese 3D donghua character shown in one complete underwater character sheet; the face, front, side and back panels depict the same woman with wet dark hair tied in a ponytail, controlled stylized facial proportions, faint blue luminous cheek markings, a dark wet jacket over a black shirt, dark cargo pants, rugged boots and a wrapped lower-leg covering.\n<Subject 2> is Madison from <Picture 2>, a premium semi-realistic Chinese 3D donghua character shown in one complete rainy-night character sheet; the face, front, side and back panels depict the same young woman with wet shoulder-length light-brown hair, a pale knit sweater, an orange life vest with dark straps, gray cargo pants and brown boots.\n<Subject 3> is the tilted ocean liner from <Picture 3>, a massive rust-streaked white passenger ship listing in a storm, with stacked decks, railings, lifeboats, a dark funnel, wet wreckage on the slanted deck, lightning-lit clouds and a distant city skyline.\n<Subject 4> is the underwater seascape from <Picture 4>, a deep teal-black submerged space with surface light rays, the liner’s dark hull looming overhead, drifting particles, a rocky seabed and slow-moving water.\n<Subject 5> is the underwater retrospective white-light state from <Picture 5>, preserving the same overhead hull and rocky seabed as <Picture 4> while adding a blinding central radiance, radial bubbles, suspended water shards and luminous streaks.\n\nsummary:\n[reference generation] In an eight-second underwater sequence, <Subject 1> floats within <Subject 4>, lifts her head toward <Subject 3>, and recognizes <Subject 2> as a distant blurred figure on the high deck. <Subject 1> reaches toward <Subject 3>, speaks through the water with rising determination, and accelerates as bubbles gather around her. A blue prompt then appears before the scene hard-cuts from <Subject 4> into the overwhelming retrospective state of <Subject 5>.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - Ava retains the same facial structure, controlled stylized proportions, wet ponytail, blue luminous cheek markings, dark jacket, black shirt, cargo pants, boots, wrapped lower-leg covering and wet physically based materials while her expression, pose and effort change.\n<Subject 2> (appears in [Shot 1]): partially_preserved - Madison preserves her identity, wet shoulder-length hair and orange life-vest silhouette from <Picture 2>, but she is intentionally distant, partially obscured by storm water and seen from far below.\n<Subject 3> (appears in [Shot 1], [Shot 4]): partially_preserved - the ocean liner preserves its massive tilted multi-deck silhouette, railings, lifeboats, funnel and storm-dark scale, viewed through the moving surface and later as a dark overhead hull outline during the transition.\n<Subject 4> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - the teal-black underwater space, overhead hull, surface light rays, drifting particles and rocky seabed remain spatially and atmospherically consistent until the final transition.\n<Subject 5> (appears in [Shot 4]): fully_preserved - the final state preserves the central blinding white radiance, radial bubbles, suspended shards, luminous streaks, teal water and dark overhead hull from <Picture 5>.\n\ndetailed_description:\nThe sequence uses the same premium semi-realistic 3D donghua rendering as the attached character and environment references. <Subject 1> keeps the observed facial proportions, wet skin shading, layered soaked hair and glistening fabric surfaces, while <Subject 2>, <Subject 3>, <Subject 4> and <Subject 5> share coherent underwater lighting, weight and contact shadows.\n\n[Shot 1] In a low upward wide shot within <Subject 4>, <Subject 1> floats beneath the churning surface with her body angled toward the faint light above. She uses her last strength to lift her head, wet hair drifting around her face and her dark jacket swaying in the current. Through the distorted wave layer, the enormous dark silhouette of <Subject 3> presses across the surface, its tilted decks and railings softened by turbulence. High on the deck, <Subject 2> leans over the railing as a blurred familiar figure, with her orange life vest barely visible in the storm. The camera slowly tilts upward along Ava’s line of sight, making the hull loom overhead while the foreground water darkens. Distant storm noise sounds muted and warped through the water, a dull metal groan rolls from the ship, and one long low-frequency ringing tone begins.\n\n[Shot 2] At 00:02.000, the shot cuts to a close facial shot of <Subject 1>. Her eyes suddenly focus, her wet face tightens, and the blue luminous markings on her cheeks catch the faint underwater light. She painfully raises one arm toward <Subject 3>, and a rush of bubbles escapes from her lips. The camera slowly pushes closer and rises slightly with her lifted hand, keeping her eyes and the surface light in shallow focus. A clear heartbeat thuds once, bubbles rush upward, and the water carries her voice in layered muffled echoes.\n<Subject 1> (S1) says:\n<d>[Chinese] 回去.</d>\n\n[Shot 3] At 00:04.000, the shot hard-cuts to a nearer medium framing of <Subject 1>. Her brow locks into a determined frown and her gaze stays fixed on the ship silhouette above. She forcefully curls her outstretched fingers toward <Subject 3>, and the surrounding bubbles bend inward as if pulled by an unseen force. Her wet jacket and hair surge with the sudden acceleration of water. The camera rapidly pushes in and begins to shake with restrained cinematic impact. A heartbeat and an electronic tone merge and rise, the rushing current intensifies, and her shout spreads through the water in long echoing layers.\n<Subject 1> (S1) says:\n<d>[Chinese] 我要回去!</d>\n\n[Shot 4] At 00:07.000, the shot cuts to a full-screen close view as a blue interface prompt freezes in the center with the visible text \"【1】\". The blue characters dissolve toward the edges while radial bubbles expand and the dark hull of <Subject 3> remains above within <Subject 4>. The image expands violently, then <Subject 5> takes over completely as a blinding retrospective white light bursts open beneath the hull, sending luminous streaks, suspended shards and bubbles through the teal water. A short high-frequency electronic burst strikes on the transition, followed by instantaneous total silence.\n\noverall_soundscape:\nThe opening shots are filled with submerged ambience: muted storm noise from above, distorted water pressure, slow currents, faint metallic groaning from <Subject 3>, drifting bubbles and a long low-frequency ring. <Subject 1> speaks twice with the same underwater voice, both lines muffled and surrounded by layered echoes. The second call is accompanied by a rising heartbeat, electronic tone and accelerated current, while the final transition delivers one sharp high-frequency electronic burst and then total silence.\n\nnon_diegetic_music:\nA low suspenseful drone underpins the sequence with deep sub-bass, distant metallic resonance and sparse heartbeat pulses. As <Subject 1> shouts with determination, the drone merges with a rising electronic tone that builds tension without overpowering her voice. All music and ambience cut abruptly to silence when the retrospective white light of <Subject 5> fills the screen.",
+          "state": "已完成",
+          "reason": "",
+          "selectVideoId": 0,
+          "medias": [
+            {
+              "id": 5,
+              "name": "倾斜邮轮",
+              "describe": "暴雨夜外海中一艘大型邮轮严重侧倾，整体甲板形成危险斜坡，栏杆与缆索斜向切割画面，救生艇吊架集中在较高一侧，空荡的吊艇位暗示撤离混乱。湿滑甲板分层布置应急舱门、倒伏桌椅、散落救生衣与固定缆桩，排水口涌进冷灰色海水。远景是半座沉入黑色海面的城市轮廓，楼体只余破碎剪影与微弱冷光；厚重雨幕、狂浪拍击船身、闪电间歇照亮云层。整体以深青灰、钢蓝和锈蚀白为主，船体有撞击凹痕与磨损，突出灾变、沉船与逃亡前的压迫感；不绘制伤员、人群或独立生物。",
+              "type": "scene",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/scene/7132af8d-96d6-45f4-b3e9-ace64d59c0ae.jpg?size=20"
+            },
+            {
+              "id": 6,
+              "name": "水下",
+              "describe": "暴雨夜近岸海面之下的昏暗水下环境，水体呈深青绿色并夹带冷灰蓝反光，上方浪层翻涌，微弱天光被切碎成斜向光柱，水中悬浮颗粒、细碎气泡与扰动暗流交织。中远景隐约可见倾斜邮轮的巨大船体轮廓压过水面，船底金属与模糊栏杆形成深色剪影，营造幽闭、窒息且充满压迫感的深海灾变空间；不呈现艾娃、变异鲨等独立主体，也不表现血色水体。",
+              "type": "scene",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/scene/a4f8fe9e-1044-4292-bf18-c070563fe451.jpg?size=20"
+            },
+            {
+              "id": 203,
+              "name": "水下濒死",
+              "describe": "继承面部结构。全身浸没深青绿水下，湿发与衣摆飘散，伤腿被裤料布条完整遮盖、无血无开放创面；意识涣散闭气，蓝白系统光映脸，气泡上浮。接坠海后场次，与雨夜态为前后帧。",
+              "type": "role",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/role/773db2f2-8b9b-4fbd-986a-e52ad02c485f.jpg?size=20"
+            },
+            {
+              "id": 205,
+              "name": "雨夜弃船",
+              "describe": "继承心形脸与浅棕微卷中长发。米白针织衫外扣橙色救生背心，全身湿透、碎刘海贴脸，缩肩后仰、圆眼含泪满是恐惧与闪躲；冷雨电光。邮轮撤离场，与灾后工装承担态互斥。",
+              "type": "role",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/workFlow/2e9bd00d-f8f2-47b7-8e2f-5273a8236971.jpg?size=20"
+            },
+            {
+              "id": 207,
+              "name": "回溯白光",
+              "describe": "相对水下默认态：蓝色系统文字向边缘消散，视野中心爆出纯白时光光团，气泡呈放射状被吸入，上方船体剪影虚化过曝；深青绿与纯白强对比。回溯确认瞬间关键帧，水体无血色。",
+              "type": "scene",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/scene/f2b10839-4d1c-4b57-9cf7-c70e6ec61349.jpg?size=20"
+            },
+            {
+              "src": "",
+              "fileType": "image",
+              "sources": "storyboard",
+              "prompt": "### 片段三（约8s）\n**引用资产名称**：[艾娃·水下濒死, 水下, 倾斜邮轮, 麦迪逊·雨夜弃船, 水下·回溯白光]\n**引用资产ID**：[203, 6, 5, 205, 207]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 1 | 艾娃用尽最后的力气抬头，透过翻涌浪层，看见上方水面倾斜邮轮的巨大深色剪影，甲板高处有一个熟悉的模糊身影伏在栏杆边。 | 2 | 仰拍远景 | 沿艾娃视线缓慢上摇，船体剪影虚化压顶 | 无台词 | 水面风暴声遥远失真；船体金属闷响；一声拉长的低频耳鸣 |\n| 2 | 艾娃眼神骤然聚焦，湿发间面孔绷紧，向邮轮方向艰难抬手，气泡从唇边涌出；短台词在水中带起模糊回声，余响未散。 | 2 | 面部特写 | 缓慢压近，随抬手轻微上移 | 艾娃（带水下回声）：『回去。』 | 一声清晰心跳；气泡急促涌出；声音在水中层层回漾 |\n| 3 | 艾娃眉头紧锁、目光坚定，手指向邮轮剪影用力收拢，周身气泡被无形力量牵引；她在水中从容而用力地喊出整句，尾音与回声充分散开。 | 3 | 近景 | 硬切后急推，画面开始震动 | 艾娃（带水下回声）：『我要回去！』 | 心跳与电子音叠在一起上扬；喊声余响回荡；水流骤然加速 |\n| 4 | 提示框定格【1】，蓝色文字向边缘消散，放射状气泡与上方船体剪影转入水下·回溯白光态207，画面由207整体接管，硬切。 | 1 | 满屏特写 | 急速扩张后硬切 | 屏幕文字：【1】 | 短促高频电子爆音；瞬间全静默 |",
+              "id": 7,
+              "index": 6
+            }
+          ],
+          "videoList": []
+        },
+        {
+          "id": 1790715654150,
+          "variants": [
+            {
+              "trackId": 1790715654150,
+              "language": "en-US",
+              "prompt": "subject_definitions:\n<Subject 1> is Ava in morning casual wear from <Picture 1>, a premium semi-realistic Chinese 3D donghua character whose face, front, side, and back reference panels depict the same woman; she has long dark hair, controlled stylized facial proportions, brown eyes, refined skin shading with a faint sweat sheen, a light gray long-sleeve crew-neck shirt, matching light gray lounge trousers, and bare feet.\n<Subject 2> is Ava’s apartment from <Picture 2>, a modern open bedroom-and-living space with warm wood flooring, pale gray walls, a bed beside floor-to-ceiling windows, a television on a low console, a deep blue sofa, work desks, and a bright morning city skyline with traffic beyond the glass.\n<Subject 3> is the translucent flashback overlay from <Picture 3>, a blue-toned semi-transparent memory layer showing darkened skyscrapers, crowded figures, and reflective fragments superimposed over the unchanged apartment.\n<Subject 4> is the blue holographic restart blueprint interface from <Picture 4>, a luminous transparent system panel titled \"Marine Infrastructure Core · 07\" with system icons, storage status, a wireframe level-one emergency floating platform over water, and a storm countdown.\n<Subject 5> is the smartphone 72-hour date page from <Picture 5>, a black phone held in hand with a bright white screen showing the prominent text \"72 Hours Before the Catastrophe\" above a calendar-grid interface in a dim bedroom.\n\nsummary:\n[reference generation] <Subject 1> wakes abruptly inside <Subject 2>, checks <Subject 5> and discovers that the morning is seventy-two hours before the disaster, then sees the normal city and television news before the crisis visions in <Subject 3> flash across the room; after suppressing her fear, <Subject 1> faces <Subject 4> as the restarted emergency system displays the floating-platform blueprint and the approaching extreme-storm countdown.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - Ava retains the same facial structure, eye shape, nose and jaw, long dark hair, stylized proportions, light gray loungewear, bare feet, and faint sweat sheen from <Picture 1>, with only breathing, expression, and pose changing across the sequence.\n<Subject 2> (appears in [Shot 1]): fully_preserved - the bedroom, living area, floor-to-ceiling windows, television console, blue sofa, desks, wood floor, city skyline, morning light, and spatial layout from <Picture 2> remain consistent throughout.\n<Subject 3> (appears in [Shot 4]): fully_preserved - the blue semi-transparent overlay, darkened city forms, crowd imagery, reflective surfaces, and memory-layer relationship to the apartment from <Picture 3> are preserved as timed flashback fragments.\n<Subject 4> (appears in [Shot 5]): partially_preserved - the hologram retains <Picture 4>’s glowing blue panel, English title, icon system, water field, wireframe emergency platform, and countdown, while modules activate and later dim according to the story beats.\n<Subject 5> (appears in [Shot 2]): fully_preserved - the phone preserves the black handset, hand-held composition, bright white interface, calendar grid, and prominent \"72 Hours Before the Catastrophe\" text from <Picture 5>, with the required early-morning time shown on the active screen.\n\ndetailed_description:\nThe sequence uses cinematic semi-realistic 3D animation matching the refinement of <Picture 1>: Ava keeps the same eye-to-face proportion, nose structure, jaw shape, layered dark hair, skin highlights, soft knit clothing, and barefoot anatomy in every frame. <Subject 2> shares the same physical lighting, material response, morning window direction, and contact shadows, while the reference-sheet layout, repeated panels, and display background are never reproduced.\n\n[Shot 1] A retrospective white flash hard-cuts into the morning bedroom of <Subject 2>. <Subject 1> jerks upright from the bed, pressing one hand into the sheet while her shoulders rise with rapid breathing. A trace of cold sweat slides along her temple, and loose dark hair settles against her neck. The bed covers drag and wrinkle from the sudden motion. The camera gives a close shot with a slight handheld emergency-stop movement, then quickly stabilizes on her upper body and alarmed face. The white-flash resonance cuts off abruptly, leaving hurried breathing and the friction of bed linens.\n\n[Shot 2] At 00:02.000, <Subject 1> grabs <Subject 5> from the bedside. The screen lights to the bright white date page from <Picture 5>, clearly showing \"72 Hours Before the Catastrophe\" and an early-morning time indication above the calendar grid. Her fingers tighten around the phone as the screen glow catches her face. The camera begins in a close shot of the hand and display, then slowly lifts to a close facial shot. Her pupils contract while her breathing remains uneven. A phone alert chime sounds, and distant morning traffic gradually enters through the window.\n\n[Shot 3] At 00:04.000, the scene opens into a medium shot inside <Subject 2>. Through the floor-to-ceiling windows, the city towers and traffic look completely normal in soft morning light. The television in the living area switches on while <Subject 1> stands at the boundary between bedroom and living room, barefoot on the wood floor and watching the screen. The camera slowly pushes past her shoulder toward the television. The bottom news subtitle displays \"Abnormally high tides near shore; some port areas suspend nighttime operations.\" The city hums with low traffic ambience while the television produces a subdued, indistinct broadcast bed beneath the subtitle.\n\n[Shot 4] At 00:07.000, rapid memory fragments from <Subject 3> appear as semi-transparent hard flashes on the window glass and television surface. The same news report appears first, followed by the city in total blackout three days later, long crowds waiting for water seven days later, and forty-seven days later a tilted cruise-ship railing with a white glow beneath the water. <Subject 1> stands motionless, her reflection layered in the glass, while her frightened expression slowly becomes controlled and resolute. The camera remains in a fixed close composition as the fragments cross-dissolve and flash. The broadcast sound briefly distorts, electric-current snaps cut through it, and distant crowd noise overlaps with underwater bubbles before the memory effects abruptly stop.\n\n[Shot 5] At 00:10.000, <Subject 4> expands in the air before <Subject 1>. Its glowing blue panel matches <Picture 4>, including the title \"Marine Infrastructure Core · 07,\" the projected water field, and the rotating wireframe level-one emergency floating platform. Modules light in sequence, displaying \"Core 07 restarted,\" \"Initial storage: 30 m³,\" and \"Initial blueprint: Level-1 emergency floating platform.\" <Subject 1> neither retreats nor smiles; she looks directly at the interface with steady focus. The camera pushes in slowly from medium-close framing, with a slight depth-of-field tightening as the panel unfolds. Cold electronic startup tones and soft scanning-line sounds accompany the activating modules.\n\n[Shot 6] At 00:11.000, the other interface modules dim. A single extreme-storm countdown becomes the central highlight between <Subject 1> and <Subject 4>, its characters brightening and dimming in a regular pulse. The screen displays \"Time until first extreme storm: 71:58:41.\" Morning light remains visible in the apartment while blue interface light moves across Ava’s face. The camera locks onto the countdown with a sudden stop, then pushes in almost imperceptibly on each glow pulse. A soft electronic pulse note sounds in time with the highlighted numerals as the sequence ends.\n\noverall_soundscape:\nThe opening white-flash tone cuts off sharply, followed by Ava’s rapid breathing and the rustle of bed sheets. The phone alert introduces a clean digital sound, while distant traffic establishes an ordinary morning outside. The television supplies subdued broadcast ambience without intelligible speech. During the flashback overlay, the broadcast tone distorts into electric interruptions, distant crowd movement, and brief underwater bubbles that cut away together. The hologram brings cold startup chimes, scanning-line textures, and a final synchronized countdown pulse over restrained room tone.\n\nnon_diegetic_music:\nThere is no separate melodic score. A nearly subliminal low tonal tension lies beneath the physical sounds and city ambience, thinning during the phone and apartment beats and tightening into the final electronic countdown pulse without becoming an independent musical theme.",
+              "state": "已完成",
+              "reason": null,
+              "videoId": null
+            }
+          ],
+          "duration": 13,
+          "prompt": "subject_definitions:\n<Subject 1> is Ava in morning casual wear from <Picture 1>, a premium semi-realistic Chinese 3D donghua character whose face, front, side, and back reference panels depict the same woman; she has long dark hair, controlled stylized facial proportions, brown eyes, refined skin shading with a faint sweat sheen, a light gray long-sleeve crew-neck shirt, matching light gray lounge trousers, and bare feet.\n<Subject 2> is Ava’s apartment from <Picture 2>, a modern open bedroom-and-living space with warm wood flooring, pale gray walls, a bed beside floor-to-ceiling windows, a television on a low console, a deep blue sofa, work desks, and a bright morning city skyline with traffic beyond the glass.\n<Subject 3> is the translucent flashback overlay from <Picture 3>, a blue-toned semi-transparent memory layer showing darkened skyscrapers, crowded figures, and reflective fragments superimposed over the unchanged apartment.\n<Subject 4> is the blue holographic restart blueprint interface from <Picture 4>, a luminous transparent system panel titled \"海洋基建核心·07\" with system icons, storage status, a wireframe level-one emergency floating platform over water, and a storm countdown.\n<Subject 5> is the smartphone 72-hour date page from <Picture 5>, a black phone held in hand with a bright white screen showing the prominent text \"灾变前72小时\" above a calendar-grid interface in a dim bedroom.\n\nsummary:\n[reference generation] <Subject 1> wakes abruptly inside <Subject 2>, checks <Subject 5> and discovers that the morning is seventy-two hours before the disaster, then sees the normal city and television news before the crisis visions in <Subject 3> flash across the room; after suppressing her fear, <Subject 1> faces <Subject 4> as the restarted emergency system displays the floating-platform blueprint and the approaching extreme-storm countdown.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - Ava retains the same facial structure, eye shape, nose and jaw, long dark hair, stylized proportions, light gray loungewear, bare feet, and faint sweat sheen from <Picture 1>, with only breathing, expression, and pose changing across the sequence.\n<Subject 2> (appears in [Shot 1]): fully_preserved - the bedroom, living area, floor-to-ceiling windows, television console, blue sofa, desks, wood floor, city skyline, morning light, and spatial layout from <Picture 2> remain consistent throughout.\n<Subject 3> (appears in [Shot 4]): fully_preserved - the blue semi-transparent overlay, darkened city forms, crowd imagery, reflective surfaces, and memory-layer relationship to the apartment from <Picture 3> are preserved as timed flashback fragments.\n<Subject 4> (appears in [Shot 5]): partially_preserved - the hologram retains <Picture 4>’s glowing blue panel, Chinese title, icon system, water field, wireframe emergency platform, and countdown, while modules activate and later dim according to the story beats.\n<Subject 5> (appears in [Shot 2]): fully_preserved - the phone preserves the black handset, hand-held composition, bright white interface, calendar grid, and prominent \"灾变前72小时\" text from <Picture 5>, with the required early-morning time shown on the active screen.\n\ndetailed_description:\nThe sequence uses cinematic semi-realistic 3D animation matching the refinement of <Picture 1>: Ava keeps the same eye-to-face proportion, nose structure, jaw shape, layered dark hair, skin highlights, soft knit clothing, and barefoot anatomy in every frame. <Subject 2> shares the same physical lighting, material response, morning window direction, and contact shadows, while the reference-sheet layout, repeated panels, and display background are never reproduced.\n\n[Shot 1] A retrospective white flash hard-cuts into the morning bedroom of <Subject 2>. <Subject 1> jerks upright from the bed, pressing one hand into the sheet while her shoulders rise with rapid breathing. A trace of cold sweat slides along her temple, and loose dark hair settles against her neck. The bed covers drag and wrinkle from the sudden motion. The camera gives a close shot with a slight handheld emergency-stop movement, then quickly stabilizes on her upper body and alarmed face. The white-flash resonance cuts off abruptly, leaving hurried breathing and the friction of bed linens.\n\n[Shot 2] At 00:02.000, <Subject 1> grabs <Subject 5> from the bedside. The screen lights to the bright white date page from <Picture 5>, clearly showing \"灾变前72小时\" and an early-morning time indication above the calendar grid. Her fingers tighten around the phone as the screen glow catches her face. The camera begins in a close shot of the hand and display, then slowly lifts to a close facial shot. Her pupils contract while her breathing remains uneven. A phone alert chime sounds, and distant morning traffic gradually enters through the window.\n\n[Shot 3] At 00:04.000, the scene opens into a medium shot inside <Subject 2>. Through the floor-to-ceiling windows, the city towers and traffic look completely normal in soft morning light. The television in the living area switches on while <Subject 1> stands at the boundary between bedroom and living room, barefoot on the wood floor and watching the screen. The camera slowly pushes past her shoulder toward the television. The bottom news subtitle displays \"近海异常高潮位，部分港区暂停夜间作业.\" The city hums with low traffic ambience while the television produces a subdued, indistinct broadcast bed beneath the subtitle.\n\n[Shot 4] At 00:07.000, rapid memory fragments from <Subject 3> appear as semi-transparent hard flashes on the window glass and television surface. The same news report appears first, followed by the city in total blackout three days later, long crowds waiting for water seven days later, and forty-seven days later a tilted cruise-ship railing with a white glow beneath the water. <Subject 1> stands motionless, her reflection layered in the glass, while her frightened expression slowly becomes controlled and resolute. The camera remains in a fixed close composition as the fragments cross-dissolve and flash. The broadcast sound briefly distorts, electric-current snaps cut through it, and distant crowd noise overlaps with underwater bubbles before the memory effects abruptly stop.\n\n[Shot 5] At 00:10.000, <Subject 4> expands in the air before <Subject 1>. Its glowing blue panel matches <Picture 4>, including the title \"海洋基建核心·07,\" the projected water field, and the rotating wireframe level-one emergency floating platform. Modules light in sequence, displaying \"核心07已重启,\" \"初始仓储：30m³,\" and \"初始蓝图：一级应急浮台.\" <Subject 1> neither retreats nor smiles; she looks directly at the interface with steady focus. The camera pushes in slowly from medium-close framing, with a slight depth-of-field tightening as the panel unfolds. Cold electronic startup tones and soft scanning-line sounds accompany the activating modules.\n\n[Shot 6] At 00:11.000, the other interface modules dim. A single extreme-storm countdown becomes the central highlight between <Subject 1> and <Subject 4>, its characters brightening and dimming in a regular pulse. The screen displays \"距离第一轮极端风暴：71:58:41.\" Morning light remains visible in the apartment while blue interface light moves across Ava’s face. The camera locks onto the countdown with a sudden stop, then pushes in almost imperceptibly on each glow pulse. A soft electronic pulse note sounds in time with the highlighted numerals as the sequence ends.\n\noverall_soundscape:\nThe opening white-flash tone cuts off sharply, followed by Ava’s rapid breathing and the rustle of bed sheets. The phone alert introduces a clean digital sound, while distant traffic establishes an ordinary morning outside. The television supplies subdued broadcast ambience without intelligible speech. During the flashback overlay, the broadcast tone distorts into electric interruptions, distant crowd movement, and brief underwater bubbles that cut away together. The hologram brings cold startup chimes, scanning-line textures, and a final synchronized countdown pulse over restrained room tone.\n\nnon_diegetic_music:\nThere is no separate melodic score. A nearly subliminal low tonal tension lies beneath the physical sounds and city ambience, thinning during the phone and apartment beats and tightening into the final electronic countdown pulse without becoming an independent musical theme.",
+          "state": "已完成",
+          "reason": "",
+          "selectVideoId": 0,
+          "medias": [
+            {
+              "id": 7,
+              "name": "艾娃公寓",
+              "describe": "现代高层一居室公寓，开放式起居与睡眠区，整体为简约冷调的都市风格。入口侧设简洁玄关与窄柜，室内摆放双人床、书桌、沙发和低矮电视柜；整面落地大窗是构图中心，窗外可见密集楼群与正常车流，清晨暖光与白天自然光均可洒入。浅灰墙面、木纹地板与雾蓝软装形成干净克制的层次，电视正在滚动新闻，房间整洁但透着灾变前短暂平静的紧迫感。",
+              "type": "scene",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/scene/8552f3d6-8d2a-4f12-a06b-eb1499ce4e4b.jpg?size=20"
+            },
+            {
+              "id": 204,
+              "name": "清晨便服",
+              "describe": "继承五官识别点。深棕长发散披未扎马尾，穿浅灰棉质圆领家居睡衣与同色长裤、赤足，面带惊惶冷汗；清晨窗光侧照。仅用于灾变前72小时公寓惊醒场，与工装默认态互斥。",
+              "type": "role",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/role/06e0ac2c-2096-4f2b-bb7d-9c7163feb26f.jpg?size=20"
+            },
+            {
+              "id": 208,
+              "name": "闪回叠影",
+              "describe": "相对公寓默认态：清晨窗光中，玻璃与电视微光上半透明叠印三组冷蓝记忆碎片——大停电夜城、抢水人龙、倾斜邮轮栏杆；现实暖光与记忆冷蓝分层，艾娃凝望不动。用于前世记忆蒙太奇。",
+              "type": "scene",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/scene/65836730-2e85-4d5a-b07c-c4d32488dc40.jpg?size=20"
+            },
+            {
+              "id": 210,
+              "name": "重启蓝图",
+              "describe": "相对默认全息界面：清晨公寓中展开完整冷蓝面板，显示核心07已重启、30m³仓储、一级应急浮台线框蓝图、风暴倒计时71:58:41。现世苏醒后启用，与回溯提示框态互斥。",
+              "type": "tool",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/tool/b4b01480-1077-40d1-ac3f-637aae2c32b0.jpg?size=20"
+            },
+            {
+              "id": 211,
+              "name": "72时日期页",
+              "describe": "黑直板手机亮起日期锁屏，醒目标注灾变前72小时与清晨时间，冷白界面、简洁日历和未读通知；艾娃手握近景。用于公寓惊醒瞬间，与其他手机页面互斥。",
+              "type": "tool",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/tool/9dd0f641-49b3-462d-a816-ac4974bafac3.jpg?size=20"
+            },
+            {
+              "src": "",
+              "fileType": "image",
+              "sources": "storyboard",
+              "prompt": "### 片段一（约13s）\n**引用资产名称**：[艾娃·清晨便服, 艾娃公寓, 手机·72时日期页, 艾娃公寓·闪回叠影, 系统蓝色全息界面·重启蓝图]\n**引用资产ID**：[204, 7, 211, 208, 210]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 1 | 回溯白光骤然硬切到清晨卧室，艾娃猛地从床上坐起，手先按住被单急促喘息，冷汗沿鬓角滑下。 | 2 | 近景 | 轻微手持急停，随后迅速稳定 | 无台词 | 白光余音瞬间切断；急促呼吸；床褥摩擦声 |\n| 2 | 她抓起床头手机，屏幕亮起，清楚显示灾变前72小时与清晨时间；艾娃瞳孔收缩，呼吸仍未平复。 | 2 | 手部特写接面部近景 | 从屏幕缓抬到艾娃眼睛 | 屏幕文字：【灾变前72小时】 | 手机提示音；窗外遥远车流声进入 |\n| 3 | 落地窗外城市楼群与车流一切正常，电视在起居区亮起，底部滚动同一条不起眼新闻；艾娃站在卧室与客厅交界处盯住屏幕。 | 3 | 中景 | 缓推越过艾娃肩侧看向电视 | 电视新闻字幕：【近海异常高潮位，部分港区暂停夜间作业】 | 城市底噪；电视新闻声压低滚动 |\n| 4 | 窗玻璃与电视画面上叠印快速记忆碎片：同一条新闻、三天后大停电的黑暗楼群、七天后排长龙抢水的人群、四十七天后倾斜邮轮栏杆与水下白光；艾娃站在原地，脸上的惊惶一点点压下去。 | 3 | 近景叠化蒙太奇 | 固定机位，碎片以半透明硬闪切入 | 无台词 | 新闻声短暂失真；电流闪断声；远处人潮声与水下气泡声快速交叠后收住 |\n| 5 | 全息界面在她面前展开，模块依次亮起：核心重启、30m³仓储、一级应急浮台线框蓝图；艾娃没有后退，也没有兴奋，只直视界面。 | 1 | 中近景 | 稳定缓推，界面展开时轻微景深推进 | 屏幕文字：【核心07已重启】【初始仓储：30m³】【初始蓝图：一级应急浮台】 | 清冷电子启动音；扫描线轻响 |\n| 6 | 其余模块暗下，画面中央单独高亮极端风暴倒计时数字，字符边缘规律明暗起伏，占据艾娃与界面之间的视觉中心。 | 2 | 倒计时特写 | 急停锁定，高亮时极轻压近 | 屏幕文字：【距离第一轮极端风暴：71:58:41】 | 一声轻微脉冲提示音随高亮起伏 |",
+              "id": 8,
+              "index": 7
+            }
+          ],
+          "videoList": []
+        },
+        {
+          "id": 1790715663461,
+          "variants": [
+            {
+              "trackId": 1790715663461,
+              "language": "en-US",
+              "prompt": "subject_definitions:\n<Subject 1> is Ava in morning casual loungewear from <Picture 1>, a premium semi-realistic Chinese 3D donghua character whose face, front, side, and back panels depict the same person; she has long dark hair, controlled stylized eye proportions, a refined nose and jaw, detailed dewy skin shading, a light gray crew-neck long-sleeve top, matching loose long pants, and bare feet, serving as the identity and wardrobe authority.\n<Subject 2> is Ava’s apartment from <Picture 2>, a modern high-rise studio with warm wood flooring, gray walls, a blue sofa, a wall-mounted television, a bed beside the panoramic window, a narrow desk along the right wall, and a dense city avenue under soft dawn light, serving as the environment authority.\n<Subject 3> is the smartphone bank and asset transaction page from <Picture 3>, a dark-cased phone with a dark-blue luminous interface showing the large balance \"20,304,\" property and vehicle information tiles, status icons, and cool interface highlights, serving as the financial-screen reference.\n<Subject 4> is the smartphone call and contact page from <Picture 4>, using the same dark-cased phone and dark-blue contact-list interface with status icons, list controls, and the visible contact entry \"Vehicle Sale Warehouse Supplies,\" serving as the calling-screen reference.\n\nsummary:\n[reference generation] <Subject 1> is in <Subject 2>, where she uses <Subject 3> to check her balance, property valuation, and vehicle information while confirming a seventy-two-hour deadline. <Subject 1> then switches from <Subject 3> to <Subject 4>, calls the listed vehicle-sale contact, moves to the apartment window, and orders the car to be sold today.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - Ava retains the same facial structure, stylized eye proportions, nose and jaw, long dark hair, dewy 3D skin shading, light gray loungewear, body proportions, and barefoot state from <Picture 1> across all poses and lighting changes.\n<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - The apartment retains the right-wall desk, panoramic city window, bed, blue sofa, television, wood floor, gray wall materials, spatial layout, and soft dawn atmosphere from <Picture 2>.\n<Subject 3> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - The phone preserves the dark case, dark-blue financial interface, balance \"20,304,\" property tile, vehicle tile, icon layout, and cool luminous screen finish from <Picture 3>, including when the vehicle information is moved into a smaller upper panel.\n<Subject 4> (appears in [Shot 3], [Shot 4]): fully_preserved - The calling screen preserves the same smartphone hardware, dark-blue contact-list layout, icon arrangement, and visible contact entry \"Vehicle Sale Warehouse Supplies\" from <Picture 4>.\n\ndetailed_description:\nThe sequence uses the same premium semi-realistic 3D donghua rendering as the current character reference: <Subject 1> retains her observed eye-to-face proportion, refined nose and jaw, dewy skin shading, layered dark hair, and soft matte gray loungewear. <Subject 2>, <Subject 3>, and <Subject 4> share coherent three-dimensional lighting, realistic contact shadows, and consistent material quality.\n\n[Shot 1] A fixed high-angle shot frames the narrow right-wall desk from <Subject 2>, with Ava’s hands and phone in the foreground and the panoramic city window glowing softly beyond. <Subject 1> sits down, moves a faint holographic window toward the edge of her view, and opens the bank, property valuation, and vehicle information pages on <Subject 3>. The screen shows the balance \"20,304,\" a property tile, and a vehicle tile as her finger swipes and taps through the information. Her shoulders gradually straighten while her hair and loose sleeves settle with the movement. The camera holds on the desk and hands, then gently pushes toward her focused profile. Synchronized sound includes rapid phone touches, a quiet inhale, and stable distant traffic below the window.\n\n[Shot 2] At 00:03.000, the cut holds on a close facial shot and slowly pushes toward Ava’s eyes. Her fingertip rests on the edge of the phone while the account and vehicle pages remain visible below her line of sight. She glances from the balance toward the holographic countdown direction at the edge of the desk, and her expression becomes low and certain.\n<Subject 1> (S1), spoken language en-US, says: <d>[English] Seventy-two hours.</d>\nThe room tone and distant traffic lower beneath her voice, followed by one very soft electronic interface pulse.\n\n[Shot 3] At 00:06.000, the cut becomes a close hand shot that follows the dialing action. <Subject 1> leaves the financial pages and opens <Subject 4>, revealing the dark-blue contact list and the entry \"Vehicle Sale Warehouse Supplies.\" She selects it to place the first call while her other hand drags the vehicle information from <Subject 3> into a smaller panel at the top of the screen, ready for recording the sale price. The phone remains dark-cased and glossy under the desk lamp, while her gray sleeve brushes the tabletop. Synchronized sound includes the dialing wait tone and two light fingertip taps on the desk.\n\n[Shot 4] At 00:08.000, the cut opens in a medium close shot as the call connects. <Subject 1> rises from the desk with controlled momentum, her loungewear shifting naturally, and walks toward the panoramic window of <Subject 2>. The camera glides laterally with her and stops steadily as she faces the glass, where ordinary traffic moves through the city avenue outside. She holds the phone near her ear, breathes steadily, and pushes past the slight hoarseness of waking up.\n<Subject 1> (S1), spoken language en-US, says: <d>[English] Sell the car. Close the deal today.</d>\nSynchronized sound includes the call-connection prompt, a muffled unintelligible voice from the phone, Ava’s steady breathing, and continuous distant traffic.\n\noverall_soundscape:\nThe soundscape is grounded in the quiet apartment: a continuous layer of distant city traffic, soft room tone, and faint phone audio. Touchscreen taps, swipes, the dialing wait tone, two fingertip taps, the call-connection prompt, and a muffled voice on the line are synchronized with the visible phone actions. Ava’s breathing is quiet at first and becomes steadier and more controlled before her final instruction.\n\nnon_diegetic_music:\nA very restrained low ambient synth layer lies beneath the scene, using a soft pulse and sparse tension without competing with dialogue or phone sounds. It thins almost to silence during Ava’s close-up, then gains a faint decisive pulse as she commits to the call and walks to the window.",
+              "state": "已完成",
+              "reason": null,
+              "videoId": null
+            }
+          ],
+          "duration": 12,
+          "prompt": "subject_definitions:\n<Subject 1> is Ava in morning casual loungewear from <Picture 1>, a premium semi-realistic Chinese 3D donghua character whose face, front, side, and back panels depict the same person; she has long dark hair, controlled stylized eye proportions, a refined nose and jaw, detailed dewy skin shading, a light gray crew-neck long-sleeve top, matching loose long pants, and bare feet, serving as the identity and wardrobe authority.\n<Subject 2> is Ava’s apartment from <Picture 2>, a modern high-rise studio with warm wood flooring, gray walls, a blue sofa, a wall-mounted television, a bed beside the panoramic window, a narrow desk along the right wall, and a dense city avenue under soft dawn light, serving as the environment authority.\n<Subject 3> is the smartphone bank and asset transaction page from <Picture 3>, a dark-cased phone with a dark-blue luminous interface showing the large balance \"20,304,\" property and vehicle information tiles, status icons, and cool interface highlights, serving as the financial-screen reference.\n<Subject 4> is the smartphone call and contact page from <Picture 4>, using the same dark-cased phone and dark-blue contact-list interface with status icons, list controls, and the visible contact entry \"卖车仓库物资,\" serving as the calling-screen reference.\n\nsummary:\n[reference generation] <Subject 1> is in <Subject 2>, where she uses <Subject 3> to check her balance, property valuation, and vehicle information while confirming a seventy-two-hour deadline. <Subject 1> then switches from <Subject 3> to <Subject 4>, calls the listed vehicle-sale contact, moves to the apartment window, and orders the car to be sold today.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - Ava retains the same facial structure, stylized eye proportions, nose and jaw, long dark hair, dewy 3D skin shading, light gray loungewear, body proportions, and barefoot state from <Picture 1> across all poses and lighting changes.\n<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - The apartment retains the right-wall desk, panoramic city window, bed, blue sofa, television, wood floor, gray wall materials, spatial layout, and soft dawn atmosphere from <Picture 2>.\n<Subject 3> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - The phone preserves the dark case, dark-blue financial interface, balance \"20,304,\" property tile, vehicle tile, icon layout, and cool luminous screen finish from <Picture 3>, including when the vehicle information is moved into a smaller upper panel.\n<Subject 4> (appears in [Shot 3], [Shot 4]): fully_preserved - The calling screen preserves the same smartphone hardware, dark-blue contact-list layout, icon arrangement, and visible contact entry \"卖车仓库物资\" from <Picture 4>.\n\ndetailed_description:\nThe sequence uses the same premium semi-realistic 3D donghua rendering as the current character reference: <Subject 1> retains her observed eye-to-face proportion, refined nose and jaw, dewy skin shading, layered dark hair, and soft matte gray loungewear. <Subject 2>, <Subject 3>, and <Subject 4> share coherent three-dimensional lighting, realistic contact shadows, and consistent material quality.\n\n[Shot 1] A fixed high-angle shot frames the narrow right-wall desk from <Subject 2>, with Ava’s hands and phone in the foreground and the panoramic city window glowing softly beyond. <Subject 1> sits down, moves a faint holographic window toward the edge of her view, and opens the bank, property valuation, and vehicle information pages on <Subject 3>. The screen shows the balance \"20,304,\" a property tile, and a vehicle tile as her finger swipes and taps through the information. Her shoulders gradually straighten while her hair and loose sleeves settle with the movement. The camera holds on the desk and hands, then gently pushes toward her focused profile. Synchronized sound includes rapid phone touches, a quiet inhale, and stable distant traffic below the window.\n\n[Shot 2] At 00:03.000, the cut holds on a close facial shot and slowly pushes toward Ava’s eyes. Her fingertip rests on the edge of the phone while the account and vehicle pages remain visible below her line of sight. She glances from the balance toward the holographic countdown direction at the edge of the desk, and her expression becomes low and certain.\n<Subject 1> (S1) says:\n<d>[Chinese] 七十二小时.</d>\nThe room tone and distant traffic lower beneath her voice, followed by one very soft electronic interface pulse.\n\n[Shot 3] At 00:06.000, the cut becomes a close hand shot that follows the dialing action. <Subject 1> leaves the financial pages and opens <Subject 4>, revealing the dark-blue contact list and the entry \"卖车仓库物资.\" She selects it to place the first call while her other hand drags the vehicle information from <Subject 3> into a smaller panel at the top of the screen, ready for recording the sale price. The phone remains dark-cased and glossy under the desk lamp, while her gray sleeve brushes the tabletop. Synchronized sound includes the dialing wait tone and two light fingertip taps on the desk.\n\n[Shot 4] At 00:08.000, the cut opens in a medium close shot as the call connects. <Subject 1> rises from the desk with controlled momentum, her loungewear shifting naturally, and walks toward the panoramic window of <Subject 2>. The camera glides laterally with her and stops steadily as she faces the glass, where ordinary traffic moves through the city avenue outside. She holds the phone near her ear, breathes steadily, and pushes past the slight hoarseness of waking up.\n<Subject 1> (S1) says:\n<d>[Chinese] 卖车。今天成交.</d>\nSynchronized sound includes the call-connection prompt, a muffled unintelligible voice from the phone, Ava’s steady breathing, and continuous distant traffic.\n\noverall_soundscape:\nThe soundscape is grounded in the quiet apartment: a continuous layer of distant city traffic, soft room tone, and faint phone audio. Touchscreen taps, swipes, the dialing wait tone, two fingertip taps, the call-connection prompt, and a muffled voice on the line are synchronized with the visible phone actions. Ava’s breathing is quiet at first and becomes steadier and more controlled before her final instruction.\n\nnon_diegetic_music:\nA very restrained low ambient synth layer lies beneath the scene, using a soft pulse and sparse tension without competing with dialogue or phone sounds. It thins almost to silence during Ava’s close-up, then gains a faint decisive pulse as she commits to the call and walks to the window.",
+          "state": "已完成",
+          "reason": "",
+          "selectVideoId": 0,
+          "medias": [
+            {
+              "id": 7,
+              "name": "艾娃公寓",
+              "describe": "现代高层一居室公寓，开放式起居与睡眠区，整体为简约冷调的都市风格。入口侧设简洁玄关与窄柜，室内摆放双人床、书桌、沙发和低矮电视柜；整面落地大窗是构图中心，窗外可见密集楼群与正常车流，清晨暖光与白天自然光均可洒入。浅灰墙面、木纹地板与雾蓝软装形成干净克制的层次，电视正在滚动新闻，房间整洁但透着灾变前短暂平静的紧迫感。",
+              "type": "scene",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/scene/8552f3d6-8d2a-4f12-a06b-eb1499ce4e4b.jpg?size=20"
+            },
+            {
+              "id": 204,
+              "name": "清晨便服",
+              "describe": "继承五官识别点。深棕长发散披未扎马尾，穿浅灰棉质圆领家居睡衣与同色长裤、赤足，面带惊惶冷汗；清晨窗光侧照。仅用于灾变前72小时公寓惊醒场，与工装默认态互斥。",
+              "type": "role",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/role/06e0ac2c-2096-4f2b-bb7d-9c7163feb26f.jpg?size=20"
+            },
+            {
+              "id": 212,
+              "name": "银行交易页",
+              "describe": "手机显示银行账户、房产估值与车辆资料页面，余额、转账入口和资产卡片清晰，冷白金融界面映蓝边；用于筹钱盘点。与日期、通话、地图页互斥。",
+              "type": "tool",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/tool/51416a62-ef81-4259-90dd-6406a6680cd7.jpg?size=20"
+            },
+            {
+              "id": 213,
+              "name": "通话联络页",
+              "describe": "手机停在通话与联系人界面，通话计时、卖车仓库物资等联络记录可辨，界面冷峻；艾娃连续拨打电话时使用。与日期、银行、地图页互斥。",
+              "type": "tool",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/tool/47b9c172-a598-495a-9775-25b753e81f1b.jpg?size=20"
+            },
+            {
+              "src": "",
+              "fileType": "image",
+              "sources": "storyboard",
+              "prompt": "### 片段二（约12s）\n**引用资产名称**：[艾娃·清晨便服, 艾娃公寓, 手机·银行交易页, 手机·通话联络页]\n**引用资产ID**：[204, 7, 212, 213]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 1 | 艾娃坐到书桌前，先把全息窗口移到视野边缘，手机连续打开银行账户、房产估值和车辆资料；她的手指快速滑动核对数字，肩背逐渐挺直。 | 3 | 近景 | 固定俯拍桌面与手部，结尾轻推到侧脸 | 无台词 | 手机触屏连点；轻微吸气；窗外车流声稳定遥远 |\n| 2 | 艾娃停在账户与车辆资料页面，指尖按在资料边缘，目光在余额和倒计时方向之间一扫，语气低而确定；确认日期的念白从容，动作与台词并行。 | 3 | 面部近景 | 缓推至眼神 | 艾娃：『七十二小时。』 | 环境声压低；一声很轻的电子脉冲 |\n| 3 | 她不再犹豫，立刻切换通话联络页拨出第一通电话，另一只手把车辆资料调到屏幕上方，准备记录成交价。 | 2 | 手部特写 | 固定跟随拨号动作 | 无台词 | 拨号等待音；指尖敲桌面两下 |\n| 4 | 电话接通，艾娃起身走到窗边，目光落在正常车流上，声音果断压过初醒的沙哑。 | 4 | 中近景 | 随起身平滑横移，最后在窗边停稳 | 艾娃：『卖车。今天成交。』 | 电话接通提示；对方模糊话音；艾娃稳定呼吸 |",
+              "id": 9,
+              "index": 8
+            }
+          ],
+          "videoList": []
+        },
+        {
+          "id": 1790715671994,
+          "variants": [
+            {
+              "trackId": 1790715671994,
+              "language": "en-US",
+              "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, a premium semi-realistic Chinese 3D donghua character shown on one complete character sheet; the face, front, side and back panels depict the same woman in one current state, with long dark hair, subtle damp sheen on her face and neck, controlled stylized facial proportions, and a plain light-gray long-sleeve loungewear top with matching long pants, serving as the identity and wardrobe authority.\n<Subject 2> is Ava’s apartment from <Picture 2>, a modern high-rise studio with warm wood flooring, a large floor-to-ceiling window facing a dense city skyline, a bed beside the window, a blue sofa and television area, and a narrow work desk with lamps on the right, serving as the environment, spatial layout and lighting authority.\n<Subject 3> is the smartphone call and contact page from <Picture 3>, a dark interface on a worn black phone showing a call list and the visible English contact entry \"Car-Sale Warehouse Supplies\", serving as the contact and calling-screen reference.\n<Subject 4> is the smartphone warehouse map page from <Picture 4>, a dark blue port-area city map with warehouse icons, a glowing blue route, a white location pin and remote candidate markers, serving as the map and route-planning reference.\n\nsummary:\n[reference generation] Across 15 seconds in <Subject 2>, Ava finishes the first call, opens <Subject 4> to compare remote port-area warehouses, selects a distant warehouse, makes a second call through <Subject 3> to request a short-term isolated rental, then immediately dials a third call and begins dictating supply items into a checklist while preserving her exact <Picture 1> identity, loungewear and the apartment’s <Picture 2> layout and lighting.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - The same facial structure, controlled eye proportions, nose and jaw design, long dark hair, subtle damp skin sheen, gray loungewear, body proportions and premium 3D donghua stylization remain consistent, with only expression, hand movement and posture changing.\n<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - The apartment layout, wood floor, floor-to-ceiling city window, work desk, bed, sofa, cool window light, warm practical lighting and metropolitan atmosphere remain consistent with <Picture 2>.\n<Subject 3> (appears in [Shot 2], [Shot 3]): fully_preserved - The worn black smartphone, dark call/contact interface and visible \"Car-Sale Warehouse Supplies\" contact entry retain the design of <Picture 3> during the second and third calls.\n<Subject 4> (appears in [Shot 1], [Shot 2]): fully_preserved - The dark port-area map, blue route, warehouse icons, white location pin and outlying candidate markers retain the visual design of <Picture 4> while Ava searches, selects and traces the route.\n\ndetailed_description:\nThe sequence uses the same premium semi-realistic 3D donghua rendering as <Picture 1>, preserving Ava’s refined facial structure, controlled eye-to-face proportions, long layered dark hair, subtle damp skin sheen and soft matte loungewear fabric. Ava, the phone interfaces and <Subject 2> share coherent cinematic light, contact shadows and physically based materials.\n\n[Shot 1] The shot begins inside <Subject 2> as an extreme close-up of the smartphone resting on the narrow work desk immediately after the first call ends. The screen switches to <Subject 4>, where the dark blue port map fills the frame and warehouse candidates around the harbor and outlying roads enlarge in quick digital zooms. Ava’s hand enters from the upper edge, and her knuckle presses and holds one warehouse marker far outside the central city. The camera pushes rapidly toward that selected marker until the white pin dominates the screen. Cool light from the floor-to-ceiling window reflects on the phone’s worn black edge, while the apartment’s wood floor and desk lamps remain softly visible in the background. Synchronized sound includes the call-ended prompt, soft interface taps and layered map zooming tones.\n\n[Shot 2] At 00:02.000, the shot cuts to a close profile view of Ava beside the work desk in <Subject 2>, then moves into a hand close-up as she opens <Subject 3> and dials the second contact. Her expression stays calm and unreadable, with only slight focus in her eyes. While listening to the ringing and muffled answer, her fingertip drags along the glowing blue route on <Subject 4>, marking the road toward the port area. Her other hand moves a pen across paper, making quick shorthand notes in time with the route. The camera alternates steadily between her profile and hands, keeping her gaze aligned with her finger direction, while the city skyline remains visible beyond the glass. Ava’s visible lip movement is synchronized with her en-US speech.\n<Subject 1> (S1) says:\n<d>[English] I need a warehouse on a short lease. The more remote the location, the better.</d>\nThe phone produces a dialing wait tone, a briefly connected but indistinct respondent voice, and the faint rapid scratch of the pen across paper.\n\n[Shot 3] At 00:08.000, the second call disconnects and Ava immediately dials the third call from <Subject 3>. In <Subject 2>, she stands squarely between the work desk and the floor-to-ceiling window, with the city skyline and muted evening traffic behind her. The camera begins in a fixed near shot and then pushes in extremely slowly as her posture becomes still. She looks toward a blank checklist column beside the map, pen ready. Faint keyboard sounds come through the earpiece after the call connects. Ava begins writing clear list lines, including \"Industrial Filter Elements\" and \"Mobile Water Storage Tanks\", while her pen records each item with soft, precise ticks. Her visible lip movement is synchronized with her en-US speech.\n<Subject 1> (S1) says:\n<d>[English] Industrial filter elements, mobile water storage tanks.</d>\nHer hair and loose loungewear remain mostly still, with only subtle motion from her breathing and writing arm. The sequence ends on the slow push toward her focused face, the glowing phone and the checklist as city light fades behind the glass.\n\noverall_soundscape:\nThe sound design is intimate and restrained, with soft apartment room tone, distant high-rise traffic beyond the window, phone call-end chimes, digital map zoom and tap sounds, dialing tones, a muffled connected voice without understandable words, faint keyboard clicks from the other caller, and quiet pen scratches on paper. Ava’s spoken lines are clear, natural, closely miked and delivered in en-US, while the phone audio remains slightly compressed and distant.\n\nnon_diegetic_music:\nNo non-diegetic music is used. The tension comes from the restrained room tone, precise interface sounds, faint phone audio and Ava’s controlled delivery.",
+              "state": "已完成",
+              "reason": null,
+              "videoId": null
+            }
+          ],
+          "duration": 15,
+          "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, a premium semi-realistic Chinese 3D donghua character shown on one complete character sheet; the face, front, side and back panels depict the same woman in one current state, with long dark hair, subtle damp sheen on her face and neck, controlled stylized facial proportions, and a plain light-gray long-sleeve loungewear top with matching long pants, serving as the identity and wardrobe authority.\n<Subject 2> is Ava’s apartment from <Picture 2>, a modern high-rise studio with warm wood flooring, a large floor-to-ceiling window facing a dense city skyline, a bed beside the window, a blue sofa and television area, and a narrow work desk with lamps on the right, serving as the environment, spatial layout and lighting authority.\n<Subject 3> is the smartphone call and contact page from <Picture 3>, a dark interface on a worn black phone showing a call list and the visible Chinese contact entry \"卖车仓库物资\", serving as the contact and calling-screen reference.\n<Subject 4> is the smartphone warehouse map page from <Picture 4>, a dark blue port-area city map with warehouse icons, a glowing blue route, a white location pin and remote candidate markers, serving as the map and route-planning reference.\n\nsummary:\n[reference generation] Across 15 seconds in <Subject 2>, Ava finishes the first call, opens <Subject 4> to compare remote port-area warehouses, selects a distant warehouse, makes a second call through <Subject 3> to request a short-term isolated rental, then immediately dials a third call and begins dictating supply items into a checklist while preserving her exact <Picture 1> identity, loungewear and the apartment’s <Picture 2> layout and lighting.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - The same facial structure, controlled eye proportions, nose and jaw design, long dark hair, subtle damp skin sheen, gray loungewear, body proportions and premium 3D donghua stylization remain consistent, with only expression, hand movement and posture changing.\n<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - The apartment layout, wood floor, floor-to-ceiling city window, work desk, bed, sofa, cool window light, warm practical lighting and metropolitan atmosphere remain consistent with <Picture 2>.\n<Subject 3> (appears in [Shot 2], [Shot 3]): fully_preserved - The worn black smartphone, dark call/contact interface and visible \"卖车仓库物资\" contact entry retain the design of <Picture 3> during the second and third calls.\n<Subject 4> (appears in [Shot 1], [Shot 2]): fully_preserved - The dark port-area map, blue route, warehouse icons, white location pin and outlying candidate markers retain the visual design of <Picture 4> while Ava searches, selects and traces the route.\n\ndetailed_description:\nThe sequence uses the same premium semi-realistic 3D donghua rendering as <Picture 1>, preserving Ava’s refined facial structure, controlled eye-to-face proportions, long layered dark hair, subtle damp skin sheen and soft matte loungewear fabric. Ava, the phone interfaces and <Subject 2> share coherent cinematic light, contact shadows and physically based materials.\n\n[Shot 1] The shot begins inside <Subject 2> as an extreme close-up of the smartphone resting on the narrow work desk immediately after the first call ends. The screen switches to <Subject 4>, where the dark blue port map fills the frame and warehouse candidates around the harbor and outlying roads enlarge in quick digital zooms. Ava’s hand enters from the upper edge, and her knuckle presses and holds one warehouse marker far outside the central city. The camera pushes rapidly toward that selected marker until the white pin dominates the screen. Cool light from the floor-to-ceiling window reflects on the phone’s worn black edge, while the apartment’s wood floor and desk lamps remain softly visible in the background. Synchronized sound includes the call-ended prompt, soft interface taps and layered map zooming tones.\n\n[Shot 2] At 00:02.000, the shot cuts to a close profile view of Ava beside the work desk in <Subject 2>, then moves into a hand close-up as she opens <Subject 3> and dials the second contact. Her expression stays calm and unreadable, with only slight focus in her eyes. While listening to the ringing and muffled answer, her fingertip drags along the glowing blue route on <Subject 4>, marking the road toward the port area. Her other hand moves a pen across paper, making quick shorthand notes in time with the route. The camera alternates steadily between her profile and hands, keeping her gaze aligned with her finger direction, while the city skyline remains visible beyond the glass.\n<Subject 1> (S1) says:\n<d>[Chinese] 仓库我要短租，位置越偏越好.</d>\nThe phone produces a dialing wait tone, a briefly connected but indistinct respondent voice, and the faint rapid scratch of the pen across paper.\n\n[Shot 3] At 00:08.000, the second call disconnects and Ava immediately dials the third call from <Subject 3>. In <Subject 2>, she stands squarely between the work desk and the floor-to-ceiling window, with the city skyline and muted evening traffic behind her. The camera begins in a fixed near shot and then pushes in extremely slowly as her posture becomes still. She looks toward a blank checklist column beside the map, pen ready. Faint keyboard sounds come through the earpiece after the call connects. Ava begins writing clear list lines, including \"工业滤芯\" and \"移动储水罐\", while her pen records each item with soft, precise ticks.\n<Subject 1> (S1) says:\n<d>[Chinese] 工业滤芯、移动储水罐.</d>\nHer hair and loose loungewear remain mostly still, with only subtle motion from her breathing and writing arm. The sequence ends on the slow push toward her focused face, the glowing phone and the checklist as city light fades behind the glass.\n\noverall_soundscape:\nThe sound design is intimate and restrained, with soft apartment room tone, distant high-rise traffic beyond the window, phone call-end chimes, digital map zoom and tap sounds, dialing tones, a muffled connected voice without understandable words, faint keyboard clicks from the other caller, and quiet pen scratches on paper. Ava’s two spoken lines are clear, natural and closely miked, while the phone audio remains slightly compressed and distant.\n\nnon_diegetic_music:\nNo non-diegetic music is used. The tension comes from the restrained room tone, precise interface sounds, faint phone audio and Ava’s controlled delivery.",
+          "state": "已完成",
+          "reason": "",
+          "selectVideoId": 0,
+          "medias": [
+            {
+              "id": 7,
+              "name": "艾娃公寓",
+              "describe": "现代高层一居室公寓，开放式起居与睡眠区，整体为简约冷调的都市风格。入口侧设简洁玄关与窄柜，室内摆放双人床、书桌、沙发和低矮电视柜；整面落地大窗是构图中心，窗外可见密集楼群与正常车流，清晨暖光与白天自然光均可洒入。浅灰墙面、木纹地板与雾蓝软装形成干净克制的层次，电视正在滚动新闻，房间整洁但透着灾变前短暂平静的紧迫感。",
+              "type": "scene",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/scene/8552f3d6-8d2a-4f12-a06b-eb1499ce4e4b.jpg?size=20"
+            },
+            {
+              "id": 204,
+              "name": "清晨便服",
+              "describe": "继承五官识别点。深棕长发散披未扎马尾，穿浅灰棉质圆领家居睡衣与同色长裤、赤足，面带惊惶冷汗；清晨窗光侧照。仅用于灾变前72小时公寓惊醒场，与工装默认态互斥。",
+              "type": "role",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/role/06e0ac2c-2096-4f2b-bb7d-9c7163feb26f.jpg?size=20"
+            },
+            {
+              "id": 213,
+              "name": "通话联络页",
+              "describe": "手机停在通话与联系人界面，通话计时、卖车仓库物资等联络记录可辨，界面冷峻；艾娃连续拨打电话时使用。与日期、银行、地图页互斥。",
+              "type": "tool",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/tool/47b9c172-a598-495a-9775-25b753e81f1b.jpg?size=20"
+            },
+            {
+              "id": 214,
+              "name": "仓库地图页",
+              "describe": "手机显示城市地图与偏远仓库候选点位，路线、港区、郊区标记和搜索栏清楚，冷蓝光屏；用于短租偏僻仓库选址。与日期、银行、通话页互斥。",
+              "type": "tool",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/tool/c4684466-caaa-428a-9fca-899fdc0cd352.jpg?size=20"
+            },
+            {
+              "src": "",
+              "fileType": "image",
+              "sources": "storyboard",
+              "prompt": "### 片段三（约15s）\n**引用资产名称**：[艾娃·清晨便服, 艾娃公寓, 手机·仓库地图页, 手机·通话联络页]\n**引用资产ID**：[204, 7, 214, 213]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 1 | 第一通电话刚断，艾娃立刻打开城市地图，港区与郊区偏远仓库候选点被逐一放大；她用指节点住其中一个远离城区的位置。 | 2 | 手机屏幕特写 | 快速推近地图标记 | 无台词 | 通话结束提示；地图缩放声 |\n| 2 | 她拨出第二通电话，边听边在地图上划出通往港区的路线，脸上没有多余表情，只强调短租和偏僻；划线与记录动作和念白并行，语速自然清晰。 | 6 | 侧脸近景接手部特写 | 稳定交替切换，视线与手指方向一致 | 艾娃：『仓库我要短租，位置越偏越好。』 | 拨号等待音；电话里含混回应；笔尖快速划过纸面 |\n| 3 | 第二通电话挂断，她立刻拨出第三通电话，身体站定在书桌与落地窗之间，目光投向即将开列的清单栏。 | 7 | 近景 | 固定机位起幅，拨号后随语气极缓推近 | 艾娃：『工业滤芯、移动储水罐、』 | 拨号等待音后接通；对方键盘敲击声隐约传来；艾娃落笔记录声 |",
+              "id": 10,
+              "index": 9
+            }
+          ],
+          "videoList": []
+        },
+        {
+          "id": 1790715681264,
+          "variants": [
+            {
+              "trackId": 1790715681264,
+              "language": "en-US",
+              "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, a premium semi-realistic Chinese 3D donghua character asset whose face, front, side and back panels depict the same person, with long dark hair, controlled stylized facial proportions, a defined nose and jaw, naturally shaded skin, and a light heather-gray long-sleeve crew-neck top with matching loose trousers, used as the sole identity and wardrobe reference.\n<Subject 2> is Ava’s apartment from <Picture 2>, a modern open studio with warm wood flooring, muted gray walls, a large floor-to-ceiling city window, a bed beside the glass, a blue sofa, a low television console, a right-side work desk, and soft cool daylight mixed with warm interior light.\n<Subject 3> is the black smartphone call-contact page from <Picture 3>, with a dark interface, large call timer, status icons, blue edge accent, and the visible supply-contact entry \"Vehicle Warehouse Supplies\", used as the active telephone and mobile-screen reference.\n\nsummary:\n[reference generation] In <Subject 2>, <Subject 1> continues a supply call using <Subject 3>; the phone keeps its referenced black hardware and dark call interface while a new material list opens as she dictates. Over nine seconds, list rows for rescue equipment, current stock and price quotations expand one by one, and the camera makes a small smooth arc from a frontal close shot to a side-front close shot while <Subject 1> scans the screen and speaks with steady finality.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - Ava retains the same facial structure, eye proportions, nose, jaw, long dark hair, body proportions and light-gray loungewear, with only natural speech, gaze shifts, hand movement and subtle hair-and-cloth motion added.\n<Subject 2> (appears in [Shot 1]): fully_preserved - the apartment preserves its open layout, floor-to-ceiling city window, bed, blue sofa, television console, work desk, wood floor, gray walls and mixed cool-daylight/warm-interior atmosphere.\n<Subject 3> (appears in [Shot 1]): partially_preserved - the phone body, dark call interface, timer and supply-contact entry remain from <Picture 3>, while the story-required new material list expands over the interface during the ongoing call.\n\ndetailed_description:\nAva’s rendering matches <Picture 1> in its stylized semi-realistic facial proportions, nose and jaw structure, layered dark hair, controlled skin shading and soft heathered knit material. <Subject 2> and <Subject 3> share the same physically based lighting, contact shadows and three-dimensional material quality, with the phone screen reflecting the apartment’s cool window light.\n\n[Shot 1] In a close shot at the narrow work desk on the right side of <Subject 2>, <Subject 3> stands upright before <Subject 1>. Its dark call-contact page remains active, the large timer glows at the top, and the supply-contact label \"Vehicle Warehouse Supplies\" is visible. The city skyline fills the large window behind Ava while the connected telephone line stays open. Ava faces the phone with a calm, deliberate expression. Her finger taps the display to create a new list headed \"Supply List\". As she begins dictating, rows expand one after another across the screen, showing \"Rescue Equipment\", \"In Stock\" and \"Quotation\"; each new field illuminates softly when it opens. Ava’s eyes move steadily down the expanding list without leaving the screen. In her other hand, a stylus makes short precise strokes to record the request. Her long hair shifts slightly with the small motion, and the soft fabric of her gray top settles naturally. The camera maintains a close framing while moving in a small smooth arc from directly in front of Ava to a side-front angle, keeping her face and the phone clearly readable. Her mouth moves in synchronized en-US speech with a steady tone that leaves no room for negotiation.\n<Subject 1> (S1), spoken language en-US, says:\n<d>[English] Rescue equipment—give me quotes on everything you have in stock.</d>\nAfter the final word, the quotation field remains active while the call continues.\n\noverall_soundscape:\nA faint continuous telephone-line hum runs beneath the scene. Distant keyboard tapping from the other caller is barely audible behind Ava’s voice. The phone produces soft touch taps, subtle row-expansion clicks and light stylus strokes as the list opens. Muted city traffic enters through the large window, while the apartment remains quiet and controlled.\n\nnon_diegetic_music:\nNo non-diegetic music is present; the sequence relies entirely on Ava’s voice, the connected call, interface sounds and restrained apartment ambience.",
+              "state": "已完成",
+              "reason": null,
+              "videoId": null
+            }
+          ],
+          "duration": 9,
+          "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, a premium semi-realistic Chinese 3D donghua character asset whose face, front, side and back panels depict the same person, with long dark hair, controlled stylized facial proportions, a defined nose and jaw, naturally shaded skin, and a light heather-gray long-sleeve crew-neck top with matching loose trousers, used as the sole identity and wardrobe reference.\n<Subject 2> is Ava’s apartment from <Picture 2>, a modern open studio with warm wood flooring, muted gray walls, a large floor-to-ceiling city window, a bed beside the glass, a blue sofa, a low television console, a right-side work desk, and soft cool daylight mixed with warm interior light.\n<Subject 3> is the black smartphone call-contact page from <Picture 3>, with a dark interface, large call timer, status icons, blue edge accent, and the visible supply-contact entry \"卖车仓库物资\", used as the active telephone and mobile-screen reference.\n\nsummary:\n[reference generation] In <Subject 2>, <Subject 1> continues a supply call using <Subject 3>; the phone keeps its referenced black hardware and dark call interface while a new material list opens as she dictates. Over nine seconds, list rows for rescue equipment, current stock and price quotations expand one by one, and the camera makes a small smooth arc from a frontal close shot to a side-front close shot while <Subject 1> scans the screen and speaks with steady finality.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - Ava retains the same facial structure, eye proportions, nose, jaw, long dark hair, body proportions and light-gray loungewear, with only natural speech, gaze shifts, hand movement and subtle hair-and-cloth motion added.\n<Subject 2> (appears in [Shot 1]): fully_preserved - the apartment preserves its open layout, floor-to-ceiling city window, bed, blue sofa, television console, work desk, wood floor, gray walls and mixed cool-daylight/warm-interior atmosphere.\n<Subject 3> (appears in [Shot 1]): partially_preserved - the phone body, dark call interface, timer and supply-contact entry remain from <Picture 3>, while the story-required new material list expands over the interface during the ongoing call.\n\ndetailed_description:\nAva’s rendering matches <Picture 1> in its stylized semi-realistic facial proportions, nose and jaw structure, layered dark hair, controlled skin shading and soft heathered knit material. <Subject 2> and <Subject 3> share the same physically based lighting, contact shadows and three-dimensional material quality, with the phone screen reflecting the apartment’s cool window light.\n\n[Shot 1] In a close shot at the narrow work desk on the right side of <Subject 2>, <Subject 3> stands upright before <Subject 1>. Its dark call-contact page remains active, the large timer glows at the top, and the supply-contact label \"卖车仓库物资\" is visible. The city skyline fills the large window behind Ava while the connected telephone line stays open. Ava faces the phone with a calm, deliberate expression. Her finger taps the display to create a new list headed \"物资清单\". As she begins dictating, rows expand one after another across the screen, showing \"救生设备\", \"现货\" and \"报价\"; each new field illuminates softly when it opens. Ava’s eyes move steadily down the expanding list without leaving the screen. In her other hand, a stylus makes short precise strokes to record the request. Her long hair shifts slightly with the small motion, and the soft fabric of her gray top settles naturally. The camera maintains a close framing while moving in a small smooth arc from directly in front of Ava to a side-front angle, keeping her face and the phone clearly readable. Her mouth moves in synchronized speech with a steady tone that leaves no room for negotiation.\n<Subject 1> (S1) says:\n<d>[Chinese] 救生设备，有现货的全部给我报价.</d>\nAfter the final word, the quotation field remains active while the call continues.\n\noverall_soundscape:\nA faint continuous telephone-line hum runs beneath the scene. Distant keyboard tapping from the other caller is barely audible behind Ava’s voice. The phone produces soft touch taps, subtle row-expansion clicks and light stylus strokes as the list opens. Muted city traffic enters through the large window, while the apartment remains quiet and controlled.\n\nnon_diegetic_music:\nNo non-diegetic music is present; the sequence relies entirely on Ava’s voice, the connected call, interface sounds and restrained apartment ambience.",
+          "state": "已完成",
+          "reason": "",
+          "selectVideoId": 0,
+          "medias": [
+            {
+              "id": 7,
+              "name": "艾娃公寓",
+              "describe": "现代高层一居室公寓，开放式起居与睡眠区，整体为简约冷调的都市风格。入口侧设简洁玄关与窄柜，室内摆放双人床、书桌、沙发和低矮电视柜；整面落地大窗是构图中心，窗外可见密集楼群与正常车流，清晨暖光与白天自然光均可洒入。浅灰墙面、木纹地板与雾蓝软装形成干净克制的层次，电视正在滚动新闻，房间整洁但透着灾变前短暂平静的紧迫感。",
+              "type": "scene",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/scene/8552f3d6-8d2a-4f12-a06b-eb1499ce4e4b.jpg?size=20"
+            },
+            {
+              "id": 204,
+              "name": "清晨便服",
+              "describe": "继承五官识别点。深棕长发散披未扎马尾，穿浅灰棉质圆领家居睡衣与同色长裤、赤足，面带惊惶冷汗；清晨窗光侧照。仅用于灾变前72小时公寓惊醒场，与工装默认态互斥。",
+              "type": "role",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/role/06e0ac2c-2096-4f2b-bb7d-9c7163feb26f.jpg?size=20"
+            },
+            {
+              "id": 213,
+              "name": "通话联络页",
+              "describe": "手机停在通话与联系人界面，通话计时、卖车仓库物资等联络记录可辨，界面冷峻；艾娃连续拨打电话时使用。与日期、银行、地图页互斥。",
+              "type": "tool",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/tool/47b9c172-a598-495a-9775-25b753e81f1b.jpg?size=20"
+            },
+            {
+              "src": "",
+              "fileType": "image",
+              "sources": "storyboard",
+              "prompt": "### 片段四（约9s）\n**引用资产名称**：[艾娃·清晨便服, 艾娃公寓, 手机·通话联络页]\n**引用资产ID**：[204, 7, 213]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 1 | 同一通物资电话继续，艾娃面前新建物资清单，清单栏随她口述逐项展开；机位从正面近景略转到侧前方近景，她视线逐项扫过清单，语速平稳却没有任何商量空隙。 | 9 | 侧前方近景 | 沿圆弧小幅横移，景别保持近景 | 艾娃：『救生设备，有现货的全部给我报价。』 | 电话持续连通；对方键盘敲击声隐约；连续触屏与落笔记录声 |",
+              "id": 11,
+              "index": 10
+            }
+          ],
+          "videoList": []
+        },
+        {
+          "id": 1790715690854,
+          "variants": [
+            {
+              "trackId": 1790715690854,
+              "language": "en-US",
+              "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, a premium semi-realistic Chinese 3D donghua character asset shown in one complete character sheet whose face, front, side and back panels depict the same person; she has long dark hair, controlled stylized facial proportions, a calm refined face with damp skin sheen, and a light heather-gray long-sleeve loungewear top with matching long pants, serving as the sole identity and wardrobe authority.\n<Subject 2> is Ava’s apartment from <Picture 2>, a modern high-rise studio with warm wood flooring, a large floor-to-ceiling city window, a bed beside the window, a deep-blue sofa, a television console, a right-side work desk, soft overcast daylight, and calm distant traffic below, serving as the environment and lighting authority.\n<Subject 3> is the blue holographic restart blueprint interface from <Picture 3>, a translucent emergency platform display showing \"Marine Infrastructure Core · 07\", \"Core 07 restarted\", \"30m³ storage\", \"Level 1 emergency floating platform\", a wireframe offshore platform, and \"Storm countdown 71:58:41\", serving as the holographic planning and countdown authority.\n<Subject 4> is the smartphone call-contact page from <Picture 4>, a dark slim phone with a blue-edged screen, call duration display, contact list, and visible \"Vehicle Sales Warehouse Supplies\" contact grouping, serving as the authority for the completed calls and vehicle, warehouse and supply contact records.\n\nsummary:\n[reference generation] In Ava’s apartment at dawn, <Subject 1> finishes a sequence of calls, places <Subject 4> on the desk beside the active <Subject 3>, organizes her emergency preparations, and quietly resolves to act before the first extreme storm arrives. The 13.5-second sequence moves from a top-down desk view to close facial framing, ends on her determined eyes, cuts to black, and leaves only a brief electronic pulse from the blueprint interface.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - Ava retains the exact facial structure, eye proportions, nose and mouth design, long dark hair, damp skin sheen, slim stylized proportions, and light gray loungewear from <Picture 1>, with only expression and pose changing.\n<Subject 2> (appears in [Shot 1]): fully_preserved - the apartment preserves the floor-to-ceiling window, city skyline, bed, blue sofa, television area, work desk, wood floor, spatial layout, and soft overcast daylight from <Picture 2>.\n<Subject 3> (appears in [Shot 1]): fully_preserved - the translucent blue hologram retains its panel shape, wireframe floating platform, English labels, storage module, ocean background, and storm countdown from <Picture 3>, with only the countdown value and pulse state animating.\n<Subject 4> (appears in [Shot 1]): fully_preserved - the phone retains the dark slim hardware, blue-edged call interface, contact-list layout, and vehicle, warehouse and supply contact information from <Picture 4>, with the screen remaining on the recent-call records after it is set down.\n\ndetailed_description:\nAva is rendered with the same premium semi-realistic 3D stylization as <Picture 1>: her controlled eye-to-face proportions, refined nose and jaw, layered dark hair, damp skin highlights, and soft gray knit loungewear remain consistent in every frame. The apartment and holographic interfaces share the same physically based lighting, clear contact shadows, and cinematic three-dimensional presentation as <Picture 2> and <Picture 3>.\n\n[Shot 1] A high overhead view looks down at the right-side work desk in <Subject 2>. <Subject 1> finishes the last of several consecutive calls and lowers <Subject 4> onto the desk. The phone screen stays on the dark call-contact page, showing the recent records grouped around \"Vehicle Sales\", \"Warehouse\", and \"Supplies\", with the visible \"Vehicle Sales Warehouse Supplies\" entry matching <Picture 4>. Beside it, <Subject 3> hovers in translucent blue light; its wireframe first-level emergency floating platform rotates almost imperceptibly while the \"30m³ storage\" module gives quiet, regular flashes. The camera slowly pulls back from directly above the phone and blueprint, revealing the wood desktop, soft window reflections, and the calm city beyond the apartment windows. A light tap sounds as the phone meets the desk, followed by several restrained message chimes and steady distant traffic.\n\n[Shot 2] At 00:02.000, the shot becomes a close view as Ava lifts her eyes toward the holographic countdown. The camera pushes in smoothly until Ava and the lower-right countdown share the frame. The numbers decrease silently from \"Storm countdown 71:58:41\", while the interface displays the clear screen text \"【Time until the first extreme storm: 71:58:41】\". Blue holographic light moves across her focused face and gray collar without changing her identity or clothing. A soft countdown pulse is audible beneath her controlled breathing; the room otherwise remains still.\n\n[Shot 3] At 00:05.000, a fixed symmetric medium shot frames Ava at the desk with the city window centered behind her. She closes the vehicle information folder, then aligns the call records, map-location page, and supply checklist into one neat row. Her motions are economical and decisive, and her expression becomes calm and resolved without hesitation. The pages settle together, and she places a pen on the desk with one crisp click. The hologram continues glowing at the edge of the composition, while the apartment remains lit by the same overcast daylight.\n\n[Shot 4] At 00:07.000, the camera begins a final slow push into a close facial shot. Ava first looks through the window at the city still functioning normally, then shifts her gaze back to the holographic countdown. Her hair and loose fabric shift only slightly with the small turn of her head. As the city noise gradually recedes under the push-in, <Subject 1> (S1), spoken language en-US, says:\n<d>[English] This time, I'm not waiting for the world to tell me it's time to run.</d>\nHer mouth moves naturally with the line, delivered softly but firmly. After the final word, she holds still for half a beat, and the distant traffic becomes nearly silent.\n\n[Shot 5] At 00:12.500, the framing closes tightly on Ava’s eyes as she looks unwaveringly at the holographic countdown. The image then cuts hard to black. For an instant, only the faint blue electronic pulse pattern belonging to <Subject 3> flickers across the darkness. One clear electronic pulse sounds, after which the scene becomes completely silent.\n\noverall_soundscape:\nThe sound design is restrained and cinematic. The opening desk action carries a soft phone placement, consecutive message alerts, paper movement, and calm traffic from beyond the windows. The hologram produces subtle periodic pulses, while Ava’s breathing remains controlled in the close shots. Paper closes and the pen makes one sharp, precise desk sound. During her final line, the city bedrock noise lowers steadily until only her voice and the following half-beat of quiet remain. The sequence ends with a single clear electronic pulse and then total silence.\n\nnon_diegetic_music:\nNo non-diegetic musical score is introduced during the sequence. Emotional tension is carried by Ava’s performance, the quiet apartment ambience, the holographic pulses, and the receding city sound. The final electronic pulse is an interface sound effect rather than music.",
+              "state": "已完成",
+              "reason": null,
+              "videoId": null
+            }
+          ],
+          "duration": 13.5,
+          "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, a premium semi-realistic Chinese 3D donghua character asset shown in one complete character sheet whose face, front, side and back panels depict the same person; she has long dark hair, controlled stylized facial proportions, a calm refined face with damp skin sheen, and a light heather-gray long-sleeve loungewear top with matching long pants, serving as the sole identity and wardrobe authority.\n<Subject 2> is Ava’s apartment from <Picture 2>, a modern high-rise studio with warm wood flooring, a large floor-to-ceiling city window, a bed beside the window, a deep-blue sofa, a television console, a right-side work desk, soft overcast daylight, and calm distant traffic below, serving as the environment and lighting authority.\n<Subject 3> is the blue holographic restart blueprint interface from <Picture 3>, a translucent emergency platform display showing \"海洋基建核心·07\", \"核心07已重启\", \"30m³仓储\", \"一级应急浮台\", a wireframe offshore platform, and \"风暴倒计时 71:58:41\", serving as the holographic planning and countdown authority.\n<Subject 4> is the smartphone call-contact page from <Picture 4>, a dark slim phone with a blue-edged screen, call duration display, contact list, and visible \"卖车仓库物资\" contact grouping, serving as the authority for the completed calls and vehicle, warehouse and supply contact records.\n\nsummary:\n[reference generation] In Ava’s apartment at dawn, <Subject 1> finishes a sequence of calls, places <Subject 4> on the desk beside the active <Subject 3>, organizes her emergency preparations, and quietly resolves to act before the first extreme storm arrives. The 13.5-second sequence moves from a top-down desk view to close facial framing, ends on her determined eyes, cuts to black, and leaves only a brief electronic pulse from the blueprint interface.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - Ava retains the exact facial structure, eye proportions, nose and mouth design, long dark hair, damp skin sheen, slim stylized proportions, and light gray loungewear from <Picture 1>, with only expression and pose changing.\n<Subject 2> (appears in [Shot 1]): fully_preserved - the apartment preserves the floor-to-ceiling window, city skyline, bed, blue sofa, television area, work desk, wood floor, spatial layout, and soft overcast daylight from <Picture 2>.\n<Subject 3> (appears in [Shot 1]): fully_preserved - the translucent blue hologram retains its panel shape, wireframe floating platform, Chinese labels, storage module, ocean background, and storm countdown from <Picture 3>, with only the countdown value and pulse state animating.\n<Subject 4> (appears in [Shot 1]): fully_preserved - the phone retains the dark slim hardware, blue-edged call interface, contact-list layout, and vehicle, warehouse and supply contact information from <Picture 4>, with the screen remaining on the recent-call records after it is set down.\n\ndetailed_description:\nAva is rendered with the same premium semi-realistic 3D stylization as <Picture 1>: her controlled eye-to-face proportions, refined nose and jaw, layered dark hair, damp skin highlights, and soft gray knit loungewear remain consistent in every frame. The apartment and holographic interfaces share the same physically based lighting, clear contact shadows, and cinematic three-dimensional presentation as <Picture 2> and <Picture 3>.\n\n[Shot 1] A high overhead view looks down at the right-side work desk in <Subject 2>. <Subject 1> finishes the last of several consecutive calls and lowers <Subject 4> onto the desk. The phone screen stays on the dark call-contact page, showing the recent records grouped around \"卖车\", \"仓库\", and \"物资\", with the visible \"卖车仓库物资\" entry matching <Picture 4>. Beside it, <Subject 3> hovers in translucent blue light; its wireframe first-level emergency floating platform rotates almost imperceptibly while the \"30m³仓储\" module gives quiet, regular flashes. The camera slowly pulls back from directly above the phone and blueprint, revealing the wood desktop, soft window reflections, and the calm city beyond the apartment windows. A light tap sounds as the phone meets the desk, followed by several restrained message chimes and steady distant traffic.\n\n[Shot 2] At 00:02.000, the shot becomes a close view as Ava lifts her eyes toward the holographic countdown. The camera pushes in smoothly until Ava and the lower-right countdown share the frame. The numbers decrease silently from \"风暴倒计时 71:58:41\", while the interface displays the clear screen text \"【距离第一轮极端风暴：71:58:41】\". Blue holographic light moves across her focused face and gray collar without changing her identity or clothing. A soft countdown pulse is audible beneath her controlled breathing; the room otherwise remains still.\n\n[Shot 3] At 00:05.000, a fixed symmetric medium shot frames Ava at the desk with the city window centered behind her. She closes the vehicle information folder, then aligns the call records, map-location page, and supply checklist into one neat row. Her motions are economical and decisive, and her expression becomes calm and resolved without hesitation. The pages settle together, and she places a pen on the desk with one crisp click. The hologram continues glowing at the edge of the composition, while the apartment remains lit by the same overcast daylight.\n\n[Shot 4] At 00:07.000, the camera begins a final slow push into a close facial shot. Ava first looks through the window at the city still functioning normally, then shifts her gaze back to the holographic countdown. Her hair and loose fabric shift only slightly with the small turn of her head. As the city noise gradually recedes under the push-in, <Subject 1> (S1) says:\n<d>[Chinese] 这一次，我不等世界告诉我该逃了.</d>\nHer mouth moves naturally with the line, delivered softly but firmly. After the final word, she holds still for half a beat, and the distant traffic becomes nearly silent.\n\n[Shot 5] At 00:12.500, the framing closes tightly on Ava’s eyes as she looks unwaveringly at the holographic countdown. The image then cuts hard to black. For an instant, only the faint blue electronic pulse pattern belonging to <Subject 3> flickers across the darkness. One clear electronic pulse sounds, after which the scene becomes completely silent.\n\noverall_soundscape:\nThe sound design is restrained and cinematic. The opening desk action carries a soft phone placement, consecutive message alerts, paper movement, and calm traffic from beyond the windows. The hologram produces subtle periodic pulses, while Ava’s breathing remains controlled in the close shots. Paper closes and the pen makes one sharp, precise desk sound. During her final line, the city bedrock noise lowers steadily until only her voice and the following half-beat of quiet remain. The sequence ends with a single clear electronic pulse and then total silence.\n\nnon_diegetic_music:\nNo non-diegetic musical score is introduced during the sequence. Emotional tension is carried by Ava’s performance, the quiet apartment ambience, the holographic pulses, and the receding city sound. The final electronic pulse is an interface sound effect rather than music.",
+          "state": "已完成",
+          "reason": "",
+          "selectVideoId": 0,
+          "medias": [
+            {
+              "id": 7,
+              "name": "艾娃公寓",
+              "describe": "现代高层一居室公寓，开放式起居与睡眠区，整体为简约冷调的都市风格。入口侧设简洁玄关与窄柜，室内摆放双人床、书桌、沙发和低矮电视柜；整面落地大窗是构图中心，窗外可见密集楼群与正常车流，清晨暖光与白天自然光均可洒入。浅灰墙面、木纹地板与雾蓝软装形成干净克制的层次，电视正在滚动新闻，房间整洁但透着灾变前短暂平静的紧迫感。",
+              "type": "scene",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/scene/8552f3d6-8d2a-4f12-a06b-eb1499ce4e4b.jpg?size=20"
+            },
+            {
+              "id": 204,
+              "name": "清晨便服",
+              "describe": "继承五官识别点。深棕长发散披未扎马尾，穿浅灰棉质圆领家居睡衣与同色长裤、赤足，面带惊惶冷汗；清晨窗光侧照。仅用于灾变前72小时公寓惊醒场，与工装默认态互斥。",
+              "type": "role",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/role/06e0ac2c-2096-4f2b-bb7d-9c7163feb26f.jpg?size=20"
+            },
+            {
+              "id": 210,
+              "name": "重启蓝图",
+              "describe": "相对默认全息界面：清晨公寓中展开完整冷蓝面板，显示核心07已重启、30m³仓储、一级应急浮台线框蓝图、风暴倒计时71:58:41。现世苏醒后启用，与回溯提示框态互斥。",
+              "type": "tool",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/tool/b4b01480-1077-40d1-ac3f-637aae2c32b0.jpg?size=20"
+            },
+            {
+              "id": 213,
+              "name": "通话联络页",
+              "describe": "手机停在通话与联系人界面，通话计时、卖车仓库物资等联络记录可辨，界面冷峻；艾娃连续拨打电话时使用。与日期、银行、地图页互斥。",
+              "type": "tool",
+              "fileType": "image",
+              "sources": "assets",
+              "src": "/oss/1790665121730/assets/1/tool/47b9c172-a598-495a-9775-25b753e81f1b.jpg?size=20"
+            },
+            {
+              "src": "",
+              "fileType": "image",
+              "sources": "storyboard",
+              "prompt": "### 片段五（约13.5s）\n**引用资产名称**：[艾娃·清晨便服, 艾娃公寓, 系统蓝色全息界面·重启蓝图, 手机·通话联络页]\n**引用资产ID**：[204, 7, 210, 213]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 1 | 艾娃连续结束通话，把手机放在桌上，屏幕上留下卖车、仓库、物资三类联络记录；一级应急浮台蓝图仍悬在旁边，仓储容量模块安静闪烁。 | 2 | 桌面俯拍 | 从手机与蓝图上方缓慢拉开 | 无台词 | 手机放下的轻响；连续消息提示音；窗外车流仍旧平静 |\n| 2 | 她抬眼看向全息倒计时，数字正从71:58:41无声减少，艾娃与倒计时同框，神情专注。 | 3 | 近景 | 稳定缓推至艾娃与倒计时同框 | 屏幕文字：【距离第一轮极端风暴：71:58:41】 | 倒计时脉冲轻响；房间内只剩克制呼吸声 |\n| 3 | 艾娃合上车辆资料，把通话记录、地图位置和物资清单整理成一排，神情冷静决绝，没有迟疑。 | 2 | 中景 | 固定，构图对称收束 | 无台词 | 资料纸页合拢；笔放在桌面的清脆一声 |\n| 4 | 她望着仍在正常运转的城市，又看向倒计时，声音很轻却斩钉截铁；视线移动与念白并行，句末留出半拍停顿，窗外车流声在句末逐渐退远。 | 5.5 | 面部近景 | 最后一次缓推，话语结束后停住半拍 | 艾娃：『这一次，我不等世界告诉我该逃了。』 | 城市底噪随镜头压近而减弱，句末趋于安静 |\n| 5 | 艾娃坚定地看向全息倒计时，画面随即切黑，只保留资产210面板自身极短暂的电子脉冲效果。 | 1 | 眼部特写转黑屏 | 急停切黑 | 无台词 | 一声清晰电子脉冲后彻底静默 |",
+              "id": 12,
+              "index": 11
+            }
+          ],
+          "videoList": []
+        }
+      ],
+      "dialogueLanguages": [
+        {
+          "value": "zh-CN",
+          "label": "中文（普通话）"
+        },
+        {
+          "value": "en-US",
+          "label": "英语（美国）"
+        },
+        {
+          "value": "en-GB",
+          "label": "英语（英国）"
+        },
+        {
+          "value": "ja-JP",
+          "label": "日语"
+        },
+        {
+          "value": "ko-KR",
+          "label": "韩语"
+        },
+        {
+          "value": "fr-FR",
+          "label": "法语（法国）"
+        },
+        {
+          "value": "de-DE",
+          "label": "德语"
+        },
+        {
+          "value": "es-ES",
+          "label": "西班牙语（西班牙）"
+        },
+        {
+          "value": "es-MX",
+          "label": "西班牙语（墨西哥）"
+        },
+        {
+          "value": "pt-BR",
+          "label": "葡萄牙语（巴西）"
+        },
+        {
+          "value": "it-IT",
+          "label": "意大利语"
+        },
+        {
+          "value": "ru-RU",
+          "label": "俄语"
+        },
+        {
+          "value": "ar-SA",
+          "label": "阿拉伯语（沙特）"
+        },
+        {
+          "value": "hi-IN",
+          "label": "印地语"
+        },
+        {
+          "value": "th-TH",
+          "label": "泰语"
+        },
+        {
+          "value": "vi-VN",
+          "label": "越南语"
+        },
+        {
+          "value": "id-ID",
+          "label": "印度尼西亚语"
+        }
+      ],
+      "selectedLanguages": [
+        "en-US"
+      ]
+    },
+    "message": "成功"
+  }
+}

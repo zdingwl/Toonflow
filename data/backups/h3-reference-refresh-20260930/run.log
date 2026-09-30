@@ -1,0 +1,9 @@
+数据库目录: D:\Toonflow-app-master\data\db2.sqlite
+Started refresh for 5 stale English prompts
+[{"id":1790715565974,"state":"生成中","reason":null},{"id":1790715576565,"state":"生成中","reason":null},{"id":1790715600051,"state":"生成中","reason":null},{"id":1790715608760,"state":"生成中","reason":null},{"id":1790715620120,"state":"生成中","reason":null}]
+[{"id":1790715565974,"state":"已完成","reason":""},{"id":1790715576565,"state":"生成中","reason":null},{"id":1790715600051,"state":"生成中","reason":null},{"id":1790715608760,"state":"生成中","reason":null},{"id":1790715620120,"state":"生成中","reason":null}]
+[{"id":1790715565974,"state":"已完成","reason":""},{"id":1790715576565,"state":"已完成","reason":""},{"id":1790715600051,"state":"生成中","reason":null},{"id":1790715608760,"state":"生成中","reason":null},{"id":1790715620120,"state":"生成中","reason":null}]
+[{"id":1790715565974,"state":"已完成","reason":""},{"id":1790715576565,"state":"已完成","reason":""},{"id":1790715600051,"state":"生成中","reason":null},{"id":1790715608760,"state":"已完成","reason":""},{"id":1790715620120,"state":"生成中","reason":null}]
+[{"id":1790715565974,"state":"已完成","reason":""},{"id":1790715576565,"state":"已完成","reason":""},{"id":1790715600051,"state":"已完成","reason":""},{"id":1790715608760,"state":"已完成","reason":""},{"id":1790715620120,"state":"生成中","reason":null}]
+[{"id":1790715565974,"state":"已完成","reason":""},{"id":1790715576565,"state":"已完成","reason":""},{"id":1790715600051,"state":"已完成","reason":""},{"id":1790715608760,"state":"已完成","reason":""},{"id":1790715620120,"state":"已完成","reason":""}]
+VERIFIED: 12/12 tracks passed real route preflight; other prompts, original text and all videos preserved.

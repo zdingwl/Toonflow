@@ -1,0 +1,18 @@
+{
+  "hangingActionPassed": true,
+  "framesReviewed": [
+    0.2,
+    0.8,
+    1.5,
+    2.5,
+    3.5,
+    4.6
+  ],
+  "observations": [
+    "Opening full shot shows both hands on upper railing connected by stanchions to ship edge.",
+    "Body is outboard beside hull; both boots remain unsupported over the sea in inspected full-body frames.",
+    "Close shots retain both arms overhead; no return to standing by rail.",
+    "Character has near-natural facial proportions and wet dark outfit; no obvious cartoon redesign as in original failed video."
+  ],
+  "scope": "Visual sampling confirms the requested hanging action in this candidate, not every detail of ship tilt, weather, costume or identity across all possible generations."
+}

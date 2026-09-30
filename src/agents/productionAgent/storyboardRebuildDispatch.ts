@@ -12,7 +12,8 @@ export function isExplicitStoryboardRebuildRequest(input: string): boolean {
 /** Never infer total or saved-scene count from a model's prose or an invalid progress fallback. */
 export function storyboardPlanSceneCount(plan: string): number {
   const declared = plan.match(/共规划\s*(\d+)\s*个?场/);
-  const headings = [...plan.matchAll(/^\s*(?:\d+[.、]\s*)?场\s*(\d+)\s*[：:]/gm)].map((match) => Number(match[1]));
+  const tableScenes = [...plan.matchAll(/^\s*\|\s*Sc\s*(\d+)\s*\|/gim)].map(match => Number(match[1]));
+  const headings = tableScenes.length ? tableScenes : [...plan.matchAll(/^\s*(?:\d+[.、]\s*)?场\s*(\d+)\s*[：:]/gm)].map((match) => Number(match[1]));
   const ordered = headings.length > 0 && headings.every((n, index) => n === index + 1);
   if (headings.length && !ordered) throw new Error("最新导演计划场次编号不连续，不能自动重建");
   const count = declared ? Number(declared[1]) : ordered ? headings.length : 0;

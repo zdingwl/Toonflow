@@ -1,4 +1,5 @@
 import express from "express";
+import { assertStoryboardPromptFresh } from "@/utils/storyboardPromptFreshness";
 import u from "@/utils";
 import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
@@ -73,6 +74,7 @@ export default router.post(
     let base64: ReferenceList[];
     try {
       prompt = await resolveLanguagePrompt(languageDb, trackId, language, req.body.prompt, audio);
+      await assertStoryboardPromptFresh(u.db, projectId, trackId, prompt);
       const resolved = await Promise.all(
         (uploadData as UploadItem[]).map(async (item): Promise<ResolvedReference | null> => {
           if (item.sources === "storyboard") {

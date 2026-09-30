@@ -1,0 +1,35 @@
+[
+  {
+    "format": "nested",
+    "declaredInputs": [
+      "ref_images.ref_image_0",
+      "ref_images.ref_image_1",
+      "ref_images.ref_image_2",
+      "ref_images.ref_image_3",
+      "ref_images.ref_image_4",
+      "ref_images.ref_image_5",
+      "ref_images.ref_image_6",
+      "ref_images.ref_image_7",
+      "ref_images.ref_image_8"
+    ],
+    "acceptedImages": []
+  },
+  {
+    "format": "dotted",
+    "declaredInputs": [
+      "ref_images.ref_image_0",
+      "ref_images.ref_image_1",
+      "ref_images.ref_image_2",
+      "ref_images.ref_image_3",
+      "ref_images.ref_image_4",
+      "ref_images.ref_image_5",
+      "ref_images.ref_image_6",
+      "ref_images.ref_image_7",
+      "ref_images.ref_image_8"
+    ],
+    "acceptedImages": [
+      "ref_image_0",
+      "ref_image_1"
+    ]
+  }
+]

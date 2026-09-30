@@ -1,0 +1,26 @@
+subject_definitions:
+<Subject 1> is Ava from <Picture 1>, a single character shown in the face, front, side, and back panels of the same character sheet; the panel layout and display background are not part of the video. She has controlled near-natural facial proportions, brown eyes under shaped eyelids, a straight nose, firm lips, defined cheeks and jaw, dark brown hair tied in a wet ponytail with loose strands, a damp black T-shirt under a glossy dark leather jacket, dark cargo pants, rugged boots, a belt pouch, and dark blue cloth wrapping over her left lower leg with the surrounding pant fabric keeping the injury covered.
+<Subject 2> is the severely tilted ocean liner from <Picture 2>, with its rain-slicked steep deck, rust-streaked white hull, angled railings, bollards, loose chairs and canvas, lifeboats, davits, dark superstructure, storm waves crashing against the port side, lightning-lit clouds, and a distant city skyline.
+
+summary:
+[reference generation] On the storm-wracked tilted liner, Ava clings to the sloping outer railing as the wet deck falls away beneath her. The camera follows the dangerous deck angle, then tilts from her straining hands to her rain-soaked face as she shouts for Madison to pull her up.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1] and [Shot 2]): fully_preserved - Ava retains her exact facial structure, eye and nose proportions, cheek and jaw contour, dark wet ponytail, lean body proportions, dark leather jacket, black shirt, cargo pants, boots, pouch, and covered left-leg wrapping; rain, tension, grip, and fear animate her existing appearance without redesigning her face or costume.
+<Subject 2> (appears in [Shot 1] and [Shot 2]): fully_preserved - The liner retains its severe list, wet deck geometry, rusted white hull, angled railings, lifeboat davits, storm-damaged clutter, wave action, lightning atmosphere, and distant city skyline, with rain and ship motion intensifying the established environment.
+
+detailed_description:
+The rendering follows the observed character sheet: Ava has controlled near-natural facial proportions, brown eyes with clearly defined eyelids, a straight nose bridge, balanced nose-to-mouth distance, firm cheek and jaw contours, detailed damp skin shading, and dark hair gathered in a wet ponytail with separate loose strands. Her black leather jacket has a glossy rain response, while her shirt, cargo pants, boots, and wrapped left leg show heavy, wet, physically based fabric surfaces; the ship and character share the same cold storm lighting, reflective water, and contact shadows.
+
+[Shot 1] In a wide shot, the liner’s rain-soaked deck forms a steep slope above the black sea. Ava hangs outside the sloping railing, both hands locked around the cold metal bar while her body extends over the drop. Her dark jacket, ponytail, and trouser legs stream with rain and tug in the wind; the dark blue wrapping and intact pant fabric completely cover her left-leg injury. High above her at the upper edge of frame, only a lifeboat davit with one remaining position is visible. The handheld camera follows the deck slope and presses downward, emphasizing the angle, the crashing waves below, and the distance to the davit. Rain hammers the deck, the davit machinery swings and clanks, and distant crowd cries cut through the storm.
+
+[Shot 2] At 00:02.000, the cut moves to a close facial shot beginning on Ava’s hands clamped to the railing. Her knuckles are pale with effort, rainwater runs over her fingers, and the railing gives a sharp metallic whine under strain. The camera tilts rapidly up the angled bar to her face as the ship shudders and her body slides a little farther outward. Ava lifts her chin toward the top of the slope, her brows drawn together and her lips trembling before she cries out through the rain.
+<Subject 1> (S1) says:
+<d>[Chinese] 麦迪逊，拉我上去！</d>
+The last word is torn away by the wind and the roar of a wave striking the hull.
+
+overall_soundscape:
+Continuous torrential rain hisses across metal decking and clothing. Waves slam against the tilted hull with deep booms and spraying water, while thunder rolls in the distance. The lifeboat davit and railing creak, swing, and emit sharp stressed-metal friction sounds. Offscreen crowd exclamations are faint beneath the wind, which surges as Ava slips. Her shouted line is wet, breathless, and partly swallowed by the storm.
+
+non_diegetic_music:
+A minimal low suspense drone sits beneath the storm, using deep sustained tones and subtle metallic resonance without overpowering the rain, waves, or Ava’s voice. The music tightens when she slides outward and cuts sharply with her final desperate call.
