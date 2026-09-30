@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   continuityHandoff,
   extractSceneExitContinuity,
+  readDirectorSceneTransition,
   validateStoryboardContinuity,
 } from "../src/agents/productionAgent/storyboardContinuity";
 import { validateStoryboardScene } from "../src/agents/productionAgent/storyboardValidator";
@@ -95,4 +96,46 @@ test("旧版分镜兼容读取但新生成可强制要求连续性契约", () =>
 ${legacy}`;
   assert.equal(validateStoryboardScene(1, scene, undefined).valid, true);
   assert.equal(validateStoryboardScene(1, scene, undefined, { requireContinuityContract: true }).valid, false);
+});
+
+
+test("分镜首片段必须服从导演场间 PRESERVE/RESET 与 transition_type", () => {
+  const plan = `| 场间 | continuity_mode | transition_type | 承接要求 | 可重置项 |
+|---|---|---|---|---|
+| Sc1 → Sc2 | PRESERVE | CONTINUOUS_ACTION | 保持坠落方向 | 无 |`;
+  const expected = readDirectorSceneTransition(plan, 1, 2);
+  assert.ok(expected);
+  const previous = `## 场1：甲板
+${segment("片段一", {
+    ...base,
+    exitStateId: "fall-edge",
+    exitSummary: "人物向画面下方坠落",
+  })}`;
+  const correct = `## 场2：水下
+${segment("片段一", {
+    ...base,
+    continuityMode: "PRESERVE",
+    cutType: "CONTINUOUS_ACTION",
+    entryStateId: "fall-edge",
+    exitStateId: "sink-end",
+    entrySummary: "刚进入水下继续向下",
+    exitSummary: "继续下沉",
+  })}`;
+  assert.deepEqual(validateStoryboardContinuity(correct, previous, {
+    requireContracts: true,
+    expectedSceneTransition: expected,
+  }).errors, []);
+
+  const wrongMode = correct.replace('"continuityMode":"PRESERVE"', '"continuityMode":"RESET"')
+    .replace('"entryStateId":"fall-edge"', '"entryStateId":"new-start"');
+  assert.match(validateStoryboardContinuity(wrongMode, previous, {
+    requireContracts: true,
+    expectedSceneTransition: expected,
+  }).errors.join("；"), /导演规划不一致/);
+
+  const wrongCut = correct.replace('"cutType":"CONTINUOUS_ACTION"', '"cutType":"HARD_CUT"');
+  assert.match(validateStoryboardContinuity(wrongCut, previous, {
+    requireContracts: true,
+    expectedSceneTransition: expected,
+  }).errors.join("；"), /cutType 与导演规划不一致/);
 });
