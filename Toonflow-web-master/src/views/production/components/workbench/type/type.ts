@@ -48,6 +48,7 @@ interface StoryboardItem {
 interface VideoPromptVariant { language: string; prompt: string; state: string; reason?: string; videoId?: number | null; }
 
 interface TrackItem {
+  importSettings?: { audio: boolean; resolution: string; aspectRatio: "16:9" | "9:16" };
   variants?: VideoPromptVariant[];
   id: number;
   prompt: string;

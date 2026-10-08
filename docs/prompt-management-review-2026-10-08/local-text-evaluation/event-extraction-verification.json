@@ -1,0 +1,41 @@
+{
+  "results": [
+    {
+      "name": "event-parallel-before",
+      "columns": 7,
+      "formatAccepted": true,
+      "thinkingChars": 0,
+      "seconds": 62.3436283,
+      "evalCount": 77
+    },
+    {
+      "name": "event-parallel-after",
+      "columns": 7,
+      "formatAccepted": true,
+      "thinkingChars": 0,
+      "seconds": 56.6674223,
+      "evalCount": 77
+    },
+    {
+      "name": "event-claims-maintenance-before",
+      "columns": 7,
+      "formatAccepted": true,
+      "thinkingChars": 0,
+      "seconds": 48.507437,
+      "evalCount": 77
+    },
+    {
+      "name": "event-claims-maintenance-after",
+      "columns": 7,
+      "formatAccepted": true,
+      "thinkingChars": 0,
+      "seconds": 46.8029757,
+      "evalCount": 74
+    }
+  ],
+  "inputPairsIdentical": true,
+  "parametersIdentical": true,
+  "sourceValidationEntry": "src/utils/cleanNovel.ts validateEventRow",
+  "productionDatabaseWrites": false,
+  "extraModelCalls": 0
+}

@@ -186,11 +186,14 @@ test("user constraints are carried forward; historical descriptions remain unkno
   assert.equal(JSON.parse((await db("o_assets").where({ id: 10 }).first()).descriptionMeta).userConstraints, "蓝色上衣");
 });
 
-test("missing/empty discovery retries once, migrations are idempotent", async t => {
+test("valid empty discovery completes once without forcing an asset, migrations are idempotent", async t => {
   const db = await fixture(t); await migrateAssetDescriptions(db);
-  const ai = model([{ newAssets: [], existingAssetRefs: [] }, ref(10, [1])]);
-  await extractScriptAssets({ db, ...ai, system: "rules" }, { projectId: 1, scriptIds: [1] });
-  assert.equal(ai.calls.length, 2);
+  const before = await db("o_assets").select("*");
+  const ai = model([{ newAssets: [], existingAssetRefs: [] }]);
+  const result = await extractScriptAssets({ db, ...ai, system: "rules" }, { projectId: 1, scriptIds: [1] });
+  assert.equal(ai.calls.length, 1);
+  assert.deepEqual(result, { created: 0, updated: 0, reused: 0 });
+  assert.deepEqual(await db("o_assets").select("*"), before);
 });
 
 test("reported shark blood-water adaptation conflict is corrected from source before saving", async t => {

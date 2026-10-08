@@ -1,0 +1,399 @@
+[
+  {
+    "videoId": 1,
+    "videoTrackId": 1790715565974,
+    "plannedTrackDuration": 4,
+    "databaseActualDuration": 5.167,
+    "file": "D:\\Toonflow-app-master\\data\\oss\\1790665121730\\video\\8705175e-c60f-4111-b94d-6aada10fe42b.mp4",
+    "ffprobeActualDuration": 5.167,
+    "h3Length": 124,
+    "fps": 24.0,
+    "compiledSeconds": 5.166666666666667,
+    "submittedPrompt": "subject_definitions:\n<Subject 1> is the Sunken City Vista environment from <Picture 1>, featuring the sharply tilted rust-stained cruise ship in the right foreground, black storm waves, horizontally sweeping rain, partially submerged ruined skyscrapers, a distant flooded city skyline, and cold lightning from the left.\n\nsummary:\n[reference generation] <Subject 1> fills the entire four-second shot as the cruise ship leans in the foreground and the broken city sinks into the storm-black sea, with rain, wave impacts, and intermittent lightning establishing the scale of the disaster.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - The tilted foreground ship, ruined submerged skyscrapers, distant skyline, black sea, sweeping rain, cold lightning, foggy atmosphere, and blue-gray lighting from <Picture 1> retain their original composition and material appearance.\n\ndetailed_description:\n<Subject 1> is rendered in cinematic semi-realistic three-dimensional style matching <Picture 1>, with wet weathered metal on the ship, dark physically lit seawater, rain haze, and coherent cold illumination across the ruins. No characters appear.\n\n[Shot 1] A vast establishing view holds the severely tilted cruise ship in the lower-right foreground, showing its rust-streaked white hull, railings, mast, windows, and mounted lifeboat. Across the middle distance, fractured skyscrapers lean and sink into the churning black sea, while the distant city skyline dissolves into fog and falling rain. Rain sweeps horizontally through the frame, large waves strike the submerged building bases and throw white spray into the air, and lightning flashes from the left, briefly lighting the broken tower silhouettes and reflected paths on the water. The camera slowly pushes toward the sinking city while preserving the strong tilted composition, making the ship's instability and the flooded city's scale increasingly imposing.\n\noverall_soundscape:\nTorrential rain roars continuously across the open water. Heavy waves crash against the submerged skyscraper bases with deep impacts and splashing spray. The cruise ship emits low metallic groans, creaks, and structural pressure sounds, while thunder rumbles after each lightning flash. There is no dialogue.\n\nnon_diegetic_music:\nNo non-diegetic music is used. The sequence relies entirely on diegetic rain, crashing waves, thunder, and the ship's deep metallic sounds.",
+    "graph": {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+        }
+      },
+      "4": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ReferenceToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "audio_vae": [
+            "4",
+            0
+          ],
+          "ref_image_size": "match",
+          "prompt": "subject_definitions:\n<Subject 1> is the Sunken City Vista environment from <Picture 1>, featuring the sharply tilted rust-stained cruise ship in the right foreground, black storm waves, horizontally sweeping rain, partially submerged ruined skyscrapers, a distant flooded city skyline, and cold lightning from the left.\n\nsummary:\n[reference generation] <Subject 1> fills the entire four-second shot as the cruise ship leans in the foreground and the broken city sinks into the storm-black sea, with rain, wave impacts, and intermittent lightning establishing the scale of the disaster.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - The tilted foreground ship, ruined submerged skyscrapers, distant skyline, black sea, sweeping rain, cold lightning, foggy atmosphere, and blue-gray lighting from <Picture 1> retain their original composition and material appearance.\n\ndetailed_description:\n<Subject 1> is rendered in cinematic semi-realistic three-dimensional style matching <Picture 1>, with wet weathered metal on the ship, dark physically lit seawater, rain haze, and coherent cold illumination across the ruins. No characters appear.\n\n[Shot 1] A vast establishing view holds the severely tilted cruise ship in the lower-right foreground, showing its rust-streaked white hull, railings, mast, windows, and mounted lifeboat. Across the middle distance, fractured skyscrapers lean and sink into the churning black sea, while the distant city skyline dissolves into fog and falling rain. Rain sweeps horizontally through the frame, large waves strike the submerged building bases and throw white spray into the air, and lightning flashes from the left, briefly lighting the broken tower silhouettes and reflected paths on the water. The camera slowly pushes toward the sinking city while preserving the strong tilted composition, making the ship's instability and the flooded city's scale increasingly imposing.\n\noverall_soundscape:\nTorrential rain roars continuously across the open water. Heavy waves crash against the submerged skyscraper bases with deep impacts and splashing spray. The cruise ship emits low metallic groans, creaks, and structural pressure sounds, while thunder rumbles after each lightning flash. There is no dialogue.\n\nnon_diegetic_music:\nNo non-diegetic music is used. The sequence relies entirely on diegetic rain, crashing waves, thunder, and the ship's deep metallic sounds.",
+          "width": 1344,
+          "height": 768,
+          "length": 124,
+          "ref_images": {
+            "ref_image_0": [
+              "15",
+              0
+            ]
+          }
+        }
+      },
+      "6": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 1957154799395971
+        }
+      },
+      "7": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "6",
+            0
+          ],
+          "guider": [
+            "7",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "11": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "10",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ]
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "10",
+            0
+          ],
+          "vae": [
+            "4",
+            0
+          ]
+        }
+      },
+      "13": {
+        "class_type": "CreateVideo",
+        "inputs": {
+          "images": [
+            "11",
+            0
+          ],
+          "audio": [
+            "12",
+            0
+          ],
+          "fps": 24.0,
+          "bit_depth": 8
+        }
+      },
+      "14": {
+        "class_type": "SaveVideo",
+        "inputs": {
+          "video": [
+            "13",
+            0
+          ],
+          "filename_prefix": "Toonflow/H3_1790718589105_885745173",
+          "format": "mp4"
+        }
+      },
+      "15": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "toonflow_h3_1790718583774_0_653239140.jpg"
+        },
+        "is_changed": [
+          "c3520865a1f2d0a4120a5a4ed4f185e0bf95351d2d8594a43f7571563488d381"
+        ]
+      }
+    }
+  },
+  {
+    "videoId": 2,
+    "videoTrackId": 1790715576565,
+    "plannedTrackDuration": 5,
+    "databaseActualDuration": 5.167,
+    "file": "D:\\Toonflow-app-master\\data\\oss\\1790665121730\\video\\c0dd41bd-3eef-49e6-afa9-0ebc078c5121.mp4",
+    "ffprobeActualDuration": 5.167,
+    "h3Length": 124,
+    "fps": 24.0,
+    "compiledSeconds": 5.166666666666667,
+    "submittedPrompt": "subject_definitions:\n<Subject 1> is the woman from <Picture 1>, a premium semi-realistic Chinese 3D donghua character asset whose face, front, side and back sheet panels depict the same person; she has wet dark hair in a ponytail, controlled stylized facial proportions, a dark zip-up jacket over a black shirt, dark cargo pants, sturdy boots, a thigh holster, and a dark wrapped covering on her left lower leg.\n<Subject 2> is the tilted ocean-liner environment from <Picture 2>, featuring a storm-battered rust-streaked hull, a steep rain-soaked deck, slanted metal railings, loose chairs and ropes, lifeboats and davits, dark crashing waves, distant city lights, and lightning-lit storm clouds.\n\nsummary:\n[reference generation] Over five seconds, <Subject 1> clings to the slanted outer railing of <Subject 2> above the stormy sea, then looks up the steep deck as the hull shudders and shouts for Madison to pull her up.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - The same facial structure, eye shape, nose and jaw design, wet ponytail, body proportions, dark jacket, black shirt, cargo pants, boots, thigh holster, and covered left lower leg remain consistent, with only pose, grip, wetness, and fearful expression changing.\n<Subject 2> (appears in [Shot 1], [Shot 2]): fully_preserved - The sharply tilted liner, wet reflective deck, angled railings, lifeboat davits, rusted hull, storm-dark sea, distant city, and lightning atmosphere preserve the reference location and lighting.\n\ndetailed_description:\nThe sequence uses cinematic semi-realistic 3D animation matching <Picture 1>. <Subject 1> keeps the reference sheet’s observed facial proportions, refined facial modeling, wet skin sheen, layered hair strands, and dark fabric materials, while sharing coherent storm lighting and contact shadows with the ship from <Picture 2>. Rain and seawater make the existing surfaces glisten without changing her identity, outfit, or proportions.\n\n[Shot 1] Wide establishing shot. The slick deck of <Subject 2> slopes downward like a steep ramp under the lightning-lit clouds. <Subject 1> hangs outside the tilted railing above the churning dark sea, both hands locked around the wet metal bar. Her injured left lower leg remains fully covered by dark wrapping and trouser fabric, with no open wound visible. Rain streams over her jacket and ponytail as loose deck equipment shifts below. High above her, only the lifeboat davit with one remaining position is visible. The camera follows the deck’s downward angle in a controlled cinematic move, emphasizing the drop and the ship’s list. Rain strikes the deck, unseen people cry out in alarm, and the lifeboat davit creaks and clanks as it swings.\n\n[Shot 2] At 00:02.000, close facial shot. The camera tilts rapidly from <Subject 1>’s straining, pale fingers on the railing up to her rain-streaked face. The hull shudders, causing her body to slide a little farther outward, and her wet hair and jacket lash in the wind. She looks up the steep slope toward the davit and shouts through the storm in en-US with a tearful, breathy voice, her lip movements synchronized to the spoken line. <Subject 1> (S1) says:\n<d>[English] Madison, pull me up!</d>\nThe wind and rain surge, the stressed railing emits a sharp metallic friction whine, and the end of her cry is swallowed by the roar of waves.\n\noverall_soundscape:\nHeavy rain and rushing wind continue throughout, layered with waves striking the tilted hull, distant thunder, and faint panicked shouts from unseen passengers. The metal railing and lifeboat davit groan, creak, and clank with the ship’s movement. In the close shot, the storm grows louder, the railing gives a high scraping whine, and <Subject 1>’s desperate call sounds tearful and breathy before being overtaken by the sea.\n\nnon_diegetic_music:\nLow tense drones and restrained sustained strings run beneath the storm, creating a sense of imminent danger without overpowering the rain, metal sounds, or the spoken cry. The music tightens as <Subject 1> slips farther outward and fades into the final roar of the waves.",
+    "graph": {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+        }
+      },
+      "4": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ReferenceToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "audio_vae": [
+            "4",
+            0
+          ],
+          "ref_image_size": "match",
+          "prompt": "subject_definitions:\n<Subject 1> is the woman from <Picture 1>, a premium semi-realistic Chinese 3D donghua character asset whose face, front, side and back sheet panels depict the same person; she has wet dark hair in a ponytail, controlled stylized facial proportions, a dark zip-up jacket over a black shirt, dark cargo pants, sturdy boots, a thigh holster, and a dark wrapped covering on her left lower leg.\n<Subject 2> is the tilted ocean-liner environment from <Picture 2>, featuring a storm-battered rust-streaked hull, a steep rain-soaked deck, slanted metal railings, loose chairs and ropes, lifeboats and davits, dark crashing waves, distant city lights, and lightning-lit storm clouds.\n\nsummary:\n[reference generation] Over five seconds, <Subject 1> clings to the slanted outer railing of <Subject 2> above the stormy sea, then looks up the steep deck as the hull shudders and shouts for Madison to pull her up.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - The same facial structure, eye shape, nose and jaw design, wet ponytail, body proportions, dark jacket, black shirt, cargo pants, boots, thigh holster, and covered left lower leg remain consistent, with only pose, grip, wetness, and fearful expression changing.\n<Subject 2> (appears in [Shot 1], [Shot 2]): fully_preserved - The sharply tilted liner, wet reflective deck, angled railings, lifeboat davits, rusted hull, storm-dark sea, distant city, and lightning atmosphere preserve the reference location and lighting.\n\ndetailed_description:\nThe sequence uses cinematic semi-realistic 3D animation matching <Picture 1>. <Subject 1> keeps the reference sheet’s observed facial proportions, refined facial modeling, wet skin sheen, layered hair strands, and dark fabric materials, while sharing coherent storm lighting and contact shadows with the ship from <Picture 2>. Rain and seawater make the existing surfaces glisten without changing her identity, outfit, or proportions.\n\n[Shot 1] Wide establishing shot. The slick deck of <Subject 2> slopes downward like a steep ramp under the lightning-lit clouds. <Subject 1> hangs outside the tilted railing above the churning dark sea, both hands locked around the wet metal bar. Her injured left lower leg remains fully covered by dark wrapping and trouser fabric, with no open wound visible. Rain streams over her jacket and ponytail as loose deck equipment shifts below. High above her, only the lifeboat davit with one remaining position is visible. The camera follows the deck’s downward angle in a controlled cinematic move, emphasizing the drop and the ship’s list. Rain strikes the deck, unseen people cry out in alarm, and the lifeboat davit creaks and clanks as it swings.\n\n[Shot 2] At 00:02.000, close facial shot. The camera tilts rapidly from <Subject 1>’s straining, pale fingers on the railing up to her rain-streaked face. The hull shudders, causing her body to slide a little farther outward, and her wet hair and jacket lash in the wind. She looks up the steep slope toward the davit and shouts through the storm in en-US with a tearful, breathy voice, her lip movements synchronized to the spoken line. <Subject 1> (S1) says:\n<d>[English] Madison, pull me up!</d>\nThe wind and rain surge, the stressed railing emits a sharp metallic friction whine, and the end of her cry is swallowed by the roar of waves.\n\noverall_soundscape:\nHeavy rain and rushing wind continue throughout, layered with waves striking the tilted hull, distant thunder, and faint panicked shouts from unseen passengers. The metal railing and lifeboat davit groan, creak, and clank with the ship’s movement. In the close shot, the storm grows louder, the railing gives a high scraping whine, and <Subject 1>’s desperate call sounds tearful and breathy before being overtaken by the sea.\n\nnon_diegetic_music:\nLow tense drones and restrained sustained strings run beneath the storm, creating a sense of imminent danger without overpowering the rain, metal sounds, or the spoken cry. The music tightens as <Subject 1> slips farther outward and fades into the final roar of the waves.",
+          "width": 1344,
+          "height": 768,
+          "length": 124,
+          "ref_images": {
+            "ref_image_0": [
+              "15",
+              0
+            ],
+            "ref_image_1": [
+              "16",
+              0
+            ]
+          }
+        }
+      },
+      "6": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 4692851871700402
+        }
+      },
+      "7": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "6",
+            0
+          ],
+          "guider": [
+            "7",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "11": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "10",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ]
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "10",
+            0
+          ],
+          "vae": [
+            "4",
+            0
+          ]
+        }
+      },
+      "13": {
+        "class_type": "CreateVideo",
+        "inputs": {
+          "images": [
+            "11",
+            0
+          ],
+          "audio": [
+            "12",
+            0
+          ],
+          "fps": 24.0,
+          "bit_depth": 8
+        }
+      },
+      "14": {
+        "class_type": "SaveVideo",
+        "inputs": {
+          "video": [
+            "13",
+            0
+          ],
+          "filename_prefix": "Toonflow/H3_1790718866820_780858056",
+          "format": "mp4"
+        }
+      },
+      "15": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "toonflow_h3_1790718858763_0_268308295.jpg"
+        },
+        "is_changed": [
+          "3b9554ec84bbc6b181f6400db6861b69e8f6f9e1de83120b052c08baa30d5c4d"
+        ]
+      },
+      "16": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "toonflow_h3_1790718863761_1_631496927.jpg"
+        },
+        "is_changed": [
+          "b2e0a5881771c8af8fb579fe4e9a7394fca1bf4343533146722c766e8906f75e"
+        ]
+      }
+    }
+  }
+]

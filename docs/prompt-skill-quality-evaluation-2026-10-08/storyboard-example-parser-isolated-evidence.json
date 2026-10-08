@@ -1,0 +1,59 @@
+{
+  "scope": "New Skill example parser compatibility only; fixture is not a project-generated shot.",
+  "createdAt": "2026-10-08T04:02:29.838Z",
+  "sourceSkill": "data/skills/production_execution_storyboard_table.md",
+  "sourceSkillSha256": "63ea4a044538b15f939a6262a2eb14505762c5c799a921bc8273205c03f1a45b",
+  "entrypoints": [
+    "src/agents/productionAgent/storyboardTable.ts:38 extractStoryboardTable",
+    "src/agents/productionAgent/storyboardPanelSync.ts:6 storyboardSegments",
+    "src/agents/productionAgent/storyboardValidator.ts:12 validateStoryboardScene"
+  ],
+  "templateSubstitution": {
+    "from": "## 场N：",
+    "to": "## 场1：",
+    "otherSourceTextChanged": false
+  },
+  "rawExample": "## 场N：场景名 ｜ 参演角色：角色A、角色B\n### 片段一（约5s）\n**片段意图**：先确认角色握住门把，再随视线发现走廊；起态在门前→终态注意力转向走廊。\n**引用资产名称**：[角色A·当前状态, 场景B·当前状态]\n**引用资产ID**：[101, 300]\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 1 | 角色A伸手握住门把，视线落向走廊。 | 5 | 中景 | 缓推 | 角色A说：『剧本原台词』 | 环境音：脚步声 |",
+  "fullExtraction": {
+    "mode": "full",
+    "scenes": [
+      1
+    ],
+    "contentPreservedExactly": true
+  },
+  "sceneExtraction": {
+    "mode": "scene",
+    "scene": 1,
+    "total": 1,
+    "taskId": "isolated_skill_fixture",
+    "contentPreservedExactly": true
+  },
+  "parsed": {
+    "segments": 1,
+    "shots": 1,
+    "columns": 7,
+    "durationSeconds": 5,
+    "assetIds": [
+      101,
+      300
+    ],
+    "intent": "**片段意图**：先确认角色握住门把，再随视线发现走廊；起态在门前→终态注意力转向走廊。",
+    "segmentPreservedExactly": true
+  },
+  "validation": {
+    "valid": true,
+    "scene": 1,
+    "errors": [],
+    "warnings": [
+      "已核对可解析的台词和屏幕文字；人物动作、空间关系及参考图状态仍需审阅"
+    ],
+    "coverageVerified": true
+  },
+  "negativeChecks": {
+    "mismatchedBudgetRejected": true,
+    "missingAssetRejected": true
+  },
+  "noDatabaseObjectConstructed": true,
+  "noCommitOrSyncMutationFunctionInvoked": true,
+  "noProviderCalls": true
+}

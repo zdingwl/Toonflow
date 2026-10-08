@@ -1,6 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
+import { join } from "node:path";
+import { tmpdir } from "node:os";
 import { createRequire } from "node:module";
 import { transform } from "sucrase";
 import express from "express";
@@ -24,7 +26,7 @@ test(`H3 ${scenario.mode} prompt API preserves requested language isolation with
   for (const [name, columns] of Object.entries({
     o_project: ['id', 'artStyle'], o_videoTrack: ['id', 'projectId', 'prompt', 'duration', 'state', 'reason'],
     o_assets: ['projectId', 'id', 'assetsId', 'type', 'name', 'describe', 'prompt', 'imageId', 'faceReferencePath', 'fullBodyReferencePath', 'sideReferencePath', 'backReferencePath'],
-    o_image: ['id', 'filePath'], o_assetsRole2Audio: ['assetsRoleId', 'assetsAudioId'],
+    o_image: ['id', 'filePath', 'type'], o_assetsRole2Audio: ['assetsRoleId', 'assetsAudioId'],
     o_prompt: ['type','data','useData'], o_modelPrompt: ['vendorId','model','path'],
   })) await db.schema.createTable(name, t => { columns.forEach(c => c === "id" || c === "projectId" || c === "imageId" ? t.integer(c) : t.text(c)); });
   await languages.migrateVideoLanguages(db);
@@ -33,6 +35,7 @@ test(`H3 ${scenario.mode} prompt API preserves requested language isolation with
   await db('o_image').insert({ id: 3, filePath: 'sheet.png' });
   await db('o_assets').insert({ id: 4, projectId: 1, type: 'role', name: 'Ava', describe: 'old trousers', prompt: 'old trousers', imageId: 3, faceReferencePath: 'face.png', fullBodyReferencePath: 'body.png' });
   await db('o_videoPromptVariant').insert({ trackId: 2, language: 'ja-JP', prompt: 'keep manual edit', state: '已完成' });
+  await db('o_prompt').insert({ type: 'videoPromptGeneration', data: 'OLD_DEFAULT_SENTINEL', useData: 'MANAGED_CUSTOM_SENTINEL: keep source close-ups and dialogue.' });
   const valid = `subject_definitions:
 <Subject 1> is Ava from <Picture 1>, with a red sweater and black skirt.
 summary:
@@ -54,6 +57,12 @@ N/A`;
     Ai: { Text: () => ({ invoke: async (request: any) => {
       if (String(request.system).startsWith("H3_SEMANTIC_REVIEW")) return { text: '{"issues":[]}' };
       calls.push(structuredClone(request));
+      if (calls.length === 1) {
+        assert.match(request.system, /MANAGED_CUSTOM_SENTINEL/);
+        assert.doesNotMatch(request.system, /OLD_DEFAULT_SENTINEL/);
+        assert.match(request.system, /subject_definitions/);
+        assert.match(request.system, /Instruction precedence/);
+      }
       if (calls.length === 2) {
         // The validated base and its exact plan must be committed before translation begins.
         assert.equal((await db("o_videoTrack").where({ id: 2 }).first()).prompt, scenario.replaceBasePrompt ? generatedBase : "old base");
@@ -107,12 +116,13 @@ N/A`;
 });
 }
 
-async function makeBudgetFixture(reply?: (prompt: string, call: number, request: any) => string, audit?: (call: number, request: any) => string, visualManual = "Detailed stylized 3D.") {
+async function makeBudgetFixture(reply?: (prompt: string, call: number, request: any) => string, audit?: (call: number, request: any) => string, visualManual = "Detailed stylized 3D.", promptRoot = "data/modelPrompt") {
   const db = knex({ client: "better-sqlite3", connection: { filename: ":memory:" }, useNullAsDefault: true });
   for (const [name, columns] of Object.entries({
     o_project: ["id", "artStyle"], o_videoTrack: ["id", "projectId", "prompt", "duration", "state", "reason"],
     o_assets: ["id", "projectId", "assetsId", "type", "name", "describe", "prompt", "imageId", "faceReferencePath", "fullBodyReferencePath", "sideReferencePath", "backReferencePath"],
-    o_image: ["id", "filePath"], o_assetsRole2Audio: ["assetsRoleId", "assetsAudioId"],
+    o_image: ["id", "filePath", "type"], o_assetsRole2Audio: ["assetsRoleId", "assetsAudioId"],
+    o_storyboard: ["id", "projectId", "videoDesc", "prompt", "track", "duration", "shouldGenerateImage", "filePath"], o_assets2Storyboard: ["storyboardId", "assetId"],
     o_prompt: ["type", "data", "useData"], o_modelPrompt: ["vendorId", "model", "path"],
   })) await db.schema.createTable(name, t => columns.forEach(c => c === "id" || c === "projectId" || c === "imageId" ? t.integer(c) : t.text(c)));
   await languages.migrateVideoLanguages(db);
@@ -124,7 +134,7 @@ async function makeBudgetFixture(reply?: (prompt: string, call: number, request:
       faceReferencePath: id <= 3 ? `face-${id}.png` : null, fullBodyReferencePath: id <= 3 ? `body-${id}.png` : null });
   }
   const calls: any[] = [], audits: any[] = [];
-  const u = { db, error: (e: any) => e, getArtPrompt: () => visualManual, getPath: () => "data/modelPrompt",
+  const u = { db, error: (e: any) => e, getArtPrompt: () => visualManual, getPath: () => promptRoot,
     oss: { getImageBase64: async (p: string) => "data:image/png;base64," + Buffer.from(p).toString("base64") },
     Ai: { Text: () => ({ invoke: async (request: any) => {
       if (String(request.system).startsWith("H3_SEMANTIC_REVIEW")) {
@@ -202,6 +212,35 @@ test("batch fill refreshes completed prompts with changed images without copying
   } finally { await f.close(); }
 });
 
+test("H3 derivative actor context uses its same-project role parent without uploading another image", async () => {
+  const f = await makeBudgetFixture();
+  try {
+    await f.db("o_assets").insert([
+      { id: 101, projectId: 1, type: "role", name: "Ava" },
+      { id: 102, projectId: 2, type: "role", name: "Foreign actor" },
+      { id: 103, projectId: 1, type: "scene", name: "Wrong parent type" },
+    ]);
+    await f.db("o_assets").where({ id: 1 }).update({ assetsId: 101, name: "Rainy state" });
+    await f.db("o_assets").where({ id: 2 }).update({ assetsId: 102, name: "Other state" });
+    await f.db("o_assets").where({ id: 3 }).update({ assetsId: 103, name: "Third state" });
+    const result = await f.post("generateVideoPrompt", { ...budgetBody, trackId: 2, info: [1, 2, 3].map(id => ({ id, sources: "assets" })) });
+    assert.equal(result.status, 200, JSON.stringify(result.body));
+    const parts = f.calls[0].messages[0].content;
+    const subjects = JSON.parse(parts[0].text.match(/<referenceSubjects>\s*([\s\S]*?)\s*<\/referenceSubjects>/)[1]);
+    assert.deepEqual(subjects.map((item: any) => [item.subject, item.assetId, item.name, item.identityName]), [
+      ["<Subject 1>", 1, "Rainy state", "Ava"],
+      ["<Subject 2>", 2, "Other state", undefined],
+      ["<Subject 3>", 3, "Third state", undefined],
+    ]);
+    assert.ok(parts[0].text.includes('"Ava" (selected state "Rainy state"), asset ID 1 = <Subject 1> from <Picture 1>'));
+    assert.match(parts[1].text, /<Picture 1>: Ava — Rainy state/);
+    assert.doesNotMatch(parts.map((part: any) => part.text || "").join("\n"), /Foreign actor|Wrong parent type/);
+    assert.deepEqual(parts.filter((part: any) => part.type === "image").map((part: any) => Buffer.from(part.image).toString()), ["asset-1.png", "asset-2.png", "asset-3.png"]);
+    const saved = await f.db("o_videoTrack").where({ id: 2 }).first();
+    assert.deepEqual((await plans.loadH3ReferencePlan(f.db, 2, saved.prompt))?.slots.map(slot => slot.assetId), [1, 2, 3]);
+  } finally { await f.close(); }
+});
+
 test("single and batch prompt routes retain all seven assets in seven complete asset pictures and persist the identical reference plan", async () => {
   const f = await makeBudgetFixture();
   try {
@@ -247,17 +286,82 @@ test("preflight overflow and missing boards finish failed without calling a mode
   } finally { await f.close(); }
 });
 
-test("H3 always loads its Ref2VA rules even when a vendor is bound to a legacy template", async () => {
+test("H3 refuses an incompatible persisted binding before AI rather than silently overriding the selection", async () => {
   const f = await makeBudgetFixture();
   try {
     await f.db("o_modelPrompt").insert({ vendorId: "test", model: "MiniMax-H3-local", path: "video/universalFirstAndLastFrameMode.md" });
     const result = await f.post("generateVideoPrompt", { ...budgetBody, trackId: 2 });
-    assert.equal(result.status, 200, JSON.stringify(result.body));
-    assert.match(f.calls[0].system, /MiniMax H3 Ref2VA Prompt Writer/i);
-    assert.match(f.calls[0].system, /Return exactly six complete sections/i);
-    assert.doesNotMatch(f.calls[0].system, /Do not use a fixed section template/);
+    assert.equal(result.status, 400, JSON.stringify(result.body));
+    assert.match(JSON.stringify(result.body), /H3.*专用提示词/);
+    assert.equal(f.calls.length, 0);
+    assert.equal((await f.db("o_videoTrack").where({ id: 2 }).first()).prompt, "keep old prompt");
   } finally { await f.close(); }
 });
+
+test("H3 actually invokes a compatible custom bound template and uses the default again after unbinding", async () => {
+  const root = mkdtempSync(join(tmpdir(), "toonflow-h3-binding-"));
+  mkdirSync(join(root, "video"));
+  const builtin = readFileSync("data/modelPrompt/video/minimaxH3Multi-referenceMode.md", "utf8");
+  writeFileSync(join(root, "video", "minimaxH3Multi-referenceMode.md"), builtin);
+  writeFileSync(join(root, "video", "customH3.md"), `${builtin}\nCUSTOM_H3_RULE_SENTINEL: use the supplied shots.\n`);
+  const f = await makeBudgetFixture(undefined, undefined, undefined, root);
+  try {
+    await f.db("o_modelPrompt").insert({ vendorId: "test", model: "MiniMax-H3-local", path: "video/customH3.md" });
+    assert.equal((await f.post("generateVideoPrompt", { ...budgetBody, trackId: 2 })).status, 200);
+    assert.match(f.calls[0].system, /CUSTOM_H3_RULE_SENTINEL/);
+    assert.doesNotMatch(f.calls[0].system, /toonflow-video-template/);
+    await f.db("o_modelPrompt").delete();
+    assert.equal((await f.post("generateVideoPrompt", { ...budgetBody, trackId: 3 })).status, 200);
+    assert.doesNotMatch(f.calls[1].system, /CUSTOM_H3_RULE_SENTINEL/);
+    assert.match(f.calls[1].system, /return exactly six complete sections/i);
+  } finally { await f.close(); rmSync(root, { recursive: true, force: true }); }
+});
+
+test("non-H3 receives project rendering as system authority, escaped storyboard facts and actual media/frame indices", async () => {
+  const f = await makeBudgetFixture(() => "compiled prompt", undefined, "RENDER_AUTHORITY_SENTINEL: cinematic semi-realistic 3D animation.");
+  try {
+    await f.db("o_image").where({ id: 2 }).update({ type: "audio" });
+    await f.db("o_storyboard").insert({ id: 20, projectId: 1, duration: 6, filePath: "board.png", videoDesc: "| 1 | 手指收紧，说'别动' & 看向 <门> | 6秒 | 近景 | 缓慢推近 | 别动 | 静默 |" });
+    const result = await f.post("generateVideoPrompt", { projectId: 1, trackId: 2, model: "test:doubao-seedance-1-0", mode: "startFrameOptional", info: [{ id: 1, sources: "assets" }, { id: 2, sources: "assets" }, { id: 20, sources: "storyboard" }] });
+    assert.equal(result.status, 200, JSON.stringify(result.body));
+    assert.match(f.calls[0].system, /RENDER_AUTHORITY_SENTINEL/);
+    const content = f.calls[0].messages[0].content;
+    assert.equal(f.calls[0].messages[0].role, "user");
+    assert.match(content, /id="1"[^\n]+mediaType="image" mediaIndex="1" frameRole="first_frame"/);
+    assert.match(content, /id="2"[^\n]+mediaType="audio" mediaIndex="1" frameRole="reference_audio"/);
+    assert.match(content, /id="20"[^\n]+mediaType="image" mediaIndex="2" frameRole="last_frame"/);
+    assert.match(content, /说&apos;别动&apos; &amp; 看向 &lt;门&gt;/);
+    assert.match(content, /startFrameOptional/);
+  } finally { await f.close(); }
+});
+
+test("a bound first-frame rule cannot silently compile a multi-reference request", async () => {
+  const f = await makeBudgetFixture();
+  try {
+    await f.db("o_modelPrompt").insert({ vendorId: "test", model: "generic-video", path: "video/universalFirstAndLastFrameMode.md" });
+    const result = await f.post("generateVideoPrompt", { ...budgetBody, model: "test:generic-video", trackId: 2 });
+    assert.equal(result.status, 400);
+    assert.match(JSON.stringify(result.body), /首尾帧规则/);
+    assert.equal(f.calls.length, 0);
+    assert.equal((await f.db("o_videoTrack").where({ id: 2 }).first()).prompt, "keep old prompt");
+  } finally { await f.close(); }
+});
+
+for (const model of ["test:MiniMax-H3-local", "test:generic-video"]) {
+  for (const output of ["LANGUAGE_TIMING_REVIEW: complete dialogue cannot fit the supplied duration", ""]) {
+    test(`${model} does not save ${output ? "a timing failure" : "an empty answer"} as a completed prompt`, async () => {
+      const f = await makeBudgetFixture(() => output);
+      try {
+        const result = await f.post("generateVideoPrompt", { ...budgetBody, model, trackId: 2 });
+        assert.equal(result.status, 400);
+        const track = await f.db("o_videoTrack").where({ id: 2 }).first();
+        assert.equal(track.state, "生成失败");
+        assert.equal(track.prompt, "keep old prompt");
+        assert.equal(f.calls.length, 1);
+      } finally { await f.close(); }
+    });
+  }
+}
 
 test("H3 generation retries a draft that is missing the official sections", async () => {
   const pictures = Array.from({ length: 7 }, (_, index) => `<Picture ${index + 1}>`).join(", ");
@@ -446,7 +550,7 @@ test("semantic contradictions no longer create failed prompt records", async () 
 });
 
 test("base writer receives the selected visual manual without semantic reviewer calls", async () => {
-  const manual = "Retain the current character images' degree of realism, facial proportions and visible skin, hair and fabric appearance; adapt only the scene lighting.";
+  const manual = "Render the preserved character designs as cinematic semi-realistic 3D animation; keep the observed facial proportions and outfit.";
   const f = await makeBudgetFixture(undefined, undefined, manual);
   try {
     const result = await f.post("generateVideoPrompt", { ...budgetBody, trackId: 2, languages: ["en-US"], regenerate: true });
@@ -454,6 +558,13 @@ test("base writer receives the selected visual manual without semantic reviewer 
     assert.equal(f.calls.length, 2, "one base writer and one translator");
     assert.equal(f.audits.length, 0);
     assert.ok(f.calls[0].system.includes(manual));
+    assert.match(f.calls[0].system, /guide defines the target medium, material treatment and lighting/);
+    const labels = f.calls[0].messages[0].content.filter((part: any) => part.type === "text").slice(1).map((part: any) => part.text);
+    assert.equal(labels.length, 7, "each uploaded image keeps its own label and position");
+    assert.match(labels[0], /^<Picture 1>: asset1; complete character sheet/);
+    assert.match(labels[3], /^<Picture 4>: asset4; location and recognisable local features/);
+    assert.match(labels[5], /^<Picture 6>: asset6; object or creature design/);
+    assert.ok(labels.slice(3).every((label: string) => !label.includes("wardrobe authority")));
     const saved = await f.db("o_videoPromptVariant").where({ trackId: 2, language: "en-US" }).first();
     assert.equal(saved.state, "已完成", saved.reason);
   } finally { await f.close(); }

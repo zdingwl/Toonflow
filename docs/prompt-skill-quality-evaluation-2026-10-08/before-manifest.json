@@ -1,0 +1,137 @@
+[
+  {
+    "path": "data/skills/production_agent_supervision.md",
+    "sha256": "059ff280d5a01d9c916aa0a710e9cd7d72320f35e56f9b400dc0cf0ff0d66547",
+    "bytes": 20406
+  },
+  {
+    "path": "data/skills/production_agent_decision.md",
+    "sha256": "a4b80358b05f0458cc4eb0dfecbb8f2d00696325030ccecf543b9dbd843a7932",
+    "bytes": 7409
+  },
+  {
+    "path": "data/skills/production_execution_director_plan.md",
+    "sha256": "30635c03467f3e3699270beeb9e34de3225b78f5ec75fd73545188d54f4b03ae",
+    "bytes": 11641
+  },
+  {
+    "path": "data/skills/production_execution_storyboard_table.md",
+    "sha256": "6d456d18ceaa8ecb3a90d01db1cbc29ca1a88b39843caf85536d813a037330bc",
+    "bytes": 8513
+  },
+  {
+    "path": "data/skills/production_execution_storyboard_panel.md",
+    "sha256": "17e4c9a08f1af54b233ff2640aa38013a12180ae578782306c1505831fa08c67",
+    "bytes": 6002
+  },
+  {
+    "path": "data/skills/production_execution_derive_assets.md",
+    "sha256": "acb0831e67ca76add4f4ce4a085771789a10b578f701bb789b68229b28112152",
+    "bytes": 3517
+  },
+  {
+    "path": "data/skills/asset_visual_design.md",
+    "sha256": "4a2d726eb85094f65305a4fa393f5ff1efe8af8f9d473cce8f1b033da6f715b5",
+    "bytes": 15970
+  },
+  {
+    "path": "data/skills/production_skills/storyboard_table_techniques.md",
+    "sha256": "cba1ce7a7506f2d976539ada1324feb0b52ce9f663186a4de8e689f5f53eb5e5",
+    "bytes": 14787
+  },
+  {
+    "path": "data/skills/production_skills/storyboard_prompt_techniques.md",
+    "sha256": "14bfbe440f89746047d597b8c7066fe738fa17edfb491df61b9b21fd67f1414d",
+    "bytes": 5401
+  },
+  {
+    "path": "data/modelPrompt/video/minimaxH3Multi-referenceMode.md",
+    "sha256": "6562edbd146544d9be21085a5413b61a2e44528712ca98927e2f7db62c5f1ea2",
+    "bytes": 12447
+  },
+  {
+    "path": "src/utils/assetPrompt.ts",
+    "sha256": "d9e1ce939da0d3990e7b2db612f6c9df27c775a20d4f2c16972ab6cb789d6299",
+    "bytes": 11420
+  },
+  {
+    "path": "src/utils/assetPromptGeneration.ts",
+    "sha256": "8623a6fa5f4ffbee7eef8f568cb0fe4665f64bc0f4a5d474e04b994b60cfb79a",
+    "bytes": 15941
+  },
+  {
+    "path": "src/utils/h3PromptContext.ts",
+    "sha256": "4ddefae5cf4512f81fcc0d57c87d8fce5f51f8b774c086a4fe2b494ae1b7545f",
+    "bytes": 5164
+  },
+  {
+    "path": "src/utils/videoPromptGeneration.ts",
+    "sha256": "ef154ab6f7fb523b161ce9ec9a54a872cf173e3b7ea5ff83229911ad2c481d0e",
+    "bytes": 23426
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/art_prompt/art_character.md",
+    "sha256": "f1d8c78056dad9ae10bbb6c38b592b6a98a97bda0f53692fa2458e5ebc4803fb",
+    "bytes": 5677
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/art_prompt/art_character_derivative.md",
+    "sha256": "7d20fb58b5b6a1e77068746b0a93b180e8ca7d770d1ac590ea7af3fc5da67f24",
+    "bytes": 4979
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/art_prompt/art_prop.md",
+    "sha256": "646a14618a5c6d4abb1e2b6b11e7163a0253f8969572b19e41cf75a288ca9a97",
+    "bytes": 1637
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/art_prompt/art_prop_derivative.md",
+    "sha256": "aa4bba6066ef34524684ac7b55a13721376ae1cf914843b24af2097f742e6cd0",
+    "bytes": 1637
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/art_prompt/art_scene.md",
+    "sha256": "c41426c5f2dd8123b64c11e871776a89065ac4104acf0ad08195d42a977c7bae",
+    "bytes": 1712
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/art_prompt/art_scene_derivative.md",
+    "sha256": "3ca02e17e389da1b323ecd3fff7e2fd11a9405d6da1853b4f7df638bd9599401",
+    "bytes": 1624
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/art_prompt/art_storyboard_video.md",
+    "sha256": "ef8f25ebc802ff532539cdbec8249ddfb42c5bdf1b7a2dfe9b75cfb8cfc77122",
+    "bytes": 4915
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/driector_skills/director_planning_style.md",
+    "sha256": "1c1cd68319c4c902e4248b03fc1e8e784866a5d5fe4acc84aa41c1562b2d0f59",
+    "bytes": 710
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/driector_skills/director_storyboard.md",
+    "sha256": "850fe5975095704f0e37d4dc3b1af275e51275534e78bd79195798f259909071",
+    "bytes": 988
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/driector_skills/director_storyboard_table_style.md",
+    "sha256": "79e9f6b6373c30376ee591c7e4287cd2a9fc910e20dd93b7e13ab9c42f88c165",
+    "bytes": 1376
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/prefix.md",
+    "sha256": "686b736916d6d735f33083526ab216c71126bef175f43922344b10e00b252e39",
+    "bytes": 3932
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/README.md",
+    "sha256": "ffcaeabd9643a916a2d94f5dc14f7883e886cd61f84a07d84053937ef27f2b48",
+    "bytes": 1396
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/video_prefix.md",
+    "sha256": "b615bcdb19b24ccf87c8dd7aa246fbad53e73515e31206c4f8587989bc157f67",
+    "bytes": 4857
+  }
+]

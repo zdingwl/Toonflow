@@ -1,0 +1,48 @@
+{
+  "variant": "before",
+  "videoId": 16,
+  "trackId": 1790715600051,
+  "model": "QWEN3.8:27b",
+  "temperature": 0.3,
+  "seed": 42,
+  "reasoning": "none",
+  "duration": 10,
+  "elapsedMs": 29617,
+  "finishReason": "stop",
+  "systemWords": 3396,
+  "systemHash": "149e7e85315aa0b174f526320bc5a53e0f4efcf956e932e1d01d8678f75c0693",
+  "inputHash": "3cd311b517f941d7685657681640f32c8558fb6b8bfd05adb2afb77276341015",
+  "referenceHashes": [
+    {
+      "assetId": 202,
+      "picture": 1,
+      "sha256": "3b9554ec84bbc6b181f6400db6861b69e8f6f9e1de83120b052c08baa30d5c4d"
+    },
+    {
+      "assetId": 205,
+      "picture": 2,
+      "sha256": "e0d3ea6fd458004bfe567e6f8dad0816b4c920a673e71c0940df74aaaf9c5ec6"
+    },
+    {
+      "assetId": 5,
+      "picture": 3,
+      "sha256": "b2e0a5881771c8af8fb579fe4e9a7394fca1bf4343533146722c766e8906f75e"
+    }
+  ],
+  "outputCounts": {
+    "total": 628,
+    "sections": {
+      "subject_definitions": 178,
+      "summary": 48,
+      "retention_analysis": 74,
+      "detailed_description": 271,
+      "overall_soundscape": 25,
+      "non_diegetic_music": 20
+    }
+  },
+  "errors": [
+    "H3 提示词格式：六段说明必须用英文；中文仅可保留在对白或明确引用的可见文字中"
+  ],
+  "workspaceUnchanged": true,
+  "limitation": "Isolated base-prompt generation with reasoning disabled; no language-localization step, media job, persisted prompt or video generation."
+}

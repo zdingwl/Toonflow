@@ -1,0 +1,56 @@
+数据库目录: D:\Toonflow-app-master\data\db2.sqlite
+[Socket] 注册命名空间: /api/socket/productionAgent
+[Socket] 注册命名空间: /api/socket/scriptAgent
+文件目录: D:\Toonflow-app-master\data\oss
+文件目录: D:\Toonflow-app-master\data\skills
+文件目录: D:\Toonflow-app-master\data\assets
+静态网站目录: D:\Toonflow-app-master\data\web
+[服务启动成功]: http://localhost:10588
+[0mOPTIONS /api/script/pollScriptAssets [32m204[0m 0.922 ms - 0[0m
+[0mPOST /api/script/pollScriptAssets [32m200[0m 15.021 ms - 1420[0m
+[0mOPTIONS /api/script/getScrptApi [32m204[0m 0.141 ms - 0[0m
+[0mPOST /api/script/getScrptApi [32m200[0m 4.307 ms - 51780[0m
+[productionAgent] 已连接: 03OmMLJkjjqpK2a5AAAB
+[0mOPTIONS /api/agents/getMemory [32m204[0m 0.085 ms - 0[0m
+[0mPOST /api/agents/getMemory [32m200[0m 11.536 ms - 689639[0m
+[0mOPTIONS /api/modelSelect/getModelList [32m204[0m 0.118 ms - 0[0m
+[0mPOST /api/modelSelect/getModelList [32m200[0m 129.392 ms - 1188[0m
+[0mOPTIONS /api/cornerScape/getAllAssets [32m204[0m 0.106 ms - 0[0m
+[0mPOST /api/cornerScape/getAllAssets [32m200[0m 4.268 ms - 41[0m
+[0mOPTIONS /api/script/getScrptApi [32m204[0m 0.127 ms - 0[0m
+[0mPOST /api/script/getScrptApi [32m200[0m 2.534 ms - 51780[0m
+[0mPOST /api/script/getScrptApi [32m200[0m 2.219 ms - 51780[0m
+[0mOPTIONS /api/production/getFlowData [32m204[0m 0.113 ms - 0[0m
+[0mPOST /api/production/getFlowData [32m200[0m 2.874 ms - 3707[0m
+[0mOPTIONS /api/production/getFlowData [32m204[0m 0.064 ms - 0[0m
+[0mPOST /api/production/getFlowData [32m200[0m 1.946 ms - 3707[0m
+[0mOPTIONS /api/project/getModelDetails [32m204[0m 0.077 ms - 0[0m
+[0mPOST /api/project/getModelDetails [32m200[0m 5.489 ms - 121[0m
+[0mOPTIONS /api/agents/getMemory [32m204[0m 0.121 ms - 0[0m
+[0mPOST /api/agents/getMemory [32m200[0m 1.799 ms - 41[0m
+[0mPOST /api/agents/getMemory [32m200[0m 1.763 ms - 41[0m
+[productionAgent] 已连接: mSG4hRBhIahUQap_AAAD
+[productionAgent] 上下文已更新: 1791442875668:productionAgent:71
+[0mPOST /api/agents/getMemory [32m200[0m 1.935 ms - 41[0m
+[0mPOST /api/modelSelect/getModelList [32m200[0m 77.099 ms - 1188[0m
+[0mOPTIONS /api/assets/getAssetsApi [32m204[0m 0.072 ms - 0[0m
+[0mPOST /api/assets/getAssetsApi [32m200[0m 2.813 ms - 60[0m
+[0mPOST /api/script/getScrptApi [32m200[0m 2.135 ms - 51780[0m
+[0mOPTIONS /api/modelSelect/getModelList [32m204[0m 0.079 ms - 0[0m
+[0mPOST /api/modelSelect/getModelList [32m200[0m 75.564 ms - 1188[0m
+[0mOPTIONS /api/modelSelect/getModelList [32m204[0m 0.151 ms - 0[0m
+[0mOPTIONS /api/project/getProject [32m204[0m 0.052 ms - 0[0m
+[0mPOST /api/modelSelect/getModelList [32m200[0m 85.595 ms - 1208[0m
+[0mPOST /api/project/getProject [32m200[0m 1.622 ms - 1123[0m
+[0mOPTIONS /api/modelSelect/getModelDetail [32m204[0m 0.079 ms - 0[0m
+[0mPOST /api/modelSelect/getModelDetail [32m200[0m 14.612 ms - 168[0m
+[0mPOST /api/modelSelect/getModelDetail [32m200[0m 14.258 ms - 331[0m
+[0mOPTIONS /api/script/getScrptApi [32m204[0m 0.147 ms - 0[0m
+[0mPOST /api/script/getScrptApi [32m200[0m 3.740 ms - 120479[0m
+[0mPOST /api/modelSelect/getModelList [32m200[0m 52.739 ms - 1188[0m
+[0mPOST /api/modelSelect/getModelList [32m200[0m 49.911 ms - 1208[0m
+[0mPOST /api/project/getProject [32m200[0m 1.169 ms - 1123[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.095 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 203.054 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.093 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 148.913 ms - 140[0m

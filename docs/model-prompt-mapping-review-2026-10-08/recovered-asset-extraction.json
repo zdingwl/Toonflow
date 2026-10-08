@@ -1,0 +1,38 @@
+{
+  "projectId": 1791442875668,
+  "projectName": "新剧本",
+  "scriptIds": [
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90
+  ],
+  "states": [
+    {
+      "extractState": 0,
+      "errorReason": null,
+      "n": 20
+    }
+  ],
+  "updateExistingDescriptions": false,
+  "priorAssociations": 0,
+  "resumedViaLoggedInUI": true,
+  "recoveredAt": "2026-10-08T07:24:10.123Z",
+  "completionVerified": false
+}

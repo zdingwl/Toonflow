@@ -325,7 +325,7 @@ test("asset manuals retain same-state full designs, explicit multi-view exceptio
     assert.match(content, /同一(?:角色|人物)[、]?同一状态/);
   }
   assert.match(derivative, /目标状态中的变化优先于基础态默认值/);
-  assert.match(derivative, /完整描述继承后的身份、衣装和当前状态/);
+  assert.match(derivative, /完整描述继承后的身份、衣装和当前(?:持续外观)?状态/);
   const sceneDerivative = manual("art_scene_derivative");
   assert.match(sceneDerivative, /机位只是镜头参数，不单独构成衍生状态/);
   assert.match(sceneDerivative, /陈设布局、损坏状态或事件痕迹/);

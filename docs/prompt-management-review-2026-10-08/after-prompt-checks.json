@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "type": "eventExtraction",
+    "characters": 1584,
+    "customOverride": false,
+    "effectiveMatchesFile": true,
+    "sha256": "788179184fba48952dee52fc7a7c97811d4b5225d341d6b8c4786598d9021b0a"
+  },
+  {
+    "id": 2,
+    "type": "scriptAssetExtraction",
+    "characters": 3223,
+    "customOverride": false,
+    "effectiveMatchesFile": true,
+    "sha256": "92d04e988cf0e14ec6ad5afcf484688f0692826dfa9994dc551caa3f0aecaa6b"
+  },
+  {
+    "id": 3,
+    "type": "videoPromptGeneration",
+    "characters": 1681,
+    "customOverride": false,
+    "effectiveMatchesFile": true,
+    "sha256": "0d1057af848fc8e29ad4f798e824e39ae985d4564928be9c4a6b47a9c9257a69"
+  },
+  {
+    "id": 4,
+    "type": "audioBindPrompt",
+    "characters": 847,
+    "customOverride": false,
+    "effectiveMatchesFile": true,
+    "sha256": "0c287e130cc5df4c7df40a5a606061f977a17c626d8c37b0e0bdd1729dfd0950"
+  }
+]

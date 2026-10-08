@@ -1,0 +1,256 @@
+TAP version 13
+# Subtest: complete character boards have one Picture each and explicit sheet semantics
+ok 1 - complete character boards have one Picture each and explicit sheet semantics
+  ---
+  duration_ms: 2.6736
+  type: 'test'
+  ...
+# Subtest: uploaded image labels assign identity only to characters and keep source composition separate from target action
+ok 2 - uploaded image labels assign identity only to characters and keep source composition separate from target action
+  ---
+  duration_ms: 0.4008
+  type: 'test'
+  ...
+# Subtest: a four-view character board contributes one Subject and an independent scene contributes one more
+ok 3 - a four-view character board contributes one Subject and an independent scene contributes one more
+  ---
+  duration_ms: 0.4659
+  type: 'test'
+  ...
+# Subtest: mixed assets group in first-upload order and retain nonconsecutive Picture sources without sorting
+ok 4 - mixed assets group in first-upload order and retain nonconsecutive Picture sources without sorting
+  ---
+  duration_ms: 0.6302
+  type: 'test'
+  ...
+# Subtest: prompt input carries each storyboard once with exact dialogue and causal order but excludes asset design prose and unuploaded files
+ok 5 - prompt input carries each storyboard once with exact dialogue and causal order but excludes asset design prose and unuploaded files
+  ---
+  duration_ms: 0.7746
+  type: 'test'
+  ...
+# Subtest: binding slots feed the free-form validator without requiring Subject definitions
+ok 6 - binding slots feed the free-form validator without requiring Subject definitions
+  ---
+  duration_ms: 1.2138
+  type: 'test'
+  ...
+# Subtest: word counts distinguish detailed_description from the whole prompt without imposing a length gate
+ok 7 - word counts distinguish detailed_description from the whole prompt without imposing a length gate
+  ---
+  duration_ms: 3.1488
+  type: 'test'
+  ...
+# Subtest: camera plan preserves existing moves across two boards with continuous three-decimal windows
+ok 8 - camera plan preserves existing moves across two boards with continuous three-decimal windows
+  ---
+  duration_ms: 0.5807
+  type: 'test'
+  ...
+# Subtest: malformed numeric data rows omit the entire board but its known duration still advances time
+ok 9 - malformed numeric data rows omit the entire board but its known duration still advances time
+  ---
+  duration_ms: 0.5304
+  type: 'test'
+  ...
+# Subtest: duration mismatch never fabricates row timing, and unknown duration prevents all later definite windows
+ok 10 - duration mismatch never fabricates row timing, and unknown duration prevents all later definite windows
+  ---
+  duration_ms: 0.3729
+  type: 'test'
+  ...
+# Subtest: accepted rounding differences stay on board boundaries and no camera window exceeds the target
+ok 11 - accepted rounding differences stay on board boundaries and no camera window exceeds the target
+  ---
+  duration_ms: 0.2948
+  type: 'test'
+  ...
+# Subtest: prompt retains every validated row boundary without inferring blank moves or cuts from quoted text
+ok 12 - prompt retains every validated row boundary without inferring blank moves or cuts from quoted text
+  ---
+  duration_ms: 0.4404
+  type: 'test'
+  ...
+# Subtest: equal camera cells do not merge supplied shots and their exact row windows span the target
+ok 13 - equal camera cells do not merge supplied shots and their exact row windows span the target
+  ---
+  duration_ms: 0.2792
+  type: 'test'
+  ...
+# Subtest: legacy prose and unknown table timing preserve source facts without making a definite row shot plan
+ok 14 - legacy prose and unknown table timing preserve source facts without making a definite row shot plan
+  ---
+  duration_ms: 0.3325
+  type: 'test'
+  ...
+# Subtest: H3 template and selected rendering guide share row-shot semantics and preserve the timing failure escape
+ok 15 - H3 template and selected rendering guide share row-shot semantics and preserve the timing failure escape
+  ---
+  duration_ms: 0.5721
+  type: 'test'
+  ...
+# Subtest: H3 single prompt API preserves requested language isolation with replaceBasePrompt=undefined
+ok 16 - H3 single prompt API preserves requested language isolation with replaceBasePrompt=undefined
+  ---
+  duration_ms: 204.586
+  type: 'test'
+  ...
+# Subtest: H3 single prompt API preserves requested language isolation with replaceBasePrompt=true
+ok 17 - H3 single prompt API preserves requested language isolation with replaceBasePrompt=true
+  ---
+  duration_ms: 36.6562
+  type: 'test'
+  ...
+# Subtest: H3 batch prompt API preserves requested language isolation with replaceBasePrompt=true
+ok 18 - H3 batch prompt API preserves requested language isolation with replaceBasePrompt=true
+  ---
+  duration_ms: 39.6189
+  type: 'test'
+  ...
+# Subtest: batch fill refreshes completed prompts with changed images without copying the stale base or touching other languages
+ok 19 - batch fill refreshes completed prompts with changed images without copying the stale base or touching other languages
+  ---
+  duration_ms: 79.2703
+  type: 'test'
+  ...
+# Subtest: H3 derivative actor context uses its same-project role parent without uploading another image
+ok 20 - H3 derivative actor context uses its same-project role parent without uploading another image
+  ---
+  duration_ms: 27.9193
+  type: 'test'
+  ...
+# Subtest: single and batch prompt routes retain all seven assets in seven complete asset pictures and persist the identical reference plan
+ok 21 - single and batch prompt routes retain all seven assets in seven complete asset pictures and persist the identical reference plan
+  ---
+  duration_ms: 58.0046
+  type: 'test'
+  ...
+# Subtest: preflight overflow and missing boards finish failed without calling a model or replacing the saved prompt
+ok 22 - preflight overflow and missing boards finish failed without calling a model or replacing the saved prompt
+  ---
+  duration_ms: 55.3143
+  type: 'test'
+  ...
+# Subtest: H3 refuses an incompatible persisted binding before AI rather than silently overriding the selection
+ok 23 - H3 refuses an incompatible persisted binding before AI rather than silently overriding the selection
+  ---
+  duration_ms: 18.3906
+  type: 'test'
+  ...
+# Subtest: H3 actually invokes a compatible custom bound template and uses the default again after unbinding
+ok 24 - H3 actually invokes a compatible custom bound template and uses the default again after unbinding
+  ---
+  duration_ms: 34.1888
+  type: 'test'
+  ...
+# Subtest: non-H3 receives project rendering as system authority, escaped storyboard facts and actual media/frame indices
+ok 25 - non-H3 receives project rendering as system authority, escaped storyboard facts and actual media/frame indices
+  ---
+  duration_ms: 19.8255
+  type: 'test'
+  ...
+# Subtest: H3 generation retries a draft that is missing the official sections
+ok 26 - H3 generation retries a draft that is missing the official sections
+  ---
+  duration_ms: 24.6242
+  type: 'test'
+  ...
+# Subtest: H3 generation retries an invalid retention marker and saves only the corrected prompt
+ok 27 - H3 generation retries an invalid retention marker and saves only the corrected prompt
+  ---
+  duration_ms: 24.7285
+  type: 'test'
+  ...
+# Subtest: Chinese free-form H3 prose is rewritten into the complete English six-section structure
+ok 28 - Chinese free-form H3 prose is rewritten into the complete English six-section structure
+  ---
+  duration_ms: 24.6217
+  type: 'test'
+  ...
+# Subtest: translation retries free-form output and saves the official source structure
+ok 29 - translation retries free-form output and saves the official source structure
+  ---
+  duration_ms: 23.3639
+  type: 'test'
+  ...
+# Subtest: English translation retries when dialogue is still Chinese before marking the variant complete
+ok 30 - English translation retries when dialogue is still Chinese before marking the variant complete
+  ---
+  duration_ms: 24.9264
+  type: 'test'
+  ...
+# Subtest: English translation retries when quoted visible screen text remains Chinese
+ok 31 - English translation retries when quoted visible screen text remains Chinese
+  ---
+  duration_ms: 26.3233
+  type: 'test'
+  ...
+# Subtest: English translation retries when English prose still requests Chinese screen text
+ok 32 - English translation retries when English prose still requests Chinese screen text
+  ---
+  duration_ms: 30.721
+  type: 'test'
+  ...
+# Subtest: translation copies the saved Picture plan without invoking a semantic reviewer
+ok 33 - translation copies the saved Picture plan without invoking a semantic reviewer
+  ---
+  duration_ms: 26.4431
+  type: 'test'
+  ...
+# Subtest: out-of-range H3 duration is reported instead of silently clamped before writing the prompt
+ok 34 - out-of-range H3 duration is reported instead of silently clamped before writing the prompt
+  ---
+  duration_ms: 18.3914
+  type: 'test'
+  ...
+# Subtest: semantic reviewer is not called and cannot reject event ordering
+ok 35 - semantic reviewer is not called and cannot reject event ordering
+  ---
+  duration_ms: 22.3495
+  type: 'test'
+  ...
+# Subtest: image-only injury color guesses do not force recoloring a faint closed reference mark
+ok 36 - image-only injury color guesses do not force recoloring a faint closed reference mark
+  ---
+  duration_ms: 28.9254
+  type: 'test'
+  ...
+# Subtest: semantic contradictions no longer create failed prompt records
+ok 37 - semantic contradictions no longer create failed prompt records
+  ---
+  duration_ms: 19.3692
+  type: 'test'
+  ...
+# Subtest: base writer receives the selected visual manual without semantic reviewer calls
+ok 38 - base writer receives the selected visual manual without semantic reviewer calls
+  ---
+  duration_ms: 21.3089
+  type: 'test'
+  ...
+# Subtest: rendering-source reviewer issues no longer trigger repair retries
+ok 39 - rendering-source reviewer issues no longer trigger repair retries
+  ---
+  duration_ms: 20.2146
+  type: 'test'
+  ...
+# Subtest: video manual applies the selected 3D rendering while reference designs and asset prefix stay authoritative
+ok 40 - video manual applies the selected 3D rendering while reference designs and asset prefix stay authoritative
+  ---
+  duration_ms: 3.9399
+  type: 'test'
+  ...
+# Subtest: other styles retain their existing shared prefix unless they provide a video override
+ok 41 - other styles retain their existing shared prefix unless they provide a video override
+  ---
+  duration_ms: 2.0185
+  type: 'test'
+  ...
+1..41
+# tests 41
+# suites 0
+# pass 41
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1732.0699

@@ -48,7 +48,7 @@ function ensureNonEmptyBody(body: string, fallback: string): string {
 export function parseFrontmatter(content: string): { name: string; description: string } {
   const match = content.match(/^\uFEFF?---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/);
   if (!match?.[1]) {
-    throw new Error(`技能文件缺少有效的 frontmatter，确保以 --- 包裹并包含 name 和 description 字段。${content}`);
+    throw new Error("技能文件缺少有效的 frontmatter，确保以 --- 包裹并包含 name 和 description 字段。");
   }
 
   const result: Record<string, string> = {};
@@ -91,6 +91,9 @@ export function parseFrontmatter(content: string): { name: string; description: 
         }
 
         const currentIndent = current.match(/^\s*/)?.[0].length ?? 0;
+        // A YAML block value must be indented. A following top-level field
+        // belongs to the frontmatter, not to this field's multiline value.
+        if (currentIndent === 0) break;
         if (blockIndent === null) {
           blockIndent = currentIndent;
         }
@@ -116,7 +119,7 @@ export function parseFrontmatter(content: string): { name: string; description: 
   }
 
   if (!result.name || !result.description) {
-    throw new Error(`技能文件缺少必要字段: name 或 description，确保 frontmatter 包含这两个字段。${content}`);
+    throw new Error("技能文件缺少必要字段: name 或 description，确保 frontmatter 包含这两个字段。");
   }
 
   return { name: result.name, description: result.description };
@@ -168,8 +171,9 @@ export async function useSkill(input: SkillInput, readSnapshot?: (filePath: stri
 }
 
 export function buildSkillPrompt(skills: { name: string; description: string }[]): string {
+  const xmlText = (value: string) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   const skillEntries = skills
-    .map((s) => `  <skill>\n    <name>${s.name}</name>\n    <description>${s.description}</description>\n  </skill>`)
+    .map((s) => `  <skill>\n    <name>${xmlText(s.name)}</name>\n    <description>${xmlText(s.description)}</description>\n  </skill>`)
     .join("\n");
   return `## Skills
 以下技能提供了专业任务的专用指令。
@@ -215,9 +219,11 @@ export function createSkillTools(skills: { name: string; description: string }[]
   const activated = new Set<string>(); // 仅记录成功加载的技能
   const skillsRootDir = path.resolve(rootDir);
   const skillNames = skills.map((s) => s.name);
+  if (new Set(skillPaths.mainSkill.map((s) => s.name)).size !== skillPaths.mainSkill.length) {
+    throw new Error("本次可用技能名称重复，请修正所选技能的 name，避免激活错误文件。");
+  }
   const skillMap = new Map(skillPaths.mainSkill.map((s) => [s.name, s]));
-  const selectedStyleResources = discoverSelectedStyleResources(skillPaths.mainSkill, skillsRootDir);
-  let selectedStyleResourcesAnnounced = false;
+  const announcedResources = new Set<string>();
   let tertiaryResourcesAnnounced = false;
   return {
     activate_skill: tool({
@@ -238,7 +244,9 @@ export function createSkillTools(skills: { name: string; description: string }[]
         if (!matched) return { error: `未找到技能 "${name}"` };
         let raw: string;
         try {
-          const stat = await fs.promises.stat(matched.path);
+          const [realRoot, realFile] = await Promise.all([fs.promises.realpath(skillsRootDir), fs.promises.realpath(matched.path)]);
+          if (!isPathInside(realFile, realRoot)) return { error: "Access denied: skill is outside skill directory" };
+          const stat = await fs.promises.stat(realFile);
           if (!stat.isFile() || stat.size > MAX_SKILL_FILE_BYTES) {
             return { error: `技能文件无效或超过大小限制: ${matched.path}` };
           }
@@ -251,22 +259,23 @@ export function createSkillTools(skills: { name: string; description: string }[]
         const body = raw.replace(/^\uFEFF?---[ \t]*\r?\n[\s\S]*?\r?\n---[ \t]*(?:\r?\n|$)/, "").trim();
         if (!body) return { error: `技能文件没有正文: ${matched.path}` };
 
-        let content = `<skill_content name="${name}">\n`;
+        const attributeName = name.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        let content = `<skill_content name="${attributeName}">\n`;
         content += body + "\n\n";
         content += "使用 read_skill_file 工具读取资源文件。\n";
-        const resourcePaths = [
+        const resourcePaths = [...new Set([
           ...skillPaths.secondarySkills,
-          ...(selectedStyleResourcesAnnounced ? [] : selectedStyleResources),
-        ];
+          ...discoverSelectedStyleResources([matched], skillsRootDir),
+        ])].filter((resource) => !announcedResources.has(resource));
         if (resourcePaths.length > 0) {
           content += "\n<skill_resources>\n";
-          for (const resourcePath of new Set(resourcePaths)) {
+          for (const resourcePath of resourcePaths) {
             content += `  <file>${resourcePath}</file>\n`;
+            announcedResources.add(resourcePath);
           }
           content += "</skill_resources>\n";
         }
         content += "</skill_content>";
-        selectedStyleResourcesAnnounced = true;
         activated.add(name);
         console.log(`⚡[主技能] ✓ 技能 "${name}" 已激活`);
         return { content };

@@ -1,0 +1,112 @@
+[
+  {
+    "path": "src/utils/modelPromptTemplates.ts",
+    "bytes": 9446,
+    "sha256": "77a65921edada38ca15ea8836be48ca685c127e25f0a83cb621b160cc8c0c90d"
+  },
+  {
+    "path": "src/utils/videoPromptGeneration.ts",
+    "bytes": 24475,
+    "sha256": "934c07902ec170ffd63097e00dca7476e14276b7406deb2acfa424f7d64db92b"
+  },
+  {
+    "path": "src/utils/h3PromptContext.ts",
+    "bytes": 10572,
+    "sha256": "1f0433a35d98317c95059c66028c850ec538980605eb608e2113d249272de74b"
+  },
+  {
+    "path": "scripts/evaluate-prompt-skill-quality.ts",
+    "bytes": 12085,
+    "sha256": "1438e4432a9626337432a54b210abe15f03dcd17b20a0b41f9d811d7805e563d"
+  },
+  {
+    "path": "data/modelPrompt/system/videoPromptGeneration.md",
+    "bytes": 4981,
+    "sha256": "f610b4174376e9f32ccd15e799838906265b92f592787d8325fecca11280ff5d"
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/art_prompt/art_storyboard_video.md",
+    "bytes": 2503,
+    "sha256": "97038dd42872c90a5d7ccd8ffc1306749a1ee6f36115c8f021946a824bffab97"
+  },
+  {
+    "path": "Toonflow-web-master/src/components/setting/components/modelMap.vue",
+    "bytes": 14111,
+    "sha256": "048fdae3346f0f21d02f918c029545ee7548a100d1f6b2f2f900a7f13bae02b0"
+  },
+  {
+    "path": "tests/h3-prompt-context.test.ts",
+    "bytes": 22866,
+    "sha256": "16b7c7df09cd3d7267cf468670e6c263c89afd4dd78ca616b9a66d91b39f039d"
+  },
+  {
+    "path": "tests/h3-prompt-generation.test.ts",
+    "bytes": 41109,
+    "sha256": "ac23ef667540d6b3732e11a2033a2bddf90d2cf3802b197b9b8449e61ead88de"
+  },
+  {
+    "path": "tests/model-prompt-map-routes.test.ts",
+    "bytes": 17991,
+    "sha256": "b6e0e2b8aaf7646da036fa02740155eb769856ba403fd347d690f1fb4add3818"
+  },
+  {
+    "path": "tests/video-template-contracts.test.ts",
+    "bytes": 5206,
+    "sha256": "ecab94e49146131a28bcc84c737435b533da1ddfbdec6d1d8d724a5c62a5162e"
+  },
+  {
+    "path": "src/routes/setting/modelMap/bindingPrompt.ts",
+    "bytes": 2238,
+    "sha256": "4969fdcd9a098a1797475792c3fd497f0164bad638d131c090a87ab5aafbd934"
+  },
+  {
+    "path": "src/routes/setting/modelMap/deletePrompt.ts",
+    "bytes": 1269,
+    "sha256": "e96f4bd8555cf4992c995df8ed978d1eeb6c6ebbc7c4761b2846463e87bcf43a"
+  },
+  {
+    "path": "src/routes/setting/modelMap/getImageAndVideoModel.ts",
+    "bytes": 2179,
+    "sha256": "ca63764ffa5000afbc9369ad9d35c6e509c672ef88150b1c944883f6573d31c1"
+  },
+  {
+    "path": "src/routes/setting/modelMap/getPromptList.ts",
+    "bytes": 1220,
+    "sha256": "b38bb1e7ae6783a6c56f6b61ee9b215742e2780340a13f014db5f3a14cfbe1e3"
+  },
+  {
+    "path": "src/routes/setting/modelMap/savePrompt.ts",
+    "bytes": 755,
+    "sha256": "bc53b9477d6943d1bcf75933b51a8164f17f9da8ca9290415db1d0ff75bb7e7f"
+  },
+  {
+    "path": "src/routes/setting/modelMap/updatePrompt.ts",
+    "bytes": 1360,
+    "sha256": "2cd30d858e09527704c7ef4254d8149b6211aecb5e3e802dd641273cf2dce781"
+  },
+  {
+    "path": "data/modelPrompt/video/minimaxH3Multi-referenceMode.md",
+    "bytes": 8775,
+    "sha256": "b6c30a74210a5df723a1386d1daf3d71646fedc9956d427c99c123999b2bbe66"
+  },
+  {
+    "path": "data/modelPrompt/video/seedance2Multi-parameterMode.md",
+    "bytes": 5123,
+    "sha256": "ddf57dc56675b39f0e02cbe5ace78472a27626ea19dca68fdb9d6008c2427b91"
+  },
+  {
+    "path": "data/modelPrompt/video/universalFirstAndLastFrameMode.md",
+    "bytes": 4469,
+    "sha256": "2b70b42cb461d465a9d072c769dfc2eb8704d36643b13189b21a84cd912ef468"
+  },
+  {
+    "path": "data/modelPrompt/video/universalMulti-parameterMode.md",
+    "bytes": 4633,
+    "sha256": "601064468c1c3300caa7dfb314953e1d5896ddbf3acd240b185d6f67e3130819"
+  },
+  {
+    "path": "data/modelPrompt/video/wan2.6Single-imageFirstFrameMode.md",
+    "bytes": 5683,
+    "sha256": "59260c511f83553e9fed320b3976b5b7cc41031e107185edd9d88c60f16e6181"
+  }
+]

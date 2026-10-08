@@ -1,0 +1,12 @@
+[
+  {
+    "entry": "src/app.ts",
+    "success": true,
+    "bytes": 10699838
+  },
+  {
+    "entry": "scripts/main.ts",
+    "success": true,
+    "bytes": 9966
+  }
+]

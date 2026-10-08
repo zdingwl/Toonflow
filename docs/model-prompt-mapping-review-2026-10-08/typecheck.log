@@ -1,0 +1,105 @@
+docs/prompt-skill-quality-evaluation-2026-10-08/before/src/utils/assetPromptGeneration.ts(5,47): error TS2307: Cannot find module './assetDescriptionVersion' or its corresponding type declarations.
+docs/prompt-skill-quality-evaluation-2026-10-08/before/src/utils/h3PromptContext.ts(1,46): error TS2307: Cannot find module './h3ReferenceSlots' or its corresponding type declarations.
+scripts/evaluate-prompt-skill-quality.ts(18,31): error TS1343: The 'import.meta' meta-property is only allowed when the '--module' option is 'es2020', 'es2022', 'esnext', 'system', 'node16', 'node18', 'node20', or 'nodenext'.
+src/routes/assets/pollingImageAssets.ts(25,43): error TS2345: Argument of type 'Pick<o_image, "id" | "assetsId" | "state" | "filePath" | "errorReason">[]' is not assignable to parameter of type 'ImageAttempt[]'.
+  Type 'Pick<o_image, "id" | "assetsId" | "state" | "filePath" | "errorReason">' is not assignable to type 'ImageAttempt'.
+    Types of property 'id' are incompatible.
+      Type 'number | undefined' is not assignable to type 'number'.
+        Type 'undefined' is not assignable to type 'number'.
+src/routes/cornerScape/getAllAssets.ts(57,32): error TS2345: Argument of type 'Pick<o_image, "id" | "assetsId" | "state" | "errorReason">[]' is not assignable to parameter of type 'ImageAttempt[]'.
+  Type 'Pick<o_image, "id" | "assetsId" | "state" | "errorReason">' is not assignable to type 'ImageAttempt'.
+    Types of property 'id' are incompatible.
+      Type 'number | undefined' is not assignable to type 'number'.
+        Type 'undefined' is not assignable to type 'number'.
+src/routes/cornerScape/getAllAssets.ts(69,66): error TS2339: Property 'errorReason' does not exist on type 'ImageAttempt'.
+src/routes/production/storyboard/batchAddStoryboardInfo.ts(54,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'string' is not assignable to parameter of type 'readonly string[]'.
+src/routes/production/storyboard/batchAddStoryboardInfo.ts(56,38): error TS18047: 'createdIds' is possibly 'null'.
+src/routes/scriptAgent/setPlanData.ts(32,67): error TS18046: 'item' is of type 'unknown'.
+src/routes/scriptAgent/setPlanData.ts(34,83): error TS18046: 'item' is of type 'unknown'.
+src/routes/scriptAgent/setPlanData.ts(36,58): error TS18046: 'item' is of type 'unknown'.
+src/routes/scriptAgent/setPlanData.ts(36,78): error TS18046: 'item' is of type 'unknown'.
+src/routes/scriptAgent/setPlanData.ts(47,110): error TS18046: 'item' is of type 'unknown'.
+src/routes/scriptAgent/setPlanData.ts(48,47): error TS2345: Argument of type '(item: { name: string; content: string; }) => [string, string]' is not assignable to parameter of type '(value: Pick<o_script, "name" | "content">, index: number, array: Pick<o_script, "name" | "content">[]) => [string, string]'.
+  Types of parameters 'item' and 'value' are incompatible.
+    Type 'Pick<o_script, "name" | "content">' is not assignable to type '{ name: string; content: string; }'.
+      Types of property 'name' are incompatible.
+        Type 'string | null | undefined' is not assignable to type 'string'.
+          Type 'undefined' is not assignable to type 'string'.
+src/routes/scriptAgent/setPlanData.ts(49,45): error TS18046: 'item' is of type 'unknown'.
+src/routes/scriptAgent/setPlanData.ts(49,60): error TS18046: 'item' is of type 'unknown'.
+src/utils/agent/runtime/toolExecutor.ts(42,97): error TS18046: 'a' is of type 'unknown'.
+src/utils/agent/runtime/toolExecutor.ts(42,101): error TS18046: 'b' is of type 'unknown'.
+tests/comfyui-memory.test.ts(139,63): error TS1343: The 'import.meta' meta-property is only allowed when the '--module' option is 'es2020', 'es2022', 'esnext', 'system', 'node16', 'node18', 'node20', or 'nodenext'.
+tests/content-constraints.test.ts(57,61): error TS1343: The 'import.meta' meta-property is only allowed when the '--module' option is 'es2020', 'es2022', 'esnext', 'system', 'node16', 'node18', 'node20', or 'nodenext'.
+tests/h3-prompt-context.test.ts(353,102): error TS1343: The 'import.meta' meta-property is only allowed when the '--module' option is 'es2020', 'es2022', 'esnext', 'system', 'node16', 'node18', 'node20', or 'nodenext'.
+tests/h3-prompt-context.test.ts(354,125): error TS1343: The 'import.meta' meta-property is only allowed when the '--module' option is 'es2020', 'es2022', 'esnext', 'system', 'node16', 'node18', 'node20', or 'nodenext'.
+tests/h3-video-reference-plan.test.ts(37,57): error TS2503: Cannot find namespace 'referenceMedia'.
+tests/h3-video-reference-plan.test.ts(39,22): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ FACE: string; FULL_BODY_FRONT: string; FULL_BODY_SIDE: string; FULL_BODY_BACK: string; }'.
+tests/import-studio.test.ts(90,42): error TS2365: Operator '+' cannot be applied to types 'void' and 'void'.
+tests/video-language-routes.test.ts(15,37): error TS1343: The 'import.meta' meta-property is only allowed when the '--module' option is 'es2020', 'es2022', 'esnext', 'system', 'node16', 'node18', 'node20', or 'nodenext'.
+tests/video-language-routes.test.ts(83,90): error TS1343: The 'import.meta' meta-property is only allowed when the '--module' option is 'es2020', 'es2022', 'esnext', 'system', 'node16', 'node18', 'node20', or 'nodenext'.
+Toonflow-web-master/src/main.ts(23,32): error TS2307: Cannot find module '@/utils/imageOptimizer' or its corresponding type declarations.
+Toonflow-web-master/src/stores/imageListCache.ts(2,19): error TS2307: Cannot find module '@/utils/axios' or its corresponding type declarations.
+Toonflow-web-master/src/stores/index.ts(1,19): error TS2307: Cannot find module '@/utils/axios' or its corresponding type declarations.
+Toonflow-web-master/src/stores/productionAgent.ts(1,19): error TS2307: Cannot find module '@/utils/axios' or its corresponding type declarations.
+Toonflow-web-master/src/stores/productionAgent.ts(2,26): error TS2307: Cannot find module '@/stores/project' or its corresponding type declarations.
+Toonflow-web-master/src/stores/productionAgent.ts(3,26): error TS2307: Cannot find module '@/stores/setting' or its corresponding type declarations.
+Toonflow-web-master/src/stores/productionAgent.ts(4,25): error TS2307: Cannot find module '@/utils/useChat' or its corresponding type declarations.
+Toonflow-web-master/src/stores/productionAgent.ts(5,43): error TS2307: Cannot find module '@/views/production/utils/flowBuilder' or its corresponding type declarations.
+Toonflow-web-master/src/stores/productionAgent.ts(56,24): error TS7006: Parameter 'data' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(108,32): error TS7006: Parameter '_' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(108,35): error TS7006: Parameter 'callback' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(129,41): error TS7006: Parameter 'data' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(129,47): error TS7006: Parameter 'callback' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(130,56): error TS7006: Parameter 'a' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(133,48): error TS7006: Parameter 'd' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(153,41): error TS7006: Parameter 'data' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(153,47): error TS7006: Parameter 'callback' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(154,56): error TS7006: Parameter 'a' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(157,54): error TS7006: Parameter 'd' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(162,46): error TS7006: Parameter 'data' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(162,52): error TS7006: Parameter 'callback' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(174,45): error TS7006: Parameter 'data' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(174,51): error TS7006: Parameter 'callback' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(186,40): error TS7006: Parameter 'data' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(186,46): error TS7006: Parameter 'callback' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(259,48): error TS7006: Parameter 'item' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(276,38): error TS7006: Parameter 'asset' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(278,33): error TS7006: Parameter 'derive' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(295,44): error TS7006: Parameter 'asset' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(297,39): error TS7006: Parameter 'derive' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(318,38): error TS7006: Parameter 'asset' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(320,33): error TS7006: Parameter 'derive' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(331,42): error TS7006: Parameter 'asset' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(352,42): error TS7006: Parameter 'asset' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(354,35): error TS7006: Parameter 'derive' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(415,56): error TS7006: Parameter 's' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/productionAgent.ts(485,59): error TS7006: Parameter 'existing' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/scriptAgent.ts(1,19): error TS2307: Cannot find module '@/utils/axios' or its corresponding type declarations.
+Toonflow-web-master/src/stores/scriptAgent.ts(2,26): error TS2307: Cannot find module '@/stores/project' or its corresponding type declarations.
+Toonflow-web-master/src/stores/scriptAgent.ts(3,26): error TS2307: Cannot find module '@/stores/setting' or its corresponding type declarations.
+Toonflow-web-master/src/stores/scriptAgent.ts(4,25): error TS2307: Cannot find module '@/utils/useChat' or its corresponding type declarations.
+Toonflow-web-master/src/stores/scriptAgent.ts(58,22): error TS7006: Parameter 'data' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/scriptAgent.ts(81,36): error TS7006: Parameter '_' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/scriptAgent.ts(81,39): error TS7006: Parameter 'callback' implicitly has an 'any' type.
+Toonflow-web-master/src/stores/video.ts(1,19): error TS2307: Cannot find module '@/utils/axios' or its corresponding type declarations.
+Toonflow-web-master/src/utils/assetsCheck.ts(73,50): error TS7006: Parameter 'item' implicitly has an 'any' type.
+Toonflow-web-master/src/utils/assetsCheck.ts(76,27): error TS7006: Parameter 'item' implicitly has an 'any' type.
+Toonflow-web-master/src/utils/axios.ts(2,20): error TS2307: Cannot find module '@/router/index' or its corresponding type declarations.
+Toonflow-web-master/src/utils/axios.ts(5,26): error TS2307: Cannot find module '@/stores/setting' or its corresponding type declarations.
+Toonflow-web-master/src/utils/global.ts(3,18): error TS2307: Cannot find module '@/locales' or its corresponding type declarations.
+Toonflow-web-master/src/utils/parseNovel.ts(1,26): error TS2307: Cannot find module '@/stores/setting' or its corresponding type declarations.
+Toonflow-web-master/src/utils/providersLogo.ts(2,21): error TS1343: The 'import.meta' meta-property is only allowed when the '--module' option is 'es2020', 'es2022', 'esnext', 'system', 'node16', 'node18', 'node20', or 'nodenext'.
+Toonflow-web-master/src/utils/providersLogo.ts(2,33): error TS2339: Property 'glob' does not exist on type 'ImportMeta'.
+Toonflow-web-master/src/utils/providersLogo.ts(12,26): error TS2322: Type 'unknown' is not assignable to type 'string'.
+Toonflow-web-master/src/utils/scanSkills.ts(1,19): error TS2307: Cannot find module '@/utils/axios' or its corresponding type declarations.
+Toonflow-web-master/src/utils/scanSkills.ts(5,26): error TS2307: Cannot find module '@/stores/setting' or its corresponding type declarations.
+Toonflow-web-master/src/utils/theme.ts(1,26): error TS2307: Cannot find module '@/stores/setting' or its corresponding type declarations.
+Toonflow-web-master/src/utils/videoPolling.ts(1,19): error TS2307: Cannot find module '@/utils/axios' or its corresponding type declarations.
+Toonflow-web-master/vite.config.ts(3,17): error TS2307: Cannot find module '@vitejs/plugin-vue' or its corresponding type declarations.
+  There are types at 'D:/Toonflow-app-master/Toonflow-web-master/node_modules/@vitejs/plugin-vue/dist/index.d.mts', but this result could not be resolved under your current 'moduleResolution' setting. Consider updating to 'node16', 'nodenext', or 'bundler'.
+Toonflow-web-master/vite.config.ts(8,33): error TS7016: Could not find a declaration file for module 'postcss-px-to-viewport'. 'D:/Toonflow-app-master/Toonflow-web-master/node_modules/postcss-px-to-viewport/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/postcss-px-to-viewport` if it exists or add a new declaration (.d.ts) file containing `declare module 'postcss-px-to-viewport';`
+Toonflow-web-master/vite.config.ts(52,43): error TS1343: The 'import.meta' meta-property is only allowed when the '--module' option is 'es2020', 'es2022', 'esnext', 'system', 'node16', 'node18', 'node20', or 'nodenext'.

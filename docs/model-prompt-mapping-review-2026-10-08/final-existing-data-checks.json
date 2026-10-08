@@ -1,0 +1,42 @@
+{
+  "o_assets": {
+    "originalRowsUnchanged": true,
+    "beforeCount": 351,
+    "currentCount": 351
+  },
+  "o_image": {
+    "originalRowsUnchanged": true,
+    "beforeCount": 367,
+    "currentCount": 367
+  },
+  "o_storyboard": {
+    "originalRowsUnchanged": true,
+    "beforeCount": 49,
+    "currentCount": 49
+  },
+  "o_videoTrack": {
+    "originalRowsUnchanged": true,
+    "beforeCount": 50,
+    "currentCount": 50
+  },
+  "o_video": {
+    "originalRowsUnchanged": true,
+    "beforeCount": 62,
+    "currentCount": 62
+  },
+  "o_videoPromptVariant": {
+    "originalRowsUnchanged": true,
+    "beforeCount": 35,
+    "currentCount": 35
+  },
+  "o_agentWorkData": {
+    "originalRowsUnchanged": true,
+    "beforeCount": 44,
+    "currentCount": 44
+  },
+  "o_script": {
+    "originalRowsUnchanged": true,
+    "beforeCount": 70,
+    "currentCount": 90
+  }
+}

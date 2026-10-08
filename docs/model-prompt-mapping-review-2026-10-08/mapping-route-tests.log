@@ -1,0 +1,284 @@
+TAP version 13
+# Subtest: candidate listing excludes system/image files and marks immutable and in-use templates
+ok 1 - candidate listing excludes system/image files and marks immutable and in-use templates
+  ---
+  duration_ms: 185.4275
+  type: 'test'
+  ...
+# Subtest: H3 candidates contain only H3-compatible templates
+ok 2 - H3 candidates contain only H3-compatible templates
+  ---
+  duration_ms: 45.7398
+  type: 'test'
+  ...
+# Subtest: model listing keeps unmapped video models, omits empty/disabled providers and reports mode-based defaults
+ok 3 - model listing keeps unmapped video models, omits empty/disabled providers and reports mode-based defaults
+  ---
+  duration_ms: 60.1281
+  type: 'test'
+  ...
+# Subtest: valid H3 custom binding persists its canonical path and is reported as actually effective
+ok 4 - valid H3 custom binding persists its canonical path and is reported as actually effective
+  ---
+  duration_ms: 43.2098
+  type: 'test'
+  ...
+# Subtest: binding rejects system without changing saved bindings
+ok 5 - binding rejects system without changing saved bindings
+  ---
+  duration_ms: 52.7085
+  type: 'test'
+  ...
+# Subtest: binding rejects image without changing saved bindings
+ok 6 - binding rejects image without changing saved bindings
+  ---
+  duration_ms: 38.9452
+  type: 'test'
+  ...
+# Subtest: binding rejects missing file without changing saved bindings
+ok 7 - binding rejects missing file without changing saved bindings
+  ---
+  duration_ms: 42.8457
+  type: 'test'
+  ...
+# Subtest: binding rejects wrong name without changing saved bindings
+ok 8 - binding rejects wrong name without changing saved bindings
+  ---
+  duration_ms: 38.2649
+  type: 'test'
+  ...
+# Subtest: binding rejects wrong H3 family without changing saved bindings
+ok 9 - binding rejects wrong H3 family without changing saved bindings
+  ---
+  duration_ms: 38.0989
+  type: 'test'
+  ...
+# Subtest: binding rejects generic for H3 without changing saved bindings
+ok 10 - binding rejects generic for H3 without changing saved bindings
+  ---
+  duration_ms: 50.1625
+  type: 'test'
+  ...
+# Subtest: binding rejects H3 for Seedance without changing saved bindings
+ok 11 - binding rejects H3 for Seedance without changing saved bindings
+  ---
+  duration_ms: 36.9114
+  type: 'test'
+  ...
+# Subtest: binding rejects unsupported multireference without changing saved bindings
+ok 12 - binding rejects unsupported multireference without changing saved bindings
+  ---
+  duration_ms: 37.094
+  type: 'test'
+  ...
+# Subtest: binding rejects incomplete selection without changing saved bindings
+ok 13 - binding rejects incomplete selection without changing saved bindings
+  ---
+  duration_ms: 38.169
+  type: 'test'
+  ...
+# Subtest: binding checks enabled video model missing/MiniMax-H3-local
+ok 14 - binding checks enabled video model missing/MiniMax-H3-local
+  ---
+  duration_ms: 38.6211
+  type: 'test'
+  ...
+# Subtest: binding checks enabled video model disabled/MiniMax-H3-local
+ok 15 - binding checks enabled video model disabled/MiniMax-H3-local
+  ---
+  duration_ms: 29.8951
+  type: 'test'
+  ...
+# Subtest: binding checks enabled video model local/missing-model
+ok 16 - binding checks enabled video model local/missing-model
+  ---
+  duration_ms: 31.4589
+  type: 'test'
+  ...
+# Subtest: binding checks enabled video model local/image-model
+ok 17 - binding checks enabled video model local/image-model
+  ---
+  duration_ms: 31.5348
+  type: 'test'
+  ...
+# Subtest: empty selection removes only this model's mapping and restores its automatic default
+ok 18 - empty selection removes only this model's mapping and restores its automatic default
+  ---
+  duration_ms: 40.4995
+  type: 'test'
+  ...
+# Subtest: concurrent first bindings remain one consistent mapping
+ok 19 - concurrent first bindings remain one consistent mapping
+  ---
+  duration_ms: 45.0682
+  type: 'test'
+  ...
+# Subtest: legacy invalid binding stays visible as invalid rather than hiding the model or reporting success
+ok 20 - legacy invalid binding stays visible as invalid rather than hiding the model or reporting success
+  ---
+  duration_ms: 32.122
+  type: 'test'
+  ...
+# Subtest: custom creation succeeds and never replaces an existing file
+ok 21 - custom creation succeeds and never replaces an existing file
+  ---
+  duration_ms: 34.7939
+  type: 'test'
+  ...
+# Subtest: saving the current H3 template as a new prompt preserves its family and can be bound
+ok 22 - saving the current H3 template as a new prompt preserves its family and can be bound
+  ---
+  duration_ms: 41.8911
+  type: 'test'
+  ...
+# Subtest: Windows case aliases cannot delete a builtin even without any binding
+ok 23 - Windows case aliases cannot delete a builtin even without any binding
+  ---
+  duration_ms: 31.4313
+  type: 'test'
+  ...
+# Subtest: savePrompt refuses unsafe name ../system/eventExtraction without touching system files
+ok 24 - savePrompt refuses unsafe name ../system/eventExtraction without touching system files
+  ---
+  duration_ms: 28.2987
+  type: 'test'
+  ...
+# Subtest: savePrompt refuses unsafe name ../../outside without touching system files
+ok 25 - savePrompt refuses unsafe name ../../outside without touching system files
+  ---
+  duration_ms: 32.7089
+  type: 'test'
+  ...
+# Subtest: savePrompt refuses unsafe name folder\\escaped without touching system files
+ok 26 - savePrompt refuses unsafe name folder\\escaped without touching system files
+  ---
+  duration_ms: 30.2788
+  type: 'test'
+  ...
+# Subtest: savePrompt refuses unsafe name CON without touching system files
+ok 27 - savePrompt refuses unsafe name CON without touching system files
+  ---
+  duration_ms: 29.2783
+  type: 'test'
+  ...
+# Subtest: savePrompt refuses unsafe name unsafe:name without touching system files
+ok 28 - savePrompt refuses unsafe name unsafe:name without touching system files
+  ---
+  duration_ms: 30.8149
+  type: 'test'
+  ...
+# [ '字段 type 无效输入：期望 "video"' ]
+# Subtest: savePrompt rejects system operations
+ok 29 - savePrompt rejects system operations
+  ---
+  duration_ms: 27.815
+  type: 'test'
+  ...
+# [ '字段 type 无效输入：期望 "video"' ]
+# Subtest: savePrompt rejects image operations
+ok 30 - savePrompt rejects image operations
+  ---
+  duration_ms: 30.241
+  type: 'test'
+  ...
+# Subtest: updatePrompt refuses unsafe name ../system/eventExtraction without touching system files
+ok 31 - updatePrompt refuses unsafe name ../system/eventExtraction without touching system files
+  ---
+  duration_ms: 37.1551
+  type: 'test'
+  ...
+# Subtest: updatePrompt refuses unsafe name ../../outside without touching system files
+ok 32 - updatePrompt refuses unsafe name ../../outside without touching system files
+  ---
+  duration_ms: 28.0126
+  type: 'test'
+  ...
+# Subtest: updatePrompt refuses unsafe name folder\\escaped without touching system files
+ok 33 - updatePrompt refuses unsafe name folder\\escaped without touching system files
+  ---
+  duration_ms: 27.0121
+  type: 'test'
+  ...
+# Subtest: updatePrompt refuses unsafe name CON without touching system files
+ok 34 - updatePrompt refuses unsafe name CON without touching system files
+  ---
+  duration_ms: 28.5979
+  type: 'test'
+  ...
+# Subtest: updatePrompt refuses unsafe name unsafe:name without touching system files
+ok 35 - updatePrompt refuses unsafe name unsafe:name without touching system files
+  ---
+  duration_ms: 29.8684
+  type: 'test'
+  ...
+# [ '字段 type 无效输入：期望 "video"' ]
+# Subtest: updatePrompt rejects system operations
+ok 36 - updatePrompt rejects system operations
+  ---
+  duration_ms: 27.8054
+  type: 'test'
+  ...
+# [ '字段 type 无效输入：期望 "video"' ]
+# Subtest: updatePrompt rejects image operations
+ok 37 - updatePrompt rejects image operations
+  ---
+  duration_ms: 32.6799
+  type: 'test'
+  ...
+# Subtest: editing a bound H3 custom cannot remove its six-section contract even when the marker is removed
+ok 38 - editing a bound H3 custom cannot remove its six-section contract even when the marker is removed
+  ---
+  duration_ms: 35.7019
+  type: 'test'
+  ...
+# Subtest: editing a template checks every binding, including a legacy path alias
+ok 39 - editing a template checks every binding, including a legacy path alias
+  ---
+  duration_ms: 26.4205
+  type: 'test'
+  ...
+# Subtest: unbound custom deletion removes it from subsequent candidates
+ok 40 - unbound custom deletion removes it from subsequent candidates
+  ---
+  duration_ms: 35.6194
+  type: 'test'
+  ...
+# Subtest: bound custom deletion is blocked across all providers and leaves the file and mapping intact
+ok 41 - bound custom deletion is blocked across all providers and leaves the file and mapping intact
+  ---
+  duration_ms: 35.4189
+  type: 'test'
+  ...
+# Subtest: deletion refuses protected or invalid selection system/eventExtraction.md
+ok 42 - deletion refuses protected or invalid selection system/eventExtraction.md
+  ---
+  duration_ms: 25.8675
+  type: 'test'
+  ...
+# Subtest: deletion refuses protected or invalid selection ../system/eventExtraction.md
+ok 43 - deletion refuses protected or invalid selection ../system/eventExtraction.md
+  ---
+  duration_ms: 26.4977
+  type: 'test'
+  ...
+# Subtest: deletion refuses protected or invalid selection video/../system/eventExtraction.md
+ok 44 - deletion refuses protected or invalid selection video/../system/eventExtraction.md
+  ---
+  duration_ms: 29.7497
+  type: 'test'
+  ...
+# Subtest: deletion refuses protected or invalid selection video/minimaxH3Multi-referenceMode.md
+ok 45 - deletion refuses protected or invalid selection video/minimaxH3Multi-referenceMode.md
+  ---
+  duration_ms: 30.1598
+  type: 'test'
+  ...
+1..45
+# tests 45
+# suites 0
+# pass 45
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2376.0968

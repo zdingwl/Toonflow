@@ -1,13 +1,32 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import knex from "knex";
-import { syncRevisedStoryboardPanels } from "../src/agents/productionAgent/storyboardPanelSync";
+import { storyboardSegments, syncRevisedStoryboardPanels } from "../src/agents/productionAgent/storyboardPanelSync";
 import { assertStoryboardPromptFresh } from "../src/utils/storyboardPromptFreshness";
 
 const segment = (action: string) => `### 片段一（约5s）
 **引用资产ID**：[1]
 | 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |
 | 1 | ${action} | 5 | 全景 | 固定 | 无台词 | 风声 |`;
+
+test("片段正文不包含下一场场头，多场总表可与逐段面板精确对应", () => {
+  const first = segment("走向入口"), second = segment("等待");
+  const table = `## 场1：走廊 ｜ 参演角色：甲\n${first}\n\n## 场2：办公室 ｜ 参演角色：乙\n${second}`;
+  assert.deepEqual(storyboardSegments(table), [first, second]);
+});
+
+test("多场修订能匹配首场已保存面板并保留下一场正文", async () => {
+  const db = await setup();
+  try {
+    const prefix = "## 场1：船侧 ｜ 参演角色：甲\n";
+    const later = `\n\n## 场2：船舱 ｜ 参演角色：乙\n${segment("等待")}`;
+    const updated = await db.transaction(trx => syncRevisedStoryboardPanels(trx, 7, 1, { storyboard: [{ id: 2 }] },
+      prefix + segment("站在栏杆旁") + later, prefix + segment("双手承重悬在船外") + later));
+    assert.equal(updated[0].videoDesc, segment("双手承重悬在船外"));
+    assert.equal((await db("o_storyboard").first()).duration, "5");
+    assert.equal((await db("o_videoTrack").first()).selectVideoId, 9);
+  } finally { await db.destroy(); }
+});
 
 async function setup() {
   const db = knex({ client: "better-sqlite3", connection: { filename: ":memory:" }, useNullAsDefault: true });

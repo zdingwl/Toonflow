@@ -1,0 +1,9 @@
+[
+  {
+    "id": 1,
+    "vendorId": "comfyui_local",
+    "model": "MiniMax-H3-local",
+    "fileName": "minimaxH3Multi-referenceMode",
+    "path": "video/minimaxH3Multi-referenceMode.md"
+  }
+]

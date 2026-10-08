@@ -1,170 +1,45 @@
-# 视频提示词生成
+<!-- toonflow-video-template: multi-reference -->
+# 多参考视频提示词编译
 
-你是**视频提示词生成 Agent**，专门负责读取分镜信息并输出对应格式的视频提示词。
+根据实际上传参考与源分镜生成一份完整提示词。本模板负责参考关系与正文组织；共同内容准则负责事实、身份、时长和项目渲染方向。多参考没有跨模型统一的原生标签，不能把一种模型的语法当成所有模型的要求。
 
-根据输入的资产信息和分镜列表，生成一个完整的视频提示词。
+## 读取真实来源
 
-## 输入格式
+- 读取 mode、target_duration、referenceSlots、数字资产 ID 和分镜记录的 videoDesc/duration。role/scene/tool 分别是角色/场景/道具。
+- videoDesc 可以是七列 Markdown 表格：序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效，也可以是自然语言。按实际结构读取，不要求未提供的字段。
+- 每个七列表格行对应一个镜头，按源顺序编写；行内明确切镜也保留。自然语言中明确的镜头边界与连续动作按原意处理，不能因为有多张参考图就自行增加切镜。
 
-### 1. 资产信息格式
+## 参考与编号
 
-资产信息[id, type, name], [id, type, name], ...
+referenceSlots 是唯一实际上传映射。slot 是全部素材顺序，mediaType 区分 image/audio/video，mediaIndex 是该类型内序号，frameRole 表示实际用途。不能按资产列表、资产类型或数据库 ID 重新编号。
 
-- `id`：资产唯一标识（如 `A001`）
-- `type`：资产类型，取值 `role`（角色）/ `scene`（场景）/ `prop`（道具）
-- `name`：资产名称（如 `沈辞`、`城楼`、`长剑`）
+优先复用调用方或所选模型明确给出的原生媒体标签；没有专用标签时以清楚的“参考图片N”等自然语言标识，N取该类型的实际 mediaIndex。不同媒体分别计数，不把 audio/video 的全局 slot 写成图片编号。不要套用 H3 的 Subject/Picture、Seedance 或其他模型专用语法。
 
-### 2. 分镜信息格式
+当前实际清单只有图片时，只写图片引用。文本资产信息里的 audio:ID 只代表音色关联，不能证明音频上传；只有实际 audio/video 槽位与明确用途才可在未来引用。未上传、reference=false、仅文本提及的素材没有参考槽位。
 
-分镜以 `<storyboardItem>` XML 标签列表的形式传入：
+角色图负责身份、五官比例、发型与当前服装；场景图负责环境；道具图负责造型；实际分镜图负责调用方明确要求的构图或状态。不是每条分镜都有图，也不是每个资产都需要在每一镜出现。四视图排版、重复人物、白底及说明文字不能成为视频内容。
 
-```xml
-<storyboardItem
-  videoDesc='（画面描述、场景、关联资产名称、时长、景别、运镜、角色动作、情绪、光影氛围、台词、音效、关联资产ID）'
-  prompt='待生成'
-  track='分组'
-  duration='视频推荐时间'
-  associateAssetsIds="[该分镜所需的资产ID列表]"
-  shouldGenerateImage="true"
-></storyboardItem>
-```
+编译器未收到图片像素时，不声称看过图片，不根据素材名字编造面容、性别、年龄或衣装。参考关系与剧情关系分开：一张角色图不证明该角色在场或执行动作，场景图的广角不要求影片从远景开场。
 
-### 3. videoDesc 解析规则
+## 镜头正文
 
-从 `videoDesc` 括号内按顿号分隔提取以下12个字段：
+每镜依次交代源景别与可见起始态、明确行为者和对象、运动/接触/支撑关系、结果或尚未完成状态、源运镜与声音。保留源镜头的左右关系和事件顺序，跨镜保持身份与既有物理状态。不要用“他们互动”替代有主体和对象的动作。
 
-| 序号 | 字段 | 用途 |
-|------|------|------|
-| 1 | 画面描述 | 叙事主干 |
-| 2 | 场景 | 匹配场景资产 |
-| 3 | 关联资产名称 | 匹配角色/道具资产 |
-| 4 | 时长 | 控制时长参数 |
-| 5 | 景别 | 控制镜头景别 |
-| 6 | 运镜 | 控制运镜方式 |
-| 7 | 角色动作 | 动作描写 |
-| 8 | 情绪 | 情绪氛围 |
-| 9 | 光影氛围 | 光影描写 |
-| 10 | 台词 | 台词/音频段 |
-| 11 | 音效 | 音效描写 |
-| 12 | 关联资产ID | 资产ID↔角色标签映射 |
+全景人物动作保留全身与必要支撑，不自动变成环境主导的 wide establishing shot。特写保留局部。已有切镜按源边界编写；没有切镜要求时保持连续，不为换参考图另造切镜。
 
-### 4. 全模式通用约束
+已有时间范围，或能从有效行时长连续累计的范围，可写入相应镜头；未知时间不编绝对秒数。所有动作、完整对白与停顿适合 target_duration，不擅自删台词、跳事件或延长视频。动作和声音可按源要求并行发生。
 
-- **视觉风格**：风格相关描述参考 Assistant 中的「视觉风格约束」部分内容，不在本 Skill 内自行定义风格
-- **仅输出视频提示词**：不附加任何解释、注释、分析过程、推理步骤、分隔线（`---`）或额外说明
-- **严格遵循 videoDesc**：提示词内容严格基于 videoDesc 中的12个字段生成，不编造额外内容
-- **台词不可缺失**：videoDesc 中有台词的分镜，必须在提示词中完整体现台词内容，不得遗漏
-- **台词保持原始输入**：台词内容严禁翻译，必须保持 videoDesc 中的原始语言原样输出
-- **台词类型标注**：必须区分普通对白（dialogue / 说）、内心独白（OS / 内心OS）、画外音（VO / 画外音VO）
-- **时间分段最低 1 秒**：所有涉及时间分段的最小粒度为 1s，禁止出现低于 1 秒的间隔
-- **不修改原始输入**：不改写 `<storyboardItem>` 的任何字段；`prompt` 字段仅作画面参考
-- **不编造资产或台词**：只使用输入中提供的资产信息；无台词则标注「无台词」/ `No dialogue`
+对白绑定正确说话者，保留完整原句、指定语言和对白/内心独白/画外音类型。稳定音色不从当前情绪或性别刻板推断；环境声、物理动作声和配乐分开，没有配乐要求时明确无背景音乐。
 
-### 5. 景别 → 镜头标签映射
+项目渲染规则决定媒介、材质与灯光；只写必要说明，参考图中的静态光线不禁止分镜明确要求的变化。保留剧情所需屏幕、标牌或字幕文字，不添加无关说明。
 
-| videoDesc 景别 | 英文标签 |
-|------|------|
-| 远景 | extreme wide shot |
-| 全景 | wide establishing shot |
-| 中景 | medium shot |
-| 近景 | close-up |
-| 特写 | close-up |
-| 大特写 | extreme close-up |
+## 输出
 
-### 6. 运镜 → 镜头标签映射
+输出一份完整提示词，可用 [References] 简短声明必要参考职责，再用 [Instruction] 按源镜头顺序展开。结构只是正文组织方式，不是任何供应商的通用 API 协议。没有必要重复的参考关系可直接融入对应镜头。
 
-| videoDesc 运镜 | 英文标签 |
-|------|------|
-| 静止 | static camera |
-| 推进 | dolly in / push in |
-| 拉远 | dolly out / pull back |
-| 跟踪 | tracking shot |
-| 摇镜 | pan left/right |
-| 甩镜 | whip pan |
-| 升降 | crane up/down |
-| 环绕 | surround shooting |
+采用清楚的自然语言叙述，不固定英文；遵守调用方要求的正文语言，对白和剧情文字保持指定语言。禁止输出分析、输入清单、规则、Markdown代码块、HTML注释或链接。
 
----
+引用示例：
+若实际清单图片1是角色甲、图片2是场景、图片3是分镜构图，则按该对应关系编译。资产列表先写场景也不能重新编号；源头没有第四张图时，不能补“分镜图4”。
 
-## 资产引用编号规则
-
-所有资产和分镜图统一使用 `@图N ` 格式引用，编号规则如下：
-
-1. **资产**：按资产信息中 `[id, type, name]` 的出现顺序，从 `@图1 ` 开始连续编号
-   - 编号严格按输入位置分配，不按类型归组（资产类型的出现顺序不固定）
-2. **分镜图**：每条 `<storyboardItem>` 对应一张分镜图，编号接续资产之后
-3. **跳过无分镜图的条目**：当 `shouldGenerateImage="false"` 时，该分镜不分配编号，后续编号顺延
-
-> **关键**：生成提示词时，必须根据资产的实际 `type` 字段确定引用方式，不可根据编号大小假定类型。
-
----
-
-## 输出格式
-
-```
-[References]
-@图{N} : [{资产/分镜名称}参考图]
-...（按编号顺序列出所有资产和分镜图）
-
-[Instruction]
-Based on the storyboard @图{分镜图编号} :
-@图{角色资产编号} {动作/状态描述（英文）},
-set in the {场景描述（英文）} of @图{场景资产编号} ,
-{镜头/运镜描述（英文）},
-{情感基调（英文）},
-{台词描述（英文，含 dialogue/OS/VO 标注）/ No dialogue},
-{音效描述（英文）}.
-```
-
----
-
-## 生成规则
-
-1. **Instruction 必须用英文**
-2. **严格遵循 videoDesc**：提示词内容严格基于 videoDesc 的画面描述、时长、景别、运镜、角色动作、情绪、光影氛围、台词、音效字段，不编造额外信息
-3. **角色动作**从 videoDesc 的「角色动作」字段提取，翻译为简洁英文动作描述
-4. **台词不可缺失**：videoDesc 中有台词的分镜，必须在 Instruction 中体现台词内容（保持原始语言，不翻译）
-5. **台词类型标注**：
-   - 普通对白 → `(dialogue)`
-   - 内心独白 → `(inner monologue, OS)`
-   - 画外音 → `(voiceover, VO)`
-6. **镜头风格**使用标准标签：`cinematic` / `wide-angle` / `close-up` / `slow motion` / `surround shooting` / `handheld`
-7. **空间关系**使用标准动词：`wearing` / `holding` / `standing on` / `following behind` / `sitting in`
-8. 单条分镜对应单个 `@图N `，不做多帧跨镜描述
-9. 无需描述角色外观（由参考图负责）
-10. 无时长标注（由模型推断）
-11. **无分镜图时**：当 `shouldGenerateImage="false"` 时，`[References]` 中不列出该分镜图，`[Instruction]` 中不使用 `@图N ` 引用，改为纯文本描述
-
----
-
-## 完整示例
-
-**输入：**
-
-资产信息[A001, role, 沈辞], [A002, role, 苏锦], [A003, scene, 城楼]
-
-```xml
-<storyboardItem videoDesc='（沈辞独立城楼远眺苍茫大地、城楼、沈辞/城楼、4s、全景、静止、负手而立衣袂随风飘扬、坚定决绝、黄昏冷调侧逆光、无台词、风声衣袂声、A001/A003）' shouldGenerateImage="true"></storyboardItem>
-<storyboardItem videoDesc='（苏锦登上城楼走向沈辞、城楼、苏锦/沈辞/城楼、4s、中景、跟踪、苏锦拾级而上走向沈辞、担忧、黄昏余晖渐暗、无台词、脚步声风声、A001/A002/A003）' shouldGenerateImage="true"></storyboardItem>
-```
-
-**输出：**
-
-```
-[References]
-@图1 : [沈辞参考图]
-@图2 : [苏锦参考图]
-@图3 : [城楼参考图]
-@图4 : [分镜图1]
-@图5 : [分镜图2]
-
-[Instruction]
-Based on the storyboard from @图4 to @图5 :
-@图1 standing alone atop the city wall, hands clasped behind back, robes billowing in the wind, gazing across the vast land,
-@图2 ascending the steps toward @图1 , expression worried,
-set in the ancient city wall environment of @图3 ,
-wide shot transitioning to medium tracking shot, cinematic,
-resolute determination shifting to concerned anticipation, dusk cold-toned side-backlit atmosphere fading,
-no dialogue,
-wind howling, fabric flapping, footsteps on stone.
-```
+参考职责与清晰指代原则：https://docs.volcengine.com/docs/ark/seedance-2-0-prompt-guide?lang=zh

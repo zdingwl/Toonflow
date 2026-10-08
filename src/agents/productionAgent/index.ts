@@ -3,7 +3,7 @@ import { z } from "zod";
 import { tool, jsonSchema } from "ai";
 import u from "@/utils";
 import Memory from "@/utils/agent/memory";
-import { createSkillTools, parseFrontmatter, scanSkills } from "@/utils/agent/skillsTools";
+import { buildSkillPrompt, createSkillTools, parseFrontmatter, scanSkills } from "@/utils/agent/skillsTools";
 import useTools from "@/agents/productionAgent/tools";
 import ResTool from "@/socket/resTool";
 import * as fs from "fs";
@@ -15,6 +15,7 @@ import { readStoryboardProgress } from "./storyboardProgress";
 import { runStoryboardTask } from "./storyboardTaskRunner";
 import { extractSourceScene, validateStoryboardScene } from "./storyboardValidator";
 import { screenplayFacts } from "./screenplay";
+import { buildDirectorPlanContext, readDirectorNarrative, DIRECTOR_PLAN_OUTPUT_CONTRACT, directorPlanTemperature } from "./directorPlanContext";
 import { storyboardPlanSceneCount } from "./storyboardRebuildDispatch";
 import { createStoryboardRevisionTool } from "./storyboardRevisionTool";
 import { wrapAgentTools } from "@/utils/agent/runtime/toolExecutor";
@@ -92,7 +93,7 @@ async function createSubAgent(parentCtx: AgentContext) {
   const taskStore = new TaskStore(u.db);
   const readSkill = (filePath: string) => parentCtx.runId ? taskStore.readSkill(parentCtx.runId, filePath) : fs.promises.readFile(filePath, "utf-8");
 
-  async function runAgent({ key, modelKey, prompt, system, name, memoryKey, tools: extraTools, messages, expectedScene, readOnlyTools }: {
+  async function runAgent({ key, modelKey, prompt, system, name, memoryKey, tools: extraTools, messages, expectedScene, readOnlyTools, temperature }: {
     key: `${string}:${string}`;
     modelKey?: `${string}:${string}`;
     prompt: string;
@@ -103,8 +104,9 @@ async function createSubAgent(parentCtx: AgentContext) {
     messages?: { role: "user" | "assistant" | "system"; content: string }[];
     expectedScene?: { scene: number; total: number; taskId: string; sourceScene?: string };
     readOnlyTools?: boolean;
+    temperature?: number;
   }) {
-    const stepInput = JSON.stringify({ key, prompt, messages: messages ?? null, expectedScene: expectedScene ?? null });
+    const stepInput = JSON.stringify({ key, prompt, messages: messages ?? null, expectedScene: expectedScene ?? null, ...(temperature !== undefined ? { temperature } : {}) });
     const stepKey = TaskStore.makeStepKey(key, stepInput);
     if (parentCtx.runId) {
       const prior = await taskStore.beginStep(parentCtx.runId, stepKey, stepInput);
@@ -128,6 +130,7 @@ async function createSubAgent(parentCtx: AgentContext) {
       });
       const { fullStream } = await u.Ai.Text(modelKey ?? key, parentCtx.thinkConfig.think, parentCtx.thinkConfig.thinlLevel).stream({
         system,
+        ...(temperature !== undefined ? { temperature } : {}),
         messages: messages ?? [{ role: "user", content: prompt }],
         abortSignal,
         tools: {
@@ -253,9 +256,12 @@ async function createSubAgent(parentCtx: AgentContext) {
       const source = await u.db("o_script").where({ id: Number(resTool.data.scriptId), projectId: Number(resTool.data.projectId) }).select("content").first();
       const workspace = await u.db("o_agentWorkData").where({ projectId: Number(resTool.data.projectId), episodesId: Number(resTool.data.scriptId), key: "productionAgent" }).select("data").first();
       const currentPlan = workspace?.data ? JSON.parse(workspace.data).scriptPlan ?? "" : "";
-      const facts = `\n【程序解析的剧本事实：统计不含标点和空格，屏幕文字不计入口播】\n${screenplayFacts(source?.content ?? "", currentPlan)}`;
-      const addPrompt = "\n你必须使用如下XML格式写入工作区：\n```\n<scriptPlan>内容</scriptPlan>\n```";
+      const narrative = await readDirectorNarrative(u.getPath("skills"), projectInfo.directorManual, readSkill);
+      const facts = "\n" + buildDirectorPlanContext(projectInfo, source?.content ?? "", currentPlan, narrative);
+      const addPrompt = DIRECTOR_PLAN_OUTPUT_CONTRACT;
+      const directorConfig = await u.db("o_agentDeploy").where({ key: "productionAgent:directorPlanAgent" }).select("temperature").first();
       return runAgent({ key: "productionAgent:directorPlanAgent", prompt, system: systemPrompt + addPrompt,
+        temperature: directorPlanTemperature(directorConfig?.temperature),
         name: "执行导演", memoryKey: "assistant:execution", messages: [
           { role: "user", content: prompt + addPrompt + facts },
         ] });
@@ -445,7 +451,7 @@ async function createArtSkills(artName: string, storyName: string, readSkill: (f
     mainSkills.push({ path: skillPath, ...parsed });
   }
   return {
-    prompt: `## Skills\n以下技能提供了专业任务的专用指令。\n当任务与某个技能的描述匹配时，调用 activate_skill 工具并传入技能名称来加载完整指令。\n${buildSkillPrompt(mainSkills)}`,
+    prompt: buildSkillPrompt(mainSkills),
     tools: createSkillTools(mainSkills, { mainSkill: mainSkills, secondarySkills: [], tertiarySkills: [] }, u.getPath("skills"), readSkill),
   };
 }
@@ -506,10 +512,7 @@ function removeAllXmlTags(text: string): string {
   return text.trim();
 }
 
-export function buildSkillPrompt(skills: { name: string; description: string }[]): string {
-  const skillEntries = skills.map((s) => `  <skill>\n    <name>${s.name}</name>\n    <description>${s.description}</description>\n  </skill>`).join("\n");
-  return `\n<available_skills>\n${skillEntries}\n</available_skills>`;
-}
+export { buildSkillPrompt } from "@/utils/agent/skillsTools";
 
 async function useProductionSkills(artName: string, storyName: string, readSkill: (filePath: string) => Promise<string>) {
   const artWorkerPath = u.getPath(["skills", "art_skills", artName, "driector_skills"]);
@@ -528,7 +531,7 @@ async function useProductionSkills(artName: string, storyName: string, readSkill
     mainSkills.push({ path: skillPath, ...parsed });
   }
   return {
-    prompt: `## Skills\n以下技能提供了专业任务的专用指令。\n当任务与某个技能的描述匹配时，调用 activate_skill 工具并传入技能名称来加载完整指令。\n${buildSkillPrompt(mainSkills)}`,
+    prompt: buildSkillPrompt(mainSkills),
     tools: createSkillTools(mainSkills, { mainSkill: mainSkills, secondarySkills: [], tertiarySkills: [] }, u.getPath("skills"), readSkill),
   };
 }

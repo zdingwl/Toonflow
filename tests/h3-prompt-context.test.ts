@@ -1,10 +1,14 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import {
   buildH3PromptInput,
+  buildH3CameraPlan,
   buildH3ReferenceSubjects,
   h3BindingSlots,
   h3PromptWordCounts,
+  h3ReferenceRoleText,
+  type H3PromptStoryboard,
 } from "../src/utils/h3PromptContext";
 import { assertH3ReferenceBindings, type H3ReferenceBindingSlot } from "../src/utils/h3ReferenceBindings";
 import { assertH3PromptContract } from "../src/utils/h3PromptContract";
@@ -22,6 +26,28 @@ test("complete character boards have one Picture each and explicit sheet semanti
   assert.match(input, /ONE complete reference sheet in ONE Picture slot/);
   assert.match(input, /not multiple people or separate uploaded Pictures/);
   assert.doesNotMatch(input, /Side\/back views remain optional/);
+  assert.match(input, /renderingAuthority=the selected project video rendering guide/);
+  assert.match(input, /storyboardAuthority=the supplied framing, initial state, actions/);
+  assert.doesNotMatch(input, /Analyze the attached reference images and describe composition/);
+});
+
+test("uploaded image labels assign identity only to characters and keep source composition separate from target action", () => {
+  const roleText = h3ReferenceRoleText({ type: "role" });
+  const sceneText = h3ReferenceRoleText({ type: "scene" });
+  const toolText = h3ReferenceRoleText({ type: "tool" });
+  assert.match(roleText, /complete character sheet for ONE person/);
+  assert.match(roleText, /identity, facial\/body proportions and wardrobe authority/);
+  assert.match(roleText, /Starting pose, support and action come from the storyboard/);
+  assert.match(sceneText, /location and recognisable local features/);
+  assert.match(sceneText, /source view is not an establishing-shot instruction/);
+  assert.doesNotMatch(sceneText, /identity.*authority|wardrobe authority/);
+  assert.match(toolText, /object or creature design/);
+  assert.match(toolText, /incidental people or limbs do not define another character/);
+  assert.doesNotMatch(toolText, /identity.*authority|wardrobe authority/);
+  assert.equal(h3ReferenceRoleText({ assetType: "character" }), roleText);
+  assert.equal(h3ReferenceRoleText({ assetType: "environment" }), sceneText);
+  assert.equal(h3ReferenceRoleText({ assetType: "prop" }), toolText);
+  assert.equal(h3ReferenceRoleText({ assetType: "creature" }), toolText);
 });
 
 type View = "FACE" | "FULL_BODY_FRONT" | "FULL_BODY_SIDE" | "FULL_BODY_BACK";
@@ -175,5 +201,169 @@ test("word counts distinguish detailed_description from the whole prompt without
   assert.equal(expandedCounts.sections.detailed_description, counts.sections.detailed_description + 700);
   assert.equal(expandedCounts.sections.subject_definitions, counts.sections.subject_definitions);
   assert.doesNotThrow(() => assertH3PromptContract(expanded, 5, 1), "word count is diagnostic, not a hard rejection threshold");
+});
+
+const cameraTable = (rows: (string | number)[][]) => [
+  "| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |",
+  "|---|---|---|---|---|---|---|",
+  ...rows.map(row => `| ${row.join(" | ")} |`),
+].join("\n");
+
+test("camera plan preserves existing moves across two boards with continuous three-decimal windows", () => {
+  const boards = [
+    { id: 3, duration: "3", videoDesc: cameraTable([
+      [5, "逐根掰开右手手指。", 1.25, "特写", "固定压近，跟随手指施力方向微移", "艾娃：『你干什么？！』", "摩擦"],
+      [6, "施力手与剩余抓握点同框。", 1.75, "近景接手部特写", "缓慢推近，在两双手之间硬切衔接", "麦迪逊：『我只是想活。』", "雨声"],
+    ]) },
+    { duration: 2, videoDesc: cameraTable([
+      [7, "松开的手。", 0.667, "特写", "固定", "", "呼吸"],
+      [8, "悬空的人物。", 1.333, "全景", "缓慢后拉", "", "雨声"],
+    ]) },
+  ];
+  const before = structuredClone(boards);
+  const plan = buildH3CameraPlan(boards, 5);
+  assert.deepEqual(plan, [
+    { storyboardId: 3, sourceRow: 5, startSeconds: 0, endSeconds: 1.25, framing: "特写", camera: "固定压近，跟随手指施力方向微移" },
+    { storyboardId: 3, sourceRow: 6, startSeconds: 1.25, endSeconds: 3, framing: "近景接手部特写", camera: "缓慢推近，在两双手之间硬切衔接" },
+    { sourceRow: 7, startSeconds: 3, endSeconds: 3.667, framing: "特写", camera: "固定" },
+    { sourceRow: 8, startSeconds: 3.667, endSeconds: 5, framing: "全景", camera: "缓慢后拉" },
+  ]);
+  assert.deepEqual(boards, before, "the pure helper must not rewrite source boards");
+});
+
+test("malformed numeric data rows omit the entire board but its known duration still advances time", () => {
+  const malformedRows = [
+    [2, "缺一列", 2, "近景", "缓推", "台词"],
+    [2, "多一列", 2, "近景", "缓推", "台词", "音效", "额外"],
+    [2, "零时长", 0, "近景", "缓推", "", ""],
+    [2, "负时长", -2, "近景", "缓推", "", ""],
+    [2, "带单位", "2s", "近景", "缓推", "", ""],
+    [2, "非有限时长", "Infinity", "近景", "缓推", "", ""],
+  ];
+  for (const badRow of malformedRows) {
+    const boards = [
+      { id: 1, duration: 4, videoDesc: cameraTable([[1, "有效行", 2, "全景", "固定", "", ""], badRow]) },
+      { id: 2, duration: 1, videoDesc: cameraTable([[3, "下一板", 1, "特写", "微移", "", ""]]) },
+    ];
+    assert.deepEqual(buildH3CameraPlan(boards, 5), [
+      { storyboardId: 2, sourceRow: 3, startSeconds: 4, endSeconds: 5, framing: "特写", camera: "微移" },
+    ], JSON.stringify(badRow));
+  }
+  const missingBoundary = cameraTable([[1, "画面", 1, "近景", "固定", "", ""]]).replace(/\|$/, "");
+  assert.deepEqual(buildH3CameraPlan([{ duration: 1, videoDesc: missingBoundary }], 1), []);
+  assert.deepEqual(buildH3CameraPlan([{ duration: 1, videoDesc: cameraTable([["one", "画面", 1, "近景", "固定", "", ""]]) }], 1), []);
+});
+
+test("duration mismatch never fabricates row timing, and unknown duration prevents all later definite windows", () => {
+  const next = { id: 2, duration: 2, videoDesc: cameraTable([[9, "下一板", 2, "近景", "固定", "", ""]]) };
+  assert.deepEqual(buildH3CameraPlan([
+    { id: 1, duration: 3, videoDesc: cameraTable([[5, "时长不匹配", 2.8, "特写", "微移", "", ""]]) }, next,
+  ], 5), [
+    { storyboardId: 2, sourceRow: 9, startSeconds: 3, endSeconds: 5, framing: "近景", camera: "固定" },
+  ]);
+  for (const duration of [undefined, null, "unknown", "", true]) {
+    const boards: H3PromptStoryboard[] = [
+      { id: 1, duration: 1, videoDesc: cameraTable([[1, "已知时长", 1, "全景", "固定", "", ""]]) },
+      { id: 3, duration, videoDesc: cameraTable([[5, "不可推断时长", 2, "特写", "微移", "", ""]]) }, next,
+    ];
+    assert.deepEqual(buildH3CameraPlan(boards, 8), [
+      { storyboardId: 1, sourceRow: 1, startSeconds: 0, endSeconds: 1, framing: "全景", camera: "固定" },
+    ], `unknown duration: ${String(duration)}`);
+  }
+});
+
+test("accepted rounding differences stay on board boundaries and no camera window exceeds the target", () => {
+  const boards = [
+    { duration: 1, videoDesc: cameraTable([[1, "第一行", 0.3334, "近景", "固定", "", ""], [2, "第二行", 0.6667, "特写", "微移", "", ""]]) },
+    { duration: 1, videoDesc: cameraTable([[3, "下一板", 1, "特写", "缓推", "", ""]]) },
+  ];
+  assert.deepEqual(buildH3CameraPlan(boards, 2).map(row => [row.startSeconds, row.endSeconds]), [[0, 0.333], [0.333, 1], [1, 2]]);
+  assert.deepEqual(buildH3CameraPlan(boards, 1).map(row => row.sourceRow), [1, 2]);
+  assert.deepEqual(buildH3CameraPlan(boards, 0.9999), []);
+  assert.deepEqual(buildH3CameraPlan(boards, NaN), []);
+  assert.deepEqual(buildH3CameraPlan(boards, 0), []);
+  const impossibleLastWindow = { duration: 1, videoDesc: cameraTable([[1, "超出板边界", 1.01, "全景", "固定", "", ""], [2, "不能倒退", 0.01, "近景", "微移", "", ""]]) };
+  assert.deepEqual(buildH3CameraPlan([impossibleLastWindow], 1), []);
+});
+
+test("prompt retains every validated row boundary without inferring blank moves or cuts from quoted text", () => {
+  const boards = [{ id: 6, duration: 3, videoDesc: cameraTable([
+    [5, "逐根松开手指，动作不停。", 1, "特写", "固定压近，跟随手指施力方向微移", "艾娃：『你干什么？！』", "雨声"],
+    [6, "人物读出屏幕上的硬切字样；这不是镜头切换。", 1, "", "", "麦迪逊：『不要替我改变对白。』", ""],
+    [7, "仍在同一位置。", 1, "近景", "固定，不切镜", "", ""],
+  ]) }];
+  const before = structuredClone(boards);
+  const input = buildH3PromptInput([], boards, 3);
+  const plan = jsonBlock(input, "cameraPlan");
+  assert.deepEqual(plan, buildH3CameraPlan(boards, 3));
+  assert.deepEqual(plan[1], { storyboardId: 6, sourceRow: 6, startSeconds: 1, endSeconds: 2, framing: "", camera: "" });
+  assert.equal(plan[2].camera, "固定，不切镜");
+  assert.ok(!JSON.stringify(plan).includes("硬切"), "an event/dialogue word must not become a camera cut");
+  assert.ok(plan.every((row: Record<string, unknown>) => !("cut" in row) && !("shots" in row) && !("source" in row)));
+  assert.deepEqual(jsonBlock(input, "storyboardFacts"), boards);
+  assert.equal((input.match(/"videoDesc":/g) || []).length, 1);
+  for (const original of ["逐根松开手指，动作不停。", "你干什么？！", "不要替我改变对白。", "人物读出屏幕上的硬切字样；这不是镜头切换。"]) {
+    assert.equal(input.split(original).length - 1, 1, original + " must remain once");
+  }
+  assert.ok(input.indexOf("<cameraPlan>") < input.indexOf("<storyboardFacts>"));
+  assert.match(input, /Blank cells impose no camera or framing instruction/);
+  assert.match(input, /they do not remove a supplied row boundary/);
+  assert.match(input, /Each listed row is one supplied source shot/);
+  assert.match(input, /start a new sequential Shot for every listed row at its startSeconds/);
+  assert.match(input, /opening shot at 0 uses \[Shot 1\] without a timestamp/);
+  assert.match(input, /legacy explicit cut inside a row[^\n]*Shot heading/);
+  assert.match(input, /quoted as dialogue or visible text is not a camera instruction/);
+  assert.doesNotMatch(input, /Row boundaries alone do not imply cuts/);
+  assert.deepEqual(boards, before);
+});
+
+test("equal camera cells do not merge supplied shots and their exact row windows span the target", () => {
+  const boards = [{ id: 16, duration: 5, videoDesc: cameraTable([
+    [11, "艾娃继续抓住栏杆。", 1.25, "近景", "固定", "艾娃：『别松手。』", "雨声"],
+    [12, "麦迪逊看向抓握点。", 1.25, "近景", "固定", "无台词", "雨声"],
+    [13, "麦迪逊的手靠近艾娃的手。", 2.5, "近景", "固定", "无台词", "雨声"],
+  ]) }];
+  const before = structuredClone(boards);
+  const input = buildH3PromptInput([{ id: 101, type: "role", name: "艾娃" }], boards, 5);
+  assert.deepEqual(jsonBlock(input, "cameraPlan"), [
+    { storyboardId: 16, sourceRow: 11, startSeconds: 0, endSeconds: 1.25, framing: "近景", camera: "固定" },
+    { storyboardId: 16, sourceRow: 12, startSeconds: 1.25, endSeconds: 2.5, framing: "近景", camera: "固定" },
+    { storyboardId: 16, sourceRow: 13, startSeconds: 2.5, endSeconds: 5, framing: "近景", camera: "固定" },
+  ]);
+  assert.match(input, /even when adjacent rows share framing, a fixed camera or continuous action/);
+  assert.match(input, /every later row uses \[Shot N\] At MM:SS\.mmm, with that row's startSeconds/);
+  assert.deepEqual(jsonBlock(input, "storyboardFacts"), boards);
+  assert.deepEqual(boards, before);
+});
+
+test("legacy prose and unknown table timing preserve source facts without making a definite row shot plan", () => {
+  for (const board of [
+    { id: 1, duration: 5, videoDesc: "艾娃抓住栏杆。两秒时硬切到麦迪逊的手。随后保持同一镜头。" },
+    { id: 2, duration: undefined, videoDesc: cameraTable([[7, "艾娃抓住栏杆。", 2, "近景", "缓推", "无台词", "雨声"]]) },
+  ]) {
+    const input = buildH3PromptInput([], [board], 5);
+    assert.deepEqual(jsonBlock(input, "cameraPlan"), []);
+    assert.deepEqual(jsonBlock(input, "storyboardFacts"), [{ id: board.id, duration: board.duration, videoDesc: board.videoDesc }].map(item => JSON.parse(JSON.stringify(item))));
+    assert.match(input, /boards whose timing is unknown and legacy natural-language descriptions[^\n]*only their explicit cuts/);
+    assert.match(input, /do not invent row timing or cut boundaries/);
+  }
+});
+
+test("H3 template and selected rendering guide share row-shot semantics and preserve the timing failure escape", () => {
+  const template = readFileSync(new URL("../data/modelPrompt/video/minimaxH3Multi-referenceMode.md", import.meta.url), "utf8");
+  const rendering = readFileSync(new URL("../data/skills/art_skills/realistic_3d_anime/art_prompt/art_storyboard_video.md", import.meta.url), "utf8");
+  assert.equal((template.match(/<!-- toonflow-video-template: minimax-h3-ref2va -->/g) || []).length, 1);
+  assert.match(template, /management metadata, not prompt content; never reproduce it/);
+  assert.match(template, /Each validated seven-column storyboard row is one supplied source shot/);
+  assert.match(rendering, /Each validated seven-column storyboard row is one supplied source shot/);
+  assert.match(template, /begin each shot at its supplied startSeconds/);
+  assert.match(template, /unknown timing and legacy natural-language descriptions retain only explicit/);
+  assert.match(rendering, /unknown[\s\S]*legacy natural-language descriptions, preserve only explicit source cuts/);
+  assert.match(template, /return only LANGUAGE_TIMING_REVIEW:/);
+  assert.match(template, /failure response takes precedence over the six-section success format/);
+  assert.match(template, /complete character sheet occupies ONE Picture slot/);
+  assert.match(template, /selected project video rendering guide defines the target medium/);
+  assert.match(template, /\[Shot 1\] has no timestamp/);
+  assert.match(template, /\[Shot N\] At MM:SS\.mmm,/);
 });
 

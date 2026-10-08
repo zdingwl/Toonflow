@@ -1,0 +1,68 @@
+{
+  "variant": "before",
+  "videoId": 16,
+  "trackId": 1790715600051,
+  "model": "QWEN3.8:27b",
+  "temperature": 0.3,
+  "seed": 42,
+  "reasoning": "medium",
+  "duration": 10,
+  "elapsedMs": 58030,
+  "finishReason": "stop",
+  "systemWords": 3420,
+  "systemHash": "2fa994d2785f2540d6638bfd06dae0045b56dfe5033da71804d8c9c7c1c29c82",
+  "inputHash": "3cd311b517f941d7685657681640f32c8558fb6b8bfd05adb2afb77276341015",
+  "referenceHashes": [
+    {
+      "assetId": 202,
+      "picture": 1,
+      "sha256": "3b9554ec84bbc6b181f6400db6861b69e8f6f9e1de83120b052c08baa30d5c4d"
+    },
+    {
+      "assetId": 205,
+      "picture": 2,
+      "sha256": "e0d3ea6fd458004bfe567e6f8dad0816b4c920a673e71c0940df74aaaf9c5ec6"
+    },
+    {
+      "assetId": 5,
+      "picture": 3,
+      "sha256": "b2e0a5881771c8af8fb579fe4e9a7394fca1bf4343533146722c766e8906f75e"
+    }
+  ],
+  "outputCounts": {
+    "total": 1075,
+    "sections": {
+      "subject_definitions": 248,
+      "summary": 91,
+      "retention_analysis": 146,
+      "detailed_description": 171,
+      "Synchronized sound": 28,
+      "overall_soundscape": 59,
+      "non_diegetic_music": 39
+    }
+  },
+  "errors": [],
+  "attempts": [
+    {
+      "attempt": 1,
+      "errors": [
+        "H3 提示词格式：summary 应使用已定义的 Subject 标签描述主体关系"
+      ],
+      "finishReason": "stop"
+    },
+    {
+      "attempt": 2,
+      "errors": [
+        "H3 提示词格式：同一 Subject 必须保持同一说话人编号，不同 Subject 不能共用同一编号"
+      ],
+      "finishReason": "stop"
+    },
+    {
+      "attempt": 3,
+      "errors": [],
+      "finishReason": "stop"
+    }
+  ],
+  "workspaceUnchanged": true,
+  "limitation": "Isolated base-prompt generation with reasoning medium and up to 3 format retries using the route's correction instruction; fixed comparison sampling, no language-localization step, media job, persisted prompt or video generation."
+}

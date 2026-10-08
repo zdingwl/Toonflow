@@ -1,0 +1,42 @@
+{
+  "o_project": {
+    "rows": 8,
+    "sha256": "8aafe710114032b49dc41cf32b91aa5f908a52dcb9d3f4bbf4cbccaa92f6d3db",
+    "unchanged": true
+  },
+  "o_agentWorkData": {
+    "rows": 44,
+    "sha256": "c9156496e973167a8cf0a706dd46f3594884a68b1fcfe899b6d4db4e17c2684c",
+    "unchanged": true
+  },
+  "o_script": {
+    "rows": 70,
+    "sha256": "91b37c245bae63f19246a4d32b8d7bc11978ef0f26529e7c99810e337cd17920",
+    "unchanged": true
+  },
+  "o_assets": {
+    "rows": 351,
+    "sha256": "3ac667a87a7fd0867a719fd1543e8798c61b44989ea05e3a8f282a09cb9c7c74",
+    "unchanged": true
+  },
+  "o_image": {
+    "rows": 367,
+    "sha256": "3e4c3690e59bc33ba831208b3f87b6815b1ce1b8793f21e148aa2de2e92a46bf",
+    "unchanged": true
+  },
+  "o_videoTrack": {
+    "rows": 50,
+    "sha256": "41a9272010c635825998ebfa778f577c7841ceea4217f4f9c1d0e8dc528a67d9",
+    "unchanged": true
+  },
+  "o_assetsRole2Audio": {
+    "rows": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "unchanged": true
+  },
+  "o_videoPromptVariant": {
+    "rows": 35,
+    "sha256": "a8f9f312b0f56fcffda9e699bada139a56f992e85ca03717a1ac486da8d6ec97",
+    "unchanged": true
+  }
+}

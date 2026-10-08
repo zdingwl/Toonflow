@@ -1,0 +1,36 @@
+# 视频画风与动作 · 电影级半写实三维
+
+## Storyboard compilation
+
+Apply video_prefix.md to the target rendering while retaining the selected character designs.
+Compile the supplied Shot, Camera and Action information; do not redesign the shot plan.
+Preserve explicit source cuts and their timing; otherwise use one continuous shot.
+Every actual cut needs its own shot heading under the selected model's syntax. Do not hide
+an extra cut, reverse shot or montage inside one shot description.
+
+## Action and state
+
+Give the required framing and visible initial state, the principal supplied action and
+its visible result. Describe body position, contact, support and force only where necessary
+to make that action unambiguous. Start directly in the requested state, and retain it across
+later shots until a supplied event changes it. The reference sheet's display pose and
+incidental support objects are not action instructions.
+
+Use short concrete sentences. Preserve who acts on whom and deliberate cause/effect;
+do not turn an intentional action into an accident. Do not add gestures, impacts, injuries,
+reactions, transitions or costume changes to enrich prose. Hair, fabric, weather and crowd
+motion support the main action. Reuse stable subject labels rather than repeating static
+face, clothing, material and background inventories.
+
+## Camera and sound
+
+Keep one feasible supplied camera path. Character 全景 means a full-body/full shot including
+the feet and relevant support/contact points. Reserve environment-dominated wide views for
+source 远景/大远景 or an explicit location introduction. Frame the local setting needed for
+the action rather than copying an environment reference's whole-location composition.
+Reconcile camera directions with body geometry while preserving the action and original timing.
+
+Keep complete supplied dialogue, its speaker, language and event position. Speech and
+necessary non-overlapping actions fit the supplied duration; do not invent faster delivery,
+extend time or omit dialogue. Use concise synchronized physical sounds and continuous ambience;
+include music only when supplied. Follow the selected model's output and reference syntax.

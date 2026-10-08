@@ -19,6 +19,18 @@ const router = createRouter({
       component: () => import("@/pages/workbench/index.vue"),
       redirect: "/project",
       children: [
+        { path: "/batch-assets/:projectId", component: () => import("@/views/importStudio/index.vue"), props: { kind: "image" } },
+        { path: "/import-videos/:projectId", component: () => import("@/views/importStudio/index.vue"), props: { kind: "video" } },
+        {
+          path: "/batch-assets",
+          component: () => import("@/views/importStudio/index.vue"),
+          props: { kind: "image" },
+        },
+        {
+          path: "/import-videos",
+          component: () => import("@/views/importStudio/index.vue"),
+          props: { kind: "video" },
+        },
         {
           path: "/project",
           component: () => import("@/views/project/index.vue"),

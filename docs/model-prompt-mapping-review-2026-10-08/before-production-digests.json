@@ -1,0 +1,34 @@
+{
+  "o_assets": {
+    "count": 351,
+    "sha256": "3ac667a87a7fd0867a719fd1543e8798c61b44989ea05e3a8f282a09cb9c7c74"
+  },
+  "o_image": {
+    "count": 367,
+    "sha256": "3e4c3690e59bc33ba831208b3f87b6815b1ce1b8793f21e148aa2de2e92a46bf"
+  },
+  "o_storyboard": {
+    "count": 49,
+    "sha256": "72eac0b5b80f8cd45b39204e749285e8c23032771668e0e89250f2eb1752d48f"
+  },
+  "o_videoTrack": {
+    "count": 50,
+    "sha256": "41a9272010c635825998ebfa778f577c7841ceea4217f4f9c1d0e8dc528a67d9"
+  },
+  "o_video": {
+    "count": 62,
+    "sha256": "8a482eee8ebea41dc3a65b1b8f08aa30b62049223a6d0737c9022e3268611c2b"
+  },
+  "o_videoPromptVariant": {
+    "count": 35,
+    "sha256": "a8f9f312b0f56fcffda9e699bada139a56f992e85ca03717a1ac486da8d6ec97"
+  },
+  "o_agentWorkData": {
+    "count": 44,
+    "sha256": "c9156496e973167a8cf0a706dd46f3594884a68b1fcfe899b6d4db4e17c2684c"
+  },
+  "o_script": {
+    "count": 70,
+    "sha256": "91b37c245bae63f19246a4d32b8d7bc11978ef0f26529e7c99810e337cd17920"
+  }
+}

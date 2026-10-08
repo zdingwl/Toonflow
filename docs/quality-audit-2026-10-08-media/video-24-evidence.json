@@ -1,0 +1,223 @@
+{
+  "videoId": 24,
+  "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>; the face, front, side, and back panels are views of the same person, with controlled near-natural facial proportions, calm eyelids over brown eyes, a straight nose, defined cheek and jaw contours, long dark brown hair in loose layered strands, and subtly luminous detailed skin. She wears a pale heather-gray long-sleeve knit top and matching loose lounge pants with soft matte fabric; the sheet defines identity, body proportions, wardrobe, and rendering only, not its panel layout, neutral display pose, or studio background.\n<Subject 2> is Ava’s apartment from <Picture 2>, a modern high-rise studio with light wood flooring, muted gray walls, a blue-gray sofa, low television console, bed by the window, laptop desk, and floor-to-ceiling windows facing a dense dusk city; it supplies the location, spatial layout, landmarks, soft lighting direction, and atmosphere.\n<Subject 3> is the black smartphone call and contact interface from <Picture 3>, featuring the dark casing, dark-blue active-call screen, timing area, contact rows, status icons, and the visible Chinese interface label \"卖车仓库物资\"; it supplies the exact phone hardware, call state, and screen-language design without its studio display background.\n\nsummary:\n[reference generation] <Subject 1> continues the same supply call while using <Subject 3> inside <Subject 2>, with <Subject 3> held at reading height and <Subject 2> providing the apartment setting; <Subject 1> scans the phone screen item by item and gives a steady, non-negotiable price request.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - Ava retains the same facial structure, observed eye and nose proportions, cheek and jaw shape, long dark hair, body proportions, pale gray knit lounge outfit, detailed skin shading, and near-natural rendering, with only speech, gaze, expression, and subtle hand motion animated.\n<Subject 2> (appears in [Shot 1]): fully_preserved - The apartment preserves its modern studio layout, wood floor, blue-gray sofa, large window wall, city skyline, desk and bed placement, muted surfaces, and soft dusk illumination while the camera stays close to Ava.\n<Subject 3> (appears in [Shot 1]): fully_preserved - The black smartphone retains its hardware, dark active-call interface, blue-black screen lighting, contact rows, and visible label \"卖车仓库物资\", with only natural thumb taps and reflected light showing continued use.\n\ndetailed_description:\nThe rendering follows <Picture 1>: Ava has controlled near-natural facial proportions, calm eyelid contours, a straight nose bridge, defined cheeks and jaw, subtly luminous skin, and visible strands in her long dark hair. Her pale gray knit top and pants retain a fine matte texture and soft drape, while the apartment and phone-screen lighting from <Picture 2> and <Picture 3> relight those surfaces without changing their geometry or material language.\n\n[Shot 1] Ava stands within the living area of <Subject 2>, her weight settled naturally near the blue-gray sofa as warm interior light blends with pale dusk city glow from the window wall. She holds <Subject 3> in front of her with both hands, the active call already connected and the dark contact interface readable; no paper, notebook, or additional visible list prop is introduced. Her right hand supports the phone while her left thumb makes short deliberate taps on the glass. Her eyes move in a steady rhythm down the screen rows as if checking each item, her brow remains focused, and her mouth articulates each phrase without enlarging her eyes or changing her facial geometry. Faint blue screen light touches her fingers, jaw, and the edge of her gray sleeve; when the interface is readable, the label \"卖车仓库物资\" remains visible. The camera holds a close shot and moves in a small smooth arc from directly in front of Ava to a slight side-front angle, keeping her face, phone, hair movement, and upper-body posture continuously framed. <Subject 1> (S1) says:\n<d>[Chinese] 救生设备，有现货的全部给我报价.</d>\n\noverall_soundscape:\nThe ongoing phone call provides a subtle continuous connection sound beneath Ava’s calm voice. Faint keyboard clicks come from the other end of the line, while repeated soft fingertip taps on the phone glass are synchronized with her thumb movements. The apartment contributes low room tone and a distant, muted city hum beyond the windows.\n\nnon_diegetic_music:\nNo non-diegetic music plays; the sequence relies on Ava’s voice, the connected call, distant keyboard sounds, screen taps, and restrained apartment ambience.",
+  "targetDuration": 9,
+  "actualDuration": 9.417,
+  "tags": {
+    "format": {
+      "tags": {
+        "major_brand": "isom",
+        "minor_version": "512",
+        "compatible_brands": "isomiso2avc1mp41",
+        "prompt": "{\"1\": {\"class_type\": \"UNETLoader\", \"inputs\": {\"unet_name\": \"minimax_h3_ref2va_pruned_int8_convrot.safetensors\", \"weight_dtype\": \"default\"}}, \"2\": {\"class_type\": \"CLIPLoader\", \"inputs\": {\"clip_name\": \"qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors\", \"type\": \"minimax\", \"device\": \"default\"}}, \"3\": {\"class_type\": \"VAELoader\", \"inputs\": {\"vae_name\": \"minimax_h3_video_vae_fp16.safetensors\"}}, \"4\": {\"class_type\": \"VAELoader\", \"inputs\": {\"vae_name\": \"minimax_h3_audio_vae_fp32.safetensors\"}}, \"5\": {\"class_type\": \"MiniMaxH3ReferenceToVideo\", \"inputs\": {\"clip\": [\"2\", 0], \"vae\": [\"3\", 0], \"audio_vae\": [\"4\", 0], \"ref_image_size\": \"match\", \"prompt\": \"subject_definitions:\\n<Subject 1> is Ava from <Picture 1>; the face, front, side, and back panels are views of the same person, with controlled near-natural facial proportions, calm eyelids over brown eyes, a straight nose, defined cheek and jaw contours, long dark brown hair in loose layered strands, and subtly luminous detailed skin. She wears a pale heather-gray long-sleeve knit top and matching loose lounge pants with soft matte fabric; the sheet defines identity, body proportions, wardrobe, and rendering only, not its panel layout, neutral display pose, or studio background.\\n<Subject 2> is Ava\\u2019s apartment from <Picture 2>, a modern high-rise studio with light wood flooring, muted gray walls, a blue-gray sofa, low television console, bed by the window, laptop desk, and floor-to-ceiling windows facing a dense dusk city; it supplies the location, spatial layout, landmarks, soft lighting direction, and atmosphere.\\n<Subject 3> is the black smartphone call and contact interface from <Picture 3>, featuring the dark casing, dark-blue active-call screen, timing area, contact rows, status icons, and the visible English interface label \\\"Vehicle Sales Warehouse Supplies\\\"; it supplies the exact phone hardware, call state, and screen-language design without its studio display background.\\n\\nsummary:\\n[reference generation] <Subject 1> continues the same supply call while using <Subject 3> inside <Subject 2>, with <Subject 3> held at reading height and <Subject 2> providing the apartment setting; <Subject 1> scans the phone screen item by item and gives a steady, non-negotiable price request.\\n\\nretention_analysis:\\n<Subject 1> (appears in [Shot 1]): fully_preserved - Ava retains the same facial structure, observed eye and nose proportions, cheek and jaw shape, long dark hair, body proportions, pale gray knit lounge outfit, detailed skin shading, and near-natural rendering, with only speech, gaze, expression, and subtle hand motion animated.\\n<Subject 2> (appears in [Shot 1]): fully_preserved - The apartment preserves its modern studio layout, wood floor, blue-gray sofa, large window wall, city skyline, desk and bed placement, muted surfaces, and soft dusk illumination while the camera stays close to Ava.\\n<Subject 3> (appears in [Shot 1]): fully_preserved - The black smartphone retains its hardware, dark active-call interface, blue-black screen lighting, contact rows, and visible label \\\"Vehicle Sales Warehouse Supplies\\\", with only natural thumb taps and reflected light showing continued use.\\n\\ndetailed_description:\\nThe rendering follows <Picture 1>: Ava has controlled near-natural facial proportions, calm eyelid contours, a straight nose bridge, defined cheeks and jaw, subtly luminous skin, and visible strands in her long dark hair. Her pale gray knit top and pants retain a fine matte texture and soft drape, while the apartment and phone-screen lighting from <Picture 2> and <Picture 3> relight those surfaces without changing their geometry or material language.\\n\\n[Shot 1] Ava stands within the living area of <Subject 2>, her weight settled naturally near the blue-gray sofa as warm interior light blends with pale dusk city glow from the window wall. She holds <Subject 3> in front of her with both hands, the active call already connected and the dark contact interface readable; no paper, notebook, or additional visible list prop is introduced. Her right hand supports the phone while her left thumb makes short deliberate taps on the glass. Her eyes move in a steady rhythm down the screen rows as if checking each item, her brow remains focused, and her mouth articulates each phrase without enlarging her eyes or changing her facial geometry. Faint blue screen light touches her fingers, jaw, and the edge of her gray sleeve; when the interface is readable, the label \\\"Vehicle Sales Warehouse Supplies\\\" remains visible. The camera holds a close shot and moves in a small smooth arc from directly in front of Ava to a slight side-front angle, keeping her face, phone, hair movement, and upper-body posture continuously framed. <Subject 1> (S1), speaking in en-US, says:\\n<d>[English] Life-saving equipment\\u2014give me a quote for everything you have in stock.</d>\\n\\noverall_soundscape:\\nThe ongoing phone call provides a subtle continuous connection sound beneath Ava\\u2019s calm voice. Faint keyboard clicks come from the other end of the line, while repeated soft fingertip taps on the phone glass are synchronized with her thumb movements. The apartment contributes low room tone and a distant, muted city hum beyond the windows.\\n\\nnon_diegetic_music:\\nNo non-diegetic music plays; the sequence relies on Ava\\u2019s voice, the connected call, distant keyboard sounds, screen taps, and restrained apartment ambience.\", \"width\": 1344, \"height\": 768, \"length\": 226, \"ref_images.ref_image_0\": [\"15\", 0], \"ref_images.ref_image_1\": [\"16\", 0], \"ref_images.ref_image_2\": [\"17\", 0]}}, \"6\": {\"class_type\": \"RandomNoise\", \"inputs\": {\"noise_seed\": 4183750473803623}}, \"7\": {\"class_type\": \"BasicGuider\", \"inputs\": {\"model\": [\"1\", 0], \"conditioning\": [\"5\", 0]}}, \"8\": {\"class_type\": \"KSamplerSelect\", \"inputs\": {\"sampler_name\": \"res_multistep\"}}, \"9\": {\"class_type\": \"BasicScheduler\", \"inputs\": {\"model\": [\"1\", 0], \"scheduler\": \"simple\", \"steps\": 20, \"denoise\": 1.0}}, \"10\": {\"class_type\": \"SamplerCustomAdvanced\", \"inputs\": {\"noise\": [\"6\", 0], \"guider\": [\"7\", 0], \"sampler\": [\"8\", 0], \"sigmas\": [\"9\", 0], \"latent_image\": [\"5\", 1]}}, \"11\": {\"class_type\": \"VAEDecode\", \"inputs\": {\"samples\": [\"10\", 0], \"vae\": [\"3\", 0]}}, \"12\": {\"class_type\": \"VAEDecodeAudio\", \"inputs\": {\"samples\": [\"10\", 0], \"vae\": [\"4\", 0]}}, \"13\": {\"class_type\": \"CreateVideo\", \"inputs\": {\"images\": [\"11\", 0], \"audio\": [\"12\", 0], \"fps\": 24.0, \"bit_depth\": 8}}, \"14\": {\"class_type\": \"SaveVideo\", \"inputs\": {\"video\": [\"13\", 0], \"filename_prefix\": \"Toonflow/H3_1790752098173_991362290\", \"format\": \"mp4\"}}, \"15\": {\"class_type\": \"LoadImage\", \"inputs\": {\"image\": \"toonflow_h3_1790752084149_0_102461545.jpg\"}, \"is_changed\": [\"d1c0cff4b3feba4fa5be34238a140e95f084d2b1f1b48d03b2fc84d8e76a78fb\"]}, \"16\": {\"class_type\": \"LoadImage\", \"inputs\": {\"image\": \"toonflow_h3_1790752089944_1_588925368.jpg\"}, \"is_changed\": [\"d25856180f0a8705fa13fc33ce7bc88f181a0bbeee2ac5cc86b6e05b89e07ed4\"]}, \"17\": {\"class_type\": \"LoadImage\", \"inputs\": {\"image\": \"toonflow_h3_1790752093039_2_782816322.jpg\"}, \"is_changed\": [\"ce8f5d156d52acca01d2d812f9cbac2e4ae747caf36eaeaa3d1403c1a27932ed\"]}}",
+        "encoder": "Lavf62.12.102"
+      }
+    }
+  },
+  "submittedGraph": {
+    "1": {
+      "class_type": "UNETLoader",
+      "inputs": {
+        "unet_name": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+        "weight_dtype": "default"
+      }
+    },
+    "2": {
+      "class_type": "CLIPLoader",
+      "inputs": {
+        "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "type": "minimax",
+        "device": "default"
+      }
+    },
+    "3": {
+      "class_type": "VAELoader",
+      "inputs": {
+        "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+      }
+    },
+    "4": {
+      "class_type": "VAELoader",
+      "inputs": {
+        "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+      }
+    },
+    "5": {
+      "class_type": "MiniMaxH3ReferenceToVideo",
+      "inputs": {
+        "clip": [
+          "2",
+          0
+        ],
+        "vae": [
+          "3",
+          0
+        ],
+        "audio_vae": [
+          "4",
+          0
+        ],
+        "ref_image_size": "match",
+        "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>; the face, front, side, and back panels are views of the same person, with controlled near-natural facial proportions, calm eyelids over brown eyes, a straight nose, defined cheek and jaw contours, long dark brown hair in loose layered strands, and subtly luminous detailed skin. She wears a pale heather-gray long-sleeve knit top and matching loose lounge pants with soft matte fabric; the sheet defines identity, body proportions, wardrobe, and rendering only, not its panel layout, neutral display pose, or studio background.\n<Subject 2> is Ava’s apartment from <Picture 2>, a modern high-rise studio with light wood flooring, muted gray walls, a blue-gray sofa, low television console, bed by the window, laptop desk, and floor-to-ceiling windows facing a dense dusk city; it supplies the location, spatial layout, landmarks, soft lighting direction, and atmosphere.\n<Subject 3> is the black smartphone call and contact interface from <Picture 3>, featuring the dark casing, dark-blue active-call screen, timing area, contact rows, status icons, and the visible English interface label \"Vehicle Sales Warehouse Supplies\"; it supplies the exact phone hardware, call state, and screen-language design without its studio display background.\n\nsummary:\n[reference generation] <Subject 1> continues the same supply call while using <Subject 3> inside <Subject 2>, with <Subject 3> held at reading height and <Subject 2> providing the apartment setting; <Subject 1> scans the phone screen item by item and gives a steady, non-negotiable price request.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - Ava retains the same facial structure, observed eye and nose proportions, cheek and jaw shape, long dark hair, body proportions, pale gray knit lounge outfit, detailed skin shading, and near-natural rendering, with only speech, gaze, expression, and subtle hand motion animated.\n<Subject 2> (appears in [Shot 1]): fully_preserved - The apartment preserves its modern studio layout, wood floor, blue-gray sofa, large window wall, city skyline, desk and bed placement, muted surfaces, and soft dusk illumination while the camera stays close to Ava.\n<Subject 3> (appears in [Shot 1]): fully_preserved - The black smartphone retains its hardware, dark active-call interface, blue-black screen lighting, contact rows, and visible label \"Vehicle Sales Warehouse Supplies\", with only natural thumb taps and reflected light showing continued use.\n\ndetailed_description:\nThe rendering follows <Picture 1>: Ava has controlled near-natural facial proportions, calm eyelid contours, a straight nose bridge, defined cheeks and jaw, subtly luminous skin, and visible strands in her long dark hair. Her pale gray knit top and pants retain a fine matte texture and soft drape, while the apartment and phone-screen lighting from <Picture 2> and <Picture 3> relight those surfaces without changing their geometry or material language.\n\n[Shot 1] Ava stands within the living area of <Subject 2>, her weight settled naturally near the blue-gray sofa as warm interior light blends with pale dusk city glow from the window wall. She holds <Subject 3> in front of her with both hands, the active call already connected and the dark contact interface readable; no paper, notebook, or additional visible list prop is introduced. Her right hand supports the phone while her left thumb makes short deliberate taps on the glass. Her eyes move in a steady rhythm down the screen rows as if checking each item, her brow remains focused, and her mouth articulates each phrase without enlarging her eyes or changing her facial geometry. Faint blue screen light touches her fingers, jaw, and the edge of her gray sleeve; when the interface is readable, the label \"Vehicle Sales Warehouse Supplies\" remains visible. The camera holds a close shot and moves in a small smooth arc from directly in front of Ava to a slight side-front angle, keeping her face, phone, hair movement, and upper-body posture continuously framed. <Subject 1> (S1), speaking in en-US, says:\n<d>[English] Life-saving equipment—give me a quote for everything you have in stock.</d>\n\noverall_soundscape:\nThe ongoing phone call provides a subtle continuous connection sound beneath Ava’s calm voice. Faint keyboard clicks come from the other end of the line, while repeated soft fingertip taps on the phone glass are synchronized with her thumb movements. The apartment contributes low room tone and a distant, muted city hum beyond the windows.\n\nnon_diegetic_music:\nNo non-diegetic music plays; the sequence relies on Ava’s voice, the connected call, distant keyboard sounds, screen taps, and restrained apartment ambience.",
+        "width": 1344,
+        "height": 768,
+        "length": 226,
+        "ref_images.ref_image_0": [
+          "15",
+          0
+        ],
+        "ref_images.ref_image_1": [
+          "16",
+          0
+        ],
+        "ref_images.ref_image_2": [
+          "17",
+          0
+        ]
+      }
+    },
+    "6": {
+      "class_type": "RandomNoise",
+      "inputs": {
+        "noise_seed": 4183750473803623
+      }
+    },
+    "7": {
+      "class_type": "BasicGuider",
+      "inputs": {
+        "model": [
+          "1",
+          0
+        ],
+        "conditioning": [
+          "5",
+          0
+        ]
+      }
+    },
+    "8": {
+      "class_type": "KSamplerSelect",
+      "inputs": {
+        "sampler_name": "res_multistep"
+      }
+    },
+    "9": {
+      "class_type": "BasicScheduler",
+      "inputs": {
+        "model": [
+          "1",
+          0
+        ],
+        "scheduler": "simple",
+        "steps": 20,
+        "denoise": 1.0
+      }
+    },
+    "10": {
+      "class_type": "SamplerCustomAdvanced",
+      "inputs": {
+        "noise": [
+          "6",
+          0
+        ],
+        "guider": [
+          "7",
+          0
+        ],
+        "sampler": [
+          "8",
+          0
+        ],
+        "sigmas": [
+          "9",
+          0
+        ],
+        "latent_image": [
+          "5",
+          1
+        ]
+      }
+    },
+    "11": {
+      "class_type": "VAEDecode",
+      "inputs": {
+        "samples": [
+          "10",
+          0
+        ],
+        "vae": [
+          "3",
+          0
+        ]
+      }
+    },
+    "12": {
+      "class_type": "VAEDecodeAudio",
+      "inputs": {
+        "samples": [
+          "10",
+          0
+        ],
+        "vae": [
+          "4",
+          0
+        ]
+      }
+    },
+    "13": {
+      "class_type": "CreateVideo",
+      "inputs": {
+        "images": [
+          "11",
+          0
+        ],
+        "audio": [
+          "12",
+          0
+        ],
+        "fps": 24.0,
+        "bit_depth": 8
+      }
+    },
+    "14": {
+      "class_type": "SaveVideo",
+      "inputs": {
+        "video": [
+          "13",
+          0
+        ],
+        "filename_prefix": "Toonflow/H3_1790752098173_991362290",
+        "format": "mp4"
+      }
+    },
+    "15": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "toonflow_h3_1790752084149_0_102461545.jpg"
+      },
+      "is_changed": [
+        "d1c0cff4b3feba4fa5be34238a140e95f084d2b1f1b48d03b2fc84d8e76a78fb"
+      ]
+    },
+    "16": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "toonflow_h3_1790752089944_1_588925368.jpg"
+      },
+      "is_changed": [
+        "d25856180f0a8705fa13fc33ce7bc88f181a0bbeee2ac5cc86b6e05b89e07ed4"
+      ]
+    },
+    "17": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "toonflow_h3_1790752093039_2_782816322.jpg"
+      },
+      "is_changed": [
+        "ce8f5d156d52acca01d2d812f9cbac2e4ae747caf36eaeaa3d1403c1a27932ed"
+      ]
+    }
+  },
+  "submittedPrompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>; the face, front, side, and back panels are views of the same person, with controlled near-natural facial proportions, calm eyelids over brown eyes, a straight nose, defined cheek and jaw contours, long dark brown hair in loose layered strands, and subtly luminous detailed skin. She wears a pale heather-gray long-sleeve knit top and matching loose lounge pants with soft matte fabric; the sheet defines identity, body proportions, wardrobe, and rendering only, not its panel layout, neutral display pose, or studio background.\n<Subject 2> is Ava’s apartment from <Picture 2>, a modern high-rise studio with light wood flooring, muted gray walls, a blue-gray sofa, low television console, bed by the window, laptop desk, and floor-to-ceiling windows facing a dense dusk city; it supplies the location, spatial layout, landmarks, soft lighting direction, and atmosphere.\n<Subject 3> is the black smartphone call and contact interface from <Picture 3>, featuring the dark casing, dark-blue active-call screen, timing area, contact rows, status icons, and the visible English interface label \"Vehicle Sales Warehouse Supplies\"; it supplies the exact phone hardware, call state, and screen-language design without its studio display background.\n\nsummary:\n[reference generation] <Subject 1> continues the same supply call while using <Subject 3> inside <Subject 2>, with <Subject 3> held at reading height and <Subject 2> providing the apartment setting; <Subject 1> scans the phone screen item by item and gives a steady, non-negotiable price request.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - Ava retains the same facial structure, observed eye and nose proportions, cheek and jaw shape, long dark hair, body proportions, pale gray knit lounge outfit, detailed skin shading, and near-natural rendering, with only speech, gaze, expression, and subtle hand motion animated.\n<Subject 2> (appears in [Shot 1]): fully_preserved - The apartment preserves its modern studio layout, wood floor, blue-gray sofa, large window wall, city skyline, desk and bed placement, muted surfaces, and soft dusk illumination while the camera stays close to Ava.\n<Subject 3> (appears in [Shot 1]): fully_preserved - The black smartphone retains its hardware, dark active-call interface, blue-black screen lighting, contact rows, and visible label \"Vehicle Sales Warehouse Supplies\", with only natural thumb taps and reflected light showing continued use.\n\ndetailed_description:\nThe rendering follows <Picture 1>: Ava has controlled near-natural facial proportions, calm eyelid contours, a straight nose bridge, defined cheeks and jaw, subtly luminous skin, and visible strands in her long dark hair. Her pale gray knit top and pants retain a fine matte texture and soft drape, while the apartment and phone-screen lighting from <Picture 2> and <Picture 3> relight those surfaces without changing their geometry or material language.\n\n[Shot 1] Ava stands within the living area of <Subject 2>, her weight settled naturally near the blue-gray sofa as warm interior light blends with pale dusk city glow from the window wall. She holds <Subject 3> in front of her with both hands, the active call already connected and the dark contact interface readable; no paper, notebook, or additional visible list prop is introduced. Her right hand supports the phone while her left thumb makes short deliberate taps on the glass. Her eyes move in a steady rhythm down the screen rows as if checking each item, her brow remains focused, and her mouth articulates each phrase without enlarging her eyes or changing her facial geometry. Faint blue screen light touches her fingers, jaw, and the edge of her gray sleeve; when the interface is readable, the label \"Vehicle Sales Warehouse Supplies\" remains visible. The camera holds a close shot and moves in a small smooth arc from directly in front of Ava to a slight side-front angle, keeping her face, phone, hair movement, and upper-body posture continuously framed. <Subject 1> (S1), speaking in en-US, says:\n<d>[English] Life-saving equipment—give me a quote for everything you have in stock.</d>\n\noverall_soundscape:\nThe ongoing phone call provides a subtle continuous connection sound beneath Ava’s calm voice. Faint keyboard clicks come from the other end of the line, while repeated soft fingertip taps on the phone glass are synchronized with her thumb movements. The apartment contributes low room tone and a distant, muted city hum beyond the windows.\n\nnon_diegetic_music:\nNo non-diegetic music plays; the sequence relies on Ava’s voice, the connected call, distant keyboard sounds, screen taps, and restrained apartment ambience.",
+  "languagePromptSnapshotMatchesSubmitted": true
+}

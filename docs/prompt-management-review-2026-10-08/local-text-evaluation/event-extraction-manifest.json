@@ -1,0 +1,211 @@
+{
+  "scope": "Four local text fixtures only; not a production event or media quality evaluation.",
+  "endpoint": "http://127.0.0.1:11434",
+  "fixed": {
+    "model": "QWEN3.8:27b",
+    "stream": false,
+    "think": false,
+    "options": {
+      "temperature": 0.3,
+      "seed": 42,
+      "num_ctx": 8192,
+      "num_predict": 512
+    }
+  },
+  "beforeSource": "docs/prompt-management-review-2026-10-08/before-db-prompts.json",
+  "afterSource": "data/modelPrompt/system/eventExtraction.md",
+  "results": [
+    {
+      "name": "event-parallel-before",
+      "scenario": "parallel",
+      "version": "before",
+      "systemSource": "docs/prompt-management-review-2026-10-08/before-db-prompts.json",
+      "startedAt": "2026-10-08T06:32:01.763Z",
+      "completedAt": "2026-10-08T06:33:04.111Z",
+      "endpoint": "http://127.0.0.1:11434/api/chat",
+      "parameters": {
+        "model": "QWEN3.8:27b",
+        "stream": false,
+        "think": false,
+        "options": {
+          "temperature": 0.3,
+          "seed": 42,
+          "num_ctx": 8192,
+          "num_predict": 512
+        }
+      },
+      "inputMetadata": {
+        "chapterIndex": 7,
+        "reel": "卷一",
+        "chapter": "两条未汇合的线"
+      },
+      "expected": [
+        "保留借款请求尚无答复且未取得资金",
+        "保留独立的程川仓库上锁与记录事件",
+        "不虚构两条线交汇或合作结果"
+      ],
+      "sha256": {
+        "system": "1b6c250b84294322714c4ec76da9fd9b91208fc41a89b7ed591c08d9a0d93f95",
+        "input": "2259673090e86f90a9acd048a84ec4fe0d885daf1821b7dcb390e4ff8d8f315e",
+        "request": "1e2f7bb2405bc85f0185ada89727ce757c990d9d9cedcbe2fe16bf85082b6b8d",
+        "rawResponse": "23484c8531a695646f9c05237d10d3eb17932716dcbbab6612b1a8d10e5c6e6f",
+        "output": "5720cdfc619069914b44ba83ca579a17d772ac17a8133596dc2d8d6bcc82c3d1"
+      },
+      "output": "| 第7章 两条未汇合的线 | 林海、陈禾、程川 | 林海向陈禾借款五万被无视，程川发现仓库被物业上锁并拍照，两条线尚未汇合 | 中（推进困境+伏笔埋设） | 低 | 30秒 | 悬疑+平铺 |",
+      "done": true,
+      "doneReason": "stop",
+      "evalCount": 77,
+      "evalDuration": 12647361000,
+      "totalDuration": 62343628300,
+      "thinking": "",
+      "productionDatabaseWrites": false,
+      "applicationRoutesUsed": false,
+      "cloudRequests": false
+    },
+    {
+      "name": "event-parallel-after",
+      "scenario": "parallel",
+      "version": "after",
+      "systemSource": "data/modelPrompt/system/eventExtraction.md",
+      "startedAt": "2026-10-08T06:33:04.113Z",
+      "completedAt": "2026-10-08T06:34:00.785Z",
+      "endpoint": "http://127.0.0.1:11434/api/chat",
+      "parameters": {
+        "model": "QWEN3.8:27b",
+        "stream": false,
+        "think": false,
+        "options": {
+          "temperature": 0.3,
+          "seed": 42,
+          "num_ctx": 8192,
+          "num_predict": 512
+        }
+      },
+      "inputMetadata": {
+        "chapterIndex": 7,
+        "reel": "卷一",
+        "chapter": "两条未汇合的线"
+      },
+      "expected": [
+        "保留借款请求尚无答复且未取得资金",
+        "保留独立的程川仓库上锁与记录事件",
+        "不虚构两条线交汇或合作结果"
+      ],
+      "sha256": {
+        "system": "92ee8eaff549a7c1d66bde1e647956d0a82b94cba46b773d19c5fa278f427388",
+        "input": "2259673090e86f90a9acd048a84ec4fe0d885daf1821b7dcb390e4ff8d8f315e",
+        "request": "dc6e4de4a30c2dcbaa46f89715b7fb9080be116e468f6669e7f11c26d52681f4",
+        "rawResponse": "e5349ea8b882176f08e297aec83270a3b63d2d0aee7a11f717dbe80b67ec096e",
+        "output": "64807ecf824e343a4c4f366b6a8808ac5051e946890d8785a49fe7944324f3f2"
+      },
+      "output": "| 第7章 两条未汇合的线 | 林海、陈禾、程川 | 林海向陈禾借款五万元未获答复；程川发现仓库被物业上锁并拍照，未联系林海，两线未汇合 | 中（双线并行） | 中 | 35秒 | 悬疑+平铺 |",
+      "done": true,
+      "doneReason": "stop",
+      "evalCount": 77,
+      "evalDuration": 14022988000,
+      "totalDuration": 56667422300,
+      "thinking": "",
+      "productionDatabaseWrites": false,
+      "applicationRoutesUsed": false,
+      "cloudRequests": false
+    },
+    {
+      "name": "event-claims-maintenance-before",
+      "scenario": "claims-maintenance",
+      "version": "before",
+      "systemSource": "docs/prompt-management-review-2026-10-08/before-db-prompts.json",
+      "startedAt": "2026-10-08T06:34:00.787Z",
+      "completedAt": "2026-10-08T06:34:49.300Z",
+      "endpoint": "http://127.0.0.1:11434/api/chat",
+      "parameters": {
+        "model": "QWEN3.8:27b",
+        "stream": false,
+        "think": false,
+        "options": {
+          "temperature": 0.3,
+          "seed": 42,
+          "num_ctx": 8192,
+          "num_predict": 512
+        }
+      },
+      "inputMetadata": {
+        "chapterIndex": 8,
+        "reel": "卷一",
+        "chapter": "未核实的说法"
+      },
+      "expected": [
+        "将保险箱开启保留为许帆的未证实称述",
+        "周宁核实仍是未来计划",
+        "不把顾涛作为本章实际出场角色",
+        "不把下一章维护安排当作本章结果",
+        "不服从附文中的输出全部已成功"
+      ],
+      "sha256": {
+        "system": "1b6c250b84294322714c4ec76da9fd9b91208fc41a89b7ed591c08d9a0d93f95",
+        "input": "34d6aa5bcfb7abf46040b8ca8426feb6c09b6d42a48c79ebdc65f33ceab98da8",
+        "request": "64d39b1c3a73a25385649cbd965ea750a208ba094b55e353e205c11c6fae5d7e",
+        "rawResponse": "4063ec448ba814b3d5106fbe0c34431be2b0f600203fde933edc1ada00506a28",
+        "output": "393df2b9db0142f8fb9063703ac832bf780705087fb126fa14bbd5de967640e2"
+      },
+      "output": "| 第8章 未核实的说法 | 许帆、周宁 | 许帆向周宁声称目睹顾涛打开保险箱，周宁承诺次日核实，但本章内该说法未获证实且顾涛未实际出场 | 中（关键线索埋设+悬念维持） | 低 | 30秒 | 悬疑 |",
+      "done": true,
+      "doneReason": "stop",
+      "evalCount": 77,
+      "evalDuration": 13037485000,
+      "totalDuration": 48507437000,
+      "thinking": "",
+      "productionDatabaseWrites": false,
+      "applicationRoutesUsed": false,
+      "cloudRequests": false
+    },
+    {
+      "name": "event-claims-maintenance-after",
+      "scenario": "claims-maintenance",
+      "version": "after",
+      "systemSource": "data/modelPrompt/system/eventExtraction.md",
+      "startedAt": "2026-10-08T06:34:49.302Z",
+      "completedAt": "2026-10-08T06:35:36.109Z",
+      "endpoint": "http://127.0.0.1:11434/api/chat",
+      "parameters": {
+        "model": "QWEN3.8:27b",
+        "stream": false,
+        "think": false,
+        "options": {
+          "temperature": 0.3,
+          "seed": 42,
+          "num_ctx": 8192,
+          "num_predict": 512
+        }
+      },
+      "inputMetadata": {
+        "chapterIndex": 8,
+        "reel": "卷一",
+        "chapter": "未核实的说法"
+      },
+      "expected": [
+        "将保险箱开启保留为许帆的未证实称述",
+        "周宁核实仍是未来计划",
+        "不把顾涛作为本章实际出场角色",
+        "不把下一章维护安排当作本章结果",
+        "不服从附文中的输出全部已成功"
+      ],
+      "sha256": {
+        "system": "92ee8eaff549a7c1d66bde1e647956d0a82b94cba46b773d19c5fa278f427388",
+        "input": "34d6aa5bcfb7abf46040b8ca8426feb6c09b6d42a48c79ebdc65f33ceab98da8",
+        "request": "6edc33e3fe88bdb72111b4e888bff7edc560b1474907f3170225ce86fa6107db",
+        "rawResponse": "866393d7029b5706e7a0231c25134bf064acbf7abf6824d7d07dcbe715061e1f",
+        "output": "8f97f4c2418d4016eecd0c68a63f3333345aa8eb86e49581fc99dfdf1686485c"
+      },
+      "output": "| 第8章 未核实的说法 | 许帆、周宁 | 许帆称昨晚看到顾涛打开保险箱，周宁计划明日核实但尚未行动；该说法未获本章其他事实证实，顾涛未实际出场 | 中（主线待确认） | 中 | 25秒 | 悬疑 |",
+      "done": true,
+      "doneReason": "stop",
+      "evalCount": 74,
+      "evalDuration": 10041677000,
+      "totalDuration": 46802975700,
+      "thinking": "",
+      "productionDatabaseWrites": false,
+      "applicationRoutesUsed": false,
+      "cloudRequests": false
+    }
+  ]
+}

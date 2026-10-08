@@ -1,5 +1,11 @@
 # Toonflow 本机 MiniMax H3 视频直连（ComfyUI）
 
+## 生成后的显存释放
+
+本地 ComfyUI 图片和视频生成结束（含失败）后，Toonflow 等待 30 秒空闲时间，再检查 ComfyUI 的运行队列和等待队列。两个队列都为空时，调用 `/free`，同时请求 `unload_models` 和 `free_memory`。后续任务会重新加载模型，已经保存的图片、视频和历史记录不受影响。
+
+同一 ComfyUI 服务的连续批量任务共用计时；新任务开始时取消待执行的清理，避免每段视频都重新加载模型。ComfyUI 仍有其他任务时每 30 秒重新检查；清理接口失败最多尝试三次并记录服务端日志，不改变生成结果。此逻辑适用于本机通用、Qwen 四视图和 H3 高清供应商；gateway 视频模式不触发本地清理。
+
 对应 `data/vendor/comfyui_local.ts` 1.7 版。此实现参照 `zdingwl/ai-drama-studio` 的 `backend/app/p16/provider.py` 中 `LocalComfyUIH3Provider.workflow_payload`、`readiness`、参考图上传以及 SaveVideo 结果读取流程。
 
 ## 不再需要 DramaClaw 或手动导出工作流

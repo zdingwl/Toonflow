@@ -116,10 +116,10 @@ test('H3 prompt and storyboard skill require state-safe references and duration 
   assert.doesNotMatch(h3, /optional FACE\/SIDE\/BACK/);
   assert.match(h3, /ONE character in ONE state/);
   assert.match(h3, /target_duration/);
-  assert.match(h3, /350–500 English words/);
-  assert.match(h3, /not a total-prompt cap/);
-  assert.match(h3, /source, reference role and concrete visible characteristics/);
-  assert.match(h3, /Remove redundant prose, not story facts/);
+  // The current reference-role template deliberately has no fixed word quota.
+  assert.match(h3, /do not impose a fixed total-prompt word count/);
+  assert.match(h3, /visible features and reference role/);
+  assert.match(h3, /Remove redundant prose,\s+not story facts/);
   assert.match(storyboard, /minimum_duration > target_duration/);
   assert.match(storyboard, /PLAN_CHANGED/);
 });

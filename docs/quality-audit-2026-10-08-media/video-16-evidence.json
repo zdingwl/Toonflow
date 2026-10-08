@@ -1,0 +1,223 @@
+{
+  "videoId": 16,
+  "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, the same person shown across the face, front, side and back panels; she has dark rain-wet hair tied in a ponytail with loose strands, controlled natural eye proportions, a straight nose, defined cheek and jaw contours, damp skin with subtle highlights, a black leather jacket over a black shirt, dark cargo pants, sturdy boots and a dark blue wrapped knee covering. The sheet defines her identity, proportions, wardrobe and wet-material rendering only, not her video pose or the display rail.\n<Subject 2> is Madison from <Picture 2>, the same person shown across the face, front, side and back panels; she has shoulder-length wet light-brown wavy hair, softly rounded facial contours, the observed relatively large eye shape, a small nose, damp tear-streaked skin, a cream knitted sweater, a glossy orange life vest with black straps, gray cargo pants and brown lace-up boots. The sheet defines her identity, proportions, wardrobe and rain-wet fabric rendering only, not her video pose or neutral display background.\n<Subject 3> is the tilted ocean liner from <Picture 3>, with a rust-streaked damaged hull, sharply sloping wet deck, metal railings and stanchions, lifeboats, dark cabin walls, hanging chains, jagged hull damage, cold lightning-lit storm clouds, turbulent sea and a distant night city. It supplies the location, architecture, spatial layout, storm atmosphere and lighting direction, while the video frames only the local deck edge required by the action.\n\nsummary:\n[reference generation] On <Subject 3>, <Subject 2> stands inside the sloping deck railing above <Subject 1>, who is already suspended outside the hull. After <Subject 2> confesses through fearful breathing that only one place remains, she deliberately pries <Subject 1>’s right hand from the rail, leaving <Subject 1> supported only by her left hand; <Subject 2> then begins forcing away that final grip as <Subject 1> hangs over open water.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - Ava’s facial structure, eye proportions, nose and jaw shape, dark ponytail, body proportions, black jacket, black shirt, dark trousers, boots, wrapped knee covering and damp skin and leather rendering remain unchanged; only pose, expression, grip and body weight change for the hanging action.\n<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - Madison’s face, light-brown wavy hair, body proportions, cream sweater, orange life vest, gray trousers, boots and wet knit and glossy-vest materials remain unchanged; tears, rapid breathing, leaning and deliberate prying motions animate the established design.\n<Subject 3> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - the liner retains its tilted rusted hull, sloping wet deck, connected railings and stanchions, lifeboat area, storm damage, cold lightning direction, rain and turbulent-sea atmosphere, with tighter local framing replacing the reference’s wide view.\n\ndetailed_description:\nThe rendering follows the observed character references: cinematic semi-realistic three-dimensional forms with each woman’s exact facial geometry, damp skin shading, layered wet hair strands and physically based clothing response. <Subject 1>’s dark leather catches cold rain light in sharp controlled highlights, while <Subject 2>’s knitted sweater and orange life vest show soft absorbent fabric and glossy wet vinyl. The storm illumination from <Subject 3> relights both characters without altering their proportions, and the character-sheet layouts, repeated figures and neutral display backgrounds are never shown.\n\n[Shot 1] On the sharply sloping deck of <Subject 3>, <Subject 2> stands inside the railing with her shoulders raised and her boots braced on the wet floor. She is above <Subject 1>, whose arms extend upward to grip the fixed outer rail; Ava’s torso and legs hang below the rail on the outboard side, and both boots dangle over open sea with no supporting surface beneath them. Rain streams down Madison’s face and orange vest. Her chest rises and falls in rapid panicked breathing, tears mix with rainwater, and her glistening eyes avoid looking directly down at Ava. Behind her, a panicked crowd pushes and sways around the lifeboat station, with wet coats and arms moving chaotically. The medium close shot slowly pushes toward Madison’s side profile with slight handheld shake.\n<Subject 2> (S1) says:\n<d>[Chinese] 姐姐……位置只有一个.</d>\n\n[Shot 2] At 00:05.000, the cut opens in a tight close view of the connected hands and wet railing. The upper rail is attached to the sloping deck by visible stanchions; the deck ends behind Madison, the ship’s hull lies beside and behind Ava, and dark churning water is directly below Ava’s dangling boots. Ava begins with both hands gripping overhead and bearing her full weight. Madison leans over from the deck side, stabilizes her body against the slope, and deliberately peels Ava’s right fingers away from the metal one by one. Ava’s right hand loses contact and drops, while her left hand alone takes her weight. Her shoulder pulls upward and her whole body sinks a few inches under gravity. The camera stays fixed in a close pressing view and shifts slightly along the direction of Madison’s prying fingers.\n<Subject 1> (S2) says:\n<d>[Chinese] 你干什么？!</d>\n\n[Shot 3] At 00:07.000, a tight near profile shows <Subject 2> with rain on her face, her jaw tense and her gaze fixed downward in desperate resolve. The camera pushes in slowly, then hard-cuts between the two women into an extreme hand close-up. <Subject 1>’s released right arm hangs away from the rail while both feet remain suspended in open air. Madison’s wet hands close over Ava’s remaining left hand and deliberately lift and bend the fingers away from the fixed upper edge one at a time. The hull suddenly lurches, reducing Ava’s hold to a single trembling finger, with Madison’s forcing hand and that last grip held in the same frame. Rain runs over the metal and fabric moves with the strain, but no blood or open injury appears.\n<Subject 2> (S1) says:\n<d>[Chinese] 我只是想活.</d>\n\noverall_soundscape:\nTorrential rain and wind continue throughout, layered with heavy waves striking the tilted hull and water rushing below the railing. Wet clothing rubs against skin and fabric, hands squeak and scrape against rain-slick metal, and the rail gives faint strained creaks under Ava’s weight. Madison’s rapid breathing is close and shallow, while Ava makes a sharp startled gasp as her right hand releases. Behind them, panicked lifeboat shouts, rushing footsteps and impacts against deck equipment form a chaotic background. The ship groans continuously and produces a sudden deep metallic lurch in the final shot.\n\nnon_diegetic_music:\nLow sustained strings and a restrained sub-bass drone sit beneath the storm, carrying dread without overpowering the dialogue. The texture thins during the hand close-up so rain, breath and friction remain exposed. At the hull’s sudden lurch, the music gives one dark swelling pulse, then fades into tense near-silence under the final held grip.",
+  "targetDuration": 10,
+  "actualDuration": 10.125,
+  "tags": {
+    "format": {
+      "tags": {
+        "major_brand": "isom",
+        "minor_version": "512",
+        "compatible_brands": "isomiso2avc1mp41",
+        "prompt": "{\"1\": {\"class_type\": \"UNETLoader\", \"inputs\": {\"unet_name\": \"minimax_h3_ref2va_pruned_int8_convrot.safetensors\", \"weight_dtype\": \"default\"}}, \"2\": {\"class_type\": \"CLIPLoader\", \"inputs\": {\"clip_name\": \"qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors\", \"type\": \"minimax\", \"device\": \"default\"}}, \"3\": {\"class_type\": \"VAELoader\", \"inputs\": {\"vae_name\": \"minimax_h3_video_vae_fp16.safetensors\"}}, \"4\": {\"class_type\": \"VAELoader\", \"inputs\": {\"vae_name\": \"minimax_h3_audio_vae_fp32.safetensors\"}}, \"5\": {\"class_type\": \"MiniMaxH3ReferenceToVideo\", \"inputs\": {\"clip\": [\"2\", 0], \"vae\": [\"3\", 0], \"audio_vae\": [\"4\", 0], \"ref_image_size\": \"match\", \"prompt\": \"subject_definitions:\\n<Subject 1> is Ava from <Picture 1>, the same person shown across the face, front, side and back panels; she has dark rain-wet hair tied in a ponytail with loose strands, controlled natural eye proportions, a straight nose, defined cheek and jaw contours, damp skin with subtle highlights, a black leather jacket over a black shirt, dark cargo pants, sturdy boots and a dark blue wrapped knee covering. The sheet defines her identity, proportions, wardrobe and wet-material rendering only, not her video pose or the display rail.\\n<Subject 2> is Madison from <Picture 2>, the same person shown across the face, front, side and back panels; she has shoulder-length wet light-brown wavy hair, softly rounded facial contours, the observed relatively large eye shape, a small nose, damp tear-streaked skin, a cream knitted sweater, a glossy orange life vest with black straps, gray cargo pants and brown lace-up boots. The sheet defines her identity, proportions, wardrobe and rain-wet fabric rendering only, not her video pose or neutral display background.\\n<Subject 3> is the tilted ocean liner from <Picture 3>, with a rust-streaked damaged hull, sharply sloping wet deck, metal railings and stanchions, lifeboats, dark cabin walls, hanging chains, jagged hull damage, cold lightning-lit storm clouds, turbulent sea and a distant night city. It supplies the location, architecture, spatial layout, storm atmosphere and lighting direction, while the video frames only the local deck edge required by the action.\\n\\nsummary:\\n[reference generation] On <Subject 3>, <Subject 2> stands inside the sloping deck railing above <Subject 1>, who is already suspended outside the hull. After <Subject 2> confesses through fearful breathing that only one place remains, she deliberately pries <Subject 1>\\u2019s right hand from the rail, leaving <Subject 1> supported only by her left hand; <Subject 2> then begins forcing away that final grip as <Subject 1> hangs over open water.\\n\\nretention_analysis:\\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - Ava\\u2019s facial structure, eye proportions, nose and jaw shape, dark ponytail, body proportions, black jacket, black shirt, dark trousers, boots, wrapped knee covering and damp skin and leather rendering remain unchanged; only pose, expression, grip and body weight change for the hanging action.\\n<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - Madison\\u2019s face, light-brown wavy hair, body proportions, cream sweater, orange life vest, gray trousers, boots and wet knit and glossy-vest materials remain unchanged; tears, rapid breathing, leaning and deliberate prying motions animate the established design.\\n<Subject 3> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - the liner retains its tilted rusted hull, sloping wet deck, connected railings and stanchions, lifeboat area, storm damage, cold lightning direction, rain and turbulent-sea atmosphere, with tighter local framing replacing the reference\\u2019s wide view.\\n\\ndetailed_description:\\nThe rendering follows the observed character references: cinematic semi-realistic three-dimensional forms with each woman\\u2019s exact facial geometry, damp skin shading, layered wet hair strands and physically based clothing response. <Subject 1>\\u2019s dark leather catches cold rain light in sharp controlled highlights, while <Subject 2>\\u2019s knitted sweater and orange life vest show soft absorbent fabric and glossy wet vinyl. The storm illumination from <Subject 3> relights both characters without altering their proportions, and the character-sheet layouts, repeated figures and neutral display backgrounds are never shown.\\n\\n[Shot 1] On the sharply sloping deck of <Subject 3>, <Subject 2> stands inside the railing with her shoulders raised and her boots braced on the wet floor. She is above <Subject 1>, whose arms extend upward to grip the fixed outer rail; Ava\\u2019s torso and legs hang below the rail on the outboard side, and both boots dangle over open sea with no supporting surface beneath them. Rain streams down Madison\\u2019s face and orange vest. Her chest rises and falls in rapid panicked breathing, tears mix with rainwater, and her glistening eyes avoid looking directly down at Ava. Behind her, a panicked crowd pushes and sways around the lifeboat station, with wet coats and arms moving chaotically. The medium close shot slowly pushes toward Madison\\u2019s side profile with slight handheld shake.\\n<Subject 2> (S1) says (spoken language: en-US):\\n<d>[English] Big sister... there\\u2019s only one spot left.</d>\\n\\n[Shot 2] At 00:05.000, the cut opens in a tight close view of the connected hands and wet railing. The upper rail is attached to the sloping deck by visible stanchions; the deck ends behind Madison, the ship\\u2019s hull lies beside and behind Ava, and dark churning water is directly below Ava\\u2019s dangling boots. Ava begins with both hands gripping overhead and bearing her full weight. Madison leans over from the deck side, stabilizes her body against the slope, and deliberately peels Ava\\u2019s right fingers away from the metal one by one. Ava\\u2019s right hand loses contact and drops, while her left hand alone takes her weight. Her shoulder pulls upward and her whole body sinks a few inches under gravity. The camera stays fixed in a close pressing view and shifts slightly along the direction of Madison\\u2019s prying fingers.\\n<Subject 1> (S2) says (spoken language: en-US):\\n<d>[English] What are you doing?!</d>\\n\\n[Shot 3] At 00:07.000, a tight near profile shows <Subject 2> with rain on her face, her jaw tense and her gaze fixed downward in desperate resolve. The camera pushes in slowly, then hard-cuts between the two women into an extreme hand close-up. <Subject 1>\\u2019s released right arm hangs away from the rail while both feet remain suspended in open air. Madison\\u2019s wet hands close over Ava\\u2019s remaining left hand and deliberately lift and bend the fingers away from the fixed upper edge one at a time. The hull suddenly lurches, reducing Ava\\u2019s hold to a single trembling finger, with Madison\\u2019s forcing hand and that last grip held in the same frame. Rain runs over the metal and fabric moves with the strain, but no blood or open injury appears.\\n<Subject 2> (S1) says (spoken language: en-US):\\n<d>[English] I just want to live.</d>\\n\\noverall_soundscape:\\nTorrential rain and wind continue throughout, layered with heavy waves striking the tilted hull and water rushing below the railing. Wet clothing rubs against skin and fabric, hands squeak and scrape against rain-slick metal, and the rail gives faint strained creaks under Ava\\u2019s weight. Madison\\u2019s rapid breathing is close and shallow, while Ava makes a sharp startled gasp as her right hand releases. Behind them, panicked lifeboat shouts, rushing footsteps and impacts against deck equipment form a chaotic background. The ship groans continuously and produces a sudden deep metallic lurch in the final shot.\\n\\nnon_diegetic_music:\\nLow sustained strings and a restrained sub-bass drone sit beneath the storm, carrying dread without overpowering the dialogue. The texture thins during the hand close-up so rain, breath and friction remain exposed. At the hull\\u2019s sudden lurch, the music gives one dark swelling pulse, then fades into tense near-silence under the final held grip.\", \"width\": 1344, \"height\": 768, \"length\": 243, \"ref_images.ref_image_0\": [\"15\", 0], \"ref_images.ref_image_1\": [\"16\", 0], \"ref_images.ref_image_2\": [\"17\", 0]}}, \"6\": {\"class_type\": \"RandomNoise\", \"inputs\": {\"noise_seed\": 2310270408804917}}, \"7\": {\"class_type\": \"BasicGuider\", \"inputs\": {\"model\": [\"1\", 0], \"conditioning\": [\"5\", 0]}}, \"8\": {\"class_type\": \"KSamplerSelect\", \"inputs\": {\"sampler_name\": \"res_multistep\"}}, \"9\": {\"class_type\": \"BasicScheduler\", \"inputs\": {\"model\": [\"1\", 0], \"scheduler\": \"simple\", \"steps\": 20, \"denoise\": 1.0}}, \"10\": {\"class_type\": \"SamplerCustomAdvanced\", \"inputs\": {\"noise\": [\"6\", 0], \"guider\": [\"7\", 0], \"sampler\": [\"8\", 0], \"sigmas\": [\"9\", 0], \"latent_image\": [\"5\", 1]}}, \"11\": {\"class_type\": \"VAEDecode\", \"inputs\": {\"samples\": [\"10\", 0], \"vae\": [\"3\", 0]}}, \"12\": {\"class_type\": \"VAEDecodeAudio\", \"inputs\": {\"samples\": [\"10\", 0], \"vae\": [\"4\", 0]}}, \"13\": {\"class_type\": \"CreateVideo\", \"inputs\": {\"images\": [\"11\", 0], \"audio\": [\"12\", 0], \"fps\": 24.0, \"bit_depth\": 8}}, \"14\": {\"class_type\": \"SaveVideo\", \"inputs\": {\"video\": [\"13\", 0], \"filename_prefix\": \"Toonflow/H3_1790743283933_134093646\", \"format\": \"mp4\"}}, \"15\": {\"class_type\": \"LoadImage\", \"inputs\": {\"image\": \"toonflow_h3_1790743271289_0_820195162.jpg\"}, \"is_changed\": [\"3b9554ec84bbc6b181f6400db6861b69e8f6f9e1de83120b052c08baa30d5c4d\"]}, \"16\": {\"class_type\": \"LoadImage\", \"inputs\": {\"image\": \"toonflow_h3_1790743276082_1_717563320.jpg\"}, \"is_changed\": [\"e0d3ea6fd458004bfe567e6f8dad0816b4c920a673e71c0940df74aaaf9c5ec6\"]}, \"17\": {\"class_type\": \"LoadImage\", \"inputs\": {\"image\": \"toonflow_h3_1790743280865_2_624266502.jpg\"}, \"is_changed\": [\"b2e0a5881771c8af8fb579fe4e9a7394fca1bf4343533146722c766e8906f75e\"]}}",
+        "encoder": "Lavf62.12.102"
+      }
+    }
+  },
+  "submittedGraph": {
+    "1": {
+      "class_type": "UNETLoader",
+      "inputs": {
+        "unet_name": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+        "weight_dtype": "default"
+      }
+    },
+    "2": {
+      "class_type": "CLIPLoader",
+      "inputs": {
+        "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "type": "minimax",
+        "device": "default"
+      }
+    },
+    "3": {
+      "class_type": "VAELoader",
+      "inputs": {
+        "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+      }
+    },
+    "4": {
+      "class_type": "VAELoader",
+      "inputs": {
+        "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+      }
+    },
+    "5": {
+      "class_type": "MiniMaxH3ReferenceToVideo",
+      "inputs": {
+        "clip": [
+          "2",
+          0
+        ],
+        "vae": [
+          "3",
+          0
+        ],
+        "audio_vae": [
+          "4",
+          0
+        ],
+        "ref_image_size": "match",
+        "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, the same person shown across the face, front, side and back panels; she has dark rain-wet hair tied in a ponytail with loose strands, controlled natural eye proportions, a straight nose, defined cheek and jaw contours, damp skin with subtle highlights, a black leather jacket over a black shirt, dark cargo pants, sturdy boots and a dark blue wrapped knee covering. The sheet defines her identity, proportions, wardrobe and wet-material rendering only, not her video pose or the display rail.\n<Subject 2> is Madison from <Picture 2>, the same person shown across the face, front, side and back panels; she has shoulder-length wet light-brown wavy hair, softly rounded facial contours, the observed relatively large eye shape, a small nose, damp tear-streaked skin, a cream knitted sweater, a glossy orange life vest with black straps, gray cargo pants and brown lace-up boots. The sheet defines her identity, proportions, wardrobe and rain-wet fabric rendering only, not her video pose or neutral display background.\n<Subject 3> is the tilted ocean liner from <Picture 3>, with a rust-streaked damaged hull, sharply sloping wet deck, metal railings and stanchions, lifeboats, dark cabin walls, hanging chains, jagged hull damage, cold lightning-lit storm clouds, turbulent sea and a distant night city. It supplies the location, architecture, spatial layout, storm atmosphere and lighting direction, while the video frames only the local deck edge required by the action.\n\nsummary:\n[reference generation] On <Subject 3>, <Subject 2> stands inside the sloping deck railing above <Subject 1>, who is already suspended outside the hull. After <Subject 2> confesses through fearful breathing that only one place remains, she deliberately pries <Subject 1>’s right hand from the rail, leaving <Subject 1> supported only by her left hand; <Subject 2> then begins forcing away that final grip as <Subject 1> hangs over open water.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - Ava’s facial structure, eye proportions, nose and jaw shape, dark ponytail, body proportions, black jacket, black shirt, dark trousers, boots, wrapped knee covering and damp skin and leather rendering remain unchanged; only pose, expression, grip and body weight change for the hanging action.\n<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - Madison’s face, light-brown wavy hair, body proportions, cream sweater, orange life vest, gray trousers, boots and wet knit and glossy-vest materials remain unchanged; tears, rapid breathing, leaning and deliberate prying motions animate the established design.\n<Subject 3> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - the liner retains its tilted rusted hull, sloping wet deck, connected railings and stanchions, lifeboat area, storm damage, cold lightning direction, rain and turbulent-sea atmosphere, with tighter local framing replacing the reference’s wide view.\n\ndetailed_description:\nThe rendering follows the observed character references: cinematic semi-realistic three-dimensional forms with each woman’s exact facial geometry, damp skin shading, layered wet hair strands and physically based clothing response. <Subject 1>’s dark leather catches cold rain light in sharp controlled highlights, while <Subject 2>’s knitted sweater and orange life vest show soft absorbent fabric and glossy wet vinyl. The storm illumination from <Subject 3> relights both characters without altering their proportions, and the character-sheet layouts, repeated figures and neutral display backgrounds are never shown.\n\n[Shot 1] On the sharply sloping deck of <Subject 3>, <Subject 2> stands inside the railing with her shoulders raised and her boots braced on the wet floor. She is above <Subject 1>, whose arms extend upward to grip the fixed outer rail; Ava’s torso and legs hang below the rail on the outboard side, and both boots dangle over open sea with no supporting surface beneath them. Rain streams down Madison’s face and orange vest. Her chest rises and falls in rapid panicked breathing, tears mix with rainwater, and her glistening eyes avoid looking directly down at Ava. Behind her, a panicked crowd pushes and sways around the lifeboat station, with wet coats and arms moving chaotically. The medium close shot slowly pushes toward Madison’s side profile with slight handheld shake.\n<Subject 2> (S1) says (spoken language: en-US):\n<d>[English] Big sister... there’s only one spot left.</d>\n\n[Shot 2] At 00:05.000, the cut opens in a tight close view of the connected hands and wet railing. The upper rail is attached to the sloping deck by visible stanchions; the deck ends behind Madison, the ship’s hull lies beside and behind Ava, and dark churning water is directly below Ava’s dangling boots. Ava begins with both hands gripping overhead and bearing her full weight. Madison leans over from the deck side, stabilizes her body against the slope, and deliberately peels Ava’s right fingers away from the metal one by one. Ava’s right hand loses contact and drops, while her left hand alone takes her weight. Her shoulder pulls upward and her whole body sinks a few inches under gravity. The camera stays fixed in a close pressing view and shifts slightly along the direction of Madison’s prying fingers.\n<Subject 1> (S2) says (spoken language: en-US):\n<d>[English] What are you doing?!</d>\n\n[Shot 3] At 00:07.000, a tight near profile shows <Subject 2> with rain on her face, her jaw tense and her gaze fixed downward in desperate resolve. The camera pushes in slowly, then hard-cuts between the two women into an extreme hand close-up. <Subject 1>’s released right arm hangs away from the rail while both feet remain suspended in open air. Madison’s wet hands close over Ava’s remaining left hand and deliberately lift and bend the fingers away from the fixed upper edge one at a time. The hull suddenly lurches, reducing Ava’s hold to a single trembling finger, with Madison’s forcing hand and that last grip held in the same frame. Rain runs over the metal and fabric moves with the strain, but no blood or open injury appears.\n<Subject 2> (S1) says (spoken language: en-US):\n<d>[English] I just want to live.</d>\n\noverall_soundscape:\nTorrential rain and wind continue throughout, layered with heavy waves striking the tilted hull and water rushing below the railing. Wet clothing rubs against skin and fabric, hands squeak and scrape against rain-slick metal, and the rail gives faint strained creaks under Ava’s weight. Madison’s rapid breathing is close and shallow, while Ava makes a sharp startled gasp as her right hand releases. Behind them, panicked lifeboat shouts, rushing footsteps and impacts against deck equipment form a chaotic background. The ship groans continuously and produces a sudden deep metallic lurch in the final shot.\n\nnon_diegetic_music:\nLow sustained strings and a restrained sub-bass drone sit beneath the storm, carrying dread without overpowering the dialogue. The texture thins during the hand close-up so rain, breath and friction remain exposed. At the hull’s sudden lurch, the music gives one dark swelling pulse, then fades into tense near-silence under the final held grip.",
+        "width": 1344,
+        "height": 768,
+        "length": 243,
+        "ref_images.ref_image_0": [
+          "15",
+          0
+        ],
+        "ref_images.ref_image_1": [
+          "16",
+          0
+        ],
+        "ref_images.ref_image_2": [
+          "17",
+          0
+        ]
+      }
+    },
+    "6": {
+      "class_type": "RandomNoise",
+      "inputs": {
+        "noise_seed": 2310270408804917
+      }
+    },
+    "7": {
+      "class_type": "BasicGuider",
+      "inputs": {
+        "model": [
+          "1",
+          0
+        ],
+        "conditioning": [
+          "5",
+          0
+        ]
+      }
+    },
+    "8": {
+      "class_type": "KSamplerSelect",
+      "inputs": {
+        "sampler_name": "res_multistep"
+      }
+    },
+    "9": {
+      "class_type": "BasicScheduler",
+      "inputs": {
+        "model": [
+          "1",
+          0
+        ],
+        "scheduler": "simple",
+        "steps": 20,
+        "denoise": 1.0
+      }
+    },
+    "10": {
+      "class_type": "SamplerCustomAdvanced",
+      "inputs": {
+        "noise": [
+          "6",
+          0
+        ],
+        "guider": [
+          "7",
+          0
+        ],
+        "sampler": [
+          "8",
+          0
+        ],
+        "sigmas": [
+          "9",
+          0
+        ],
+        "latent_image": [
+          "5",
+          1
+        ]
+      }
+    },
+    "11": {
+      "class_type": "VAEDecode",
+      "inputs": {
+        "samples": [
+          "10",
+          0
+        ],
+        "vae": [
+          "3",
+          0
+        ]
+      }
+    },
+    "12": {
+      "class_type": "VAEDecodeAudio",
+      "inputs": {
+        "samples": [
+          "10",
+          0
+        ],
+        "vae": [
+          "4",
+          0
+        ]
+      }
+    },
+    "13": {
+      "class_type": "CreateVideo",
+      "inputs": {
+        "images": [
+          "11",
+          0
+        ],
+        "audio": [
+          "12",
+          0
+        ],
+        "fps": 24.0,
+        "bit_depth": 8
+      }
+    },
+    "14": {
+      "class_type": "SaveVideo",
+      "inputs": {
+        "video": [
+          "13",
+          0
+        ],
+        "filename_prefix": "Toonflow/H3_1790743283933_134093646",
+        "format": "mp4"
+      }
+    },
+    "15": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "toonflow_h3_1790743271289_0_820195162.jpg"
+      },
+      "is_changed": [
+        "3b9554ec84bbc6b181f6400db6861b69e8f6f9e1de83120b052c08baa30d5c4d"
+      ]
+    },
+    "16": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "toonflow_h3_1790743276082_1_717563320.jpg"
+      },
+      "is_changed": [
+        "e0d3ea6fd458004bfe567e6f8dad0816b4c920a673e71c0940df74aaaf9c5ec6"
+      ]
+    },
+    "17": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "toonflow_h3_1790743280865_2_624266502.jpg"
+      },
+      "is_changed": [
+        "b2e0a5881771c8af8fb579fe4e9a7394fca1bf4343533146722c766e8906f75e"
+      ]
+    }
+  },
+  "submittedPrompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, the same person shown across the face, front, side and back panels; she has dark rain-wet hair tied in a ponytail with loose strands, controlled natural eye proportions, a straight nose, defined cheek and jaw contours, damp skin with subtle highlights, a black leather jacket over a black shirt, dark cargo pants, sturdy boots and a dark blue wrapped knee covering. The sheet defines her identity, proportions, wardrobe and wet-material rendering only, not her video pose or the display rail.\n<Subject 2> is Madison from <Picture 2>, the same person shown across the face, front, side and back panels; she has shoulder-length wet light-brown wavy hair, softly rounded facial contours, the observed relatively large eye shape, a small nose, damp tear-streaked skin, a cream knitted sweater, a glossy orange life vest with black straps, gray cargo pants and brown lace-up boots. The sheet defines her identity, proportions, wardrobe and rain-wet fabric rendering only, not her video pose or neutral display background.\n<Subject 3> is the tilted ocean liner from <Picture 3>, with a rust-streaked damaged hull, sharply sloping wet deck, metal railings and stanchions, lifeboats, dark cabin walls, hanging chains, jagged hull damage, cold lightning-lit storm clouds, turbulent sea and a distant night city. It supplies the location, architecture, spatial layout, storm atmosphere and lighting direction, while the video frames only the local deck edge required by the action.\n\nsummary:\n[reference generation] On <Subject 3>, <Subject 2> stands inside the sloping deck railing above <Subject 1>, who is already suspended outside the hull. After <Subject 2> confesses through fearful breathing that only one place remains, she deliberately pries <Subject 1>’s right hand from the rail, leaving <Subject 1> supported only by her left hand; <Subject 2> then begins forcing away that final grip as <Subject 1> hangs over open water.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - Ava’s facial structure, eye proportions, nose and jaw shape, dark ponytail, body proportions, black jacket, black shirt, dark trousers, boots, wrapped knee covering and damp skin and leather rendering remain unchanged; only pose, expression, grip and body weight change for the hanging action.\n<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - Madison’s face, light-brown wavy hair, body proportions, cream sweater, orange life vest, gray trousers, boots and wet knit and glossy-vest materials remain unchanged; tears, rapid breathing, leaning and deliberate prying motions animate the established design.\n<Subject 3> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - the liner retains its tilted rusted hull, sloping wet deck, connected railings and stanchions, lifeboat area, storm damage, cold lightning direction, rain and turbulent-sea atmosphere, with tighter local framing replacing the reference’s wide view.\n\ndetailed_description:\nThe rendering follows the observed character references: cinematic semi-realistic three-dimensional forms with each woman’s exact facial geometry, damp skin shading, layered wet hair strands and physically based clothing response. <Subject 1>’s dark leather catches cold rain light in sharp controlled highlights, while <Subject 2>’s knitted sweater and orange life vest show soft absorbent fabric and glossy wet vinyl. The storm illumination from <Subject 3> relights both characters without altering their proportions, and the character-sheet layouts, repeated figures and neutral display backgrounds are never shown.\n\n[Shot 1] On the sharply sloping deck of <Subject 3>, <Subject 2> stands inside the railing with her shoulders raised and her boots braced on the wet floor. She is above <Subject 1>, whose arms extend upward to grip the fixed outer rail; Ava’s torso and legs hang below the rail on the outboard side, and both boots dangle over open sea with no supporting surface beneath them. Rain streams down Madison’s face and orange vest. Her chest rises and falls in rapid panicked breathing, tears mix with rainwater, and her glistening eyes avoid looking directly down at Ava. Behind her, a panicked crowd pushes and sways around the lifeboat station, with wet coats and arms moving chaotically. The medium close shot slowly pushes toward Madison’s side profile with slight handheld shake.\n<Subject 2> (S1) says (spoken language: en-US):\n<d>[English] Big sister... there’s only one spot left.</d>\n\n[Shot 2] At 00:05.000, the cut opens in a tight close view of the connected hands and wet railing. The upper rail is attached to the sloping deck by visible stanchions; the deck ends behind Madison, the ship’s hull lies beside and behind Ava, and dark churning water is directly below Ava’s dangling boots. Ava begins with both hands gripping overhead and bearing her full weight. Madison leans over from the deck side, stabilizes her body against the slope, and deliberately peels Ava’s right fingers away from the metal one by one. Ava’s right hand loses contact and drops, while her left hand alone takes her weight. Her shoulder pulls upward and her whole body sinks a few inches under gravity. The camera stays fixed in a close pressing view and shifts slightly along the direction of Madison’s prying fingers.\n<Subject 1> (S2) says (spoken language: en-US):\n<d>[English] What are you doing?!</d>\n\n[Shot 3] At 00:07.000, a tight near profile shows <Subject 2> with rain on her face, her jaw tense and her gaze fixed downward in desperate resolve. The camera pushes in slowly, then hard-cuts between the two women into an extreme hand close-up. <Subject 1>’s released right arm hangs away from the rail while both feet remain suspended in open air. Madison’s wet hands close over Ava’s remaining left hand and deliberately lift and bend the fingers away from the fixed upper edge one at a time. The hull suddenly lurches, reducing Ava’s hold to a single trembling finger, with Madison’s forcing hand and that last grip held in the same frame. Rain runs over the metal and fabric moves with the strain, but no blood or open injury appears.\n<Subject 2> (S1) says (spoken language: en-US):\n<d>[English] I just want to live.</d>\n\noverall_soundscape:\nTorrential rain and wind continue throughout, layered with heavy waves striking the tilted hull and water rushing below the railing. Wet clothing rubs against skin and fabric, hands squeak and scrape against rain-slick metal, and the rail gives faint strained creaks under Ava’s weight. Madison’s rapid breathing is close and shallow, while Ava makes a sharp startled gasp as her right hand releases. Behind them, panicked lifeboat shouts, rushing footsteps and impacts against deck equipment form a chaotic background. The ship groans continuously and produces a sudden deep metallic lurch in the final shot.\n\nnon_diegetic_music:\nLow sustained strings and a restrained sub-bass drone sit beneath the storm, carrying dread without overpowering the dialogue. The texture thins during the hand close-up so rain, breath and friction remain exposed. At the hull’s sudden lurch, the music gives one dark swelling pulse, then fades into tense near-silence under the final held grip.",
+  "languagePromptSnapshotMatchesSubmitted": true
+}

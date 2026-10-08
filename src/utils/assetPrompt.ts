@@ -11,6 +11,8 @@ const typeGuides: Record<AssetPromptType, string> = {
 - 第一栏只要求头部和肩胸完整，头脚完整只约束后三栏，不把全身要求施加到脸部特写。
 - 使用“同一人的四个视角”，不能写“四名视角”或暗示四个人。排版与各栏朝向只写一次。
 - 标志存在不等于每栏均可见：脸部特写不强求手臂入画，背面不强求眼角痣可见。衣袖或头发遮挡的旧伤、纹样保持遮挡，不卷袖、不新增破口，不为展示标志换装或扭转身体。
+- 设定板只绘制稳定身份和本次持续外观状态，如明确换装、发型、湿润、包扎、伤势或形变。抓栏杆、坠落、挣扎、惊惶等瞬时表情和动作，以及周围环境的海水、气泡、闪电、镜头接触物或短时投影属于剧情画面，不写入角色板；既定随身装备、配饰和明确持续附着于身体的状态效果仍须保留。
+- 使用符合本次身体和伤病条件的中性展示姿态及展示光，不能为中性站姿删除伤势、包扎、遮挡或明确身体限制，也不新增未经授权的支撑物。剧情场景光照不覆盖角色固有色与展示灯光。
 - 用户没有给出精确身高时，不要自行编造“168cm/180cm”等精确数值；用七头身、修长、挺拔等相对视觉比例表达即可。
 - 头顶与脚底完整入画只约束后三栏；独立视角工作流的每个子任务只画一个角色的一种视角，最终再拼成展示板，不能要求每个子任务重复四栏。
 - 最后用一句话约束无文字、无水印、无 logo。
@@ -46,7 +48,7 @@ const commonContract = `
 1. 如果明确身份/状态冲突或父角色身份依据缺失而无法从输入解决，只返回 ASSET_REVIEW_REQUIRED: 加简短原因，调用方将作为内部审核信息处理；不能编造可绘制正文。其余情况只输出最终提示词正文。不要输出 Markdown 标题、代码块、表格、字段名、分析过程、解释、备注、方案或“提示词：”前缀。
 2. 以连贯、明确的中文自然语言为主，用短语补充风格、色彩、材质、光影、构图；英文仅保留确实能提高识别精度的专业词，不做逐句中英双写。
 3. 同一事实只写一次。同义的风格词、材质词、光影词、完整入画要求、一致性要求和交付边界不得反复堆叠。不要为了强调而连续重复“3D渲染/PBR/高精度建模/电影级光影”等概念。
-4. 信息优先级：全局内容表现约束 > 原有身份/外貌/标志性特征/服装/状态 > 视觉手册风格约束 > 风格默认值。身份与剧情因果不变，但红色血液、红色伤口及血色环境必须按全局规则改编；同步修正反射和反弹光，不能以“忠实保留颜色”恢复红色血液。非伤口的红衣、红灯、红瞳、自然唇色等明确特征仍须保留。
+4. 先按资产类型区分生效身份、持续外观状态和镜头语境；剧情动作、瞬时表情、接触物与短时环境光不因出现在角色描述中就成为设定板内容，场景和道具按各自类型规则保留必要内容。信息优先级：全局内容表现约束 > 本次生效的身份/外貌/标志性特征/服装/持续状态 > 视觉手册风格约束 > 风格默认值。身份与剧情因果不变，但红色血液、红色伤口及血色环境必须按全局规则改编；同步修正反射和反弹光，不能以“忠实保留颜色”恢复红色血液。非伤口的红衣、红灯、红瞳、自然唇色等明确特征仍须保留。
 5. 不要无依据新增精确数字、颜色、朝代、饰品、痣、伤疤、花纹、天气等事实。尤其当用户没有提供精确身高时，不要自行编造厘米数。
 6. 把“主体内容”写清楚后再写美学与构图，不要先堆一长串质量标签。对图片模型来说，主体、关系、位置、视角和一致性高于标签数量。
 7. 风格、造型、材质和灯光必须使用可见、可执行的正向描述建立。交付边界只处理文字、水印、裁切、结构错误等基础缺陷，不得用大量负面词代替正向视觉设计，也不生成单独的 Negative Prompt 区块。
@@ -73,12 +75,26 @@ ${label}名称：${name}
 ${label}描述：${describe}`;
 }
 
+/** Use only the selected style's design guidance when establishing asset facts. */
+export function buildAssetExtractionArtContext(prefix: string): string {
+  const design = prefix.replace(/^---[\s\S]*?---\s*/u, "")
+    .split(/(?=^#{1,6}[ \t]+\S)/m)
+    .filter(section => !/^#{1,6}[ \t]+.*(?:格式|输出|风格锚点|视频|分镜|镜头|参数)/u.test(section.trim()))
+    .join("\n")
+    .split(/\r?\n/)
+    .filter(line => !/四栏|四宫格|展示板|拼板|视图布局|排版|Picture|Subject|分镜|视频|^#{1,6}[ \t]+.*展示/iu.test(line))
+    .join("\n")
+    .replace(/[^\n。]*最终提示词[^\n。]*(?:。|$)/gu, "").trim();
+  if (!design) return "";
+  return `项目当前美术设计方向（仅指导未规定外观的设计补全，不是新增剧情事实）：\n${design}\n提取 desc 仍只记录该资产的稳定可见设计。不要把画风名称、渲染媒介、展示背景、展示灯光、排版或下游生成指令写成身份与场景事实；剧本明确的年龄、时代、地点、衣装和状态优先。`;
+}
+
 const roleGenerationLayout = `CHARACTER TURNAROUND SHEET, ONE SAME CHARACTER, exactly four panels in one horizontal row.
 Panel 1: straight-on head-and-shoulders portrait, full head visible.
 Panel 2: full-body front view.
 Panel 3: full-body strict 90-degree left side view.
 Panel 4: full-body straight back view.
-All full-body panels show the entire body with aligned feet. Keep exactly the same identity, hairstyle, body proportions, outfit, colors and accessories across all panels. Uncluttered background and readable lighting following the selected project style and design facts. No cropped head, no cropped feet, no extra characters, no text, no labels, no watermark.`;
+All full-body panels show the entire body with aligned feet. Keep exactly the same identity, hairstyle, body proportions, outfit, colors and accessories across all panels. Use neutral presentation poses compatible with the defined anatomy and injury limitations. Preserve the current sustained appearance changes, injuries, coverings, outfit, accessories and attached persistent state effects. Scene actions, momentary expressions, scene contact objects, surrounding scene water, bubbles, lightning and temporary projections belong to shots rather than this character sheet; do not remove explicitly defined body structure, costume, accessories or attached persistent state effects. Uncluttered background and readable display lighting following the selected project style; keep intrinsic colors readable rather than copying temporary scene lighting. No cropped head, no cropped feet, no extra characters, no text, no labels, no watermark.`;
 
 /**
  * Adds a short, unambiguous layout contract at the beginning of the runtime

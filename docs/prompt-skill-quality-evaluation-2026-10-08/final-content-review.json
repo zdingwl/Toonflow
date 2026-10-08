@@ -1,0 +1,134 @@
+{
+  "scope": "Independent read-only review of existing isolated base-prompt outputs and their saved source input; no generation, code or production database changes.",
+  "reviewedVersion": "after-verified",
+  "verdict": "FORMAT_AND_CORE_IDENTITY_PASS_CAMERA_PRESERVATION_PARTIAL",
+  "productionVideoQualityVerified": false,
+  "versions": {
+    "before": {
+      "file": "D:\\Toonflow-app-master\\docs\\prompt-skill-quality-evaluation-2026-10-08\\video16-before.md",
+      "sha256": "0c2e68a2e7ef2cd4bee2bf19f9550e49c54b9674a44092cddacae896667faeab",
+      "words": 628,
+      "formatErrors": [
+        "H3 提示词格式：六段说明必须用英文；中文仅可保留在对白或明确引用的可见文字中"
+      ],
+      "actorAndSpeakerMapping": "PASS",
+      "usableAsFinalContentPass": false
+    },
+    "after": {
+      "file": "D:\\Toonflow-app-master\\docs\\prompt-skill-quality-evaluation-2026-10-08\\video16-after.md",
+      "sha256": "3a07e861230889702a66ee9dce2e2ba24c7b7f44e0db1c51e86d1de72b3a87d1",
+      "words": 348,
+      "formatErrors": [
+        "H3 提示词格式：Shot 2 应以 [Shot 2] At MM:SS.mmm, 开始"
+      ],
+      "actorAndSpeakerMapping": "FAIL",
+      "usableAsFinalContentPass": false
+    },
+    "after-refined": {
+      "file": "D:\\Toonflow-app-master\\docs\\prompt-skill-quality-evaluation-2026-10-08\\video16-after-refined.md",
+      "sha256": "c55bba1ce3058587ff40670b5c9f320e71c60073579e3f9fad49aebbe804b604",
+      "words": 377,
+      "formatErrors": [],
+      "actorAndSpeakerMapping": "FAIL",
+      "usableAsFinalContentPass": false
+    },
+    "after-final": {
+      "file": "D:\\Toonflow-app-master\\docs\\prompt-skill-quality-evaluation-2026-10-08\\video16-after-final.md",
+      "sha256": "8d2d5792e0addea12eb9baa18f5c8c536a055d1e58cfd8f9a639fa3838c3bffa",
+      "words": 423,
+      "formatErrors": [],
+      "actorAndSpeakerMapping": "PASS",
+      "usableAsFinalContentPass": false
+    },
+    "after-verified": {
+      "file": "D:\\Toonflow-app-master\\docs\\prompt-skill-quality-evaluation-2026-10-08\\video16-after-verified.md",
+      "sha256": "77cb14c0cc6832abe5379d4917f8aa8331b03236bb0b0f930b02852017e96a05",
+      "words": 425,
+      "formatErrors": [],
+      "actorAndSpeakerMapping": "PASS",
+      "usableAsFinalContentPass": false
+    }
+  },
+  "fixedActorMap": {
+    "Subject 1": {
+      "assetId": 202,
+      "picture": 1,
+      "identityName": "艾娃",
+      "storyRole": "悬挂者/被掰手指/第二句说话人"
+    },
+    "Subject 2": {
+      "assetId": 205,
+      "picture": 2,
+      "identityName": "麦迪逊",
+      "storyRole": "甲板施力者/第一和第三句说话人"
+    }
+  },
+  "preservedInVerified": [
+    {
+      "fact": "麦迪逊在甲板施力，艾娃悬挂；右手被逐指掰开、释放后左手承重，最终只剩左手一指。",
+      "evidence": "after-verified summary and Shot 2/3 use Subject 2 as actor and Subject 1 as target."
+    },
+    {
+      "fact": "三句对白文字、事件顺序及实际人物归属正确。",
+      "evidence": "Subject 2 (S1): 姐姐……位置只有一个 / Subject 1 (S2): 你干什么？！ / Subject 2 (S1): 我只是想活。"
+    },
+    {
+      "fact": "5秒与7秒分镜边界、手部同框、右手已释放与双脚悬空、最后一指、船体突然倾斜。",
+      "evidence": "Shot headings 00:05.000 and 00:07.000; Shot 3 explicit loose right hand, dangling feet, final finger and same frame."
+    },
+    {
+      "fact": "半写实三维国漫、真实材质和电影灯光目标明确，未要求放大眼睛或改脸。",
+      "evidence": "Cinematic semi-realistic 3D animation with Chinese donghua production finish, physically based materials, and film lighting."
+    },
+    {
+      "fact": "未新增背景音乐。",
+      "evidence": "non_diegetic_music: none; source storyboard has no BGM requirement."
+    }
+  ],
+  "residuals": [
+    {
+      "severity": "P1",
+      "sourceRow": 5,
+      "source": "固定压近，跟随手指施力方向微移",
+      "afterFinal": "Only Close-up is specified; no fixed pressing framing or camera micro-movement.",
+      "afterVerified": "Still only Close-up on the hands and railing; camera instruction is missing.",
+      "status": "MISSING"
+    },
+    {
+      "severity": "P1",
+      "sourceRow": 6,
+      "source": "缓慢推近，在两双手之间硬切衔接",
+      "afterFinal": "Close-up of profile and hands; no slow push or explicit hard cut.",
+      "afterVerified": "Close-up transitioning to a hand detail; no explicit slow push or hard cut, nor separate shot compiling the internal source cut.",
+      "status": "PARTIAL",
+      "attribution": "This cut is already supplied by the source storyboard, not invented by the video writer."
+    },
+    {
+      "severity": "P2",
+      "sourceRow": 4,
+      "source": "麦迪逊位置高于船外悬吊的艾娃；身后救生位被慌乱人群挤动",
+      "afterFinal": "Explicitly preserves higher than suspended Subject 1; pushes and shoves near lifeboat area.",
+      "afterVerified": "Writes positioned above the railing instead; suspended Subject 1 first described in Shot 2; crowd pressure softened to shuffles.",
+      "status": "WEAKENED"
+    }
+  ],
+  "failureHistory": [
+    {
+      "version": "before",
+      "reason": "Chinese metadata names in English section prose fail the format guard; identity/action/speaker mapping is correct, but BGM is invented."
+    },
+    {
+      "version": "after",
+      "reason": "Missing mandatory timestamp comma plus complete action/speaker identity reversal despite correct Picture definitions."
+    },
+    {
+      "version": "after-refined",
+      "reason": "Format errors empty, but Subject 1/2 action and dialogue roles still reversed. This is a semantic FAIL and cannot serve as final PASS evidence."
+    }
+  ],
+  "limits": [
+    "One source segment, one model and seed, temperature 0.3, reasoning disabled; this is an isolated text comparison rather than the full normal generation/retry/localization pipeline.",
+    "Empty formatErrors prove the exercised structural/reference checks passed, not preservation of camera meaning or rendered video quality.",
+    "Only saved existing reference hashes are compared; no video render, audio listen or production asset/prompt overwrite was performed."
+  ]
+}

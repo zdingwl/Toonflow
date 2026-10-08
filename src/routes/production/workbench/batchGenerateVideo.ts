@@ -46,6 +46,7 @@ export default router.post("/", validateFields({
     })),
     language: dialogueLanguageSchema.optional(),
     trackId: z.number(), prompt: z.string(), duration: z.number(),
+    audio: z.boolean().optional(), resolution: z.string().optional(), aspectRatio: z.enum(["16:9", "9:16"]).optional(),
   })),
   model: z.string(), mode: z.string(), resolution: z.string(), audio: z.boolean().optional(),
 }), async (req, res) => {
@@ -61,14 +62,14 @@ export default router.post("/", validateFields({
   // Preflight ALL tracks BEFORE creating any video row; never start a batch with
   // a role + mutually-exclusive derivative or a prompt with mismatched Picture indices.
   let validationTracks: { trackId: number; language?: string; valid: boolean; pictureCount?: number; referenceCount?: number; reason?: string }[] = [];
-  let prepared: { trackId: number; prompt: string; duration: number; referenceList: ReferenceList[]; language?: string }[];
+  let prepared: { trackId: number; prompt: string; duration: number; referenceList: ReferenceList[]; language?: string; audio?: boolean; resolution: string; aspectRatio: "16:9" | "9:16" }[];
   try {
     const preparationResults = await Promise.allSettled(
-      (trackData as { uploadData: UploadItem[]; trackId: number; prompt: string; duration: number; language?: string }[]).map(async track => {
+      (trackData as { uploadData: UploadItem[]; trackId: number; prompt: string; duration: number; language?: string; audio?: boolean; resolution?: string; aspectRatio?: "16:9" | "9:16" }[]).map(async track => {
         const ownedTrack = await u.db("o_videoTrack").where({ id: track.trackId, projectId, scriptId }).first();
         if (!ownedTrack) throw new Error("视频段不存在");
         try {
-          track.prompt = await resolveLanguagePrompt(languageDb, track.trackId, track.language, track.prompt, audio);
+          track.prompt = await resolveLanguagePrompt(languageDb, track.trackId, track.language, track.prompt, track.audio ?? audio);
           await assertStoryboardPromptFresh(u.db, projectId, track.trackId, track.prompt);
           const resolved = await Promise.all(track.uploadData.map(async (item): Promise<ResolvedReference | null> => {
             if (item.sources === "storyboard") {
@@ -123,7 +124,8 @@ export default router.post("/", validateFields({
             };
           }));
           if (h3 && loaded.some(item => !item)) throw new Error("H3 参考素材缺失：不能跳过某个 Picture 槽位继续生成");
-          return { language: track.language, trackId: track.trackId, prompt: track.prompt, duration: track.duration, referenceList: loaded.filter(Boolean) as ReferenceList[] };
+          return { language: track.language, trackId: track.trackId, prompt: track.prompt, duration: track.duration, referenceList: loaded.filter(Boolean) as ReferenceList[],
+            audio: track.audio ?? audio, resolution: track.resolution || resolution, aspectRatio: track.aspectRatio || (ratio?.videoRatio as "16:9" | "9:16") || "16:9" };
         } catch (cause) {
           const reason = "视频参考检查失败：" + u.error(cause).message;
           if (!validateOnly) await u.db("o_videoTrack").where({ id: track.trackId, projectId, scriptId }).update({ state: "生成失败", reason });
@@ -156,14 +158,14 @@ export default router.post("/", validateFields({
   }));
   res.status(200).send(success(tasks.map(item => ({ videoId: item.videoId, trackId: item.trackId, language: item.language }))));
 
-  const runTask = async ({ videoId, videoPath, prompt, duration, referenceList }: (typeof tasks)[number]) => {
+  const runTask = async ({ videoId, videoPath, prompt, duration, referenceList, audio, resolution, aspectRatio }: (typeof tasks)[number]) => {
     try {
       const relatedObjects = { projectId, videoId, scriptId, type: "视频" };
       const aiVideo = u.Ai.Video(model);
       await aiVideo.run({
         prompt, referenceList,
         mode: modeData.length > 0 ? modeData : mode,
-        duration, aspectRatio: (ratio?.videoRatio as "16:9" | "9:16") || "16:9", resolution, audio,
+        duration, aspectRatio, resolution, audio,
       }, { projectId, taskClass: "视频生成", describe: "根据提示词生成视频", relatedObjects: JSON.stringify(relatedObjects) });
       await aiVideo.save(videoPath);
       await u.db("o_video").where("id", videoId).update({ state: "生成成功", errorReason: null, ...(await inspectVideoQuality(videoPath)) });

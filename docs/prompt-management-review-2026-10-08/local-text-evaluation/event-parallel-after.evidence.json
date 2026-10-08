@@ -1,0 +1,47 @@
+{
+  "name": "event-parallel-after",
+  "scenario": "parallel",
+  "version": "after",
+  "systemSource": "data/modelPrompt/system/eventExtraction.md",
+  "startedAt": "2026-10-08T06:33:04.113Z",
+  "completedAt": "2026-10-08T06:34:00.785Z",
+  "endpoint": "http://127.0.0.1:11434/api/chat",
+  "parameters": {
+    "model": "QWEN3.8:27b",
+    "stream": false,
+    "think": false,
+    "options": {
+      "temperature": 0.3,
+      "seed": 42,
+      "num_ctx": 8192,
+      "num_predict": 512
+    }
+  },
+  "inputMetadata": {
+    "chapterIndex": 7,
+    "reel": "卷一",
+    "chapter": "两条未汇合的线"
+  },
+  "expected": [
+    "保留借款请求尚无答复且未取得资金",
+    "保留独立的程川仓库上锁与记录事件",
+    "不虚构两条线交汇或合作结果"
+  ],
+  "sha256": {
+    "system": "92ee8eaff549a7c1d66bde1e647956d0a82b94cba46b773d19c5fa278f427388",
+    "input": "2259673090e86f90a9acd048a84ec4fe0d885daf1821b7dcb390e4ff8d8f315e",
+    "request": "dc6e4de4a30c2dcbaa46f89715b7fb9080be116e468f6669e7f11c26d52681f4",
+    "rawResponse": "e5349ea8b882176f08e297aec83270a3b63d2d0aee7a11f717dbe80b67ec096e",
+    "output": "64807ecf824e343a4c4f366b6a8808ac5051e946890d8785a49fe7944324f3f2"
+  },
+  "output": "| 第7章 两条未汇合的线 | 林海、陈禾、程川 | 林海向陈禾借款五万元未获答复；程川发现仓库被物业上锁并拍照，未联系林海，两线未汇合 | 中（双线并行） | 中 | 35秒 | 悬疑+平铺 |",
+  "done": true,
+  "doneReason": "stop",
+  "evalCount": 77,
+  "evalDuration": 14022988000,
+  "totalDuration": 56667422300,
+  "thinking": "",
+  "productionDatabaseWrites": false,
+  "applicationRoutesUsed": false,
+  "cloudRequests": false
+}

@@ -1,0 +1,1036 @@
+TAP version 13
+# Subtest: ordinary extraction reuses descriptions, images and IDs without invoking redesign
+ok 1 - ordinary extraction reuses descriptions, images and IDs without invoking redesign
+  ---
+  duration_ms: 59.7093
+  type: 'test'
+  ...
+# Subtest: refresh designs once across episodes, includes unselected linked episodes, keeps IDs/images/derivatives and versions history
+ok 2 - refresh designs once across episodes, includes unselected linked episodes, keeps IDs/images/derivatives and versions history
+  ---
+  duration_ms: 23.1053
+  type: 'test'
+  ...
+# Subtest: failed design or forged evidence leaves all descriptions and associations intact
+ok 3 - failed design or forged evidence leaves all descriptions and associations intact
+  ---
+  duration_ms: 31.5728
+  type: 'test'
+  ...
+# Subtest: apartment evidence is copied from numbered source spans, preserving punctuation and whitespace
+ok 4 - apartment evidence is copied from numbered source spans, preserving punctuation and whitespace
+  ---
+  duration_ms: 11.9409
+  type: 'test'
+  ...
+# Subtest: invalid source reference receives bounded correction without relaxing grounding
+ok 5 - invalid source reference receives bounded correction without relaxing grounding
+  ---
+  duration_ms: 13.6196
+  type: 'test'
+  ...
+# Subtest: new same-name different-type asset is created once and an existing name returned as new still respects reuse mode
+ok 6 - new same-name different-type asset is created once and an existing name returned as new still respects reuse mode
+  ---
+  duration_ms: 9.2346
+  type: 'test'
+  ...
+# Subtest: out-of-scope IDs and concurrent edits cannot overwrite data
+ok 7 - out-of-scope IDs and concurrent edits cannot overwrite data
+  ---
+  duration_ms: 9.8904
+  type: 'test'
+  ...
+# Subtest: scene numbers mistaken for script IDs retry before any design or persistence
+ok 8 - scene numbers mistaken for script IDs retry before any design or persistence
+  ---
+  duration_ms: 9.8109
+  type: 'test'
+  ...
+# Subtest: re-extraction drops background-role links without deleting saved assets or images
+ok 9 - re-extraction drops background-role links without deleting saved assets or images
+  ---
+  duration_ms: 15.2315
+  type: 'test'
+  ...
+# Subtest: prompt writer and auditor use current database facts and explicit redesign fields, stale completion cannot overwrite a newer description
+ok 10 - prompt writer and auditor use current database facts and explicit redesign fields, stale completion cannot overwrite a newer description
+  ---
+  duration_ms: 24.857
+  type: 'test'
+  ...
+# Subtest: user constraints are carried forward; historical descriptions remain unknown-source
+ok 11 - user constraints are carried forward; historical descriptions remain unknown-source
+  ---
+  duration_ms: 10.74
+  type: 'test'
+  ...
+# Subtest: valid empty discovery completes once without forcing an asset, migrations are idempotent
+ok 12 - valid empty discovery completes once without forcing an asset, migrations are idempotent
+  ---
+  duration_ms: 8.938
+  type: 'test'
+  ...
+# Subtest: reported shark blood-water adaptation conflict is corrected from source before saving
+ok 13 - reported shark blood-water adaptation conflict is corrected from source before saving
+  ---
+  duration_ms: 10.05
+  type: 'test'
+  ...
+# Subtest: real identity conflicts survive the single recheck and preserve the previous data
+ok 14 - real identity conflicts survive the single recheck and preserve the previous data
+  ---
+  duration_ms: 28.2568
+  type: 'test'
+  ...
+# Subtest: malformed model results provide schema feedback on retry and name the failing asset
+ok 15 - malformed model results provide schema feedback on retry and name the failing asset
+  ---
+  duration_ms: 9.0494
+  type: 'test'
+  ...
+# Subtest: batch size five sends five then two scripts, not twenty-five; a derivative reference is never redesigned
+ok 16 - batch size five sends five then two scripts, not twenty-five; a derivative reference is never redesigned
+  ---
+  duration_ms: 8.7036
+  type: 'test'
+  ...
+# Subtest: the selected real 3D prefix contributes design rather than image/video output templates
+ok 17 - the selected real 3D prefix contributes design rather than image/video output templates
+  ---
+  duration_ms: 2.1344
+  type: 'test'
+  ...
+# Subtest: synthetic prefix retains its design while discarding metadata, layout and output/video sections
+ok 18 - synthetic prefix retains its design while discarding metadata, layout and output/video sections
+  ---
+  duration_ms: 0.4475
+  type: 'test'
+  ...
+# Subtest: separate selections do not reuse another style's design context
+ok 19 - separate selections do not reuse another style's design context
+  ---
+  duration_ms: 0.5377
+  type: 'test'
+  ...
+# Subtest: empty or template-only input adds no invented design context
+ok 20 - empty or template-only input adds no invented design context
+  ---
+  duration_ms: 0.2293
+  type: 'test'
+  ...
+# Subtest: selected 3D manual reaches both writer and auditor while old images retain identity only
+ok 21 - selected 3D manual reaches both writer and auditor while old images retain identity only
+  ---
+  duration_ms: 47.3202
+  type: 'test'
+  ...
+# Subtest: asset context rejects wrong project or asset type and a parent from another project
+ok 22 - asset context rejects wrong project or asset type and a parent from another project
+  ---
+  duration_ms: 7.01
+  type: 'test'
+  ...
+# Subtest: first base design may generate without an image, but derivative role requires a parent image
+ok 23 - first base design may generate without an image, but derivative role requires a parent image
+  ---
+  duration_ms: 5.0199
+  type: 'test'
+  ...
+# Subtest: context carries independent child states and derivative parent identity
+ok 24 - context carries independent child states and derivative parent identity
+  ---
+  duration_ms: 3.1273
+  type: 'test'
+  ...
+# Subtest: receipt image override loads the previous selected sheet instead of pending image or stale crops
+ok 25 - receipt image override loads the previous selected sheet instead of pending image or stale crops
+  ---
+  duration_ms: 2.3294
+  type: 'test'
+  ...
+# Subtest: derivative writer and audit use parent facts without copying the old erroneous output
+ok 26 - derivative writer and audit use parent facts without copying the old erroneous output
+  ---
+  duration_ms: 2.7621
+  type: 'test'
+  ...
+# Subtest: derivative candidate review compares the parent and new candidate, not an old derivative
+ok 27 - derivative candidate review compares the parent and new candidate, not an old derivative
+  ---
+  duration_ms: 3.1002
+  type: 'test'
+  ...
+# Subtest: failed consistency audit gets one repair and cannot return a savable prompt if still failing
+ok 28 - failed consistency audit gets one repair and cannot return a savable prompt if still failing
+  ---
+  duration_ms: 3.5869
+  type: 'test'
+  ...
+# Subtest: Markdown output is repaired into plain drawing instructions before audit
+ok 29 - Markdown output is repaired into plain drawing instructions before audit
+  ---
+  duration_ms: 2.951
+  type: 'test'
+  ...
+# Subtest: explicit review-required output and malformed audit fail closed
+ok 30 - explicit review-required output and malformed audit fail closed
+  ---
+  duration_ms: 3.8524
+  type: 'test'
+  ...
+# Subtest: explicit wardrobe overrides an old selected image and occluded marks need not appear in every view
+ok 31 - explicit wardrobe overrides an old selected image and occluded marks need not appear in every view
+  ---
+  duration_ms: 4.3022
+  type: 'test'
+  ...
+# Subtest: repeated malformed audit is bounded and cannot replace a saved prompt
+ok 32 - repeated malformed audit is bounded and cannot replace a saved prompt
+  ---
+  duration_ms: 4.2032
+  type: 'test'
+  ...
+# Subtest: a length-truncated audit must be retried even when its text parses
+ok 33 - a length-truncated audit must be retried even when its text parses
+  ---
+  duration_ms: 3.5039
+  type: 'test'
+  ...
+# Subtest: candidate image review rejects inconsistency and preserves selected asset and image rows
+ok 34 - candidate image review rejects inconsistency and preserves selected asset and image rows
+  ---
+  duration_ms: 4.0915
+  type: 'test'
+  ...
+# Subtest: oversized reference sheets are bounded for vision without changing the original image
+ok 35 - oversized reference sheets are bounded for vision without changing the original image
+  ---
+  duration_ms: 224.7065
+  type: 'test'
+  ...
+# Subtest: asset writer keeps complete role design separate from short video bindings
+ok 36 - asset writer keeps complete role design separate from short video bindings
+  ---
+  duration_ms: 3.9184
+  type: 'test'
+  ...
+# Subtest: asset writer keeps complete scene design separate from short video bindings
+ok 37 - asset writer keeps complete scene design separate from short video bindings
+  ---
+  duration_ms: 3.5385
+  type: 'test'
+  ...
+# Subtest: asset writer keeps complete tool design separate from short video bindings
+ok 38 - asset writer keeps complete tool design separate from short video bindings
+  ---
+  duration_ms: 3.7217
+  type: 'test'
+  ...
+# Subtest: asset manuals retain same-state full designs, explicit multi-view exceptions and meaningful derivatives
+ok 39 - asset manuals retain same-state full designs, explicit multi-view exceptions and meaningful derivatives
+  ---
+  duration_ms: 0.7639
+  type: 'test'
+  ...
+# Subtest: Qwen four-view provider is asset-driven rather than hardcoded to the sample Kor character
+ok 40 - Qwen four-view provider is asset-driven rather than hardcoded to the sample Kor character
+  ---
+  duration_ms: 1.3015
+  type: 'test'
+  ...
+# Subtest: character prompt and code use the same four canonical positions
+ok 41 - character prompt and code use the same four canonical positions
+  ---
+  duration_ms: 0.5967
+  type: 'test'
+  ...
+# Subtest: scene prompt contracts keep reusable environment plates free of independent subjects
+ok 42 - scene prompt contracts keep reusable environment plates free of independent subjects
+  ---
+  duration_ms: 1.0373
+  type: 'test'
+  ...
+# Subtest: asset design skill applies differentiated adult lead aesthetics without sexualizing unknown ages
+ok 43 - asset design skill applies differentiated adult lead aesthetics without sexualizing unknown ages
+  ---
+  duration_ms: 0.6614
+  type: 'test'
+  ...
+# Subtest: realistic_3d_anime asset manuals use the project 3D medium and Qwen observable-description structure
+ok 44 - realistic_3d_anime asset manuals use the project 3D medium and Qwen observable-description structure
+  ---
+  duration_ms: 0.7376
+  type: 'test'
+  ...
+# Subtest: Qwen four-view provider removes layout sentences from every single-view prompt
+ok 45 - Qwen four-view provider removes layout sentences from every single-view prompt
+  ---
+  duration_ms: 62.8918
+  type: 'test'
+  ...
+# Subtest: Qwen route sends per-asset facts and optional style reference without the generic layout contract
+ok 46 - Qwen route sends per-asset facts and optional style reference without the generic layout contract
+  ---
+  duration_ms: 0.5857
+  type: 'test'
+  ...
+# Subtest: scripted changed eye color is allowed as a derivative state
+ok 47 - scripted changed eye color is allowed as a derivative state
+  ---
+  duration_ms: 0.2475
+  type: 'test'
+  ...
+# Subtest: H3 prompt and storyboard skill require state-safe references and duration preflight
+ok 48 - H3 prompt and storyboard skill require state-safe references and duration preflight
+  ---
+  duration_ms: 0.745
+  type: 'test'
+  ...
+# Subtest: valid single candidate commits only after the model finishes and constrains the tool to current-project parent audio IDs
+ok 49 - valid single candidate commits only after the model finishes and constrains the tool to current-project parent audio IDs
+  ---
+  duration_ms: 171.35
+  type: 'test'
+  ...
+# Subtest: no suitable candidate reports failure and preserves every existing binding
+ok 50 - no suitable candidate reports failure and preserves every existing binding
+  ---
+  duration_ms: 25.5974
+  type: 'test'
+  ...
+# Subtest: no tool call reports failure and preserves every existing binding
+ok 51 - no tool call reports failure and preserves every existing binding
+  ---
+  duration_ms: 23.8521
+  type: 'test'
+  ...
+# Subtest: duplicate same result reports failure and preserves every existing binding
+ok 52 - duplicate same result reports failure and preserves every existing binding
+  ---
+  duration_ms: 20.3895
+  type: 'test'
+  ...
+# Subtest: conflicting duplicate results reports failure and preserves every existing binding
+ok 53 - conflicting duplicate results reports failure and preserves every existing binding
+  ---
+  duration_ms: 25.9247
+  type: 'test'
+  ...
+# Subtest: invented candidate reports failure and preserves every existing binding
+ok 54 - invented candidate reports failure and preserves every existing binding
+  ---
+  duration_ms: 28.9563
+  type: 'test'
+  ...
+# Subtest: other project's candidate reports failure and preserves every existing binding
+ok 55 - other project's candidate reports failure and preserves every existing binding
+  ---
+  duration_ms: 19.7984
+  type: 'test'
+  ...
+# Subtest: audio child instead of candidate parent reports failure and preserves every existing binding
+ok 56 - audio child instead of candidate parent reports failure and preserves every existing binding
+  ---
+  duration_ms: 20.4943
+  type: 'test'
+  ...
+# Subtest: role ID instead of audio candidate reports failure and preserves every existing binding
+ok 57 - role ID instead of audio candidate reports failure and preserves every existing binding
+  ---
+  duration_ms: 16.1699
+  type: 'test'
+  ...
+# Subtest: omitted audioId reports failure and preserves every existing binding
+ok 58 - omitted audioId reports failure and preserves every existing binding
+  ---
+  duration_ms: 16.165
+  type: 'test'
+  ...
+# Subtest: array instead of scalar reports failure and preserves every existing binding
+ok 59 - array instead of scalar reports failure and preserves every existing binding
+  ---
+  duration_ms: 13.6511
+  type: 'test'
+  ...
+# Subtest: string instead of number reports failure and preserves every existing binding
+ok 60 - string instead of number reports failure and preserves every existing binding
+  ---
+  duration_ms: 14.2425
+  type: 'test'
+  ...
+# Subtest: fractional ID reports failure and preserves every existing binding
+ok 61 - fractional ID reports failure and preserves every existing binding
+  ---
+  duration_ms: 15.9858
+  type: 'test'
+  ...
+# Subtest: zero ID reports failure and preserves every existing binding
+ok 62 - zero ID reports failure and preserves every existing binding
+  ---
+  duration_ms: 21.9797
+  type: 'test'
+  ...
+# Subtest: unexpected result field reports failure and preserves every existing binding
+ok 63 - unexpected result field reports failure and preserves every existing binding
+  ---
+  duration_ms: 16.982
+  type: 'test'
+  ...
+# Subtest: model failure after a valid tool submission preserves the prior binding
+ok 64 - model failure after a valid tool submission preserves the prior binding
+  ---
+  duration_ms: 14.958
+  type: 'test'
+  ...
+# Subtest: an additional invalid tool call that the SDK did not execute still rejects the whole response
+ok 65 - an additional invalid tool call that the SDK did not execute still rejects the whole response
+  ---
+  duration_ms: 13.8033
+  type: 'test'
+  ...
+# Subtest: an unrecognised tool call in the response cannot commit a collected result
+ok 66 - an unrecognised tool call in the response cannot commit a collected result
+  ---
+  duration_ms: 12.9557
+  type: 'test'
+  ...
+# Subtest: failed replacement insert rolls back removal of the old binding
+ok 67 - failed replacement insert rolls back removal of the old binding
+  ---
+  duration_ms: 11.3036
+  type: 'test'
+  ...
+# Subtest: different roles can select the same candidate and custom prompt overrides remain effective
+ok 68 - different roles can select the same candidate and custom prompt overrides remain effective
+  ---
+  duration_ms: 18.5519
+  type: 'test'
+  ...
+# Subtest: a non-character target cannot replace its binding even if a valid audio ID is submitted
+ok 69 - a non-character target cannot replace its binding even if a valid audio ID is submitted
+  ---
+  duration_ms: 13.9787
+  type: 'test'
+  ...
+# Subtest: an empty candidate list returns an error without invoking a model or changing bindings or status
+ok 70 - an empty candidate list returns an error without invoking a model or changing bindings or status
+  ---
+  duration_ms: 20.3245
+  type: 'test'
+  ...
+# Subtest: a missing managed prompt falls back to the canonical file through the shared system entry
+ok 71 - a missing managed prompt falls back to the canonical file through the shared system entry
+  ---
+  duration_ms: 13.4083
+  type: 'test'
+  ...
+# Subtest: instruction-like names and descriptions stay in JSON source data and cannot become additional messages
+ok 72 - instruction-like names and descriptions stay in JSON source data and cannot become additional messages
+  ---
+  duration_ms: 14.655
+  type: 'test'
+  ...
+# Subtest: 事件提取保留原有合法七字段正文及成功回调
+ok 73 - 事件提取保留原有合法七字段正文及成功回调
+  ---
+  duration_ms: 5.8119
+  type: 'test'
+  ...
+# Subtest: 事件提取沿用useData优先级并原样传递系统模板
+ok 74 - 事件提取沿用useData优先级并原样传递系统模板
+  ---
+  duration_ms: 2.1011
+  type: 'test'
+  ...
+# Subtest: 事件提取缺少数据库模板时使用canonical文件，不调用旧内嵌默认
+ok 75 - 事件提取缺少数据库模板时使用canonical文件，不调用旧内嵌默认
+  ---
+  duration_ms: 1.4535
+  type: 'test'
+  ...
+# Subtest: 小说正文与元数据保持来源数据，不混入系统指令
+ok 76 - 小说正文与元数据保持来源数据，不混入系统指令
+  ---
+  duration_ms: 1.0553
+  type: 'test'
+  ...
+# Subtest: canonical的两个few-shot保留七字段契约并可由现有回调接收
+ok 77 - canonical的两个few-shot保留七字段契约并可由现有回调接收
+  ---
+  duration_ms: 3.3664
+  type: 'test'
+  ...
+# Subtest: 合法完整think块被移除，旧格式小数秒和半角理由括号仍兼容
+ok 78 - 合法完整think块被移除，旧格式小数秒和半角理由括号仍兼容
+  ---
+  duration_ms: 1.9979
+  type: 'test'
+  ...
+# Subtest: 事件提取拒绝文本走既有错误回调，不返回成功事件
+ok 79 - 事件提取拒绝文本走既有错误回调，不返回成功事件
+  ---
+  duration_ms: 1.1
+  type: 'test'
+  ...
+# Subtest: 事件提取说明前缀走既有错误回调，不返回成功事件
+ok 80 - 事件提取说明前缀走既有错误回调，不返回成功事件
+  ---
+  duration_ms: 0.8015
+  type: 'test'
+  ...
+# Subtest: 事件提取多行说明走既有错误回调，不返回成功事件
+ok 81 - 事件提取多行说明走既有错误回调，不返回成功事件
+  ---
+  duration_ms: 0.8156
+  type: 'test'
+  ...
+# Subtest: 事件提取代码块走既有错误回调，不返回成功事件
+ok 82 - 事件提取代码块走既有错误回调，不返回成功事件
+  ---
+  duration_ms: 0.8018
+  type: 'test'
+  ...
+# Subtest: 事件提取缺少字段走既有错误回调，不返回成功事件
+ok 83 - 事件提取缺少字段走既有错误回调，不返回成功事件
+  ---
+  duration_ms: 0.5723
+  type: 'test'
+  ...
+# Subtest: 事件提取额外字段走既有错误回调，不返回成功事件
+ok 84 - 事件提取额外字段走既有错误回调，不返回成功事件
+  ---
+  duration_ms: 0.4577
+  type: 'test'
+  ...
+# Subtest: 事件提取空核心事件走既有错误回调，不返回成功事件
+ok 85 - 事件提取空核心事件走既有错误回调，不返回成功事件
+  ---
+  duration_ms: 0.4619
+  type: 'test'
+  ...
+# Subtest: 事件提取错误章节走既有错误回调，不返回成功事件
+ok 86 - 事件提取错误章节走既有错误回调，不返回成功事件
+  ---
+  duration_ms: 0.5985
+  type: 'test'
+  ...
+# Subtest: 事件提取未知主线枚举走既有错误回调，不返回成功事件
+ok 87 - 事件提取未知主线枚举走既有错误回调，不返回成功事件
+  ---
+  duration_ms: 0.5618
+  type: 'test'
+  ...
+# Subtest: 事件提取缺少主线理由走既有错误回调，不返回成功事件
+ok 88 - 事件提取缺少主线理由走既有错误回调，不返回成功事件
+  ---
+  duration_ms: 0.4624
+  type: 'test'
+  ...
+# Subtest: 事件提取未知密度走既有错误回调，不返回成功事件
+ok 89 - 事件提取未知密度走既有错误回调，不返回成功事件
+  ---
+  duration_ms: 0.4317
+  type: 'test'
+  ...
+# Subtest: 事件提取分钟单位走既有错误回调，不返回成功事件
+ok 90 - 事件提取分钟单位走既有错误回调，不返回成功事件
+  ---
+  duration_ms: 0.3865
+  type: 'test'
+  ...
+# Subtest: 事件提取区间秒数走既有错误回调，不返回成功事件
+ok 91 - 事件提取区间秒数走既有错误回调，不返回成功事件
+  ---
+  duration_ms: 0.5435
+  type: 'test'
+  ...
+# Subtest: 事件提取0秒空剧情走既有错误回调，不返回成功事件
+ok 92 - 事件提取0秒空剧情走既有错误回调，不返回成功事件
+  ---
+  duration_ms: 0.7622
+  type: 'test'
+  ...
+# Subtest: 事件提取未知情绪标签走既有错误回调，不返回成功事件
+ok 93 - 事件提取未知情绪标签走既有错误回调，不返回成功事件
+  ---
+  duration_ms: 0.4755
+  type: 'test'
+  ...
+# Subtest: 事件提取未闭合think走既有错误回调，不返回成功事件
+ok 94 - 事件提取未闭合think走既有错误回调，不返回成功事件
+  ---
+  duration_ms: 0.5518
+  type: 'test'
+  ...
+# Subtest: 空正文在模型调用前进入错误分支
+ok 95 - 空正文在模型调用前进入错误分支
+  ---
+  duration_ms: 0.6278
+  type: 'test'
+  ...
+# Subtest: 模型异常继续沿用errorReason回调，不把错误写成事件
+ok 96 - 模型异常继续沿用errorReason回调，不把错误写成事件
+  ---
+  duration_ms: 0.6778
+  type: 'test'
+  ...
+# Subtest: complete character boards have one Picture each and explicit sheet semantics
+ok 97 - complete character boards have one Picture each and explicit sheet semantics
+  ---
+  duration_ms: 2.6801
+  type: 'test'
+  ...
+# Subtest: uploaded image labels assign identity only to characters and keep source composition separate from target action
+ok 98 - uploaded image labels assign identity only to characters and keep source composition separate from target action
+  ---
+  duration_ms: 1.3019
+  type: 'test'
+  ...
+# Subtest: a four-view character board contributes one Subject and an independent scene contributes one more
+ok 99 - a four-view character board contributes one Subject and an independent scene contributes one more
+  ---
+  duration_ms: 0.4547
+  type: 'test'
+  ...
+# Subtest: mixed assets group in first-upload order and retain nonconsecutive Picture sources without sorting
+ok 100 - mixed assets group in first-upload order and retain nonconsecutive Picture sources without sorting
+  ---
+  duration_ms: 0.6252
+  type: 'test'
+  ...
+# Subtest: prompt input carries each storyboard once with exact dialogue and causal order but excludes asset design prose and unuploaded files
+ok 101 - prompt input carries each storyboard once with exact dialogue and causal order but excludes asset design prose and unuploaded files
+  ---
+  duration_ms: 1.1589
+  type: 'test'
+  ...
+# Subtest: binding slots feed the free-form validator without requiring Subject definitions
+ok 102 - binding slots feed the free-form validator without requiring Subject definitions
+  ---
+  duration_ms: 1.447
+  type: 'test'
+  ...
+# Subtest: word counts distinguish detailed_description from the whole prompt without imposing a length gate
+ok 103 - word counts distinguish detailed_description from the whole prompt without imposing a length gate
+  ---
+  duration_ms: 3.6444
+  type: 'test'
+  ...
+# Subtest: camera plan preserves existing moves across two boards with continuous three-decimal windows
+ok 104 - camera plan preserves existing moves across two boards with continuous three-decimal windows
+  ---
+  duration_ms: 0.7292
+  type: 'test'
+  ...
+# Subtest: malformed numeric data rows omit the entire board but its known duration still advances time
+ok 105 - malformed numeric data rows omit the entire board but its known duration still advances time
+  ---
+  duration_ms: 0.5378
+  type: 'test'
+  ...
+# Subtest: duration mismatch never fabricates row timing, and unknown duration prevents all later definite windows
+ok 106 - duration mismatch never fabricates row timing, and unknown duration prevents all later definite windows
+  ---
+  duration_ms: 0.4111
+  type: 'test'
+  ...
+# Subtest: accepted rounding differences stay on board boundaries and no camera window exceeds the target
+ok 107 - accepted rounding differences stay on board boundaries and no camera window exceeds the target
+  ---
+  duration_ms: 0.3099
+  type: 'test'
+  ...
+# Subtest: prompt retains every validated row boundary without inferring blank moves or cuts from quoted text
+ok 108 - prompt retains every validated row boundary without inferring blank moves or cuts from quoted text
+  ---
+  duration_ms: 0.4876
+  type: 'test'
+  ...
+# Subtest: equal camera cells do not merge supplied shots and their exact row windows span the target
+ok 109 - equal camera cells do not merge supplied shots and their exact row windows span the target
+  ---
+  duration_ms: 0.3543
+  type: 'test'
+  ...
+# Subtest: legacy prose and unknown table timing preserve source facts without making a definite row shot plan
+ok 110 - legacy prose and unknown table timing preserve source facts without making a definite row shot plan
+  ---
+  duration_ms: 0.4049
+  type: 'test'
+  ...
+# Subtest: H3 template and selected rendering guide share row-shot semantics and preserve the timing failure escape
+ok 111 - H3 template and selected rendering guide share row-shot semantics and preserve the timing failure escape
+  ---
+  duration_ms: 0.6756
+  type: 'test'
+  ...
+# Subtest: official six-section Ref2VA prompt passes
+ok 112 - official six-section Ref2VA prompt passes
+  ---
+  duration_ms: 3.5493
+  type: 'test'
+  ...
+# Subtest: source-language dialogue and explicitly quoted visible text remain valid before localization
+ok 113 - source-language dialogue and explicitly quoted visible text remain valid before localization
+  ---
+  duration_ms: 3.6146
+  type: 'test'
+  ...
+# Subtest: explicitly labelled standalone source-language title text remains valid before localization
+ok 114 - explicitly labelled standalone source-language title text remains valid before localization
+  ---
+  duration_ms: 0.4923
+  type: 'test'
+  ...
+# Subtest: missing, reordered, duplicated and prefaced sections are rejected
+ok 115 - missing, reordered, duplicated and prefaced sections are rejected
+  ---
+  duration_ms: 0.9737
+  type: 'test'
+  ...
+# Subtest: generation checklist requires official structure, shots and speaker IDs
+ok 116 - generation checklist requires official structure, shots and speaker IDs
+  ---
+  duration_ms: 0.5894
+  type: 'test'
+  ...
+# Subtest: invalid Picture slots, shot times and dialogue speakers are rejected
+ok 117 - invalid Picture slots, shot times and dialogue speakers are rejected
+  ---
+  duration_ms: 1.0388
+  type: 'test'
+  ...
+# Subtest: empty, oversized and unsafe prompts are rejected
+ok 118 - empty, oversized and unsafe prompts are rejected
+  ---
+  duration_ms: 0.2711
+  type: 'test'
+  ...
+# Subtest: normalization changes locale placement and explicit cut-time spelling only
+ok 119 - normalization changes locale placement and explicit cut-time spelling only
+  ---
+  duration_ms: 0.7629
+  type: 'test'
+  ...
+# Subtest: H3 single prompt API preserves requested language isolation with replaceBasePrompt=undefined
+ok 120 - H3 single prompt API preserves requested language isolation with replaceBasePrompt=undefined
+  ---
+  duration_ms: 275.6237
+  type: 'test'
+  ...
+# Subtest: H3 single prompt API preserves requested language isolation with replaceBasePrompt=true
+ok 121 - H3 single prompt API preserves requested language isolation with replaceBasePrompt=true
+  ---
+  duration_ms: 41.816
+  type: 'test'
+  ...
+# Subtest: H3 batch prompt API preserves requested language isolation with replaceBasePrompt=true
+ok 122 - H3 batch prompt API preserves requested language isolation with replaceBasePrompt=true
+  ---
+  duration_ms: 61.2357
+  type: 'test'
+  ...
+# Subtest: batch fill refreshes completed prompts with changed images without copying the stale base or touching other languages
+ok 123 - batch fill refreshes completed prompts with changed images without copying the stale base or touching other languages
+  ---
+  duration_ms: 110.5221
+  type: 'test'
+  ...
+# Subtest: H3 derivative actor context uses its same-project role parent without uploading another image
+ok 124 - H3 derivative actor context uses its same-project role parent without uploading another image
+  ---
+  duration_ms: 44.2179
+  type: 'test'
+  ...
+# Subtest: single and batch prompt routes retain all seven assets in seven complete asset pictures and persist the identical reference plan
+ok 125 - single and batch prompt routes retain all seven assets in seven complete asset pictures and persist the identical reference plan
+  ---
+  duration_ms: 71.1981
+  type: 'test'
+  ...
+# Subtest: preflight overflow and missing boards finish failed without calling a model or replacing the saved prompt
+ok 126 - preflight overflow and missing boards finish failed without calling a model or replacing the saved prompt
+  ---
+  duration_ms: 67.0726
+  type: 'test'
+  ...
+# Subtest: H3 refuses an incompatible persisted binding before AI rather than silently overriding the selection
+ok 127 - H3 refuses an incompatible persisted binding before AI rather than silently overriding the selection
+  ---
+  duration_ms: 33.6881
+  type: 'test'
+  ...
+# Subtest: H3 actually invokes a compatible custom bound template and uses the default again after unbinding
+ok 128 - H3 actually invokes a compatible custom bound template and uses the default again after unbinding
+  ---
+  duration_ms: 42.8972
+  type: 'test'
+  ...
+# Subtest: non-H3 receives project rendering as system authority, escaped storyboard facts and actual media/frame indices
+ok 129 - non-H3 receives project rendering as system authority, escaped storyboard facts and actual media/frame indices
+  ---
+  duration_ms: 38.5249
+  type: 'test'
+  ...
+# Subtest: H3 generation retries a draft that is missing the official sections
+ok 130 - H3 generation retries a draft that is missing the official sections
+  ---
+  duration_ms: 36.4578
+  type: 'test'
+  ...
+# Subtest: H3 generation retries an invalid retention marker and saves only the corrected prompt
+ok 131 - H3 generation retries an invalid retention marker and saves only the corrected prompt
+  ---
+  duration_ms: 40.8816
+  type: 'test'
+  ...
+# Subtest: Chinese free-form H3 prose is rewritten into the complete English six-section structure
+ok 132 - Chinese free-form H3 prose is rewritten into the complete English six-section structure
+  ---
+  duration_ms: 29.9073
+  type: 'test'
+  ...
+# Subtest: translation retries free-form output and saves the official source structure
+ok 133 - translation retries free-form output and saves the official source structure
+  ---
+  duration_ms: 33.4737
+  type: 'test'
+  ...
+# Subtest: English translation retries when dialogue is still Chinese before marking the variant complete
+ok 134 - English translation retries when dialogue is still Chinese before marking the variant complete
+  ---
+  duration_ms: 33.5608
+  type: 'test'
+  ...
+# Subtest: English translation retries when quoted visible screen text remains Chinese
+ok 135 - English translation retries when quoted visible screen text remains Chinese
+  ---
+  duration_ms: 35.9812
+  type: 'test'
+  ...
+# Subtest: English translation retries when English prose still requests Chinese screen text
+ok 136 - English translation retries when English prose still requests Chinese screen text
+  ---
+  duration_ms: 30.6762
+  type: 'test'
+  ...
+# Subtest: translation copies the saved Picture plan without invoking a semantic reviewer
+ok 137 - translation copies the saved Picture plan without invoking a semantic reviewer
+  ---
+  duration_ms: 32.657
+  type: 'test'
+  ...
+# Subtest: out-of-range H3 duration is reported instead of silently clamped before writing the prompt
+ok 138 - out-of-range H3 duration is reported instead of silently clamped before writing the prompt
+  ---
+  duration_ms: 17.9972
+  type: 'test'
+  ...
+# Subtest: semantic reviewer is not called and cannot reject event ordering
+ok 139 - semantic reviewer is not called and cannot reject event ordering
+  ---
+  duration_ms: 28.3057
+  type: 'test'
+  ...
+# Subtest: image-only injury color guesses do not force recoloring a faint closed reference mark
+ok 140 - image-only injury color guesses do not force recoloring a faint closed reference mark
+  ---
+  duration_ms: 28.962
+  type: 'test'
+  ...
+# Subtest: semantic contradictions no longer create failed prompt records
+ok 141 - semantic contradictions no longer create failed prompt records
+  ---
+  duration_ms: 26.5958
+  type: 'test'
+  ...
+# Subtest: base writer receives the selected visual manual without semantic reviewer calls
+ok 142 - base writer receives the selected visual manual without semantic reviewer calls
+  ---
+  duration_ms: 32.3968
+  type: 'test'
+  ...
+# Subtest: rendering-source reviewer issues no longer trigger repair retries
+ok 143 - rendering-source reviewer issues no longer trigger repair retries
+  ---
+  duration_ms: 31.0142
+  type: 'test'
+  ...
+# Subtest: managed defaults update together while keeping user edits, IDs and missing-entry recovery
+ok 144 - managed defaults update together while keeping user edits, IDs and missing-entry recovery
+  ---
+  duration_ms: 48.5942
+  type: 'test'
+  ...
+# Subtest: a missing or blank default fails before changing any managed row
+ok 145 - a missing or blank default fails before changing any managed row
+  ---
+  duration_ms: 21.8956
+  type: 'test'
+  ...
+# Subtest: video shared policy and selected model format are both carried, with explicit scope
+ok 146 - video shared policy and selected model format are both carried, with explicit scope
+  ---
+  duration_ms: 0.4035
+  type: 'test'
+  ...
+# Subtest: video fallback carries one policy and tolerates absent managed rows
+ok 147 - video fallback carries one policy and tolerates absent managed rows
+  ---
+  duration_ms: 0.1366
+  type: 'test'
+  ...
+# Subtest: Electron development reads repository defaults even when userData has no template files
+ok 148 - Electron development reads repository defaults even when userData has no template files
+  ---
+  duration_ms: 12.6754
+  type: 'test'
+  ...
+# Subtest: packaged defaults follow each release's resources rather than stale merged userData files
+ok 149 - packaged defaults follow each release's resources rather than stale merged userData files
+  ---
+  duration_ms: 7.1395
+  type: 'test'
+  ...
+# Subtest: schema-valid empty background discovery succeeds without redesign, asset writes or loss of selected images
+ok 150 - schema-valid empty background discovery succeeds without redesign, asset writes or loss of selected images
+  ---
+  duration_ms: 61.9376
+  type: 'test'
+  ...
+# Subtest: a text-only empty claim still retries and fails without resultTool or persisted changes
+ok 151 - a text-only empty claim still retries and fails without resultTool or persisted changes
+  ---
+  duration_ms: 6.5001
+  type: 'test'
+  ...
+# Subtest: invalid tool results still retry and fail rather than becoming empty success
+ok 152 - invalid tool results still retry and fail rather than becoming empty success
+  ---
+  duration_ms: 10.1488
+  type: 'test'
+  ...
+# Subtest: schema correction can legitimately finish with an empty discovery on the second attempt
+ok 153 - schema correction can legitimately finish with an empty discovery on the second attempt
+  ---
+  duration_ms: 7.7848
+  type: 'test'
+  ...
+# Subtest: seedance2 identifies its family and accepts the actual source and media contracts
+ok 154 - seedance2 identifies its family and accepts the actual source and media contracts
+  ---
+  duration_ms: 1.4885
+  type: 'test'
+  ...
+# Subtest: seedance2 retains source shots, exact dialogue and time budgets without inventing image observations
+ok 155 - seedance2 retains source shots, exact dialogue and time budgets without inventing image observations
+  ---
+  duration_ms: 0.412
+  type: 'test'
+  ...
+# Subtest: seedance2 treats linked voice IDs as metadata and excludes unuploaded audio or video
+ok 156 - seedance2 treats linked voice IDs as metadata and excludes unuploaded audio or video
+  ---
+  duration_ms: 0.2508
+  type: 'test'
+  ...
+# Subtest: first-last identifies its family and accepts the actual source and media contracts
+ok 157 - first-last identifies its family and accepts the actual source and media contracts
+  ---
+  duration_ms: 0.1389
+  type: 'test'
+  ...
+# Subtest: first-last retains source shots, exact dialogue and time budgets without inventing image observations
+ok 158 - first-last retains source shots, exact dialogue and time budgets without inventing image observations
+  ---
+  duration_ms: 0.0988
+  type: 'test'
+  ...
+# Subtest: first-last treats linked voice IDs as metadata and excludes unuploaded audio or video
+ok 159 - first-last treats linked voice IDs as metadata and excludes unuploaded audio or video
+  ---
+  duration_ms: 0.0784
+  type: 'test'
+  ...
+# Subtest: multi-reference identifies its family and accepts the actual source and media contracts
+ok 160 - multi-reference identifies its family and accepts the actual source and media contracts
+  ---
+  duration_ms: 0.1241
+  type: 'test'
+  ...
+# Subtest: multi-reference retains source shots, exact dialogue and time budgets without inventing image observations
+ok 161 - multi-reference retains source shots, exact dialogue and time budgets without inventing image observations
+  ---
+  duration_ms: 0.0969
+  type: 'test'
+  ...
+# Subtest: multi-reference treats linked voice IDs as metadata and excludes unuploaded audio or video
+ok 162 - multi-reference treats linked voice IDs as metadata and excludes unuploaded audio or video
+  ---
+  duration_ms: 0.144
+  type: 'test'
+  ...
+# Subtest: wan2.6 identifies its family and accepts the actual source and media contracts
+ok 163 - wan2.6 identifies its family and accepts the actual source and media contracts
+  ---
+  duration_ms: 0.1709
+  type: 'test'
+  ...
+# Subtest: wan2.6 retains source shots, exact dialogue and time budgets without inventing image observations
+ok 164 - wan2.6 retains source shots, exact dialogue and time budgets without inventing image observations
+  ---
+  duration_ms: 0.1142
+  type: 'test'
+  ...
+# Subtest: wan2.6 treats linked voice IDs as metadata and excludes unuploaded audio or video
+ok 165 - wan2.6 treats linked voice IDs as metadata and excludes unuploaded audio or video
+  ---
+  duration_ms: 0.0899
+  type: 'test'
+  ...
+# Subtest: Seedance uses separate native media indexes and allows supplied storyboard images and target lighting
+ok 166 - Seedance uses separate native media indexes and allows supplied storyboard images and target lighting
+  ---
+  duration_ms: 0.1867
+  type: 'test'
+  ...
+# Subtest: first/last mode uses declared transport roles and does not enforce a continuous single take
+ok 167 - first/last mode uses declared transport roles and does not enforce a continuous single take
+  ---
+  duration_ms: 0.0872
+  type: 'test'
+  ...
+# Subtest: generic multi-reference does not pretend its aliases or section headings are a universal native protocol
+ok 168 - generic multi-reference does not pretend its aliases or section headings are a universal native protocol
+  ---
+  duration_ms: 0.0738
+  type: 'test'
+  ...
+# Subtest: Wan separates first-frame I2V from ordered R2V character labels and keeps its API limits out of the screenplay
+ok 169 - Wan separates first-frame I2V from ordered R2V character labels and keeps its API limits out of the screenplay
+  ---
+  duration_ms: 0.1729
+  type: 'test'
+  ...
+# Subtest: video manual applies the selected 3D rendering while reference designs and asset prefix stay authoritative
+ok 170 - video manual applies the selected 3D rendering while reference designs and asset prefix stay authoritative
+  ---
+  duration_ms: 4.7999
+  type: 'test'
+  ...
+# Subtest: other styles retain their existing shared prefix unless they provide a video override
+ok 171 - other styles retain their existing shared prefix unless they provide a video override
+  ---
+  duration_ms: 2.7601
+  type: 'test'
+  ...
+1..171
+# tests 171
+# suites 0
+# pass 171
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2167.2923

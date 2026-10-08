@@ -1,33 +1,31 @@
 import express from "express";
 import u from "@/utils";
-import { success } from "@/lib/responseFormat";
+import { error, success } from "@/lib/responseFormat";
+import { evaluateVideoPromptBinding, getDefaultVideoPromptPath } from "@/utils/modelPromptTemplates";
 const router = express.Router();
 
 export default router.post("/", async (req, res) => {
-  const dataList = await u.db("o_vendorConfig").select("id").where("enable", 1);
-  if (!dataList || dataList.length === 0) {
-    return res.status(404).send({ error: "模型未找到" });
-  }
-  const data = await Promise.all(
-    dataList.map(async (item) => {
+  try {
+    const root = u.getPath(["modelPrompt"]);
+    const dataList = await u.db("o_vendorConfig").select("id").where("enable", 1);
+    const data = await Promise.all(dataList.map(async item => {
       const vendor = u.vendor.getVendor(item.id!);
-      const promptList = await u.db("o_modelPrompt").andWhere("vendorId", vendor.id).select("*");
-      const promptMap = new Map(promptList.map((p) => [p.model, { fileName: p.fileName, path: p.path }]));
+      const bindings = await u.db("o_modelPrompt").where("vendorId", item.id).select("*");
       const models = await u.vendor.getModelList(item.id!);
-      const filteredModels = models
-        .filter((m: any) => m.type === "video")
-        .map((m: any) => ({
-          name: m.name,
-          type: m.type as "image" | "video",
-          model: m.modelName,
-          ...(promptMap.get(m.modelName) ? { ...promptMap.get(m.modelName) } : {}),
-        }));
-      return {
-        id: item.id,
-        name: vendor.name,
-        promptList: filteredModels,
-      };
-    }),
-  );
-  res.status(200).send(success(data));
+      const promptList = await Promise.all(models.filter((model: any) => model.type === "video").map(async (model: any) => {
+        const binding = bindings.find(binding => binding.model === model.modelName);
+        const modes = Array.isArray(model.mode) ? model.mode : [];
+        const preferredMode = modes.find(Array.isArray) || modes.find((mode: any) => ["singleImage", "startEndRequired", "endFrameOptional", "startFrameOptional"].includes(mode)) || "text";
+        const mode = typeof preferredMode === "string" ? preferredMode : JSON.stringify(preferredMode);
+        const automaticPaths = new Set(modes.map((mode: any) => getDefaultVideoPromptPath(model.modelName, typeof mode === "string" ? mode : JSON.stringify(mode))));
+        const effective = await evaluateVideoPromptBinding(root, model.modelName, binding, mode);
+        const automatic = binding?.path ? await evaluateVideoPromptBinding(root, model.modelName, undefined, mode) : effective;
+        return { name: model.name, type: "video", model: model.modelName, fileName: binding?.fileName || "", path: binding?.path || "", defaultPath: automatic.effectivePath, autoModeDependent: automaticPaths.size > 1, ...effective };
+      }));
+      return { id: item.id, name: vendor.name, promptList };
+    }));
+    res.status(200).send(success(data.filter(provider => provider.promptList.length)));
+  } catch (cause) {
+    res.status((cause as any).status || 500).send(error(u.error(cause).message));
+  }
 });

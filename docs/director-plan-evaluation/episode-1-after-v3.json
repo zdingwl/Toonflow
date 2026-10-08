@@ -1,0 +1,38 @@
+{
+  "episodeId": 1,
+  "projectId": 1790665121730,
+  "model": "QWEN3.8:27b",
+  "temperature": 1,
+  "reasoning": "none",
+  "seed": 42,
+  "context": "current",
+  "elapsedMs": 57173,
+  "finishReason": "stop",
+  "usage": {
+    "inputTokens": 7411,
+    "inputTokenDetails": {
+      "noCacheTokens": 7411,
+      "cacheReadTokens": 0
+    },
+    "outputTokens": 6461,
+    "outputTokenDetails": {
+      "textTokens": 6461,
+      "reasoningTokens": 0
+    },
+    "totalTokens": 13872,
+    "raw": {
+      "prompt_tokens": 7411,
+      "completion_tokens": 6461,
+      "total_tokens": 13872,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "reasoningTokens": 0,
+    "cachedInputTokens": 0
+  },
+  "steps": 1,
+  "readKeys": [],
+  "characters": 9365,
+  "factErrors": []
+}

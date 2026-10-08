@@ -1,7 +1,9 @@
 import type { Knex } from "knex";
 import { markStoryboardPromptsStale } from "@/utils/storyboardPromptFreshness";
 
-export const storyboardSegments = (text: string) => text.split(/(?=^###\s*片段)/m).filter(part => /^###\s*片段/.test(part.trim())).map(part => part.trim());
+// A scene heading terminates the preceding segment; it is not part of that
+// panel's videoDesc. Otherwise a later scene makes an exact panel match fail.
+export const storyboardSegments = (text: string) => text.split(/(?=^###\s*片段|^##\s*场\d+)/m).filter(part => /^###\s*片段/.test(part.trim())).map(part => part.trim());
 const canonical = (text: string) => text.replace(/\r\n/g, "\n").trim();
 
 /** Reconcile only exact old/new segment matches. Independently edited panels are conflicts. */

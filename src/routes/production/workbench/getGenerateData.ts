@@ -5,6 +5,7 @@ import { success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { db as languageDb } from "@/utils/db";
 import { dialogueLanguages } from "@/utils/videoLanguages";
+import { loadH3ReferencePlan } from "@/utils/h3ReferencePlan";
 const router = express.Router();
 
 interface VideoItem {
@@ -21,6 +22,7 @@ interface TrackMedia {
 }
 
 interface TrackItem {
+  importSettings?: { audio: boolean; resolution: string; aspectRatio: string };
   id?: number;
   variants?: any[];
   prompt: string;
@@ -214,6 +216,17 @@ export default router.post(
             })),
         ),
       });
+    }
+    if (await languageDb.schema.hasColumn("o_importItem", "trackId")) {
+      const imports = await languageDb("o_importItem").whereIn("trackId", trackIdMap);
+      for (const item of imports) {
+        const track = trackList.find(t => t.id === item.trackId);
+        if (!track) continue;
+        const spec = JSON.parse(item.spec);
+        track.importSettings = { audio: spec.audio, resolution: spec.resolution, aspectRatio: spec.aspectRatio };
+        const plan = await loadH3ReferencePlan(languageDb, item.trackId, track.prompt);
+        if (plan) track.medias = plan.slots.flatMap(slot => track.medias.filter(media => media.id === slot.assetId && (media as any).sources === "assets"));
+      }
     }
     res.status(200).send(
       success({

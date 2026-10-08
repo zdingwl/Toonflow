@@ -1,0 +1,827 @@
+[
+  {
+    "videoId": 16,
+    "trackId": 1790715600051,
+    "savedPlan": [
+      {
+        "assetId": 202,
+        "assetType": "role",
+        "path": "/1790665121730/assets/1/role/8778bba0-4658-4ee8-bcad-2d8619cd154a.jpg",
+        "label": "雨夜坠海",
+        "picture": 1,
+        "absoluteSource": "D:/Toonflow-app-master/data/oss\\1790665121730/assets/1/role/8778bba0-4658-4ee8-bcad-2d8619cd154a.jpg",
+        "sha256": "3b9554ec84bbc6b181f6400db6861b69e8f6f9e1de83120b052c08baa30d5c4d"
+      },
+      {
+        "assetId": 205,
+        "assetType": "role",
+        "path": "1790665121730/workFlow/2e9bd00d-f8f2-47b7-8e2f-5273a8236971.jpg",
+        "label": "雨夜弃船",
+        "picture": 2,
+        "absoluteSource": "D:/Toonflow-app-master/data/oss\\1790665121730/workFlow/2e9bd00d-f8f2-47b7-8e2f-5273a8236971.jpg",
+        "sha256": "e0d3ea6fd458004bfe567e6f8dad0816b4c920a673e71c0940df74aaaf9c5ec6"
+      },
+      {
+        "assetId": 5,
+        "assetType": "scene",
+        "path": "/1790665121730/scene/7132af8d-96d6-45f4-b3e9-ace64d59c0ae.jpg",
+        "label": "倾斜邮轮",
+        "picture": 3,
+        "absoluteSource": "D:/Toonflow-app-master/data/oss\\1790665121730/scene/7132af8d-96d6-45f4-b3e9-ace64d59c0ae.jpg",
+        "sha256": "b2e0a5881771c8af8fb579fe4e9a7394fca1bf4343533146722c766e8906f75e"
+      }
+    ],
+    "submittedOrder": [
+      {
+        "graphKey": "ref_images.ref_image_0",
+        "uploadedAbsoluteFile": "D:/new_comfyui/input/toonflow_h3_1790743271289_0_820195162.jpg",
+        "matchesAssetId": [
+          202
+        ],
+        "sha256": "3b9554ec84bbc6b181f6400db6861b69e8f6f9e1de83120b052c08baa30d5c4d"
+      },
+      {
+        "graphKey": "ref_images.ref_image_1",
+        "uploadedAbsoluteFile": "D:/new_comfyui/input/toonflow_h3_1790743276082_1_717563320.jpg",
+        "matchesAssetId": [
+          205
+        ],
+        "sha256": "e0d3ea6fd458004bfe567e6f8dad0816b4c920a673e71c0940df74aaaf9c5ec6"
+      },
+      {
+        "graphKey": "ref_images.ref_image_2",
+        "uploadedAbsoluteFile": "D:/new_comfyui/input/toonflow_h3_1790743280865_2_624266502.jpg",
+        "matchesAssetId": [
+          5
+        ],
+        "sha256": "b2e0a5881771c8af8fb579fe4e9a7394fca1bf4343533146722c766e8906f75e"
+      }
+    ],
+    "sameOrder": true,
+    "submittedPromptMatchesLanguageSnapshot": true,
+    "graph": {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+        }
+      },
+      "4": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ReferenceToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "audio_vae": [
+            "4",
+            0
+          ],
+          "ref_image_size": "match",
+          "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, the same person shown across the face, front, side and back panels; she has dark rain-wet hair tied in a ponytail with loose strands, controlled natural eye proportions, a straight nose, defined cheek and jaw contours, damp skin with subtle highlights, a black leather jacket over a black shirt, dark cargo pants, sturdy boots and a dark blue wrapped knee covering. The sheet defines her identity, proportions, wardrobe and wet-material rendering only, not her video pose or the display rail.\n<Subject 2> is Madison from <Picture 2>, the same person shown across the face, front, side and back panels; she has shoulder-length wet light-brown wavy hair, softly rounded facial contours, the observed relatively large eye shape, a small nose, damp tear-streaked skin, a cream knitted sweater, a glossy orange life vest with black straps, gray cargo pants and brown lace-up boots. The sheet defines her identity, proportions, wardrobe and rain-wet fabric rendering only, not her video pose or neutral display background.\n<Subject 3> is the tilted ocean liner from <Picture 3>, with a rust-streaked damaged hull, sharply sloping wet deck, metal railings and stanchions, lifeboats, dark cabin walls, hanging chains, jagged hull damage, cold lightning-lit storm clouds, turbulent sea and a distant night city. It supplies the location, architecture, spatial layout, storm atmosphere and lighting direction, while the video frames only the local deck edge required by the action.\n\nsummary:\n[reference generation] On <Subject 3>, <Subject 2> stands inside the sloping deck railing above <Subject 1>, who is already suspended outside the hull. After <Subject 2> confesses through fearful breathing that only one place remains, she deliberately pries <Subject 1>’s right hand from the rail, leaving <Subject 1> supported only by her left hand; <Subject 2> then begins forcing away that final grip as <Subject 1> hangs over open water.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - Ava’s facial structure, eye proportions, nose and jaw shape, dark ponytail, body proportions, black jacket, black shirt, dark trousers, boots, wrapped knee covering and damp skin and leather rendering remain unchanged; only pose, expression, grip and body weight change for the hanging action.\n<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - Madison’s face, light-brown wavy hair, body proportions, cream sweater, orange life vest, gray trousers, boots and wet knit and glossy-vest materials remain unchanged; tears, rapid breathing, leaning and deliberate prying motions animate the established design.\n<Subject 3> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - the liner retains its tilted rusted hull, sloping wet deck, connected railings and stanchions, lifeboat area, storm damage, cold lightning direction, rain and turbulent-sea atmosphere, with tighter local framing replacing the reference’s wide view.\n\ndetailed_description:\nThe rendering follows the observed character references: cinematic semi-realistic three-dimensional forms with each woman’s exact facial geometry, damp skin shading, layered wet hair strands and physically based clothing response. <Subject 1>’s dark leather catches cold rain light in sharp controlled highlights, while <Subject 2>’s knitted sweater and orange life vest show soft absorbent fabric and glossy wet vinyl. The storm illumination from <Subject 3> relights both characters without altering their proportions, and the character-sheet layouts, repeated figures and neutral display backgrounds are never shown.\n\n[Shot 1] On the sharply sloping deck of <Subject 3>, <Subject 2> stands inside the railing with her shoulders raised and her boots braced on the wet floor. She is above <Subject 1>, whose arms extend upward to grip the fixed outer rail; Ava’s torso and legs hang below the rail on the outboard side, and both boots dangle over open sea with no supporting surface beneath them. Rain streams down Madison’s face and orange vest. Her chest rises and falls in rapid panicked breathing, tears mix with rainwater, and her glistening eyes avoid looking directly down at Ava. Behind her, a panicked crowd pushes and sways around the lifeboat station, with wet coats and arms moving chaotically. The medium close shot slowly pushes toward Madison’s side profile with slight handheld shake.\n<Subject 2> (S1) says (spoken language: en-US):\n<d>[English] Big sister... there’s only one spot left.</d>\n\n[Shot 2] At 00:05.000, the cut opens in a tight close view of the connected hands and wet railing. The upper rail is attached to the sloping deck by visible stanchions; the deck ends behind Madison, the ship’s hull lies beside and behind Ava, and dark churning water is directly below Ava’s dangling boots. Ava begins with both hands gripping overhead and bearing her full weight. Madison leans over from the deck side, stabilizes her body against the slope, and deliberately peels Ava’s right fingers away from the metal one by one. Ava’s right hand loses contact and drops, while her left hand alone takes her weight. Her shoulder pulls upward and her whole body sinks a few inches under gravity. The camera stays fixed in a close pressing view and shifts slightly along the direction of Madison’s prying fingers.\n<Subject 1> (S2) says (spoken language: en-US):\n<d>[English] What are you doing?!</d>\n\n[Shot 3] At 00:07.000, a tight near profile shows <Subject 2> with rain on her face, her jaw tense and her gaze fixed downward in desperate resolve. The camera pushes in slowly, then hard-cuts between the two women into an extreme hand close-up. <Subject 1>’s released right arm hangs away from the rail while both feet remain suspended in open air. Madison’s wet hands close over Ava’s remaining left hand and deliberately lift and bend the fingers away from the fixed upper edge one at a time. The hull suddenly lurches, reducing Ava’s hold to a single trembling finger, with Madison’s forcing hand and that last grip held in the same frame. Rain runs over the metal and fabric moves with the strain, but no blood or open injury appears.\n<Subject 2> (S1) says (spoken language: en-US):\n<d>[English] I just want to live.</d>\n\noverall_soundscape:\nTorrential rain and wind continue throughout, layered with heavy waves striking the tilted hull and water rushing below the railing. Wet clothing rubs against skin and fabric, hands squeak and scrape against rain-slick metal, and the rail gives faint strained creaks under Ava’s weight. Madison’s rapid breathing is close and shallow, while Ava makes a sharp startled gasp as her right hand releases. Behind them, panicked lifeboat shouts, rushing footsteps and impacts against deck equipment form a chaotic background. The ship groans continuously and produces a sudden deep metallic lurch in the final shot.\n\nnon_diegetic_music:\nLow sustained strings and a restrained sub-bass drone sit beneath the storm, carrying dread without overpowering the dialogue. The texture thins during the hand close-up so rain, breath and friction remain exposed. At the hull’s sudden lurch, the music gives one dark swelling pulse, then fades into tense near-silence under the final held grip.",
+          "width": 1344,
+          "height": 768,
+          "length": 243,
+          "ref_images.ref_image_0": [
+            "15",
+            0
+          ],
+          "ref_images.ref_image_1": [
+            "16",
+            0
+          ],
+          "ref_images.ref_image_2": [
+            "17",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2310270408804917
+        }
+      },
+      "7": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "6",
+            0
+          ],
+          "guider": [
+            "7",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "11": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "10",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ]
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "10",
+            0
+          ],
+          "vae": [
+            "4",
+            0
+          ]
+        }
+      },
+      "13": {
+        "class_type": "CreateVideo",
+        "inputs": {
+          "images": [
+            "11",
+            0
+          ],
+          "audio": [
+            "12",
+            0
+          ],
+          "fps": 24.0,
+          "bit_depth": 8
+        }
+      },
+      "14": {
+        "class_type": "SaveVideo",
+        "inputs": {
+          "video": [
+            "13",
+            0
+          ],
+          "filename_prefix": "Toonflow/H3_1790743283933_134093646",
+          "format": "mp4"
+        }
+      },
+      "15": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "toonflow_h3_1790743271289_0_820195162.jpg"
+        },
+        "is_changed": [
+          "3b9554ec84bbc6b181f6400db6861b69e8f6f9e1de83120b052c08baa30d5c4d"
+        ]
+      },
+      "16": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "toonflow_h3_1790743276082_1_717563320.jpg"
+        },
+        "is_changed": [
+          "e0d3ea6fd458004bfe567e6f8dad0816b4c920a673e71c0940df74aaaf9c5ec6"
+        ]
+      },
+      "17": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "toonflow_h3_1790743280865_2_624266502.jpg"
+        },
+        "is_changed": [
+          "b2e0a5881771c8af8fb579fe4e9a7394fca1bf4343533146722c766e8906f75e"
+        ]
+      }
+    }
+  },
+  {
+    "videoId": 17,
+    "trackId": 1790715608760,
+    "savedPlan": [
+      {
+        "assetId": 202,
+        "assetType": "role",
+        "path": "/1790665121730/assets/1/role/8778bba0-4658-4ee8-bcad-2d8619cd154a.jpg",
+        "label": "雨夜坠海",
+        "picture": 1,
+        "absoluteSource": "D:/Toonflow-app-master/data/oss\\1790665121730/assets/1/role/8778bba0-4658-4ee8-bcad-2d8619cd154a.jpg",
+        "sha256": "3b9554ec84bbc6b181f6400db6861b69e8f6f9e1de83120b052c08baa30d5c4d"
+      },
+      {
+        "assetId": 5,
+        "assetType": "scene",
+        "path": "/1790665121730/scene/7132af8d-96d6-45f4-b3e9-ace64d59c0ae.jpg",
+        "label": "倾斜邮轮",
+        "picture": 2,
+        "absoluteSource": "D:/Toonflow-app-master/data/oss\\1790665121730/scene/7132af8d-96d6-45f4-b3e9-ace64d59c0ae.jpg",
+        "sha256": "b2e0a5881771c8af8fb579fe4e9a7394fca1bf4343533146722c766e8906f75e"
+      },
+      {
+        "assetId": 6,
+        "assetType": "scene",
+        "path": "/1790665121730/scene/a4f8fe9e-1044-4292-bf18-c070563fe451.jpg",
+        "label": "水下",
+        "picture": 3,
+        "absoluteSource": "D:/Toonflow-app-master/data/oss\\1790665121730/scene/a4f8fe9e-1044-4292-bf18-c070563fe451.jpg",
+        "sha256": "b62f57b8282a7af5fbcb627cc0d8bc9974dcfe9af563c91f1212eeb6ca4fda31"
+      },
+      {
+        "assetId": 215,
+        "assetType": "tool",
+        "path": "/1790665121730/assets/1/tool/530138ad-31f0-4e7b-99d7-18d3884ef041.jpg",
+        "label": "咬腿剪影帧",
+        "picture": 4,
+        "absoluteSource": "D:/Toonflow-app-master/data/oss\\1790665121730/assets/1/tool/530138ad-31f0-4e7b-99d7-18d3884ef041.jpg",
+        "sha256": "e31f9ce7120ce061c3d920fc3b1ffe4f72fa851b0f07b65c3ae6edb04d26b9c5"
+      }
+    ],
+    "submittedOrder": [
+      {
+        "graphKey": "ref_images.ref_image_0",
+        "uploadedAbsoluteFile": "D:/new_comfyui/input/toonflow_h3_1790744302909_0_657413471.jpg",
+        "matchesAssetId": [
+          202
+        ],
+        "sha256": "3b9554ec84bbc6b181f6400db6861b69e8f6f9e1de83120b052c08baa30d5c4d"
+      },
+      {
+        "graphKey": "ref_images.ref_image_1",
+        "uploadedAbsoluteFile": "D:/new_comfyui/input/toonflow_h3_1790744308660_1_397277838.jpg",
+        "matchesAssetId": [
+          5
+        ],
+        "sha256": "b2e0a5881771c8af8fb579fe4e9a7394fca1bf4343533146722c766e8906f75e"
+      },
+      {
+        "graphKey": "ref_images.ref_image_2",
+        "uploadedAbsoluteFile": "D:/new_comfyui/input/toonflow_h3_1790744312150_2_631005099.jpg",
+        "matchesAssetId": [
+          6
+        ],
+        "sha256": "b62f57b8282a7af5fbcb627cc0d8bc9974dcfe9af563c91f1212eeb6ca4fda31"
+      },
+      {
+        "graphKey": "ref_images.ref_image_3",
+        "uploadedAbsoluteFile": "D:/new_comfyui/input/toonflow_h3_1790744314084_3_664522937.jpg",
+        "matchesAssetId": [
+          215
+        ],
+        "sha256": "e31f9ce7120ce061c3d920fc3b1ffe4f72fa851b0f07b65c3ae6edb04d26b9c5"
+      }
+    ],
+    "sameOrder": true,
+    "submittedPromptMatchesLanguageSnapshot": true,
+    "graph": {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+        }
+      },
+      "4": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ReferenceToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "audio_vae": [
+            "4",
+            0
+          ],
+          "ref_image_size": "match",
+          "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, where the face, front, side and back panels show the same person; she has wet dark hair in a high ponytail with loose strands, controlled eye proportions, a straight nose, defined cheeks and jaw, damp detailed skin, a black leather jacket over a black shirt, dark cargo pants, belt and pouches, rugged boots, and a dark blue wrap over the injured lower left leg beneath torn pant fabric, with the sheet supplying identity, proportions, costume and wet-material rendering only rather than its display pose, railing, panel layout or background.\n<Subject 2> is the storm-wrecked tilted ocean liner from <Picture 2>, with rust-streaked white decks, wet railings, lifeboats, slanted hull plating, broken deck furniture, black heaving sea, distant storm-dark city lights, lightning and cold rain, supplying the ship’s architecture, location, lighting direction and dangerous atmosphere.\n<Subject 3> is the dark underwater environment from <Picture 3>, with the massive hull overhead, pale storm light entering the surface in angled beams, deep teal-black water, suspended bubbles and a dim rocky seabed, supplying underwater layout, depth, color and light direction.\n<Subject 4> is the single massive mutant shark from <Picture 4>, with a dark charcoal upper body, pale gray underjaw and throat, rough scarred skin, conical snout, black eye, rows of triangular teeth, broad pectoral fins, dorsal fin and powerful tail; the human legs in that source are not part of <Subject 4>, and <Subject 1> retains her full pants and leg wrap during the attack.\n\nsummary:\n[reference generation] Madison deliberately pries <Subject 1>’s final finger from a railing on <Subject 2>, sending <Subject 1> falling along the tilted hull into the storm sea above <Subject 3>; after <Subject 1> submerges, <Subject 4> rises from the dark water and lunges toward her covered injured leg, with the contact hidden by jaws, surf and bubbles and no blood or open wound shown.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - The same facial structure, restrained eye proportions, nose, cheeks, jaw, ponytail, body proportions, black jacket, black shirt, dark cargo pants, boots, pouches and dark blue leg wrap remain consistent, while rain, immersion, movement and pain alter only wetness, expression and pose.\n<Subject 2> (appears in [Shot 1], [Shot 2]): fully_preserved - The liner’s rusted hull, railings, slanted deck geometry, lifeboats, wet storm lighting, lightning, rain and hostile sea are retained, with the wide reference view adapted to the local railing and ship-side action.\n<Subject 3> (appears in [Shot 2], [Shot 3]): fully_preserved - The overhead hull, teal-black water, surface light shafts, bubbles, depth and dim seabed are retained as the below-surface environment.\n<Subject 4> (appears in [Shot 3]): fully_preserved - The shark’s massive scale, dark upper body, pale jaws, rough skin, teeth, fins and upward-lunge silhouette are retained, while the reference’s bare human legs and brighter clear-water appearance are not transferred to <Subject 1> or the storm-night scene.\n\ndetailed_description:\nThe rendering follows <Picture 1>: <Subject 1> has near-natural facial geometry with restrained eye size, a straight nose bridge, defined cheek and jaw contours, damp skin with soft specular highlights, and layered wet hair strands. Her soaked leather and cotton clothing show physically based weight, shine and drape, while storm light from <Subject 2> and underwater light from <Subject 3> relight those same surfaces without changing her facial structure or costume.\n\n[Shot 1] The shot opens directly on the outboard side of <Subject 2> in driving rain, where the wet metal railing is visibly attached to the slanted deck edge. <Subject 1> is already suspended below that railing, her weight held by the last hooked finger of her left hand, with her torso and both legs outside the hull and both boots dangling over open black water with no deck beneath them. Madison remains on the deck side, her rain-dark hands and cuffed forearms entering frame as she deliberately pries <Subject 1>’s final finger from the rail. The grip releases; <Subject 1>’s shoulder drops, her ponytail whips upward, and her whole body falls along the rust-streaked hull of <Subject 2>. The camera follows in a fast downward tracking move, rain streaking past the lens and the tilted ship’s structure sliding upward in frame, until white spray sweeps across the lens. <Subject 1> (S1) makes a short, sharp inhale. Madison (S2) gives a suppressed trembling cry from above without reaching down.\n\n[Shot 2] At 00:02.000, the camera is outside <Subject 2> in a steep high-angle full shot containing <Subject 1>, the hull edge and the churning sea. She strikes a black wave feet and legs first, sending a ring of white spray outward as the surging water swallows her hips and upper body. Her injured left leg remains completely covered by the dark blue wrap and intact black pant fabric, with no exposed wound. As she goes under, the view enters the dark teal water defined by <Subject 3>, with bubbles rising and the shadow of the ship overhead. The camera jolts on impact and tilts down after her as the surface closes overhead. The storm sound becomes muffled during submersion, leaving a heavy plunge tone, fading rain, rushing bubbles and low water pressure.\n\n[Shot 3] At 00:04.000, the view remains beneath the broken surface near the shadowed hull in <Subject 3>. A huge dark shape rises from the black-blue depth behind <Subject 1>, resolving into <Subject 4> with broad fins, rough dark skin and pale jaws opening toward her clothed leg. <Subject 1> curls in pain, one arm pulling inward while her ponytail drifts in the turbulent water. When <Subject 4> reaches her leg, the exact contact is completely hidden by the dark jaw silhouette, bursting white surf, foam and a curtain of bubbles; her pants and blue wrap remain intact, with no blood and no open wound. The camera makes a short fast push toward the lunge, then a massive wave and foam flood the lens until the frame cuts to black. A low underwater roar builds, the wave crashes, and a sharp predator hiss is suddenly choked off by the enclosed water sound.\n\noverall_soundscape:\nContinuous rain, screaming wind, hull groans and impacts surround <Subject 2>. <Subject 1> (S1) produces only a short involuntary inhale, while Madison (S2) gives a suppressed crying breath from above. The fall carries rushing rain, cloth and wind, followed by a heavy body-into-water impact, muffled storm noise, surging bubbles and the deep pressure of <Subject 3>. The shark rise brings a low-frequency water rumble, a violent wave burst and a sharp predatory sound from <Subject 4> that cuts abruptly as the frame goes black.\n\nnon_diegetic_music:\nA sparse tension cue begins with low sustained sub-bass and distant metallic tremors beneath the storm. It tightens with a rising string cluster during <Subject 1>’s fall from <Subject 2>, drops to a muted hollow tone after she enters the water of <Subject 3>, and surges with a sharp brass-and-percussion stab as <Subject 4> lunges. The music cuts suddenly to silence with the black wave, leaving only the implied threat underwater.",
+          "width": 1344,
+          "height": 768,
+          "length": 158,
+          "ref_images.ref_image_0": [
+            "15",
+            0
+          ],
+          "ref_images.ref_image_1": [
+            "16",
+            0
+          ],
+          "ref_images.ref_image_2": [
+            "17",
+            0
+          ],
+          "ref_images.ref_image_3": [
+            "18",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 7188996842046729
+        }
+      },
+      "7": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "6",
+            0
+          ],
+          "guider": [
+            "7",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "11": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "10",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ]
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "10",
+            0
+          ],
+          "vae": [
+            "4",
+            0
+          ]
+        }
+      },
+      "13": {
+        "class_type": "CreateVideo",
+        "inputs": {
+          "images": [
+            "11",
+            0
+          ],
+          "audio": [
+            "12",
+            0
+          ],
+          "fps": 24.0,
+          "bit_depth": 8
+        }
+      },
+      "14": {
+        "class_type": "SaveVideo",
+        "inputs": {
+          "video": [
+            "13",
+            0
+          ],
+          "filename_prefix": "Toonflow/H3_1790744320964_415825770",
+          "format": "mp4"
+        }
+      },
+      "15": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "toonflow_h3_1790744302909_0_657413471.jpg"
+        },
+        "is_changed": [
+          "3b9554ec84bbc6b181f6400db6861b69e8f6f9e1de83120b052c08baa30d5c4d"
+        ]
+      },
+      "16": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "toonflow_h3_1790744308660_1_397277838.jpg"
+        },
+        "is_changed": [
+          "b2e0a5881771c8af8fb579fe4e9a7394fca1bf4343533146722c766e8906f75e"
+        ]
+      },
+      "17": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "toonflow_h3_1790744312150_2_631005099.jpg"
+        },
+        "is_changed": [
+          "b62f57b8282a7af5fbcb627cc0d8bc9974dcfe9af563c91f1212eeb6ca4fda31"
+        ]
+      },
+      "18": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "toonflow_h3_1790744314084_3_664522937.jpg"
+        },
+        "is_changed": [
+          "e31f9ce7120ce061c3d920fc3b1ffe4f72fa851b0f07b65c3ae6edb04d26b9c5"
+        ]
+      }
+    }
+  },
+  {
+    "videoId": 24,
+    "trackId": 1790715681264,
+    "savedPlan": [
+      {
+        "assetId": 204,
+        "assetType": "role",
+        "path": "/1790665121730/assets/1/role/06e0ac2c-2096-4f2b-bb7d-9c7163feb26f.jpg",
+        "label": "清晨便服",
+        "picture": 1,
+        "absoluteSource": "D:/Toonflow-app-master/data/oss\\1790665121730/assets/1/role/06e0ac2c-2096-4f2b-bb7d-9c7163feb26f.jpg",
+        "sha256": "d1c0cff4b3feba4fa5be34238a140e95f084d2b1f1b48d03b2fc84d8e76a78fb"
+      },
+      {
+        "assetId": 7,
+        "assetType": "scene",
+        "path": "/1790665121730/scene/8552f3d6-8d2a-4f12-a06b-eb1499ce4e4b.jpg",
+        "label": "艾娃公寓",
+        "picture": 2,
+        "absoluteSource": "D:/Toonflow-app-master/data/oss\\1790665121730/scene/8552f3d6-8d2a-4f12-a06b-eb1499ce4e4b.jpg",
+        "sha256": "d25856180f0a8705fa13fc33ce7bc88f181a0bbeee2ac5cc86b6e05b89e07ed4"
+      },
+      {
+        "assetId": 213,
+        "assetType": "tool",
+        "path": "/1790665121730/assets/1/tool/47b9c172-a598-495a-9775-25b753e81f1b.jpg",
+        "label": "通话联络页",
+        "picture": 3,
+        "absoluteSource": "D:/Toonflow-app-master/data/oss\\1790665121730/assets/1/tool/47b9c172-a598-495a-9775-25b753e81f1b.jpg",
+        "sha256": "ce8f5d156d52acca01d2d812f9cbac2e4ae747caf36eaeaa3d1403c1a27932ed"
+      }
+    ],
+    "submittedOrder": [
+      {
+        "graphKey": "ref_images.ref_image_0",
+        "uploadedAbsoluteFile": "D:/new_comfyui/input/toonflow_h3_1790752084149_0_102461545.jpg",
+        "matchesAssetId": [
+          204
+        ],
+        "sha256": "d1c0cff4b3feba4fa5be34238a140e95f084d2b1f1b48d03b2fc84d8e76a78fb"
+      },
+      {
+        "graphKey": "ref_images.ref_image_1",
+        "uploadedAbsoluteFile": "D:/new_comfyui/input/toonflow_h3_1790752089944_1_588925368.jpg",
+        "matchesAssetId": [
+          7
+        ],
+        "sha256": "d25856180f0a8705fa13fc33ce7bc88f181a0bbeee2ac5cc86b6e05b89e07ed4"
+      },
+      {
+        "graphKey": "ref_images.ref_image_2",
+        "uploadedAbsoluteFile": "D:/new_comfyui/input/toonflow_h3_1790752093039_2_782816322.jpg",
+        "matchesAssetId": [
+          213
+        ],
+        "sha256": "ce8f5d156d52acca01d2d812f9cbac2e4ae747caf36eaeaa3d1403c1a27932ed"
+      }
+    ],
+    "sameOrder": true,
+    "submittedPromptMatchesLanguageSnapshot": true,
+    "graph": {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+        }
+      },
+      "4": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ReferenceToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "audio_vae": [
+            "4",
+            0
+          ],
+          "ref_image_size": "match",
+          "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>; the face, front, side, and back panels are views of the same person, with controlled near-natural facial proportions, calm eyelids over brown eyes, a straight nose, defined cheek and jaw contours, long dark brown hair in loose layered strands, and subtly luminous detailed skin. She wears a pale heather-gray long-sleeve knit top and matching loose lounge pants with soft matte fabric; the sheet defines identity, body proportions, wardrobe, and rendering only, not its panel layout, neutral display pose, or studio background.\n<Subject 2> is Ava’s apartment from <Picture 2>, a modern high-rise studio with light wood flooring, muted gray walls, a blue-gray sofa, low television console, bed by the window, laptop desk, and floor-to-ceiling windows facing a dense dusk city; it supplies the location, spatial layout, landmarks, soft lighting direction, and atmosphere.\n<Subject 3> is the black smartphone call and contact interface from <Picture 3>, featuring the dark casing, dark-blue active-call screen, timing area, contact rows, status icons, and the visible English interface label \"Vehicle Sales Warehouse Supplies\"; it supplies the exact phone hardware, call state, and screen-language design without its studio display background.\n\nsummary:\n[reference generation] <Subject 1> continues the same supply call while using <Subject 3> inside <Subject 2>, with <Subject 3> held at reading height and <Subject 2> providing the apartment setting; <Subject 1> scans the phone screen item by item and gives a steady, non-negotiable price request.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - Ava retains the same facial structure, observed eye and nose proportions, cheek and jaw shape, long dark hair, body proportions, pale gray knit lounge outfit, detailed skin shading, and near-natural rendering, with only speech, gaze, expression, and subtle hand motion animated.\n<Subject 2> (appears in [Shot 1]): fully_preserved - The apartment preserves its modern studio layout, wood floor, blue-gray sofa, large window wall, city skyline, desk and bed placement, muted surfaces, and soft dusk illumination while the camera stays close to Ava.\n<Subject 3> (appears in [Shot 1]): fully_preserved - The black smartphone retains its hardware, dark active-call interface, blue-black screen lighting, contact rows, and visible label \"Vehicle Sales Warehouse Supplies\", with only natural thumb taps and reflected light showing continued use.\n\ndetailed_description:\nThe rendering follows <Picture 1>: Ava has controlled near-natural facial proportions, calm eyelid contours, a straight nose bridge, defined cheeks and jaw, subtly luminous skin, and visible strands in her long dark hair. Her pale gray knit top and pants retain a fine matte texture and soft drape, while the apartment and phone-screen lighting from <Picture 2> and <Picture 3> relight those surfaces without changing their geometry or material language.\n\n[Shot 1] Ava stands within the living area of <Subject 2>, her weight settled naturally near the blue-gray sofa as warm interior light blends with pale dusk city glow from the window wall. She holds <Subject 3> in front of her with both hands, the active call already connected and the dark contact interface readable; no paper, notebook, or additional visible list prop is introduced. Her right hand supports the phone while her left thumb makes short deliberate taps on the glass. Her eyes move in a steady rhythm down the screen rows as if checking each item, her brow remains focused, and her mouth articulates each phrase without enlarging her eyes or changing her facial geometry. Faint blue screen light touches her fingers, jaw, and the edge of her gray sleeve; when the interface is readable, the label \"Vehicle Sales Warehouse Supplies\" remains visible. The camera holds a close shot and moves in a small smooth arc from directly in front of Ava to a slight side-front angle, keeping her face, phone, hair movement, and upper-body posture continuously framed. <Subject 1> (S1), speaking in en-US, says:\n<d>[English] Life-saving equipment—give me a quote for everything you have in stock.</d>\n\noverall_soundscape:\nThe ongoing phone call provides a subtle continuous connection sound beneath Ava’s calm voice. Faint keyboard clicks come from the other end of the line, while repeated soft fingertip taps on the phone glass are synchronized with her thumb movements. The apartment contributes low room tone and a distant, muted city hum beyond the windows.\n\nnon_diegetic_music:\nNo non-diegetic music plays; the sequence relies on Ava’s voice, the connected call, distant keyboard sounds, screen taps, and restrained apartment ambience.",
+          "width": 1344,
+          "height": 768,
+          "length": 226,
+          "ref_images.ref_image_0": [
+            "15",
+            0
+          ],
+          "ref_images.ref_image_1": [
+            "16",
+            0
+          ],
+          "ref_images.ref_image_2": [
+            "17",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 4183750473803623
+        }
+      },
+      "7": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "6",
+            0
+          ],
+          "guider": [
+            "7",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "11": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "10",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ]
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "10",
+            0
+          ],
+          "vae": [
+            "4",
+            0
+          ]
+        }
+      },
+      "13": {
+        "class_type": "CreateVideo",
+        "inputs": {
+          "images": [
+            "11",
+            0
+          ],
+          "audio": [
+            "12",
+            0
+          ],
+          "fps": 24.0,
+          "bit_depth": 8
+        }
+      },
+      "14": {
+        "class_type": "SaveVideo",
+        "inputs": {
+          "video": [
+            "13",
+            0
+          ],
+          "filename_prefix": "Toonflow/H3_1790752098173_991362290",
+          "format": "mp4"
+        }
+      },
+      "15": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "toonflow_h3_1790752084149_0_102461545.jpg"
+        },
+        "is_changed": [
+          "d1c0cff4b3feba4fa5be34238a140e95f084d2b1f1b48d03b2fc84d8e76a78fb"
+        ]
+      },
+      "16": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "toonflow_h3_1790752089944_1_588925368.jpg"
+        },
+        "is_changed": [
+          "d25856180f0a8705fa13fc33ce7bc88f181a0bbeee2ac5cc86b6e05b89e07ed4"
+        ]
+      },
+      "17": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "toonflow_h3_1790752093039_2_782816322.jpg"
+        },
+        "is_changed": [
+          "ce8f5d156d52acca01d2d812f9cbac2e4ae747caf36eaeaa3d1403c1a27932ed"
+        ]
+      }
+    }
+  }
+]

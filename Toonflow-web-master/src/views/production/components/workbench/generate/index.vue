@@ -8,7 +8,7 @@
     <div class="modelSelect">
       <modeMenu v-model="modelParmas" :modeOptions="modeOptions" :trackId="currentTrack?.id" :modeList="modeList" @modeChange="modeChange" />
     </div>
-    <div class="languagePanel">
+    <div v-if="!imported" class="languagePanel">
       <strong>对白语言</strong>
       <t-select
         :value="selectedLanguages"
@@ -20,7 +20,7 @@
         style="min-width: 360px; flex: 1" />
       <span>生成提示词会更新当前视频段所选语言的提示词；批量生成只补齐未完成版本，已有视频保留。</span>
     </div>
-    <div class="languageTabs">
+    <div v-if="!imported" class="languageTabs">
       <t-radio-group v-model="activeLanguage" variant="default-filled">
         <t-radio-button value="">原版（未标注语言）</t-radio-button>
         <t-radio-button v-for="language in availableLanguages" :key="language" :value="language">{{ languageName(language) }}</t-radio-button>
@@ -28,9 +28,9 @@
     </div>
     <div class="generate ac">
       <div class="prompt" v-if="currentTrack">
-        <t-card :title="'#' + (activeTrackIndex + 1) + $t('workbench.generate.generateText')" header-bordered class="videoPrompt">
+        <t-card :title="'#' + (activeTrackIndex + 1) + (imported ? ' 视频提示词' : $t('workbench.generate.generateText'))" header-bordered class="videoPrompt">
           <template #actions>
-            <t-button size="small" class="genTextbtn" :loading="currentTrack.state == '生成中'" @click="genText">
+            <t-button v-if="!imported" size="small" class="genTextbtn" :loading="currentTrack.state == '生成中'" @click="genText">
               {{ $t("workbench.generate.generateText") }}
             </t-button>
           </template>
@@ -60,6 +60,7 @@
       <newTrack
         v-model:activeTrackIndex="activeTrackIndex"
         v-model="trackList"
+        :imported="imported"
         :image-list="imageList"
         @change="trackChange"
         :modelParmas="modelParmas"
@@ -86,6 +87,7 @@ import promptEditor from "@/components/promptEditor.vue";
 import imageListCacheStore from "@/stores/imageListCache";
 import { getH3ReferenceGuardError } from "@/utils/h3ReferenceGuard";
 
+const props = defineProps<{ imported?: boolean }>();
 const { project } = storeToRefs(projectStore());
 const episodesId = inject<Ref<number>>("episodesId")!;
 const activeTrackIndex = ref(0);
@@ -288,6 +290,13 @@ watch(
         if (drMap[0].duration?.length) modelParmas.value.duration = clampDuration(modelParmas.value.duration);
       }
 
+      applyImportSettings();
+      // Imported Picture bindings require the model's actual reference mode.
+      // Some vendor configs include video/audio slots alongside image slots.
+      if (props.imported) {
+        const referenceMode = data.mode.find((m: VideoMode) => Array.isArray(m) && m.some(value => value.startsWith("imageReference:")));
+        if (referenceMode) modelParmas.value.mode = JSON.stringify(referenceMode);
+      }
       const currentParsed = parseMode(modelParmas.value.mode);
       const modeMatched =
         currentParsed !== null &&
@@ -344,7 +353,7 @@ async function getGenerateData() {
   languageOptions.value = data.dialogueLanguages || [];
   selectedLanguages.value = data.selectedLanguages || [];
   if (!loadedLanguageSelection) {
-    activeLanguage.value = selectedLanguages.value[0] || "";
+    activeLanguage.value = props.imported ? "" : selectedLanguages.value[0] || "";
     loadedLanguageSelection = true;
   }
   storyboardList.value = data.storyboardList;
@@ -369,6 +378,7 @@ async function getGenerateData() {
   }
 
   modelParmas.value.duration = clampDuration(data.trackList?.[activeTrackIndex.value]?.duration);
+  applyImportSettings();
 }
 /** 提示词失焦时保存到后端 */
 async function handlePromptBlur() {
@@ -452,10 +462,17 @@ async function genText() {
     track.state = failures.length ? "生成失败" : "已完成";
     if (failures.length) window.$message.error(failures.map((v: VideoPromptVariant) => `${languageName(v.language)}：${v.reason || "生成失败"}`).join("；"));
     else window.$message.success("所选语言提示词已更新，已有视频已保留");
-    if (!activeLanguage.value) activeLanguage.value = selectedLanguages.value[0] || "";
+    if (!activeLanguage.value) activeLanguage.value = props.imported ? "" : selectedLanguages.value[0] || "";
   } catch (e) {
     track.state = "生成失败";
     window.$message.error((e as Error)?.message ?? "提示词生成失败");
+  }
+}
+function applyImportSettings() {
+  const settings = currentTrack.value?.importSettings;
+  if (props.imported && settings) {
+    modelParmas.value.audio = settings.audio;
+    modelParmas.value.resolution = settings.resolution;
   }
 }
 function trackChange(prevIndex?: number) {
@@ -483,6 +500,7 @@ function trackChange(prevIndex?: number) {
     imageList.value = imageList.value.slice(0, 1);
   }
   modelParmas.value.duration = clampDuration(trackList.value?.[activeTrackIndex.value]?.duration);
+  applyImportSettings();
 }
 /** 监听当前轨道的 medias 变化，实时同步到缓存 */
 watch(
@@ -509,16 +527,17 @@ onMounted(() => {
 });
 /** 单个轨道生成视频 */
 async function generateVideo() {
-  if (!selectedLanguages.value.length) return window.$message.warning("请先选择对白语言并生成提示词");
-  if (!modelParmas.value.audio) return window.$message.warning("请开启声音后生成对白语言版本");
+  if (!props.imported && !selectedLanguages.value.length) return window.$message.warning("请先选择对白语言并生成提示词");
+  if (!props.imported && !modelParmas.value.audio) return window.$message.warning("请开启声音后生成对白语言版本");
   await handlePromptBlur();
   const track = currentTrack.value;
-  const languages = [...selectedLanguages.value];
-  if (languages.some((language) => !track.variants?.some((v) => v.language === language && v.prompt.trim() && v.state === "已完成")))
+  const languages = props.imported ? [""] : [...selectedLanguages.value];
+  if (!props.imported && languages.some((language) => !track.variants?.some((v) => v.language === language && v.prompt.trim() && v.state === "已完成")))
     return window.$message.warning("请先生成并检查所有已选语言的提示词");
+  if (props.imported && !track.prompt.trim()) return window.$message.warning("请填写视频提示词");
   const dlg = DialogPlugin.confirm({
     header: $t("workbench.generate.generateConfirm"),
-    body: `将为当前视频段生成 ${languages.length} 个版本：${languages.map(languageName).join("、")}。`,
+    body: props.imported ? "将按当前提示词与参考图生成这个视频段，已有视频会保留。" : `将为当前视频段生成 ${languages.length} 个版本：${languages.map(languageName).join("、")}。`,
     onConfirm: async () => {
       dlg.destroy();
       try {
@@ -558,13 +577,13 @@ async function generateVideo() {
         };
         const referenceError = getH3ReferenceGuardError(request.model, request.mode, languages.map((language) => ({
           label: `视频段 #${trackList.value.findIndex((item) => item.id === track.id) + 1}（${languageName(language)}）`,
-          prompt: track.variants?.find((variant) => variant.language === language)?.prompt || "",
+          prompt: props.imported ? track.prompt : track.variants?.find((variant) => variant.language === language)?.prompt || "",
           uploadData: request.uploadData,
         })));
         if (referenceError) return window.$message.warning(referenceError);
         const { data } = await axios.post("/production/workbench/batchGenerateVideo", {
           ...request,
-          trackData: languages.map((language) => ({ trackId: track.id, language, prompt: "", duration: request.duration, uploadData: request.uploadData })),
+          trackData: languages.map((language) => ({ trackId: track.id, language: language || undefined, prompt: props.imported ? track.prompt : "", aspectRatio: props.imported ? track.importSettings?.aspectRatio : undefined, duration: request.duration, uploadData: request.uploadData })),
         });
         window.$message.success($t("workbench.generate.generateStarted"));
         data.forEach((item: { videoId: number; language: string }) =>

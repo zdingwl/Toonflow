@@ -1,0 +1,236 @@
+{
+  "videoId": 17,
+  "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, where the face, front, side and back panels show the same person; she has wet dark hair in a high ponytail with loose strands, controlled eye proportions, a straight nose, defined cheeks and jaw, damp detailed skin, a black leather jacket over a black shirt, dark cargo pants, belt and pouches, rugged boots, and a dark blue wrap over the injured lower left leg beneath torn pant fabric, with the sheet supplying identity, proportions, costume and wet-material rendering only rather than its display pose, railing, panel layout or background.\n<Subject 2> is the storm-wrecked tilted ocean liner from <Picture 2>, with rust-streaked white decks, wet railings, lifeboats, slanted hull plating, broken deck furniture, black heaving sea, distant storm-dark city lights, lightning and cold rain, supplying the ship’s architecture, location, lighting direction and dangerous atmosphere.\n<Subject 3> is the dark underwater environment from <Picture 3>, with the massive hull overhead, pale storm light entering the surface in angled beams, deep teal-black water, suspended bubbles and a dim rocky seabed, supplying underwater layout, depth, color and light direction.\n<Subject 4> is the single massive mutant shark from <Picture 4>, with a dark charcoal upper body, pale gray underjaw and throat, rough scarred skin, conical snout, black eye, rows of triangular teeth, broad pectoral fins, dorsal fin and powerful tail; the human legs in that source are not part of <Subject 4>, and <Subject 1> retains her full pants and leg wrap during the attack.\n\nsummary:\n[reference generation] Madison deliberately pries <Subject 1>’s final finger from a railing on <Subject 2>, sending <Subject 1> falling along the tilted hull into the storm sea above <Subject 3>; after <Subject 1> submerges, <Subject 4> rises from the dark water and lunges toward her covered injured leg, with the contact hidden by jaws, surf and bubbles and no blood or open wound shown.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - The same facial structure, restrained eye proportions, nose, cheeks, jaw, ponytail, body proportions, black jacket, black shirt, dark cargo pants, boots, pouches and dark blue leg wrap remain consistent, while rain, immersion, movement and pain alter only wetness, expression and pose.\n<Subject 2> (appears in [Shot 1], [Shot 2]): fully_preserved - The liner’s rusted hull, railings, slanted deck geometry, lifeboats, wet storm lighting, lightning, rain and hostile sea are retained, with the wide reference view adapted to the local railing and ship-side action.\n<Subject 3> (appears in [Shot 2], [Shot 3]): fully_preserved - The overhead hull, teal-black water, surface light shafts, bubbles, depth and dim seabed are retained as the below-surface environment.\n<Subject 4> (appears in [Shot 3]): fully_preserved - The shark’s massive scale, dark upper body, pale jaws, rough skin, teeth, fins and upward-lunge silhouette are retained, while the reference’s bare human legs and brighter clear-water appearance are not transferred to <Subject 1> or the storm-night scene.\n\ndetailed_description:\nThe rendering follows <Picture 1>: <Subject 1> has near-natural facial geometry with restrained eye size, a straight nose bridge, defined cheek and jaw contours, damp skin with soft specular highlights, and layered wet hair strands. Her soaked leather and cotton clothing show physically based weight, shine and drape, while storm light from <Subject 2> and underwater light from <Subject 3> relight those same surfaces without changing her facial structure or costume.\n\n[Shot 1] The shot opens directly on the outboard side of <Subject 2> in driving rain, where the wet metal railing is visibly attached to the slanted deck edge. <Subject 1> is already suspended below that railing, her weight held by the last hooked finger of her left hand, with her torso and both legs outside the hull and both boots dangling over open black water with no deck beneath them. Madison remains on the deck side, her rain-dark hands and cuffed forearms entering frame as she deliberately pries <Subject 1>’s final finger from the rail. The grip releases; <Subject 1>’s shoulder drops, her ponytail whips upward, and her whole body falls along the rust-streaked hull of <Subject 2>. The camera follows in a fast downward tracking move, rain streaking past the lens and the tilted ship’s structure sliding upward in frame, until white spray sweeps across the lens. <Subject 1> (S1) makes a short, sharp inhale. Madison (S2) gives a suppressed trembling cry from above without reaching down.\n\n[Shot 2] At 00:02.000, the camera is outside <Subject 2> in a steep high-angle full shot containing <Subject 1>, the hull edge and the churning sea. She strikes a black wave feet and legs first, sending a ring of white spray outward as the surging water swallows her hips and upper body. Her injured left leg remains completely covered by the dark blue wrap and intact black pant fabric, with no exposed wound. As she goes under, the view enters the dark teal water defined by <Subject 3>, with bubbles rising and the shadow of the ship overhead. The camera jolts on impact and tilts down after her as the surface closes overhead. The storm sound becomes muffled during submersion, leaving a heavy plunge tone, fading rain, rushing bubbles and low water pressure.\n\n[Shot 3] At 00:04.000, the view remains beneath the broken surface near the shadowed hull in <Subject 3>. A huge dark shape rises from the black-blue depth behind <Subject 1>, resolving into <Subject 4> with broad fins, rough dark skin and pale jaws opening toward her clothed leg. <Subject 1> curls in pain, one arm pulling inward while her ponytail drifts in the turbulent water. When <Subject 4> reaches her leg, the exact contact is completely hidden by the dark jaw silhouette, bursting white surf, foam and a curtain of bubbles; her pants and blue wrap remain intact, with no blood and no open wound. The camera makes a short fast push toward the lunge, then a massive wave and foam flood the lens until the frame cuts to black. A low underwater roar builds, the wave crashes, and a sharp predator hiss is suddenly choked off by the enclosed water sound.\n\noverall_soundscape:\nContinuous rain, screaming wind, hull groans and impacts surround <Subject 2>. <Subject 1> (S1) produces only a short involuntary inhale, while Madison (S2) gives a suppressed crying breath from above. The fall carries rushing rain, cloth and wind, followed by a heavy body-into-water impact, muffled storm noise, surging bubbles and the deep pressure of <Subject 3>. The shark rise brings a low-frequency water rumble, a violent wave burst and a sharp predatory sound from <Subject 4> that cuts abruptly as the frame goes black.\n\nnon_diegetic_music:\nA sparse tension cue begins with low sustained sub-bass and distant metallic tremors beneath the storm. It tightens with a rising string cluster during <Subject 1>’s fall from <Subject 2>, drops to a muted hollow tone after she enters the water of <Subject 3>, and surges with a sharp brass-and-percussion stab as <Subject 4> lunges. The music cuts suddenly to silence with the black wave, leaving only the implied threat underwater.",
+  "targetDuration": 6,
+  "actualDuration": 6.583333,
+  "tags": {
+    "format": {
+      "tags": {
+        "major_brand": "isom",
+        "minor_version": "512",
+        "compatible_brands": "isomiso2avc1mp41",
+        "prompt": "{\"1\": {\"class_type\": \"UNETLoader\", \"inputs\": {\"unet_name\": \"minimax_h3_ref2va_pruned_int8_convrot.safetensors\", \"weight_dtype\": \"default\"}}, \"2\": {\"class_type\": \"CLIPLoader\", \"inputs\": {\"clip_name\": \"qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors\", \"type\": \"minimax\", \"device\": \"default\"}}, \"3\": {\"class_type\": \"VAELoader\", \"inputs\": {\"vae_name\": \"minimax_h3_video_vae_fp16.safetensors\"}}, \"4\": {\"class_type\": \"VAELoader\", \"inputs\": {\"vae_name\": \"minimax_h3_audio_vae_fp32.safetensors\"}}, \"5\": {\"class_type\": \"MiniMaxH3ReferenceToVideo\", \"inputs\": {\"clip\": [\"2\", 0], \"vae\": [\"3\", 0], \"audio_vae\": [\"4\", 0], \"ref_image_size\": \"match\", \"prompt\": \"subject_definitions:\\n<Subject 1> is Ava from <Picture 1>, where the face, front, side and back panels show the same person; she has wet dark hair in a high ponytail with loose strands, controlled eye proportions, a straight nose, defined cheeks and jaw, damp detailed skin, a black leather jacket over a black shirt, dark cargo pants, belt and pouches, rugged boots, and a dark blue wrap over the injured lower left leg beneath torn pant fabric, with the sheet supplying identity, proportions, costume and wet-material rendering only rather than its display pose, railing, panel layout or background.\\n<Subject 2> is the storm-wrecked tilted ocean liner from <Picture 2>, with rust-streaked white decks, wet railings, lifeboats, slanted hull plating, broken deck furniture, black heaving sea, distant storm-dark city lights, lightning and cold rain, supplying the ship\\u2019s architecture, location, lighting direction and dangerous atmosphere.\\n<Subject 3> is the dark underwater environment from <Picture 3>, with the massive hull overhead, pale storm light entering the surface in angled beams, deep teal-black water, suspended bubbles and a dim rocky seabed, supplying underwater layout, depth, color and light direction.\\n<Subject 4> is the single massive mutant shark from <Picture 4>, with a dark charcoal upper body, pale gray underjaw and throat, rough scarred skin, conical snout, black eye, rows of triangular teeth, broad pectoral fins, dorsal fin and powerful tail; the human legs in that source are not part of <Subject 4>, and <Subject 1> retains her full pants and leg wrap during the attack.\\n\\nsummary:\\n[reference generation] Madison deliberately pries <Subject 1>\\u2019s final finger from a railing on <Subject 2>, sending <Subject 1> falling along the tilted hull into the storm sea above <Subject 3>; after <Subject 1> submerges, <Subject 4> rises from the dark water and lunges toward her covered injured leg, with the contact hidden by jaws, surf and bubbles and no blood or open wound shown.\\n\\nretention_analysis:\\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - The same facial structure, restrained eye proportions, nose, cheeks, jaw, ponytail, body proportions, black jacket, black shirt, dark cargo pants, boots, pouches and dark blue leg wrap remain consistent, while rain, immersion, movement and pain alter only wetness, expression and pose.\\n<Subject 2> (appears in [Shot 1], [Shot 2]): fully_preserved - The liner\\u2019s rusted hull, railings, slanted deck geometry, lifeboats, wet storm lighting, lightning, rain and hostile sea are retained, with the wide reference view adapted to the local railing and ship-side action.\\n<Subject 3> (appears in [Shot 2], [Shot 3]): fully_preserved - The overhead hull, teal-black water, surface light shafts, bubbles, depth and dim seabed are retained as the below-surface environment.\\n<Subject 4> (appears in [Shot 3]): fully_preserved - The shark\\u2019s massive scale, dark upper body, pale jaws, rough skin, teeth, fins and upward-lunge silhouette are retained, while the reference\\u2019s bare human legs and brighter clear-water appearance are not transferred to <Subject 1> or the storm-night scene.\\n\\ndetailed_description:\\nThe rendering follows <Picture 1>: <Subject 1> has near-natural facial geometry with restrained eye size, a straight nose bridge, defined cheek and jaw contours, damp skin with soft specular highlights, and layered wet hair strands. Her soaked leather and cotton clothing show physically based weight, shine and drape, while storm light from <Subject 2> and underwater light from <Subject 3> relight those same surfaces without changing her facial structure or costume.\\n\\n[Shot 1] The shot opens directly on the outboard side of <Subject 2> in driving rain, where the wet metal railing is visibly attached to the slanted deck edge. <Subject 1> is already suspended below that railing, her weight held by the last hooked finger of her left hand, with her torso and both legs outside the hull and both boots dangling over open black water with no deck beneath them. Madison remains on the deck side, her rain-dark hands and cuffed forearms entering frame as she deliberately pries <Subject 1>\\u2019s final finger from the rail. The grip releases; <Subject 1>\\u2019s shoulder drops, her ponytail whips upward, and her whole body falls along the rust-streaked hull of <Subject 2>. The camera follows in a fast downward tracking move, rain streaking past the lens and the tilted ship\\u2019s structure sliding upward in frame, until white spray sweeps across the lens. <Subject 1> (S1) makes a short, sharp inhale. Madison (S2) gives a suppressed trembling cry from above without reaching down.\\n\\n[Shot 2] At 00:02.000, the camera is outside <Subject 2> in a steep high-angle full shot containing <Subject 1>, the hull edge and the churning sea. She strikes a black wave feet and legs first, sending a ring of white spray outward as the surging water swallows her hips and upper body. Her injured left leg remains completely covered by the dark blue wrap and intact black pant fabric, with no exposed wound. As she goes under, the view enters the dark teal water defined by <Subject 3>, with bubbles rising and the shadow of the ship overhead. The camera jolts on impact and tilts down after her as the surface closes overhead. The storm sound becomes muffled during submersion, leaving a heavy plunge tone, fading rain, rushing bubbles and low water pressure.\\n\\n[Shot 3] At 00:04.000, the view remains beneath the broken surface near the shadowed hull in <Subject 3>. A huge dark shape rises from the black-blue depth behind <Subject 1>, resolving into <Subject 4> with broad fins, rough dark skin and pale jaws opening toward her clothed leg. <Subject 1> curls in pain, one arm pulling inward while her ponytail drifts in the turbulent water. When <Subject 4> reaches her leg, the exact contact is completely hidden by the dark jaw silhouette, bursting white surf, foam and a curtain of bubbles; her pants and blue wrap remain intact, with no blood and no open wound. The camera makes a short fast push toward the lunge, then a massive wave and foam flood the lens until the frame cuts to black. A low underwater roar builds, the wave crashes, and a sharp predator hiss is suddenly choked off by the enclosed water sound.\\n\\noverall_soundscape:\\nContinuous rain, screaming wind, hull groans and impacts surround <Subject 2>. <Subject 1> (S1) produces only a short involuntary inhale, while Madison (S2) gives a suppressed crying breath from above. The fall carries rushing rain, cloth and wind, followed by a heavy body-into-water impact, muffled storm noise, surging bubbles and the deep pressure of <Subject 3>. The shark rise brings a low-frequency water rumble, a violent wave burst and a sharp predatory sound from <Subject 4> that cuts abruptly as the frame goes black.\\n\\nnon_diegetic_music:\\nA sparse tension cue begins with low sustained sub-bass and distant metallic tremors beneath the storm. It tightens with a rising string cluster during <Subject 1>\\u2019s fall from <Subject 2>, drops to a muted hollow tone after she enters the water of <Subject 3>, and surges with a sharp brass-and-percussion stab as <Subject 4> lunges. The music cuts suddenly to silence with the black wave, leaving only the implied threat underwater.\", \"width\": 1344, \"height\": 768, \"length\": 158, \"ref_images.ref_image_0\": [\"15\", 0], \"ref_images.ref_image_1\": [\"16\", 0], \"ref_images.ref_image_2\": [\"17\", 0], \"ref_images.ref_image_3\": [\"18\", 0]}}, \"6\": {\"class_type\": \"RandomNoise\", \"inputs\": {\"noise_seed\": 7188996842046729}}, \"7\": {\"class_type\": \"BasicGuider\", \"inputs\": {\"model\": [\"1\", 0], \"conditioning\": [\"5\", 0]}}, \"8\": {\"class_type\": \"KSamplerSelect\", \"inputs\": {\"sampler_name\": \"res_multistep\"}}, \"9\": {\"class_type\": \"BasicScheduler\", \"inputs\": {\"model\": [\"1\", 0], \"scheduler\": \"simple\", \"steps\": 20, \"denoise\": 1.0}}, \"10\": {\"class_type\": \"SamplerCustomAdvanced\", \"inputs\": {\"noise\": [\"6\", 0], \"guider\": [\"7\", 0], \"sampler\": [\"8\", 0], \"sigmas\": [\"9\", 0], \"latent_image\": [\"5\", 1]}}, \"11\": {\"class_type\": \"VAEDecode\", \"inputs\": {\"samples\": [\"10\", 0], \"vae\": [\"3\", 0]}}, \"12\": {\"class_type\": \"VAEDecodeAudio\", \"inputs\": {\"samples\": [\"10\", 0], \"vae\": [\"4\", 0]}}, \"13\": {\"class_type\": \"CreateVideo\", \"inputs\": {\"images\": [\"11\", 0], \"audio\": [\"12\", 0], \"fps\": 24.0, \"bit_depth\": 8}}, \"14\": {\"class_type\": \"SaveVideo\", \"inputs\": {\"video\": [\"13\", 0], \"filename_prefix\": \"Toonflow/H3_1790744320964_415825770\", \"format\": \"mp4\"}}, \"15\": {\"class_type\": \"LoadImage\", \"inputs\": {\"image\": \"toonflow_h3_1790744302909_0_657413471.jpg\"}, \"is_changed\": [\"3b9554ec84bbc6b181f6400db6861b69e8f6f9e1de83120b052c08baa30d5c4d\"]}, \"16\": {\"class_type\": \"LoadImage\", \"inputs\": {\"image\": \"toonflow_h3_1790744308660_1_397277838.jpg\"}, \"is_changed\": [\"b2e0a5881771c8af8fb579fe4e9a7394fca1bf4343533146722c766e8906f75e\"]}, \"17\": {\"class_type\": \"LoadImage\", \"inputs\": {\"image\": \"toonflow_h3_1790744312150_2_631005099.jpg\"}, \"is_changed\": [\"b62f57b8282a7af5fbcb627cc0d8bc9974dcfe9af563c91f1212eeb6ca4fda31\"]}, \"18\": {\"class_type\": \"LoadImage\", \"inputs\": {\"image\": \"toonflow_h3_1790744314084_3_664522937.jpg\"}, \"is_changed\": [\"e31f9ce7120ce061c3d920fc3b1ffe4f72fa851b0f07b65c3ae6edb04d26b9c5\"]}}",
+        "encoder": "Lavf62.12.102"
+      }
+    }
+  },
+  "submittedGraph": {
+    "1": {
+      "class_type": "UNETLoader",
+      "inputs": {
+        "unet_name": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+        "weight_dtype": "default"
+      }
+    },
+    "2": {
+      "class_type": "CLIPLoader",
+      "inputs": {
+        "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "type": "minimax",
+        "device": "default"
+      }
+    },
+    "3": {
+      "class_type": "VAELoader",
+      "inputs": {
+        "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+      }
+    },
+    "4": {
+      "class_type": "VAELoader",
+      "inputs": {
+        "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+      }
+    },
+    "5": {
+      "class_type": "MiniMaxH3ReferenceToVideo",
+      "inputs": {
+        "clip": [
+          "2",
+          0
+        ],
+        "vae": [
+          "3",
+          0
+        ],
+        "audio_vae": [
+          "4",
+          0
+        ],
+        "ref_image_size": "match",
+        "prompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, where the face, front, side and back panels show the same person; she has wet dark hair in a high ponytail with loose strands, controlled eye proportions, a straight nose, defined cheeks and jaw, damp detailed skin, a black leather jacket over a black shirt, dark cargo pants, belt and pouches, rugged boots, and a dark blue wrap over the injured lower left leg beneath torn pant fabric, with the sheet supplying identity, proportions, costume and wet-material rendering only rather than its display pose, railing, panel layout or background.\n<Subject 2> is the storm-wrecked tilted ocean liner from <Picture 2>, with rust-streaked white decks, wet railings, lifeboats, slanted hull plating, broken deck furniture, black heaving sea, distant storm-dark city lights, lightning and cold rain, supplying the ship’s architecture, location, lighting direction and dangerous atmosphere.\n<Subject 3> is the dark underwater environment from <Picture 3>, with the massive hull overhead, pale storm light entering the surface in angled beams, deep teal-black water, suspended bubbles and a dim rocky seabed, supplying underwater layout, depth, color and light direction.\n<Subject 4> is the single massive mutant shark from <Picture 4>, with a dark charcoal upper body, pale gray underjaw and throat, rough scarred skin, conical snout, black eye, rows of triangular teeth, broad pectoral fins, dorsal fin and powerful tail; the human legs in that source are not part of <Subject 4>, and <Subject 1> retains her full pants and leg wrap during the attack.\n\nsummary:\n[reference generation] Madison deliberately pries <Subject 1>’s final finger from a railing on <Subject 2>, sending <Subject 1> falling along the tilted hull into the storm sea above <Subject 3>; after <Subject 1> submerges, <Subject 4> rises from the dark water and lunges toward her covered injured leg, with the contact hidden by jaws, surf and bubbles and no blood or open wound shown.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - The same facial structure, restrained eye proportions, nose, cheeks, jaw, ponytail, body proportions, black jacket, black shirt, dark cargo pants, boots, pouches and dark blue leg wrap remain consistent, while rain, immersion, movement and pain alter only wetness, expression and pose.\n<Subject 2> (appears in [Shot 1], [Shot 2]): fully_preserved - The liner’s rusted hull, railings, slanted deck geometry, lifeboats, wet storm lighting, lightning, rain and hostile sea are retained, with the wide reference view adapted to the local railing and ship-side action.\n<Subject 3> (appears in [Shot 2], [Shot 3]): fully_preserved - The overhead hull, teal-black water, surface light shafts, bubbles, depth and dim seabed are retained as the below-surface environment.\n<Subject 4> (appears in [Shot 3]): fully_preserved - The shark’s massive scale, dark upper body, pale jaws, rough skin, teeth, fins and upward-lunge silhouette are retained, while the reference’s bare human legs and brighter clear-water appearance are not transferred to <Subject 1> or the storm-night scene.\n\ndetailed_description:\nThe rendering follows <Picture 1>: <Subject 1> has near-natural facial geometry with restrained eye size, a straight nose bridge, defined cheek and jaw contours, damp skin with soft specular highlights, and layered wet hair strands. Her soaked leather and cotton clothing show physically based weight, shine and drape, while storm light from <Subject 2> and underwater light from <Subject 3> relight those same surfaces without changing her facial structure or costume.\n\n[Shot 1] The shot opens directly on the outboard side of <Subject 2> in driving rain, where the wet metal railing is visibly attached to the slanted deck edge. <Subject 1> is already suspended below that railing, her weight held by the last hooked finger of her left hand, with her torso and both legs outside the hull and both boots dangling over open black water with no deck beneath them. Madison remains on the deck side, her rain-dark hands and cuffed forearms entering frame as she deliberately pries <Subject 1>’s final finger from the rail. The grip releases; <Subject 1>’s shoulder drops, her ponytail whips upward, and her whole body falls along the rust-streaked hull of <Subject 2>. The camera follows in a fast downward tracking move, rain streaking past the lens and the tilted ship’s structure sliding upward in frame, until white spray sweeps across the lens. <Subject 1> (S1) makes a short, sharp inhale. Madison (S2) gives a suppressed trembling cry from above without reaching down.\n\n[Shot 2] At 00:02.000, the camera is outside <Subject 2> in a steep high-angle full shot containing <Subject 1>, the hull edge and the churning sea. She strikes a black wave feet and legs first, sending a ring of white spray outward as the surging water swallows her hips and upper body. Her injured left leg remains completely covered by the dark blue wrap and intact black pant fabric, with no exposed wound. As she goes under, the view enters the dark teal water defined by <Subject 3>, with bubbles rising and the shadow of the ship overhead. The camera jolts on impact and tilts down after her as the surface closes overhead. The storm sound becomes muffled during submersion, leaving a heavy plunge tone, fading rain, rushing bubbles and low water pressure.\n\n[Shot 3] At 00:04.000, the view remains beneath the broken surface near the shadowed hull in <Subject 3>. A huge dark shape rises from the black-blue depth behind <Subject 1>, resolving into <Subject 4> with broad fins, rough dark skin and pale jaws opening toward her clothed leg. <Subject 1> curls in pain, one arm pulling inward while her ponytail drifts in the turbulent water. When <Subject 4> reaches her leg, the exact contact is completely hidden by the dark jaw silhouette, bursting white surf, foam and a curtain of bubbles; her pants and blue wrap remain intact, with no blood and no open wound. The camera makes a short fast push toward the lunge, then a massive wave and foam flood the lens until the frame cuts to black. A low underwater roar builds, the wave crashes, and a sharp predator hiss is suddenly choked off by the enclosed water sound.\n\noverall_soundscape:\nContinuous rain, screaming wind, hull groans and impacts surround <Subject 2>. <Subject 1> (S1) produces only a short involuntary inhale, while Madison (S2) gives a suppressed crying breath from above. The fall carries rushing rain, cloth and wind, followed by a heavy body-into-water impact, muffled storm noise, surging bubbles and the deep pressure of <Subject 3>. The shark rise brings a low-frequency water rumble, a violent wave burst and a sharp predatory sound from <Subject 4> that cuts abruptly as the frame goes black.\n\nnon_diegetic_music:\nA sparse tension cue begins with low sustained sub-bass and distant metallic tremors beneath the storm. It tightens with a rising string cluster during <Subject 1>’s fall from <Subject 2>, drops to a muted hollow tone after she enters the water of <Subject 3>, and surges with a sharp brass-and-percussion stab as <Subject 4> lunges. The music cuts suddenly to silence with the black wave, leaving only the implied threat underwater.",
+        "width": 1344,
+        "height": 768,
+        "length": 158,
+        "ref_images.ref_image_0": [
+          "15",
+          0
+        ],
+        "ref_images.ref_image_1": [
+          "16",
+          0
+        ],
+        "ref_images.ref_image_2": [
+          "17",
+          0
+        ],
+        "ref_images.ref_image_3": [
+          "18",
+          0
+        ]
+      }
+    },
+    "6": {
+      "class_type": "RandomNoise",
+      "inputs": {
+        "noise_seed": 7188996842046729
+      }
+    },
+    "7": {
+      "class_type": "BasicGuider",
+      "inputs": {
+        "model": [
+          "1",
+          0
+        ],
+        "conditioning": [
+          "5",
+          0
+        ]
+      }
+    },
+    "8": {
+      "class_type": "KSamplerSelect",
+      "inputs": {
+        "sampler_name": "res_multistep"
+      }
+    },
+    "9": {
+      "class_type": "BasicScheduler",
+      "inputs": {
+        "model": [
+          "1",
+          0
+        ],
+        "scheduler": "simple",
+        "steps": 20,
+        "denoise": 1.0
+      }
+    },
+    "10": {
+      "class_type": "SamplerCustomAdvanced",
+      "inputs": {
+        "noise": [
+          "6",
+          0
+        ],
+        "guider": [
+          "7",
+          0
+        ],
+        "sampler": [
+          "8",
+          0
+        ],
+        "sigmas": [
+          "9",
+          0
+        ],
+        "latent_image": [
+          "5",
+          1
+        ]
+      }
+    },
+    "11": {
+      "class_type": "VAEDecode",
+      "inputs": {
+        "samples": [
+          "10",
+          0
+        ],
+        "vae": [
+          "3",
+          0
+        ]
+      }
+    },
+    "12": {
+      "class_type": "VAEDecodeAudio",
+      "inputs": {
+        "samples": [
+          "10",
+          0
+        ],
+        "vae": [
+          "4",
+          0
+        ]
+      }
+    },
+    "13": {
+      "class_type": "CreateVideo",
+      "inputs": {
+        "images": [
+          "11",
+          0
+        ],
+        "audio": [
+          "12",
+          0
+        ],
+        "fps": 24.0,
+        "bit_depth": 8
+      }
+    },
+    "14": {
+      "class_type": "SaveVideo",
+      "inputs": {
+        "video": [
+          "13",
+          0
+        ],
+        "filename_prefix": "Toonflow/H3_1790744320964_415825770",
+        "format": "mp4"
+      }
+    },
+    "15": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "toonflow_h3_1790744302909_0_657413471.jpg"
+      },
+      "is_changed": [
+        "3b9554ec84bbc6b181f6400db6861b69e8f6f9e1de83120b052c08baa30d5c4d"
+      ]
+    },
+    "16": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "toonflow_h3_1790744308660_1_397277838.jpg"
+      },
+      "is_changed": [
+        "b2e0a5881771c8af8fb579fe4e9a7394fca1bf4343533146722c766e8906f75e"
+      ]
+    },
+    "17": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "toonflow_h3_1790744312150_2_631005099.jpg"
+      },
+      "is_changed": [
+        "b62f57b8282a7af5fbcb627cc0d8bc9974dcfe9af563c91f1212eeb6ca4fda31"
+      ]
+    },
+    "18": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "toonflow_h3_1790744314084_3_664522937.jpg"
+      },
+      "is_changed": [
+        "e31f9ce7120ce061c3d920fc3b1ffe4f72fa851b0f07b65c3ae6edb04d26b9c5"
+      ]
+    }
+  },
+  "submittedPrompt": "subject_definitions:\n<Subject 1> is Ava from <Picture 1>, where the face, front, side and back panels show the same person; she has wet dark hair in a high ponytail with loose strands, controlled eye proportions, a straight nose, defined cheeks and jaw, damp detailed skin, a black leather jacket over a black shirt, dark cargo pants, belt and pouches, rugged boots, and a dark blue wrap over the injured lower left leg beneath torn pant fabric, with the sheet supplying identity, proportions, costume and wet-material rendering only rather than its display pose, railing, panel layout or background.\n<Subject 2> is the storm-wrecked tilted ocean liner from <Picture 2>, with rust-streaked white decks, wet railings, lifeboats, slanted hull plating, broken deck furniture, black heaving sea, distant storm-dark city lights, lightning and cold rain, supplying the ship’s architecture, location, lighting direction and dangerous atmosphere.\n<Subject 3> is the dark underwater environment from <Picture 3>, with the massive hull overhead, pale storm light entering the surface in angled beams, deep teal-black water, suspended bubbles and a dim rocky seabed, supplying underwater layout, depth, color and light direction.\n<Subject 4> is the single massive mutant shark from <Picture 4>, with a dark charcoal upper body, pale gray underjaw and throat, rough scarred skin, conical snout, black eye, rows of triangular teeth, broad pectoral fins, dorsal fin and powerful tail; the human legs in that source are not part of <Subject 4>, and <Subject 1> retains her full pants and leg wrap during the attack.\n\nsummary:\n[reference generation] Madison deliberately pries <Subject 1>’s final finger from a railing on <Subject 2>, sending <Subject 1> falling along the tilted hull into the storm sea above <Subject 3>; after <Subject 1> submerges, <Subject 4> rises from the dark water and lunges toward her covered injured leg, with the contact hidden by jaws, surf and bubbles and no blood or open wound shown.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - The same facial structure, restrained eye proportions, nose, cheeks, jaw, ponytail, body proportions, black jacket, black shirt, dark cargo pants, boots, pouches and dark blue leg wrap remain consistent, while rain, immersion, movement and pain alter only wetness, expression and pose.\n<Subject 2> (appears in [Shot 1], [Shot 2]): fully_preserved - The liner’s rusted hull, railings, slanted deck geometry, lifeboats, wet storm lighting, lightning, rain and hostile sea are retained, with the wide reference view adapted to the local railing and ship-side action.\n<Subject 3> (appears in [Shot 2], [Shot 3]): fully_preserved - The overhead hull, teal-black water, surface light shafts, bubbles, depth and dim seabed are retained as the below-surface environment.\n<Subject 4> (appears in [Shot 3]): fully_preserved - The shark’s massive scale, dark upper body, pale jaws, rough skin, teeth, fins and upward-lunge silhouette are retained, while the reference’s bare human legs and brighter clear-water appearance are not transferred to <Subject 1> or the storm-night scene.\n\ndetailed_description:\nThe rendering follows <Picture 1>: <Subject 1> has near-natural facial geometry with restrained eye size, a straight nose bridge, defined cheek and jaw contours, damp skin with soft specular highlights, and layered wet hair strands. Her soaked leather and cotton clothing show physically based weight, shine and drape, while storm light from <Subject 2> and underwater light from <Subject 3> relight those same surfaces without changing her facial structure or costume.\n\n[Shot 1] The shot opens directly on the outboard side of <Subject 2> in driving rain, where the wet metal railing is visibly attached to the slanted deck edge. <Subject 1> is already suspended below that railing, her weight held by the last hooked finger of her left hand, with her torso and both legs outside the hull and both boots dangling over open black water with no deck beneath them. Madison remains on the deck side, her rain-dark hands and cuffed forearms entering frame as she deliberately pries <Subject 1>’s final finger from the rail. The grip releases; <Subject 1>’s shoulder drops, her ponytail whips upward, and her whole body falls along the rust-streaked hull of <Subject 2>. The camera follows in a fast downward tracking move, rain streaking past the lens and the tilted ship’s structure sliding upward in frame, until white spray sweeps across the lens. <Subject 1> (S1) makes a short, sharp inhale. Madison (S2) gives a suppressed trembling cry from above without reaching down.\n\n[Shot 2] At 00:02.000, the camera is outside <Subject 2> in a steep high-angle full shot containing <Subject 1>, the hull edge and the churning sea. She strikes a black wave feet and legs first, sending a ring of white spray outward as the surging water swallows her hips and upper body. Her injured left leg remains completely covered by the dark blue wrap and intact black pant fabric, with no exposed wound. As she goes under, the view enters the dark teal water defined by <Subject 3>, with bubbles rising and the shadow of the ship overhead. The camera jolts on impact and tilts down after her as the surface closes overhead. The storm sound becomes muffled during submersion, leaving a heavy plunge tone, fading rain, rushing bubbles and low water pressure.\n\n[Shot 3] At 00:04.000, the view remains beneath the broken surface near the shadowed hull in <Subject 3>. A huge dark shape rises from the black-blue depth behind <Subject 1>, resolving into <Subject 4> with broad fins, rough dark skin and pale jaws opening toward her clothed leg. <Subject 1> curls in pain, one arm pulling inward while her ponytail drifts in the turbulent water. When <Subject 4> reaches her leg, the exact contact is completely hidden by the dark jaw silhouette, bursting white surf, foam and a curtain of bubbles; her pants and blue wrap remain intact, with no blood and no open wound. The camera makes a short fast push toward the lunge, then a massive wave and foam flood the lens until the frame cuts to black. A low underwater roar builds, the wave crashes, and a sharp predator hiss is suddenly choked off by the enclosed water sound.\n\noverall_soundscape:\nContinuous rain, screaming wind, hull groans and impacts surround <Subject 2>. <Subject 1> (S1) produces only a short involuntary inhale, while Madison (S2) gives a suppressed crying breath from above. The fall carries rushing rain, cloth and wind, followed by a heavy body-into-water impact, muffled storm noise, surging bubbles and the deep pressure of <Subject 3>. The shark rise brings a low-frequency water rumble, a violent wave burst and a sharp predatory sound from <Subject 4> that cuts abruptly as the frame goes black.\n\nnon_diegetic_music:\nA sparse tension cue begins with low sustained sub-bass and distant metallic tremors beneath the storm. It tightens with a rising string cluster during <Subject 1>’s fall from <Subject 2>, drops to a muted hollow tone after she enters the water of <Subject 3>, and surges with a sharp brass-and-percussion stab as <Subject 4> lunges. The music cuts suddenly to silence with the black wave, leaving only the implied threat underwater.",
+  "languagePromptSnapshotMatchesSubmitted": true
+}

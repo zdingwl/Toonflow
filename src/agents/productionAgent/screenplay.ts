@@ -93,5 +93,35 @@ export function validateDirectorFacts(script: string, plan: string): string[] {
     }
     try { productionSceneBudget(plan, source.scene, source.text); } catch (error) { errors.push((error as Error).message); }
   }
+  return [...errors, ...validateDirectorBeatBudgets(script, plan)];
+}
+
+/** Legacy plans remain valid; new director beat tables must use the explicit per-scene budget. */
+export function validateDirectorBeatBudgets(script: string, plan: string): string[] {
+  if (!/^(?:#{1,6}\s+(?:[三3][、. ]\s*)?逐场导演设计|<逐场导演设计>)\s*$/m.test(plan)) return [];
+  const sections = [...plan.matchAll(/^####\s+Sc(\d+)[：:][^\r\n]*/gm)];
+  const errors: string[] = [];
+  for (const scene of parseScriptScenes(script)) {
+    const index = sections.findIndex(section => Number(section[1]) === scene.scene);
+    if (index < 0) { errors.push(`Sc${scene.scene}缺少逐场导演设计`); continue; }
+    const section = plan.slice(sections[index].index!, sections[index + 1]?.index ?? plan.length);
+    const beats = section.split(/\r?\n/).filter(line => /^\s*\|\s*B\d+\s*\|/i.test(line))
+      .map(line => line.split("|").slice(1, -1).map(cell => cell.trim()));
+    if (!beats.length) { errors.push(`Sc${scene.scene}缺少叙事节拍`); continue; }
+    let budget: number | undefined;
+    try { budget = productionSceneBudget(plan, scene.scene, scene.text); }
+    catch { continue; } // The fact validator reports malformed budgets separately.
+    if (budget === undefined) continue;
+    let end = 0;
+    for (const beat of beats) {
+      const range = beat[1]?.match(/^(\d+(?:\.\d+)?)\s*[–—\-~～至]\s*(\d+(?:\.\d+)?)\s*(?:秒|s)?$/i);
+      if (!range || Math.abs(Number(range[1]) - end) > 0.001 || Number(range[2]) <= Number(range[1])) {
+        errors.push(`Sc${scene.scene}节拍区间必须从0连续覆盖制作预算，不能沿用来源绝对时段或重叠留空`);
+        end = NaN; break;
+      }
+      end = Number(range[2]);
+    }
+    if (Number.isFinite(end) && Math.abs(end - budget) > 0.001) errors.push(`Sc${scene.scene}节拍合计${end}秒，与制作预算${budget}秒不一致`);
+  }
   return errors;
 }

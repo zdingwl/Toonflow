@@ -25,3 +25,32 @@ test("selected production skills have complete, unique frontmatter", async () =>
   assert.ok(names.has("director_storyboard_table_style"));
   assert.ok(names.has("storyboard_prompt_techniques"));
 });
+
+test("every selectable art/story combination has unambiguous activation names", async () => {
+  const { parseFrontmatter } = await import("../src/utils/agent/skillsTools.ts");
+  const load = root => fs.readdirSync(root).filter(name => name.endsWith(".md")).map(name => {
+    const file = path.join(root, name);
+    const content = fs.readFileSync(file, "utf8");
+    const metadata = parseFrontmatter(content);
+    assert.ok(content.replace(/^\uFEFF?---[\s\S]*?\r?\n---/, "").trim(), `${file}: empty skill`);
+    return { ...metadata, file };
+  });
+  const variants = root => fs.readdirSync(root, { withFileTypes: true })
+    .filter(entry => entry.isDirectory())
+    .map(entry => path.join(root, entry.name, "driector_skills"))
+    .filter(dir => fs.existsSync(dir))
+    .map(load);
+  const art = variants("data/skills/art_skills");
+  const story = variants("data/skills/story_skills");
+  const common = load("data/skills/production_skills");
+  assert.ok(art.length && story.length);
+  for (const selectedArt of art) {
+    for (const selectedStory of story) {
+      const names = new Map();
+      for (const skill of [...selectedArt, ...selectedStory, ...common]) {
+        assert.ok(!names.has(skill.name), `ambiguous ${skill.name}: ${names.get(skill.name)} / ${skill.file}`);
+        names.set(skill.name, skill.file);
+      }
+    }
+  }
+});

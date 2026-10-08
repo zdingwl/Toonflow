@@ -1,0 +1,12 @@
+{
+  "entry": "src/app.ts",
+  "bundle": true,
+  "write": false,
+  "packages": "external",
+  "outputBytes": [
+    1451104
+  ],
+  "errors": [],
+  "warnings": [],
+  "changedSources": 23
+}

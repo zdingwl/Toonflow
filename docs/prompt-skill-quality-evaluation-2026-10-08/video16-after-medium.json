@@ -1,0 +1,48 @@
+{
+  "variant": "after",
+  "videoId": 16,
+  "trackId": 1790715600051,
+  "model": "QWEN3.8:27b",
+  "temperature": 0.3,
+  "seed": 42,
+  "reasoning": "medium",
+  "duration": 10,
+  "elapsedMs": 17907,
+  "finishReason": "stop",
+  "systemWords": 1854,
+  "systemHash": "7c4a2478dec45751e5e5926d2f1d3166313df20284356825929c8d3086b0728e",
+  "inputHash": "d3ef56d15cf25a6e960bed55f235117b146cc599c3cb5c7acc9ce7d530ac20af",
+  "referenceHashes": [
+    {
+      "assetId": 202,
+      "picture": 1,
+      "sha256": "3b9554ec84bbc6b181f6400db6861b69e8f6f9e1de83120b052c08baa30d5c4d"
+    },
+    {
+      "assetId": 205,
+      "picture": 2,
+      "sha256": "e0d3ea6fd458004bfe567e6f8dad0816b4c920a673e71c0940df74aaaf9c5ec6"
+    },
+    {
+      "assetId": 5,
+      "picture": 3,
+      "sha256": "b2e0a5881771c8af8fb579fe4e9a7394fca1bf4343533146722c766e8906f75e"
+    }
+  ],
+  "outputCounts": {
+    "total": 508,
+    "sections": {
+      "subject_definitions": 125,
+      "summary": 37,
+      "retention_analysis": 53,
+      "detailed_description": 232,
+      "overall_soundscape": 48,
+      "non_diegetic_music": 1
+    }
+  },
+  "errors": [
+    "H3 提示词格式：summary 应使用已定义的 Subject 标签描述主体关系"
+  ],
+  "workspaceUnchanged": true,
+  "limitation": "Isolated base-prompt generation with reasoning medium; fixed comparison sampling, no runtime retries, language-localization step, media job, persisted prompt or video generation."
+}

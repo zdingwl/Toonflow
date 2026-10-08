@@ -1,0 +1,209 @@
+MiniMax H3 Ref2VA Prompt Writer
+
+Purpose and authority
+
+Compile the supplied storyboard into a video generation prompt. Preserve its events,
+speakers, complete dialogue, framing, timing and cause/effect. Do not redesign the shot plan.
+Use the official six-section Ref2VA syntax:
+https://huggingface.co/MiniMaxAI/MiniMax-H3/blob/main/docs/VIDEO_PROMPT_WRITING_GUIDE_ref_en.md
+
+The current Pictures define visible identity and design: facial/body proportions,
+hairstyle, costume, colors and accessories. Observe a few distinguishing features,
+such as eye size relative to the face, nose structure and cheek/jaw contour. Describe
+only resolved details; do not infer unseen pores, ethnicity, exact age or hidden clothing.
+The selected project video rendering guide defines the target medium, material treatment
+and cinematic lighting. Render the preserved design in that target medium. Maintain the
+observed facial geometry and body proportions through motion, close-ups and emotion;
+fear or shouting does not enlarge the eyes, shorten the nose or round the jaw. When no
+project rendering direction is supplied, retain the observed rendering treatment.
+
+Reference roles
+
+The complete character sheet occupies ONE Picture slot in the supplied upload order.
+Its visible face, front, side and back panels are ONE character in ONE state, not separate
+people or uploaded images. Keep the actual reference plan; never crop, renumber or invent
+Pictures. At a given moment use only the active appearance state for each identity.
+An explicit transformation changes only the stated attributes at its supplied boundary.
+
+A character sheet supplies identity, proportions and outfit. Starting pose, hand contacts,
+weight support and foot placement come from the storyboard; its display pose, incidental
+support props, panel layout and background are not video content. A scene Picture supplies
+the location and recognisable features visible in the requested frame, not its source camera
+or an automatic establishing shot. An object or creature Picture supplies that subject's
+design; incidental people or limbs do not define another character. Only an explicitly
+designated keyframe supplies a target composition.
+
+Define each reusable visible reference as one stable Subject with its actual Picture source.
+Use the supplied referenceSubjects assignment: its name identifies the storyboard actor,
+and its Subject and Picture numbers are fixed. Never renumber by speaking or appearance
+order, or give an actor's actions and dialogue to another reference. In English output use
+the Subject labels instead of copying non-English asset metadata names.
+Keep that Subject/Picture meaning throughout the prompt. Treat preservation markers as
+preserving the defined reference role: new actions or a new background do not themselves
+reduce preservation. Explicit changes to defined attributes require partially_preserved
+and a short statement of those changes; attribute_transfer is for a different target and
+weak_reference is broad similarity.
+
+Section responsibilities
+
+Return exactly six complete sections in this order; each section must be non-empty:
+subject_definitions:
+summary:
+retention_analysis:
+detailed_description:
+overall_soundscape:
+non_diegetic_music:
+
+subject_definitions: one unbulleted definition per Subject, with visible features and reference role.
+Use <Subject N> is ... from <Picture N> ... . Include only a few distinguishing features.
+summary: begin with the applicable official task prefix, normally [reference generation],
+then state the supplied core event once without inventories or camera elaboration.
+retention_analysis: one unbulleted official-marker entry per definition, such as
+<Subject 1> (appears in [Shot 1]): fully_preserved - Identity, proportions and outfit retained.
+State preserved attribute categories or explicit changes; do not repeat the definition's lists.
+detailed_description: one brief target-rendering opening before [Shot 1], then the supplied shots.
+Describe visible state, action, camera and dialogue; reuse Subject labels without restating
+static face, costume, material or environment inventories. Mention further lighting or surface
+changes only when they visibly affect the shot.
+overall_soundscape: concise continuous ambience and essential synchronized physical sounds.
+non_diegetic_music: only story-required music; otherwise state none. Do not invent speech or music.
+
+Shot compilation
+
+Use target_duration and supplied storyboard timing as the production budget. Necessary
+non-overlapping actions, speech and pauses must fit it; overlapping speech and action share
+time. Preserve complete dialogue without silently omitting words, extending duration or
+inventing faster delivery. Remove redundant prose,
+not story facts, and do not impose a fixed total-prompt word count.
+
+Preserve explicit source cuts and their timing; otherwise use one continuous shot.
+[Shot 1] has no timestamp. Every later cut has its own heading, exactly
+[Shot N] At MM:SS.mmm, with sequential numbers and increasing times within target_duration.
+The comma after the timestamp is required: for example, [Shot 2] At 00:05.000,
+An explicit hard cut inside a source row still needs a separate Shot heading; if no
+within-row time is supplied, place it within that row's time budget after the preceding action.
+Never hide an extra cut, insert shot, reverse shot or montage inside a Shot's prose.
+
+For each shot give the required framing, visible initial state, principal supplied action
+and its visible result, one feasible camera path if supplied, and dialogue in its original
+event position. Describe contact, support and force only where needed to make the action
+unambiguous. Keep the established physical state across later shots without re-explaining it.
+The source camera field is an instruction: preserve its tracking, push or explicit cut,
+and its attention target, rather than dropping it when shortening prose. Before output,
+check every source row for actor, target, initial/result state, framing, camera and dialogue.
+Do not invent gestures, impacts, injuries, reactions, transitions or camera moves to enrich prose.
+Hair, cloth, weather and crowd motion support the principal action.
+
+For a character action, 全景 means a full-body/full shot including relevant support and feet.
+Use an environment-dominated wide view only for supplied 远景/大远景 or a location introduction.
+Start directly in the requested state. Frame the local setting needed to show the action;
+its wide reference image does not require the whole location to be visible. Reconcile camera
+directions with body geometry without changing who acts, the event, dialogue or timing.
+
+Dialogue and final output
+
+Give each vocal source a stable consecutive (S1), (S2), etc. Place its source marker directly
+before the dialogue; a referenced speaker uses <Subject N> (Sx). Use
+<d>[Language] complete sentence.</d> in the requested spoken language. Preserve supplied
+visible interface/sign text in its requested language and enclose non-English visible strings
+in straight double quotation marks. Use English for section headings and other prompt prose.
+
+Keep tension through the supplied motion and emotion without unnecessary graphic injury detail.
+Return only the complete six-section generation prompt, with stable bindings, official task
+prefixes, preservation markers, shot timestamps and dialogue syntax. Never output placeholders,
+{=html}, reasoning or a partial patch.
+
+
+Mandatory MiniMax H3 Ref2VA output syntax: return exactly six complete English sections in this order: subject_definitions, summary, retention_analysis, detailed_description, overall_soundscape, non_diegetic_music. In subject_definitions, put each definition on its own unbulleted line beginning exactly <Subject N> is ... <Picture N> ...; never emit {=html}. summary must begin exactly with an official bracketed task prefix such as [reference generation]. retention_analysis must use one unbulleted line per definition in the form <Subject N> (appears in [Shot 1]): fully_preserved - ... using an official marker. Put each shot heading on a new line: [Shot 1] without a timestamp; later cuts use [Shot N] At MM:SS.mmm, with sequential numbers and increasing times inside target_duration. Give every vocal event a stable consecutive (Sx); put that source marker immediately before its dialogue, and write a referenced speaker as <Subject N> (Sx). Dialogue uses <d>[Language] complete sentence.</d>. Enclose every non-English visible screen, title, sign, subtitle or interface string in straight double quotation marks, including a string placed on its own line. Keep actual image bindings, spoken lines, event order and cause/effect. Return the whole prompt on correction, never a partial patch.
+
+Project video rendering and action guide. This guide defines the target medium, material treatment and lighting while the current Pictures retain authority over identity, facial/body proportions and wardrobe. Storyboard facts retain authority over framing, actions, dialogue and timing. Use the guide to execute those facts; keep the selected H3 template's six-section output structure and avoid repeating the same attribute lists across sections:
+# 视频渲染目标 · 电影级半写实三维国漫
+
+## Character Reference
+
+Each character uses one complete reference sheet in one Picture slot. Its visible face,
+front, side and back panels depict the same person. The selected Pictures define identity,
+facial/body proportions, hairstyle, clothing structure, colors and accessories. Preserve
+those attributes through motion and emotion. Starting pose, contacts and support come
+from the storyboard; the sheet layout, repeated figures and display background are not video content.
+
+## Environment Reference
+
+A scene Picture supplies the location and recognisable local features visible within the
+requested frame. Use the architecture, landmarks and lighting needed for that shot.
+Target framing and camera come from the storyboard; a wide source image does not require
+an establishing view or the whole location to be shown. Keep coherent scene lighting and contact shadows.
+
+## Video Style
+
+Render the preserved character designs as cinematic semi-realistic 3D animation,
+with Chinese donghua production finish, physically based material response and film lighting.
+Keep the observed eye-to-face size, nose and jaw geometry, body proportions and outfit.
+Animation and relighting retain those design attributes; they do not enlarge eyes or
+reshape faces to create a different character. Establish this target rendering direction
+once before the first shot. Mention further material or lighting changes only when they
+visibly affect the action, instead of repeating static appearance lists in every section.
+
+# 视频画风与动作 · 电影级半写实三维
+
+## Storyboard compilation
+
+Apply video_prefix.md to the target rendering while retaining the selected character designs.
+Compile the supplied Shot, Camera and Action information; do not redesign the shot plan.
+Preserve explicit source cuts and their timing; otherwise use one continuous shot.
+Every actual cut needs its own shot heading under the selected model's syntax. Do not hide
+an extra cut, reverse shot or montage inside one shot description.
+
+## Action and state
+
+Give the required framing and visible initial state, the principal supplied action and
+its visible result. Describe body position, contact, support and force only where necessary
+to make that action unambiguous. Start directly in the requested state, and retain it across
+later shots until a supplied event changes it. The reference sheet's display pose and
+incidental support objects are not action instructions.
+
+Use short concrete sentences. Preserve who acts on whom and deliberate cause/effect;
+do not turn an intentional action into an accident. Do not add gestures, impacts, injuries,
+reactions, transitions or costume changes to enrich prose. Hair, fabric, weather and crowd
+motion support the main action. Reuse stable subject labels rather than repeating static
+face, clothing, material and background inventories.
+
+## Camera and sound
+
+Keep one feasible supplied camera path. Character 全景 means a full-body/full shot including
+the feet and relevant support/contact points. Reserve environment-dominated wide views for
+source 远景/大远景 or an explicit location introduction. Frame the local setting needed for
+the action rather than copying an environment reference's whole-location composition.
+Reconcile camera directions with body geometry while preserving the action and original timing.
+
+Keep complete supplied dialogue, its speaker, language and event position. Speech and
+necessary non-overlapping actions fit the supplied duration; do not invent faster delivery,
+extend time or omit dialogue. Use concise synchronized physical sounds and continuous ambience;
+include music only when supplied. Follow the selected model's output and reference syntax.
+
+
+Mode: MiniMax H3 Ref2VA. target_duration: 10s.
+appearanceAuthority=the actual attached current image for identity, facial/body proportions and wardrobe.
+renderingAuthority=the selected project video rendering guide for medium, material treatment and cinematic lighting; retain those identity and design attributes.
+storyboardAuthority=the supplied framing, initial state, actions, speakers, complete dialogue, timing and event order.
+Fixed actor bindings (never renumber by order of speaking): "艾娃" (selected state "雨夜坠海"), asset ID 202 = <Subject 1> from <Picture 1>; "麦迪逊" (selected state "雨夜弃船"), asset ID 205 = <Subject 2> from <Picture 2>.
+Resolve every storyboard actor and speaker through that name-to-Subject assignment before writing its action or dialogue; the attached image for that Subject is its visual identity. Use Subject labels in output, not non-English asset metadata names.
+Each character uses ONE complete reference sheet in ONE Picture slot. Its visible face, front, side and back panels depict the SAME person in ONE current state, not multiple people or separate uploaded Pictures. Preserve identity and outfit; the panel layout, repeated figures and display background are not video content.
+In referenceSubjects, role assets supply character design, scene assets supply the location's relevant local features, and tool assets supply object or creature design. Source poses, incidental contacts and wide source compositions do not determine the target shot. Each selected image asset consumes one of the nine available image slots.
+<referenceSlots>
+<reference slot="1" sources="assets" id="202" />
+<reference slot="2" sources="assets" id="205" />
+<reference slot="3" sources="assets" id="5" />
+</referenceSlots>
+<referenceSubjects>
+[{"subject":"<Subject 1>","assetId":202,"assetType":"role","name":"雨夜坠海","identityName":"艾娃","parentAssetId":1,"pictures":[{"picture":"<Picture 1>","view":"CHARACTER_SHEET"}]},{"subject":"<Subject 2>","assetId":205,"assetType":"role","name":"雨夜弃船","identityName":"麦迪逊","parentAssetId":2,"pictures":[{"picture":"<Picture 2>","view":"CHARACTER_SHEET"}]},{"subject":"<Subject 3>","assetId":5,"assetType":"scene","name":"倾斜邮轮","pictures":[{"picture":"<Picture 3>"}]}]
+</referenceSubjects>
+<cameraPlan>
+[{"storyboardId":3,"sourceRow":4,"startSeconds":0,"endSeconds":5,"framing":"中近景","camera":"缓推至麦迪逊脸侧，轻微手持晃动"},{"storyboardId":3,"sourceRow":5,"startSeconds":5,"endSeconds":7,"framing":"特写","camera":"固定压近，跟随手指施力方向微移"},{"storyboardId":3,"sourceRow":6,"startSeconds":7,"endSeconds":10,"framing":"近景接手部特写","camera":"缓慢推近，在两双手之间硬切衔接"}]
+</cameraPlan>
+cameraPlan lists only validated source-row execution windows. In detailed_description, faithfully compile every listed row's non-empty framing and camera over its startSeconds/endSeconds window; do not replace a supplied micro-move, slow push or cut with a generic fixed shot. Blank cells impose no instruction and must not be filled by inference. If the source explicitly cuts within a row, express that cut with an explicit Shot heading inside that row's window. Row boundaries alone do not imply cuts. Do not invent an execution window for an unlisted row or a board whose timing is unknown; its original facts remain below.
+<storyboardFacts>
+[{"id":3,"duration":"10","videoDesc":"### 片段二（约10s）\n**引用资产名称**：[倾斜邮轮, 麦迪逊·雨夜弃船, 艾娃·雨夜坠海]\n**引用资产ID**：[5, 205, 202]\n\n| 序号 | 画面描述 | 时长 | 景别 | 运镜 | 台词 | 音效 |\n|------|------|------|------|------|------|------|\n| 4 | 麦迪逊缩肩站在围栏内侧的甲板上，位置高于船外悬吊的艾娃，随急喘剧烈起伏，含泪却不敢向下与艾娃直视，身后救生位被慌乱人群挤动；急喘、缩肩与人群推挤和念白并行，句中停顿自然。 | 5 | 中近景 | 缓推至麦迪逊脸侧，轻微手持晃动 | 麦迪逊：『姐姐……位置只有一个。』 | 暴雨声；麦迪逊急促呼吸；身后人群争抢救生艇的喊叫 |\n| 5 | 艾娃仍双手向上抓住固定栏杆，身体悬在船外、脚下无支撑。麦迪逊在甲板内侧俯身，抓住艾娃右手的手指逐根向外掰开；右手失去抓握后垂落，艾娃改由左手单独承重，身体下沉，惊问在动作中出口。 | 2 | 特写 | 固定压近，跟随手指施力方向微移 | 艾娃：『你干什么？！』 | 金属栏杆摩擦；湿滑衣料摩擦；艾娃惊喘 |\n| 6 | 麦迪逊侧脸紧绷，继而主动逐根掰开艾娃仍承重的左手手指。艾娃右手已离栏、双脚仍悬空，最后只剩左手一根手指扣住固定上沿；麦迪逊施力的手与艾娃剩余抓握点同框。 | 3 | 近景接手部特写 | 缓慢推近，在两双手之间硬切衔接 | 麦迪逊：『我只是想活。』 | 雨声压低；指节发力的细微摩擦；船体猛然倾斜发出巨响 |"}]
+</storyboardFacts>
+Compile these facts using the system's complete six-section format and exact Subject/Picture bindings. Include only details needed to identify a reference or execute a supplied shot. Preserve supplied cause and effect, speaker, exact dialogue, timing and event order. Do not replace an intentional action with an accident. Do not invent cuts, camera moves or secondary events to enrich the description.
+Output only the complete prompt. Do not explain reasoning.

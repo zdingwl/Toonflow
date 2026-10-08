@@ -1,0 +1,165 @@
+{
+  "reviewedArtifact": "D:\\Toonflow-app-master\\docs\\prompt-skill-quality-evaluation-2026-10-08\\video16-after-final-retry.md",
+  "sha256": "d47179934c5b1b995b30160f8e6e9603296e7565dc467833d9251247b9278397",
+  "reviewScope": "Independent content comparison against the saved source storyboard and cameraPlan; no generation, code, model or production database changes.",
+  "modelEvaluation": {
+    "words": 555,
+    "reasoning": "medium",
+    "temperature": 0.3,
+    "seed": 42,
+    "formatErrors": [],
+    "attempts": [
+      {
+        "attempt": 1,
+        "errors": [
+          "H3 提示词格式：<Subject 3> 已定义但未在 detailed_description 中使用"
+        ],
+        "finishReason": "stop"
+      },
+      {
+        "attempt": 2,
+        "errors": [],
+        "finishReason": "stop"
+      }
+    ],
+    "limitation": "Isolated base-prompt generation with reasoning medium and up to 3 format retries using the route's correction instruction; fixed comparison sampling, no language-localization step, media job, persisted prompt or video generation."
+  },
+  "verdict": "CORE_PLOT_AND_CAMERA_MEANING_PASS_EXPLICIT_INTERNAL_CUT_COMPILATION_FAIL",
+  "fullContentPass": false,
+  "renderedVideoQualityVerified": false,
+  "sourceCameraPlan": [
+    {
+      "storyboardId": 3,
+      "sourceRow": 4,
+      "startSeconds": 0,
+      "endSeconds": 5,
+      "framing": "中近景",
+      "camera": "缓推至麦迪逊脸侧，轻微手持晃动"
+    },
+    {
+      "storyboardId": 3,
+      "sourceRow": 5,
+      "startSeconds": 5,
+      "endSeconds": 7,
+      "framing": "特写",
+      "camera": "固定压近，跟随手指施力方向微移"
+    },
+    {
+      "storyboardId": 3,
+      "sourceRow": 6,
+      "startSeconds": 7,
+      "endSeconds": 10,
+      "framing": "近景接手部特写",
+      "camera": "缓慢推近，在两双手之间硬切衔接"
+    }
+  ],
+  "actualShotHeadings": [
+    {
+      "shot": 1,
+      "startSeconds": null
+    },
+    {
+      "shot": 2,
+      "startSeconds": 5.0
+    },
+    {
+      "shot": 3,
+      "startSeconds": 7.0
+    }
+  ],
+  "checks": [
+    {
+      "name": "actor_receiver_identity",
+      "status": "PASS",
+      "evidence": "Subject 1/Picture 1 remains Ava in dark jacket, suspended target; Subject 2/Picture 2 remains Madison in orange vest, deliberate prying actor. summary and Shot 1/2/3 are consistent."
+    },
+    {
+      "name": "dialogue_speaker_and_order",
+      "status": "PASS",
+      "evidence": "Madison/Subject 2 (S1): 姐姐……位置只有一个; Ava/Subject 1 (S2): 你干什么？！; Madison/Subject 2 (S1): 我只是想活. Supplied sentences and row order retained; Ava question explicitly occurs mid-action."
+    },
+    {
+      "name": "right_then_left_support",
+      "status": "PASS",
+      "evidence": "Shot 2 starts both hands gripping, right fingers pried open, right hand drops, left hand alone carries weight and body sinks. Shot 3 retains right hand released and unsupported feet while remaining left fingers are pried to one finger."
+    },
+    {
+      "name": "initial_state",
+      "status": "PASS_WITH_WEAKER_SHOT_LOCAL_STATEMENT",
+      "evidence": "Summary explicitly places Madison inside and above suspended Ava. Shot 1 retains inside railing and averted downward gaze toward Subject 1, but does not itself repeat Ava suspended outside. Shot 2 states body outside and feet unsupported."
+    },
+    {
+      "name": "source_global_order_and_end_state",
+      "status": "PASS",
+      "evidence": "First 0-5s breath/tear/crowd/first line; 5-7s deliberate right-hand release and startled question; 7-10s deliberate left-hand prying to one finger, shared forcing-hand/grip frame, hull lurch and third line. No complete release or falling is added."
+    },
+    {
+      "name": "row4_camera",
+      "status": "PASS",
+      "source": "中近景；缓推至麦迪逊脸侧，轻微手持晃动",
+      "evidence": "Shot 1: Medium close-up; slowly pushes toward Subject 2 face side with slight handheld shake."
+    },
+    {
+      "name": "row5_micro_move",
+      "status": "PASS",
+      "source": "特写；固定压近，跟随手指施力方向微移",
+      "evidence": "Shot 2: The camera presses in fixed, shifting slightly along the direction of the prying force."
+    },
+    {
+      "name": "row6_slow_push_and_hard_cut_meaning",
+      "status": "PASS",
+      "source": "近景接手部特写；缓慢推近，在两双手之间硬切衔接",
+      "evidence": "Shot 3: The camera pushes in slowly with a hard cut between the two hands."
+    },
+    {
+      "name": "row6_hard_cut_explicit_timed_shot4",
+      "status": "FAIL",
+      "expected": "Separate [Shot 4] At MM:SS.mmm, heading inside source row6 window after 7s and before 10s.",
+      "actual": "Hard cut is only described inside Shot 3 prose. No Shot 4 or additional timestamp exists. Structural errors[] does not check this source-to-shot requirement.",
+      "attribution": "The hard cut comes from source row6; it is not an invented extra event."
+    },
+    {
+      "name": "new_events",
+      "status": "PASS_FOR_CORE_EVENTS",
+      "evidence": "No additional rescue, fall, new impact, new dialogue or costume-change event. Scene/appearance detail remains reference description rather than a new event."
+    },
+    {
+      "name": "no_bgm",
+      "status": "PASS",
+      "evidence": "non_diegetic_music: None. No unsupported orchestral score."
+    },
+    {
+      "name": "video_style_and_design_preservation",
+      "status": "PASS_AT_TEXT_LEVEL",
+      "evidence": "Cinematic semi-realistic 3D donghua, physically based materials and film lighting explicitly preserve each reference facial geometry, proportions and wardrobe. This does not prove rendering quality."
+    },
+    {
+      "name": "source_sound_cues",
+      "status": "PASS",
+      "evidence": "Rain lowers in final segment; finger-joint strain, wet fabric/metal friction, Ava gasp, crowd/lifeboat calls and loud lurching-hull groan are all retained."
+    }
+  ],
+  "historicalFailuresPreserved": [
+    {
+      "file": "video16-after.md",
+      "reason": "Missing timestamp commas and actor/dialogue inversion."
+    },
+    {
+      "file": "video16-after-refined.md",
+      "reason": "Format passed, but actor/dialogue inversion remained. This is not final PASS evidence."
+    },
+    {
+      "file": "video16-after-final.md",
+      "reason": "Identity corrected but row5 micro-move and row6 slow push/hard cut missing."
+    },
+    {
+      "file": "video16-after-verified.md",
+      "reason": "Identity correct but camera details still incomplete; previous final-content-review.json is retained."
+    },
+    {
+      "file": "video16-after-route-retry.md",
+      "reason": "Camera meanings restored but row6 hard cut still inside Shot 3 instead of a separate timed Shot 4."
+    }
+  ],
+  "interpretation": "The supplied story and camera intentions are now preserved in this sample. The internal source cut is not yet compiled into the exact required numbered timeline. Do not report full content PASS or video quality PASS."
+}

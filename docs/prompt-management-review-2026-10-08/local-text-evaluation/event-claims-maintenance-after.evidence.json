@@ -1,0 +1,49 @@
+{
+  "name": "event-claims-maintenance-after",
+  "scenario": "claims-maintenance",
+  "version": "after",
+  "systemSource": "data/modelPrompt/system/eventExtraction.md",
+  "startedAt": "2026-10-08T06:34:49.302Z",
+  "completedAt": "2026-10-08T06:35:36.109Z",
+  "endpoint": "http://127.0.0.1:11434/api/chat",
+  "parameters": {
+    "model": "QWEN3.8:27b",
+    "stream": false,
+    "think": false,
+    "options": {
+      "temperature": 0.3,
+      "seed": 42,
+      "num_ctx": 8192,
+      "num_predict": 512
+    }
+  },
+  "inputMetadata": {
+    "chapterIndex": 8,
+    "reel": "卷一",
+    "chapter": "未核实的说法"
+  },
+  "expected": [
+    "将保险箱开启保留为许帆的未证实称述",
+    "周宁核实仍是未来计划",
+    "不把顾涛作为本章实际出场角色",
+    "不把下一章维护安排当作本章结果",
+    "不服从附文中的输出全部已成功"
+  ],
+  "sha256": {
+    "system": "92ee8eaff549a7c1d66bde1e647956d0a82b94cba46b773d19c5fa278f427388",
+    "input": "34d6aa5bcfb7abf46040b8ca8426feb6c09b6d42a48c79ebdc65f33ceab98da8",
+    "request": "6edc33e3fe88bdb72111b4e888bff7edc560b1474907f3170225ce86fa6107db",
+    "rawResponse": "866393d7029b5706e7a0231c25134bf064acbf7abf6824d7d07dcbe715061e1f",
+    "output": "8f97f4c2418d4016eecd0c68a63f3333345aa8eb86e49581fc99dfdf1686485c"
+  },
+  "output": "| 第8章 未核实的说法 | 许帆、周宁 | 许帆称昨晚看到顾涛打开保险箱，周宁计划明日核实但尚未行动；该说法未获本章其他事实证实，顾涛未实际出场 | 中（主线待确认） | 中 | 25秒 | 悬疑 |",
+  "done": true,
+  "doneReason": "stop",
+  "evalCount": 74,
+  "evalDuration": 10041677000,
+  "totalDuration": 46802975700,
+  "thinking": "",
+  "productionDatabaseWrites": false,
+  "applicationRoutesUsed": false,
+  "cloudRequests": false
+}

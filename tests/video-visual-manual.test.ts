@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {getArtPrompt} from '../src/utils/getArtPrompt';
-test('video manual derives rendering from references while asset design retains its own prefix',()=>{
+test('video manual applies the selected 3D rendering while reference designs and asset prefix stay authoritative',()=>{
  const video=getArtPrompt('realistic_3d_anime','art_skills','art_storyboard_video');
  const character=getArtPrompt('realistic_3d_anime','art_skills','art_character');
  assert.ok(video.startsWith('# 视频渲染目标'));
@@ -11,7 +11,13 @@ test('video manual derives rendering from references while asset design retains 
  assert.doesNotMatch(video,/统一目标为精品二次元写实幻想角色原画|保持有体积的插画渲染|维持插画质感/);
  assert.ok(character.startsWith('# 全局美学基础'));
  assert.match(character,/cinematic semi-realistic Chinese 3D animation/);
- assert.match(video,/Derive the target rendering from the current character images/);
+ assert.match(video,/Chinese donghua production finish/);
+ assert.match(video,/selected Pictures define identity/);
+ assert.match(video,/Keep the observed eye-to-face size, nose and jaw geometry/);
+ assert.match(video,/do not enlarge eyes or\s+reshape faces/);
+ assert.match(video,/Starting pose, contacts and support come\s+from the storyboard/);
+ assert.match(video,/a wide source image does not require\s+an establishing view/);
+ assert.doesNotMatch(video,/Derive the target rendering from the current character images|rendering follows the currently selected images/);
  assert.doesNotMatch(character,/# 视频渲染目标/);
  assert.equal(getArtPrompt('realistic_3d_anime','art_skills','art_storyboard_video.md'),video);
 });

@@ -1,9 +1,10 @@
 import express from "express";
+import { readManagedPrompt } from "@/utils/managedPromptDefaults";
 import u from "@/utils";
 import { z } from "zod";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
-import { tool, jsonSchema } from "ai";
+import { tool, jsonSchema, stepCountIs } from "ai";
 const router = express.Router();
 
 // 获取资产
@@ -31,51 +32,54 @@ export default router.post(
 
     async function processAsset(asset: (typeof assetsData)[number]) {
       try {
+        // Collect the complete model response before touching an existing binding.
+        const submissions: unknown[] = [];
         const resultTool = tool({
-          description: "匹配完成后必须调用此工具提交结果",
-          inputSchema: jsonSchema<{ id: number; audioId: number }>(
-            z
-              .object({
-                audioId: z.number().nullable().optional().describe("与该资产匹配的音频ID列表，若无合适匹配则返回空数组"),
-              })
-              .toJSONSchema(),
-          ),
+          description: "必须且只能调用一次提交匹配结果；无合适候选提交 audioId: null，保留已有绑定",
+          inputSchema: jsonSchema<{ audioId: number | null }>({
+            type: "object",
+            properties: {
+              audioId: {
+                anyOf: [{ type: "integer", enum: audioData.map((i) => i.id) }, { type: "null" }],
+                description: "候选列表中的单个数字音色ID；无合适匹配则为null，不是数组",
+              },
+            },
+            required: ["audioId"],
+            additionalProperties: false,
+          }),
           execute: async (result) => {
-            await u.db("o_assetsRole2Audio").where("assetsRoleId", asset.id).delete();
-            if (result?.audioId) await u.db("o_assetsRole2Audio").insert({ assetsRoleId: asset.id, assetsAudioId: result.audioId });
-            await u.db("o_assets").where("id", asset.id).update("audioBindState", "已完成");
-            return "无需回复用户任何内容";
+            submissions.push(result);
+            return "匹配结果已收集，请结束本轮，不要再次调用工具";
           },
         });
 
-        const audioList = audioData.map((i) => `- ID:${i.id} | 名称:${i.name} | 描述:${i.describe ?? "无"}`).join("\n");
         const promptData = await u.db("o_prompt").where("type", "audioBindPrompt").first();
-        let audioBindPrompt = "" as string | undefined;
-        if (promptData && promptData.useData) {
-          audioBindPrompt = promptData.useData;
-        } else {
-          audioBindPrompt = promptData?.data ?? undefined;
-        }
-        const { text } = await u.Ai.Text("universalAi").invoke({
+        const audioBindPrompt = promptData?.useData || promptData?.data
+          || readManagedPrompt("audioBindPrompt");
+        const response = await u.Ai.Text("universalAi").invoke({
+          system: audioBindPrompt,
           messages: [
             {
-              role: "system",
-              content: `
-              ${audioBindPrompt}
-              `,
-            },
-            {
               role: "user",
-              content: `
-                ## 候选音频列表
-                ${audioList}
-                ## 待匹配资产
-                - ID:${asset.id} | 名称:${asset.name} | 描述:${asset.describe ?? "无"} | 类型：${asset.type}
-                请从候选音频列表中为该资产选出来一个最符合该角色设定的音色，并调用 resultTool 提交结果。
-           `,
+              content: JSON.stringify({ candidates: audioData, targetAsset: asset }),
             },
           ],
           tools: { resultTool },
+          toolChoice: { type: "tool", toolName: "resultTool" },
+          stopWhen: stepCountIs(1),
+        });
+        const toolCalls = response.steps.flatMap((step) => step.toolCalls);
+        if (toolCalls.length !== 1 || toolCalls[0].toolName !== "resultTool" || submissions.length !== 1) {
+          throw new Error("音色匹配必须提交一次有效结果，缺少或重复提交；保留已有绑定");
+        }
+        const result = z.object({ audioId: z.number().int().nullable() }).strict().parse(submissions[0]);
+        if (result.audioId === null) throw new Error("没有合适的候选音色；保留已有绑定");
+        if (!audioData.some((i) => i.id === result.audioId)) throw new Error("音色ID不在当前项目候选列表中；保留已有绑定");
+        if (asset.type !== "role") throw new Error("仅角色资产可以绑定音色；保留已有绑定");
+        await u.db.transaction(async (trx) => {
+          await trx("o_assetsRole2Audio").where("assetsRoleId", asset.id).delete();
+          await trx("o_assetsRole2Audio").insert({ assetsRoleId: asset.id, assetsAudioId: result.audioId });
+          await trx("o_assets").where("id", asset.id).update("audioBindState", "已完成");
         });
       } catch (e) {
         await u.db("o_assets").where("id", asset.id).update("audioBindState", "生成失败");

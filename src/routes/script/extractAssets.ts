@@ -5,6 +5,8 @@ import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { getAssetVisualDesignSkill } from "@/utils/assetVisualDesignSkill";
 import { extractScriptAssets } from "@/utils/scriptAssetExtraction";
+import fs from "fs";
+import { buildAssetExtractionArtContext } from "@/utils/assetPrompt";
 
 const router = express.Router();
 
@@ -29,11 +31,11 @@ const assetExtractionDesignRules = `
 
 场景：
 - 场景 desc 只记录可复用的纯环境：空间拓扑、出入口、前中后景、固定建筑和陈设、基准材质、天气与默认光线。具名人物、人影、动物、怪物、独立生物、车辆/船只等可独立资产及其动作不得写进场景 desc。
-- 在不改变剧本地点功能的前提下，按网络幻想概念设计提升审美：设置一个清晰视觉地标或主构图中心，强化纵深、尺度反差、轮廓节奏、色彩层次、氛围光和幻想细节，使画面具有网文封面/精品幻想动画的第一眼吸引力，避免普通库存照片、房地产样板间和无重点的物件堆砌。
+- 在不改变剧本地点功能、时代和空间关系的前提下，按当前项目媒介与题材进行场景美术设计：设置一个清晰视觉地标或主构图中心，强化纵深、轮廓节奏、色彩层次和材质身份。幻想细节、奇观或夸张尺度仅在剧本或当前项目美术方向允许时补足；日常地点也应有明确设计重点，不用幻想封面效果改写普通生活空间。
 - 不把所有场景套成同一种蓝紫霓虹；色彩、材质和奇观必须服务题材与地点身份。基础场景只写默认状态，末日损毁、夜景、暴雨、堆满物资等跨镜头稳定变化交给场景衍生状态，不把互斥状态合并。
 
 道具与生物：
-- desc 只记录稳定外形、结构、材质、颜色和识别特征；按网络幻想资产设计强化轮廓、材质对比与标志性细节。持握、攻击、飞驰、张口咬击等瞬时动作不写成永久外形。
+- desc 只记录稳定外形、结构、材质、颜色和识别特征；按当前项目媒介、题材与资产功能强化轮廓、材质对比与标志性细节，不默认加入幻想装饰或特效。持握、攻击、飞驰、张口咬击等瞬时动作不写成永久外形。
 `.trim();
 
 
@@ -58,8 +60,11 @@ export default router.post(
       const project = await u.db("o_project").where({ id: projectId }).first();
       if (!project) throw new Error("项目不存在");
       const template = await u.db("o_prompt").where({ type: "scriptAssetExtraction" }).first();
+      const prefixPath = u.getPath(["skills", "art_skills", project.artStyle || "", "prefix.md"]);
+      const artContext = fs.existsSync(prefixPath) ? buildAssetExtractionArtContext(fs.readFileSync(prefixPath, "utf-8")) : "";
       const system = (template?.useData || template?.data || "") + "\n\n" + getAssetVisualDesignSkill() + "\n\n" + assetExtractionDesignRules
-        + "\n项目画风：" + (project.artStyle || "") + "\n当前 resultTool 的字段结构优先于旧模板。";
+        + "\n项目画风标识：" + (project.artStyle || "") + (artContext ? "\n\n" + artContext : "")
+        + "\n当前 resultTool 的字段结构优先于旧模板。";
       await u.db("o_script").where({ projectId }).whereIn("id", scriptIds).update({ extractState: 0, errorReason: null });
       res.send(success("开始提取资产"));
       void extractScriptAssets({

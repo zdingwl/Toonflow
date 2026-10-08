@@ -1,14 +1,14 @@
 import u from "@/utils";
+import { composeVideoPromptPolicy } from "@/utils/videoPromptPolicy";
+import { assertVideoTemplateCompatible, resolveVideoPromptTemplate } from "@/utils/modelPromptTemplates";
 import { assertStoryboardPromptFresh } from "@/utils/storyboardPromptFreshness";
-import fs from "fs/promises";
-import path from "path";
 import { expandH3AssetSlots } from "@/utils/h3ReferenceSlots";
 import { h3SlotPath, saveH3ReferencePlan, loadH3ReferencePlan, copyH3ReferencePlan, resolveH3ReferencePlan } from "@/utils/h3ReferencePlan";
 import { assertH3ActiveStates } from "@/utils/h3VisualStateGuard";
 import { db as languageDb } from "@/utils/db";
 import { assertTranslatedDialogueLanguage, generateLanguageVariants } from "@/utils/videoLanguages";
 import { assertH3PromptContract, h3FormatChecklist, normalizeH3PromptFormat } from "@/utils/h3PromptContract";
-import { buildH3PromptInput, h3BindingSlots } from "@/utils/h3PromptContext";
+import { buildH3PromptInput, h3BindingSlots, h3ReferenceRoleText } from "@/utils/h3PromptContext";
 import { assertH3ReferenceBindings } from "@/utils/h3ReferenceBindings";
 import { prepareH3VisionImage } from "@/utils/h3VisionImage";
 
@@ -96,7 +96,7 @@ async function generateForTrack(input: VideoPromptRequest) {
             .db("o_assets")
             .leftJoin("o_image", "o_image.id", "o_assets.imageId")
             .where({ "o_assets.id": item.id, "o_assets.projectId": projectId })
-            .select("o_assets.id", "o_assets.assetsId", "o_assets.type", "o_assets.name", "o_assets.describe", "o_assets.prompt as assetPrompt", "o_image.filePath")
+            .select("o_assets.id", "o_assets.assetsId", "o_assets.type", "o_assets.name", "o_assets.describe", "o_assets.prompt as assetPrompt", "o_image.filePath", "o_image.type as imageMediaType")
             .first();
           if (!assetsData) throw new Error(`资产 ${item.id} 不存在或不属于当前项目`);
           return {
@@ -104,7 +104,7 @@ async function generateForTrack(input: VideoPromptRequest) {
             _type: "assets", // 标记类型
             _reference: item.reference !== false,
             _slotType: item.slotType,
-            _fileType: item.fileType,
+            _fileType: item.fileType || assetsData.imageMediaType || "image",
           };
         }
       }),
@@ -156,7 +156,6 @@ async function generateForTrack(input: VideoPromptRequest) {
     });
 
     const [id, modelData] = model.split(/:(.+)/);
-    const modelLower = (modelData ?? "").toLowerCase();
     const h3PromptMode = isMiniMaxH3(modelData ?? "");
     const h3RefPromptMode = h3PromptMode && typeof mode === "string" && /^\s*\[/.test(mode);
     const h3PromptInstruction = h3RefPromptMode
@@ -165,65 +164,16 @@ async function generateForTrack(input: VideoPromptRequest) {
     const projectData = await u.db("o_project").select("*").where({ id: projectId }).first();
     const videoTrackData = await u.db("o_videoTrack").select("duration").where({ id: trackId }).first();
     const videoPrompt = await u.db("o_prompt").where("type", "videoPromptGeneration").first();
-    let videoPromptGeneration = "" as string | undefined;
-
     const modelPromptData = await u.db("o_modelPrompt").where("vendorId", id).where("model", modelData).first();
-    //查询到 有绑定对应视频提示词
-    if (h3RefPromptMode) {
-      // Ref2VA grammar is required, even when this vendor has an older bound template.
-      // A missing H3 template must not silently fall through to another model's rules.
-      videoPromptGeneration = await fs.readFile(path.join(u.getPath(["modelPrompt"]), "video", "minimaxH3Multi-referenceMode.md"), "utf-8");
-      if (!videoPromptGeneration.trim()) throw new Error("H3 多参考提示词规则文件为空，请修复后重试");
-    } else if (modelPromptData) {
-      const modelPromptRoot = u.getPath(["modelPrompt"]);
-      try {
-        const fullPath = path.join(modelPromptRoot, modelPromptData?.path!);
-        const content = await fs.readFile(fullPath, "utf-8");
-        videoPromptGeneration = content ?? "";
-      } catch { }
-    }
+    // The mapping page and generation share one resolver. A compatible explicit
+    // binding takes precedence; invalid bindings fail visibly instead of switching rules.
+    const selectedTemplate = await resolveVideoPromptTemplate(u.getPath(["modelPrompt"]), modelData, mode, modelPromptData);
+    if (selectedTemplate) assertVideoTemplateCompatible(selectedTemplate, modelData, [mode]);
+    let videoPromptGeneration = selectedTemplate?.data.replace(/<!--\s*toonflow-video-template:[\s\S]*?-->/gi, "").trim();
 
-    // 未查询到绑定，根据模型名称 + mode 自动匹配 modelPrompt/video/ 下的文件
-    if (!videoPromptGeneration) {
-      const modelPromptRoot = u.getPath(["modelPrompt"]);
-      const videoPromptDir = path.join(modelPromptRoot, "video");
-
-      let fileName: string | null = null;
-
-      if (h3RefPromptMode) {
-        // MiniMax H3 / local Ref2VA => dedicated ordered <Picture N> prompt skill
-        fileName = "minimaxH3Multi-referenceMode.md";
-      } else if (modelLower.includes("wan") && modelLower.includes("2.6")) {
-        // wan2.6 系列 => 单图首尾帧模式
-        fileName = "wan2.6Single-imageFirstFrameMode.md";
-      } else if (/seedance.*2[.\-]0/i.test(modelData)) {
-        // seedance 2.0 / 2-0 系列
-        fileName = "seedance2Multi-parameterMode.md";
-      } else if (mode === "startEndRequired" || mode === "endFrameOptional" || mode === "startFrameOptional") {
-        // body.mode 为首尾帧相关 => 通用首尾帧模式
-        fileName = "universalFirstAndLastFrameMode.md";
-      } else if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
-        // 其他 => 通用多参模式
-        fileName = "universalMulti-parameterMode.md";
-      }
-      if (fileName) {
-        try {
-          const fullPath = path.join(videoPromptDir, fileName);
-          videoPromptGeneration = await fs.readFile(fullPath, "utf-8");
-        } catch {
-          // 文件不存在则忽略，继续用备选
-        }
-      }
-    }
-
-    //备选
-    if (!videoPromptGeneration) {
-      if (videoPrompt && videoPrompt.useData) {
-        videoPromptGeneration = videoPrompt.useData;
-      } else {
-        videoPromptGeneration = videoPrompt?.data ?? undefined;
-      }
-    }
+    // Prompt management governs shared content even when a dedicated model file
+    // supplies the provider's syntax. A fallback policy is included only once.
+    videoPromptGeneration = composeVideoPromptPolicy(videoPrompt?.useData || videoPrompt?.data, videoPromptGeneration);
 
     const artStyle = projectData?.artStyle || "无";
 
@@ -232,6 +182,18 @@ async function generateForTrack(input: VideoPromptRequest) {
     // H3 Picture slots must describe only the images that will actually be uploaded to Ref2VA.
     // Storyboard images remain available as text-only composition guidance so they cannot override face identity.
     const h3DirectionText = storyboard.map((item) => item.videoDesc || "").join("\n");
+    if (h3PromptMode) {
+      // A derivative name often identifies only its state. Carry the same-project
+      // parent actor name so the writer need not infer who owns its actions/dialogue.
+      const parentIds = [...new Set(images.filter((item: any) => item?._type === "assets" && h3AssetRank(item) === 0 && Number(item.assetsId) > 0).map((item: any) => Number(item.assetsId)))];
+      if (parentIds.length) {
+        const parents = await u.db("o_assets").where({ projectId }).whereIn("id", parentIds).select("id", "name", "type");
+        const byId = new Map(parents.filter((item: any) => h3AssetRank(item) === 0).map((item: any) => [Number(item.id), item.name]));
+        for (const item of images) {
+          if (item?._type === "assets" && h3AssetRank(item) === 0 && byId.has(Number(item.assetsId))) item._identityName = byId.get(Number(item.assetsId));
+        }
+      }
+    }
     if (h3PromptMode) assertH3ActiveStates(images.filter((item: any) => item?._type === "assets" && item._reference !== false).map((item: any) => ({
       assetId: Number(item.id), parentAssetId: item.assetsId, assetType: item.type, name: item.name, filePath: item.filePath,
     })));
@@ -247,12 +209,19 @@ async function generateForTrack(input: VideoPromptRequest) {
       )
       : images.filter((item: any) => item && item._reference !== false && item.filePath);
 
+    const mediaCounts: Record<string, number> = { image: 0, audio: 0, video: 0 };
     const referenceSlotItems = pictureSourceItems.map((item: any, index: number) => {
       const slot = index + 1;
       const sources = item._type === "assets" ? "assets" : "storyboard";
       const type = item._type === "assets" ? String(item.type || "asset") : "storyboard";
       const name = item._type === "assets" ? String(item.name || `资产${item.id}`) : `分镜图${item.id}`;
-      return `<reference slot="${slot}" sources="${sources}" id="${item.id}" type="${escapeXmlAttr(type)}" name="${escapeXmlAttr(name)}" />`;
+      const mediaType = ["audio", "video"].includes(item._fileType) ? item._fileType : "image";
+      const mediaIndex = ++mediaCounts[mediaType];
+      const frameMode = ["singleImage", "startEndRequired", "endFrameOptional", "startFrameOptional"].includes(mode);
+      const frameRole = frameMode && mediaType === "image" && mediaIndex === 1 ? "first_frame"
+        : frameMode && mediaType === "image" && mediaIndex === 2 && mode !== "singleImage" ? "last_frame"
+          : `reference_${mediaType}`;
+      return `<reference slot="${slot}" sources="${sources}" id="${item.id}" type="${escapeXmlAttr(type)}" name="${escapeXmlAttr(name)}" mediaType="${mediaType}" mediaIndex="${mediaIndex}" frameRole="${frameRole}" />`;
     });
     const referenceSlots = `<referenceSlots>\n${referenceSlotItems.join("\n")}\n</referenceSlots>`;
 
@@ -267,6 +236,8 @@ async function generateForTrack(input: VideoPromptRequest) {
       .map((item: any) => ({ assetId: item.id, name: item.name, mediaType: item._fileType || item.type }));
     const content = h3PromptMode ? buildH3PromptInput(pictureSourceItems, storyboard, targetDuration, otherReferences) : `
           **模型名称**：${modelData},
+          **生成模式 mode**：${mode},
+          **项目画风 artStyle**：${artStyle},
           **目标时长 target_duration**：${targetDuration}s,
           **参考素材槽位**：
           ${referenceSlots},
@@ -276,8 +247,8 @@ async function generateForTrack(input: VideoPromptRequest) {
         .join("，")},
           **分镜信息**：${storyboard.map(
           (i) => `<storyboardItem
-  videoDesc='${i.videoDesc}'
-  duration='${i.duration}'
+  videoDesc='${escapeXmlAttr(i.videoDesc)}'
+  duration='${escapeXmlAttr(i.duration)}'
 ></storyboardItem>`,
         )},
           `;
@@ -292,23 +263,25 @@ async function generateForTrack(input: VideoPromptRequest) {
       for (const [index, item] of pictureSourceItems.entries()) {
         const referencePath = h3SlotPath(item);
         if (!referencePath) throw new Error(`${item.name} 缺少实际参考图，请先补齐人物参考图`);
-        userContent.push({ type: "text", text: `<Picture ${index + 1}>: ${item.name}; actual current reference, identity and wardrobe authority.` });
+        const identityLabel = item._identityName ? `${item._identityName} — ${item.name}` : item.name;
+        userContent.push({ type: "text", text: `<Picture ${index + 1}>: ${identityLabel}; ${h3ReferenceRoleText(item)}` });
         const dataUrl = await u.oss.getImageBase64(referencePath);
         const preparedImage = await prepareH3VisionImage(dataUrl);
         userContent.push({ type: "image", ...preparedImage });
       }
     }
     const generateBase = async () => {
-      const system = h3PromptMode ? `${videoPromptGeneration}\n\n${h3PromptInstruction}\n\nProject visual requirements (rendering guidance only; use relevant qualities without replacing the selected H3 prompt template's output structure):\n${visualManual}` : videoPromptGeneration;
+      const system = h3PromptMode ? `${videoPromptGeneration}\n\n${h3PromptInstruction}\n\nProject video rendering and action guide. This guide defines the target medium, material treatment and lighting while the current Pictures retain authority over identity, facial/body proportions and wardrobe. Storyboard facts retain authority over framing, actions, dialogue and timing. Use the guide to execute those facts; keep the selected H3 template's six-section output structure and avoid repeating the same attribute lists across sections:\n${visualManual}` : `${videoPromptGeneration}\n\nProject video rendering and action guide. Apply the selected medium, material treatment and lighting to the supplied storyboard without inventing appearance details that are absent from the input. Preserve the selected model template's output format:\n${visualManual}`;
       const messages: any[] = h3PromptMode
         ? [{ role: "user", content: userContent }]
-        : [{ role: "assistant", content: visualManual }, { role: "user", content }];
+        : [{ role: "user", content }];
       const maxAttempts = h3RefPromptMode ? 5 : 3;
       for (let attempt = 0; attempt < maxAttempts; attempt++) {
         const result = { text: (await u.Ai.Text("universalAi", h3PromptMode ? true : undefined, h3PromptMode ? 2 : undefined).invoke({ system, messages })).text };
+        if (!result.text?.trim()) throw new Error("模型未返回视频提示词，请重试");
+        if (/^(REFERENCE_STATE_REVIEW|LANGUAGE_TIMING_REVIEW):/.test(result.text.trim())) throw new Error(result.text.trim());
         if (!h3PromptMode) return result.text;
         result.text = normalizeH3PromptFormat(result.text.trim());
-        if (/^(REFERENCE_STATE_REVIEW|LANGUAGE_TIMING_REVIEW):/.test(result.text.trim())) throw new Error(result.text);
         try {
           if (h3RefPromptMode) {
             assertH3PromptContract(result.text, targetDuration, pictureSourceItems.length);
@@ -318,7 +291,7 @@ async function generateForTrack(input: VideoPromptRequest) {
         }
         catch (cause) {
           if (attempt === maxAttempts - 1) throw Object.assign(cause as Error, { candidatePrompt: result.text });
-          messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Rewrite and return one complete prompt using the selected H3 template. Do not return a patch. ${h3PromptInstruction} Reinspect the attached images and fix only the reported content contradiction while preserving the story events, speakers, exact dialogue and timing. Review error: ${u.error(cause).message}` });
+          messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Return one complete corrected prompt using the selected H3 template, never a partial patch. ${h3PromptInstruction} Fix the reported syntax or reference-format error only. Keep all already-correct sections and shot prose verbatim, including actors, targets, exact dialogue, physical states, framing and camera instructions. Preserve the existing valid Shot headings and timestamps; do not merge cuts, remove camera moves, shorten content or redesign the sequence while repairing format. Use the supplied source facts and fixed actor bindings if the reported error requires a reference correction. Review error: ${u.error(cause).message}` });
           continue;
         }
         await saveH3ReferencePlan(languageDb, trackId, result.text, pictureSourceItems);

@@ -1,0 +1,90 @@
+[
+  {
+    "path": "data/modelPrompt/system/eventExtraction.md",
+    "sha256": "92ee8eaff549a7c1d66bde1e647956d0a82b94cba46b773d19c5fa278f427388"
+  },
+  {
+    "path": "data/modelPrompt/system/scriptAssetExtraction.md",
+    "sha256": "8c4bcec165eec2f0cadfbe77c1ee6e22c22e2e6fef6f27b1f5b1b23a39c453b1"
+  },
+  {
+    "path": "data/modelPrompt/system/videoPromptGeneration.md",
+    "sha256": "4fad98734a2f182f52b7eeb4177d04522a4bd16c5e0479960fd8e98f5934b9a7"
+  },
+  {
+    "path": "data/modelPrompt/system/audioBindPrompt.md",
+    "sha256": "3493e88571066e94241ff800b02dd1b95af63a8ea4a6898d3fd171d0d8cd23c9"
+  },
+  {
+    "path": "src/utils/managedPromptDefaults.ts",
+    "sha256": "f21d4d45efe7acc1ca48eafb772ac731d7d2367321def63f768d7269a6c86f4e"
+  },
+  {
+    "path": "src/utils/videoPromptPolicy.ts",
+    "sha256": "6196359aa2b83811aaf7955ef06efce1e4f233b64df5bc0c8c5de653a542b8c2"
+  },
+  {
+    "path": "src/lib/initDB.ts",
+    "sha256": "d13947b6e57a645233a7a9ec42cf90de662cc18d8f4a0b37296e7f65bca14400"
+  },
+  {
+    "path": "src/lib/fixDB.ts",
+    "sha256": "cd0bec26773dd749169eba95c8819aa11cddd064c487d708b59d78b4a720ef3b"
+  },
+  {
+    "path": "src/utils/getPrompts.ts",
+    "sha256": "06acf370a3480ced9bbd65a15cb61fc44c16c7378fd27a8a8b1a27946165668c"
+  },
+  {
+    "path": "src/utils/cleanNovel.ts",
+    "sha256": "f77af230a70cf222128fcabb74b074dff3eae8dfa7a0696d90038788b273a060"
+  },
+  {
+    "path": "src/utils/scriptAssetExtraction.ts",
+    "sha256": "cd8454b50a7a128cc95c438964e9aab28edae032f5a011e3d012c6a562f015ac"
+  },
+  {
+    "path": "src/utils/videoPromptGeneration.ts",
+    "sha256": "368af52f53c5d169bf4fa6d8a5789b19eb0f5f6be585e1100b2d610411022865"
+  },
+  {
+    "path": "src/routes/cornerScape/batchBindAudio.ts",
+    "sha256": "f5ba2ab230bd53caa8726db6773eb2f830260547d75c26e8e2ecf8aa22dee31f"
+  },
+  {
+    "path": "scripts/main.ts",
+    "sha256": "d4d3fa50966d06b96de856124619b3442a24f9a12988cd5e3b91c8a8defd014d"
+  },
+  {
+    "path": "scripts/evaluate-prompt-skill-quality.ts",
+    "sha256": "1cc6621e0221e0ce20e197c4051f788275542ab877b5493b2710d7b1c803259a"
+  },
+  {
+    "path": "scripts/evaluate-event-extraction-local.mjs",
+    "sha256": "bf94f1e4882acf8027df691cd2e3336e6876cbd1b42eb89f81b307b0eedccb52"
+  },
+  {
+    "path": "tests/managed-prompt-defaults.test.ts",
+    "sha256": "1f35e78f4b6c8ec1392cf45c9b485002573aee0052350d809a28699d2b565aca"
+  },
+  {
+    "path": "tests/clean-novel-events.test.ts",
+    "sha256": "0dd7e1563224573c016207ee431d541727cae992d4d975d8ce00e84f2eb8c9ee"
+  },
+  {
+    "path": "tests/audio-bind-route.test.ts",
+    "sha256": "b57286eb1ff80973ccf1879e5866812db82bf07bb7b242b6f8ce005ed8dc1184"
+  },
+  {
+    "path": "tests/script-asset-empty-discovery.test.ts",
+    "sha256": "c77e11dadd8c749e11c24531c98266bf103cd98ce804cfe08a7b8c491e6487be"
+  },
+  {
+    "path": "tests/asset-description-refresh.test.ts",
+    "sha256": "50199ec16804ae9ffa78165356ff83314380128770c255b4cbd290df0cc5f3e9"
+  },
+  {
+    "path": "tests/h3-prompt-generation.test.ts",
+    "sha256": "cd1ee181c65e6671d1edb45ed5d64eceadc3955f66de4601add03a0a7c2d424a"
+  }
+]

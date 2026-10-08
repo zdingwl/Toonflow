@@ -1,0 +1,100 @@
+[
+  {
+    "videoId": 16,
+    "duration": 10.125,
+    "createdAtMilliseconds": 1790743269870,
+    "promptChars": 7286,
+    "detailedDescriptionWords": 541,
+    "fullPromptWords": 1152,
+    "shots": [
+      "[Shot 1]",
+      "[Shot 2] At 00:05.000",
+      "[Shot 3] At 00:07.000"
+    ],
+    "sceneChangeCandidatesThreshold015": [
+      4.75,
+      6.541667,
+      7.666667
+    ],
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1344,
+        "height": 768,
+        "r_frame_rate": "24/1"
+      },
+      {
+        "index": 1,
+        "codec_name": "aac",
+        "codec_type": "audio",
+        "sample_rate": "32000",
+        "channels": 2,
+        "r_frame_rate": "0/0"
+      }
+    ]
+  },
+  {
+    "videoId": 17,
+    "duration": 6.583333,
+    "createdAtMilliseconds": 1790743269870,
+    "promptChars": 7295,
+    "detailedDescriptionWords": 510,
+    "fullPromptWords": 1146,
+    "shots": [
+      "[Shot 1]",
+      "[Shot 2] At 00:02.000",
+      "[Shot 3] At 00:04.000"
+    ],
+    "sceneChangeCandidatesThreshold015": [],
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1344,
+        "height": 768,
+        "r_frame_rate": "24/1"
+      },
+      {
+        "index": 1,
+        "codec_name": "aac",
+        "codec_type": "audio",
+        "sample_rate": "32000",
+        "channels": 2,
+        "r_frame_rate": "0/0"
+      }
+    ]
+  },
+  {
+    "videoId": 24,
+    "duration": 9.417,
+    "createdAtMilliseconds": 1790743269870,
+    "promptChars": 4740,
+    "detailedDescriptionWords": 272,
+    "fullPromptWords": 729,
+    "shots": [
+      "[Shot 1]"
+    ],
+    "sceneChangeCandidatesThreshold015": [],
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1344,
+        "height": 768,
+        "r_frame_rate": "24/1"
+      },
+      {
+        "index": 1,
+        "codec_name": "aac",
+        "codec_type": "audio",
+        "sample_rate": "32000",
+        "channels": 2,
+        "r_frame_rate": "0/0"
+      }
+    ]
+  }
+]

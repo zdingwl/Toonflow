@@ -6,13 +6,13 @@
       </div>
       <div class="itemBox fc ac">
         <t-tooltip
-          :content="menu.labelKey ? $t(menu.labelKey) : ''"
+          :content="menu.label || (menu.labelKey ? $t(menu.labelKey) : '')"
           placement="right"
           destroyOnClose
           :showArrow="false"
           v-for="(menu, index) in menuList"
           :key="index">
-          <div class="item fc c" v-if="menu.type === 'btn'" :class="{ active: activeMenu == menu.path }" @click="handleClick(menu)">
+          <div class="item fc c" v-if="menu.type === 'btn'" role="button" tabindex="0" :aria-label="menu.label || (menu.labelKey ? $t(menu.labelKey) : '')" :class="{ active: activeMenu == menu.path || activeMenu.startsWith(menu.path + '/') }" @click="handleClick(menu)" @keydown.enter="handleClick(menu)" @keydown.space.prevent="handleClick(menu)">
             <component :is="menu.icon" class="icon" />
           </div>
           <div class="divider" v-if="menu.type === 'divider'"></div>
@@ -39,7 +39,7 @@
       </div>
     </div>
     <div class="view">
-      <div class="topMenu f ac jb" v-if="project?.id">
+      <div class="topMenu f ac jb" v-if="project?.id && !['/batch-assets', '/import-videos'].some(path => activeMenu.startsWith(path))">
         <div class="title">
           <h2>{{ project?.name || $t("workbench.selectProject") }}</h2>
         </div>
@@ -54,7 +54,7 @@
             <div
               class="item fc c"
               v-if="menu.type === 'btn' && (project.projectType === 'novel' || !menu.nodelOnly)"
-              :class="{ active: activeMenu == menu.path }"
+              :class="{ active: activeMenu == menu.path || activeMenu.startsWith(menu.path + '/') }"
               @click="handleClick(menu)">
               <component :is="menu.icon" class="icon" />
             </div>
@@ -85,6 +85,8 @@ const { showSetting, isElectron, needUpdate } = storeToRefs(settingStore());
 const menuList = ref([
   { type: "btn", path: "/project", labelKey: "workbench.menu.myProject", icon: "i-folder-close" },
   { type: "btn", path: "/task", labelKey: "workbench.menu.taskCenter", icon: "i-view-list" },
+  { type: "btn", path: "/batch-assets", label: "批量资产", icon: "i-picture" },
+  { type: "btn", path: "/import-videos", label: "导入视频", icon: "i-video-two" },
   // { type: "divider" },
 ]);
 

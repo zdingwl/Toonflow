@@ -1,0 +1,147 @@
+/** Isolated H3 prompt comparison. Uses local Ollama and read-only data; never submits media jobs. */
+import fs from "node:fs/promises";
+import path from "node:path";
+import crypto from "node:crypto";
+import { createRequire } from "node:module";
+import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
+import { generateText } from "ai";
+import { transform } from "sucrase";
+import { VM } from "vm2";
+import * as currentContext from "../src/utils/h3PromptContext";
+import * as slotsModule from "../src/utils/h3ReferenceSlots";
+import { assertH3PromptContract, h3FormatChecklist, normalizeH3PromptFormat } from "../src/utils/h3PromptContract";
+import { assertH3ReferenceBindings } from "../src/utils/h3ReferenceBindings";
+import { prepareH3VisionImage } from "../src/utils/h3VisionImage";
+import { withContentConstraints } from "../src/utils/contentConstraints";
+
+const require = createRequire(import.meta.url);
+const Database = require("better-sqlite3");
+const root = path.resolve(".");
+const evaluationRoot = path.join(root, "docs/prompt-skill-quality-evaluation-2026-10-08");
+const sha256 = (value: string | Buffer) => crypto.createHash("sha256").update(value).digest("hex");
+const englishWords = (value: string) => (value.match(/[A-Za-z]+(?:['’-][A-Za-z]+)*/g) || []).length;
+
+async function main() {
+  const args = new Map<string, string>();
+  for (let i = 2; i < process.argv.length; i += 2) {
+    if (!process.argv[i]?.startsWith("--") || !process.argv[i + 1]) throw new Error("使用 --variant before|after --output 文件名 [--video 16|17|24]");
+    args.set(process.argv[i].slice(2), process.argv[i + 1]);
+  }
+  const variant = args.get("variant");
+  if (variant !== "before" && variant !== "after") throw new Error("variant 必须为 before 或 after");
+  const reasoning = args.get("reasoning") || "none";
+  if (!["none", "medium"].includes(reasoning)) throw new Error("reasoning 仅允许 none 或当前 H3 路由使用的 medium");
+  const maxAttempts = Number(args.get("attempts") || 1);
+  if (!Number.isInteger(maxAttempts) || maxAttempts < 1 || maxAttempts > 5) throw new Error("attempts 必须为 1–5");
+  const videoId = Number(args.get("video") || 16);
+  if (![16, 17, 24].includes(videoId)) throw new Error("仅比较已审查的正常项目样本16/17/24");
+  const filename = args.get("output") || "";
+  if (!/^[A-Za-z0-9_-]+\.md$/.test(filename)) throw new Error("output 必须为不含目录的全新 .md 文件名");
+  const output = path.join(evaluationRoot, filename);
+  try { await fs.access(output); throw new Error("输出已存在，请选新文件名"); }
+  catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
+
+  const db = new Database(path.join(root, "data/db2.sqlite"), { readonly: true });
+  let track: any, storyboards: any[], config: any, vendor: any, assets: Map<number, any>;
+  let workspaceBefore: { id: number; hash: string }[];
+  try {
+    const video = db.prepare("select * from o_video where id=? and projectId=?").get(videoId, 1790665121730);
+    if (!video) throw new Error("正常项目样本不存在");
+    track = db.prepare("select * from o_videoTrack where id=? and projectId=?").get(video.videoTrackId, video.projectId);
+    storyboards = db.prepare('select id,duration,videoDesc from o_storyboard where trackId=? and projectId=? order by "index"').all(track.id, video.projectId);
+    config = db.prepare("select * from o_agentDeploy where key='universalAi'").get();
+    if (config?.vendorId !== "ollama") throw new Error("只允许已配置本地Ollama，不切供应商");
+    vendor = JSON.parse(db.prepare("select inputValues from o_vendorConfig where id='ollama'").get().inputValues);
+    const url = new URL(vendor.baseUrl);
+    if (!["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)) throw new Error("仅调用本机文本服务");
+    assets = new Map(db.prepare("select id,assetsId,name,type from o_assets where projectId=?").all(video.projectId).map((a: any) => [a.id, a]));
+    workspaceBefore = db.prepare("select id,data from o_agentWorkData where projectId=? and key='productionAgent'").all(String(video.projectId)).map((w: any) => ({ id: w.id, hash: sha256(w.data) }));
+  } finally { db.close(); }
+
+  const evidence = JSON.parse(await fs.readFile(path.join(root, "docs/quality-audit-2026-10-08-media/normal-project-reference-evidence.json"), "utf8")).find((e: any) => e.videoId === videoId);
+  if (!evidence || !storyboards!.length) throw new Error("参考证据或当前面板缺失");
+  const slots = evidence.savedPlan.map((p: any) => {
+    const asset = assets!.get(p.assetId), parent = assets!.get(Number(asset?.assetsId));
+    return { id: p.assetId, assetId: p.assetId, type: p.assetType, name: asset?.name || p.label,
+      ...(variant === "after" && p.assetType === "role" && parent?.type === "role" ? { assetsId: Number(parent.id), _identityName: parent.name } : {}) };
+  });
+  const sourceRoot = variant === "before" ? path.join(evaluationRoot, "before") : root;
+  const read = (p: string) => fs.readFile(path.join(sourceRoot, p), "utf8");
+  const contextSource = await read("src/utils/h3PromptContext.ts");
+  const exports: any = {};
+  new VM({ sandbox: { exports, require: (id: string) => {
+    if (id === "./h3ReferenceSlots") return slotsModule;
+    throw new Error("比较模块不允许导入 " + id);
+  } }, eval: false, wasm: false }).run(transform(contextSource, { transforms: ["typescript", "imports"] }).code);
+  const template = await read("data/modelPrompt/video/minimaxH3Multi-referenceMode.md");
+  const visualManual = (await read("data/skills/art_skills/realistic_3d_anime/video_prefix.md")) + "\n" +
+    (await read("data/skills/art_skills/realistic_3d_anime/art_prompt/art_storyboard_video.md"));
+  // Read the actual assembly text; do not import the application DB or initialization code.
+  const routeSource = await read("src/utils/videoPromptGeneration.ts");
+  const assembly = routeSource.match(/const system = h3PromptMode \? `([\s\S]*?)` : videoPromptGeneration;/)?.[1];
+  if (!assembly) throw new Error("视频系统提示词组合已变化，需更新隔离比较器");
+  const instruction = routeSource.match(/const h3EnglishPromptInstruction = `([\s\S]*?)`;/)?.[1]?.replaceAll("${h3FormatChecklist}", h3FormatChecklist);
+  if (!instruction) throw new Error("H3 英文输出指令已变化，需更新隔离比较器");
+  const correction = routeSource.match(/messages\.push\(\{ role: "assistant", content: result\.text \}, \{ role: "user", content: `([\s\S]*?)`/)?.[1];
+  if (!correction) throw new Error("H3 格式纠错指令已变化，需更新隔离比较器");
+  const system = assembly.replace(/\\n/g, "\n")
+    .replaceAll("${videoPromptGeneration}", template).replaceAll("${h3PromptInstruction}", instruction).replaceAll("${visualManual}", visualManual);
+  const input = exports.buildH3PromptInput(slots, storyboards!, Number(track!.duration));
+  const content: any[] = [{ type: "text", text: input }];
+  const referenceHashes: any[] = [];
+  for (const [index, source] of evidence.savedPlan.entries()) {
+    const image = await fs.readFile(source.absoluteSource);
+    if (sha256(image) !== source.sha256) throw new Error("参考图已变化，不能与旧样本直接比较");
+    const roleText = variant === "before" ? "actual current reference, identity and wardrobe authority." : currentContext.h3ReferenceRoleText(slots[index]);
+    const identityLabel = slots[index]._identityName ? slots[index]._identityName + " — " + slots[index].name : slots[index].name;
+    content.push({ type: "text", text: "<Picture " + (index + 1) + ">: " + identityLabel + "; " + roleText });
+    content.push({ type: "image", ...await prepareH3VisionImage("data:image/jpeg;base64," + image.toString("base64")) });
+    referenceHashes.push({ assetId: source.assetId, picture: index + 1, sha256: sha256(image) });
+  }
+  const address = vendor!.baseUrl.trim().replace(/\/+$/, "");
+  const provider = createOpenAICompatible({
+    name: "ollama", baseURL: address.endsWith("/v1") ? address : address + "/v1",
+    ...(vendor!.apiKey?.trim() ? { apiKey: vendor!.apiKey.trim().replace(/^Bearer\s+/i, "") } : {}),
+    fetch: (url, init) => fetch(url, { ...init, body: JSON.stringify({ ...JSON.parse(String(init?.body)), seed: 42, reasoning_effort: reasoning }) }),
+  });
+  const model = config!.modelName.replace(/^ollama:/, "");
+  const started = Date.now();
+  const messages: any[] = [{ role: "user", content }];
+  const history: { attempt: number; prompt: string; errors: string[]; finishReason: string }[] = [];
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const result = await generateText({
+      model: provider.chatModel(model), system: withContentConstraints(system),
+      messages, temperature: 0.3, maxOutputTokens: 10000, abortSignal: AbortSignal.timeout(600000),
+    });
+    const prompt = normalizeH3PromptFormat(result.text.trim());
+    const errors: string[] = [];
+    try { assertH3PromptContract(prompt, Number(track!.duration), slots.length); } catch (e) { errors.push((e as Error).message); }
+    try { assertH3ReferenceBindings(prompt, currentContext.h3BindingSlots(slots)); } catch (e) { errors.push((e as Error).message); }
+    history.push({ attempt, prompt, errors, finishReason: result.finishReason });
+    if (!errors.length || attempt === maxAttempts) break;
+    messages.push({ role: "assistant", content: prompt }, { role: "user", content: correction.replaceAll("${h3PromptInstruction}", instruction).replaceAll("${u.error(cause).message}", errors[0]) });
+  }
+  const last = history.at(-1)!;
+  const { prompt, errors } = last;
+  const readback = new Database(path.join(root, "data/db2.sqlite"), { readonly: true });
+  let workspaceAfter: any[];
+  try { workspaceAfter = readback.prepare("select id,data from o_agentWorkData where projectId=? and key='productionAgent'").all("1790665121730").map((w: any) => ({ id: w.id, hash: sha256(w.data) })); }
+  finally { readback.close(); }
+  const metadata = {
+    variant, videoId, trackId: track!.id, model, temperature: 0.3, seed: 42, reasoning,
+    duration: Number(track!.duration), elapsedMs: Date.now() - started, finishReason: last.finishReason,
+    systemWords: englishWords(system), systemHash: sha256(system), inputHash: sha256(input),
+    referenceHashes, outputCounts: currentContext.h3PromptWordCounts(prompt), errors,
+    attempts: history.map(({ attempt, errors, finishReason }) => ({ attempt, errors, finishReason })),
+    workspaceUnchanged: JSON.stringify(workspaceBefore!) === JSON.stringify(workspaceAfter),
+    limitation: `Isolated base-prompt generation with reasoning ${reasoning} and up to ${maxAttempts} format retries using the route's correction instruction; fixed comparison sampling, no language-localization step, media job, persisted prompt or video generation.`,
+  };
+  await fs.mkdir(evaluationRoot, { recursive: true });
+  await fs.writeFile(output, prompt, { encoding: "utf8", flag: "wx" });
+  await fs.writeFile(output.replace(/\.md$/, ".json"), JSON.stringify(metadata, null, 2), { flag: "wx" });
+  await fs.writeFile(output.replace(/\.md$/, "-input.txt"), system + "\n\n" + input, { flag: "wx" });
+  if (maxAttempts > 1) for (const item of history) await fs.writeFile(output.replace(/\.md$/, `-attempt${item.attempt}.md`), item.prompt, { flag: "wx" });
+  console.log(JSON.stringify(metadata));
+  if (errors.length || !metadata.workspaceUnchanged) process.exitCode = 1;
+}
+main().catch(error => { console.error(error instanceof Error ? error.message : "比较失败"); process.exitCode = 1; });

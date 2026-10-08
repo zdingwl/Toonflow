@@ -1,0 +1,104 @@
+{
+  "reviewedLatest": "video16-after-preserved-retry.md",
+  "scope": "Read-only independent comparison of saved isolated text samples. No code/database/model modification or generation. Previous records are retained.",
+  "verdict": "CORE_STORY_AND_CAMERA_MEANING_PRESERVED_INTERNAL_CUT_TIMELINE_INCOMPLETE",
+  "fullContentPass": false,
+  "renderedVideoQualityVerified": false,
+  "comparison": {
+    "before": {
+      "file": "video16-before-route-retry.md",
+      "sha256": "861bdac026b6e69006de80fd8f57d457bd983b237811e39792ac8603c040f45f",
+      "words": 1075,
+      "attempts": 3,
+      "formatErrors": [],
+      "unsupportedBGM": true
+    },
+    "after": {
+      "file": "video16-after-preserved-retry.md",
+      "sha256": "ff0556aaa550991d749ff0211ea82d522c72b7068f55701554f178a6d30593b9",
+      "words": 532,
+      "attempts": 2,
+      "formatErrors": [],
+      "unsupportedBGM": false
+    },
+    "wordReductionPercent": 50.51,
+    "commonSampling": {
+      "model": "QWEN3.8:27b",
+      "temperature": 0.3,
+      "seed": 42,
+      "reasoning": "medium",
+      "sameReferenceHashes": true
+    }
+  },
+  "checks": [
+    {
+      "name": "core_actor_receiver_and_dialogue",
+      "status": "PASS",
+      "evidence": "Both final texts map Subject1/Picture1 to suspended Ava and Subject2/Picture2 to deliberate prying Madison. The three supplied lines remain Madison(S1), Ava(S2), Madison(S1). Earlier after/refined inversions are not reused as PASS evidence."
+    },
+    {
+      "name": "physical_sequence",
+      "status": "PASS",
+      "evidence": "Both hands initially grip outside with unsupported feet; right fingers pried and right hand drops; left hand alone bears weight; body sinks; left fingers pried to one; released right hand and dangling feet remain; forcing hand and final grip share the frame. No fall, rescue or complete release is invented."
+    },
+    {
+      "name": "row_order_and_initial_state",
+      "status": "PASS_WITH_WEAKER_SHOT_LOCAL_STATEMENT",
+      "evidence": "0-5 / 5-7 / 7-10 source sequence preserved. Summary explicitly fixes Madison inside and above suspended Ava; Shot1 retains her downward-avoiding gaze and lifeboat crowd but does not itself restate all suspension geometry."
+    },
+    {
+      "name": "row4_camera",
+      "status": "PASS",
+      "evidence": "Medium close-up, slow push toward Madison face side and slight handheld shake retained."
+    },
+    {
+      "name": "row5_micro_move",
+      "status": "PASS",
+      "evidence": "After: camera presses in fixed, shifting slightly along direction of prying force. Before also retains this instruction."
+    },
+    {
+      "name": "row6_slow_push_hard_cut_semantics",
+      "status": "PASS",
+      "evidence": "After: camera pushes in slowly with a hard cut between the two hands. Before similarly retains slow push and hard-cutting between hands."
+    },
+    {
+      "name": "row6_cut_as_independent_timestamped_shot4",
+      "status": "FAIL_IN_BOTH",
+      "evidence": "Both texts have only Shot1, Shot2 at5s and Shot3 at7s. Explicit source hard cut remains inside Shot3 prose; neither provides separate Shot4 within(7,10)s. errors[] does not prove this content requirement."
+    },
+    {
+      "name": "source_sounds_and_hull_lurch",
+      "status": "PASS",
+      "evidence": "After retains rain lowered, fine knuckle strain, fabric/metal friction, startled gasp, lifeboat crowd, rapid breathing and sudden groan as hull lurches in overall_soundscape."
+    },
+    {
+      "name": "no_unsupported_bgm",
+      "status": "AFTER_PASS_BEFORE_FAIL",
+      "evidence": "Source supplies no music. Before adds sustained strings and pulsing low-end score; after states None."
+    },
+    {
+      "name": "3d_style_and_reference_identity",
+      "status": "PASS_AT_TEXT_LEVEL",
+      "evidence": "After explicitly uses cinematic semi-realistic3D donghua, physically based materials and film lighting while preserving observed facial geometry, proportions and wardrobe. Before describes semi-realistic3D inherited from sheets. No rendered-video conclusion is made."
+    }
+  ],
+  "remainingIssues": [
+    "Source row6 hard cut has no independently compiled Shot4 timestamp.",
+    "Opening suspension relation is explicit in summary but weaker in Shot1 prose."
+  ],
+  "historicalEvidencePreserved": [
+    "final-content-review.json",
+    "camera-plan-final-content-review.json",
+    "video16-after.md",
+    "video16-after-refined.md",
+    "video16-after-final.md",
+    "video16-after-verified.md",
+    "video16-after-route-retry.md",
+    "video16-after-final-retry.md"
+  ],
+  "limits": [
+    "Isolated base-prompt generation with reasoning medium and up to 3 format retries using the route's correction instruction; fixed comparison sampling, no language-localization step, media job, persisted prompt or video generation.",
+    "Single source segment and deterministic comparison settings; different source rule bundles and correction instructions are compared together, so improvement cannot be attributed to one individual rule.",
+    "This confirms saved text content, not a persisted production prompt or a newly generated video."
+  ]
+}

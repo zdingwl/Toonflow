@@ -8,7 +8,7 @@
         </div>
         <div class="right f ac">
           <t-button size="small" variant="outline" @click="batchDownloadVideo">{{ $t("workbench.generate.batchDownloadVideo") }}</t-button>
-          <t-button size="small" variant="outline" @click="batchGenText" :loading="generateTextLoad">
+          <t-button v-if="!imported" size="small" variant="outline" @click="batchGenText" :loading="generateTextLoad">
             {{ $t("workbench.generate.batchGenerateText") }}
           </t-button>
           <t-button size="small" variant="outline" @click="batchGenVideo" :loading="generateVideoLoad">
@@ -54,7 +54,7 @@
             <i-close size="14" />
           </div>
         </div>
-        <div class="item addItem c" @click="addTrack">
+        <div v-if="!imported" class="item addItem c" @click="addTrack">
           <i-plus size="36"></i-plus>
         </div>
       </div>
@@ -77,6 +77,7 @@ const { project } = storeToRefs(projectStore());
 const { removeCache } = imageListCacheStore();
 const episodesId = inject<Ref<number>>("episodesId")!;
 const props = defineProps<{
+  imported?: boolean;
   languages: string[];
   activeLanguage: string;
   languageName: (language: string) => string;
@@ -246,7 +247,7 @@ async function batchDownloadVideo(): Promise<void> {
 }
 const generateTextLoad = ref(false);
 async function batchGenText() {
-  if (!props.languages.length) return window.$message.warning("请先选择对白语言");
+  if (!props.imported && !props.languages.length) return window.$message.warning("请先选择对白语言");
   if (!checkedTrackIds.value.length) return window.$message.warning("请勾选视频段");
   if (trackList.value.some((t) => checkedTrackIds.value.includes(t.id) && t.state === "生成中")) return window.$message.warning("所选视频段正在生成，请稍候");
   await props.savePrompt();
@@ -325,31 +326,32 @@ function getTrackUploadInfo(track: TrackItem, filterEmpty = false) {
 const generateVideoLoad = ref(false);
 /** 批量为已勾选轨道生成视频 */
 async function batchGenVideo() {
-  if (!props.languages.length) return window.$message.warning("请先选择对白语言");
+  if (!props.imported && !props.languages.length) return window.$message.warning("请先选择对白语言");
   if (!checkedTrackIds.value.length) return window.$message.warning("请勾选视频段");
-  if (!props.modelParmas.audio) return window.$message.warning("请开启声音后生成对白语言版本");
+  if (!props.imported && !props.modelParmas.audio) return window.$message.warning("请开启声音后生成对白语言版本");
   await props.savePrompt();
-  const languages = [...props.languages];
+  const languages = props.imported ? [""] : [...props.languages];
   const selectedTracks = trackList.value.filter((track) => checkedTrackIds.value.includes(track.id));
   const dlg = DialogPlugin.confirm({
     header: $t("workbench.generate.generateConfirm"),
-    body: `将为 ${selectedTracks.length} 段视频分别生成 ${languages.map(props.languageName).join("、")}，共 ${selectedTracks.length * languages.length} 个视频。`,
+    body: props.imported ? `将生成所选的 ${selectedTracks.length} 个视频段，已有视频保留。` : `将为 ${selectedTracks.length} 段视频分别生成 ${languages.map(props.languageName).join("、")}，共 ${selectedTracks.length * languages.length} 个视频。`,
     onConfirm: async () => {
       dlg.destroy();
 
       const checkedTrackData = selectedTracks;
       const notHasPrompt = checkedTrackData.filter((track) =>
-        languages.some((language) => !track.variants?.some((v) => v.language === language && v.prompt.trim() && v.state === "已完成")),
+        props.imported ? !track.prompt.trim() : languages.some((language) => !track.variants?.some((v) => v.language === language && v.prompt.trim() && v.state === "已完成")),
       );
-      if (notHasPrompt.length) return window.$message.warning("请先生成并检查所有已选语言的提示词");
+      if (notHasPrompt.length) return window.$message.warning(props.imported ? "请填写所有已选分镜的提示词" : "请先生成并检查所有已选语言的提示词");
 
       const trackData = checkedTrackData.flatMap((track) => {
         const trackId = track.id;
         const uploadData = props.modelParmas.mode === "text" ? [] : getTrackUploadInfo(track, true);
         return languages.map((language) => ({
-          language,
+          language: language || undefined,
+          ...(props.imported ? { audio: track.importSettings?.audio, resolution: track.importSettings?.resolution, aspectRatio: track.importSettings?.aspectRatio } : {}),
           duration: props.clampDuration(track.duration || props.modelParmas.duration),
-          prompt: "",
+          prompt: props.imported ? track.prompt : "",
           uploadData,
           trackId,
         }));
@@ -364,8 +366,8 @@ async function batchGenVideo() {
         trackData,
       };
       const referenceError = getH3ReferenceGuardError(requestData.model, requestData.mode, trackData.map((item) => ({
-        label: `视频段 #${trackList.value.findIndex((track) => track.id === item.trackId) + 1}（${props.languageName(item.language)}）`,
-        prompt: checkedTrackData.find((track) => track.id === item.trackId)?.variants?.find((variant) => variant.language === item.language)?.prompt || "",
+        label: `视频段 #${trackList.value.findIndex((track) => track.id === item.trackId) + 1}（${props.languageName(item.language || "")}）`,
+        prompt: props.imported ? item.prompt : checkedTrackData.find((track) => track.id === item.trackId)?.variants?.find((variant) => variant.language === item.language)?.prompt || "",
         uploadData: item.uploadData,
       })));
       if (referenceError) return window.$message.warning(referenceError);

@@ -45,11 +45,11 @@ async function invokeResult(invoke: (input: any) => Promise<any>, schema: z.ZodT
     // Use the shared system entry point so Ai.Text appends global constraints last.
     const result = await invoke({ system: system + (attempt ? `\n上次结果未能保存：${diagnostic}。请根据 resultTool 的 schema 修正，提交全部必填字段。仅填写该资产必要的可见设计，sourceRef 必须选择输入中的原文编号，不复述整集剧本。必须调用 resultTool。` : ""),
       messages: [{ role: "user", content: JSON.stringify(input) }], tools: { resultTool }, toolChoice: { type: "tool", toolName: "resultTool" }, stopWhen: stepCountIs(1) });
-    if (output && !(Array.isArray(output.newAssets) && !output.newAssets.length && !output.existingAssetRefs.length)) return output;
+    if (output) return output;
     const errors = (result?.content || []).filter((part: any) => part.type === "tool-error");
     diagnostic = errors.length ? errors.map((part: any) => part.error?.message || String(part.error)).join("；").slice(0, 700)
       : result?.finishReason === "length" ? "模型输出达到长度上限，请缩短描述和引文"
-      : output ? "模型返回了空资产列表" : `模型未提交结果工具（结束原因：${result?.finishReason || "未知"}）`;
+      : `模型未提交结果工具（结束原因：${result?.finishReason || "未知"}）`;
     output = undefined;
   }
   throw new Error(`AI 未返回有效的资产结果：${diagnostic}`);
@@ -93,7 +93,6 @@ export async function extractScriptAssets(deps: { db: any; invoke: (input: any) 
       `${system}\n${assetDiscoveryRules}\n本步骤识别资产和剧本关联。符合入选规则的已有资产返回 existingAssetRefs 的 assetId 和 scriptIds；新资产返回 newAssets 的 name/desc/type/scriptIds。按名称、类型、基础/衍生身份匹配，不合并同名不同类型资产。同一实体的同义名称应复用已有 ID，不得换个名称重复新建。不在本批剧本出现的资产不要返回。scriptIds 是数据库剧本编号，不是剧本内的场景序号；只能选择 ${JSON.stringify([...allowed])}，不能按场景一、二、三自行递增。`,
       { scripts: batch, existingAssets: assets.map((a: any) => ({ assetId: a.id, name: a.name, type: a.type, parentAssetId: a.assetsId })) })
       .catch((cause: Error) => { throw new Error(`识别剧本资产：${cause.message}`); });
-    if (!result.newAssets.length && !result.existingAssetRefs.length) throw new Error("AI 未返回任何资产");
     const add = (key: string, value: any, scriptIds: number[]) => {
       if (!scriptIds.length || scriptIds.some(id => !allowed.has(id))) throw new Error("资产关联剧本ID无效");
       const target = targets.get(key) || { ...value, scriptIds: new Set<number>() };

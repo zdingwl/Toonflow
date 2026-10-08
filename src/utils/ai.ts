@@ -4,6 +4,7 @@ import axios from "axios";
 import { transform } from "sucrase";
 import u from "@/utils";
 import { withContentConstraints, withNonGraphicVisuals } from "./contentConstraints";
+import { withComfyuiMemory } from "./comfyuiMemory";
 
 type AiType =
   | "scriptAgent"
@@ -138,7 +139,7 @@ async function getVendorTemplateFn(fnName: FnName, modelName: `${string}:${strin
       const effectiveThink = think ?? !!selectedModel.think;
       return fn(selectedModel, effectiveThink, thinkLevel);
     };
-  else return <T>(input: T) => fn(input, selectedModel);
+  else return <T>(input: T) => withComfyuiMemory(running.vendor, fnName, () => fn(input, selectedModel));
 }
 
 async function withTaskRecord<T>(

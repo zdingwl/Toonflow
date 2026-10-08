@@ -27,13 +27,19 @@ test("H3 API graph uses ComfyUI V3 dotted reference inputs instead of silently i
   }
 });
 
-test("H3 prompt writer inherits observed proportions and rendering instead of assigning all references a fixed genre", async () => {
+test("H3 prompt writer preserves reference geometry while the selected video guide defines rendering", async () => {
   const template = await readFile(new URL("../data/modelPrompt/video/minimaxH3Multi-referenceMode.md", import.meta.url), "utf8");
   assert.doesNotMatch(template, /The references represent premium|Characters must remain stylized|same stylized proportions|a premium semi-realistic Chinese 3D donghua character asset/);
-  assert.match(template, /project preset name\s+is not evidence/);
+  assert.match(template, /current Pictures define visible identity and design/);
   assert.match(template, /eye size relative to the face/);
-  assert.match(template, /geometry and rendering are to be retained/);
-  assert.match(template, /newly added actions or a new background do not by\s+themselves reduce preservation/);
+  assert.match(template, /project video rendering guide defines the target medium/);
+  assert.match(template, /Maintain the\s+observed facial geometry and body proportions/);
+  assert.match(template, /does not enlarge the eyes, shorten the nose or round the jaw/);
+  assert.match(template, /no\s+project rendering direction is supplied, retain the observed rendering treatment/);
+  assert.match(template, /new actions or a new background do not themselves\s+reduce preservation/);
+  assert.match(template, /never crop, renumber or invent\s+Pictures/);
+  assert.match(template, /Never hide an extra cut, insert shot, reverse shot or montage inside a Shot's prose/);
+  assert.match(template, /do not repeat the definition's lists/);
 });
 
 test("H3 submission preserves spoken Picture labels without mistaking them for uploaded sources", () => {

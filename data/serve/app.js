@@ -15575,7 +15575,7 @@ var require_mime_types = __commonJS({
   "node_modules/mime-types/index.js"(exports2) {
     "use strict";
     var db2 = require_mime_db();
-    var extname = require("path").extname;
+    var extname2 = require("path").extname;
     var mimeScore = require_mimeScore();
     var EXTRACT_TYPE_REGEXP = /^\s*([^;\s]*)(?:;|\s|$)/;
     var TEXT_TYPE_REGEXP = /^text\//i;
@@ -15631,7 +15631,7 @@ var require_mime_types = __commonJS({
       if (!path34 || typeof path34 !== "string") {
         return false;
       }
-      var extension2 = extname("x." + path34).toLowerCase().slice(1);
+      var extension2 = extname2("x." + path34).toLowerCase().slice(1);
       if (!extension2) {
         return false;
       }
@@ -16160,8 +16160,8 @@ var require_text = __commonJS({
     var debug = require_src()("body-parser:text");
     var read = require_read();
     var { normalizeOptions, passthrough } = require_utils();
-    module2.exports = text2;
-    function text2(options) {
+    module2.exports = text3;
+    function text3(options) {
       const normalizedOptions = normalizeOptions(options, "text/plain");
       return function textParser(req, res, next) {
         read(req, res, next, passthrough, debug, normalizedOptions);
@@ -19109,14 +19109,14 @@ var require_view = __commonJS({
     var fs37 = require("node:fs");
     var dirname2 = path34.dirname;
     var basename = path34.basename;
-    var extname = path34.extname;
+    var extname2 = path34.extname;
     var join2 = path34.join;
     var resolve3 = path34.resolve;
     module2.exports = View;
     function View(name28, options) {
       var opts = options || {};
       this.defaultEngine = opts.defaultEngine;
-      this.ext = extname(name28);
+      this.ext = extname2(name28);
       this.name = name28;
       this.root = opts.root;
       if (!this.ext && !this.defaultEngine) {
@@ -20312,11 +20312,11 @@ var require_dist = __commonJS({
     exports2.TokenData = TokenData;
     var PathError = class extends TypeError {
       constructor(message, originalPath) {
-        let text2 = message;
+        let text3 = message;
         if (originalPath)
-          text2 += `: ${originalPath}`;
-        text2 += `; visit https://git.new/pathToRegexpError for info`;
-        super(text2);
+          text3 += `: ${originalPath}`;
+        text3 += `; visit https://git.new/pathToRegexpError for info`;
+        super(text3);
         this.originalPath = originalPath;
       }
     };
@@ -20936,16 +20936,16 @@ var require_router = __commonJS({
         return new Router(options);
       }
       const opts = options || {};
-      function router174(req, res, next) {
-        router174.handle(req, res, next);
+      function router175(req, res, next) {
+        router175.handle(req, res, next);
       }
-      Object.setPrototypeOf(router174, this);
-      router174.caseSensitive = opts.caseSensitive;
-      router174.mergeParams = opts.mergeParams;
-      router174.params = {};
-      router174.strict = opts.strict;
-      router174.stack = [];
-      return router174;
+      Object.setPrototypeOf(router175, this);
+      router175.caseSensitive = opts.caseSensitive;
+      router175.mergeParams = opts.mergeParams;
+      router175.params = {};
+      router175.strict = opts.strict;
+      router175.stack = [];
+      return router175;
     }
     Router.prototype = function() {
     };
@@ -21333,7 +21333,7 @@ var require_application = __commonJS({
     var app2 = exports2 = module2.exports = {};
     var trustProxyDefaultSymbol = "@@symbol:trust_proxy_default";
     app2.init = function init() {
-      var router174 = null;
+      var router175 = null;
       this.cache = /* @__PURE__ */ Object.create(null);
       this.engines = /* @__PURE__ */ Object.create(null);
       this.settings = /* @__PURE__ */ Object.create(null);
@@ -21342,13 +21342,13 @@ var require_application = __commonJS({
         configurable: true,
         enumerable: true,
         get: function getrouter() {
-          if (router174 === null) {
-            router174 = new Router({
+          if (router175 === null) {
+            router175 = new Router({
               caseSensitive: this.enabled("case sensitive routing"),
               strict: this.enabled("strict routing")
             });
           }
-          return router174;
+          return router175;
         }
       });
     };
@@ -21419,15 +21419,15 @@ var require_application = __commonJS({
       if (fns.length === 0) {
         throw new TypeError("app.use() requires a middleware function");
       }
-      var router174 = this.router;
+      var router175 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router174.use(path34, fn2);
+          return router175.use(path34, fn2);
         }
         debug(".use app under %s", path34);
         fn2.mountpath = path34;
         fn2.parent = this;
-        router174.use(path34, function mounted_app(req, res, next) {
+        router175.use(path34, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -22836,7 +22836,7 @@ var require_send = __commonJS({
     var statuses = require_statuses();
     var Stream = require("stream");
     var util4 = require("util");
-    var extname = path34.extname;
+    var extname2 = path34.extname;
     var join2 = path34.join;
     var normalize = path34.normalize;
     var resolve3 = path34.resolve;
@@ -23111,7 +23111,7 @@ var require_send = __commonJS({
       debug('stat "%s"', path35);
       fs37.stat(path35, function onstat(err, stat) {
         var pathEndsWithSep = path35[path35.length - 1] === sep;
-        if (err && err.code === "ENOENT" && !extname(path35) && !pathEndsWithSep) {
+        if (err && err.code === "ENOENT" && !extname2(path35) && !pathEndsWithSep) {
           return next(err);
         }
         if (err) return self2.onStatError(err);
@@ -23174,7 +23174,7 @@ var require_send = __commonJS({
     SendStream.prototype.type = function type(path35) {
       var res = this.res;
       if (res.getHeader("Content-Type")) return;
-      var ext = extname(path35);
+      var ext = extname2(path35);
       var type2 = mime.contentType(ext) || "application/octet-stream";
       debug("content-type %s", type2);
       res.setHeader("Content-Type", type2);
@@ -23394,7 +23394,7 @@ var require_response = __commonJS({
     var setCharset = require_utils3().setCharset;
     var cookie = require_cookie();
     var send = require_send();
-    var extname = path34.extname;
+    var extname2 = path34.extname;
     var resolve3 = path34.resolve;
     var vary = require_vary();
     var { Buffer: Buffer3 } = require("node:buffer");
@@ -23632,7 +23632,7 @@ var require_response = __commonJS({
     };
     res.attachment = function attachment(filename) {
       if (filename) {
-        this.type(extname(filename));
+        this.type(extname2(filename));
       }
       this.set("Content-Disposition", contentDisposition(filename));
       return this;
@@ -33030,7 +33030,7 @@ var require_mime_types2 = __commonJS({
   "node_modules/accepts/node_modules/mime-types/index.js"(exports2) {
     "use strict";
     var db2 = require_mime_db2();
-    var extname = require("path").extname;
+    var extname2 = require("path").extname;
     var EXTRACT_TYPE_REGEXP = /^\s*([^;\s]*)(?:;|\s|$)/;
     var TEXT_TYPE_REGEXP = /^text\//i;
     exports2.charset = charset;
@@ -33084,7 +33084,7 @@ var require_mime_types2 = __commonJS({
       if (!path34 || typeof path34 !== "string") {
         return false;
       }
-      var extension2 = extname("x." + path34).toLowerCase().substr(1);
+      var extension2 = extname2("x." + path34).toLowerCase().substr(1);
       if (!extension2) {
         return false;
       }
@@ -34666,7 +34666,7 @@ var require_socket = __commonJS({
         debug("readyState updated from %s to %s", this._readyState, state);
         this._readyState = state;
       }
-      constructor(id, server2, transport, req, protocol) {
+      constructor(id2, server2, transport, req, protocol) {
         super();
         this._readyState = "opening";
         this.upgrading = false;
@@ -34675,7 +34675,7 @@ var require_socket = __commonJS({
         this.packetsFn = [];
         this.sentCallbackFn = [];
         this.cleanupFn = [];
-        this.id = id;
+        this.id = id2;
         this.server = server2;
         this.request = req;
         this.protocol = protocol;
@@ -37286,7 +37286,7 @@ var require_websocket2 = __commonJS({
     var http4 = require("http");
     var net = require("net");
     var tls = require("tls");
-    var { randomBytes, createHash: createHash11 } = require("crypto");
+    var { randomBytes, createHash: createHash13 } = require("crypto");
     var { Duplex, Readable: Readable2 } = require("stream");
     var { URL: URL2 } = require("url");
     var PerMessageDeflate = require_permessage_deflate();
@@ -37943,7 +37943,7 @@ var require_websocket2 = __commonJS({
           abortHandshake(websocket, socket, "Invalid Upgrade header");
           return;
         }
-        const digest = createHash11("sha1").update(key + GUID).digest("base64");
+        const digest = createHash13("sha1").update(key + GUID).digest("base64");
         if (res.headers["sec-websocket-accept"] !== digest) {
           abortHandshake(websocket, socket, "Invalid Sec-WebSocket-Accept header");
           return;
@@ -38310,7 +38310,7 @@ var require_websocket_server = __commonJS({
     var EventEmitter3 = require("events");
     var http4 = require("http");
     var { Duplex } = require("stream");
-    var { createHash: createHash11 } = require("crypto");
+    var { createHash: createHash13 } = require("crypto");
     var extension = require_extension();
     var PerMessageDeflate = require_permessage_deflate();
     var subprotocol = require_subprotocol();
@@ -38607,7 +38607,7 @@ var require_websocket_server = __commonJS({
           );
         }
         if (this._state > RUNNING) return abortHandshake(socket, 503);
-        const digest = createHash11("sha1").update(key + GUID).digest("base64");
+        const digest = createHash13("sha1").update(key + GUID).digest("base64");
         const headers = [
           "HTTP/1.1 101 Switching Protocols",
           "Upgrade: websocket",
@@ -39231,9 +39231,9 @@ var require_server = __commonJS({
           closeConnection(Server2.errors.UNSUPPORTED_PROTOCOL_VERSION);
           return;
         }
-        let id;
+        let id2;
         try {
-          id = await this.generateId(req);
+          id2 = await this.generateId(req);
         } catch (e) {
           debug("error while generating an id");
           this.emit("connection_error", {
@@ -39248,7 +39248,7 @@ var require_server = __commonJS({
           closeConnection(Server2.errors.BAD_REQUEST);
           return;
         }
-        debug('handshaking client "%s"', id);
+        debug('handshaking client "%s"', id2);
         try {
           var transport = this.createTransport(transportName, req);
           if ("polling" === transportName) {
@@ -39271,14 +39271,14 @@ var require_server = __commonJS({
           closeConnection(Server2.errors.BAD_REQUEST);
           return;
         }
-        const socket = new socket_1.Socket(id, this, transport, req, protocol);
+        const socket = new socket_1.Socket(id2, this, transport, req, protocol);
         transport.on("headers", (headers, req2) => {
           const isInitialRequest = !req2._query.sid;
           if (isInitialRequest) {
             if (this.opts.cookie) {
               headers["Set-Cookie"] = [
                 // @ts-ignore
-                (0, cookie_1.serialize)(this.opts.cookie.name, id, this.opts.cookie)
+                (0, cookie_1.serialize)(this.opts.cookie.name, id2, this.opts.cookie)
               ];
             }
             this.emit("initial_headers", headers, req2);
@@ -39286,10 +39286,10 @@ var require_server = __commonJS({
           this.emit("headers", headers, req2);
         });
         transport.onRequest(req);
-        this.clients[id] = socket;
+        this.clients[id2] = socket;
         this.clientsCount++;
         socket.once("close", () => {
-          delete this.clients[id];
+          delete this.clients[id2];
           this.clientsCount--;
         });
         this.emit("connection", socket);
@@ -39321,13 +39321,13 @@ var require_server = __commonJS({
         }
         if (value.data === void 0) {
           const transport = new webtransport_1.WebTransport(session, stream4, reader);
-          const id = base64id.generateId();
-          debug('handshaking client "%s" (WebTransport)', id);
-          const socket = new socket_1.Socket(id, this, transport, null, 4);
-          this.clients[id] = socket;
+          const id2 = base64id.generateId();
+          debug('handshaking client "%s" (WebTransport)', id2);
+          const socket = new socket_1.Socket(id2, this, transport, null, 4);
+          this.clients[id2] = socket;
           this.clientsCount++;
           socket.once("close", () => {
-            delete this.clients[id];
+            delete this.clients[id2];
             this.clientsCount--;
           });
           this.emit("connection", socket);
@@ -39531,10 +39531,10 @@ var require_server = __commonJS({
           websocket.close();
           return;
         }
-        const id = req._query.sid;
+        const id2 = req._query.sid;
         req.websocket = websocket;
-        if (id) {
-          const client = this.clients[id];
+        if (id2) {
+          const client = this.clients[id2];
           if (!client) {
             debug("upgrade attempt for closed client");
             websocket.close();
@@ -40493,10 +40493,10 @@ var require_userver = __commonJS({
             this.abortRequest(res, errorCode, errorContext);
             return;
           }
-          const id = req._query.sid;
+          const id2 = req._query.sid;
           let transport;
-          if (id) {
-            const client = this.clients[id];
+          if (id2) {
+            const client = this.clients[id2];
             if (!client) {
               debug("upgrade attempt for closed client");
               return res.close();
@@ -40518,7 +40518,7 @@ var require_userver = __commonJS({
             }
           }
           const additionalHeaders = {};
-          const isInitialRequest = !id;
+          const isInitialRequest = !id2;
           if (isInitialRequest) {
             this.emit("initial_headers", additionalHeaders, req);
           }
@@ -41170,8 +41170,8 @@ var require_cjs3 = __commonJS({
     var isInteger = Number.isInteger || function(value) {
       return typeof value === "number" && isFinite(value) && Math.floor(value) === value;
     };
-    function isAckIdValid(id) {
-      return id === void 0 || isInteger(id);
+    function isAckIdValid(id2) {
+      return id2 === void 0 || isInteger(id2);
     }
     function isObject5(value) {
       return Object.prototype.toString.call(value) === "[object Object]";
@@ -42101,10 +42101,10 @@ var require_socket2 = __commonJS({
           data
         };
         if (typeof data[data.length - 1] === "function") {
-          const id = this.nsp._ids++;
-          debug("emitting packet with ack id %d", id);
-          this.registerAckCallback(id, data.pop());
-          packet.id = id;
+          const id2 = this.nsp._ids++;
+          debug("emitting packet with ack id %d", id2);
+          this.registerAckCallback(id2, data.pop());
+          packet.id = id2;
         }
         const flags = Object.assign({}, this.flags);
         this.flags = {};
@@ -42154,18 +42154,18 @@ var require_socket2 = __commonJS({
       /**
        * @private
        */
-      registerAckCallback(id, ack) {
+      registerAckCallback(id2, ack) {
         const timeout = this.flags.timeout;
         if (timeout === void 0) {
-          this.acks.set(id, ack);
+          this.acks.set(id2, ack);
           return;
         }
         const timer = setTimeout(() => {
-          debug("event with ack id %d has timed out after %d ms", id, timeout);
-          this.acks.delete(id);
+          debug("event with ack id %d has timed out after %d ms", id2, timeout);
+          this.acks.delete(id2);
           ack.call(this, new Error("operation has timed out"));
         }, timeout);
-        this.acks.set(id, (...args) => {
+        this.acks.set(id2, (...args) => {
           clearTimeout(timer);
           ack.apply(this, [null, ...args]);
         });
@@ -42393,7 +42393,7 @@ var require_socket2 = __commonJS({
        * @param {Number} id - packet id
        * @private
        */
-      ack(id) {
+      ack(id2) {
         const self2 = this;
         let sent = false;
         return function() {
@@ -42402,7 +42402,7 @@ var require_socket2 = __commonJS({
           const args = Array.prototype.slice.call(arguments);
           debug("sending ack %j", args);
           self2.packet({
-            id,
+            id: id2,
             type: socket_io_parser_1.PacketType.ACK,
             data: args
           });
@@ -43488,19 +43488,19 @@ var require_in_memory_adapter = __commonJS({
        * @param {Set<Room>} rooms   a set of rooms
        * @public
        */
-      addAll(id, rooms) {
-        if (!this.sids.has(id)) {
-          this.sids.set(id, /* @__PURE__ */ new Set());
+      addAll(id2, rooms) {
+        if (!this.sids.has(id2)) {
+          this.sids.set(id2, /* @__PURE__ */ new Set());
         }
         for (const room of rooms) {
-          this.sids.get(id).add(room);
+          this.sids.get(id2).add(room);
           if (!this.rooms.has(room)) {
             this.rooms.set(room, /* @__PURE__ */ new Set());
             this.emit("create-room", room);
           }
-          if (!this.rooms.get(room).has(id)) {
-            this.rooms.get(room).add(id);
-            this.emit("join-room", room, id);
+          if (!this.rooms.get(room).has(id2)) {
+            this.rooms.get(room).add(id2);
+            this.emit("join-room", room, id2);
           }
         }
       }
@@ -43510,18 +43510,18 @@ var require_in_memory_adapter = __commonJS({
        * @param {SocketId} id     the socket id
        * @param {Room}     room   the room name
        */
-      del(id, room) {
-        if (this.sids.has(id)) {
-          this.sids.get(id).delete(room);
+      del(id2, room) {
+        if (this.sids.has(id2)) {
+          this.sids.get(id2).delete(room);
         }
-        this._del(room, id);
+        this._del(room, id2);
       }
-      _del(room, id) {
+      _del(room, id2) {
         const _room = this.rooms.get(room);
         if (_room != null) {
-          const deleted = _room.delete(id);
+          const deleted = _room.delete(id2);
           if (deleted) {
-            this.emit("leave-room", room, id);
+            this.emit("leave-room", room, id2);
           }
           if (_room.size === 0 && this.rooms.delete(room)) {
             this.emit("delete-room", room);
@@ -43533,14 +43533,14 @@ var require_in_memory_adapter = __commonJS({
        *
        * @param {SocketId} id   the socket id
        */
-      delAll(id) {
-        if (!this.sids.has(id)) {
+      delAll(id2) {
+        if (!this.sids.has(id2)) {
           return;
         }
-        for (const room of this.sids.get(id)) {
-          this._del(room, id);
+        for (const room of this.sids.get(id2)) {
+          this._del(room, id2);
         }
-        this.sids.delete(id);
+        this.sids.delete(id2);
       }
       /**
        * Broadcasts a packet.
@@ -43637,8 +43637,8 @@ var require_in_memory_adapter = __commonJS({
        *
        * @param {SocketId} id   the socket id
        */
-      socketRooms(id) {
-        return this.sids.get(id);
+      socketRooms(id2) {
+        return this.sids.get(id2);
       }
       /**
        * Returns the matching socket instances
@@ -43693,21 +43693,21 @@ var require_in_memory_adapter = __commonJS({
           for (const room of rooms) {
             if (!this.rooms.has(room))
               continue;
-            for (const id of this.rooms.get(room)) {
-              if (ids.has(id) || except.has(id))
+            for (const id2 of this.rooms.get(room)) {
+              if (ids.has(id2) || except.has(id2))
                 continue;
-              const socket = this.nsp.sockets.get(id);
+              const socket = this.nsp.sockets.get(id2);
               if (socket) {
                 callback(socket);
-                ids.add(id);
+                ids.add(id2);
               }
             }
           }
         } else {
-          for (const [id] of this.sids) {
-            if (except.has(id))
+          for (const [id2] of this.sids) {
+            if (except.has(id2))
               continue;
-            const socket = this.nsp.sockets.get(id);
+            const socket = this.nsp.sockets.get(id2);
             if (socket)
               callback(socket);
           }
@@ -43804,10 +43804,10 @@ var require_in_memory_adapter = __commonJS({
         const withoutAcknowledgement = packet.id === void 0;
         const notVolatile = ((_a37 = opts.flags) === null || _a37 === void 0 ? void 0 : _a37.volatile) === void 0;
         if (isEventPacket && withoutAcknowledgement && notVolatile) {
-          const id = (0, yeast_1.yeast)();
-          packet.data.push(id);
+          const id2 = (0, yeast_1.yeast)();
+          packet.data.push(id2);
           this.packets.push({
-            id,
+            id: id2,
             opts,
             data: packet.data,
             emittedAt: Date.now()
@@ -44597,10 +44597,10 @@ var require_uws = __commonJS({
     var SEPARATOR = "";
     var { addAll, del, broadcast } = socket_io_adapter_1.Adapter.prototype;
     function patchAdapter(app2) {
-      socket_io_adapter_1.Adapter.prototype.addAll = function(id, rooms) {
-        const isNew = !this.sids.has(id);
-        addAll.call(this, id, rooms);
-        const socket = this.nsp.sockets.get(id) || this.nsp._preConnectSockets.get(id);
+      socket_io_adapter_1.Adapter.prototype.addAll = function(id2, rooms) {
+        const isNew = !this.sids.has(id2);
+        addAll.call(this, id2, rooms);
+        const socket = this.nsp.sockets.get(id2) || this.nsp._preConnectSockets.get(id2);
         if (!socket) {
           return;
         }
@@ -44610,16 +44610,16 @@ var require_uws = __commonJS({
         }
         if (isNew) {
           socket.conn.on("upgrade", () => {
-            const rooms2 = this.sids.get(id);
+            const rooms2 = this.sids.get(id2);
             if (rooms2) {
               subscribe(this.nsp.name, socket, isNew, rooms2);
             }
           });
         }
       };
-      socket_io_adapter_1.Adapter.prototype.del = function(id, room) {
-        del.call(this, id, room);
-        const socket = this.nsp.sockets.get(id) || this.nsp._preConnectSockets.get(id);
+      socket_io_adapter_1.Adapter.prototype.del = function(id2, room) {
+        del.call(this, id2, room);
+        const socket = this.nsp.sockets.get(id2) || this.nsp._preConnectSockets.get(id2);
         if (socket && socket.conn.transport.name === "websocket") {
           const sessionId = socket.conn.id;
           const websocket = socket.conn.transport.socket;
@@ -47436,7 +47436,7 @@ var require_websocket4 = __commonJS({
     var http4 = require("http");
     var net = require("net");
     var tls = require("tls");
-    var { randomBytes, createHash: createHash11 } = require("crypto");
+    var { randomBytes, createHash: createHash13 } = require("crypto");
     var { Readable: Readable2 } = require("stream");
     var { URL: URL2 } = require("url");
     var PerMessageDeflate = require_permessage_deflate2();
@@ -48010,7 +48010,7 @@ var require_websocket4 = __commonJS({
           abortHandshake(websocket, socket, "Invalid Upgrade header");
           return;
         }
-        const digest = createHash11("sha1").update(key + GUID).digest("base64");
+        const digest = createHash13("sha1").update(key + GUID).digest("base64");
         if (res.headers["sec-websocket-accept"] !== digest) {
           abortHandshake(websocket, socket, "Invalid Sec-WebSocket-Accept header");
           return;
@@ -48318,7 +48318,7 @@ var require_websocket_server2 = __commonJS({
     var https2 = require("https");
     var net = require("net");
     var tls = require("tls");
-    var { createHash: createHash11 } = require("crypto");
+    var { createHash: createHash13 } = require("crypto");
     var PerMessageDeflate = require_permessage_deflate2();
     var WebSocket = require_websocket4();
     var { format, parse: parse4 } = require_extension2();
@@ -48539,7 +48539,7 @@ var require_websocket_server2 = __commonJS({
           );
         }
         if (this._state > RUNNING) return abortHandshake(socket, 503);
-        const digest = createHash11("sha1").update(key + GUID).digest("base64");
+        const digest = createHash13("sha1").update(key + GUID).digest("base64");
         const headers = [
           "HTTP/1.1 101 Switching Protocols",
           "Upgrade: websocket",
@@ -48834,8 +48834,8 @@ var require_lib4 = __commonJS({
         getWss: function getWss() {
           return wsServer;
         },
-        applyTo: function applyTo(router174) {
-          (0, _addWsMethod2.default)(router174);
+        applyTo: function applyTo(router175) {
+          (0, _addWsMethod2.default)(router175);
         }
       };
     }
@@ -50316,7 +50316,7 @@ var require_to_regex_range = __commonJS({
       if (start === stop) {
         return { pattern: start, count: [], digits: 0 };
       }
-      let zipped = zip(start, stop);
+      let zipped = zip3(start, stop);
       let digits = zipped.length;
       let pattern = "";
       let count = 0;
@@ -50376,7 +50376,7 @@ var require_to_regex_range = __commonJS({
       }
       return result;
     }
-    function zip(a, b) {
+    function zip3(a, b) {
       let arr = [];
       for (let i = 0; i < a.length; i++) arr.push([a[i], b[i]]);
       return arr;
@@ -58549,8 +58549,8 @@ var require_uniqueId = __commonJS({
     var toString4 = require_toString();
     var idCounter = 0;
     function uniqueId(prefix) {
-      var id = ++idCounter;
-      return toString4(prefix) + id;
+      var id2 = ++idCounter;
+      return toString4(prefix) + id2;
     }
     module2.exports = uniqueId;
   }
@@ -58568,15 +58568,15 @@ var require_timeout = __commonJS({
     };
     function timeout(promise3, ms) {
       return new Promise(function(resolve3, reject) {
-        const id = setTimeout(function() {
+        const id2 = setTimeout(function() {
           reject(new KnexTimeoutError("operation timed out"));
         }, ms);
         function wrappedResolve(value) {
-          clearTimeout(id);
+          clearTimeout(id2);
           resolve3(value);
         }
         function wrappedReject(err) {
-          clearTimeout(id);
+          clearTimeout(id2);
           reject(err);
         }
         promise3.then(wrappedResolve, wrappedReject);
@@ -66854,20 +66854,20 @@ var require_nanoid = __commonJS({
     var urlAlphabet = "ModuleSymbhasOwnPr-0123456789ABCDEFGHNRVfgctiUvz_KqYTJkLxpZXIjQW";
     var numberAlphabet = "0123456789";
     function nanoid4(size = 21) {
-      let id = "";
+      let id2 = "";
       let i = size;
       while (i--) {
-        id += urlAlphabet[Math.random() * 64 | 0];
+        id2 += urlAlphabet[Math.random() * 64 | 0];
       }
-      return id;
+      return id2;
     }
     function nanonum(size = 21) {
-      let id = "";
+      let id2 = "";
       let i = size;
       while (i--) {
-        id += numberAlphabet[Math.random() * 10 | 0];
+        id2 += numberAlphabet[Math.random() * 10 | 0];
       }
-      return id;
+      return id2;
     }
     module2.exports = { nanoid: nanoid4, nanonum };
   }
@@ -71659,27 +71659,27 @@ var require_sqlite_viewcompiler = __commonJS({
 var require_tokenizer = __commonJS({
   "node_modules/knex/lib/dialects/sqlite3/schema/internal/tokenizer.js"(exports2, module2) {
     "use strict";
-    function tokenize(text2, tokens) {
+    function tokenize(text3, tokens) {
       const compiledRegex = new RegExp(
         Object.entries(tokens).map(([type, regex]) => `(?<${type}>${regex.source})`).join("|"),
         "yi"
       );
       let index = 0;
       const ast = [];
-      while (index < text2.length) {
+      while (index < text3.length) {
         compiledRegex.lastIndex = index;
-        const result = text2.match(compiledRegex);
+        const result = text3.match(compiledRegex);
         if (result !== null) {
-          const [type, text3] = Object.entries(result.groups).find(
+          const [type, text4] = Object.entries(result.groups).find(
             ([name28, group]) => group !== void 0
           );
-          index += text3.length;
+          index += text4.length;
           if (!type.startsWith("_")) {
-            ast.push({ type, text: text3 });
+            ast.push({ type, text: text4 });
           }
         } else {
           throw new Error(
-            `No matching tokenizer rule found at: [${text2.substring(index)}]`
+            `No matching tokenizer rule found at: [${text3.substring(index)}]`
           );
         }
       }
@@ -72224,7 +72224,7 @@ var require_parser = __commonJS({
       return s(
         [
           t({ text: "CREATE" }, (v) => null),
-          unique,
+          unique2,
           t({ text: "INDEX" }, (v) => null),
           exists,
           schema,
@@ -72240,7 +72240,7 @@ var require_parser = __commonJS({
         (v) => Object.assign({}, ...v.filter((x) => x !== null))
       )(ctx);
     }
-    function unique(ctx) {
+    function unique2(ctx) {
       return o(t({ text: "UNIQUE" }), (v) => ({ unique: v !== null }))(ctx);
     }
     function exists(ctx) {
@@ -72576,7 +72576,7 @@ var require_compiler2 = __commonJS({
       return ast.name !== null ? `CONSTRAINT ${identifier(ast.name, wrap)} ` : "";
     }
     function createIndex(ast, wrap) {
-      return `CREATE${unique(ast, wrap)} INDEX${exists(ast, wrap)} ${schema(
+      return `CREATE${unique2(ast, wrap)} INDEX${exists(ast, wrap)} ${schema(
         ast,
         wrap
       )}${index(ast, wrap)} on ${table(ast, wrap)} (${indexedColumnList(
@@ -72584,7 +72584,7 @@ var require_compiler2 = __commonJS({
         wrap
       )})${where(ast, wrap)}`;
     }
-    function unique(ast, wrap) {
+    function unique2(ast, wrap) {
       return ast.unique ? " UNIQUE" : "";
     }
     function exists(ast, wrap) {
@@ -72651,8 +72651,8 @@ var require_utils9 = __commonJS({
     function isEqualId(first, second) {
       return first.toLowerCase() === second.toLowerCase();
     }
-    function includesId(list2, id) {
-      return list2.some((item) => isEqualId(item, id));
+    function includesId(list2, id2) {
+      return list2.some((item) => isEqualId(item, id2));
     }
     module2.exports = {
       isEqualId,
@@ -80393,9 +80393,9 @@ async function getOllamaModelDigest(model, fetcher = fetch) {
   if (!installed?.digest) throw new Error(`\u672C\u5730 Ollama \u6A21\u578B\u672A\u5B89\u88C5: ${model}`);
   return installed.digest;
 }
-async function embedWithOllama(model, text2, purpose, fetcher = fetch) {
+async function embedWithOllama(model, text3, purpose, fetcher = fetch) {
   const input = purpose === "query" ? `Instruct: Retrieve relevant memories that answer the user's question
-Query:${text2}` : text2;
+Query:${text3}` : text3;
   const response = await fetcher(`${OLLAMA_URL}/api/embed`, {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -80447,12 +80447,12 @@ async function initEmbedding() {
   }
   await loading;
 }
-async function getEmbedding(text2, purpose = "document") {
+async function getEmbedding(text3, purpose = "document") {
   if (!loadedModelId) await initEmbedding();
   if (activeBackend === "ollama") {
-    return embedWithOllama(ollamaModel, text2, purpose);
+    return embedWithOllama(ollamaModel, text3, purpose);
   }
-  const output = await extractor(text2, { pooling: "mean", normalize: true });
+  const output = await extractor(text3, { pooling: "mean", normalize: true });
   return Array.from(output.data);
 }
 async function getEmbeddingModelId() {
@@ -94547,13 +94547,13 @@ var require_JSXTransformer = __commonJS({
       return firstChar >= _charcodes.charCodes.lowercaseA && firstChar <= _charcodes.charCodes.lowercaseZ;
     }
     exports2.startsWithLowerCase = startsWithLowerCase;
-    function formatJSXTextLiteral(text2) {
+    function formatJSXTextLiteral(text3) {
       let result = "";
       let whitespace = "";
       let isInInitialLineWhitespace = false;
       let seenNonWhitespace = false;
-      for (let i = 0; i < text2.length; i++) {
-        const c = text2[i];
+      for (let i = 0; i < text3.length; i++) {
+        const c = text3[i];
         if (c === " " || c === "	" || c === "\r") {
           if (!isInInitialLineWhitespace) {
             whitespace += c;
@@ -94568,7 +94568,7 @@ var require_JSXTransformer = __commonJS({
           result += whitespace;
           whitespace = "";
           if (c === "&") {
-            const { entity, newI } = processEntity(text2, i + 1);
+            const { entity, newI } = processEntity(text3, i + 1);
             i = newI - 1;
             result += entity;
           } else {
@@ -94583,10 +94583,10 @@ var require_JSXTransformer = __commonJS({
       }
       return JSON.stringify(result);
     }
-    function formatJSXTextReplacement(text2) {
+    function formatJSXTextReplacement(text3) {
       let numNewlines = 0;
       let numSpaces = 0;
-      for (const c of text2) {
+      for (const c of text3) {
         if (c === "\n") {
           numNewlines++;
           numSpaces = 0;
@@ -94596,21 +94596,21 @@ var require_JSXTransformer = __commonJS({
       }
       return "\n".repeat(numNewlines) + " ".repeat(numSpaces);
     }
-    function formatJSXStringValueLiteral(text2) {
+    function formatJSXStringValueLiteral(text3) {
       let result = "";
-      for (let i = 0; i < text2.length; i++) {
-        const c = text2[i];
+      for (let i = 0; i < text3.length; i++) {
+        const c = text3[i];
         if (c === "\n") {
-          if (/\s/.test(text2[i + 1])) {
+          if (/\s/.test(text3[i + 1])) {
             result += " ";
-            while (i < text2.length && /\s/.test(text2[i + 1])) {
+            while (i < text3.length && /\s/.test(text3[i + 1])) {
               i++;
             }
           } else {
             result += "\n";
           }
         } else if (c === "&") {
-          const { entity, newI } = processEntity(text2, i + 1);
+          const { entity, newI } = processEntity(text3, i + 1);
           result += entity;
           i = newI - 1;
         } else {
@@ -94619,38 +94619,38 @@ var require_JSXTransformer = __commonJS({
       }
       return JSON.stringify(result);
     }
-    function processEntity(text2, indexAfterAmpersand) {
+    function processEntity(text3, indexAfterAmpersand) {
       let str = "";
       let count = 0;
       let entity;
       let i = indexAfterAmpersand;
-      if (text2[i] === "#") {
+      if (text3[i] === "#") {
         let radix = 10;
         i++;
         let numStart;
-        if (text2[i] === "x") {
+        if (text3[i] === "x") {
           radix = 16;
           i++;
           numStart = i;
-          while (i < text2.length && isHexDigit(text2.charCodeAt(i))) {
+          while (i < text3.length && isHexDigit(text3.charCodeAt(i))) {
             i++;
           }
         } else {
           numStart = i;
-          while (i < text2.length && isDecimalDigit(text2.charCodeAt(i))) {
+          while (i < text3.length && isDecimalDigit(text3.charCodeAt(i))) {
             i++;
           }
         }
-        if (text2[i] === ";") {
-          const numStr = text2.slice(numStart, i);
+        if (text3[i] === ";") {
+          const numStr = text3.slice(numStart, i);
           if (numStr) {
             i++;
             entity = String.fromCodePoint(parseInt(numStr, radix));
           }
         }
       } else {
-        while (i < text2.length && count++ < 10) {
-          const ch = text2[i];
+        while (i < text3.length && count++ < 10) {
+          const ch = text3[i];
           i++;
           if (ch === ";") {
             entity = _xhtml2.default.get(str);
@@ -108852,46 +108852,46 @@ var init_schemas = __esm({
         }
         doc.write(`const newResult = {};`);
         for (const key of normalized.keys) {
-          const id = ids[key];
+          const id2 = ids[key];
           const k = esc(key);
           const schema = shape[key];
           const isOptionalOut = schema?._zod?.optout === "optional";
-          doc.write(`const ${id} = ${parseStr(key)};`);
+          doc.write(`const ${id2} = ${parseStr(key)};`);
           if (isOptionalOut) {
             doc.write(`
-        if (${id}.issues.length) {
+        if (${id2}.issues.length) {
           if (${k} in input) {
-            payload.issues = payload.issues.concat(${id}.issues.map(iss => ({
+            payload.issues = payload.issues.concat(${id2}.issues.map(iss => ({
               ...iss,
               path: iss.path ? [${k}, ...iss.path] : [${k}]
             })));
           }
         }
         
-        if (${id}.value === undefined) {
+        if (${id2}.value === undefined) {
           if (${k} in input) {
             newResult[${k}] = undefined;
           }
         } else {
-          newResult[${k}] = ${id}.value;
+          newResult[${k}] = ${id2}.value;
         }
         
       `);
           } else {
             doc.write(`
-        if (${id}.issues.length) {
-          payload.issues = payload.issues.concat(${id}.issues.map(iss => ({
+        if (${id2}.issues.length) {
+          payload.issues = payload.issues.concat(${id2}.issues.map(iss => ({
             ...iss,
             path: iss.path ? [${k}, ...iss.path] : [${k}]
           })));
         }
         
-        if (${id}.value === undefined) {
+        if (${id2}.value === undefined) {
           if (${k} in input) {
             newResult[${k}] = undefined;
           }
         } else {
-          newResult[${k}] = ${id}.value;
+          newResult[${k}] = ${id2}.value;
         }
         
       `);
@@ -112952,8 +112952,8 @@ var init_lt = __esm({
   "node_modules/zod/v4/locales/lt.js"() {
     "use strict";
     init_util();
-    capitalizeFirstCharacter = (text2) => {
-      return text2.charAt(0).toUpperCase() + text2.slice(1);
+    capitalizeFirstCharacter = (text3) => {
+      return text3.charAt(0).toUpperCase() + text3.slice(1);
     };
     error26 = () => {
       const Sizable = {
@@ -116947,26 +116947,26 @@ function extractDefs(ctx, schema) {
     throw new Error("Unprocessed schema. This is a bug in Zod.");
   const idToSchema = /* @__PURE__ */ new Map();
   for (const entry of ctx.seen.entries()) {
-    const id = ctx.metadataRegistry.get(entry[0])?.id;
-    if (id) {
-      const existing = idToSchema.get(id);
+    const id2 = ctx.metadataRegistry.get(entry[0])?.id;
+    if (id2) {
+      const existing = idToSchema.get(id2);
       if (existing && existing !== entry[0]) {
-        throw new Error(`Duplicate schema id "${id}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
+        throw new Error(`Duplicate schema id "${id2}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
       }
-      idToSchema.set(id, entry[0]);
+      idToSchema.set(id2, entry[0]);
     }
   }
   const makeURI = (entry) => {
     const defsSegment = ctx.target === "draft-2020-12" ? "$defs" : "definitions";
     if (ctx.external) {
       const externalId = ctx.external.registry.get(entry[0])?.id;
-      const uriGenerator = ctx.external.uri ?? ((id2) => id2);
+      const uriGenerator = ctx.external.uri ?? ((id3) => id3);
       if (externalId) {
         return { ref: uriGenerator(externalId) };
       }
-      const id = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
-      entry[1].defId = id;
-      return { defId: id, ref: `${uriGenerator("__shared")}#/${defsSegment}/${id}` };
+      const id2 = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
+      entry[1].defId = id2;
+      return { defId: id2, ref: `${uriGenerator("__shared")}#/${defsSegment}/${id2}` };
     }
     if (entry[1] === root2) {
       return { ref: "#" };
@@ -117014,8 +117014,8 @@ Set the \`cycles\` parameter to \`"ref"\` to resolve cyclical schemas with defs.
         continue;
       }
     }
-    const id = ctx.metadataRegistry.get(entry[0])?.id;
-    if (id) {
+    const id2 = ctx.metadataRegistry.get(entry[0])?.id;
+    if (id2) {
       extractToDef(entry);
       continue;
     }
@@ -117111,10 +117111,10 @@ function finalize(ctx, schema) {
   } else {
   }
   if (ctx.external?.uri) {
-    const id = ctx.external.registry.get(schema)?.id;
-    if (!id)
+    const id2 = ctx.external.registry.get(schema)?.id;
+    if (!id2)
       throw new Error("Schema is missing an `id` property");
-    result.$id = ctx.external.uri(id);
+    result.$id = ctx.external.uri(id2);
   }
   Object.assign(result, root2.def ?? root2.schema);
   const defs = ctx.external?.defs ?? {};
@@ -120544,7 +120544,7 @@ async function generateMissingVariants(db2, trackId, languages, generateBase, tr
       const prompt = (await translate(translationInstruction(language), base, language)).trim();
       if (!prompt || prompt.startsWith("LANGUAGE_TIMING_REVIEW:")) throw new Error(prompt || "\u6A21\u578B\u672A\u8FD4\u56DE\u63D0\u793A\u8BCD");
       assertTranslatedDialogueLanguage(prompt, language);
-      const slots = (text2) => [...new Set([...text2.replace(/<d\b[^>]*>[\s\S]*?<\/d>/g, "").matchAll(/<(?:Picture|Subject|Image|Video|Audio)\s+\d+>/g)].map((match) => match[0]))].sort().join(",");
+      const slots = (text3) => [...new Set([...text3.replace(/<d\b[^>]*>[\s\S]*?<\/d>/g, "").matchAll(/<(?:Picture|Subject|Image|Video|Audio)\s+\d+>/g)].map((match) => match[0]))].sort().join(",");
       if (validateReferenceLabels && slots(base) !== slots(prompt)) throw new Error("\u7FFB\u8BD1\u6539\u53D8\u4E86\u53C2\u8003\u56FE\u7F16\u53F7\uFF0C\u8BF7\u91CD\u8BD5\u8BE5\u8BED\u8A00");
       await db2("o_videoPromptVariant").where({ trackId, language }).update({ prompt, state: "\u5DF2\u5B8C\u6210", reason: null });
     } catch (cause) {
@@ -120652,10 +120652,10 @@ function requireCurrentAssetPrompt(asset, submittedPrompt) {
   }
 }
 async function saveDescription(db2, asset, describe4, meta4) {
-  const text2 = describe4.trim();
-  if (!text2) throw new Error("\u8D44\u4EA7\u63CF\u8FF0\u4E0D\u80FD\u4E3A\u7A7A");
+  const text3 = describe4.trim();
+  if (!text3) throw new Error("\u8D44\u4EA7\u63CF\u8FF0\u4E0D\u80FD\u4E3A\u7A7A");
   const oldVersion = descriptionVersion(asset);
-  if (text2 === (asset.describe || "").trim()) {
+  if (text3 === (asset.describe || "").trim()) {
     await db2("o_assets").where({ id: asset.id, projectId: asset.projectId }).update({ descriptionMeta: JSON.stringify(meta4) });
     return oldVersion;
   }
@@ -120669,7 +120669,7 @@ async function saveDescription(db2, asset, describe4, meta4) {
   }).onConflict(["assetId", "version"]).ignore();
   const version3 = oldVersion + 1;
   await db2("o_assets").where({ id: asset.id, projectId: asset.projectId }).update({
-    describe: text2,
+    describe: text3,
     descriptionVersion: version3,
     descriptionMeta: JSON.stringify(meta4),
     promptState: "\u5F85\u66F4\u65B0",
@@ -121601,8 +121601,8 @@ A medium tracking shot follows the woman from behind as she ascends and approach
       });
       const data = await knex3("o_vendorConfig").select("*");
       for (const item of data) {
-        let { id, code } = item;
-        const filename = `${id}.ts`;
+        let { id: id2, code } = item;
+        const filename = `${id2}.ts`;
         const rootDir = utils_default.getPath("vendor");
         if (!code && import_fs2.default.existsSync(import_path4.default.join(rootDir, filename))) continue;
         if (!import_fs2.default.existsSync(rootDir)) import_fs2.default.mkdirSync(rootDir, { recursive: true });
@@ -121614,9 +121614,9 @@ A medium tracking shot follows the woman from behind as she ascends and approach
       }
       const defList = Object.keys(vendorData).map((filename) => filename.replace(/\.ts$/, ""));
       const existingIds = data.map((i) => i.id);
-      for (const id of defList) {
-        if (!existingIds.includes(id)) {
-          const tsCode = vendorData[`${id}.ts`];
+      for (const id2 of defList) {
+        if (!existingIds.includes(id2)) {
+          const tsCode = vendorData[`${id2}.ts`];
           if (tsCode) await tempOnsert(tsCode);
         }
       }
@@ -121644,18 +121644,18 @@ A medium tracking shot follows the woman from behind as she ascends and approach
       }
       const comfyuiLocalData = await utils_default.db("o_vendorConfig").where("id", "comfyui_local").first();
       if (comfyuiLocalData) {
-        const models = JSON.parse(comfyuiLocalData.models || "[]");
-        if (!models.some((item) => item.modelName === "qwen-image-2.1-local")) {
-          models.splice(Math.min(1, models.length), 0, {
+        const models2 = JSON.parse(comfyuiLocalData.models || "[]");
+        if (!models2.some((item) => item.modelName === "qwen-image-2.1-local")) {
+          models2.splice(Math.min(1, models2.length), 0, {
             name: "Qwen Image 2.1 \u672C\u673A",
             modelName: "qwen-image-2.1-local",
             type: "image",
             mode: ["text", "singleImage", "multiReference"]
           });
         }
-        const qwenImageModel = models.find((item) => item.modelName === "qwen-image-2.1-local");
+        const qwenImageModel = models2.find((item) => item.modelName === "qwen-image-2.1-local");
         qwenImageModel.mode = ["text", "singleImage", "multiReference"];
-        const h3Model = models.find((item) => item.modelName === "MiniMax-H3-local");
+        const h3Model = models2.find((item) => item.modelName === "MiniMax-H3-local");
         if (h3Model) {
           for (const item of h3Model.durationResolutionMap || []) {
             item.resolution = ["768p"];
@@ -121669,7 +121669,7 @@ A medium tracking shot follows the woman from behind as she ascends and approach
           ...JSON.parse(comfyuiLocalData.inputValues || "{}")
         };
         await utils_default.db("o_vendorConfig").where("id", "comfyui_local").update({
-          models: JSON.stringify(models),
+          models: JSON.stringify(models2),
           inputValues: JSON.stringify(inputValues)
         });
       }
@@ -125220,8 +125220,8 @@ var require_utils12 = __commonJS({
       params.path = ids;
       return params;
     }
-    function appendContextPath(contextPath, id) {
-      return (contextPath ? contextPath + "." : "") + id;
+    function appendContextPath(contextPath, id2) {
+      return (contextPath ? contextPath + "." : "") + id2;
     }
   }
 });
@@ -127287,7 +127287,7 @@ var require_helpers4 = __commonJS({
     "use strict";
     exports2.__esModule = true;
     exports2.SourceLocation = SourceLocation;
-    exports2.id = id;
+    exports2.id = id2;
     exports2.stripFlags = stripFlags;
     exports2.stripComment = stripComment;
     exports2.preparePath = preparePath;
@@ -127319,7 +127319,7 @@ var require_helpers4 = __commonJS({
         column: locInfo.last_column
       };
     }
-    function id(token) {
+    function id2(token) {
       if (/^\[.*\]$/.test(token)) {
         return token.substring(1, token.length - 1);
       } else {
@@ -130501,9 +130501,9 @@ var require_javascript_compiler = __commonJS({
       //
       // Pops a value off the stack and assigns it to the current hash
       assignToHash: function assignToHash(key) {
-        var value = this.popStack(), context2 = void 0, type = void 0, id = void 0;
+        var value = this.popStack(), context2 = void 0, type = void 0, id2 = void 0;
         if (this.trackIds) {
-          id = this.popStack();
+          id2 = this.popStack();
         }
         if (this.stringParams) {
           type = this.popStack();
@@ -130516,8 +130516,8 @@ var require_javascript_compiler = __commonJS({
         if (type) {
           hash4.types[key] = type;
         }
-        if (id) {
-          hash4.ids[key] = id;
+        if (id2) {
+          hash4.ids[key] = id2;
         }
         hash4.values[key] = value;
       },
@@ -130965,9 +130965,9 @@ var require_printer = __commonJS({
       hash4 = sexpr.hash ? " " + this.accept(sexpr.hash) : "";
       return this.accept(sexpr.path) + " " + params + hash4;
     };
-    PrintVisitor.prototype.PathExpression = function(id) {
-      var path34 = id.parts.join("/");
-      return (id.data ? "@" : "") + "PATH:" + path34;
+    PrintVisitor.prototype.PathExpression = function(id2) {
+      var path34 = id2.parts.join("/");
+      return (id2.data ? "@" : "") + "PATH:" + path34;
     };
     PrintVisitor.prototype.StringLiteral = function(string5) {
       return '"' + string5.value + '"';
@@ -140804,7 +140804,7 @@ var require_mime_types3 = __commonJS({
   "node_modules/form-data/node_modules/mime-types/index.js"(exports2) {
     "use strict";
     var db2 = require_mime_db3();
-    var extname = require("path").extname;
+    var extname2 = require("path").extname;
     var EXTRACT_TYPE_REGEXP = /^\s*([^;\s]*)(?:;|\s|$)/;
     var TEXT_TYPE_REGEXP = /^text\//i;
     exports2.charset = charset;
@@ -140858,7 +140858,7 @@ var require_mime_types3 = __commonJS({
       if (!path34 || typeof path34 !== "string") {
         return false;
       }
-      var extension2 = extname("x." + path34).toLowerCase().substr(1);
+      var extension2 = extname2("x." + path34).toLowerCase().substr(1);
       if (!extension2) {
         return false;
       }
@@ -141731,9 +141731,9 @@ var init_InterceptorManager = __esm({
        *
        * @returns {void}
        */
-      eject(id) {
-        if (this.handlers[id]) {
-          this.handlers[id] = null;
+      eject(id2) {
+        if (this.handlers[id2]) {
+          this.handlers[id2] = null;
         }
       }
       /**
@@ -145088,22 +145088,22 @@ function getAdapter(adapters2, config3) {
   const rejectedReasons = {};
   for (let i = 0; i < length; i++) {
     nameOrAdapter = adapters2[i];
-    let id;
+    let id2;
     adapter2 = nameOrAdapter;
     if (!isResolvedHandle(nameOrAdapter)) {
-      adapter2 = knownAdapters[(id = String(nameOrAdapter)).toLowerCase()];
+      adapter2 = knownAdapters[(id2 = String(nameOrAdapter)).toLowerCase()];
       if (adapter2 === void 0) {
-        throw new AxiosError_default(`Unknown adapter '${id}'`);
+        throw new AxiosError_default(`Unknown adapter '${id2}'`);
       }
     }
     if (adapter2 && (utils_default2.isFunction(adapter2) || (adapter2 = adapter2.get(config3)))) {
       break;
     }
-    rejectedReasons[id || "#" + i] = adapter2;
+    rejectedReasons[id2 || "#" + i] = adapter2;
   }
   if (!adapter2) {
     const reasons = Object.entries(rejectedReasons).map(
-      ([id, state]) => `adapter ${id} ` + (state === false ? "is not supported by the environment" : "is not available in the build")
+      ([id2, state]) => `adapter ${id2} ` + (state === false ? "is not supported by the environment" : "is not available in the build")
     );
     let s = length ? reasons.length > 1 ? "since :\n" + reasons.map(renderReason).join("\n") : " " + renderReason(reasons[0]) : "as no adapter specified";
     throw new AxiosError_default(
@@ -145834,8 +145834,8 @@ var init_error = __esm({
 });
 
 // src/utils/stripThink.ts
-function stripThink(text2) {
-  return text2.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
+function stripThink(text3) {
+  return text3.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
 }
 var init_stripThink = __esm({
   "src/utils/stripThink.ts"() {
@@ -146061,15 +146061,15 @@ var init_dist3 = __esm({
     marker7 = `vercel.ai.error.${name6}`;
     symbol7 = Symbol.for(marker7);
     JSONParseError = class extends (_b7 = AISDKError, _a7 = symbol7, _b7) {
-      constructor({ text: text2, cause }) {
+      constructor({ text: text3, cause }) {
         super({
           name: name6,
-          message: `JSON parsing failed: Text: ${text2}.
+          message: `JSON parsing failed: Text: ${text3}.
 Error message: ${getErrorMessage(cause)}`,
           cause
         });
         this[_a7] = true;
-        this.text = text2;
+        this.text = text3;
       }
       static isInstance(error73) {
         return AISDKError.hasMarker(error73, marker7);
@@ -150214,7 +150214,7 @@ function createParser(callbacks) {
       "`callbacks` must be an object, got a function instead. Did you mean `{onEvent: fn}`?"
     );
   const { onEvent = noop3, onError = noop3, onRetry = noop3, onComment } = callbacks;
-  let incompleteLine = "", isFirstChunk = true, id, data = "", eventType = "";
+  let incompleteLine = "", isFirstChunk = true, id2, data = "", eventType = "";
   function feed(newChunk) {
     const chunk = isFirstChunk ? newChunk.replace(/^\xEF\xBB\xBF/, "") : newChunk, [complete, incomplete] = splitLines(`${incompleteLine}${chunk}`);
     for (const line of complete)
@@ -150248,7 +150248,7 @@ function createParser(callbacks) {
 `;
         break;
       case "id":
-        id = value.includes("\0") ? void 0 : value;
+        id2 = value.includes("\0") ? void 0 : value;
         break;
       case "retry":
         /^\d+$/.test(value) ? onRetry(parseInt(value, 10)) : onError(
@@ -150271,16 +150271,16 @@ function createParser(callbacks) {
   }
   function dispatchEvent() {
     data.length > 0 && onEvent({
-      id,
+      id: id2,
       event: eventType || void 0,
       // If the data buffer's last character is a U+000A LINE FEED (LF) character,
       // then remove the last character from the data buffer.
       data: data.endsWith(`
 `) ? data.slice(0, -1) : data
-    }), id = void 0, data = "", eventType = "";
+    }), id2 = void 0, data = "", eventType = "";
   }
   function reset(options = {}) {
-    incompleteLine && options.consume && parseLine(incompleteLine), isFirstChunk = true, id = void 0, data = "", eventType = "", incompleteLine = "";
+    incompleteLine && options.consume && parseLine(incompleteLine), isFirstChunk = true, id2 = void 0, data = "", eventType = "", incompleteLine = "";
   }
   return { feed, reset };
 }
@@ -150811,12 +150811,12 @@ function mediaTypeToExtension(mediaType) {
     "x-m4a": "m4a"
   }[subtype]) != null ? _a211 : subtype;
 }
-function _parse2(text2) {
-  const obj = JSON.parse(text2);
+function _parse2(text3) {
+  const obj = JSON.parse(text3);
   if (obj === null || typeof obj !== "object") {
     return obj;
   }
-  if (suspectProtoRx.test(text2) === false && suspectConstructorRx.test(text2) === false) {
+  if (suspectProtoRx.test(text3) === false && suspectConstructorRx.test(text3) === false) {
     return obj;
   }
   return filter2(obj);
@@ -150843,15 +150843,15 @@ function filter2(obj) {
   }
   return obj;
 }
-function secureJsonParse(text2) {
+function secureJsonParse(text3) {
   const { stackTraceLimit } = Error;
   try {
     Error.stackTraceLimit = 0;
   } catch (e) {
-    return _parse2(text2);
+    return _parse2(text3);
   }
   try {
-    return _parse2(text2);
+    return _parse2(text3);
   } finally {
     Error.stackTraceLimit = stackTraceLimit;
   }
@@ -151790,11 +151790,11 @@ async function safeValidateTypes({
   }
 }
 async function parseJSON({
-  text: text2,
+  text: text3,
   schema
 }) {
   try {
-    const value = secureJsonParse(text2);
+    const value = secureJsonParse(text3);
     if (schema == null) {
       return value;
     }
@@ -151803,15 +151803,15 @@ async function parseJSON({
     if (JSONParseError.isInstance(error73) || TypeValidationError.isInstance(error73)) {
       throw error73;
     }
-    throw new JSONParseError({ text: text2, cause: error73 });
+    throw new JSONParseError({ text: text3, cause: error73 });
   }
 }
 async function safeParseJSON({
-  text: text2,
+  text: text3,
   schema
 }) {
   try {
-    const value = secureJsonParse(text2);
+    const value = secureJsonParse(text3);
     if (schema == null) {
       return { success: true, value, rawValue: value };
     }
@@ -151819,7 +151819,7 @@ async function safeParseJSON({
   } catch (error73) {
     return {
       success: false,
-      error: JSONParseError.isInstance(error73) ? error73 : new JSONParseError({ text: text2, cause: error73 }),
+      error: JSONParseError.isInstance(error73) ? error73 : new JSONParseError({ text: text3, cause: error73 }),
       rawValue: void 0
     };
   }
@@ -151872,7 +151872,7 @@ function tool(tool22) {
   return tool22;
 }
 function createProviderToolFactory({
-  id,
+  id: id2,
   inputSchema
 }) {
   return ({
@@ -151886,7 +151886,7 @@ function createProviderToolFactory({
     ...args
   }) => tool({
     type: "provider",
-    id,
+    id: id2,
     args,
     inputSchema,
     outputSchema: outputSchema2,
@@ -151899,7 +151899,7 @@ function createProviderToolFactory({
   });
 }
 function createProviderToolFactoryWithOutputSchema({
-  id,
+  id: id2,
   inputSchema,
   outputSchema: outputSchema2,
   supportsDeferredResults
@@ -151914,7 +151914,7 @@ function createProviderToolFactoryWithOutputSchema({
     ...args
   }) => tool({
     type: "provider",
-    id,
+    id: id2,
     args,
     inputSchema,
     outputSchema: outputSchema2,
@@ -152908,12 +152908,12 @@ function convertToOpenAIChatMessages({
         break;
       }
       case "assistant": {
-        let text2 = "";
+        let text3 = "";
         const toolCalls = [];
         for (const part of content) {
           switch (part.type) {
             case "text": {
-              text2 += part.text;
+              text3 += part.text;
               break;
             }
             case "tool-call": {
@@ -152931,7 +152931,7 @@ function convertToOpenAIChatMessages({
         }
         messages.push({
           role: "assistant",
-          content: text2,
+          content: text3,
           tool_calls: toolCalls.length > 0 ? toolCalls : void 0
         });
         break;
@@ -152974,12 +152974,12 @@ function convertToOpenAIChatMessages({
   return { messages, warnings };
 }
 function getResponseMetadata({
-  id,
+  id: id2,
   model,
   created
 }) {
   return {
-    id: id != null ? id : void 0,
+    id: id2 != null ? id2 : void 0,
     modelId: model != null ? model : void 0,
     timestamp: created ? new Date(created * 1e3) : void 0
   };
@@ -153098,9 +153098,9 @@ function convertToOpenAICompletionPrompt({
   user = "user",
   assistant = "assistant"
 }) {
-  let text2 = "";
+  let text3 = "";
   if (prompt[0].role === "system") {
-    text2 += `${prompt[0].content}
+    text3 += `${prompt[0].content}
 
 `;
     prompt = prompt.slice(1);
@@ -153121,7 +153121,7 @@ function convertToOpenAICompletionPrompt({
             }
           }
         }).filter(Boolean).join("");
-        text2 += `${user}:
+        text3 += `${user}:
 ${userMessage}
 
 `;
@@ -153140,7 +153140,7 @@ ${userMessage}
             }
           }
         }).join("");
-        text2 += `${assistant}:
+        text3 += `${assistant}:
 ${assistantMessage}
 
 `;
@@ -153157,21 +153157,21 @@ ${assistantMessage}
       }
     }
   }
-  text2 += `${assistant}:
+  text3 += `${assistant}:
 `;
   return {
-    prompt: text2,
+    prompt: text3,
     stopSequences: [`
 ${user}:`]
   };
 }
 function getResponseMetadata2({
-  id,
+  id: id2,
   model,
   created
 }) {
   return {
-    id: id != null ? id : void 0,
+    id: id2 != null ? id2 : void 0,
     modelId: model != null ? model : void 0,
     timestamp: created != null ? new Date(created * 1e3) : void 0
   };
@@ -153357,34 +153357,34 @@ async function convertToOpenAIResponsesInput({
           switch (part.type) {
             case "text": {
               const providerOpts = (_a31 = part.providerOptions) == null ? void 0 : _a31[providerOptionsName];
-              const id = providerOpts == null ? void 0 : providerOpts.itemId;
+              const id2 = providerOpts == null ? void 0 : providerOpts.itemId;
               const phase = providerOpts == null ? void 0 : providerOpts.phase;
-              if (hasConversation && id != null) {
+              if (hasConversation && id2 != null) {
                 break;
               }
-              if (store && id != null) {
-                input.push({ type: "item_reference", id });
+              if (store && id2 != null) {
+                input.push({ type: "item_reference", id: id2 });
                 break;
               }
               input.push({
                 role: "assistant",
                 content: [{ type: "output_text", text: part.text }],
-                id,
+                id: id2,
                 ...phase != null && { phase }
               });
               break;
             }
             case "tool-call": {
-              const id = (_f = (_c = (_b27 = part.providerOptions) == null ? void 0 : _b27[providerOptionsName]) == null ? void 0 : _c.itemId) != null ? _f : (_e = (_d = part.providerMetadata) == null ? void 0 : _d[providerOptionsName]) == null ? void 0 : _e.itemId;
-              if (hasConversation && id != null) {
+              const id2 = (_f = (_c = (_b27 = part.providerOptions) == null ? void 0 : _b27[providerOptionsName]) == null ? void 0 : _c.itemId) != null ? _f : (_e = (_d = part.providerMetadata) == null ? void 0 : _d[providerOptionsName]) == null ? void 0 : _e.itemId;
+              if (hasConversation && id2 != null) {
                 break;
               }
               const resolvedToolName = toolNameMapping.toProviderToolName(
                 part.toolName
               );
               if (resolvedToolName === "tool_search") {
-                if (store && id != null) {
-                  input.push({ type: "item_reference", id });
+                if (store && id2 != null) {
+                  input.push({ type: "item_reference", id: id2 });
                   break;
                 }
                 const parsedInput = typeof part.input === "string" ? await parseJSON({
@@ -153397,7 +153397,7 @@ async function convertToOpenAIResponsesInput({
                 const execution = parsedInput.call_id != null ? "client" : "server";
                 input.push({
                   type: "tool_search_call",
-                  id: id != null ? id : part.toolCallId,
+                  id: id2 != null ? id2 : part.toolCallId,
                   execution,
                   call_id: (_g = parsedInput.call_id) != null ? _g : null,
                   status: "completed",
@@ -153406,13 +153406,13 @@ async function convertToOpenAIResponsesInput({
                 break;
               }
               if (part.providerExecuted) {
-                if (store && id != null) {
-                  input.push({ type: "item_reference", id });
+                if (store && id2 != null) {
+                  input.push({ type: "item_reference", id: id2 });
                 }
                 break;
               }
-              if (store && id != null) {
-                input.push({ type: "item_reference", id });
+              if (store && id2 != null) {
+                input.push({ type: "item_reference", id: id2 });
                 break;
               }
               if (hasLocalShellTool && resolvedToolName === "local_shell") {
@@ -153423,7 +153423,7 @@ async function convertToOpenAIResponsesInput({
                 input.push({
                   type: "local_shell_call",
                   call_id: part.toolCallId,
-                  id,
+                  id: id2,
                   action: {
                     type: "exec",
                     command: parsedInput.action.command,
@@ -153443,7 +153443,7 @@ async function convertToOpenAIResponsesInput({
                 input.push({
                   type: "shell_call",
                   call_id: part.toolCallId,
-                  id,
+                  id: id2,
                   status: "completed",
                   action: {
                     commands: parsedInput.action.commands,
@@ -153461,7 +153461,7 @@ async function convertToOpenAIResponsesInput({
                 input.push({
                   type: "apply_patch_call",
                   call_id: parsedInput.callId,
-                  id,
+                  id: id2,
                   status: "completed",
                   operation: parsedInput.operation
                 });
@@ -153473,7 +153473,7 @@ async function convertToOpenAIResponsesInput({
                   call_id: part.toolCallId,
                   name: resolvedToolName,
                   input: typeof part.input === "string" ? part.input : JSON.stringify(part.input),
-                  id
+                  id: id2
                 });
                 break;
               }
@@ -153482,7 +153482,7 @@ async function convertToOpenAIResponsesInput({
                 call_id: part.toolCallId,
                 name: resolvedToolName,
                 arguments: JSON.stringify(part.input),
-                id
+                id: id2
               });
               break;
             }
@@ -154881,9 +154881,9 @@ var init_dist6 = __esm({
         });
         const choice2 = response.choices[0];
         const content = [];
-        const text2 = choice2.message.content;
-        if (text2 != null && text2.length > 0) {
-          content.push({ type: "text", text: text2 });
+        const text3 = choice2.message.content;
+        if (text3 != null && text3.length > 0) {
+          content.push({ type: "text", text: text3 });
         }
         for (const toolCall of (_a31 = choice2.message.tool_calls) != null ? _a31 : []) {
           content.push({
@@ -157536,8 +157536,8 @@ var init_dist6 = __esm({
             include = [...include, key];
           }
         }
-        function hasOpenAITool(id) {
-          return (tools == null ? void 0 : tools.find((tool3) => tool3.type === "provider" && tool3.id === id)) != null;
+        function hasOpenAITool(id2) {
+          return (tools == null ? void 0 : tools.find((tool3) => tool3.type === "provider" && tool3.id === id2)) != null;
         }
         const topLogprobs = typeof (openaiOptions == null ? void 0 : openaiOptions.logprobs) === "number" ? openaiOptions == null ? void 0 : openaiOptions.logprobs : (openaiOptions == null ? void 0 : openaiOptions.logprobs) === true ? TOP_LOGPROBS_MAX : void 0;
         if (topLogprobs) {
@@ -159039,7 +159039,7 @@ var init_dist6 = __esm({
         return this.config.provider;
       }
       async getArgs({
-        text: text2,
+        text: text3,
         voice = "alloy",
         outputFormat = "mp3",
         speed,
@@ -159055,7 +159055,7 @@ var init_dist6 = __esm({
         });
         const requestBody = {
           model: this.modelId,
-          input: text2,
+          input: text3,
           voice,
           response_format: "mp3",
           speed,
@@ -159416,13 +159416,13 @@ function convertToDeepSeekChatMessages({
         break;
       }
       case "assistant": {
-        let text2 = "";
+        let text3 = "";
         let reasoning;
         const toolCalls = [];
         for (const part of content) {
           switch (part.type) {
             case "text": {
-              text2 += part.text;
+              text3 += part.text;
               break;
             }
             case "reasoning": {
@@ -159451,7 +159451,7 @@ function convertToDeepSeekChatMessages({
         }
         messages.push({
           role: "assistant",
-          content: text2,
+          content: text3,
           reasoning_content: reasoning,
           tool_calls: toolCalls.length > 0 ? toolCalls : void 0
         });
@@ -159596,12 +159596,12 @@ function prepareTools({
   }
 }
 function getResponseMetadata3({
-  id,
+  id: id2,
   model,
   created
 }) {
   return {
-    id: id != null ? id : void 0,
+    id: id2 != null ? id2 : void 0,
     modelId: model != null ? model : void 0,
     timestamp: created != null ? new Date(created * 1e3) : void 0
   };
@@ -159868,9 +159868,9 @@ var init_dist7 = __esm({
             });
           }
         }
-        const text2 = choice2.message.content;
-        if (text2 != null && text2.length > 0) {
-          content.push({ type: "text", text: text2 });
+        const text3 = choice2.message.content;
+        if (text3 != null && text3.length > 0) {
+          content.push({ type: "text", text: text3 });
         }
         return {
           content,
@@ -160288,15 +160288,15 @@ var init_dist8 = __esm({
     marker72 = `vercel.ai.error.${name62}`;
     symbol72 = Symbol.for(marker72);
     JSONParseError2 = class extends (_b72 = AISDKError2, _a72 = symbol72, _b72) {
-      constructor({ text: text2, cause }) {
+      constructor({ text: text3, cause }) {
         super({
           name: name62,
-          message: `JSON parsing failed: Text: ${text2}.
+          message: `JSON parsing failed: Text: ${text3}.
 Error message: ${getErrorMessage3(cause)}`,
           cause
         });
         this[_a72] = true;
-        this.text = text2;
+        this.text = text3;
       }
       static isInstance(error73) {
         return AISDKError2.hasMarker(error73, marker72);
@@ -160559,12 +160559,12 @@ function loadApiKey2({
   }
   return apiKey;
 }
-function _parse3(text2) {
-  const obj = JSON.parse(text2);
+function _parse3(text3) {
+  const obj = JSON.parse(text3);
   if (obj === null || typeof obj !== "object") {
     return obj;
   }
-  if (suspectProtoRx2.test(text2) === false && suspectConstructorRx2.test(text2) === false) {
+  if (suspectProtoRx2.test(text3) === false && suspectConstructorRx2.test(text3) === false) {
     return obj;
   }
   return filter3(obj);
@@ -160591,15 +160591,15 @@ function filter3(obj) {
   }
   return obj;
 }
-function secureJsonParse2(text2) {
+function secureJsonParse2(text3) {
   const { stackTraceLimit } = Error;
   try {
     Error.stackTraceLimit = 0;
   } catch (e) {
-    return _parse3(text2);
+    return _parse3(text3);
   }
   try {
-    return _parse3(text2);
+    return _parse3(text3);
   } finally {
     Error.stackTraceLimit = stackTraceLimit;
   }
@@ -160662,11 +160662,11 @@ async function safeValidateTypes2({
   }
 }
 async function parseJSON2({
-  text: text2,
+  text: text3,
   schema
 }) {
   try {
-    const value = secureJsonParse2(text2);
+    const value = secureJsonParse2(text3);
     if (schema == null) {
       return value;
     }
@@ -160675,15 +160675,15 @@ async function parseJSON2({
     if (JSONParseError2.isInstance(error73) || TypeValidationError2.isInstance(error73)) {
       throw error73;
     }
-    throw new JSONParseError2({ text: text2, cause: error73 });
+    throw new JSONParseError2({ text: text3, cause: error73 });
   }
 }
 async function safeParseJSON2({
-  text: text2,
+  text: text3,
   schema
 }) {
   try {
-    const value = secureJsonParse2(text2);
+    const value = secureJsonParse2(text3);
     if (schema == null) {
       return { success: true, value, rawValue: value };
     }
@@ -160691,7 +160691,7 @@ async function safeParseJSON2({
   } catch (error73) {
     return {
       success: false,
-      error: JSONParseError2.isInstance(error73) ? error73 : new JSONParseError2({ text: text2, cause: error73 }),
+      error: JSONParseError2.isInstance(error73) ? error73 : new JSONParseError2({ text: text3, cause: error73 }),
       rawValue: void 0
     };
   }
@@ -163517,13 +163517,13 @@ function extractDefs2(ctx, schema) {
     throw new Error("Unprocessed schema. This is a bug in Zod.");
   const idToSchema = /* @__PURE__ */ new Map();
   for (const entry of ctx.seen.entries()) {
-    const id = (_a37 = ctx.metadataRegistry.get(entry[0])) == null ? void 0 : _a37.id;
-    if (id) {
-      const existing = idToSchema.get(id);
+    const id2 = (_a37 = ctx.metadataRegistry.get(entry[0])) == null ? void 0 : _a37.id;
+    if (id2) {
+      const existing = idToSchema.get(id2);
       if (existing && existing !== entry[0]) {
-        throw new Error(`Duplicate schema id "${id}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
+        throw new Error(`Duplicate schema id "${id2}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
       }
-      idToSchema.set(id, entry[0]);
+      idToSchema.set(id2, entry[0]);
     }
   }
   const makeURI = (entry) => {
@@ -163531,13 +163531,13 @@ function extractDefs2(ctx, schema) {
     const defsSegment = ctx.target === "draft-2020-12" ? "$defs" : "definitions";
     if (ctx.external) {
       const externalId = (_a47 = ctx.external.registry.get(entry[0])) == null ? void 0 : _a47.id;
-      const uriGenerator = (_b28 = ctx.external.uri) != null ? _b28 : (id2) => id2;
+      const uriGenerator = (_b28 = ctx.external.uri) != null ? _b28 : (id22) => id22;
       if (externalId) {
         return { ref: uriGenerator(externalId) };
       }
-      const id = (_d2 = (_c2 = entry[1].defId) != null ? _c2 : entry[1].schema.id) != null ? _d2 : `schema${ctx.counter++}`;
-      entry[1].defId = id;
-      return { defId: id, ref: `${uriGenerator("__shared")}#/${defsSegment}/${id}` };
+      const id2 = (_d2 = (_c2 = entry[1].defId) != null ? _c2 : entry[1].schema.id) != null ? _d2 : `schema${ctx.counter++}`;
+      entry[1].defId = id2;
+      return { defId: id2, ref: `${uriGenerator("__shared")}#/${defsSegment}/${id2}` };
     }
     if (entry[1] === root2) {
       return { ref: "#" };
@@ -163585,8 +163585,8 @@ Set the \`cycles\` parameter to \`"ref"\` to resolve cyclical schemas with defs.
         continue;
       }
     }
-    const id = (_d = ctx.metadataRegistry.get(entry[0])) == null ? void 0 : _d.id;
-    if (id) {
+    const id2 = (_d = ctx.metadataRegistry.get(entry[0])) == null ? void 0 : _d.id;
+    if (id2) {
       extractToDef(entry);
       continue;
     }
@@ -163684,10 +163684,10 @@ function finalize2(ctx, schema) {
   } else {
   }
   if ((_a37 = ctx.external) == null ? void 0 : _a37.uri) {
-    const id = (_b27 = ctx.external.registry.get(schema)) == null ? void 0 : _b27.id;
-    if (!id)
+    const id2 = (_b27 = ctx.external.registry.get(schema)) == null ? void 0 : _b27.id;
+    if (!id2)
       throw new Error("Schema is missing an `id` property");
-    result.$id = ctx.external.uri(id);
+    result.$id = ctx.external.uri(id2);
   }
   Object.assign(result, (_c = root2.def) != null ? _c : root2.schema);
   const defs = (_e = (_d = ctx.external) == null ? void 0 : _d.defs) != null ? _e : {};
@@ -164756,12 +164756,12 @@ function convertToZhipuChatMessages(prompt) {
         break;
       }
       case "assistant": {
-        let text2 = "";
+        let text3 = "";
         const toolCalls = [];
         for (const part of content) {
           switch (part.type) {
             case "text": {
-              text2 += part.text;
+              text3 += part.text;
               break;
             }
             case "reasoning": {
@@ -164786,7 +164786,7 @@ function convertToZhipuChatMessages(prompt) {
         }
         messages.push({
           role: "assistant",
-          content: text2,
+          content: text3,
           prefix: isLastMessage ? true : void 0,
           tool_calls: toolCalls.length > 0 ? toolCalls : void 0
         });
@@ -164840,12 +164840,12 @@ function mapZhipuFinishReason(finishReason) {
   }
 }
 function getResponseMetadata4({
-  id,
+  id: id2,
   model,
   created
 }) {
   return {
-    id: id != null ? id : void 0,
+    id: id2 != null ? id2 : void 0,
     modelId: model != null ? model : void 0,
     timestamp: created != null ? new Date(created * 1e3) : void 0
   };
@@ -167137,46 +167137,46 @@ var init_dist11 = __esm({
         }
         doc.write(`const newResult = {};`);
         for (const key of normalized.keys) {
-          const id = ids[key];
+          const id2 = ids[key];
           const k = esc2(key);
           const schema = shape[key];
           const isOptionalOut = ((_a37 = schema == null ? void 0 : schema._zod) == null ? void 0 : _a37.optout) === "optional";
-          doc.write(`const ${id} = ${parseStr(key)};`);
+          doc.write(`const ${id2} = ${parseStr(key)};`);
           if (isOptionalOut) {
             doc.write(`
-        if (${id}.issues.length) {
+        if (${id2}.issues.length) {
           if (${k} in input) {
-            payload.issues = payload.issues.concat(${id}.issues.map(iss => ({
+            payload.issues = payload.issues.concat(${id2}.issues.map(iss => ({
               ...iss,
               path: iss.path ? [${k}, ...iss.path] : [${k}]
             })));
           }
         }
         
-        if (${id}.value === undefined) {
+        if (${id2}.value === undefined) {
           if (${k} in input) {
             newResult[${k}] = undefined;
           }
         } else {
-          newResult[${k}] = ${id}.value;
+          newResult[${k}] = ${id2}.value;
         }
         
       `);
           } else {
             doc.write(`
-        if (${id}.issues.length) {
-          payload.issues = payload.issues.concat(${id}.issues.map(iss => ({
+        if (${id2}.issues.length) {
+          payload.issues = payload.issues.concat(${id2}.issues.map(iss => ({
             ...iss,
             path: iss.path ? [${k}, ...iss.path] : [${k}]
           })));
         }
         
-        if (${id}.value === undefined) {
+        if (${id2}.value === undefined) {
           if (${k} in input) {
             newResult[${k}] = undefined;
           }
         } else {
-          newResult[${k}] = ${id}.value;
+          newResult[${k}] = ${id2}.value;
         }
         
       `);
@@ -170950,8 +170950,8 @@ var init_dist11 = __esm({
         }
       };
     };
-    capitalizeFirstCharacter2 = (text2) => {
-      return text2.charAt(0).toUpperCase() + text2.slice(1);
+    capitalizeFirstCharacter2 = (text3) => {
+      return text3.charAt(0).toUpperCase() + text3.slice(1);
     };
     error262 = () => {
       const Sizable = {
@@ -175951,15 +175951,15 @@ var require_dist6 = __commonJS({
     var _a77;
     var _b76;
     var JSONParseError5 = class extends (_b76 = AISDKError5, _a77 = symbol77, _b76) {
-      constructor({ text: text2, cause }) {
+      constructor({ text: text3, cause }) {
         super({
           name: name67,
-          message: `JSON parsing failed: Text: ${text2}.
+          message: `JSON parsing failed: Text: ${text3}.
 Error message: ${getErrorMessage6(cause)}`,
           cause
         });
         this[_a77] = true;
-        this.text = text2;
+        this.text = text3;
       }
       static isInstance(error73) {
         return AISDKError5.hasMarker(error73, marker77);
@@ -178855,46 +178855,46 @@ var require_schemas = __commonJS({
         }
         doc.write(`const newResult = {};`);
         for (const key of normalized.keys) {
-          const id = ids[key];
+          const id2 = ids[key];
           const k = util4.esc(key);
           const schema = shape[key];
           const isOptionalOut = schema?._zod?.optout === "optional";
-          doc.write(`const ${id} = ${parseStr(key)};`);
+          doc.write(`const ${id2} = ${parseStr(key)};`);
           if (isOptionalOut) {
             doc.write(`
-        if (${id}.issues.length) {
+        if (${id2}.issues.length) {
           if (${k} in input) {
-            payload.issues = payload.issues.concat(${id}.issues.map(iss => ({
+            payload.issues = payload.issues.concat(${id2}.issues.map(iss => ({
               ...iss,
               path: iss.path ? [${k}, ...iss.path] : [${k}]
             })));
           }
         }
         
-        if (${id}.value === undefined) {
+        if (${id2}.value === undefined) {
           if (${k} in input) {
             newResult[${k}] = undefined;
           }
         } else {
-          newResult[${k}] = ${id}.value;
+          newResult[${k}] = ${id2}.value;
         }
         
       `);
           } else {
             doc.write(`
-        if (${id}.issues.length) {
-          payload.issues = payload.issues.concat(${id}.issues.map(iss => ({
+        if (${id2}.issues.length) {
+          payload.issues = payload.issues.concat(${id2}.issues.map(iss => ({
             ...iss,
             path: iss.path ? [${k}, ...iss.path] : [${k}]
           })));
         }
         
-        if (${id}.value === undefined) {
+        if (${id2}.value === undefined) {
           if (${k} in input) {
             newResult[${k}] = undefined;
           }
         } else {
-          newResult[${k}] = ${id}.value;
+          newResult[${k}] = ${id2}.value;
         }
         
       `);
@@ -183946,8 +183946,8 @@ var require_lt = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.default = default_1;
     var util4 = __importStar(require_util4());
-    var capitalizeFirstCharacter3 = (text2) => {
-      return text2.charAt(0).toUpperCase() + text2.slice(1);
+    var capitalizeFirstCharacter3 = (text3) => {
+      return text3.charAt(0).toUpperCase() + text3.slice(1);
     };
     function getUnitTypeFromNumber3(number6) {
       const abs = Math.abs(number6);
@@ -188834,26 +188834,26 @@ var require_to_json_schema = __commonJS({
         throw new Error("Unprocessed schema. This is a bug in Zod.");
       const idToSchema = /* @__PURE__ */ new Map();
       for (const entry of ctx.seen.entries()) {
-        const id = ctx.metadataRegistry.get(entry[0])?.id;
-        if (id) {
-          const existing = idToSchema.get(id);
+        const id2 = ctx.metadataRegistry.get(entry[0])?.id;
+        if (id2) {
+          const existing = idToSchema.get(id2);
           if (existing && existing !== entry[0]) {
-            throw new Error(`Duplicate schema id "${id}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
+            throw new Error(`Duplicate schema id "${id2}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
           }
-          idToSchema.set(id, entry[0]);
+          idToSchema.set(id2, entry[0]);
         }
       }
       const makeURI = (entry) => {
         const defsSegment = ctx.target === "draft-2020-12" ? "$defs" : "definitions";
         if (ctx.external) {
           const externalId = ctx.external.registry.get(entry[0])?.id;
-          const uriGenerator = ctx.external.uri ?? ((id2) => id2);
+          const uriGenerator = ctx.external.uri ?? ((id3) => id3);
           if (externalId) {
             return { ref: uriGenerator(externalId) };
           }
-          const id = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
-          entry[1].defId = id;
-          return { defId: id, ref: `${uriGenerator("__shared")}#/${defsSegment}/${id}` };
+          const id2 = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
+          entry[1].defId = id2;
+          return { defId: id2, ref: `${uriGenerator("__shared")}#/${defsSegment}/${id2}` };
         }
         if (entry[1] === root2) {
           return { ref: "#" };
@@ -188901,8 +188901,8 @@ Set the \`cycles\` parameter to \`"ref"\` to resolve cyclical schemas with defs.
             continue;
           }
         }
-        const id = ctx.metadataRegistry.get(entry[0])?.id;
-        if (id) {
+        const id2 = ctx.metadataRegistry.get(entry[0])?.id;
+        if (id2) {
           extractToDef(entry);
           continue;
         }
@@ -188998,10 +188998,10 @@ Set the \`cycles\` parameter to \`"ref"\` to resolve cyclical schemas with defs.
       } else {
       }
       if (ctx.external?.uri) {
-        const id = ctx.external.registry.get(schema)?.id;
-        if (!id)
+        const id2 = ctx.external.registry.get(schema)?.id;
+        if (!id2)
           throw new Error("Schema is missing an `id` property");
-        result.$id = ctx.external.uri(id);
+        result.$id = ctx.external.uri(id2);
       }
       Object.assign(result, root2.def ?? root2.schema);
       const defs = ctx.external?.defs ?? {};
@@ -196396,7 +196396,7 @@ var require_dist7 = __commonJS({
           "`callbacks` must be an object, got a function instead. Did you mean `{onEvent: fn}`?"
         );
       const { onEvent = noop4, onError = noop4, onRetry = noop4, onComment } = callbacks;
-      let incompleteLine = "", isFirstChunk = true, id, data = "", eventType = "";
+      let incompleteLine = "", isFirstChunk = true, id2, data = "", eventType = "";
       function feed(newChunk) {
         const chunk = isFirstChunk ? newChunk.replace(/^\xEF\xBB\xBF/, "") : newChunk, [complete, incomplete] = splitLines2(`${incompleteLine}${chunk}`);
         for (const line of complete)
@@ -196430,7 +196430,7 @@ var require_dist7 = __commonJS({
 `;
             break;
           case "id":
-            id = value.includes("\0") ? void 0 : value;
+            id2 = value.includes("\0") ? void 0 : value;
             break;
           case "retry":
             /^\d+$/.test(value) ? onRetry(parseInt(value, 10)) : onError(
@@ -196453,16 +196453,16 @@ var require_dist7 = __commonJS({
       }
       function dispatchEvent() {
         data.length > 0 && onEvent({
-          id,
+          id: id2,
           event: eventType || void 0,
           // If the data buffer's last character is a U+000A LINE FEED (LF) character,
           // then remove the last character from the data buffer.
           data: data.endsWith(`
 `) ? data.slice(0, -1) : data
-        }), id = void 0, data = "", eventType = "";
+        }), id2 = void 0, data = "", eventType = "";
       }
       function reset(options = {}) {
-        incompleteLine && options.consume && parseLine(incompleteLine), isFirstChunk = true, id = void 0, data = "", eventType = "", incompleteLine = "";
+        incompleteLine && options.consume && parseLine(incompleteLine), isFirstChunk = true, id2 = void 0, data = "", eventType = "", incompleteLine = "";
       }
       return { feed, reset };
     }
@@ -197372,12 +197372,12 @@ var require_dist8 = __commonJS({
     var import_provider910 = require_dist6();
     var suspectProtoRx5 = /"(?:_|\\u005[Ff])(?:_|\\u005[Ff])(?:p|\\u0070)(?:r|\\u0072)(?:o|\\u006[Ff])(?:t|\\u0074)(?:o|\\u006[Ff])(?:_|\\u005[Ff])(?:_|\\u005[Ff])"\s*:/;
     var suspectConstructorRx5 = /"(?:c|\\u0063)(?:o|\\u006[Ff])(?:n|\\u006[Ee])(?:s|\\u0073)(?:t|\\u0074)(?:r|\\u0072)(?:u|\\u0075)(?:c|\\u0063)(?:t|\\u0074)(?:o|\\u006[Ff])(?:r|\\u0072)"\s*:/;
-    function _parse7(text2) {
-      const obj = JSON.parse(text2);
+    function _parse7(text3) {
+      const obj = JSON.parse(text3);
       if (obj === null || typeof obj !== "object") {
         return obj;
       }
-      if (suspectProtoRx5.test(text2) === false && suspectConstructorRx5.test(text2) === false) {
+      if (suspectProtoRx5.test(text3) === false && suspectConstructorRx5.test(text3) === false) {
         return obj;
       }
       return filter6(obj);
@@ -197404,15 +197404,15 @@ var require_dist8 = __commonJS({
       }
       return obj;
     }
-    function secureJsonParse5(text2) {
+    function secureJsonParse5(text3) {
       const { stackTraceLimit } = Error;
       try {
         Error.stackTraceLimit = 0;
       } catch (e) {
-        return _parse7(text2);
+        return _parse7(text3);
       }
       try {
-        return _parse7(text2);
+        return _parse7(text3);
       } finally {
         Error.stackTraceLimit = stackTraceLimit;
       }
@@ -198694,11 +198694,11 @@ var require_dist8 = __commonJS({
       }
     }
     async function parseJSON5({
-      text: text2,
+      text: text3,
       schema
     }) {
       try {
-        const value = secureJsonParse5(text2);
+        const value = secureJsonParse5(text3);
         if (schema == null) {
           return value;
         }
@@ -198707,15 +198707,15 @@ var require_dist8 = __commonJS({
         if (import_provider910.JSONParseError.isInstance(error73) || import_provider910.TypeValidationError.isInstance(error73)) {
           throw error73;
         }
-        throw new import_provider910.JSONParseError({ text: text2, cause: error73 });
+        throw new import_provider910.JSONParseError({ text: text3, cause: error73 });
       }
     }
     async function safeParseJSON5({
-      text: text2,
+      text: text3,
       schema
     }) {
       try {
-        const value = secureJsonParse5(text2);
+        const value = secureJsonParse5(text3);
         if (schema == null) {
           return { success: true, value, rawValue: value };
         }
@@ -198723,7 +198723,7 @@ var require_dist8 = __commonJS({
       } catch (error73) {
         return {
           success: false,
-          error: import_provider910.JSONParseError.isInstance(error73) ? error73 : new import_provider910.JSONParseError({ text: text2, cause: error73 }),
+          error: import_provider910.JSONParseError.isInstance(error73) ? error73 : new import_provider910.JSONParseError({ text: text3, cause: error73 }),
           rawValue: void 0
         };
       }
@@ -198895,7 +198895,7 @@ var require_dist8 = __commonJS({
       return { ...tool22, type: "dynamic" };
     }
     function createProviderToolFactory3({
-      id,
+      id: id2,
       inputSchema
     }) {
       return ({
@@ -198909,7 +198909,7 @@ var require_dist8 = __commonJS({
         ...args
       }) => tool3({
         type: "provider",
-        id,
+        id: id2,
         args,
         inputSchema,
         outputSchema: outputSchema2,
@@ -198922,7 +198922,7 @@ var require_dist8 = __commonJS({
       });
     }
     function createProviderToolFactoryWithOutputSchema3({
-      id,
+      id: id2,
       inputSchema,
       outputSchema: outputSchema2,
       supportsDeferredResults
@@ -198937,7 +198937,7 @@ var require_dist8 = __commonJS({
         ...args
       }) => tool3({
         type: "provider",
-        id,
+        id: id2,
         args,
         inputSchema,
         outputSchema: outputSchema2,
@@ -199288,13 +199288,13 @@ var require_dist9 = __commonJS({
             break;
           }
           case "assistant": {
-            let text2 = "";
+            let text3 = "";
             const toolCalls = [];
             for (const part of content) {
               const partOptions = getQwenOptions(part);
               switch (part.type) {
                 case "text": {
-                  text2 += part.text;
+                  text3 += part.text;
                   break;
                 }
                 case "tool-call": {
@@ -199326,7 +199326,7 @@ var require_dist9 = __commonJS({
             }
             messages.push({
               role: "assistant",
-              content: text2,
+              content: text3,
               tool_calls: toolCalls.length > 0 ? toolCalls : void 0,
               ...options
             });
@@ -199365,13 +199365,13 @@ var require_dist9 = __commonJS({
       return messages;
     }
     function getResponseMetadata8({
-      id,
+      id: id2,
       model,
       created
     }) {
       return {
         // Assign 'id' if provided; otherwise, leave as undefined.
-        id: id != null ? id : void 0,
+        id: id2 != null ? id2 : void 0,
         // Map 'model' to 'modelId' for improved clarity; assign if provided.
         modelId: model != null ? model : void 0,
         // If 'created' is provided, convert the Unix timestamp (seconds) to a JavaScript Date object.
@@ -199402,13 +199402,13 @@ var require_dist9 = __commonJS({
       };
     }
     var import_provider_utils210 = require_dist8();
-    var import_zod158 = require_zod();
-    var qwenErrorDataSchema = import_zod158.z.object({
-      object: import_zod158.z.literal("error"),
-      message: import_zod158.z.string(),
-      type: import_zod158.z.string(),
-      param: import_zod158.z.string().nullable(),
-      code: import_zod158.z.string().nullable()
+    var import_zod160 = require_zod();
+    var qwenErrorDataSchema = import_zod160.z.object({
+      object: import_zod160.z.literal("error"),
+      message: import_zod160.z.string(),
+      type: import_zod160.z.string(),
+      param: import_zod160.z.string().nullable(),
+      code: import_zod160.z.string().nullable()
     });
     var qwenFailedResponseHandler = (0, import_provider_utils210.createJsonErrorResponseHandler)({
       errorSchema: qwenErrorDataSchema,
@@ -199689,19 +199689,19 @@ var require_dist9 = __commonJS({
               }
               for (const part of result.content) {
                 if (part.type === "reasoning") {
-                  const id = (0, import_provider_utils310.generateId)();
-                  controller.enqueue({ type: "reasoning-start", id });
+                  const id2 = (0, import_provider_utils310.generateId)();
+                  controller.enqueue({ type: "reasoning-start", id: id2 });
                   controller.enqueue({
                     type: "reasoning-delta",
-                    id,
+                    id: id2,
                     delta: part.text
                   });
-                  controller.enqueue({ type: "reasoning-end", id });
+                  controller.enqueue({ type: "reasoning-end", id: id2 });
                 } else if (part.type === "text") {
-                  const id = (0, import_provider_utils310.generateId)();
-                  controller.enqueue({ type: "text-start", id });
-                  controller.enqueue({ type: "text-delta", id, delta: part.text });
-                  controller.enqueue({ type: "text-end", id });
+                  const id2 = (0, import_provider_utils310.generateId)();
+                  controller.enqueue({ type: "text-start", id: id2 });
+                  controller.enqueue({ type: "text-delta", id: id2, delta: part.text });
+                  controller.enqueue({ type: "text-end", id: id2 });
                 } else if (part.type === "tool-call") {
                   controller.enqueue({
                     type: "tool-call",
@@ -200087,11 +200087,11 @@ var require_dist9 = __commonJS({
       if (inputFormat === "prompt" && prompt.length === 1 && prompt[0].role === "user" && prompt[0].content.length === 1 && prompt[0].content[0].type === "text") {
         return { prompt: prompt[0].content[0].text };
       }
-      let text2 = "";
+      let text3 = "";
       if (prompt[0].role === "system") {
         const systemContent = prompt[0].content;
         if (typeof systemContent === "string") {
-          text2 += `${systemContent}
+          text3 += `${systemContent}
 
 `;
         } else if (Array.isArray(systemContent)) {
@@ -200104,11 +200104,11 @@ var require_dist9 = __commonJS({
               functionality: `system message ${(_a31 = part == null ? void 0 : part.type) != null ? _a31 : "unknown"} content parts`
             });
           }).join("");
-          text2 += `${systemText}
+          text3 += `${systemText}
 
 `;
         } else {
-          text2 += `${String(systemContent)}
+          text3 += `${String(systemContent)}
 
 `;
         }
@@ -200141,7 +200141,7 @@ var require_dist9 = __commonJS({
                 }
               }
             }).join("");
-            text2 += `${user}:
+            text3 += `${user}:
 ${userMessage}
 
 `;
@@ -200175,7 +200175,7 @@ ${userMessage}
                 }
               }
             }).join("");
-            text2 += `${assistant}:
+            text3 += `${assistant}:
 ${assistantMessage}
 
 `;
@@ -200192,10 +200192,10 @@ ${assistantMessage}
           }
         }
       }
-      text2 += `${assistant}:
+      text3 += `${assistant}:
 `;
       return {
-        prompt: text2,
+        prompt: text3,
         stopSequences: [`
 ${user}:`]
       };
@@ -201234,7 +201234,7 @@ function prepareTools2({
     "gemini-flash-latest",
     "gemini-flash-lite-latest",
     "gemini-pro-latest"
-  ].some((id) => id === modelId);
+  ].some((id2) => id2 === modelId);
   const isGemini2orNewer = modelId.includes("gemini-2") || modelId.includes("gemini-3") || modelId.includes("nano-banana") || isLatest;
   const supportsFileSearch = modelId.includes("gemini-2.5") || modelId.includes("gemini-3");
   if (tools == null) {
@@ -208526,14 +208526,14 @@ function convertToOpenAICompatibleChatMessages(prompt) {
         break;
       }
       case "assistant": {
-        let text2 = "";
+        let text3 = "";
         let reasoning = "";
         const toolCalls = [];
         for (const part of content) {
           const partMetadata = getOpenAIMetadata(part);
           switch (part.type) {
             case "text": {
-              text2 += part.text;
+              text3 += part.text;
               break;
             }
             case "reasoning": {
@@ -208565,7 +208565,7 @@ function convertToOpenAICompatibleChatMessages(prompt) {
         }
         messages.push({
           role: "assistant",
-          content: text2,
+          content: text3,
           ...reasoning.length > 0 ? { reasoning_content: reasoning } : {},
           tool_calls: toolCalls.length > 0 ? toolCalls : void 0,
           ...metadata
@@ -208612,12 +208612,12 @@ function convertToOpenAICompatibleChatMessages(prompt) {
   return messages;
 }
 function getResponseMetadata5({
-  id,
+  id: id2,
   model,
   created
 }) {
   return {
-    id: id != null ? id : void 0,
+    id: id2 != null ? id2 : void 0,
     modelId: model != null ? model : void 0,
     timestamp: created != null ? new Date(created * 1e3) : void 0
   };
@@ -208731,9 +208731,9 @@ function convertToOpenAICompatibleCompletionPrompt({
   user = "user",
   assistant = "assistant"
 }) {
-  let text2 = "";
+  let text3 = "";
   if (prompt[0].role === "system") {
-    text2 += `${prompt[0].content}
+    text3 += `${prompt[0].content}
 
 `;
     prompt = prompt.slice(1);
@@ -208754,7 +208754,7 @@ function convertToOpenAICompatibleCompletionPrompt({
             }
           }
         }).filter(Boolean).join("");
-        text2 += `${user}:
+        text3 += `${user}:
 ${userMessage}
 
 `;
@@ -208773,7 +208773,7 @@ ${userMessage}
             }
           }
         }).join("");
-        text2 += `${assistant}:
+        text3 += `${assistant}:
 ${assistantMessage}
 
 `;
@@ -208790,21 +208790,21 @@ ${assistantMessage}
       }
     }
   }
-  text2 += `${assistant}:
+  text3 += `${assistant}:
 `;
   return {
-    prompt: text2,
+    prompt: text3,
     stopSequences: [`
 ${user}:`]
   };
 }
 function getResponseMetadata22({
-  id,
+  id: id2,
   model,
   created
 }) {
   return {
-    id: id != null ? id : void 0,
+    id: id2 != null ? id2 : void 0,
     modelId: model != null ? model : void 0,
     timestamp: created != null ? new Date(created * 1e3) : void 0
   };
@@ -209097,9 +209097,9 @@ var init_dist14 = __esm({
         });
         const choice2 = responseBody.choices[0];
         const content = [];
-        const text2 = choice2.message.content;
-        if (text2 != null && text2.length > 0) {
-          content.push({ type: "text", text: text2 });
+        const text3 = choice2.message.content;
+        if (text3 != null && text3.length > 0) {
+          content.push({ type: "text", text: text3 });
         }
         const reasoning = (_a31 = choice2.message.reasoning_content) != null ? _a31 : choice2.message.reasoning;
         if (reasoning != null && reasoning.length > 0) {
@@ -210069,12 +210069,12 @@ function convertToXaiChatMessages(prompt) {
         break;
       }
       case "assistant": {
-        let text2 = "";
+        let text3 = "";
         const toolCalls = [];
         for (const part of content) {
           switch (part.type) {
             case "text": {
-              text2 += part.text;
+              text3 += part.text;
               break;
             }
             case "tool-call": {
@@ -210092,7 +210092,7 @@ function convertToXaiChatMessages(prompt) {
         }
         messages.push({
           role: "assistant",
-          content: text2,
+          content: text3,
           tool_calls: toolCalls.length > 0 ? toolCalls : void 0
         });
         break;
@@ -210155,14 +210155,14 @@ function convertXaiChatUsage(usage) {
   };
 }
 function getResponseMetadata6({
-  id,
+  id: id2,
   model,
   created,
   created_at
 }) {
   const unixTime = created != null ? created : created_at;
   return {
-    id: id != null ? id : void 0,
+    id: id2 != null ? id2 : void 0,
     modelId: model != null ? model : void 0,
     timestamp: unixTime != null ? new Date(unixTime * 1e3) : void 0
   };
@@ -210291,11 +210291,11 @@ async function convertToXaiResponsesInput({
         for (const part of message.content) {
           switch (part.type) {
             case "text": {
-              const id = typeof ((_b27 = (_a31 = part.providerOptions) == null ? void 0 : _a31.xai) == null ? void 0 : _b27.itemId) === "string" ? part.providerOptions.xai.itemId : void 0;
+              const id2 = typeof ((_b27 = (_a31 = part.providerOptions) == null ? void 0 : _a31.xai) == null ? void 0 : _b27.itemId) === "string" ? part.providerOptions.xai.itemId : void 0;
               input.push({
                 role: "assistant",
                 content: part.text,
-                id
+                id: id2
               });
               break;
             }
@@ -210303,10 +210303,10 @@ async function convertToXaiResponsesInput({
               if (part.providerExecuted) {
                 break;
               }
-              const id = typeof ((_d = (_c = part.providerOptions) == null ? void 0 : _c.xai) == null ? void 0 : _d.itemId) === "string" ? part.providerOptions.xai.itemId : void 0;
+              const id2 = typeof ((_d = (_c = part.providerOptions) == null ? void 0 : _c.xai) == null ? void 0 : _d.itemId) === "string" ? part.providerOptions.xai.itemId : void 0;
               input.push({
                 type: "function_call",
-                id: id != null ? id : part.toolCallId,
+                id: id2 != null ? id2 : part.toolCallId,
                 call_id: part.toolCallId,
                 name: part.toolName,
                 arguments: JSON.stringify(part.input),
@@ -210932,13 +210932,13 @@ var init_dist15 = __esm({
         const choice2 = response.choices[0];
         const content = [];
         if (choice2.message.content != null && choice2.message.content.length > 0) {
-          let text2 = choice2.message.content;
+          let text3 = choice2.message.content;
           const lastMessage = body.messages[body.messages.length - 1];
-          if ((lastMessage == null ? void 0 : lastMessage.role) === "assistant" && text2 === lastMessage.content) {
-            text2 = "";
+          if ((lastMessage == null ? void 0 : lastMessage.role) === "assistant" && text3 === lastMessage.content) {
+            text3 = "";
           }
-          if (text2.length > 0) {
-            content.push({ type: "text", text: text2 });
+          if (text3.length > 0) {
+            content.push({ type: "text", text: text3 });
           }
         }
         if (choice2.message.reasoning_content != null && choice2.message.reasoning_content.length > 0) {
@@ -212223,7 +212223,7 @@ var init_dist15 = __esm({
               break;
             }
             case "reasoning": {
-              const summaryTexts = part.summary.map((s) => s.text).filter((text2) => text2 && text2.length > 0);
+              const summaryTexts = part.summary.map((s) => s.text).filter((text3) => text3 && text3.length > 0);
               if (summaryTexts.length > 0) {
                 const reasoningText = summaryTexts.join("");
                 if (part.encrypted_content || part.id) {
@@ -213111,15 +213111,15 @@ var init_dist16 = __esm({
     marker73 = `vercel.ai.error.${name63}`;
     symbol73 = Symbol.for(marker73);
     JSONParseError3 = class extends (_b73 = AISDKError3, _a73 = symbol73, _b73) {
-      constructor({ text: text2, cause }) {
+      constructor({ text: text3, cause }) {
         super({
           name: name63,
-          message: `JSON parsing failed: Text: ${text2}.
+          message: `JSON parsing failed: Text: ${text3}.
 Error message: ${getErrorMessage4(cause)}`,
           cause
         });
         this[_a73] = true;
-        this.text = text2;
+        this.text = text3;
       }
       static isInstance(error73) {
         return AISDKError3.hasMarker(error73, marker73);
@@ -213380,12 +213380,12 @@ function withUserAgentSuffix3(headers, ...userAgentSuffixParts) {
 function isNonNullable2(value) {
   return value != null;
 }
-function _parse5(text2) {
-  const obj = JSON.parse(text2);
+function _parse5(text3) {
+  const obj = JSON.parse(text3);
   if (obj === null || typeof obj !== "object") {
     return obj;
   }
-  if (suspectProtoRx3.test(text2) === false && suspectConstructorRx3.test(text2) === false) {
+  if (suspectProtoRx3.test(text3) === false && suspectConstructorRx3.test(text3) === false) {
     return obj;
   }
   return filter4(obj);
@@ -213412,15 +213412,15 @@ function filter4(obj) {
   }
   return obj;
 }
-function secureJsonParse3(text2) {
+function secureJsonParse3(text3) {
   const { stackTraceLimit } = Error;
   try {
     Error.stackTraceLimit = 0;
   } catch (e) {
-    return _parse5(text2);
+    return _parse5(text3);
   }
   try {
-    return _parse5(text2);
+    return _parse5(text3);
   } finally {
     Error.stackTraceLimit = stackTraceLimit;
   }
@@ -214355,11 +214355,11 @@ async function safeValidateTypes3({
   }
 }
 async function parseJSON3({
-  text: text2,
+  text: text3,
   schema
 }) {
   try {
-    const value = secureJsonParse3(text2);
+    const value = secureJsonParse3(text3);
     if (schema == null) {
       return value;
     }
@@ -214368,15 +214368,15 @@ async function parseJSON3({
     if (JSONParseError3.isInstance(error73) || TypeValidationError3.isInstance(error73)) {
       throw error73;
     }
-    throw new JSONParseError3({ text: text2, cause: error73 });
+    throw new JSONParseError3({ text: text3, cause: error73 });
   }
 }
 async function safeParseJSON3({
-  text: text2,
+  text: text3,
   schema
 }) {
   try {
-    const value = secureJsonParse3(text2);
+    const value = secureJsonParse3(text3);
     if (schema == null) {
       return { success: true, value, rawValue: value };
     }
@@ -214384,7 +214384,7 @@ async function safeParseJSON3({
   } catch (error73) {
     return {
       success: false,
-      error: JSONParseError3.isInstance(error73) ? error73 : new JSONParseError3({ text: text2, cause: error73 }),
+      error: JSONParseError3.isInstance(error73) ? error73 : new JSONParseError3({ text: text3, cause: error73 }),
       rawValue: void 0
     };
   }
@@ -214429,7 +214429,7 @@ function tool2(tool22) {
   return tool22;
 }
 function createProviderToolFactory2({
-  id,
+  id: id2,
   inputSchema
 }) {
   return ({
@@ -214443,7 +214443,7 @@ function createProviderToolFactory2({
     ...args
   }) => tool2({
     type: "provider",
-    id,
+    id: id2,
     args,
     inputSchema,
     outputSchema: outputSchema2,
@@ -214456,7 +214456,7 @@ function createProviderToolFactory2({
   });
 }
 function createProviderToolFactoryWithOutputSchema2({
-  id,
+  id: id2,
   inputSchema,
   outputSchema: outputSchema2,
   supportsDeferredResults
@@ -214471,7 +214471,7 @@ function createProviderToolFactoryWithOutputSchema2({
     ...args
   }) => tool2({
     type: "provider",
-    id,
+    id: id2,
     args,
     inputSchema,
     outputSchema: outputSchema2,
@@ -219200,15 +219200,15 @@ var init_dist18 = __esm({
     marker74 = `vercel.ai.error.${name64}`;
     symbol74 = Symbol.for(marker74);
     JSONParseError4 = class extends (_b74 = AISDKError4, _a74 = symbol74, _b74) {
-      constructor({ text: text2, cause }) {
+      constructor({ text: text3, cause }) {
         super({
           name: name64,
-          message: `JSON parsing failed: Text: ${text2}.
+          message: `JSON parsing failed: Text: ${text3}.
 Error message: ${getErrorMessage5(cause)}`,
           cause
         });
         this[_a74] = true;
-        this.text = text2;
+        this.text = text3;
       }
       static isInstance(error73) {
         return AISDKError4.hasMarker(error73, marker74);
@@ -219474,12 +219474,12 @@ function loadApiKey3({
   }
   return apiKey;
 }
-function _parse6(text2) {
-  const obj = JSON.parse(text2);
+function _parse6(text3) {
+  const obj = JSON.parse(text3);
   if (obj === null || typeof obj !== "object") {
     return obj;
   }
-  if (suspectProtoRx4.test(text2) === false && suspectConstructorRx4.test(text2) === false) {
+  if (suspectProtoRx4.test(text3) === false && suspectConstructorRx4.test(text3) === false) {
     return obj;
   }
   return filter5(obj);
@@ -219506,15 +219506,15 @@ function filter5(obj) {
   }
   return obj;
 }
-function secureJsonParse4(text2) {
+function secureJsonParse4(text3) {
   const { stackTraceLimit } = Error;
   try {
     Error.stackTraceLimit = 0;
   } catch (e) {
-    return _parse6(text2);
+    return _parse6(text3);
   }
   try {
-    return _parse6(text2);
+    return _parse6(text3);
   } finally {
     Error.stackTraceLimit = stackTraceLimit;
   }
@@ -220440,11 +220440,11 @@ async function safeValidateTypes4({
   }
 }
 async function parseJSON4({
-  text: text2,
+  text: text3,
   schema
 }) {
   try {
-    const value = secureJsonParse4(text2);
+    const value = secureJsonParse4(text3);
     if (schema == null) {
       return value;
     }
@@ -220453,15 +220453,15 @@ async function parseJSON4({
     if (JSONParseError4.isInstance(error73) || TypeValidationError4.isInstance(error73)) {
       throw error73;
     }
-    throw new JSONParseError4({ text: text2, cause: error73 });
+    throw new JSONParseError4({ text: text3, cause: error73 });
   }
 }
 async function safeParseJSON4({
-  text: text2,
+  text: text3,
   schema
 }) {
   try {
-    const value = secureJsonParse4(text2);
+    const value = secureJsonParse4(text3);
     if (schema == null) {
       return { success: true, value, rawValue: value };
     }
@@ -220469,7 +220469,7 @@ async function safeParseJSON4({
   } catch (error73) {
     return {
       success: false,
-      error: JSONParseError4.isInstance(error73) ? error73 : new JSONParseError4({ text: text2, cause: error73 }),
+      error: JSONParseError4.isInstance(error73) ? error73 : new JSONParseError4({ text: text3, cause: error73 }),
       rawValue: void 0
     };
   }
@@ -221249,7 +221249,7 @@ function convertToMinimaxChatMessages(prompt) {
         break;
       }
       case "assistant": {
-        let text2 = "";
+        let text3 = "";
         const toolCalls = [];
         let reasoningDetails = void 0;
         for (const part of content) {
@@ -221257,7 +221257,7 @@ function convertToMinimaxChatMessages(prompt) {
           const partMinimaxMetadata = getMinimaxMetadata(part);
           switch (part.type) {
             case "text": {
-              text2 += part.text;
+              text3 += part.text;
               break;
             }
             case "tool-call": {
@@ -221282,7 +221282,7 @@ function convertToMinimaxChatMessages(prompt) {
         }
         const messageObj = {
           role: "assistant",
-          content: text2,
+          content: text3,
           tool_calls: toolCalls.length > 0 ? toolCalls : void 0,
           ...metadata
         };
@@ -221401,12 +221401,12 @@ function prepareTools7({
   }
 }
 function getResponseMetadata7({
-  id,
+  id: id2,
   model,
   created
 }) {
   return {
-    id: id ?? void 0,
+    id: id2 ?? void 0,
     modelId: model ?? void 0,
     timestamp: created != null ? new Date(created * 1e3) : void 0
   };
@@ -221623,9 +221623,9 @@ var init_dist20 = __esm({
         });
         const choice2 = responseBody.choices[0];
         const content = [];
-        const text2 = choice2.message.content;
-        if (text2 != null && text2.length > 0) {
-          content.push({ type: "text", text: text2 });
+        const text3 = choice2.message.content;
+        if (text3 != null && text3.length > 0) {
+          content.push({ type: "text", text: text3 });
         }
         if (choice2.message.reasoning_details?.length) {
           const reasoningBlock = choice2.message.reasoning_details.find(
@@ -223122,14 +223122,14 @@ var require_semver = __commonJS({
         if (!m[4]) {
           this.prerelease = [];
         } else {
-          this.prerelease = m[4].split(".").map((id) => {
-            if (/^[0-9]+$/.test(id)) {
-              const num = +id;
+          this.prerelease = m[4].split(".").map((id2) => {
+            if (/^[0-9]+$/.test(id2)) {
+              const num = +id2;
               if (num >= 0 && num < MAX_SAFE_INTEGER3) {
                 return num;
               }
             }
-            return id;
+            return id2;
           });
         }
         this.build = m[5] ? m[5].split(".") : [];
@@ -223953,7 +223953,7 @@ var require_range2 = __commonJS({
       debug("stars", comp);
       return comp;
     };
-    var isX = (id) => !id || id.toLowerCase() === "x" || id === "*";
+    var isX = (id2) => !id2 || id2.toLowerCase() === "x" || id2 === "*";
     var replaceTildes = (comp, options) => {
       return comp.trim().split(/\s+/).map((c) => replaceTilde(c, options)).join(" ");
     };
@@ -225982,7 +225982,7 @@ async function taskRecord(projectId, taskClass, modelName, opts = {}) {
       opteorContent = content.toString();
     }
   }
-  const [id] = await db_default("o_tasks").insert({
+  const [id2] = await db_default("o_tasks").insert({
     projectId,
     taskClass,
     relatedObjects: opteorContent,
@@ -225992,7 +225992,7 @@ async function taskRecord(projectId, taskClass, modelName, opts = {}) {
     startTime: Date.now()
   });
   return async function done(state, reason) {
-    await db_default("o_tasks").where("id", id).update({
+    await db_default("o_tasks").where("id", id2).update({
       state: taskStateMap[state],
       reason: state === -1 ? reason ?? "" : null
     });
@@ -229573,8 +229573,8 @@ async function convertToLanguageModelPrompt({
       }
       case "user":
       case "system":
-        for (const id of approvedToolCallIds) {
-          toolCallIds.delete(id);
+        for (const id2 of approvedToolCallIds) {
+          toolCallIds.delete(id2);
         }
         if (toolCallIds.size > 0) {
           throw new MissingToolResultsError({
@@ -229584,8 +229584,8 @@ async function convertToLanguageModelPrompt({
         break;
     }
   }
-  for (const id of approvedToolCallIds) {
-    toolCallIds.delete(id);
+  for (const id2 of approvedToolCallIds) {
+    toolCallIds.delete(id2);
   }
   if (toolCallIds.size > 0) {
     throw new MissingToolResultsError({ toolCallIds: Array.from(toolCallIds) });
@@ -233488,7 +233488,7 @@ function streamText({
 }
 function createOutputTransformStream(output) {
   let firstTextChunkId = void 0;
-  let text2 = "";
+  let text22 = "";
   let textChunk = "";
   let textProviderMetadata = void 0;
   let lastPublishedJson = "";
@@ -233534,10 +233534,10 @@ function createOutputTransformStream(output) {
         controller.enqueue({ part: chunk, partialOutput: void 0 });
         return;
       }
-      text2 += chunk.text;
+      text22 += chunk.text;
       textChunk += chunk.text;
       textProviderMetadata = (_a212 = chunk.providerMetadata) != null ? _a212 : textProviderMetadata;
-      const result = await output.parsePartialOutput({ text: text2 });
+      const result = await output.parsePartialOutput({ text: text22 });
       if (result !== void 0) {
         const currentJson = JSON.stringify(result.partial);
         if (currentJson !== lastPublishedJson) {
@@ -233551,16 +233551,16 @@ function createOutputTransformStream(output) {
 function createDownload(options) {
   return ({ url: url4, abortSignal }) => download({ url: url4, maxBytes: options == null ? void 0 : options.maxBytes, abortSignal });
 }
-function getPotentialStartIndex(text2, searchedText) {
+function getPotentialStartIndex(text22, searchedText) {
   if (searchedText.length === 0) {
     return null;
   }
-  const directIndex = text2.indexOf(searchedText);
+  const directIndex = text22.indexOf(searchedText);
   if (directIndex !== -1) {
     return directIndex;
   }
-  for (let i = text2.length - 1; i >= 0; i--) {
-    const suffix = text2.substring(i);
+  for (let i = text22.length - 1; i >= 0; i--) {
+    const suffix = text22.substring(i);
     if (searchedText.startsWith(suffix)) {
       return i;
     }
@@ -233584,15 +233584,15 @@ function extractReasoningMiddleware({
           transformedContent.push(part);
           continue;
         }
-        const text2 = startWithReasoning ? openingTag + part.text : part.text;
+        const text22 = startWithReasoning ? openingTag + part.text : part.text;
         const regexp = new RegExp(`${openingTag}(.*?)${closingTag}`, "gs");
-        const matches = Array.from(text2.matchAll(regexp));
+        const matches = Array.from(text22.matchAll(regexp));
         if (!matches.length) {
           transformedContent.push(part);
           continue;
         }
         const reasoningText = matches.map((match) => match[1]).join(separator);
-        let textWithoutReasoning = text2;
+        let textWithoutReasoning = text22;
         for (let i = matches.length - 1; i >= 0; i--) {
           const match = matches[i];
           const beforeMatch = textWithoutReasoning.slice(0, match.index);
@@ -233645,8 +233645,8 @@ function extractReasoningMiddleware({
               }
               const activeExtraction = reasoningExtractions[chunk.id];
               activeExtraction.buffer += chunk.delta;
-              function publish(text2) {
-                if (text2.length > 0) {
+              function publish(text22) {
+                if (text22.length > 0) {
                   const prefix = activeExtraction.afterSwitch && (activeExtraction.isReasoning ? !activeExtraction.isFirstReasoning : !activeExtraction.isFirstText) ? separator : "";
                   if (activeExtraction.isReasoning && (activeExtraction.afterSwitch || activeExtraction.isFirstReasoning)) {
                     controller.enqueue({
@@ -233657,7 +233657,7 @@ function extractReasoningMiddleware({
                   if (activeExtraction.isReasoning) {
                     controller.enqueue({
                       type: "reasoning-delta",
-                      delta: prefix + text2,
+                      delta: prefix + text22,
                       id: `reasoning-${activeExtraction.idCounter}`
                     });
                   } else {
@@ -233667,7 +233667,7 @@ function extractReasoningMiddleware({
                     }
                     controller.enqueue({
                       type: "text-delta",
-                      delta: prefix + text2,
+                      delta: prefix + text22,
                       id: activeExtraction.textId
                     });
                   }
@@ -233900,14 +233900,14 @@ var init_dist22 = __esm({
       constructor({
         message = "No object generated.",
         cause,
-        text: text2,
+        text: text22,
         response,
         usage,
         finishReason
       }) {
         super({ name: name85, message, cause });
         this[_a86] = true;
-        this.text = text2;
+        this.text = text22;
         this.response = response;
         this.usage = usage;
         this.finishReason = finishReason;
@@ -234535,11 +234535,11 @@ var init_dist22 = __esm({
     text = () => ({
       name: "text",
       responseFormat: Promise.resolve({ type: "text" }),
-      async parseCompleteOutput({ text: text2 }) {
-        return text2;
+      async parseCompleteOutput({ text: text22 }) {
+        return text22;
       },
-      async parsePartialOutput({ text: text2 }) {
-        return { partial: text2 };
+      async parsePartialOutput({ text: text22 }) {
+        return { partial: text22 };
       },
       createElementStreamTransform() {
         return void 0;
@@ -234559,13 +234559,13 @@ var init_dist22 = __esm({
           ...name212 != null && { name: name212 },
           ...description != null && { description }
         })),
-        async parseCompleteOutput({ text: text2 }, context2) {
-          const parseResult = await safeParseJSON({ text: text2 });
+        async parseCompleteOutput({ text: text22 }, context2) {
+          const parseResult = await safeParseJSON({ text: text22 });
           if (!parseResult.success) {
             throw new NoObjectGeneratedError({
               message: "No object generated: could not parse the response.",
               cause: parseResult.error,
-              text: text2,
+              text: text22,
               response: context2.response,
               usage: context2.usage,
               finishReason: context2.finishReason
@@ -234579,7 +234579,7 @@ var init_dist22 = __esm({
             throw new NoObjectGeneratedError({
               message: "No object generated: response did not match schema.",
               cause: validationResult.error,
-              text: text2,
+              text: text22,
               response: context2.response,
               usage: context2.usage,
               finishReason: context2.finishReason
@@ -234587,8 +234587,8 @@ var init_dist22 = __esm({
           }
           return validationResult.value;
         },
-        async parsePartialOutput({ text: text2 }) {
-          const result = await parsePartialJson(text2);
+        async parsePartialOutput({ text: text22 }) {
+          const result = await parsePartialJson(text22);
           switch (result.state) {
             case "failed-parse":
             case "undefined-input": {
@@ -234634,13 +234634,13 @@ var init_dist22 = __esm({
             ...description != null && { description }
           };
         }),
-        async parseCompleteOutput({ text: text2 }, context2) {
-          const parseResult = await safeParseJSON({ text: text2 });
+        async parseCompleteOutput({ text: text22 }, context2) {
+          const parseResult = await safeParseJSON({ text: text22 });
           if (!parseResult.success) {
             throw new NoObjectGeneratedError({
               message: "No object generated: could not parse the response.",
               cause: parseResult.error,
-              text: text2,
+              text: text22,
               response: context2.response,
               usage: context2.usage,
               finishReason: context2.finishReason
@@ -234654,7 +234654,7 @@ var init_dist22 = __esm({
                 value: outerValue,
                 cause: "response must be an object with an elements array"
               }),
-              text: text2,
+              text: text22,
               response: context2.response,
               usage: context2.usage,
               finishReason: context2.finishReason
@@ -234669,7 +234669,7 @@ var init_dist22 = __esm({
               throw new NoObjectGeneratedError({
                 message: "No object generated: response did not match schema.",
                 cause: validationResult.error,
-                text: text2,
+                text: text22,
                 response: context2.response,
                 usage: context2.usage,
                 finishReason: context2.finishReason
@@ -234678,8 +234678,8 @@ var init_dist22 = __esm({
           }
           return outerValue.elements;
         },
-        async parsePartialOutput({ text: text2 }) {
-          const result = await parsePartialJson(text2);
+        async parsePartialOutput({ text: text22 }) {
+          const result = await parsePartialJson(text22);
           switch (result.state) {
             case "failed-parse":
             case "undefined-input": {
@@ -234742,13 +234742,13 @@ var init_dist22 = __esm({
           ...name212 != null && { name: name212 },
           ...description != null && { description }
         }),
-        async parseCompleteOutput({ text: text2 }, context2) {
-          const parseResult = await safeParseJSON({ text: text2 });
+        async parseCompleteOutput({ text: text22 }, context2) {
+          const parseResult = await safeParseJSON({ text: text22 });
           if (!parseResult.success) {
             throw new NoObjectGeneratedError({
               message: "No object generated: could not parse the response.",
               cause: parseResult.error,
-              text: text2,
+              text: text22,
               response: context2.response,
               usage: context2.usage,
               finishReason: context2.finishReason
@@ -234762,7 +234762,7 @@ var init_dist22 = __esm({
                 value: outerValue,
                 cause: "response must be an object that contains a choice value."
               }),
-              text: text2,
+              text: text22,
               response: context2.response,
               usage: context2.usage,
               finishReason: context2.finishReason
@@ -234770,8 +234770,8 @@ var init_dist22 = __esm({
           }
           return outerValue.result;
         },
-        async parsePartialOutput({ text: text2 }) {
-          const result = await parsePartialJson(text2);
+        async parsePartialOutput({ text: text22 }) {
+          const result = await parsePartialJson(text22);
           switch (result.state) {
             case "failed-parse":
             case "undefined-input": {
@@ -234810,13 +234810,13 @@ var init_dist22 = __esm({
           ...name212 != null && { name: name212 },
           ...description != null && { description }
         }),
-        async parseCompleteOutput({ text: text2 }, context2) {
-          const parseResult = await safeParseJSON({ text: text2 });
+        async parseCompleteOutput({ text: text22 }, context2) {
+          const parseResult = await safeParseJSON({ text: text22 });
           if (!parseResult.success) {
             throw new NoObjectGeneratedError({
               message: "No object generated: could not parse the response.",
               cause: parseResult.error,
-              text: text2,
+              text: text22,
               response: context2.response,
               usage: context2.usage,
               finishReason: context2.finishReason
@@ -234824,8 +234824,8 @@ var init_dist22 = __esm({
           }
           return parseResult.value;
         },
-        async parsePartialOutput({ text: text2 }) {
-          const result = await parsePartialJson(text2);
+        async parsePartialOutput({ text: text22 }) {
+          const result = await parsePartialJson(text22);
           switch (result.state) {
             case "failed-parse":
             case "undefined-input": {
@@ -237168,14 +237168,14 @@ var init_dist23 = __esm({
       dbCache = db2;
       writeDb(db2);
     };
-    createRun = async (id) => {
+    createRun = async (id2) => {
       const db2 = getDb();
       const started_at = (/* @__PURE__ */ new Date()).toISOString();
-      const existing = db2.runs.find((r) => r.id === id);
+      const existing = db2.runs.find((r) => r.id === id2);
       if (existing) {
         return existing;
       }
-      const run = { id, started_at };
+      const run = { id: id2, started_at };
       db2.runs.push(run);
       saveDb(db2);
       notifyServer("run");
@@ -237506,6 +237506,106 @@ var init_contentConstraints = __esm({
   }
 });
 
+// src/utils/comfyuiMemory.ts
+function comfyuiMemoryEndpoint(vendor, request) {
+  const values = vendor?.inputValues || {};
+  const supported = vendor?.id === "comfyui_local" ? request === "imageRequest" || request === "videoRequest" && (values.videoBackend || "comfyui").trim().toLowerCase() === "comfyui" : vendor?.id === "comfyui_qwen21_fourview" ? request === "imageRequest" : vendor?.id === "comfyui_h3_hd" && request === "videoRequest";
+  if (!supported) return;
+  try {
+    const url4 = new URL(values.baseUrl || "http://127.0.0.1:8188");
+    if (url4.protocol !== "http:" && url4.protocol !== "https:") return;
+    return url4.href.replace(/\/+$/, "");
+  } catch {
+    return;
+  }
+}
+function withComfyuiMemory(vendor, request, operation) {
+  const endpoint = comfyuiMemoryEndpoint(vendor, request);
+  return endpoint ? memory.run(endpoint, operation) : operation();
+}
+var ComfyuiMemoryManager, memory;
+var init_comfyuiMemory = __esm({
+  "src/utils/comfyuiMemory.ts"() {
+    "use strict";
+    ComfyuiMemoryManager = class {
+      servers = /* @__PURE__ */ new Map();
+      idleMs;
+      retryMs;
+      request;
+      logger;
+      constructor(options = {}) {
+        this.idleMs = options.idleMs ?? 3e4;
+        this.retryMs = options.retryMs ?? 3e4;
+        this.request = options.request ?? fetch;
+        this.logger = options.logger ?? console;
+      }
+      async run(baseUrl, operation) {
+        const url4 = new URL(baseUrl);
+        if (["localhost", "[::1]"].includes(url4.hostname)) url4.hostname = "127.0.0.1";
+        const key = url4.href.replace(/\/+$/, "");
+        let state = this.servers.get(key);
+        if (!state) {
+          state = { url: baseUrl, active: 0, revision: 0, failures: 0 };
+          this.servers.set(key, state);
+        }
+        state.active++;
+        state.revision++;
+        state.failures = 0;
+        clearTimeout(state.timer);
+        state.timer = void 0;
+        try {
+          await state.checking;
+          return await operation();
+        } finally {
+          state.active--;
+          if (!state.active) this.schedule(key, state, this.idleMs);
+        }
+      }
+      schedule(key, state, delay2) {
+        clearTimeout(state.timer);
+        state.timer = setTimeout(() => {
+          state.timer = void 0;
+          state.checking = this.releaseWhenIdle(key, state, state.revision).finally(() => {
+            state.checking = void 0;
+          });
+        }, delay2);
+        state.timer.unref?.();
+      }
+      async releaseWhenIdle(key, state, revision) {
+        const unchanged = () => !state.active && state.revision === revision;
+        const label = new URL(state.url).origin;
+        try {
+          if (!unchanged()) return;
+          const response = await this.request(`${state.url}/queue`, { signal: AbortSignal.timeout(1e4) });
+          if (!response.ok) throw new Error(`\u67E5\u8BE2\u961F\u5217 HTTP ${response.status}`);
+          const queue = await response.json();
+          if (!Array.isArray(queue.queue_running) || !Array.isArray(queue.queue_pending)) throw new Error("\u961F\u5217\u54CD\u5E94\u65E0\u6548");
+          if (!unchanged()) return;
+          if (queue.queue_running.length || queue.queue_pending.length) {
+            this.schedule(key, state, this.retryMs);
+            return;
+          }
+          const released = await this.request(`${state.url}/free`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ unload_models: true, free_memory: true }),
+            signal: AbortSignal.timeout(1e4)
+          });
+          if (!released.ok) throw new Error(`\u91CA\u653E\u663E\u5B58 HTTP ${released.status}`);
+          this.logger.info(`[ComfyUI] ${label} \u961F\u5217\u7A7A\u95F2\uFF0C\u5DF2\u8BF7\u6C42\u5378\u8F7D\u6A21\u578B\u5E76\u6E05\u7406\u7F13\u5B58`);
+          if (unchanged()) this.servers.delete(key);
+        } catch (error73) {
+          this.logger.warn(`[ComfyUI] ${label} \u81EA\u52A8\u6E05\u7406\u672A\u5B8C\u6210\uFF1A${error73 instanceof Error ? error73.message : String(error73)}`);
+          if (!unchanged()) return;
+          if (++state.failures < 3) this.schedule(key, state, this.retryMs);
+          else this.servers.delete(key);
+        }
+      }
+    };
+    memory = new ComfyuiMemoryManager();
+  }
+});
+
 // src/utils/ai.ts
 async function resolveModelName(value) {
   if (AiTypeValues.includes(value)) {
@@ -237560,13 +237660,13 @@ async function getModelConfig(value) {
   return null;
 }
 async function getVendorTemplateFn(fnName, modelName) {
-  const [id, name28] = modelName.split(/:(.+)/);
-  const vendorConfigData = await utils_default.db("o_vendorConfig").where("id", id).first();
-  if (!vendorConfigData) throw new Error(`\u672A\u627E\u5230\u4F9B\u5E94\u5546\u914D\u7F6E id=${id}`);
-  const modelList = await utils_default.vendor.getModelList(id);
+  const [id2, name28] = modelName.split(/:(.+)/);
+  const vendorConfigData = await utils_default.db("o_vendorConfig").where("id", id2).first();
+  if (!vendorConfigData) throw new Error(`\u672A\u627E\u5230\u4F9B\u5E94\u5546\u914D\u7F6E id=${id2}`);
+  const modelList = await utils_default.vendor.getModelList(id2);
   const selectedModel = modelList.find((i) => i.modelName == name28);
-  if (!selectedModel) throw new Error(`\u672A\u627E\u5230\u6A21\u578B ${name28} id=${id}`);
-  const code = utils_default.vendor.getCode(id);
+  if (!selectedModel) throw new Error(`\u672A\u627E\u5230\u6A21\u578B ${name28} id=${id2}`);
+  const code = utils_default.vendor.getCode(id2);
   const jsCode = (0, import_sucrase2.transform)(code, { transforms: ["typescript"] }).code;
   const running = utils_default.vm(jsCode);
   if (running.vendor) {
@@ -237574,13 +237674,13 @@ async function getVendorTemplateFn(fnName, modelName) {
     running.vendor.models = modelList;
   }
   const fn = running[fnName];
-  if (!fn) throw new Error(`\u672A\u627E\u5230\u4F9B\u5E94\u5546\u914D\u7F6E\u4E2D\u7684\u51FD\u6570 ${fnName} id=${id}`);
+  if (!fn) throw new Error(`\u672A\u627E\u5230\u4F9B\u5E94\u5546\u914D\u7F6E\u4E2D\u7684\u51FD\u6570 ${fnName} id=${id2}`);
   if (fnName == "textRequest")
     return (think, thinkLevel = 0) => {
       const effectiveThink = think ?? !!selectedModel.think;
       return fn(selectedModel, effectiveThink, thinkLevel);
     };
-  else return (input) => fn(input, selectedModel);
+  else return (input) => withComfyuiMemory(running.vendor, fnName, () => fn(input, selectedModel));
 }
 async function withTaskRecord(modelKey, taskClass, describe4, relatedObjects, projectId, fn) {
   const modelName = await resolveModelName(modelKey);
@@ -237608,8 +237708,8 @@ async function urlToBase642(url4, retries = 3, delay2 = 1e3) {
   }
   throw new Error("urlToBase64 failed");
 }
-function referenceList2imageBase642(id, input) {
-  const version3 = utils_default.vendor.getVendor(id).version;
+function referenceList2imageBase642(id2, input) {
+  const version3 = utils_default.vendor.getVendor(id2).version;
   if (!version3 || isNaN(parseFloat(version3)) || parseFloat(version3) < 2) {
     input.imageBase64 = (input.referenceList ?? []).map((item) => item.base64);
     return input;
@@ -237626,6 +237726,7 @@ var init_ai = __esm({
     import_sucrase2 = __toESM(require_dist5());
     init_utils3();
     init_contentConstraints();
+    init_comfyuiMemory();
     AiTypeValues = [
       "scriptAgent",
       "productionAgent",
@@ -237961,36 +238062,36 @@ __export(vendor_exports, {
   getVendor: () => getVendor,
   writeCode: () => writeCode
 });
-function writeCode(id, tsCode) {
+function writeCode(id2, tsCode) {
   const rootDir = utils_default.getPath("vendor");
   import_fs6.default.mkdirSync(rootDir, { recursive: true });
-  if (import_fs6.default.existsSync(import_path8.default.join(rootDir, `${id}.ts`))) {
-    import_fs6.default.writeFileSync(import_path8.default.join(rootDir, `${id}.ts`), tsCode);
+  if (import_fs6.default.existsSync(import_path8.default.join(rootDir, `${id2}.ts`))) {
+    import_fs6.default.writeFileSync(import_path8.default.join(rootDir, `${id2}.ts`), tsCode);
   }
-  import_fs6.default.writeFileSync(import_path8.default.join(rootDir, `${id}.ts`), tsCode);
+  import_fs6.default.writeFileSync(import_path8.default.join(rootDir, `${id2}.ts`), tsCode);
 }
-function getCode(id) {
+function getCode(id2) {
   const rootDir = utils_default.getPath("vendor");
-  const targetFile = import_path8.default.join(rootDir, `${id}.ts`);
+  const targetFile = import_path8.default.join(rootDir, `${id2}.ts`);
   if (!import_fs6.default.existsSync(targetFile)) return "";
   return import_fs6.default.readFileSync(targetFile, "utf-8");
 }
-async function getModelList(id) {
-  const models = await utils_default.db("o_vendorConfig").where("id", id).select("models").first();
-  if (!models || !models.models) return [];
-  const code = getCode(id);
+async function getModelList(id2) {
+  const models2 = await utils_default.db("o_vendorConfig").where("id", id2).select("models").first();
+  if (!models2 || !models2.models) return [];
+  const code = getCode(id2);
   const jsCode = (0, import_sucrase3.transform)(code, { transforms: ["typescript"] }).code;
   const vendorData2 = utils_default.vm(jsCode);
   if (!vendorData2 || !vendorData2.vendor || !vendorData2.vendor.models) return [];
-  const combined = [...JSON.parse(JSON.stringify(vendorData2.vendor.models)), ...JSON.parse(models?.models ?? "[]")];
+  const combined = [...JSON.parse(JSON.stringify(vendorData2.vendor.models)), ...JSON.parse(models2?.models ?? "[]")];
   const map3 = /* @__PURE__ */ new Map();
   for (const m of combined) {
     map3.set(m.modelName, m);
   }
   return [...map3.values()];
 }
-function getVendor(id) {
-  const code = getCode(id);
+function getVendor(id2) {
+  const code = getCode(id2);
   const jsCode = (0, import_sucrase3.transform)(code, { transforms: ["typescript"] }).code;
   const vendorData2 = utils_default.vm(jsCode);
   return vendorData2.vendor;
@@ -238185,7 +238286,7 @@ var init_storyboardProgress = __esm({
     "use strict";
     import_node_crypto5 = require("node:crypto");
     init_storyboardScenes();
-    hashStoryboardSource = (text2) => (0, import_node_crypto5.createHash)("sha256").update(text2).digest("hex");
+    hashStoryboardSource = (text3) => (0, import_node_crypto5.createHash)("sha256").update(text3).digest("hex");
   }
 });
 
@@ -238203,8 +238304,8 @@ function sceneNumber(raw) {
   }
   return total + digit;
 }
-function extractDialogue(text2) {
-  const lines = text2.split(/\r?\n/).map((line) => line.trim().replace(/^\*\*(.*?)\*\*$/, "$1")).filter(Boolean);
+function extractDialogue(text3) {
+  const lines = text3.split(/\r?\n/).map((line) => line.trim().replace(/^\*\*(.*?)\*\*$/, "$1")).filter(Boolean);
   const result = [];
   const label = /^([\p{L}][\p{L}\p{N}· ._-]{0,24}?)(?:[（(](?:VO|OS|旁白|画外音|独白)[）)])?$/u;
   for (let i = 0; i < lines.length; i++) {
@@ -238225,16 +238326,16 @@ function extractDialogue(text2) {
 function parseScriptScenes(script) {
   const headings = [...script.matchAll(/^(?:#{1,4}\s*)?(?:\*\*)?场(?:景)?\s*([零一二三四五六七八九十百两\d]+)(?=[\s：:、.（(])[^\r\n]*/gm)];
   return headings.map((heading, index) => {
-    const text2 = script.slice(heading.index, headings[index + 1]?.index ?? script.length).trim();
+    const text3 = script.slice(heading.index, headings[index + 1]?.index ?? script.length).trim();
     const range = heading[0].match(/[（(]\s*(\d+(?:\.\d+)?)\s*[–—\-~～至]\s*(\d+(?:\.\d+)?)\s*(?:秒|s)\s*[）)]/i);
     const duration4 = range ? Number(range[2]) - Number(range[1]) : void 0;
     return {
       scene: sceneNumber(heading[1]),
       title: heading[0],
-      text: text2,
+      text: text3,
       sourceDuration: duration4 && duration4 > 0 ? duration4 : void 0,
-      dialogue: extractDialogue(text2),
-      screenText: [...text2.matchAll(/【([^】]+)】/g)].map((m) => m[1])
+      dialogue: extractDialogue(text3),
+      screenText: [...text3.matchAll(/【([^】]+)】/g)].map((m) => m[1])
     };
   });
 }
@@ -238293,8 +238394,8 @@ var normalizeSpokenText, spokenCharacterCount;
 var init_screenplay = __esm({
   "src/agents/productionAgent/screenplay.ts"() {
     "use strict";
-    normalizeSpokenText = (text2) => text2.normalize("NFKC").replace(/[^\p{L}\p{N}]/gu, "");
-    spokenCharacterCount = (text2) => [...normalizeSpokenText(text2)].length;
+    normalizeSpokenText = (text3) => text3.normalize("NFKC").replace(/[^\p{L}\p{N}]/gu, "");
+    spokenCharacterCount = (text3) => [...normalizeSpokenText(text3)].length;
   }
 });
 
@@ -238302,14 +238403,14 @@ var init_screenplay = __esm({
 function validateStoryboardScene(scene, markdown, sourceScene, options = {}) {
   const errors = [];
   const warnings = [];
-  const text2 = markdown.trim();
-  const headings = [...text2.matchAll(/^##\s*场\s*(\d+)\s*[：:]/gm)];
+  const text3 = markdown.trim();
+  const headings = [...text3.matchAll(/^##\s*场\s*(\d+)\s*[：:]/gm)];
   if (headings.length !== 1 || Number(headings[0]?.[1]) !== scene || headings[0]?.index !== 0) {
     errors.push(`\u5FC5\u987B\u6709\u4E14\u53EA\u6709\u201C## \u573A${scene}\uFF1A\u201D\u573A\u5934`);
   }
-  const parts = [...text2.matchAll(/^###\s*片段[^\n]*/gm)];
+  const parts = [...text3.matchAll(/^###\s*片段[^\n]*/gm)];
   if (!parts.length) errors.push("\u5F53\u524D\u573A\u6CA1\u6709\u4EFB\u4F55\u5206\u955C\u7247\u6BB5");
-  const segments = parts.map((part, i) => text2.slice(part.index, parts[i + 1]?.index ?? text2.length));
+  const segments = parts.map((part, i) => text3.slice(part.index, parts[i + 1]?.index ?? text3.length));
   const dialogueCells = [];
   let sceneDuration = 0;
   for (const [i, segment] of segments.entries()) {
@@ -238334,8 +238435,8 @@ function validateStoryboardScene(scene, markdown, sourceScene, options = {}) {
     if (declared && Math.abs(Number(declared[1]) - duration4) > 0.05) errors.push(`\u7247\u6BB5${i + 1}\u6807\u9898\u65F6\u957F\u4E0E\u955C\u5934\u5408\u8BA1${duration4}\u79D2\u4E0D\u4E00\u81F4`);
     if (options.assetIds) {
       const refs = segment.match(/引用资产ID(?:（[^）]*）)?\*\*\s*[：:]\s*\[([^\]]*)\]/i);
-      const ids = refs?.[1].split(/[,，]/).map((id) => Number(id.trim())) ?? [];
-      if (!ids.length || ids.some((id) => !Number.isSafeInteger(id) || !options.assetIds.includes(id))) {
+      const ids = refs?.[1].split(/[,，]/).map((id2) => Number(id2.trim())) ?? [];
+      if (!ids.length || ids.some((id2) => !Number.isSafeInteger(id2) || !options.assetIds.includes(id2))) {
         errors.push(`\u7247\u6BB5${i + 1}\u5F15\u7528\u8D44\u4EA7\u7F3A\u5931\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE`);
       }
     }
@@ -238370,7 +238471,7 @@ function validateStoryboardScene(scene, markdown, sourceScene, options = {}) {
     warnings.push("\u672A\u8BC6\u522B\u53EF\u9010\u5B57\u6838\u5BF9\u7684\u539F\u573A\u6B21\u53F0\u8BCD\uFF1B\u53EA\u5B8C\u6210\u7ED3\u6784\u6821\u9A8C\uFF0C\u4E0D\u80FD\u5BA3\u79F0\u5267\u60C5\u5185\u5BB9\u5B8C\u5168\u8986\u76D6");
   }
   const screens = [...(sourceScene ?? "").matchAll(/【([^】]+)】/g)].map((match) => normalizeSpokenText(match[1]));
-  const shown = [...text2.matchAll(/【([^】]+)】/g)].map((match) => normalizeSpokenText(match[1])).join("");
+  const shown = [...text3.matchAll(/【([^】]+)】/g)].map((match) => normalizeSpokenText(match[1])).join("");
   if (screens.some((screen) => !shown.includes(screen))) {
     errors.push("\u9057\u6F0F\u6216\u6539\u5199\u539F\u5267\u672C\u5FC5\u987B\u5448\u73B0\u7684\u5C4F\u5E55\u6587\u5B57");
     coverageVerified = false;
@@ -238618,7 +238719,7 @@ var init_storyboardPromptFreshness = __esm({
   "src/utils/storyboardPromptFreshness.ts"() {
     "use strict";
     import_node_crypto10 = require("node:crypto");
-    hash3 = (text2) => (0, import_node_crypto10.createHash)("sha256").update(text2.trim()).digest("hex");
+    hash3 = (text3) => (0, import_node_crypto10.createHash)("sha256").update(text3.trim()).digest("hex");
     keyFor = (trackId) => `storyboardPromptStale:${trackId}`;
   }
 });
@@ -238642,7 +238743,7 @@ async function syncRevisedStoryboardPanels(trx, projectId, episodesId, data, ori
     const duration4 = cells.reduce((sum, row) => sum + Number(row[2]), 0);
     const refs = after[i].match(/引用资产ID(?:（[^）]*）)?\*\*\s*[：:]\s*\[([^\]]*)\]/i);
     if (!refs || !duration4) throw new Error("\u4FEE\u8BA2\u7247\u6BB5\u7F3A\u5C11\u6709\u6548\u65F6\u957F\u6216\u8D44\u4EA7\u5F15\u7528");
-    const ids = [...new Set(refs[1].split(/[,，]/).map((id) => Number(id.trim())))];
+    const ids = [...new Set(refs[1].split(/[,，]/).map((id2) => Number(id2.trim())))];
     const changed = canonical(panel.videoDesc ?? "") !== canonical(after[i]);
     if (changed) {
       if (panel.trackId) await markStoryboardPromptsStale(trx, projectId, episodesId, panel.trackId);
@@ -238664,8 +238765,8 @@ var init_storyboardPanelSync = __esm({
   "src/agents/productionAgent/storyboardPanelSync.ts"() {
     "use strict";
     init_storyboardPromptFreshness();
-    storyboardSegments = (text2) => text2.split(/(?=^###\s*片段)/m).filter((part) => /^###\s*片段/.test(part.trim())).map((part) => part.trim());
-    canonical = (text2) => text2.replace(/\r\n/g, "\n").trim();
+    storyboardSegments = (text3) => text3.split(/(?=^###\s*片段)/m).filter((part) => /^###\s*片段/.test(part.trim())).map((part) => part.trim());
+    canonical = (text3) => text3.replace(/\r\n/g, "\n").trim();
   }
 });
 
@@ -238771,7 +238872,7 @@ var init_storyboardRevision = __esm({
     init_storyboardValidator();
     init_storyboardContentGuard();
     init_storyboardPanelSync();
-    storyboardSceneHash = (text2) => (0, import_node_crypto11.createHash)("sha256").update(text2).digest("hex");
+    storyboardSceneHash = (text3) => (0, import_node_crypto11.createHash)("sha256").update(text3).digest("hex");
   }
 });
 
@@ -238914,8 +239015,8 @@ var init_chatHistory = __esm({
       recordContentAdd(messageId, content) {
         const message = this.snapshots.get(messageId);
         if (!message) return;
-        const id = content.id;
-        if (!id || !message.content.some((item) => item?.id === id)) {
+        const id2 = content.id;
+        if (!id2 || !message.content.some((item) => item?.id === id2)) {
           message.content.push(JSON.parse(JSON.stringify(content)));
         }
         this.schedulePersist(messageId);
@@ -238989,9 +239090,9 @@ function parseReceipt(raw) {
   return parsed;
 }
 async function getOperationReceipt(db2, scope, kind, requestId, expectedInput) {
-  const id = operationReceiptId(kind, requestId);
+  const id2 = operationReceiptId(kind, requestId);
   const key = operationReceiptKey(kind, requestId);
-  const row = await db2("o_agentWorkData").where({ id }).first();
+  const row = await db2("o_agentWorkData").where({ id: id2 }).first();
   if (!row) return null;
   if (Number(row.projectId) !== scope.projectId || Number(row.episodesId) !== scope.episodesId || row.key !== key) throw new Error("\u64CD\u4F5C\u56DE\u6267 ID \u51B2\u7A81\u6216\u4F5C\u7528\u57DF\u4E0D\u5339\u914D");
   const receipt = parseReceipt(row.data);
@@ -239005,7 +239106,7 @@ async function withOperationReceipt(db2, scope, kind, requestId, input, create) 
   return db2.transaction(async (trx) => {
     const prior = await getOperationReceipt(trx, scope, kind, requestId, input);
     if (prior) return { duplicate: true, receipt: prior };
-    const id = operationReceiptId(kind, requestId);
+    const id2 = operationReceiptId(kind, requestId);
     const key = operationReceiptKey(kind, requestId);
     const inputHash = operationInputHash(input);
     const createTime = Date.now();
@@ -239020,7 +239121,7 @@ async function withOperationReceipt(db2, scope, kind, requestId, input, create) 
       claimToken
     };
     await trx("o_agentWorkData").insert({
-      id,
+      id: id2,
       projectId: scope.projectId,
       episodesId: scope.episodesId,
       key,
@@ -239028,7 +239129,7 @@ async function withOperationReceipt(db2, scope, kind, requestId, input, create) 
       createTime,
       updateTime: createTime
     }).onConflict("id").ignore();
-    const claimedRow = await trx("o_agentWorkData").where({ id }).first();
+    const claimedRow = await trx("o_agentWorkData").where({ id: id2 }).first();
     if (!claimedRow) throw new Error("\u64CD\u4F5C\u56DE\u6267\u62A2\u5360\u5931\u8D25");
     if (Number(claimedRow.projectId) !== scope.projectId || Number(claimedRow.episodesId) !== scope.episodesId || claimedRow.key !== key) throw new Error("\u64CD\u4F5C\u56DE\u6267 ID \u51B2\u7A81\u6216\u4F5C\u7528\u57DF\u4E0D\u5339\u914D");
     const claimedReceipt = parseReceipt(claimedRow.data);
@@ -239049,7 +239150,7 @@ async function withOperationReceipt(db2, scope, kind, requestId, input, create) 
       createTime,
       claimToken
     };
-    const updated = await trx("o_agentWorkData").where({ id }).update({
+    const updated = await trx("o_agentWorkData").where({ id: id2 }).update({
       data: JSON.stringify(receipt),
       updateTime: Date.now()
     });
@@ -239169,8 +239270,8 @@ function normalizeRole(role) {
 function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, (match) => "\\" + match);
 }
-function stripHiddenXml(text2, tags) {
-  let result = text2;
+function stripHiddenXml(text3, tags) {
+  let result = text3;
   for (const tag of tags) {
     const escaped = escapeRegExp(tag);
     result = result.replace(new RegExp("<" + escaped + "(?:\\s[^>]*)?>[\\s\\S]*?<\\/" + escaped + ">", "g"), "");
@@ -239322,7 +239423,7 @@ var init_editArtStyle = __esm({
         prompt: external_exports.string()
       }),
       async (req, res) => {
-        const { id, name: name28, fileUrl, prompt } = req.body;
+        const { id: id2, name: name28, fileUrl, prompt } = req.body;
         const imagePath = `/artStyle/${v4_default()}.jpg`;
         const matches = fileUrl.match(/^data:image\/\w+;base64,(.+)$/);
         const realBase64 = matches ? matches[1] : fileUrl;
@@ -239332,7 +239433,7 @@ var init_editArtStyle = __esm({
           fileUrl: imagePath,
           label: name28,
           prompt
-        }).where("id", id);
+        }).where("id", id2);
         res.status(200).send(success3("\u827A\u672F\u98CE\u683C\u7F16\u8F91\u6210\u529F"));
       }
     );
@@ -239491,7 +239592,7 @@ var init_addAudioAssets = __esm({
             }
           })
         );
-        const [id] = await utils_default.db("o_assets").insert({
+        const [id2] = await utils_default.db("o_assets").insert({
           name: name28,
           describe: describe4,
           type: "audio",
@@ -239501,7 +239602,7 @@ var init_addAudioAssets = __esm({
         for (const item of assetsItem) {
           const [assetsId] = await utils_default.db("o_assets").insert({
             prompt: item.prompt,
-            assetsId: id,
+            assetsId: id2,
             type: "audio",
             describe: item.describe,
             name: item.name,
@@ -239541,8 +239642,8 @@ var init_batchDelete = __esm({
         id: external_exports.array(external_exports.number())
       }),
       async (req, res) => {
-        const { id } = req.body;
-        await utils_default.db("o_assets").whereIn("id", id).delete();
+        const { id: id2 } = req.body;
+        await utils_default.db("o_assets").whereIn("id", id2).delete();
         res.status(200).send(success3({ message: "\u5220\u9664\u8D44\u4EA7\u6210\u529F" }));
       }
     );
@@ -239605,8 +239706,8 @@ var init_delAssets = __esm({
         id: external_exports.number()
       }),
       async (req, res) => {
-        const { id } = req.body;
-        const assetsData = await utils_default.db("o_image").where("assetsId", id);
+        const { id: id2 } = req.body;
+        const assetsData = await utils_default.db("o_image").where("assetsId", id2);
         await Promise.all(
           assetsData.map(
             (i) => i.filePath ? utils_default.oss.deleteFile(i.filePath).catch((e) => {
@@ -239618,9 +239719,9 @@ var init_delAssets = __esm({
         if (imageIds.length > 0) {
           await utils_default.db("o_assets").whereIn("imageId", imageIds).update({ imageId: null });
         }
-        await utils_default.db("o_image").where({ assetsId: id }).delete();
-        await utils_default.db("o_assets").where({ id }).delete();
-        await utils_default.db("o_assets").where("assetsId", id).delete();
+        await utils_default.db("o_image").where({ assetsId: id2 }).delete();
+        await utils_default.db("o_assets").where({ id: id2 }).delete();
+        await utils_default.db("o_assets").where("assetsId", id2).delete();
         res.status(200).send(success3({ message: "\u5220\u9664\u8D44\u4EA7\u6210\u529F" }));
       }
     );
@@ -239644,12 +239745,12 @@ var init_delImage = __esm({
         id: external_exports.number()
       }),
       async (req, res) => {
-        const { id } = req.body;
-        await utils_default.db("o_assets").where({ imageId: id }).update({
+        const { id: id2 } = req.body;
+        await utils_default.db("o_assets").where({ imageId: id2 }).update({
           imageId: null
         });
-        await utils_default.db("o_image").where({ id }).delete();
-        const assetsData = await utils_default.db("o_image").where("id", id);
+        await utils_default.db("o_image").where({ id: id2 }).delete();
+        const assetsData = await utils_default.db("o_image").where("id", id2);
         await Promise.all(assetsData.map((i) => i.filePath && utils_default.oss.deleteFile(i.filePath)));
         res.status(200).send(success3({ message: "\u8D44\u4EA7\u56FE\u7247\u5220\u9664\u6210\u529F" }));
       }
@@ -239940,12 +240041,12 @@ var init_saveAssets = __esm({
         referenceLayout: external_exports.enum(["four_view", "front_back"]).optional()
       }),
       async (req, res) => {
-        const { id, base64: base644, type, prompt, projectId, imageId, referenceLayout: requestedLayout } = req.body;
-        const asset = await utils_default.db("o_assets").where({ id, projectId, type }).select("*").first();
+        const { id: id2, base64: base644, type, prompt, projectId, imageId, referenceLayout: requestedLayout } = req.body;
+        const asset = await utils_default.db("o_assets").where({ id: id2, projectId, type }).select("*").first();
         if (!asset) return res.status(404).send(error50("\u8D44\u4EA7\u4E0D\u5B58\u5728\u3001\u7C7B\u578B\u4E0D\u7B26\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE"));
         try {
           if (!base644 && imageId === void 0) {
-            if (prompt !== void 0) await utils_default.db("o_assets").where({ id, projectId, type }).update({ prompt: prompt ?? "" });
+            if (prompt !== void 0) await utils_default.db("o_assets").where({ id: id2, projectId, type }).update({ prompt: prompt ?? "" });
             return res.status(200).send(success3({ message: "\u8D44\u4EA7\u63D0\u793A\u8BCD\u5DF2\u4FDD\u5B58", imageId: asset.imageId ?? null }));
           }
           let adoptedImageId = imageId ?? null;
@@ -239961,7 +240062,7 @@ var init_saveAssets = __esm({
             const savePath = `/${projectId}/${type}/${v4_default()}.png`;
             await utils_default.oss.writeFile(savePath, await (0, import_sharp4.default)(source).png().toBuffer());
             const [newImageId] = await utils_default.db("o_image").insert({
-              assetsId: id,
+              assetsId: id2,
               filePath: savePath,
               type,
               state: "\u5DF2\u5B8C\u6210",
@@ -239971,7 +240072,7 @@ var init_saveAssets = __esm({
             adoptedImageId = newImageId;
             adoptedPath = savePath;
           } else if (adoptedImageId !== null) {
-            const selected = await utils_default.db("o_image").where({ id: adoptedImageId, assetsId: id, type }).first();
+            const selected = await utils_default.db("o_image").where({ id: adoptedImageId, assetsId: id2, type }).first();
             if (!selected) throw new Error("\u6240\u9009\u56FE\u7247\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u8D44\u4EA7\u548C\u7C7B\u578B");
             adoptedDescriptionVersion = Number(selected.descriptionVersion || 0);
             if (!selected.filePath) throw new Error("\u6240\u9009\u56FE\u7247\u6CA1\u6709\u53EF\u7528\u6587\u4EF6\uFF0C\u4E0D\u80FD\u91C7\u7528");
@@ -239986,7 +240087,7 @@ var init_saveAssets = __esm({
               const acceptedPath = `/${projectId}/${type}/${v4_default()}.png`;
               await utils_default.oss.writeFile(acceptedPath, await (0, import_sharp4.default)(source).png().toBuffer());
               const [acceptedId] = await utils_default.db("o_image").insert({
-                assetsId: id,
+                assetsId: id2,
                 filePath: acceptedPath,
                 type,
                 state: "\u5DF2\u5B8C\u6210",
@@ -240000,7 +240101,7 @@ var init_saveAssets = __esm({
             }
           }
           const referenceLayout = requestedLayout ?? (adoptedImageId === asset.imageId && asset.referenceLayout === "front_back" ? "front_back" : "four_view");
-          await utils_default.db("o_assets").where({ id, projectId, type }).update({
+          await utils_default.db("o_assets").where({ id: id2, projectId, type }).update({
             ...prompt !== void 0 ? { prompt: prompt ?? "" } : {},
             imageId: adoptedImageId,
             ...asset.descriptionVersion !== void 0 ? { imageDescriptionVersion: adoptedDescriptionVersion } : {},
@@ -240043,10 +240144,10 @@ var init_updateAssets = __esm({
         prompt: external_exports.string().optional().nullable()
       }),
       async (req, res) => {
-        const { id, projectId, name: name28, describe: describe4, remark, prompt } = req.body;
+        const { id: id2, projectId, name: name28, describe: describe4, remark, prompt } = req.body;
         try {
           await utils_default.db.transaction(async (trx) => {
-            const asset = await trx("o_assets").where({ id, projectId }).first();
+            const asset = await trx("o_assets").where({ id: id2, projectId }).first();
             if (!asset) throw new Error("\u8D44\u4EA7\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
             if ((asset.describe || "").trim() !== describe4.trim()) {
               await saveDescription(trx, asset, describe4, {
@@ -240058,7 +240159,7 @@ var init_updateAssets = __esm({
                 updatedAt: Date.now()
               });
             }
-            await trx("o_assets").where({ id, projectId }).update({ name: name28, remark, prompt });
+            await trx("o_assets").where({ id: id2, projectId }).update({ name: name28, remark, prompt });
           });
         } catch (cause) {
           return res.status(400).send(error50(utils_default.error(cause).message));
@@ -240099,7 +240200,7 @@ var init_updateAudioAssets = __esm({
         )
       }),
       async (req, res) => {
-        const { id, name: name28, describe: describe4, projectId, assetsItem } = req.body;
+        const { id: id2, name: name28, describe: describe4, projectId, assetsItem } = req.body;
         await Promise.all(
           assetsItem.map(async (i) => {
             if (i.src) {
@@ -240123,11 +240224,11 @@ var init_updateAudioAssets = __esm({
             }
           })
         );
-        await utils_default.db("o_assets").where("id", id).update({
+        await utils_default.db("o_assets").where("id", id2).update({
           name: name28,
           describe: describe4
         });
-        const existingItems = await utils_default.db("o_assets").where("assetsId", id).select("id");
+        const existingItems = await utils_default.db("o_assets").where("assetsId", id2).select("id");
         const existingIds = existingItems.map((i) => i.id);
         const incomingIds = assetsItem.filter((i) => i.id).map((i) => i.id);
         const toDeleteIds = existingIds.filter((eid) => !incomingIds.includes(eid));
@@ -240154,7 +240255,7 @@ var init_updateAudioAssets = __esm({
           } else {
             const [assetsId] = await utils_default.db("o_assets").insert({
               prompt: item.prompt,
-              assetsId: id,
+              assetsId: id2,
               type: "audio",
               projectId,
               describe: item.describe,
@@ -240220,7 +240321,7 @@ var init_uploadClip = __esm({
         const ext = getExtFromBase64(base64Data);
         const savePath = `/${projectId}/assets/${v4_default()}.${ext}`;
         await utils_default.oss.writeFile(savePath, Buffer.from(base64Data.match(/base64,([A-Za-z0-9+/=]+)/)[1] ?? "", "base64"));
-        const [id] = await utils_default.db("o_assets").insert({
+        const [id2] = await utils_default.db("o_assets").insert({
           type,
           projectId,
           name: name28,
@@ -240229,10 +240330,10 @@ var init_uploadClip = __esm({
         const [imageId] = await utils_default.db("o_image").insert({
           filePath: savePath,
           type,
-          assetsId: id,
+          assetsId: id2,
           state: "\u5DF2\u5B8C\u6210"
         });
-        await utils_default.db("o_assets").where("id", id).update({
+        await utils_default.db("o_assets").where("id", id2).update({
           imageId
         });
         res.status(200).send(success3("\u4E0A\u4F20\u6210\u529F"));
@@ -240459,13 +240560,13 @@ The four-panel layout contract above has priority over conflicting framing phras
   const presentation = type === "scene" ? "Render a reusable EMPTY ENVIRONMENT PLATE with one coherent scene image with readable spatial relationships and access paths. Do not render named characters, people, silhouettes, animals, monsters, independent creatures, or character actions mentioned in the design facts; those are separate assets for storyboard/video composition. Preserve only fixed environmental structure, lighting, weather, damage and set dressing." : "Default to one clear main view of a single subject. Use a multi-view layout only when explicitly required by the design facts; all views depict the same asset and state. For living creatures preserve natural anatomy and posture.";
   return `Create one production-ready ${label} design reference render. The visible rendering medium and art direction stated in Design facts are authoritative. Internal project preset id "${artStyle || "unspecified"}" is metadata only and must not change that medium. Name: ${name28}. Design facts: ${prompt.trim()}. ${presentation} Use a controlled design-presentation view with coherent materials and lighting. No text, no labels, no watermark.`;
 }
-function needsFluxPromptTranslation(text2) {
-  return /[\u3400-\u9fff\uf900-\ufaff]/u.test(text2);
+function needsFluxPromptTranslation(text3) {
+  return /[\u3400-\u9fff\uf900-\ufaff]/u.test(text3);
 }
-function buildFluxPromptTranslationRequest(text2) {
+function buildFluxPromptTranslationRequest(text3) {
   return {
     system: `You translate and compress image-generation prompts for FLUX.1 Schnell. Return only one concise English prompt, with no explanation, Markdown, headings, quotation marks, or code fences. Preserve concrete visual facts, identity markers, outfits, hairstyles, camera views, panel positions and reference slots. Apply global content constraints before preserving colors: adapt red blood/wounds to covered injuries or necessary small green/black traces, and blood-red environments to natural colors including their reflected light. Preserve unrelated red clothing, lights and identity features. Remove redundant quality buzzwords and repeated synonyms, but invent no story facts. Translate Chinese names phonetically or describe them in English so that the result contains no Chinese characters. Keep the result under 260 English words so it fits the image model context.`,
-    user: text2.trim()
+    user: text3.trim()
   };
 }
 var typeGuides, commonContract, roleGenerationLayout;
@@ -240539,8 +240640,8 @@ async function resolveAssetImageModel(requestedModel, type) {
   }
   const provider = await utils_default.db("o_vendorConfig").where({ id: "comfyui_qwen21_fourview", enable: 1 }).select("models").first();
   if (!provider) throw new Error("\u4EBA\u7269\u56DB\u89C6\u56FE\u6A21\u578B\u5C1A\u672A\u542F\u7528\uFF0C\u8BF7\u91CD\u542F\u670D\u52A1\u5B8C\u6210\u6A21\u578B\u914D\u7F6E\u8FC1\u79FB");
-  const models = JSON.parse(provider.models || "[]");
-  if (!models.some((item) => item.modelName === "qwen-image-2.1-fourview-local")) {
+  const models2 = JSON.parse(provider.models || "[]");
+  if (!models2.some((item) => item.modelName === "qwen-image-2.1-fourview-local")) {
     throw new Error("\u4EBA\u7269\u56DB\u89C6\u56FE\u6A21\u578B\u914D\u7F6E\u7F3A\u5931\uFF0C\u8BF7\u5728\u6A21\u578B\u8BBE\u7F6E\u4E2D\u68C0\u67E5 Qwen-Image-2.1 \u56DB\u89C6\u56FE\u4F9B\u5E94\u5546");
   }
   return ROLE_FOUR_VIEW_MODEL;
@@ -240688,11 +240789,11 @@ var init_batchGenerateImageAssets = __esm({
 
 // src/utils/assetPromptGeneration.ts
 async function loadAssetPromptContext(db2, input, imageOverrides = {}) {
-  const readAsset = async (id) => {
-    const asset2 = await db2("o_assets").where({ id, projectId: input.projectId }).first();
+  const readAsset = async (id2) => {
+    const asset2 = await db2("o_assets").where({ id: id2, projectId: input.projectId }).first();
     if (!asset2) return null;
-    const imageId = Object.hasOwn(imageOverrides, id) ? imageOverrides[id] : asset2.imageId;
-    const image = imageId ? await db2("o_image").where({ id: imageId, assetsId: id }).first() : null;
+    const imageId = Object.hasOwn(imageOverrides, id2) ? imageOverrides[id2] : asset2.imageId;
+    const image = imageId ? await db2("o_image").where({ id: imageId, assetsId: id2 }).first() : null;
     return { ...asset2, selectedImagePath: image?.filePath || null };
   };
   const asset = await readAsset(input.assetsId);
@@ -240770,10 +240871,10 @@ async function audit(deps, content) {
           text: '\u4E0A\u6B21\u5BA1\u6838\u56DE\u590D\u4E0D\u662F\u6709\u6548\u7684\u5B8C\u6574JSON\u3002\u8BF7\u4F9D\u636E\u76F8\u540C\u4E8B\u5B9E\u91CD\u65B0\u5BA1\u6838\uFF0C\u53EA\u8FD4\u56DE {"passed":boolean,"issues":string[]}\uFF1B\u4FDD\u7559\u771F\u5B9E\u51B2\u7A81\uFF0C\u4E0D\u8981\u4E3A\u4E86\u4FEE\u6B63\u8F93\u51FA\u683C\u5F0F\u800C\u6539\u6210\u901A\u8FC7\u3002'
         }] : content }]
       });
-      const text2 = String(result.text ?? result._output ?? "").trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
+      const text3 = String(result.text ?? result._output ?? "").trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
       if (result.finishReason === "length") continue;
       try {
-        parsed = JSON.parse(text2);
+        parsed = JSON.parse(text3);
       } catch {
         continue;
       }
@@ -240872,7 +240973,7 @@ var init_batchPolishAssetsPrompt = __esm({
         const assetsDataList = await utils_default.db("o_assets").where({ projectId }).whereIn("id", assetsIds).select("id", "assetsId", "type");
         if (!assetsDataList || assetsDataList.length === 0) return res.status(500).send(error50("\u8D44\u4EA7\u4E0D\u5B58\u5728"));
         const assetsDataMap = new Map(assetsDataList.map((a) => [a.id, a]));
-        if (assetsIds.some((id) => !assetsDataMap.has(id))) return res.status(400).send(error50("\u8D44\u4EA7\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE"));
+        if (assetsIds.some((id2) => !assetsDataMap.has(id2))) return res.status(400).send(error50("\u8D44\u4EA7\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE"));
         if (items.some((item) => assetsDataMap.get(item.assetsId)?.type !== item.type)) return res.status(400).send(error50("\u8D44\u4EA7\u7C7B\u578B\u4E0E\u5F53\u524D\u8BB0\u5F55\u4E0D\u4E00\u81F4"));
         await utils_default.db("o_assets").whereIn("id", assetsIds).update({ promptState: "\u751F\u6210\u4E2D", promptErrorReason: null });
         const getTypeConfig = (isDerivative) => ({
@@ -240966,8 +241067,8 @@ var init_cancelGenerate = __esm({
         id: external_exports.number()
       }),
       async (req, res) => {
-        const { id } = req.body;
-        await utils_default.db("o_image").where("id", id).update({
+        const { id: id2 } = req.body;
+        await utils_default.db("o_image").where("id", id2).update({
           state: "\u751F\u6210\u5931\u8D25"
         });
         res.status(200).send(success3({ message: "\u53D6\u6D88\u6210\u529F" }));
@@ -241011,12 +241112,12 @@ var init_generateAssets = __esm({
       styleBase64: external_exports.string().optional().nullable()
     };
     generateAssets_default = router26.post("/", validateFields(requestSchema2), async (req, res) => {
-      const { projectId, model, resolution, id, type, name: name28, prompt, base64: base644, styleBase64 } = req.body;
+      const { projectId, model, resolution, id: id2, type, name: name28, prompt, base64: base644, styleBase64 } = req.body;
       const project = await utils_default.db("o_project").where("id", projectId).select("artStyle", "type", "intro").first();
       if (!project) return res.status(404).send(error50("\u9879\u76EE\u4E3A\u7A7A"));
       const cfg = assetTypeConfig2[type];
       if (!cfg) return res.status(400).send(error50("\u4E0D\u652F\u6301\u7684\u8D44\u4EA7\u7C7B\u578B"));
-      const asset = await utils_default.db("o_assets").where({ id, projectId, type }).select("*").first();
+      const asset = await utils_default.db("o_assets").where({ id: id2, projectId, type }).select("*").first();
       if (!asset) return res.status(404).send(error50("\u8D44\u4EA7\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u548C\u7C7B\u578B"));
       try {
         requireCurrentAssetPrompt(asset, prompt);
@@ -241034,14 +241135,14 @@ var init_generateAssets = __esm({
       const [imageId] = await utils_default.db("o_image").insert({
         type,
         state: "\u751F\u6210\u4E2D",
-        assetsId: id,
+        assetsId: id2,
         model: selectedModelName,
         resolution,
         ...asset.descriptionVersion !== void 0 ? { descriptionVersion: descriptionVersion(asset) } : {}
       });
       const imagePath = `/${projectId}/${cfg.dir}/${v4_default()}.jpg`;
       const describe4 = `\u751F\u6210${cfg.label}\u56FE\uFF0C\u540D\u79F0\uFF1A${name28}\uFF0C\u63D0\u793A\u8BCD\uFF1A${prompt}`;
-      const relatedObjects = { id, projectId, type: cfg.label };
+      const relatedObjects = { id: id2, projectId, type: cfg.label };
       try {
         let runtimePrompt = prompt;
         let runtimeArtStyle = project.artStyle || "";
@@ -241077,7 +241178,7 @@ var init_generateAssets = __esm({
         if (!imageData) return res.status(500).send(error50("\u8D44\u4EA7\u5DF2\u88AB\u5220\u9664"));
         if (imageData.state === "\u751F\u6210\u5931\u8D25") return res.status(400).send(error50(imageData.errorReason || "\u56FE\u7247\u751F\u6210\u5DF2\u53D6\u6D88"));
         await utils_default.db("o_image").where("id", imageId).update({ state: "\u5DF2\u5B8C\u6210", filePath: imagePath, type, model: selectedModelName, resolution: actualResolution });
-        await utils_default.db("o_assets").where({ id, projectId, type }).update({
+        await utils_default.db("o_assets").where({ id: id2, projectId, type }).update({
           imageId,
           ...asset.descriptionVersion !== void 0 ? { imageDescriptionVersion: descriptionVersion(asset) } : {},
           ...type === "role" ? {
@@ -241089,7 +241190,7 @@ var init_generateAssets = __esm({
           } : {}
         });
         const path34 = await utils_default.oss.getSmallImageUrl(imagePath);
-        return res.status(200).send(success3({ path: path34, assetsId: id }));
+        return res.status(200).send(success3({ path: path34, assetsId: id2 }));
       } catch (e) {
         await utils_default.db("o_image").where("id", imageId).update({ state: "\u751F\u6210\u5931\u8D25", errorReason: utils_default.error(e).message });
         return res.status(400).send(error50(utils_default.error(e).message || "\u56FE\u7247\u751F\u6210\u5931\u8D25"));
@@ -241252,7 +241353,7 @@ var init_batchBindAudio = __esm({
             } else {
               audioBindPrompt = promptData?.data ?? void 0;
             }
-            const { text: text2 } = await utils_default.Ai.Text("universalAi").invoke({
+            const { text: text3 } = await utils_default.Ai.Text("universalAi").invoke({
               messages: [
                 {
                   role: "system",
@@ -241482,8 +241583,8 @@ var init_getSingleProject = __esm({
         id: external_exports.number()
       }),
       async (req, res) => {
-        const { id } = req.body;
-        const data = await utils_default.db("o_project").where("id", id).select("*");
+        const { id: id2 } = req.body;
+        const data = await utils_default.db("o_project").where("id", id2).select("*");
         res.status(200).send(success3(data));
       }
     );
@@ -241512,8 +241613,8 @@ var init_updateProject = __esm({
         projectType: external_exports.string().optional().nullable()
       }),
       async (req, res) => {
-        const { id, intro, type, artStyle, videoRatio, projectType } = req.body;
-        await utils_default.db("o_project").where("id", id).update({
+        const { id: id2, intro, type, artStyle, videoRatio, projectType } = req.body;
+        await utils_default.db("o_project").where("id", id2).update({
           intro,
           type,
           artStyle,
@@ -241521,5408 +241622,6 @@ var init_updateProject = __esm({
           projectType
         });
         res.status(200).send(success3({ message: "\u4FEE\u6539\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/login/login.ts
-function setToken(payload, expiresIn, secret) {
-  if (!payload || typeof secret !== "string" || !secret) {
-    throw new Error("\u53C2\u6570\u4E0D\u5408\u6CD5");
-  }
-  return import_jsonwebtoken4.default.sign(payload, secret, { expiresIn });
-}
-var import_express36, import_jsonwebtoken4, router36, login_default;
-var init_login = __esm({
-  "src/routes/login/login.ts"() {
-    "use strict";
-    import_express36 = __toESM(require_express2());
-    init_utils3();
-    import_jsonwebtoken4 = __toESM(require_jsonwebtoken());
-    init_responseFormat();
-    init_middleware();
-    init_zod();
-    router36 = import_express36.default.Router();
-    login_default = router36.post(
-      "/",
-      validateFields({
-        username: external_exports.string(),
-        password: external_exports.string()
-      }),
-      async (req, res) => {
-        const { username, password } = req.body;
-        const data = await utils_default.db("o_user").where("name", "=", username).first();
-        if (!data) return res.status(400).send(error50("\u767B\u5F55\u5931\u8D25"));
-        if (data.password == password && data.name == username) {
-          const tokenData = await utils_default.db("o_setting").where("key", "tokenKey").first();
-          if (!tokenData) return res.status(400).send(error50("\u672A\u627E\u5230tokenKey"));
-          const token = setToken(
-            {
-              id: data.id,
-              name: data.name
-            },
-            "180Days",
-            tokenData?.value
-          );
-          return res.status(200).send(success3({ token: "Bearer " + token, name: data.name, id: data.id }, "\u767B\u5F55\u6210\u529F"));
-        } else {
-          return res.status(400).send(error50("\u7528\u6237\u540D\u6216\u5BC6\u7801\u9519\u8BEF"));
-        }
-      }
-    );
-  }
-});
-
-// src/routes/modelSelect/getModelDetail.ts
-var import_express37, router37, getModelDetail_default;
-var init_getModelDetail = __esm({
-  "src/routes/modelSelect/getModelDetail.ts"() {
-    "use strict";
-    import_express37 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router37 = import_express37.default.Router();
-    getModelDetail_default = router37.post(
-      "/",
-      validateFields({
-        modelId: external_exports.string()
-      }),
-      async (req, res) => {
-        const { modelId } = req.body;
-        const [id, name28] = modelId.split(/:(.+)/);
-        const models = await utils_default.vendor.getModelList(id);
-        const findData = models.find((i) => i.modelName == name28);
-        res.status(200).send(success3(findData));
-      }
-    );
-  }
-});
-
-// src/routes/modelSelect/getModelList.ts
-var import_express38, router38, getModelList_default;
-var init_getModelList = __esm({
-  "src/routes/modelSelect/getModelList.ts"() {
-    "use strict";
-    import_express38 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router38 = import_express38.default.Router();
-    getModelList_default = router38.post(
-      "/",
-      validateFields({
-        type: external_exports.enum(["text", "image", "video", "all"])
-      }),
-      async (req, res) => {
-        const { type } = req.body;
-        const dataList = await utils_default.db("o_vendorConfig").select("id").where("enable", 1);
-        if (!dataList || dataList.length === 0) {
-          return res.status(404).send({ error: "\u6A21\u578B\u672A\u627E\u5230" });
-        }
-        const modelList = await Promise.all(dataList.map((i) => utils_default.vendor.getModelList(i.id)));
-        const result = await Promise.all(
-          dataList.map(async (data, index) => {
-            const vendorData2 = await utils_default.vendor.getVendor(data.id);
-            const models = modelList[index];
-            const filtered = type === "all" ? models.filter((item) => item.type !== "video") : models.filter((item) => item.type === type);
-            return filtered.map((item) => ({
-              id: data.id,
-              label: item.name,
-              value: item.modelName,
-              type: item.type,
-              name: vendorData2.name
-            }));
-          })
-        );
-        res.status(200).send(success3(result.flat()));
-      }
-    );
-  }
-});
-
-// src/routes/novel/addNovel.ts
-var import_express39, router39, addNovel_default;
-var init_addNovel = __esm({
-  "src/routes/novel/addNovel.ts"() {
-    "use strict";
-    import_express39 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router39 = import_express39.default.Router();
-    addNovel_default = router39.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        data: external_exports.array(
-          external_exports.object({
-            index: external_exports.number(),
-            reel: external_exports.string(),
-            chapter: external_exports.string(),
-            chapterData: external_exports.string()
-          })
-        )
-      }),
-      async (req, res) => {
-        const { projectId, data } = req.body;
-        const totalNovelId = [];
-        const getLastChapterIndex = await utils_default.db("o_novel").where("projectId", projectId).select("chapterIndex").orderBy("chapterIndex", "desc").first();
-        let lastChapterIndex = 0;
-        if (getLastChapterIndex) {
-          lastChapterIndex = getLastChapterIndex.chapterIndex;
-        }
-        for (const item of data) {
-          const [id] = await utils_default.db("o_novel").insert({
-            projectId,
-            chapterIndex: ++lastChapterIndex,
-            reel: item.reel,
-            chapter: item.chapter,
-            chapterData: item.chapterData,
-            createTime: Date.now(),
-            eventState: 0
-          });
-          totalNovelId.push(id);
-        }
-        const chapterAllList = await utils_default.db("o_novel").where("projectId", projectId).whereIn("id", totalNovelId);
-        const novelClass = new utils_default.cleanNovel();
-        novelClass.emitter.on("item", async (item) => {
-          await utils_default.db("o_novel").where("id", item.id).update({ event: item.event, eventState: item.event ? 1 : -1, errorReason: item?.errReason ?? null });
-        });
-        novelClass.start(chapterAllList, projectId);
-        res.status(200).send(success3({ message: "\u65B0\u589E\u539F\u6587\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/novel/batchDeleteNovel.ts
-var import_express40, router40, batchDeleteNovel_default;
-var init_batchDeleteNovel = __esm({
-  "src/routes/novel/batchDeleteNovel.ts"() {
-    "use strict";
-    import_express40 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router40 = import_express40.default.Router();
-    batchDeleteNovel_default = router40.post(
-      "/",
-      validateFields({
-        ids: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { ids } = req.body;
-        if (!ids.length) {
-          return res.status(400).send(error50("\u8BF7\u5148\u9009\u62E9\u9700\u8981\u5220\u9664\u7684\u5185\u5BB9"));
-        }
-        const chapterData = await utils_default.db("o_eventChapter").whereIn("novelId", ids);
-        await utils_default.db("o_eventChapter").whereIn("novelId", ids).delete();
-        const eventIds = chapterData.map((i) => i.id);
-        if (eventIds.length) await utils_default.db("o_event").whereIn("id", eventIds).delete();
-        await utils_default.db("o_novel").whereIn("id", ids).del();
-        res.status(200).send(success3({ message: "\u5220\u9664\u539F\u6587\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/novel/delNovel.ts
-var import_express41, router41, delNovel_default;
-var init_delNovel = __esm({
-  "src/routes/novel/delNovel.ts"() {
-    "use strict";
-    import_express41 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router41 = import_express41.default.Router();
-    delNovel_default = router41.post(
-      "/",
-      validateFields({
-        id: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id } = req.body;
-        const chapterData = await utils_default.db("o_eventChapter").where("novelId", id);
-        await utils_default.db("o_eventChapter").where("novelId", id).delete();
-        const eventIds = chapterData.map((i) => i.id);
-        if (eventIds.length) await utils_default.db("o_event").whereIn("id", eventIds).delete();
-        await utils_default.db("o_novel").where("id", id).del();
-        res.status(200).send(success3({ message: "\u5220\u9664\u539F\u6587\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/novel/event/batchDeleteEvent.ts
-var import_express42, router42, batchDeleteEvent_default;
-var init_batchDeleteEvent = __esm({
-  "src/routes/novel/event/batchDeleteEvent.ts"() {
-    "use strict";
-    import_express42 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router42 = import_express42.default.Router();
-    batchDeleteEvent_default = router42.post(
-      "/",
-      validateFields({
-        ids: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { ids } = req.body;
-        await utils_default.db("o_event").whereIn("id", ids).del();
-        await utils_default.db("o_eventChapter").whereIn("eventId", ids).del();
-        res.status(200).send(success3({ message: "\u5220\u9664\u4E8B\u4EF6\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/novel/event/deletEvent.ts
-var import_express43, router43, deletEvent_default;
-var init_deletEvent = __esm({
-  "src/routes/novel/event/deletEvent.ts"() {
-    "use strict";
-    import_express43 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router43 = import_express43.default.Router();
-    deletEvent_default = router43.post(
-      "/",
-      validateFields({
-        id: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id } = req.body;
-        await utils_default.db("o_event").where("id", id).del();
-        await utils_default.db("o_eventChapter").where("eventId", id).del();
-        res.status(200).send(success3({ message: "\u5220\u9664\u4E8B\u4EF6\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/novel/event/generateEvents.ts
-var import_express44, router44, generateEvents_default;
-var init_generateEvents = __esm({
-  "src/routes/novel/event/generateEvents.ts"() {
-    "use strict";
-    import_express44 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router44 = import_express44.default.Router();
-    generateEvents_default = router44.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        novelIds: external_exports.array(external_exports.number()),
-        concurrentCount: external_exports.number().min(1).optional()
-      }),
-      async (req, res) => {
-        const { projectId, novelIds, concurrentCount = 5 } = req.body;
-        const [allChapters, novel] = await Promise.all([
-          utils_default.db("o_novel").where("projectId", projectId).whereIn("id", novelIds),
-          Promise.resolve(new utils_default.cleanNovel(concurrentCount))
-        ]);
-        if (allChapters.length === 0) {
-          return res.status(400).send(success3("\u6CA1\u6709\u5BF9\u5E94\u7AE0\u8282"));
-        }
-        await utils_default.db("o_novel").where("projectId", projectId).whereIn("id", novelIds).update({ eventState: 0, event: null });
-        novel.emitter.on("item", async (item) => {
-          await utils_default.db("o_novel").where("id", item.id).update({ event: item.event, eventState: item.event ? 1 : -1, errorReason: item?.errorReason ?? null });
-        });
-        novel.start(allChapters, projectId);
-        return res.status(200).send(success3("\u751F\u6210\u4E8B\u4EF6\u6210\u529F"));
-      }
-    );
-  }
-});
-
-// src/routes/novel/event/getEvent.ts
-var import_express45, router45, getEvent_default;
-var init_getEvent = __esm({
-  "src/routes/novel/event/getEvent.ts"() {
-    "use strict";
-    import_express45 = __toESM(require_express2());
-    init_utils3();
-    init_db();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router45 = import_express45.default.Router();
-    getEvent_default = router45.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        page: external_exports.number(),
-        limit: external_exports.number(),
-        search: external_exports.string().optional()
-      }),
-      async (req, res) => {
-        const { projectId, page, limit, search } = req.body;
-        const offset = (page - 1) * limit;
-        const baseQuery = utils_default.db("o_event as e").join("o_eventChapter as ec", "ec.eventId", "e.id").join("o_novel as n", "n.id", "ec.novelId").where("n.projectId", projectId);
-        if (search) {
-          baseQuery.where("e.name", "like", `%${search}%`);
-        }
-        const [{ total }] = await baseQuery.clone().countDistinct("e.id as total");
-        if (!Number(total)) {
-          return res.status(200).send(success3({ list: [], total: 0 }));
-        }
-        const rows = await baseQuery.clone().select("e.id", "e.name as eventName", "e.detail", "e.createTime", db.raw("GROUP_CONCAT(n.chapterIndex) as chapterIndexes")).groupBy("e.id").limit(limit).offset(offset);
-        const list2 = rows.map((e) => ({
-          id: e.id,
-          eventName: e.eventName,
-          detail: e.detail,
-          createTime: e.createTime,
-          chapters: e.chapterIndexes ? e.chapterIndexes.split(",").map(Number) : []
-        }));
-        res.status(200).send(success3({ list: list2, total: Number(total) }));
-      }
-    );
-  }
-});
-
-// src/routes/novel/getNovel.ts
-var import_express46, router46, getNovel_default;
-var init_getNovel = __esm({
-  "src/routes/novel/getNovel.ts"() {
-    "use strict";
-    import_express46 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router46 = import_express46.default.Router();
-    getNovel_default = router46.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        page: external_exports.number(),
-        limit: external_exports.number(),
-        search: external_exports.string().optional()
-      }),
-      async (req, res) => {
-        const { projectId, page, limit, search } = req.body;
-        const offset = (page - 1) * limit;
-        const data = await utils_default.db("o_novel").where("projectId", projectId).select("id", "chapterIndex as index", "reel", "chapter", "chapterData", "event", "eventState", "errorReason").andWhere((qb) => {
-          if (search) {
-            qb.where("chapter", "like", `%${search}%`);
-          }
-        }).orderBy("chapterIndex", "asc").limit(limit).offset(offset);
-        const totalQuery = await utils_default.db("o_novel").where("projectId", projectId).andWhere((qb) => {
-          if (search) {
-            qb.where("chapter", "like", `%${search}%`);
-          }
-        }).count("* as total").first();
-        res.status(200).send(success3({ data, total: totalQuery.total }));
-      }
-    );
-  }
-});
-
-// src/routes/novel/getNovelData.ts
-var import_express47, router47, getNovelData_default;
-var init_getNovelData = __esm({
-  "src/routes/novel/getNovelData.ts"() {
-    "use strict";
-    import_express47 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router47 = import_express47.default.Router();
-    getNovelData_default = router47.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { projectId } = req.body;
-        const data = await utils_default.db("o_novel").where("projectId", projectId).select("*");
-        res.status(200).send(success3(data));
-      }
-    );
-  }
-});
-
-// src/routes/novel/getNovelEventState.ts
-var import_express48, router48, getNovelEventState_default;
-var init_getNovelEventState = __esm({
-  "src/routes/novel/getNovelEventState.ts"() {
-    "use strict";
-    import_express48 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router48 = import_express48.default.Router();
-    getNovelEventState_default = router48.post(
-      "/",
-      validateFields({
-        ids: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { ids } = req.body;
-        const data = await utils_default.db("o_novel").whereIn("id", ids).whereNot("eventState", 0).select("id", "event", "eventState", "errorReason");
-        res.status(200).send(success3(data));
-      }
-    );
-  }
-});
-
-// src/routes/novel/getNovelIndex.ts
-var import_express49, router49, getNovelIndex_default;
-var init_getNovelIndex = __esm({
-  "src/routes/novel/getNovelIndex.ts"() {
-    "use strict";
-    import_express49 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router49 = import_express49.default.Router();
-    getNovelIndex_default = router49.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { projectId } = req.body;
-        const data = await utils_default.db("o_novel").where("projectId", projectId).select("id", "chapterIndex as index", "chapter").orderBy("chapterIndex", "asc");
-        res.status(200).send(success3(data));
-      }
-    );
-  }
-});
-
-// src/routes/novel/updateNovel.ts
-var import_express50, router50, updateNovel_default;
-var init_updateNovel = __esm({
-  "src/routes/novel/updateNovel.ts"() {
-    "use strict";
-    import_express50 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router50 = import_express50.default.Router();
-    updateNovel_default = router50.post(
-      "/",
-      validateFields({
-        id: external_exports.number(),
-        index: external_exports.union([external_exports.number(), external_exports.string()]),
-        reel: external_exports.string(),
-        chapter: external_exports.string(),
-        chapterData: external_exports.string(),
-        event: external_exports.string()
-      }),
-      async (req, res) => {
-        const { id, index, reel, chapter, chapterData, event } = req.body;
-        await utils_default.db("o_novel").where("id", id).update({
-          chapterIndex: index,
-          reel,
-          chapter,
-          chapterData,
-          event
-        });
-        res.status(200).send(success3({ message: "\u66F4\u65B0\u539F\u6587\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/other/deleteAllData.ts
-var import_express51, router51, deleteAllData_default;
-var init_deleteAllData = __esm({
-  "src/routes/other/deleteAllData.ts"() {
-    "use strict";
-    import_express51 = __toESM(require_express2());
-    init_initDB();
-    init_db();
-    init_responseFormat();
-    router51 = import_express51.default.Router();
-    deleteAllData_default = router51.post(
-      "/",
-      async (req, res) => {
-        await initDB_default(db, true);
-        res.status(200).send(success3({ message: "\u6E05\u7A7A\u6570\u636E\u8868\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/other/getVersion.ts
-var import_express52, router52, getVersion_default;
-var init_getVersion = __esm({
-  "src/routes/other/getVersion.ts"() {
-    "use strict";
-    import_express52 = __toESM(require_express2());
-    init_responseFormat();
-    init_writeVersion();
-    router52 = import_express52.default.Router();
-    getVersion_default = router52.get("/", async (req, res) => {
-      const version3 = await getVersion();
-      res.status(200).send(success3(version3));
-    });
-  }
-});
-
-// src/routes/production/assets/batchGenerateAssetsImage.ts
-var import_express53, router53, activeAssetGenerationRequests, batchGenerateAssetsImage_default;
-var init_batchGenerateAssetsImage = __esm({
-  "src/routes/production/assets/batchGenerateAssetsImage.ts"() {
-    "use strict";
-    import_express53 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    init_operationReceipt();
-    init_assetPromptGeneration();
-    init_assetDescriptionVersion();
-    init_assetReferenceMedia();
-    router53 = import_express53.default.Router();
-    activeAssetGenerationRequests = /* @__PURE__ */ new Set();
-    batchGenerateAssetsImage_default = router53.post(
-      "/",
-      validateFields({
-        assetIds: external_exports.array(external_exports.number()),
-        projectId: external_exports.number(),
-        scriptId: external_exports.number(),
-        concurrentCount: external_exports.number().min(1).optional(),
-        requestId: external_exports.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional()
-      }),
-      async (req, res) => {
-        const { assetIds, projectId, scriptId, concurrentCount = 5 } = req.body;
-        const requestId = req.body.requestId ?? `assetgen_${utils_default.uuid()}`;
-        const normalizedIds = [...new Set(assetIds.map(Number))].sort((a, b) => a - b);
-        if (!normalizedIds.length) return res.status(400).send(error50("assetIds\u4E0D\u80FD\u4E3A\u7A7A"));
-        const generationKey = `${projectId}:${scriptId}:${requestId}`;
-        let ownsGenerationWorker = false;
-        try {
-          const projectSettingData = await utils_default.db("o_project").where("id", projectId).select("imageModel", "imageQuality", "artStyle").first();
-          if (!projectSettingData) return res.status(400).send(error50("\u9879\u76EE\u4E0D\u5B58\u5728"));
-          const operationInput = { assetIds: normalizedIds, projectId, scriptId };
-          const claimed = await withOperationReceipt(
-            utils_default.db,
-            { projectId, episodesId: scriptId },
-            "asset-generate",
-            requestId,
-            operationInput,
-            async (trx) => {
-              const script = await trx("o_script").where({ id: scriptId, projectId }).select("id").first();
-              if (!script) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C");
-              const assets = await trx("o_assets").where({ projectId }).whereIn("id", normalizedIds).select("id", "type", "assetsId", "imageId");
-              const found = new Set(assets.map((item) => Number(item.id)));
-              const missing = normalizedIds.filter((id) => !found.has(id));
-              if (missing.length) throw new Error(`\u8D44\u4EA7\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u6216\u4E0D\u5B58\u5728\uFF1A${missing.join(",")}`);
-              const links = await trx("o_scriptAssets").where({ scriptId }).whereIn("assetId", normalizedIds).select("assetId");
-              const linked = new Set(links.map((item) => Number(item.assetId)));
-              const unlinked = normalizedIds.filter((id) => !linked.has(id));
-              if (unlinked.length) throw new Error(`\u8D44\u4EA7\u672A\u7ED1\u5B9A\u5230\u5F53\u524D\u5267\u96C6\uFF1A${unlinked.join(",")}`);
-              const referenceImageIdMap2 = {};
-              const referenceIds = [...new Set(assets.flatMap((a) => [a.id, a.assetsId]).filter(Boolean))];
-              const referenceAssets = await trx("o_assets").where({ projectId }).whereIn("id", referenceIds).select("id", "imageId");
-              for (const a of referenceAssets) referenceImageIdMap2[Number(a.id)] = a.imageId ?? null;
-              const imageIdMap = {};
-              for (const item of assets) {
-                const [imageId] = await trx("o_image").insert({
-                  assetsId: item.id,
-                  type: item.type,
-                  state: "\u751F\u6210\u4E2D",
-                  resolution: projectSettingData.imageQuality,
-                  model: projectSettingData.imageModel
-                });
-                imageIdMap[Number(item.id)] = Number(imageId);
-                const updated = await trx("o_assets").where({ id: item.id, projectId }).update({ imageId });
-                if (updated !== 1) throw new Error(`\u8D44\u4EA7 ${item.id} \u7684\u56FE\u7247\u4EFB\u52A1\u7ED1\u5B9A\u5931\u8D25`);
-              }
-              return { assetIds: normalizedIds, imageIdMap, referenceImageIdMap: referenceImageIdMap2 };
-            }
-          );
-          if (!claimed.duplicate || !activeAssetGenerationRequests.has(generationKey)) {
-            activeAssetGenerationRequests.add(generationKey);
-            ownsGenerationWorker = true;
-          }
-          const currentRows = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").where({ "o_assets.projectId": projectId }).whereIn("o_assets.id", normalizedIds).select("o_assets.id", "o_image.state", "o_image.filePath", "o_image.errorReason", "o_assets.prompt");
-          const currentData = await Promise.all(
-            currentRows.map(async (item) => ({
-              id: item.id,
-              state: item.state ?? "\u672A\u751F\u6210",
-              src: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : null,
-              errorReason: item.errorReason ?? "",
-              prompt: item.prompt ?? ""
-            }))
-          );
-          res.status(200).send(success3(currentData));
-          if (!ownsGenerationWorker) return;
-          const receiptImages = claimed.duplicate ? await utils_default.db("o_image").whereIn("id", Object.values(claimed.receipt.data.imageIdMap)).select("id", "assetsId", "state") : [];
-          const generationIds = claimed.duplicate ? receiptImages.filter((item) => item.state === "\u751F\u6210\u4E2D" && Number(item.id) === Number(claimed.receipt.data.imageIdMap[item.assetsId])).map((item) => Number(item.assetsId)) : normalizedIds;
-          if (!generationIds.length) {
-            activeAssetGenerationRequests.delete(generationKey);
-            ownsGenerationWorker = false;
-            return;
-          }
-          const assetsDataArr = await utils_default.db("o_assets").where({ projectId }).whereIn("id", generationIds).select("id", "describe", "name", "type", "assetsId");
-          const visionDeps = { loadImage: (path34) => utils_default.oss.getImageBase64(path34), invoke: (input) => utils_default.Ai.Text("universalAi").invoke(input) };
-          const referenceImageIdMap = claimed.receipt.data.referenceImageIdMap || {};
-          const generateSingleAsset = async (item) => {
-            const imageId = Number(claimed.receipt.data.imageIdMap[item.id]);
-            try {
-              const context2 = await loadAssetPromptContext(utils_default.db, { projectId, assetsId: item.id, type: item.type, name: item.name, describe: item.describe || "" }, referenceImageIdMap);
-              const manualKind = item.type === "role" ? "character" : item.type === "scene" ? "scene" : "prop";
-              const manual = utils_default.getArtPrompt(projectSettingData.artStyle, "art_skills", `art_${manualKind}${context2.parent ? "_derivative" : ""}`);
-              if (!manual) throw new Error("\u89C6\u89C9\u624B\u518C\u672A\u5B9A\u4E49");
-              const text2 = await generateAssetPrompt(visionDeps, context2, manual);
-              await saveGeneratedAssetPrompt(utils_default.db, context2.asset, text2);
-              const sourcePath = context2.parent ? context2.parent.selectedImagePath : context2.asset.selectedImagePath;
-              const imageBase64 = sourcePath ? await utils_default.oss.getImageBase64(sourcePath) : null;
-              if (context2.parent && !imageBase64) throw new Error("\u884D\u751F\u8D44\u4EA7\u7F3A\u5C11\u53EF\u8BFB\u53D6\u7684\u539F\u8D44\u4EA7\u56FE\u7247\uFF0C\u4E0D\u80FD\u4F7F\u7528\u6587\u751F\u56FE");
-              const repeloadObj = {
-                prompt: text2,
-                size: projectSettingData.imageQuality,
-                aspectRatio: "16:9"
-              };
-              const imageCls = await utils_default.Ai.Image(projectSettingData.imageModel).run(
-                {
-                  referenceList: imageBase64 ? [{ type: "image", base64: imageBase64 }] : [],
-                  ...repeloadObj
-                },
-                {
-                  taskClass: "\u751F\u6210\u56FE\u7247",
-                  describe: "\u8D44\u4EA7\u56FE\u7247\u751F\u6210",
-                  relatedObjects: JSON.stringify({
-                    ...repeloadObj,
-                    assetId: item.id,
-                    parentAssetId: context2.parent?.id ?? null,
-                    referenceImagePath: sourcePath ?? null,
-                    generationMode: imageBase64 ? "image-to-image" : "text-to-image"
-                  }),
-                  projectId
-                }
-              );
-              const savePath = `/${projectId}/assets/${scriptId}/${item.type}/${utils_default.uuid()}.jpg`;
-              await imageCls.save(savePath);
-              await utils_default.db("o_image").where({ id: imageId, assetsId: item.id }).update({ filePath: savePath });
-              const layout = "four_view";
-              const referenceFields = item.type === "role" ? {
-                designStatus: "ready",
-                designVersion: utils_default.db.raw("COALESCE(designVersion, 0) + 1"),
-                referenceLayout: layout,
-                referenceFingerprint: await roleReferenceFingerprint(savePath)
-              } : null;
-              await utils_default.db.transaction(async (trx) => {
-                const completed = await trx("o_image").where({ id: imageId, assetsId: item.id, state: "\u751F\u6210\u4E2D" }).update({
-                  state: "\u5DF2\u5B8C\u6210",
-                  filePath: savePath,
-                  errorReason: null,
-                  ...context2.asset.descriptionVersion !== void 0 ? { descriptionVersion: descriptionVersion(context2.asset) } : {}
-                });
-                if (completed && (referenceFields || context2.asset.descriptionVersion !== void 0)) {
-                  await trx("o_assets").where({ id: item.id, projectId, imageId }).update({
-                    ...referenceFields,
-                    ...context2.asset.descriptionVersion !== void 0 ? { imageDescriptionVersion: descriptionVersion(context2.asset) } : {}
-                  });
-                }
-              });
-            } catch (reason) {
-              if (Object.hasOwn(referenceImageIdMap, item.id)) {
-                await utils_default.db("o_assets").where({ id: item.id, projectId, imageId }).update({ imageId: referenceImageIdMap[item.id] });
-              }
-              await utils_default.db("o_assets").where({ id: item.id, projectId }).update({ promptState: "\u751F\u6210\u5931\u8D25", promptErrorReason: utils_default.error(reason).message });
-              await utils_default.db("o_image").where({ id: imageId, assetsId: item.id }).update({
-                state: "\u751F\u6210\u5931\u8D25",
-                errorReason: utils_default.error(reason).message
-              });
-            }
-          };
-          try {
-            for (let i = 0; i < assetsDataArr.length; i += concurrentCount) {
-              const batch = assetsDataArr.slice(i, i + concurrentCount);
-              await Promise.all(batch.map(generateSingleAsset));
-            }
-          } finally {
-            if (ownsGenerationWorker) {
-              activeAssetGenerationRequests.delete(generationKey);
-              ownsGenerationWorker = false;
-            }
-          }
-        } catch (reason) {
-          const message = utils_default.error(reason).message;
-          console.error("[assets/batchGenerateAssetsImage]", reason);
-          if (ownsGenerationWorker) {
-            activeAssetGenerationRequests.delete(generationKey);
-            ownsGenerationWorker = false;
-          }
-          if (res.headersSent) {
-            try {
-              const receipt = await getOperationReceipt(
-                utils_default.db,
-                { projectId, episodesId: scriptId },
-                "asset-generate",
-                requestId
-              );
-              const imageIds = Object.values(receipt?.data?.imageIdMap ?? {}).map(Number).filter(Number.isSafeInteger);
-              if (imageIds.length) {
-                await utils_default.db("o_image").whereIn("id", imageIds).where({ state: "\u751F\u6210\u4E2D" }).update({
-                  state: "\u751F\u6210\u5931\u8D25",
-                  errorReason: `\u751F\u6210\u4EFB\u52A1\u521D\u59CB\u5316\u5931\u8D25\uFF1A${message}`
-                });
-              }
-            } catch (markError) {
-              console.error("[assets/batchGenerateAssetsImage] \u6807\u8BB0\u521D\u59CB\u5316\u5931\u8D25\u72B6\u6001\u5931\u8D25:", markError);
-            }
-            return;
-          }
-          return res.status(400).send(error50(message));
-        }
-      }
-    );
-  }
-});
-
-// src/routes/production/assets/deleteAssetsDireve.ts
-var import_express54, router54, deleteAssetsDireve_default;
-var init_deleteAssetsDireve = __esm({
-  "src/routes/production/assets/deleteAssetsDireve.ts"() {
-    "use strict";
-    import_express54 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router54 = import_express54.default.Router();
-    deleteAssetsDireve_default = router54.post(
-      "/",
-      validateFields({
-        id: external_exports.number(),
-        projectId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id, projectId } = req.body;
-        const assetsFirstData = await utils_default.db("o_assets").where("id", id).first();
-        if (!assetsFirstData) {
-          return res.status(404).send({ error: "\u8D44\u6E90\u672A\u627E\u5230" });
-        }
-        if (assetsFirstData?.flowId) await utils_default.db("o_imageFlow").where("id", assetsFirstData?.flowId).delete();
-        await utils_default.db("o_assets").where("id", id).delete();
-        await utils_default.db("o_assets2Storyboard").where("assetId", id).delete();
-        res.status(200).send(success3({ message: "\u89C6\u9891\u5220\u9664\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/production/assets/pollingImage.ts
-var import_express55, router55, pollingImage_default;
-var init_pollingImage = __esm({
-  "src/routes/production/assets/pollingImage.ts"() {
-    "use strict";
-    import_express55 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router55 = import_express55.default.Router();
-    pollingImage_default = router55.post(
-      "/",
-      validateFields({
-        ids: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { ids } = req.body;
-        const data = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").whereIn("o_assets.id", ids).whereNot("o_image.state", "\u751F\u6210\u4E2D").select("o_image.state", "o_assets.id", "o_image.filePath", "o_image.errorReason", "o_assets.prompt");
-        const result = await Promise.all(
-          data.map(async (item) => ({
-            ...item,
-            src: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : null
-          }))
-        );
-        res.status(200).send(success3(result));
-      }
-    );
-  }
-});
-
-// src/routes/production/assets/updateAssetsUrl.ts
-var import_express56, router56, updateAssetsUrl_default;
-var init_updateAssetsUrl = __esm({
-  "src/routes/production/assets/updateAssetsUrl.ts"() {
-    "use strict";
-    import_express56 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router56 = import_express56.default.Router();
-    updateAssetsUrl_default = router56.post(
-      "/",
-      validateFields({
-        id: external_exports.number(),
-        url: external_exports.string(),
-        flowId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id, url: url4, flowId } = req.body;
-        const [imageId] = await utils_default.db("o_image").insert({
-          filePath: utils_default.replaceUrl(url4),
-          state: "\u5DF2\u5B8C\u6210",
-          assetsId: id
-        });
-        await utils_default.db("o_assets").where({ id }).update({ flowId, imageId });
-        res.status(200).send(success3({ message: "\u66F4\u65B0\u63D0\u793A\u8BCD\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/production/editImage/generateFlowImage.ts
-async function urlToBase643(imageUrl) {
-  if (imageUrl.startsWith("/oss/")) {
-    return await utils_default.oss.getImageBase64(utils_default.replaceUrl(imageUrl).replace("/smallImage", ""));
-  }
-  imageUrl = await utils_default.oss.getFileUrl(utils_default.replaceUrl(imageUrl));
-  const response = await axios_default.get(imageUrl, { responseType: "arraybuffer" });
-  const contentType = response.headers["content-type"] || "image/png";
-  const base644 = Buffer.from(response.data, "binary").toString("base64");
-  return `data:${contentType};base64,${base644}`;
-}
-var import_express57, router57, generateFlowImage_default;
-var init_generateFlowImage = __esm({
-  "src/routes/production/editImage/generateFlowImage.ts"() {
-    "use strict";
-    import_express57 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    init_axios2();
-    router57 = import_express57.default.Router();
-    generateFlowImage_default = router57.post(
-      "/",
-      validateFields({
-        model: external_exports.string(),
-        references: external_exports.array(external_exports.string()).optional(),
-        quality: external_exports.string(),
-        ratio: external_exports.string(),
-        prompt: external_exports.string(),
-        projectId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { model, references = [], quality, ratio, prompt, projectId } = req.body;
-        try {
-          const imageClass = await utils_default.Ai.Image(model).run(
-            {
-              prompt,
-              referenceList: await (async () => {
-                const list2 = [];
-                for (const url5 of references) {
-                  list2.push({ type: "image", base64: await urlToBase643(url5) });
-                }
-                return list2;
-              })(),
-              size: quality,
-              aspectRatio: ratio
-            },
-            {
-              taskClass: "\u5DE5\u4F5C\u6D41\u56FE\u7247\u751F\u6210",
-              describe: "\u5DE5\u4F5C\u6D41\u56FE\u7247\u751F\u6210",
-              relatedObjects: JSON.stringify(req.body),
-              projectId
-            }
-          );
-          const savePath = `${projectId}/workFlow/${utils_default.uuid()}.jpg`;
-          await imageClass.save(savePath);
-          const url4 = await utils_default.oss.getSmallImageUrl(savePath);
-          return res.status(200).send(success3({ url: url4 }));
-        } catch (e) {
-          res.status(400).send(error50(utils_default.error(e).message));
-        }
-      }
-    );
-  }
-});
-
-// src/routes/production/editImage/getImageDefaultModle.ts
-var import_express58, router58, getImageDefaultModle_default;
-var init_getImageDefaultModle = __esm({
-  "src/routes/production/editImage/getImageDefaultModle.ts"() {
-    "use strict";
-    import_express58 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router58 = import_express58.default.Router();
-    getImageDefaultModle_default = router58.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { projectId } = req.body;
-        const imageFlowData = await utils_default.db("o_project").where("id", projectId).select("imageModel", "imageQuality").first();
-        return res.status(200).send(success3(imageFlowData));
-      }
-    );
-  }
-});
-
-// src/routes/production/editImage/getImageFlow.ts
-var import_express59, router59, getImageFlow_default;
-var init_getImageFlow = __esm({
-  "src/routes/production/editImage/getImageFlow.ts"() {
-    "use strict";
-    import_express59 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router59 = import_express59.default.Router();
-    getImageFlow_default = router59.post(
-      "/",
-      validateFields({
-        id: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id, type } = req.body;
-        const imageFlowData = await utils_default.db("o_imageFlow").where("id", id).first();
-        if (imageFlowData?.flowData) {
-          const parseFlow = JSON.parse(imageFlowData.flowData);
-          await Promise.all(
-            parseFlow.nodes.map(async (node) => {
-              if (node.type === "upload") {
-                node.data.image = node.data.image ? await utils_default.oss.getSmallImageUrl(node.data.image) : "";
-              } else if (node.type === "generated") {
-                node.data.generatedImage = node.data.generatedImage ? await utils_default.oss.getSmallImageUrl(node.data.generatedImage) : "";
-                node.data.references = await Promise.all(node.data.references.map(async (item) => {
-                  return {
-                    image: await utils_default.oss.getSmallImageUrl(item.image)
-                  };
-                }));
-              }
-            })
-          );
-          return res.status(200).send(success3({ ...parseFlow, id: imageFlowData.id }));
-        }
-        return res.status(200).send(success3(null));
-      }
-    );
-  }
-});
-
-// src/routes/production/editImage/saveImageFlow.ts
-var import_express60, router60, saveImageFlow_default;
-var init_saveImageFlow = __esm({
-  "src/routes/production/editImage/saveImageFlow.ts"() {
-    "use strict";
-    import_express60 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router60 = import_express60.default.Router();
-    saveImageFlow_default = router60.post(
-      "/",
-      validateFields({
-        edges: external_exports.any(),
-        nodes: external_exports.any()
-      }),
-      async (req, res) => {
-        const { edges, nodes } = req.body;
-        nodes.forEach((node) => {
-          if (node.type == "upload") {
-            node.data.image = node.data.image ? utils_default.replaceUrl(node.data.image) : "";
-          }
-          if (node.type == "generated") {
-            node.data.generatedImage = node.data.generatedImage ? utils_default.replaceUrl(node.data.generatedImage) : "";
-            node.data.references.forEach((item) => {
-              item.image = item.image ? utils_default.replaceUrl(item.image) : "";
-            });
-          }
-        });
-        const [insertFlowId] = await utils_default.db("o_imageFlow").insert({
-          flowData: JSON.stringify({ edges, nodes })
-        });
-        return res.status(200).send(success3({ id: insertFlowId }));
-      }
-    );
-  }
-});
-
-// src/routes/production/editImage/updateImageFlow.ts
-var import_express61, router61, updateImageFlow_default;
-var init_updateImageFlow = __esm({
-  "src/routes/production/editImage/updateImageFlow.ts"() {
-    "use strict";
-    import_express61 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router61 = import_express61.default.Router();
-    updateImageFlow_default = router61.post(
-      "/",
-      validateFields({
-        edges: external_exports.any(),
-        nodes: external_exports.any(),
-        flowId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { edges, nodes, flowId } = req.body;
-        nodes.forEach((node) => {
-          if (node.type == "upload") {
-            node.data.image = node.data.image ? utils_default.replaceUrl(node.data.image) : "";
-          }
-          if (node.type == "generated") {
-            node.data.generatedImage = node.data.generatedImage ? utils_default.replaceUrl(node.data.generatedImage) : "";
-            node.data.references.forEach((item) => {
-              item.image = item.image ? utils_default.replaceUrl(item.image) : "";
-            });
-          }
-        });
-        await utils_default.db("o_imageFlow").where("id", flowId).update({
-          flowData: JSON.stringify({ edges, nodes })
-        });
-        return res.status(200).send(success3());
-      }
-    );
-  }
-});
-
-// src/routes/production/editImage/uploadImage.ts
-var import_express62, router62, uploadImage_default;
-var init_uploadImage = __esm({
-  "src/routes/production/editImage/uploadImage.ts"() {
-    "use strict";
-    import_express62 = __toESM(require_express2());
-    init_utils3();
-    init_responseFormat();
-    init_middleware();
-    init_zod();
-    init_dist_node();
-    router62 = import_express62.default.Router();
-    uploadImage_default = router62.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        scriptId: external_exports.number(),
-        base64Data: external_exports.string()
-      }),
-      async (req, res) => {
-        const { base64Data, projectId, scriptId } = req.body;
-        function getExtFromBase642(base64Data2) {
-          const mime = base64Data2.match(/^data:([^;]+);base64,/)?.[1] ?? "";
-          const mimeMap = {
-            // 图片
-            "image/jpeg": "jpeg",
-            "image/jpg": "jpg",
-            "image/png": "png",
-            // 音频
-            "audio/mpeg": "mp3",
-            "audio/mp3": "mp3",
-            "audio/wav": "wav",
-            // 视频
-            "video/mp4": "mp4",
-            "video/webm": "webm"
-          };
-          return mimeMap[mime] ?? "bin";
-        }
-        const ext = getExtFromBase642(base64Data);
-        if (!["jpeg", "jpg", "png"].includes(ext)) {
-          return res.status(400).send(error50("\u4E0D\u652F\u6301\u7684\u6587\u4EF6\u7C7B\u578B"));
-        }
-        const savePath = `/${projectId}/imageFlow/${scriptId}/${v4_default()}.${ext}`;
-        await utils_default.oss.writeFile(savePath, Buffer.from(base64Data.match(/base64,([A-Za-z0-9+/=]+)/)[1] ?? "", "base64"));
-        const url4 = await utils_default.oss.getSmallImageUrl(savePath);
-        res.status(200).send(success3(url4));
-      }
-    );
-  }
-});
-
-// src/routes/production/getFlowData.ts
-var import_express63, router63, getFlowData_default;
-var init_getFlowData = __esm({
-  "src/routes/production/getFlowData.ts"() {
-    "use strict";
-    import_express63 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router63 = import_express63.default.Router();
-    getFlowData_default = router63.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        episodesId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { projectId, episodesId } = req.body;
-        const sqlData = await utils_default.db("o_agentWorkData").where("projectId", String(projectId)).andWhere("episodesId", String(episodesId)).andWhere("key", "productionAgent").select("data").first();
-        const scriptData = await utils_default.db("o_script").where("projectId", projectId).where("id", episodesId).first();
-        if (!scriptData) return res.status(400).send(error50("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C"));
-        const scriptAssets = await utils_default.db("o_scriptAssets").where("scriptId", episodesId);
-        const assetIds = scriptAssets.map((i) => i.assetId);
-        const assetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_assets.*", "o_image.filePath", "o_image.state", "o_image.errorReason").where("o_assets.id", "in", assetIds).andWhere("o_assets.assetsId", null).where("o_assets.projectId", projectId);
-        let childAssetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_assets.*", "o_image.filePath", "o_image.state", "o_image.errorReason").where("o_assets.projectId", projectId).where("o_assets.assetsId", "in", assetIds).whereNotNull("o_assets.assetsId");
-        if (!sqlData) {
-          const flowData = {
-            script: scriptData.content ?? "",
-            scriptPlan: "",
-            assets: await Promise.all(
-              assetsData.map(async (item) => ({
-                id: item.id,
-                name: item.name ?? "",
-                type: item.type ?? "",
-                prompt: item.prompt ?? "",
-                desc: item.describe ?? "",
-                src: item.filePath && await utils_default.oss.getSmallImageUrl(item.filePath),
-                derive: await Promise.all(
-                  childAssetsData.filter((child) => child.assetsId === item.id).map(async (child) => ({
-                    id: child.id,
-                    assetsId: item.id,
-                    name: child.name ?? "",
-                    type: child.type,
-                    prompt: child.prompt,
-                    desc: child.describe ?? "",
-                    src: child.filePath && await utils_default.oss.getSmallImageUrl(child.filePath),
-                    state: child.state ?? "\u672A\u751F\u6210"
-                    //todo：矫正状态值
-                  }))
-                )
-              }))
-            ),
-            storyboardTable: "",
-            storyboard: [],
-            //todo：矫正workbench数据
-            //@ts-ignore
-            workbench: {
-              videoList: []
-            }
-            // //todo：矫正封面数据
-            // poster: {
-            //   items: [],
-            // },
-          };
-          return res.status(200).send(success3(flowData));
-        } else {
-          try {
-            const storyboardData = await utils_default.db("o_storyboard").where({ scriptId: episodesId, projectId });
-            await Promise.all(
-              storyboardData.map(async (i) => {
-                if (i.filePath) {
-                  try {
-                    i.filePath = await utils_default.oss.getSmallImageUrl(i.filePath);
-                  } catch {
-                    i.filePath = "";
-                  }
-                } else {
-                  i.filePath = "";
-                }
-              })
-            );
-            const storyboardIds = storyboardData.map((i) => i.id);
-            const assetsIds = await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", storyboardIds).orderBy("rowid");
-            const assets2StoryboardMap = {};
-            assetsIds.forEach((i) => {
-              if (!assets2StoryboardMap[i.storyboardId]) {
-                assets2StoryboardMap[i.storyboardId] = [];
-              }
-              assets2StoryboardMap[i.storyboardId].push(i.assetId);
-            });
-            const flowData = JSON.parse(sqlData.data ?? "{}");
-            flowData.assets = await Promise.all(
-              assetsData.map(async (item) => ({
-                id: item.id,
-                name: item.name ?? "",
-                type: item.type ?? "",
-                prompt: item.prompt ?? "",
-                desc: item.describe ?? "",
-                src: item.filePath && await utils_default.oss.getSmallImageUrl(item.filePath),
-                flowId: item.flowId,
-                derive: await Promise.all(
-                  childAssetsData.filter((child) => child.assetsId === item.id).map(async (child) => ({
-                    id: child.id,
-                    assetsId: item.id,
-                    name: child.name ?? "",
-                    prompt: child.prompt,
-                    type: child.type,
-                    desc: child.describe ?? "",
-                    src: child.filePath && await utils_default.oss.getSmallImageUrl(child.filePath),
-                    state: child.state ?? "\u672A\u751F\u6210",
-                    errorReason: child?.errorReason ?? "",
-                    flowId: child.flowId
-                  }))
-                )
-              }))
-            );
-            flowData.storyboard = storyboardData.map((i) => ({
-              id: i.id,
-              index: i.index,
-              duration: i.duration ? +i.duration : 0,
-              prompt: i.prompt,
-              associateAssetsIds: assets2StoryboardMap[i.id] ?? [],
-              src: i.filePath,
-              state: i.state,
-              videoDesc: i.videoDesc,
-              shouldGenerateImage: i.shouldGenerateImage,
-              reason: i?.reason ?? "",
-              flowId: i.flowId
-            })).sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
-            flowData.script = scriptData.content ?? "";
-            res.status(200).send(success3(flowData));
-          } catch (err) {
-            res.status(400).send(error50());
-          }
-        }
-      }
-    );
-  }
-});
-
-// src/routes/production/getStoryboardData.ts
-var import_express64, router64, getStoryboardData_default;
-var init_getStoryboardData = __esm({
-  "src/routes/production/getStoryboardData.ts"() {
-    "use strict";
-    import_express64 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router64 = import_express64.default.Router();
-    getStoryboardData_default = router64.post(
-      "/",
-      validateFields({
-        scriptId: external_exports.number(),
-        projectId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { scriptId, projectId } = req.body;
-        const storyboardData = await utils_default.db("o_storyboard").where({ scriptId, projectId }).orderBy("index", "asc");
-        const data = await Promise.all(
-          storyboardData.map(async (i) => {
-            return {
-              ...i,
-              filePath: i.filePath ? await utils_default.oss.getSmallImageUrl(i.filePath) : ""
-            };
-          })
-        );
-        const storyboardIds = storyboardData.map((s) => s.id);
-        const storyboardConfigs = await utils_default.db("o_assets2Storyboard").leftJoin("o_assets", "o_assets2Storyboard.assetId", "o_assets.id").leftJoin("o_image", "o_assets.imageId", "o_image.id").whereIn("o_assets2Storyboard.storyboardId", storyboardIds).select("o_assets2Storyboard.storyboardId", "o_assets.id as assetId", "o_assets.name", "o_assets.type", "o_image.filePath as avatar");
-        const storyboardCharactersMap = storyboardConfigs.reduce((acc, cur) => {
-          const storyboardId = cur.storyboardId;
-          if (!acc[storyboardId]) {
-            acc[storyboardId] = [];
-          }
-          const character = {
-            name: cur.name ?? "",
-            type: cur.type ?? ""
-          };
-          if (cur.avatar) {
-            character.avatar = cur.avatar;
-          }
-          acc[storyboardId].push(character);
-          return acc;
-        }, {});
-        const result = await Promise.all(
-          data.map(async (item) => {
-            const characters = storyboardCharactersMap[item.id] ?? [];
-            const charactersWithUrl = await Promise.all(
-              characters.map(async (c) => {
-                if (c.avatar) {
-                  return { ...c, avatar: await utils_default.oss.getSmallImageUrl(c.avatar) };
-                }
-                return c;
-              })
-            );
-            return {
-              id: String(item.id),
-              createTime: item.createTime ?? void 0,
-              duration: item.duration ? Number(item.duration) : void 0,
-              filePath: item.filePath || void 0,
-              prompt: item.prompt ?? void 0,
-              scriptId: item.scriptId ?? void 0,
-              characters: charactersWithUrl,
-              index: item.index
-            };
-          })
-        );
-        res.status(200).send(success3(result));
-      }
-    );
-  }
-});
-
-// src/routes/production/getStoryboardRevisionContext.ts
-var import_express65, router65, getStoryboardRevisionContext_default;
-var init_getStoryboardRevisionContext = __esm({
-  "src/routes/production/getStoryboardRevisionContext.ts"() {
-    "use strict";
-    import_express65 = __toESM(require_express2());
-    init_zod();
-    init_utils3();
-    init_responseFormat();
-    init_middleware();
-    init_storyboardProgress();
-    init_storyboardTable();
-    init_storyboardRevision();
-    router65 = import_express65.default.Router();
-    getStoryboardRevisionContext_default = router65.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number().int().positive(),
-        episodesId: external_exports.number().int().positive()
-      }),
-      async (req, res) => {
-        try {
-          const { projectId, episodesId } = req.body;
-          const progress = await readStoryboardProgress(utils_default.db, projectId, episodesId);
-          if (!progress.valid || progress.mode !== "scene") {
-            throw new Error(progress.conflict?.message ?? "\u5F53\u524D\u5DE5\u4F5C\u533A\u6CA1\u6709\u53EF\u4FEE\u8BA2\u7684\u9010\u573A\u5206\u955C\u8FDB\u5EA6");
-          }
-          const snapshot = await readStoryboardTableSnapshot(utils_default.db, projectId, episodesId);
-          const scenes = snapshot.storyboardTableProgress?.scenes ?? {};
-          if (snapshot.storyboardTableProgress?.taskId !== progress.taskId || snapshot.storyboardTableProgress?.revision !== progress.revision) {
-            throw new Error("\u8BFB\u53D6\u671F\u95F4\u5206\u955C\u8FDB\u5EA6\u53D1\u751F\u53D8\u5316\uFF0C\u8BF7\u91CD\u65B0\u83B7\u53D6\u4FEE\u8BA2\u4E0A\u4E0B\u6587");
-          }
-          return res.status(200).send(success3({
-            taskId: progress.taskId,
-            total: progress.total,
-            revision: progress.revision,
-            savedScenes: progress.savedScenes,
-            missingScenes: progress.missingScenes,
-            scenes: Object.fromEntries(Object.entries(scenes).map(([scene, text2]) => [scene, {
-              content: text2,
-              hash: storyboardSceneHash(text2)
-            }]))
-          }));
-        } catch (error73) {
-          const message = error73 instanceof Error ? error73.message : "\u65E0\u6CD5\u8BFB\u53D6\u5206\u955C\u4FEE\u8BA2\u4E0A\u4E0B\u6587";
-          return res.status(409).send({ code: 409, message, data: null });
-        }
-      }
-    );
-  }
-});
-
-// src/routes/production/reviseStoryboardScene.ts
-var import_express66, router66, reviseStoryboardScene_default;
-var init_reviseStoryboardScene = __esm({
-  "src/routes/production/reviseStoryboardScene.ts"() {
-    "use strict";
-    import_express66 = __toESM(require_express2());
-    init_zod();
-    init_utils3();
-    init_responseFormat();
-    init_middleware();
-    init_storyboardRevision();
-    router66 = import_express66.default.Router();
-    reviseStoryboardScene_default = router66.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number().int().positive(),
-        episodesId: external_exports.number().int().positive(),
-        taskId: external_exports.string().min(8).max(128),
-        scene: external_exports.number().int().positive(),
-        expectedRevision: external_exports.number().int().nonnegative(),
-        expectedSceneHash: external_exports.string().regex(/^[a-f0-9]{64}$/),
-        revisedScene: external_exports.string().min(1).max(6e4),
-        reason: external_exports.string().min(1).max(2e3)
-      }),
-      async (req, res) => {
-        try {
-          const result = await reviseStoryboardScene(utils_default.db, req.body);
-          return res.status(200).send(success3(result));
-        } catch (error73) {
-          const message = error73 instanceof Error ? error73.message : "\u5206\u955C\u4FEE\u8BA2\u5931\u8D25";
-          console.error("[production/reviseStoryboardScene]", error73);
-          return res.status(409).send({ code: 409, message, data: null });
-        }
-      }
-    );
-  }
-});
-
-// src/routes/production/saveFlowData.ts
-var import_express67, router67, saveFlowData_default;
-var init_saveFlowData = __esm({
-  "src/routes/production/saveFlowData.ts"() {
-    "use strict";
-    import_express67 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    init_storyboardScenes();
-    router67 = import_express67.default.Router();
-    saveFlowData_default = router67.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        episodesId: external_exports.number(),
-        data: external_exports.any().optional(),
-        scene: external_exports.object({
-          taskId: external_exports.string().min(8).max(128),
-          index: external_exports.number().int().min(1),
-          total: external_exports.number().int().min(1).max(1e3),
-          content: external_exports.string().min(1).max(6e4)
-        }).optional(),
-        writeFields: external_exports.array(external_exports.enum(["scriptPlan", "storyboardTable"])).max(2).optional()
-      }),
-      async (req, res) => {
-        const { data, projectId, episodesId, scene, writeFields = [] } = req.body;
-        if (scene && data !== void 0) return res.status(400).send({ code: 400, message: "\u5355\u573A\u4FDD\u5B58\u4E0E\u6574\u4EFD\u5DE5\u4F5C\u533A\u4FDD\u5B58\u4E0D\u80FD\u540C\u65F6\u63D0\u4EA4", data: null });
-        const serialized = scene ? void 0 : JSON.stringify(data);
-        if (!scene && (serialized === void 0 || !data || typeof data !== "object" || Array.isArray(data))) {
-          return res.status(400).send({ code: 400, message: "\u5DE5\u4F5C\u533A\u6570\u636E\u683C\u5F0F\u9519\u8BEF", data: null });
-        }
-        try {
-          const result = await utils_default.db.transaction(async (trx) => {
-            const scope = { projectId, episodesId, key: "productionAgent" };
-            const script = await trx("o_script").where({ id: episodesId, projectId }).first();
-            if (!script) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C");
-            const existing = await trx("o_agentWorkData").where(scope).first();
-            const storedData = existing ? JSON.parse(existing.data || "{}") : {
-              script: script.content ?? "",
-              scriptPlan: "",
-              assets: [],
-              storyboardTable: "",
-              storyboard: [],
-              workbench: { videoList: [] }
-            };
-            let nextData;
-            let sceneResult;
-            if (scene) {
-              sceneResult = mergeStoryboardScene(
-                storedData.storyboardTable ?? "",
-                storedData.storyboardTableProgress,
-                scene.taskId,
-                scene.index,
-                scene.total,
-                scene.content
-              );
-              nextData = { ...storedData, storyboardTable: sceneResult.storyboardTable, storyboardTableProgress: sceneResult.storyboardTableProgress };
-            } else {
-              const explicitWrites = new Set(writeFields);
-              const explicitStoryboardTable = explicitWrites.has("storyboardTable") || data.resetStoryboardTable === true;
-              const clientData = { ...data };
-              delete clientData.storyboardRevisionHistory;
-              delete clientData.storyboardAuditHistory;
-              delete clientData.storyboardApproval;
-              delete clientData.storyboardSceneAudits;
-              delete clientData.storyboardTaskArchives;
-              nextData = { ...storedData, ...clientData };
-              nextData.script = script.content ?? "";
-              if (!explicitWrites.has("scriptPlan")) {
-                nextData.scriptPlan = storedData.scriptPlan ?? "";
-              }
-              const previous = storedData.storyboardTableProgress;
-              const incoming = nextData.storyboardTableProgress;
-              if (!explicitStoryboardTable) {
-                nextData.storyboardTable = storedData.storyboardTable ?? "";
-                if (previous) nextData.storyboardTableProgress = previous;
-                else delete nextData.storyboardTableProgress;
-              } else if (previous) {
-                if (nextData.resetStoryboardTable === true && incoming?.revision !== previous.revision) {
-                  throw new Error("\u5DF2\u6709\u9010\u573A\u5206\u955C\u8FDB\u5EA6\uFF0C\u6574\u8868\u8986\u76D6\u524D\u8BF7\u5148\u663E\u5F0F\u6E05\u7A7A\u6216\u5B8C\u6210\u5F53\u524D\u4EFB\u52A1");
-                }
-                if (incoming?.revision !== previous.revision || incoming?.taskId !== previous.taskId) {
-                  nextData.storyboardTable = storedData.storyboardTable;
-                  nextData.storyboardTableProgress = previous;
-                } else if (nextData.storyboardTable !== storedData.storyboardTable) {
-                  delete nextData.storyboardTableProgress;
-                }
-              } else if (incoming) {
-                nextData.storyboardTable = storedData.storyboardTable;
-                delete nextData.storyboardTableProgress;
-              }
-              delete nextData.resetStoryboardTable;
-              if (Array.isArray(data.storyboard) && data.storyboard.length && data.storyboard.every((item) => item.id)) {
-                for (const [index, item] of data.storyboard.entries()) {
-                  const updated = await trx("o_storyboard").where({ id: item.id, projectId, scriptId: episodesId }).update({ index });
-                  if (updated !== 1) throw new Error(`\u5206\u955C ${item.id} \u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u548C\u5267\u672C\uFF0C\u5DE5\u4F5C\u533A\u672A\u4FDD\u5B58`);
-                }
-              }
-            }
-            const payload = JSON.stringify(nextData);
-            if (existing) {
-              const updated = await trx("o_agentWorkData").where({ id: existing.id, data: existing.data }).update({ data: payload });
-              if (updated !== 1) throw new Error("\u4FDD\u5B58\u671F\u95F4\u5DE5\u4F5C\u533A\u7248\u672C\u5DF2\u53D8\u5316\uFF0C\u8BF7\u91CD\u65B0\u52A0\u8F7D\u540E\u91CD\u8BD5");
-            } else {
-              await trx("o_agentWorkData").insert({ ...scope, data: payload });
-            }
-            const saved = await trx("o_agentWorkData").where(scope).select("data").first();
-            if (!saved || saved.data !== payload) throw new Error("\u5DE5\u4F5C\u533A\u6570\u636E\u5199\u5165\u6821\u9A8C\u5931\u8D25");
-            return sceneResult;
-          });
-          return res.status(200).send(success3(result ?? null));
-        } catch (reason) {
-          const message = reason instanceof Error ? reason.message : "\u5DE5\u4F5C\u533A\u4FDD\u5B58\u5931\u8D25";
-          console.error("[production/saveFlowData]", reason);
-          return res.status(400).send({ code: 400, message, data: null });
-        }
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/addStoryboard.ts
-var import_express68, router68, addStoryboard_default;
-var init_addStoryboard = __esm({
-  "src/routes/production/storyboard/addStoryboard.ts"() {
-    "use strict";
-    import_express68 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router68 = import_express68.default.Router();
-    addStoryboard_default = router68.post(
-      "/",
-      validateFields({
-        prompt: external_exports.string(),
-        duration: external_exports.number(),
-        state: external_exports.string(),
-        videoDesc: external_exports.string(),
-        shouldGenerateImage: external_exports.number(),
-        src: external_exports.string().nullable(),
-        scriptId: external_exports.number(),
-        projectId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { prompt, duration: duration4, state, src, scriptId, projectId, videoDesc, shouldGenerateImage } = req.body;
-        const trackId = Date.now();
-        await utils_default.db("o_videoTrack").insert({
-          id: trackId,
-          scriptId,
-          projectId
-        });
-        const [id] = await utils_default.db("o_storyboard").insert({
-          prompt,
-          duration: duration4,
-          state,
-          filePath: utils_default.replaceUrl(src),
-          trackId,
-          videoDesc,
-          shouldGenerateImage: src ? 1 : 0,
-          scriptId,
-          projectId
-        });
-        return res.status(200).send(success3({ id }));
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/batchAddStoryboardInfo.ts
-var import_express69, import_node_crypto15, router69, batchAddStoryboardInfo_default;
-var init_batchAddStoryboardInfo = __esm({
-  "src/routes/production/storyboard/batchAddStoryboardInfo.ts"() {
-    "use strict";
-    import_express69 = __toESM(require_express2());
-    import_node_crypto15 = require("node:crypto");
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router69 = import_express69.default.Router();
-    batchAddStoryboardInfo_default = router69.post(
-      "/",
-      validateFields({
-        data: external_exports.array(
-          external_exports.object({
-            prompt: external_exports.string(),
-            duration: external_exports.number(),
-            track: external_exports.string(),
-            state: external_exports.string(),
-            src: external_exports.string().nullable(),
-            videoDesc: external_exports.string(),
-            shouldGenerateImage: external_exports.number(),
-            associateAssetsIds: external_exports.array(external_exports.number())
-          })
-        ),
-        scriptId: external_exports.number(),
-        projectId: external_exports.number(),
-        // 可选：同一个业务写入操作的重试必须复用相同的 requestId；旧客户端无需提供。
-        requestId: external_exports.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional()
-      }),
-      async (req, res) => {
-        const { data, scriptId, projectId, requestId } = req.body;
-        if (!data.length) return res.status(400).send(error50("\u6570\u636E\u4E0D\u80FD\u4E3A\u7A7A"));
-        const requestKey = requestId ? `storyboardWrite:${requestId}` : null;
-        const payloadHash = requestKey ? (0, import_node_crypto15.createHash)("sha256").update(JSON.stringify(data)).digest("hex") : null;
-        try {
-          const { stored, createdIds, associationMap } = await utils_default.db.transaction(async (trx) => {
-            const script = await trx("o_script").where({ id: scriptId, projectId }).first();
-            if (!script) throw new Error("\u5267\u672C\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\uFF0C\u5206\u955C\u672A\u5199\u5165");
-            let createdIds2 = null;
-            if (requestKey) {
-              const previous = await trx("o_agentWorkData").where({ projectId, episodesId: scriptId, key: requestKey }).first();
-              if (previous) {
-                const prior = JSON.parse(previous.data ?? "{}");
-                if (prior.payloadHash !== payloadHash || !Array.isArray(prior.createdIds) || prior.createdIds.length !== data.length) {
-                  throw new Error("\u76F8\u540C requestId \u5BF9\u5E94\u4E0D\u540C\u7684\u5206\u955C\u5185\u5BB9\uFF0C\u5DF2\u62D2\u7EDD\u91CD\u590D\u63D0\u4EA4");
-                }
-                createdIds2 = prior.createdIds;
-                const persisted = await trx("o_storyboard").where({ scriptId, projectId }).whereIn("id", createdIds2).select("id");
-                if (persisted.length !== createdIds2.length) {
-                  throw new Error("\u539F\u8BF7\u6C42\u7684\u90E8\u5206\u5206\u955C\u5DF2\u4E0D\u5B58\u5728\uFF0C\u4E0D\u80FD\u4F5C\u4E3A\u6210\u529F\u7684\u91CD\u8BD5\u8FD4\u56DE");
-                }
-              }
-            }
-            if (!createdIds2) {
-              const assetIds = [...new Set(data.flatMap((item) => item.associateAssetsIds))];
-              if (assetIds.length) {
-                const assets = await trx("o_assets").where({ projectId }).whereIn("id", assetIds).select("id");
-                const found = new Set(assets.map((item) => Number(item.id)));
-                const missing = assetIds.filter((id) => !found.has(id));
-                if (missing.length) throw new Error(`\u5F15\u7528\u8D44\u4EA7\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u6216\u4E0D\u5B58\u5728\uFF1A${missing.join(",")}`);
-              }
-              createdIds2 = [];
-              for (const item of data) {
-                const [id] = await trx("o_storyboard").insert({
-                  prompt: item.prompt,
-                  duration: String(item.duration),
-                  state: item.state,
-                  scriptId,
-                  projectId,
-                  track: item.track,
-                  videoDesc: item.videoDesc,
-                  shouldGenerateImage: item.shouldGenerateImage,
-                  createTime: Date.now()
-                });
-                createdIds2.push(id);
-                if (item.associateAssetsIds?.length) {
-                  await trx("o_assets2Storyboard").insert(
-                    [...new Set(item.associateAssetsIds)].map((assetId) => ({ assetId, storyboardId: id }))
-                  );
-                }
-              }
-              const lastStoryboard = await trx("o_storyboard").where({ scriptId, projectId });
-              if (!lastStoryboard.length) throw new Error("\u672A\u67E5\u5230\u5206\u955C\u6570\u636E");
-              const storyboardGroupByTrack = {};
-              for (const item of lastStoryboard) {
-                (storyboardGroupByTrack[item.track] ??= []).push(item.id);
-              }
-              for (const track of Object.keys(storyboardGroupByTrack)) {
-                const storyboardIds2 = storyboardGroupByTrack[track];
-                const trackDuration = lastStoryboard.filter((item) => item.track === track).reduce((sum, item) => sum + Number(item.duration), 0);
-                const existingStoryboard = await trx("o_storyboard").where({ scriptId, projectId, track }).whereNotNull("trackId").first();
-                let trackId;
-                if (existingStoryboard?.trackId) {
-                  trackId = existingStoryboard.trackId;
-                  const updated = await trx("o_videoTrack").where({ id: trackId, scriptId, projectId }).update({ duration: trackDuration });
-                  if (updated !== 1) throw new Error(`\u5206\u955C\u5206\u7EC4 ${track} \u4E0D\u5C5E\u4E8E\u5F53\u524D\u5267\u672C`);
-                } else {
-                  const maxRow = await trx("o_videoTrack").max({ maxId: "id" }).first();
-                  trackId = Math.max(Date.now(), Number(maxRow?.maxId ?? 0) + 1);
-                  await trx("o_videoTrack").insert({ id: trackId, scriptId, projectId, duration: trackDuration });
-                }
-                await trx("o_storyboard").where({ scriptId, projectId }).whereIn("id", storyboardIds2).update({ trackId });
-              }
-              const verified = await trx("o_storyboard").where({ scriptId, projectId });
-              if (verified.length !== lastStoryboard.length || verified.some((item) => !item.trackId)) {
-                throw new Error("\u5206\u955C\u5206\u7EC4\u4FDD\u5B58\u4E0D\u5B8C\u6574");
-              }
-              if (requestKey) {
-                await trx("o_agentWorkData").insert({
-                  projectId,
-                  episodesId: scriptId,
-                  key: requestKey,
-                  data: JSON.stringify({ payloadHash, createdIds: createdIds2 })
-                });
-              }
-            }
-            const stored2 = await trx("o_storyboard").where({ scriptId, projectId });
-            const storyboardIds = stored2.map((item) => item.id);
-            const links = storyboardIds.length ? await trx("o_assets2Storyboard").whereIn("storyboardId", storyboardIds).orderBy("rowid").select("storyboardId", "assetId") : [];
-            const associationMap2 = {};
-            for (const link of links) {
-              (associationMap2[link.storyboardId] ??= []).push(link.assetId);
-            }
-            return { stored: stored2, createdIds: createdIds2, associationMap: associationMap2 };
-          });
-          const storyboardData = await Promise.all(
-            stored.map(async (item) => ({
-              associateAssetsIds: associationMap[item.id] ?? [],
-              src: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath).catch(() => "") : "",
-              id: item.id,
-              trackId: item.trackId,
-              prompt: item.prompt,
-              duration: Number(item.duration),
-              state: item.state,
-              scriptId: item.scriptId,
-              reason: item.reason,
-              videoDesc: item.videoDesc
-            }))
-          );
-          return res.status(200).send({ ...success3(storyboardData), createdIds });
-        } catch (reason) {
-          console.error("[storyboard/batchAddStoryboardInfo]", reason);
-          return res.status(400).send(error50(reason instanceof Error ? reason.message : "\u5206\u955C\u6279\u91CF\u5199\u5165\u5931\u8D25"));
-        }
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/batchDelete.ts
-var import_express70, router70, batchDelete_default2;
-var init_batchDelete2 = __esm({
-  "src/routes/production/storyboard/batchDelete.ts"() {
-    "use strict";
-    import_express70 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router70 = import_express70.default.Router();
-    batchDelete_default2 = router70.post(
-      "/",
-      validateFields({
-        ids: external_exports.array(external_exports.number()),
-        projectId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { ids, projectId } = req.body;
-        if (!ids.length) return res.status(400).send(error50("\u8BF7\u5148\u9009\u62E9\u5206\u955C"));
-        const removed = await utils_default.db.transaction(async (trx) => {
-          const storyboardDataList = await trx("o_storyboard").whereIn("id", ids).where("projectId", projectId).select("id", "trackId", "flowId");
-          if (!storyboardDataList.length) return 0;
-          const storyBoardIds = storyboardDataList.map((item) => item.id);
-          const flowIds = storyboardDataList.map((item) => item.flowId).filter((id) => id != null);
-          const trackIds = [...new Set(storyboardDataList.map((item) => item.trackId).filter((id) => id != null))];
-          await trx("o_assets2Storyboard").whereIn("storyboardId", storyBoardIds).delete();
-          await trx("o_storyboard").whereIn("id", storyBoardIds).delete();
-          if (flowIds.length) await trx("o_imageFlow").whereIn("id", flowIds).delete();
-          for (const trackId of trackIds) {
-            const remaining = await trx("o_storyboard").where({ trackId }).first("id");
-            if (!remaining) await trx("o_videoTrack").where({ id: trackId, projectId }).update({ archived: 1 });
-          }
-          return storyBoardIds.length;
-        });
-        if (!removed) return res.status(400).send(error50("\u5F53\u524D\u9009\u62E9\u5206\u955C\u4E0D\u5B58\u5728"));
-        res.status(200).send(success3({ message: "\u89C6\u9891\u5220\u9664\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/batchGenerateImage.ts
-async function getAssetsImageBase64(imageIds) {
-  if (!imageIds.length) return [];
-  const imagePaths = await utils_default.db("o_image").whereIn("o_image.id", imageIds).select("o_image.id", "o_image.filePath");
-  const id2Path = /* @__PURE__ */ new Map();
-  for (const row of imagePaths) id2Path.set(row.id, row.filePath);
-  const imageUrls = await Promise.all(
-    imageIds.map(async (id) => {
-      const filePath = id2Path.get(id);
-      if (!filePath) return null;
-      try {
-        return await utils_default.oss.getImageBase64(filePath);
-      } catch {
-        return null;
-      }
-    })
-  );
-  return imageUrls.filter(Boolean).map((url4) => ({ type: "image", base64: url4 }));
-}
-var import_express71, router71, activeStoryboardGenerationRequests, batchGenerateImage_default;
-var init_batchGenerateImage = __esm({
-  "src/routes/production/storyboard/batchGenerateImage.ts"() {
-    "use strict";
-    import_express71 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    init_operationReceipt();
-    router71 = import_express71.default.Router();
-    activeStoryboardGenerationRequests = /* @__PURE__ */ new Set();
-    batchGenerateImage_default = router71.post(
-      "/",
-      validateFields({
-        storyboardIds: external_exports.array(external_exports.number()),
-        projectId: external_exports.number(),
-        scriptId: external_exports.number(),
-        concurrentCount: external_exports.number().min(1).optional(),
-        compulsory: external_exports.boolean().optional(),
-        requestId: external_exports.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional()
-      }),
-      async (req, res) => {
-        const {
-          storyboardIds,
-          projectId,
-          scriptId,
-          concurrentCount = 5,
-          compulsory = false
-        } = req.body;
-        const requestId = req.body.requestId ?? `storygen_${utils_default.uuid()}`;
-        const normalizedIds = [...new Set(storyboardIds.map(Number))].sort((a, b) => a - b);
-        if (!normalizedIds.length) return res.status(400).send(error50("storyboardIds\u4E0D\u80FD\u4E3A\u7A7A"));
-        const generationKey = `${projectId}:${scriptId}:${requestId}`;
-        let ownsGenerationWorker = false;
-        try {
-          const projectSettingData = await utils_default.db("o_project").where("id", projectId).select("imageModel", "imageQuality", "artStyle", "videoRatio").first();
-          if (!projectSettingData) return res.status(400).send(error50("\u9879\u76EE\u4E0D\u5B58\u5728"));
-          const operationInput = { storyboardIds: normalizedIds, projectId, scriptId, compulsory };
-          const claimed = await withOperationReceipt(
-            utils_default.db,
-            { projectId, episodesId: scriptId },
-            "storyboard-generate",
-            requestId,
-            operationInput,
-            async (trx) => {
-              const script = await trx("o_script").where({ id: scriptId, projectId }).select("id").first();
-              if (!script) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C");
-              const rows = await trx("o_storyboard").where({ scriptId, projectId }).whereIn("id", normalizedIds).select("id", "shouldGenerateImage");
-              const found = new Set(rows.map((item) => Number(item.id)));
-              const missing = normalizedIds.filter((id) => !found.has(id));
-              if (missing.length) throw new Error(`\u5206\u955C\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u6216\u5267\u96C6\uFF1A${missing.join(",")}`);
-              if (compulsory) {
-                await trx("o_storyboard").where({ scriptId, projectId }).whereIn("id", normalizedIds).update({ state: "\u751F\u6210\u4E2D", shouldGenerateImage: 1, reason: null });
-              } else {
-                const skippedIds = rows.filter((item) => Number(item.shouldGenerateImage) === 0).map((item) => Number(item.id));
-                const generateIds = rows.filter((item) => Number(item.shouldGenerateImage) !== 0).map((item) => Number(item.id));
-                if (skippedIds.length) {
-                  await trx("o_storyboard").where({ scriptId, projectId }).whereIn("id", skippedIds).update({ state: "\u672A\u751F\u6210", reason: null });
-                }
-                if (generateIds.length) {
-                  await trx("o_storyboard").where({ scriptId, projectId }).whereIn("id", generateIds).update({ state: "\u751F\u6210\u4E2D", reason: null });
-                }
-              }
-              return { storyboardIds: normalizedIds, compulsory };
-            }
-          );
-          if (!claimed.duplicate || !activeStoryboardGenerationRequests.has(generationKey)) {
-            activeStoryboardGenerationRequests.add(generationKey);
-            ownsGenerationWorker = true;
-          }
-          const assets2StoryboardRows = await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", normalizedIds).orderBy("rowid").select("storyboardId", "assetId");
-          const allAssetIds = [...new Set(assets2StoryboardRows.map((row) => Number(row.assetId)))];
-          const assetImageMap = {};
-          if (allAssetIds.length) {
-            const assetRows = await utils_default.db("o_assets").where({ projectId }).whereIn("id", allAssetIds).select("id", "imageId");
-            assetRows.forEach((row) => {
-              if (row.imageId != null) assetImageMap[row.id] = row.imageId;
-            });
-          }
-          const assetRecord = {};
-          assets2StoryboardRows.forEach((item) => {
-            const imageId = assetImageMap[item.assetId];
-            if (imageId != null) (assetRecord[item.storyboardId] ??= []).push(imageId);
-          });
-          const storyboardData = await utils_default.db("o_storyboard").where({ scriptId, projectId }).whereIn("id", normalizedIds).orderBy("index", "asc");
-          const responseData = await Promise.all(storyboardData.map(async (item) => ({
-            id: item.id,
-            prompt: item.prompt,
-            associateAssetsIds: assetRecord[item.id] ?? [],
-            src: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : null,
-            state: item.state,
-            videoDesc: item.videoDesc,
-            shouldGenerateImage: item.shouldGenerateImage
-          })));
-          res.status(200).send(success3(responseData));
-          if (!ownsGenerationWorker) return;
-          const generationIds = claimed.duplicate ? storyboardData.filter((item) => item.state === "\u751F\u6210\u4E2D" && (compulsory || Number(item.shouldGenerateImage) !== 0)).map((item) => Number(item.id)) : normalizedIds;
-          if (!generationIds.length) {
-            activeStoryboardGenerationRequests.delete(generationKey);
-            ownsGenerationWorker = false;
-            return;
-          }
-          const generateTask = async (item) => {
-            const repeloadObj = {
-              prompt: item.prompt,
-              size: projectSettingData.imageQuality,
-              aspectRatio: projectSettingData.videoRatio
-            };
-            try {
-              const imageCls = await utils_default.Ai.Image(projectSettingData.imageModel).run(
-                {
-                  referenceList: await getAssetsImageBase64(assetRecord[item.id] || []),
-                  ...repeloadObj
-                },
-                {
-                  taskClass: "\u751F\u6210\u5206\u955C\u56FE\u7247",
-                  describe: "\u5206\u955C\u56FE\u7247\u751F\u6210",
-                  relatedObjects: JSON.stringify(repeloadObj),
-                  projectId
-                }
-              );
-              const savePath = `/${projectId}/assets/${scriptId}/${utils_default.uuid()}.jpg`;
-              await imageCls.save(savePath);
-              await utils_default.db("o_storyboard").where({ id: item.id, scriptId, projectId }).update({
-                filePath: savePath,
-                state: "\u5DF2\u5B8C\u6210",
-                reason: null
-              });
-            } catch (reason) {
-              await utils_default.db("o_storyboard").where({ id: item.id, scriptId, projectId }).update({
-                filePath: "",
-                reason: utils_default.error(reason).message,
-                state: "\u751F\u6210\u5931\u8D25"
-              });
-            }
-          };
-          const generationIdSet = new Set(generationIds);
-          const generateList = (compulsory ? storyboardData : storyboardData.filter((item) => item.shouldGenerateImage !== 0)).filter((item) => generationIdSet.has(Number(item.id)));
-          try {
-            for (let i = 0; i < generateList.length; i += concurrentCount) {
-              const batch = generateList.slice(i, i + concurrentCount);
-              await Promise.all(batch.map(generateTask));
-            }
-          } finally {
-            if (ownsGenerationWorker) {
-              activeStoryboardGenerationRequests.delete(generationKey);
-              ownsGenerationWorker = false;
-            }
-          }
-        } catch (reason) {
-          const message = utils_default.error(reason).message;
-          console.error("[storyboard/batchGenerateImage]", reason);
-          if (ownsGenerationWorker) {
-            activeStoryboardGenerationRequests.delete(generationKey);
-            ownsGenerationWorker = false;
-          }
-          if (!res.headersSent) return res.status(400).send(error50(message));
-        }
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/downPreviewImage.ts
-var import_express72, import_sharp8, router72, downPreviewImage_default;
-var init_downPreviewImage = __esm({
-  "src/routes/production/storyboard/downPreviewImage.ts"() {
-    "use strict";
-    import_express72 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    import_sharp8 = __toESM(require("sharp"));
-    init_middleware();
-    router72 = import_express72.default.Router();
-    downPreviewImage_default = router72.post(
-      "/",
-      validateFields({
-        storyboardIds: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { storyboardIds } = req.body;
-        const storyboardImage = await utils_default.db("o_storyboard").whereIn("id", storyboardIds).select("id", "filePath");
-        const filePathMap = {};
-        storyboardImage.forEach((i) => {
-          filePathMap[i.id] = i.filePath || "";
-        });
-        const orderedFilePaths = storyboardIds.map((id) => filePathMap[id]);
-        const loaded = await Promise.all(
-          orderedFilePaths.map(async (filePath) => {
-            if (!filePath) return null;
-            const buffer = await utils_default.oss.getFile(filePath);
-            const metadata = await (0, import_sharp8.default)(buffer).metadata();
-            return { buffer, width: metadata.width || 0, height: metadata.height || 0 };
-          })
-        );
-        const validImages = loaded.filter((img) => img !== null && img.width > 0 && img.height > 0);
-        if (validImages.length === 0) {
-          res.status(204).end();
-          return;
-        }
-        const cols = Math.min(5, validImages.length);
-        const rows = Math.ceil(validImages.length / cols);
-        const colWidths = Array(cols).fill(0);
-        const rowHeights = Array(rows).fill(0);
-        validImages.forEach((img, idx) => {
-          const c = idx % cols;
-          const r = Math.floor(idx / cols);
-          colWidths[c] = Math.max(colWidths[c], img.width);
-          rowHeights[r] = Math.max(rowHeights[r], img.height);
-        });
-        const canvasWidth = colWidths.reduce((a, b) => a + b, 0);
-        const canvasHeight = rowHeights.reduce((a, b) => a + b, 0);
-        const compositeInputs = [];
-        for (let i = 0; i < validImages.length; i++) {
-          const img = validImages[i];
-          const c = i % cols;
-          const r = Math.floor(i / cols);
-          const x = colWidths.slice(0, c).reduce((a, b) => a + b, 0);
-          const y = rowHeights.slice(0, r).reduce((a, b) => a + b, 0);
-          compositeInputs.push({
-            input: img.buffer,
-            left: x,
-            top: y
-          });
-          const label = `S${String(i + 1).padStart(2, "0")}`;
-          const fontSize = Math.max(14, Math.min(img.width, img.height) * 0.06);
-          const padding = Math.round(fontSize * 0.4);
-          const textWidth = Math.round(label.length * fontSize * 0.65);
-          const bgW = textWidth + padding * 2;
-          const bgH = Math.round(fontSize) + padding * 2;
-          const labelSvg = Buffer.from(
-            `<svg xmlns="http://www.w3.org/2000/svg" width="${bgW}" height="${bgH}">
-          <rect x="0" y="0" width="${bgW}" height="${bgH}" rx="4" ry="4" fill="rgba(0,0,0,0.55)"/>
-          <text x="${padding}" y="${padding + fontSize * 0.85}" font-family="Arial, sans-serif" font-weight="bold" font-size="${fontSize}" fill="#fff">${label}</text>
-        </svg>`
-          );
-          compositeInputs.push({
-            input: labelSvg,
-            left: x + 4,
-            top: y + 4
-          });
-        }
-        const resultBuffer = await (0, import_sharp8.default)({
-          create: {
-            width: canvasWidth,
-            height: canvasHeight,
-            channels: 4,
-            background: { r: 255, g: 255, b: 255, alpha: 1 }
-          }
-        }).composite(compositeInputs).png({ compressionLevel: 3 }).toBuffer();
-        res.setHeader("Content-Type", "image/png");
-        res.setHeader("Content-Disposition", "attachment; filename=storyboard-preview.png");
-        res.setHeader("Content-Length", resultBuffer.length);
-        res.status(200).send(resultBuffer);
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/editStoryboardInfo.ts
-var import_express73, router73, editStoryboardInfo_default;
-var init_editStoryboardInfo = __esm({
-  "src/routes/production/storyboard/editStoryboardInfo.ts"() {
-    "use strict";
-    import_express73 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router73 = import_express73.default.Router();
-    editStoryboardInfo_default = router73.post(
-      "/",
-      validateFields({
-        id: external_exports.number(),
-        prompt: external_exports.string(),
-        videoDesc: external_exports.string()
-      }),
-      async (req, res) => {
-        const { id, prompt, videoDesc } = req.body;
-        await utils_default.db("o_storyboard").where({ id }).update({
-          prompt,
-          videoDesc
-        });
-        res.status(200).send(success3({ message: "\u66F4\u65B0\u63D0\u793A\u8BCD\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/getStoryboardData.ts
-var import_express74, router74, getStoryboardData_default2;
-var init_getStoryboardData2 = __esm({
-  "src/routes/production/storyboard/getStoryboardData.ts"() {
-    "use strict";
-    import_express74 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router74 = import_express74.default.Router();
-    getStoryboardData_default2 = router74.post(
-      "/",
-      validateFields({
-        scriptId: external_exports.number(),
-        page: external_exports.number(),
-        limit: external_exports.number(),
-        name: external_exports.string().optional().nullable()
-      }),
-      async (req, res) => {
-        const { scriptId, page, limit, name: name28 } = req.body;
-        const offset = (page - 1) * limit;
-        const storyboardData = await utils_default.db("o_storyboard").where({ scriptId }).modify((qb) => {
-          if (name28) {
-            qb.andWhere("title", "like", `%${name28}%`);
-          }
-        }).offset(offset).limit(limit);
-        const data = await Promise.all(
-          storyboardData.map(async (i) => {
-            return {
-              id: i.id,
-              prompt: i.prompt,
-              state: i.state,
-              src: i.filePath ? await utils_default.oss.getSmallImageUrl(i.filePath) : ""
-            };
-          })
-        );
-        const totalQuery = await utils_default.db("o_storyboard").where({ scriptId }).modify((qb) => {
-          if (name28) {
-            qb.andWhere("title", "like", `%${name28}%`);
-          }
-        }).count("* as total").first();
-        res.status(200).send(success3({ data, total: totalQuery?.total }));
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/pollingImage.ts
-var import_express75, router75, pollingImage_default2;
-var init_pollingImage2 = __esm({
-  "src/routes/production/storyboard/pollingImage.ts"() {
-    "use strict";
-    import_express75 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router75 = import_express75.default.Router();
-    pollingImage_default2 = router75.post(
-      "/",
-      validateFields({
-        ids: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { ids } = req.body;
-        const data = await utils_default.db("o_storyboard").whereIn("id", ids).whereNot("state", "\u751F\u6210\u4E2D").select("id", "state", "reason", "filePath", "prompt");
-        const result = await Promise.all(
-          data.map(async (item) => ({
-            ...item,
-            src: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : null
-          }))
-        );
-        res.status(200).send(success3(result));
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/previewImage.ts
-var import_express76, import_sharp9, router76, previewImage_default;
-var init_previewImage = __esm({
-  "src/routes/production/storyboard/previewImage.ts"() {
-    "use strict";
-    import_express76 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    import_sharp9 = __toESM(require("sharp"));
-    init_responseFormat();
-    init_middleware();
-    router76 = import_express76.default.Router();
-    previewImage_default = router76.post(
-      "/",
-      validateFields({
-        storyboardIds: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { storyboardIds } = req.body;
-        const storyboardImage = await utils_default.db("o_storyboard").whereIn("id", storyboardIds).select("id", "filePath");
-        const filePathMap = {};
-        storyboardImage.forEach((i) => {
-          filePathMap[i.id] = i.filePath || "";
-        });
-        const orderedFilePaths = storyboardIds.map((id) => filePathMap[id]);
-        const loaded = await Promise.all(
-          orderedFilePaths.map(async (filePath) => {
-            if (!filePath) return null;
-            const buffer = await utils_default.oss.getFile(filePath);
-            const metadata = await (0, import_sharp9.default)(buffer).metadata();
-            return { buffer, width: metadata.width || 0, height: metadata.height || 0 };
-          })
-        );
-        const validImages = loaded.filter((img) => img !== null && img.width > 0 && img.height > 0);
-        if (validImages.length === 0) {
-          return res.status(200).send(success3(null));
-        }
-        const maxThumbWidth = 512;
-        const resizedImages = await Promise.all(
-          validImages.map(async (img) => {
-            if (img.width <= maxThumbWidth) {
-              return img;
-            }
-            const scale = maxThumbWidth / img.width;
-            const newWidth = maxThumbWidth;
-            const newHeight = Math.round(img.height * scale);
-            const buffer = await (0, import_sharp9.default)(img.buffer).resize(newWidth, newHeight).toBuffer();
-            return { buffer, width: newWidth, height: newHeight };
-          })
-        );
-        const cols = Math.min(5, resizedImages.length);
-        const rows = Math.ceil(resizedImages.length / cols);
-        const colWidths = Array(cols).fill(0);
-        const rowHeights = Array(rows).fill(0);
-        resizedImages.forEach((img, idx) => {
-          const c = idx % cols;
-          const r = Math.floor(idx / cols);
-          colWidths[c] = Math.max(colWidths[c], img.width);
-          rowHeights[r] = Math.max(rowHeights[r], img.height);
-        });
-        const canvasWidth = colWidths.reduce((a, b) => a + b, 0);
-        const canvasHeight = rowHeights.reduce((a, b) => a + b, 0);
-        const compositeInputs = [];
-        for (let i = 0; i < resizedImages.length; i++) {
-          const img = resizedImages[i];
-          const c = i % cols;
-          const r = Math.floor(i / cols);
-          const x = colWidths.slice(0, c).reduce((a, b) => a + b, 0);
-          const y = rowHeights.slice(0, r).reduce((a, b) => a + b, 0);
-          compositeInputs.push({
-            input: img.buffer,
-            left: x,
-            top: y
-          });
-          const label = `S${String(i + 1).padStart(2, "0")}`;
-          const fontSize = Math.max(14, Math.min(img.width, img.height) * 0.06);
-          const padding = Math.round(fontSize * 0.4);
-          const textWidth = Math.round(label.length * fontSize * 0.65);
-          const bgW = textWidth + padding * 2;
-          const bgH = Math.round(fontSize) + padding * 2;
-          const labelSvg = Buffer.from(
-            `<svg xmlns="http://www.w3.org/2000/svg" width="${bgW}" height="${bgH}">
-          <rect x="0" y="0" width="${bgW}" height="${bgH}" rx="4" ry="4" fill="rgba(0,0,0,0.55)"/>
-          <text x="${padding}" y="${padding + fontSize * 0.85}" font-family="Arial, sans-serif" font-weight="bold" font-size="${fontSize}" fill="#fff">${label}</text>
-        </svg>`
-          );
-          compositeInputs.push({
-            input: labelSvg,
-            left: x + 4,
-            top: y + 4
-          });
-        }
-        const resultBuffer = await (0, import_sharp9.default)({
-          create: {
-            width: canvasWidth,
-            height: canvasHeight,
-            channels: 4,
-            background: { r: 255, g: 255, b: 255, alpha: 1 }
-          }
-        }).composite(compositeInputs).jpeg({ quality: 80 }).toBuffer();
-        const base644 = resultBuffer.toString("base64");
-        const dataUrl = `data:image/jpeg;base64,${base644}`;
-        return res.status(200).send(success3(dataUrl));
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/removeFrame.ts
-var import_express77, router77, removeFrame_default;
-var init_removeFrame = __esm({
-  "src/routes/production/storyboard/removeFrame.ts"() {
-    "use strict";
-    import_express77 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router77 = import_express77.default.Router();
-    removeFrame_default = router77.post(
-      "/",
-      validateFields({
-        id: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id } = req.body;
-        const removed = await utils_default.db.transaction(async (trx) => {
-          const storyboardData = await trx("o_storyboard").where({ id }).select("id", "trackId", "flowId", "projectId", "scriptId").first();
-          if (!storyboardData) return false;
-          await trx("o_assets2Storyboard").where("storyboardId", id).delete();
-          await trx("o_storyboard").where({ id }).delete();
-          if (storyboardData.flowId != null) await trx("o_imageFlow").where("id", storyboardData.flowId).delete();
-          if (storyboardData.trackId != null) {
-            const remaining = await trx("o_storyboard").where({ trackId: storyboardData.trackId }).first("id");
-            if (!remaining) {
-              await trx("o_videoTrack").where({ id: storyboardData.trackId, projectId: storyboardData.projectId, scriptId: storyboardData.scriptId }).update({ archived: 1 });
-            }
-          }
-          return true;
-        });
-        if (!removed) return res.status(400).send(error50("\u672A\u627E\u5230\u8BE5\u5206\u955C"));
-        res.status(200).send(success3({ message: "\u89C6\u9891\u5220\u9664\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/updateStoryboardUrl.ts
-var import_express78, router78, updateStoryboardUrl_default;
-var init_updateStoryboardUrl = __esm({
-  "src/routes/production/storyboard/updateStoryboardUrl.ts"() {
-    "use strict";
-    import_express78 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router78 = import_express78.default.Router();
-    updateStoryboardUrl_default = router78.post(
-      "/",
-      validateFields({
-        id: external_exports.number(),
-        url: external_exports.string(),
-        flowId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id, url: url4, flowId } = req.body;
-        await utils_default.db("o_storyboard").where({ id }).update({
-          filePath: utils_default.replaceUrl(url4),
-          flowId,
-          state: "\u5DF2\u5B8C\u6210",
-          shouldGenerateImage: url4 ? 1 : 0
-        });
-        res.status(200).send(success3({ message: "\u66F4\u65B0\u5206\u955C\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/addTrack.ts
-var import_express79, router79, addTrack_default;
-var init_addTrack = __esm({
-  "src/routes/production/workbench/addTrack.ts"() {
-    "use strict";
-    import_express79 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router79 = import_express79.default.Router();
-    addTrack_default = router79.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        scriptId: external_exports.number(),
-        duration: external_exports.number().optional()
-      }),
-      async (req, res) => {
-        const { projectId, scriptId, duration: duration4 } = req.body;
-        const data = await utils_default.db("o_project").where("id", projectId).first();
-        const video = data?.videoModel?.split(":");
-        const vemdor = await utils_default.vendor.getModelList(video?.[0]);
-        const trackId = Date.now();
-        await utils_default.db("o_videoTrack").insert({
-          id: trackId,
-          projectId,
-          scriptId,
-          duration: duration4
-        });
-        res.status(200).send(success3(trackId));
-      }
-    );
-  }
-});
-
-// src/utils/h3ReferenceSlots.ts
-function h3AssetType(item) {
-  const type = String(item.assetType || item.type || "").toLowerCase();
-  if (type === "character") return "role";
-  if (type === "environment") return "scene";
-  if (type === "prop" || type === "creature") return "tool";
-  return type;
-}
-function h3ImageAssetItems(items) {
-  const seen = /* @__PURE__ */ new Set();
-  return items.filter((item, index) => {
-    const mediaType = String(item.fileType || item._fileType || "").toLowerCase();
-    const referenceType = String(item.referenceType || item._slotType || "").toLowerCase();
-    const source = item.sourceType || item.sources || item._type;
-    if (item._reference === false || item.reference === false || source === "storyboard" || h3AssetType(item) === "storyboard") return false;
-    if (["audio", "video"].includes(mediaType) || ["audio", "video"].includes(h3AssetType(item)) || ["audioreference", "videoreference"].includes(referenceType)) return false;
-    const id = item.assetId ?? item.id;
-    const key = id == null ? `anonymous:${index}` : `asset:${id}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-}
-function expandH3AssetSlots(items, _directionText = "") {
-  const assets = h3ImageAssetItems(items);
-  if (assets.length > 9) throw new Error(`MiniMax H3 \u6700\u591A\u652F\u6301 9 \u5F20\u53C2\u8003\u56FE\uFF0C\u5F53\u524D\u6709 ${assets.length} \u4E2A\u72EC\u7ACB\u56FE\u7247\u8D44\u4EA7\uFF1B\u8BF7\u62C6\u5206\u955C\u5934\u6216\u51CF\u5C11\u53EF\u89C1\u8D44\u4EA7\u540E\u91CD\u65B0\u751F\u6210\u63D0\u793A\u8BCD`);
-  return assets.map(({ _referenceRole, referenceKind, ...item }) => item);
-}
-var init_h3ReferenceSlots = __esm({
-  "src/utils/h3ReferenceSlots.ts"() {
-    "use strict";
-  }
-});
-
-// src/utils/h3VisualStateGuard.ts
-function assertH3ActiveStates(assets) {
-  const active = /* @__PURE__ */ new Map();
-  for (const asset of assets) {
-    if (!asset.filePath) throw new Error(`H3 \u53C2\u8003\u56FE\u7F3A\u5931\uFF1A${asset.name || asset.assetId}\uFF08\u8D44\u4EA7 ID ${asset.assetId}\uFF09`);
-    if (!["role", "character"].includes(String(asset.assetType || "").toLowerCase())) continue;
-    const rootId = Number(asset.parentAssetId) > 0 ? Number(asset.parentAssetId) : Number(asset.assetId);
-    const existing = active.get(rootId);
-    if (existing) {
-      if (existing.assetId !== asset.assetId) {
-        throw new Error(`\u540C\u4E00\u4EBA\u7269\u7684\u4E92\u65A5\u5F62\u6001\u4E0D\u53EF\u540C\u65F6\u5F15\u7528\uFF1A${existing.name || existing.assetId}\uFF08${existing.assetId}\uFF09\u4E0E ${asset.name || asset.assetId}\uFF08${asset.assetId}\uFF09\uFF1B\u8BF7\u9009\u62E9\u5F53\u524D\u955C\u5934\u552F\u4E00\u6709\u6548\u72B6\u6001`);
-      }
-      throw new Error(`H3 \u4EBA\u7269\u8D44\u4EA7\u91CD\u590D\u5F15\u7528\uFF1A${asset.name || asset.assetId}\uFF08${asset.assetId}\uFF09\uFF1B\u540C\u4E00\u4EBA\u7269\u53EA\u9009\u62E9\u4E00\u6B21\uFF0C\u6240\u9700\u89C6\u89D2\u4F1A\u6309\u955C\u5934\u548C\u56FE\u7247\u989D\u5EA6\u5206\u914D`);
-    }
-    active.set(rootId, asset);
-  }
-}
-function assertH3PictureSlots(prompt, slotCount) {
-  if (!Number.isInteger(slotCount) || slotCount < 0 || slotCount > 9) throw new Error(`MiniMax H3 \u53C2\u8003\u56FE\u6570\u91CF\u65E0\u6548\uFF1A${slotCount}\uFF0C\u6700\u591A9\u5F20`);
-  const raw = [...prompt.replace(/<d>[\s\S]*?<\/d>/g, "").matchAll(/<Picture\s*(\d+)\s*>/gi)];
-  if (!slotCount) {
-    if (raw.length) throw new Error("\u5F53\u524D\u6CA1\u6709\u4E0A\u4F20 H3 \u53C2\u8003\u56FE\uFF0C\u4F46\u63D0\u793A\u8BCD\u4ECD\u5F15\u7528\u4E86 Picture \u69FD\u4F4D");
-    return;
-  }
-  const ids = new Set(raw.map((match) => Number(match[1])));
-  if (ids.size !== slotCount || [...ids].some((n) => !Number.isInteger(n) || n < 1 || n > slotCount)) {
-    throw new Error(`H3 \u63D0\u793A\u8BCD Picture \u69FD\u4F4D\u4E0E\u5B9E\u9645\u4E0A\u4F20\u56FE\u4E0D\u4E00\u81F4\uFF1A\u9700\u8981 1..${slotCount}\uFF0C\u5B9E\u9645\u51FA\u73B0 ${[...ids].sort((a, b) => a - b).join(",") || "\u65E0"}`);
-  }
-}
-var init_h3VisualStateGuard = __esm({
-  "src/utils/h3VisualStateGuard.ts"() {
-    "use strict";
-  }
-});
-
-// src/utils/h3ReferenceBindings.ts
-function subjectPictureBindings(prompt, pictureCount) {
-  const bindings = /* @__PURE__ */ new Map();
-  const definitions = prompt.match(/^subject_definitions:\s*\r?\n([\s\S]*?)(?=^summary:\s*$)/im)?.[1];
-  const bindingText = definitions ?? prompt;
-  const mentions = [...bindingText.matchAll(/<Subject\s+(\d+)>/gi)];
-  for (let index = 0; index < mentions.length; index++) {
-    const subject = Number(mentions[index][1]);
-    const start = mentions[index].index;
-    const end = mentions[index + 1]?.index ?? bindingText.length;
-    const pictures = [...new Set([...bindingText.slice(start, end).matchAll(/<Picture\s+(\d+)>/gi)].map((match) => Number(match[1])))].sort((a, b) => a - b);
-    for (const picture of pictures) {
-      if (picture < 1 || picture > pictureCount) fail(`<Subject ${subject}> \u5F15\u7528\u4E86\u4E0D\u5B58\u5728\u7684 <Picture ${picture}>`);
-    }
-    if (!pictures.length) continue;
-    const previous = bindings.get(subject);
-    if (previous && previous.join(",") !== pictures.join(",")) fail(`<Subject ${subject}> \u7684 Picture \u5BF9\u5E94\u5173\u7CFB\u4E0D\u4E00\u81F4`);
-    bindings.set(subject, pictures);
-  }
-  return bindings;
-}
-function assertH3ReferenceBindings(prompt, slots, sourcePrompt) {
-  assertH3PictureSlots(prompt, slots.length);
-  const targetBindings = subjectPictureBindings(prompt, slots.length);
-  if (sourcePrompt !== void 0) {
-    assertH3PictureSlots(sourcePrompt, slots.length);
-    const sourceBindings = subjectPictureBindings(sourcePrompt, slots.length);
-    for (const [subject, pictures] of sourceBindings) {
-      const target = targetBindings.get(subject);
-      if (target && target.join(",") !== pictures.join(",")) fail(`<Subject ${subject}> \u5728\u7FFB\u8BD1\u524D\u540E\u5BF9\u5E94\u4E86\u4E0D\u540C\u7684 Picture`);
-    }
-  }
-}
-var fail;
-var init_h3ReferenceBindings = __esm({
-  "src/utils/h3ReferenceBindings.ts"() {
-    "use strict";
-    init_h3VisualStateGuard();
-    fail = (reason) => {
-      throw new Error(`H3 \u53C2\u8003\u56FE\u7ED1\u5B9A\uFF1A${reason}\uFF0C\u8BF7\u91CD\u65B0\u751F\u6210\u89C6\u9891\u63D0\u793A\u8BCD`);
-    };
-  }
-});
-
-// src/utils/h3ReferencePlan.ts
-function h3SlotPath(item) {
-  const kind = item._referenceRole || item.referenceKind;
-  const name28 = String(item.name || item.label || "\u8D44\u4EA7").replace(/(?:脸部身份参考|正面全身参考|侧面全身参考|背面全身参考)$/, "");
-  if (kind && !Object.hasOwn(fields, kind)) throw regenerate(`${name28}\u7684\u4EBA\u7269\u53C2\u8003\u7C7B\u578B\u65E0\u6548`);
-  const path34 = kind ? item[fields[kind]] : item.filePath || item.path;
-  if (typeof path34 !== "string" || !path34.trim()) throw new Error(`${name28}\u7F3A\u5C11${kind ? labels[kind] : "\u56FE\u7247"}\uFF0C\u8BF7\u5148\u8865\u9F50\u5F53\u524D\u8D44\u4EA7\u53C2\u8003\u56FE\u540E\u91CD\u65B0\u751F\u6210\u89C6\u9891\u63D0\u793A\u8BCD`);
-  return path34;
-}
-function validatePlan(value) {
-  const plan = value;
-  if (!plan || plan.version !== 1 || !Array.isArray(plan.slots) || plan.slots.length > 9) throw regenerate("\u5DF2\u4FDD\u5B58\u7684 H3 \u53C2\u8003\u56FE\u8BA1\u5212\u65E0\u6548");
-  const seen = /* @__PURE__ */ new Set();
-  for (const slot of plan.slots) {
-    if (!slot || !Number.isSafeInteger(slot.assetId) || typeof slot.assetType !== "string" || !slot.assetType || typeof slot.path !== "string" || !slot.path.trim() || typeof slot.label !== "string" || slot.kind && !Object.hasOwn(fields, slot.kind)) throw regenerate("\u5DF2\u4FDD\u5B58\u7684 H3 \u53C2\u8003\u56FE\u8BA1\u5212\u4E0D\u5B8C\u6574");
-    if (slot.kind && slot.assetType !== "role") throw regenerate("\u5DF2\u4FDD\u5B58\u7684 H3 \u4EBA\u7269\u53C2\u8003\u7C7B\u578B\u4E0D\u4E00\u81F4");
-    const key = `${slot.assetId}:${slot.kind || "image"}`;
-    if (seen.has(key)) throw regenerate("\u5DF2\u4FDD\u5B58\u7684 H3 \u53C2\u8003\u56FE\u8BA1\u5212\u5B58\u5728\u91CD\u590D\u69FD\u4F4D");
-    seen.add(key);
-  }
-  const roles = new Set(plan.slots.filter((slot) => slot.assetType === "role").map((slot) => slot.assetId));
-  for (const id of roles) {
-    const slots = plan.slots.filter((slot) => slot.assetId === id);
-    if (slots.some((slot) => !slot.kind)) {
-      if (slots.length !== 1) throw regenerate("\u4EBA\u7269\u6574\u56FE\u4E0D\u80FD\u4E0E\u72EC\u7ACB\u89C6\u56FE\u6DF7\u7528");
-    } else if (!slots.some((slot) => slot.kind === "FULL_BODY_FRONT")) throw regenerate("\u5DF2\u4FDD\u5B58\u7684 H3 \u8BA1\u5212\u7F3A\u5C11\u4EBA\u7269\u6B63\u9762\u5168\u8EAB\u53C2\u8003");
-  }
-  return plan;
-}
-async function ensurePlanTable(db2) {
-  let pending = pendingTables.get(db2);
-  if (!pending) {
-    pending = (async () => {
-      if (await db2.schema.hasTable("o_h3ReferencePlan")) return;
-      try {
-        await db2.schema.createTable("o_h3ReferencePlan", (table) => {
-          table.bigInteger("trackId").notNullable();
-          table.string("promptHash", 64).notNullable();
-          table.text("plan").notNullable();
-          table.primary(["trackId", "promptHash"]);
-        });
-      } catch (cause) {
-        if (!await db2.schema.hasTable("o_h3ReferencePlan")) throw cause;
-      }
-    })();
-    pendingTables.set(db2, pending);
-  }
-  try {
-    await pending;
-  } catch (cause) {
-    if (pendingTables.get(db2) === pending) pendingTables.delete(db2);
-    throw cause;
-  }
-}
-async function persistPlan(db2, trackId, prompt, plan) {
-  if (!Number.isSafeInteger(trackId) || !prompt.trim()) throw regenerate("H3 \u63D0\u793A\u8BCD\u6216\u89C6\u9891\u6BB5\u65E0\u6548");
-  validatePlan(plan);
-  await ensurePlanTable(db2);
-  const key = { trackId, promptHash: promptHash(prompt) };
-  const serialized = JSON.stringify(plan);
-  await db2("o_h3ReferencePlan").insert({ ...key, plan: serialized }).onConflict(["trackId", "promptHash"]).ignore();
-  const stored = await db2("o_h3ReferencePlan").where(key).first();
-  if (stored?.plan !== serialized) throw regenerate("\u540C\u4E00\u63D0\u793A\u8BCD\u5DF2\u7ED1\u5B9A\u4E0D\u540C\u7684\u53C2\u8003\u56FE\uFF0C\u4E0D\u53EF\u8986\u76D6\u5386\u53F2\u8BA1\u5212");
-  return plan;
-}
-async function saveH3ReferencePlan(db2, trackId, prompt, slots) {
-  const plan = {
-    version: 1,
-    slots: slots.filter((slot) => h3ImageAssetItems([slot]).length > 0).map((slot) => ({
-      assetId: Number(slot.assetId ?? slot.id),
-      assetType: h3AssetType(slot),
-      ...slot._referenceRole || slot.referenceKind ? { kind: slot._referenceRole || slot.referenceKind } : {},
-      path: h3SlotPath(slot),
-      label: String(slot.name || slot.label || `\u8D44\u4EA7${slot.assetId ?? slot.id}`)
-    }))
-  };
-  return persistPlan(db2, trackId, prompt, plan);
-}
-async function loadH3ReferencePlan(db2, trackId, prompt) {
-  if (!await db2.schema.hasTable("o_h3ReferencePlan")) return null;
-  const stored = await db2("o_h3ReferencePlan").where({ trackId, promptHash: promptHash(prompt) }).first();
-  if (!stored) return null;
-  try {
-    return validatePlan(JSON.parse(stored.plan));
-  } catch {
-    throw regenerate("\u5DF2\u4FDD\u5B58\u7684 H3 \u53C2\u8003\u56FE\u8BA1\u5212\u65E0\u6CD5\u8BFB\u53D6");
-  }
-}
-function resolveH3ReferencePlan(items, plan) {
-  validatePlan(plan);
-  if (plan.slots.some((slot) => slot.kind)) throw regenerate("\u8BE5\u89C6\u9891\u6BB5\u4ECD\u7ED1\u5B9A\u4EBA\u7269\u72EC\u7ACB\u89C6\u56FE\uFF0C\u73B0\u5DF2\u6539\u4E3A\u6BCF\u4E2A\u4EBA\u7269\u4E00\u5F20\u5B8C\u6574\u53C2\u8003\u56FE");
-  const assets = h3ImageAssetItems(items);
-  const byId = new Map(assets.map((item) => [Number(item.assetId ?? item.id), item]));
-  const expectedIds = new Set(plan.slots.map((slot) => slot.assetId));
-  if (byId.size !== expectedIds.size || [...expectedIds].some((id) => !byId.has(id))) throw regenerate("\u5F53\u524D\u56FE\u7247\u8D44\u4EA7\u96C6\u5408\u4E0E\u63D0\u793A\u8BCD\u4FDD\u5B58\u7684\u53C2\u8003\u56FE\u8BA1\u5212\u4E0D\u4E00\u81F4");
-  return plan.slots.map((slot) => {
-    const current = byId.get(slot.assetId);
-    if (h3AssetType(current) !== slot.assetType) throw regenerate(`${slot.label}\u7684\u8D44\u4EA7\u7C7B\u578B\u5DF2\u53D8\u5316`);
-    const currentPath = h3SlotPath({ ...current, _referenceRole: slot.kind, referenceKind: slot.kind });
-    if (canonicalPath(currentPath) !== canonicalPath(slot.path)) throw regenerate(`${slot.label}\u7684\u53C2\u8003\u56FE\u7247\u5DF2\u53D8\u5316`);
-    return {
-      path: slot.path,
-      label: slot.label,
-      sourceType: "assets",
-      assetType: slot.assetType,
-      fileType: "image",
-      referenceType: "imageReference",
-      assetId: slot.assetId,
-      ...slot.kind ? { referenceKind: slot.kind } : {},
-      ...current.prompt ? { prompt: current.prompt } : {}
-    };
-  });
-}
-function pictureNumbers(prompt) {
-  return [...new Set([...prompt.replace(/<d>[\s\S]*?<\/d>/g, "").matchAll(/<Picture\s+(\d+)>/g)].map((match) => Number(match[1])))].sort((a, b) => a - b);
-}
-async function copyH3ReferencePlan(db2, trackId, sourcePrompt, targetPrompt, validatePrompt = true) {
-  const plan = await loadH3ReferencePlan(db2, trackId, sourcePrompt);
-  if (!plan) return null;
-  if (validatePrompt) {
-    const expected = plan.slots.map((_, index) => index + 1);
-    if (JSON.stringify(pictureNumbers(sourcePrompt)) !== JSON.stringify(expected) || JSON.stringify(pictureNumbers(targetPrompt)) !== JSON.stringify(expected)) throw regenerate("\u53C2\u8003\u56FE\u7F16\u53F7\u5DF2\u53D8\u5316");
-    assertH3ReferenceBindings(targetPrompt, plan.slots, sourcePrompt);
-  }
-  return persistPlan(db2, trackId, targetPrompt, plan);
-}
-var import_node_crypto16, fields, labels, canonicalPath, promptHash, regenerate, pendingTables;
-var init_h3ReferencePlan = __esm({
-  "src/utils/h3ReferencePlan.ts"() {
-    "use strict";
-    import_node_crypto16 = require("node:crypto");
-    init_h3ReferenceSlots();
-    init_h3ReferenceBindings();
-    fields = {
-      FACE: "faceReferencePath",
-      FULL_BODY_FRONT: "fullBodyReferencePath",
-      FULL_BODY_SIDE: "sideReferencePath",
-      FULL_BODY_BACK: "backReferencePath"
-    };
-    labels = {
-      FACE: "\u8138\u90E8\u8EAB\u4EFD\u53C2\u8003",
-      FULL_BODY_FRONT: "\u6B63\u9762\u5168\u8EAB\u53C2\u8003",
-      FULL_BODY_SIDE: "\u4FA7\u9762\u5168\u8EAB\u53C2\u8003",
-      FULL_BODY_BACK: "\u80CC\u9762\u5168\u8EAB\u53C2\u8003"
-    };
-    canonicalPath = (path34) => path34.replace(/\\/g, "/").replace(/^\/+/, "");
-    promptHash = (prompt) => (0, import_node_crypto16.createHash)("sha256").update(prompt, "utf8").digest("hex");
-    regenerate = (reason) => new Error(`${reason}\uFF0C\u8BF7\u91CD\u65B0\u751F\u6210\u89C6\u9891\u63D0\u793A\u8BCD`);
-    pendingTables = /* @__PURE__ */ new WeakMap();
-  }
-});
-
-// src/utils/h3PromptContract.ts
-function normalizeH3DialogueLocales(prompt) {
-  return prompt.replace(dialogueLocalePrefix, (_, label, locale) => "(spoken locale: " + locale + ") " + label + " ");
-}
-function normalizeH3PromptFormat(prompt) {
-  const normalized = normalizeH3DialogueLocales(prompt).replace(/(<(?:Subject|Picture|Video|Audio)\s+\d+>)\{=html\}/g, "$1").split(/(<d>[\s\S]*?<\/d>)/g).map((part, index) => index % 2 ? part.replace(/。(?=<\/d>)/g, ".").replace(/！(?=<\/d>)/g, "!").replace(/？(?=<\/d>)/g, "?") : part.replace(
-    /^(\[Shot ([2-9]|[1-9]\d+)\])\s+At\s+(\d{1,2}):([0-5]\d)(?:\.(\d{1,3}))?\s*[,，:：]/gm,
-    (_, shot, _number3, minutes, seconds, fraction) => `${shot} At ${minutes.padStart(2, "0")}:${seconds}.${(fraction || "").padEnd(3, "0")},`
-  ).replace(
-    /^(\[Shot (?:[2-9]|[1-9]\d+)\])\s+At\s+([0-5]?\d)\.(\d{1,3})\s*[,，:：]/gm,
-    (_, shot, seconds, fraction) => `${shot} At 00:${seconds.padStart(2, "0")}.${fraction.padEnd(3, "0")},`
-  ).replace(/[“”]/g, '"')).join("").replace(
-    /(^subject_definitions:\s*\n)([\s\S]*?)(?=^summary:)/m,
-    (_, heading, body) => heading + body.replace(/([.!?;])[^\S\r\n]+(?=<(?:Subject|Picture|Video|Audio) \d+> (?:is|are|represents|defines|provides)\b)/g, "$1\n")
-  );
-  return normalized.replace(/(^retention_analysis:\s*\n)([\s\S]*?)(?=^detailed_description:)/m, (_, heading, body) => heading + body.replace(/^(<(?:Subject|Picture|Video|Audio) \d+>) (appears in \[Shot \d+\](?:,? (?:and )?\[Shot \d+\])*):/gm, "$1 ($2):"));
-}
-function assertH3PromptContract(prompt, duration4, pictureCount) {
-  const fail2 = (reason) => {
-    throw new Error(`H3 \u63D0\u793A\u8BCD\u683C\u5F0F\uFF1A${reason}`);
-  };
-  const value = String(prompt || "");
-  if (!value.trim()) fail2("\u5185\u5BB9\u4E0D\u80FD\u4E3A\u7A7A");
-  if (value.length > MAX_H3_PROMPT_LENGTH) fail2(`\u957F\u5EA6\u4E0D\u80FD\u8D85\u8FC7 ${MAX_H3_PROMPT_LENGTH} \u4E2A\u5B57\u7B26`);
-  if (/\u0000|[\u0001-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(value)) fail2("\u5305\u542B\u975E\u6CD5\u63A7\u5236\u5B57\u7B26");
-  const headings = [...value.matchAll(/^(subject_definitions|summary|retention_analysis|detailed_description|overall_soundscape|non_diegetic_music):\s*/gm)];
-  const missing = sections.filter((section) => !headings.some((m) => m[1] === section));
-  if (missing.length) fail2(`\u516D\u4E2A\u7AE0\u8282\u4E0D\u5B8C\u6574\uFF0C\u7F3A\u5C11\uFF1A${missing.join(", ")}\u3002\u8BF7\u8FD4\u56DE\u5B8C\u6574\u63D0\u793A\u8BCD`);
-  if (headings.length !== sections.length || headings.some((heading, index) => heading[1] !== sections[index])) fail2("\u516D\u4E2A\u7AE0\u8282\u5FC5\u987B\u5404\u51FA\u73B0\u4E00\u6B21\u5E76\u6309\u5B98\u65B9\u987A\u5E8F\u6392\u5217");
-  if (value.slice(0, headings[0].index).trim()) fail2("subject_definitions \u4E4B\u524D\u4E0D\u80FD\u51FA\u73B0\u989D\u5916\u6B63\u6587");
-  const body = Object.fromEntries(headings.map((m, i) => [m[1], value.slice(m.index + m[0].length, headings[i + 1]?.index ?? value.length).trim()]));
-  if (Object.values(body).some((section) => !section)) fail2("\u7AE0\u8282\u5185\u5BB9\u4E0D\u80FD\u4E3A\u7A7A");
-  const dialogueRanges = [];
-  let dialogueStart;
-  for (const tag of body.detailed_description.matchAll(/<\/?d\b[^>]*>/g)) {
-    if (tag[0] === "<d>") {
-      if (dialogueStart !== void 0) fail2("\u5BF9\u767D\u6807\u7B7E\u4E0D\u5F97\u5D4C\u5957");
-      dialogueStart = tag.index;
-    } else if (tag[0] === "</d>") {
-      if (dialogueStart === void 0) fail2("\u5BF9\u767D\u7ED3\u675F\u6807\u7B7E\u6CA1\u6709\u5BF9\u5E94\u7684\u5F00\u59CB\u6807\u7B7E");
-      const start = dialogueStart;
-      const content = body.detailed_description.slice(start + 3, tag.index).trim();
-      if (!/^\[[A-Za-z][A-Za-z -]*\]\s*\S/.test(content)) fail2("\u5BF9\u767D\u5FC5\u987B\u4F7F\u7528 <d>[English] ...</d> \u683C\u5F0F\uFF0C\u5730\u533A/\u53E3\u97F3\u5199\u5728\u6807\u7B7E\u5916");
-      if (!/[.?!][\"']?$/.test(content)) fail2("\u5B8C\u6574\u5BF9\u767D\u5FC5\u987B\u5728 </d> \u524D\u4F7F\u7528\u53E5\u53F7\u3001\u95EE\u53F7\u6216\u611F\u53F9\u53F7\u7ED3\u5C3E");
-      dialogueRanges.push({ start, end: tag.index + tag[0].length });
-      dialogueStart = void 0;
-    } else fail2("\u5BF9\u767D\u5FC5\u987B\u4F7F\u7528 <d>[English] ...</d> \u683C\u5F0F\uFF0C\u5730\u533A/\u53E3\u97F3\u5199\u5728\u6807\u7B7E\u5916");
-  }
-  if (dialogueStart !== void 0) fail2("\u5BF9\u767D\u6807\u7B7E\u672A\u95ED\u5408");
-  if (sections.filter((s) => s !== "detailed_description").some((s) => /<\/?d\b/.test(body[s]))) fail2("\u5B8C\u6574\u5BF9\u767D\u53EA\u80FD\u51FA\u73B0\u5728 detailed_description");
-  const shotDescription = maskDialogue(body.detailed_description);
-  const structuredPrompt = sections.map((section) => body[section]).join("\n");
-  const prose = structuredPrompt.replace(/<d\b[^>]*>[\s\S]*?<\/d>/g, "").replace(/"[^"\n]*"|“[^”\n]*”|『[^』\n]*』|「[^」\n]*」/g, "").replace(/^([^\n]*(?:text|title|caption|subtitle|label|screen|display|card)[^\n]*:\s*\r?\n)[^\n]*\p{Script=Han}[^\n]*$/gimu, "$1");
-  if (/[\u3400-\u9fff]/.test(prose)) fail2("\u516D\u6BB5\u8BF4\u660E\u5FC5\u987B\u7528\u82F1\u6587\uFF1B\u4E2D\u6587\u4EC5\u53EF\u4FDD\u7559\u5728\u5BF9\u767D\u6216\u660E\u786E\u5F15\u7528\u7684\u53EF\u89C1\u6587\u5B57\u4E2D");
-  assertH3PictureSlots(maskDialogue(structuredPrompt), pictureCount);
-  const label = /<(Subject|Picture|Video|Audio)\s+\d+>/g;
-  const definitionLines = [...body.subject_definitions.matchAll(/^(<(?:Subject|Picture|Video|Audio) \d+>)\s+.+$/gm)];
-  const definitions = definitionLines.map((m) => m[1]);
-  if (!definitions.length || new Set(definitions).size !== definitions.length) fail2("\u5F15\u7528\u5B9A\u4E49\u7F3A\u5931\u6216\u91CD\u590D");
-  const sourceVideos = new Set(definitionLines.flatMap((line) => [...line[0].matchAll(/<Video \d+>/g)].map((match) => match[0])));
-  for (const [section, text2] of Object.entries(body)) {
-    for (const m of maskDialogue(text2).matchAll(label)) {
-      if (m[1] === "Picture" || definitions.includes(m[0])) continue;
-      if (section === "subject_definitions" && m[1] === "Video" && sourceVideos.has(m[0])) continue;
-      fail2(`\u672A\u5B9A\u4E49\u5F15\u7528 ${m[0]}`);
-    }
-  }
-  const rows = body.retention_analysis.split(/\r?\n/).filter((line) => line.trim());
-  const retained = [];
-  for (const row of rows) {
-    const m = /^(<(Subject|Picture|Video|Audio) \d+>)(?:\s*\([^\n]*\))?\s*:\s*(\w+)\s*[-–—]/.exec(row);
-    if (!m) fail2("\u4FDD\u7559\u5206\u6790\u5FC5\u987B\u9010\u6761\u5BF9\u5E94\u5DF2\u5B9A\u4E49\u7684 Subject \u6216\u72EC\u7ACB\u951A\u70B9");
-    if (!definitions.includes(m[1])) fail2("\u4FDD\u7559\u5206\u6790\u5FC5\u987B\u9010\u6761\u5BF9\u5E94\u5DF2\u5B9A\u4E49\u7684 Subject \u6216\u72EC\u7ACB\u951A\u70B9");
-    const allowed = m[2] === "Audio" ? ["fully_copy", "partially_copy", "reference", "weak_reference"] : ["fully_preserved", "partially_preserved", "attribute_transfer", "weak_reference"];
-    if (!allowed.includes(m[3]) || /\(S\d+(?:\s*,\s*S\d+)*\)/.test(row)) fail2("\u4FDD\u7559\u5173\u7CFB\u6807\u8BB0\u6216\u8BF4\u8BDD\u4EBA\u6807\u8BB0\u4E0D\u7B26\u5408\u89C4\u8303");
-    retained.push(m[1]);
-  }
-  if (retained.length !== definitions.length || new Set(retained).size !== definitions.length) fail2("\u6BCF\u4E2A\u5B9A\u4E49\u9700\u8981\u4E14\u53EA\u80FD\u6709\u4E00\u6761\u4FDD\u7559\u5206\u6790");
-  if (!/^\[(?:reference generation|keyframe completion|video editing|video continuation|audio reuse|audio reference)(?: \+ (?:reference generation|keyframe completion|video editing|video continuation|audio reuse|audio reference))*\]/.test(body.summary)) fail2("summary \u7F3A\u5C11\u5B98\u65B9\u4EFB\u52A1\u7C7B\u578B\u524D\u7F00");
-  if (definitions.some((d) => d.startsWith("<Subject ")) && !/<Subject \d+>/.test(body.summary)) fail2("summary \u5E94\u4F7F\u7528\u5DF2\u5B9A\u4E49\u7684 Subject \u6807\u7B7E\u63CF\u8FF0\u4E3B\u4F53\u5173\u7CFB");
-  const shots = [...shotDescription.matchAll(/\[Shot (\d+)\]/g)];
-  if (!shots.length || !shotDescription.slice(0, shots[0].index).trim()) fail2("\u7B2C\u4E00\u955C\u4E4B\u524D\u9700\u8981\u5177\u4F53\u753B\u98CE\u63CF\u8FF0");
-  let previousTime = 0;
-  shots.forEach((shot, index) => {
-    if (Number(shot[1]) !== index + 1) fail2("\u955C\u5934\u7F16\u53F7\u5FC5\u987B\u8FDE\u7EED");
-    const tail = shotDescription.slice(shot.index + shot[0].length);
-    const time4 = /^\s*At (\d{2}):([0-5]\d)\.(\d{3}),/.exec(tail);
-    if (index === 0) {
-      if (/^\s*At\s+\d/.test(tail)) fail2("Shot 1 \u4E0D\u80FD\u5E26\u65F6\u95F4\u6233");
-      return;
-    }
-    if (!time4) fail2(`Shot ${index + 1} \u5E94\u4EE5 [Shot ${index + 1}] At MM:SS.mmm, \u5F00\u59CB`);
-    const matchedTime = time4;
-    const seconds = Number(matchedTime[1]) * 60 + Number(matchedTime[2]) + Number(matchedTime[3]) / 1e3;
-    if (seconds <= previousTime || seconds >= duration4) fail2("\u5207\u955C\u65F6\u95F4\u5FC5\u987B\u9012\u589E\u4E14\u5728\u76EE\u6807\u65F6\u957F\u4EE5\u5185");
-    previousTime = seconds;
-  });
-  for (const definition of definitions.filter((item) => item.startsWith("<Subject "))) {
-    if (!shotDescription.includes(definition)) fail2(`${definition} \u5DF2\u5B9A\u4E49\u4F46\u672A\u5728 detailed_description \u4E2D\u4F7F\u7528`);
-  }
-  const shotNumbers = new Set(shots.map((shot) => Number(shot[1])));
-  for (const row of rows) {
-    for (const mention of row.matchAll(/\[Shot (\d+)\]/g)) {
-      if (!shotNumbers.has(Number(mention[1]))) fail2(`\u4FDD\u7559\u5206\u6790\u5F15\u7528\u4E86\u4E0D\u5B58\u5728\u7684 ${mention[0]}`);
-    }
-  }
-  if (normalizeH3DialogueLocales(value) !== value) fail2("\u5BF9\u767D\u5F00\u5934\u7684\u5730\u533A\u6807\u8BB0\u5FC5\u987B\u5199\u5728\u6807\u7B7E\u5916");
-  const copiedAudio = new Set(rows.flatMap((row) => /^(<Audio \d+>)(?:\s*\([^\n]*\))?\s*:\s*(?:fully_copy|partially_copy)\s*[-–—]/.exec(row)?.slice(1, 2) ?? []));
-  const introducedSpeakers = /* @__PURE__ */ new Set();
-  const subjectSpeakers = /* @__PURE__ */ new Map();
-  const speakerSubjects = /* @__PURE__ */ new Map();
-  const shotProse = shotDescription.slice(shots[0].index);
-  for (const speaker of shotProse.matchAll(/\(S\d+(?:\s*,\s*S\d+)*\)/g)) {
-    const ids = [...speaker[0].matchAll(/S(\d+)/g)].map((match) => Number(match[1]));
-    if (new Set(ids).size !== ids.length) fail2("\u7EC4\u5408\u8BF4\u8BDD\u4EBA\u6807\u8BB0\u4E0D\u80FD\u91CD\u590D\u540C\u4E00\u7F16\u53F7");
-    if (ids.length > 1 && ids.some((id) => !introducedSpeakers.has(id))) fail2("\u7EC4\u5408\u8BF4\u8BDD\u4EBA\u6807\u8BB0\u53EA\u80FD\u4F7F\u7528\u4E4B\u524D\u5DF2\u5355\u72EC\u6807\u660E\u7684\u8BF4\u8BDD\u4EBA\u7F16\u53F7");
-    for (const id of ids) introducedSpeakers.add(id);
-    const subject = /(<Subject \d+>)\s*$/.exec(shotProse.slice(0, speaker.index))?.[1];
-    if (subject && ids.length === 1) {
-      const id = ids[0];
-      if (subjectSpeakers.has(subject) && subjectSpeakers.get(subject) !== id || speakerSubjects.has(id) && speakerSubjects.get(id) !== subject) fail2("\u540C\u4E00 Subject \u5FC5\u987B\u4FDD\u6301\u540C\u4E00\u8BF4\u8BDD\u4EBA\u7F16\u53F7\uFF0C\u4E0D\u540C Subject \u4E0D\u80FD\u5171\u7528\u540C\u4E00\u7F16\u53F7");
-      subjectSpeakers.set(subject, id);
-      speakerSubjects.set(id, subject);
-    }
-  }
-  if ([...introducedSpeakers].sort((a, b) => a - b).some((id, index) => id !== index + 1)) fail2("\u8BF4\u8BDD\u4EBA\u7F16\u53F7\u5FC5\u987B\u4ECE (S1) \u8FDE\u7EED\u7F16\u53F7\uFF0C\u4E0D\u80FD\u7F3A\u53F7");
-  let previousDialogueEnd = 0;
-  for (const dialogue of dialogueRanges) {
-    const currentShot = shots.filter((shot) => shot.index < dialogue.start).at(-1);
-    if (!currentShot) fail2("\u5BF9\u767D\u5FC5\u987B\u4F4D\u4E8E\u5B9E\u9645\u955C\u5934\u4E2D");
-    const activeShot = currentShot;
-    const prelude = shotDescription.slice(Math.max(previousDialogueEnd, activeShot.index + activeShot[0].length), dialogue.start);
-    previousDialogueEnd = dialogue.end;
-    const speaker = [...prelude.matchAll(/\(S\d+(?:\s*,\s*S\d+)*\)/g)].at(-1);
-    if (!speaker) {
-      const audio = [...prelude.matchAll(/<Audio \d+>/g)].at(-1)?.[0];
-      if (audio && copiedAudio.has(audio)) continue;
-      fail2("\u6BCF\u6B21\u5BF9\u767D\u9700\u8981\u660E\u786E\u7684 (Sx) \u8BF4\u8BDD\u4EBA\u6807\u8BB0\uFF1B\u76F4\u63A5\u590D\u7528\u97F3\u8F68\u4E2D\u7684\u6B4C\u8BCD\u63D0\u793A\u5E94\u5F15\u7528\u5BF9\u5E94 Audio");
-    }
-  }
-}
-var sections, MAX_H3_PROMPT_LENGTH, maskDialogue, dialogueLocalePrefix, h3FormatChecklist;
-var init_h3PromptContract = __esm({
-  "src/utils/h3PromptContract.ts"() {
-    "use strict";
-    init_h3VisualStateGuard();
-    sections = ["subject_definitions", "summary", "retention_analysis", "detailed_description", "overall_soundscape", "non_diegetic_music"];
-    MAX_H3_PROMPT_LENGTH = 3e4;
-    maskDialogue = (text2) => text2.replace(/<d>[\s\S]*?<\/d>/g, (content) => content.replace(/[^\r\n]/g, " "));
-    dialogueLocalePrefix = /(<d>\[[A-Za-z][A-Za-z -]*\])\s*\(([a-z]{2,3}-(?:[A-Z][a-z]{3}(?:-(?:[A-Z]{2}|\d{3}))?|[A-Z]{2}|\d{3}))\)\s*/g;
-    h3FormatChecklist = `Mandatory MiniMax H3 Ref2VA output syntax: return exactly six complete English sections in this order: subject_definitions, summary, retention_analysis, detailed_description, overall_soundscape, non_diegetic_music. In subject_definitions, put each definition on its own unbulleted line beginning exactly <Subject N> is ... <Picture N> ...; never emit {=html}. summary must begin exactly with an official bracketed task prefix such as [reference generation]. retention_analysis must use one unbulleted line per definition in the form <Subject N> (appears in [Shot 1]): fully_preserved - ... using an official marker. Put each shot heading on a new line: [Shot 1] without a timestamp; later cuts use [Shot N] At MM:SS.mmm, with sequential numbers and increasing times inside target_duration. Give every vocal event a stable consecutive (Sx); put that source marker immediately before its dialogue, and write a referenced speaker as <Subject N> (Sx). Dialogue uses <d>[Language] complete sentence.</d>. Enclose every non-English visible screen, title, sign, subtitle or interface string in straight double quotation marks, including a string placed on its own line. Keep actual image bindings, spoken lines, event order and cause/effect. Return the whole prompt on correction, never a partial patch.`;
-  }
-});
-
-// src/utils/h3PromptContext.ts
-function h3BindingSlots(slots) {
-  return slots.map((item) => ({ assetId: Number(item.assetId ?? item.id), assetType: h3AssetType(item), kind: item._referenceRole ?? item.referenceKind }));
-}
-function buildH3ReferenceSubjects(slots) {
-  const groups = /* @__PURE__ */ new Map();
-  slots.forEach((item, index) => {
-    const id = Number(item.assetId ?? item.id);
-    let group = groups.get(id);
-    if (!group) {
-      group = {
-        subject: `<Subject ${groups.size + 1}>`,
-        assetId: id,
-        assetType: h3AssetType(item),
-        name: String(item._assetName || item.name || item.label || `asset ${id}`).replace(/(?:脸部身份参考|正面全身参考|侧面全身参考|背面全身参考)$/, ""),
-        ...item.assetsId || item.parentAssetId ? { parentAssetId: Number(item.assetsId || item.parentAssetId) } : {},
-        pictures: []
-      };
-      groups.set(id, group);
-    }
-    group.pictures.push({ picture: `<Picture ${index + 1}>`, ...item._referenceRole || item.referenceKind ? { view: item._referenceRole || item.referenceKind } : h3AssetType(item) === "role" ? { view: "CHARACTER_SHEET" } : {} });
-  });
-  return [...groups.values()];
-}
-function buildH3PromptInput(slots, storyboards, duration4, otherReferences = []) {
-  const subjects = buildH3ReferenceSubjects(slots);
-  const references = slots.map((item, index) => `<reference slot="${index + 1}" sources="assets" id="${Number(item.assetId ?? item.id)}" />`).join("\n");
-  return `Mode: MiniMax H3 Ref2VA. target_duration: ${duration4}s.
-appearanceAuthority=the actual attached current image. Images establish appearance; storyboard facts establish events, dialogue and timing.
-The grouped sources below are authoritative. Each character uses ONE complete reference sheet in ONE Picture slot. Its face, front, side and back panels depict the SAME person in ONE current state, not multiple people or separate uploaded Pictures. Treat each asset as one consistent subject and cite its actual Picture where it affects the video. Describe only views visible in the attached sheet. Preserve identity and outfit; never render the panel layout, repeated figures or display background in the video. Each selected image asset consumes one of the nine available image slots.
-<referenceSlots>
-${references}
-</referenceSlots>
-<referenceSubjects>
-${JSON.stringify(subjects)}
-</referenceSubjects>
-${otherReferences.length ? `<otherReferences>${JSON.stringify(otherReferences)}</otherReferences>
-` : ""}<storyboardFacts>
-${JSON.stringify(storyboards.map((item) => ({ id: item.id, duration: item.duration, videoDesc: item.videoDesc || "" })))}
-</storyboardFacts>
-Write the complete MiniMax H3 Ref2VA generation prompt using exactly these six non-empty sections in this order:
-subject_definitions:
-summary:
-retention_analysis:
-detailed_description:
-overall_soundscape:
-non_diegetic_music:
-
-Define every reusable visible asset as one stable <Subject N> and cite the actual source <Picture N> in its definition. Use the same Subject/Picture meaning everywhere. summary must start with the applicable official task-type prefix. retention_analysis must contain exactly one valid preservation entry for every definition.
-
-In detailed_description, establish the requested rendering style before [Shot 1]. [Shot 1] has no timestamp. Every later explicit cut uses [Shot N] At MM:SS.mmm, with sequential numbers and increasing times inside target_duration. Give every vocal source a stable consecutive (S1), (S2), etc.; a referenced speaker is written <Subject N> (Sx). Dialogue uses <d>[Language] complete sentence.</d> and stays in the requested spoken language.
-
-Analyze the attached reference images and describe composition, appearance, position, environment and lighting, actions and state changes, camera movement, synchronized physical sound and reference usage. Preserve supplied cause and effect, speaker, exact dialogue, timing and event order. Do not replace an intentional action with an accident.
-
-Output only the complete six-section prompt. Do not explain reasoning.`;
-}
-var init_h3PromptContext = __esm({
-  "src/utils/h3PromptContext.ts"() {
-    "use strict";
-    init_h3ReferenceSlots();
-  }
-});
-
-// src/utils/h3VisionImage.ts
-async function prepareH3VisionImage(dataUrl) {
-  const encoded = /^data:(image\/[^;]+);base64,([\s\S]+)$/.exec(dataUrl);
-  if (!encoded) throw new Error("H3 \u63D0\u793A\u8BCD\u53C2\u8003\u56FE\u7F16\u7801\u65E0\u6548");
-  const source = Buffer.from(encoded[2], "base64");
-  if (source.length <= maxVisionBytes && ["image/jpeg", "image/png", "image/webp"].includes(encoded[1])) {
-    return { image: source, mediaType: encoded[1] };
-  }
-  for (const quality of [92, 82, 72]) {
-    const image = await (0, import_sharp10.default)(source).rotate().flatten({ background: "#ffffff" }).jpeg({ quality, chromaSubsampling: "4:4:4" }).toBuffer();
-    if (image.length <= maxVisionBytes) return { image, mediaType: "image/jpeg" };
-  }
-  for (const size of [4096, 3072, 2048]) {
-    const image = await (0, import_sharp10.default)(source).rotate().resize({ width: size, height: size, fit: "inside", withoutEnlargement: true }).flatten({ background: "#ffffff" }).jpeg({ quality: 85 }).toBuffer();
-    if (image.length <= maxVisionBytes) return { image, mediaType: "image/jpeg" };
-  }
-  throw new Error("H3 \u63D0\u793A\u8BCD\u53C2\u8003\u56FE\u8FC7\u5927\uFF0C\u65E0\u6CD5\u5728\u4FDD\u7559\u5B8C\u6574\u753B\u9762\u7684\u60C5\u51B5\u4E0B\u7F16\u7801");
-}
-var import_sharp10, maxVisionBytes;
-var init_h3VisionImage = __esm({
-  "src/utils/h3VisionImage.ts"() {
-    "use strict";
-    import_sharp10 = __toESM(require("sharp"));
-    maxVisionBytes = 7 * 1024 * 1024;
-  }
-});
-
-// src/utils/videoPromptGeneration.ts
-function isMiniMaxH3(modelName) {
-  const value = String(modelName || "").toLowerCase();
-  return value.includes("minimax") && value.includes("h3");
-}
-function h3AssetRank(item) {
-  const type = String(item?.type || "").toLowerCase();
-  if (type === "role" || type === "character") return 0;
-  if (type === "scene" || type === "environment") return 1;
-  if (type === "tool" || type === "prop" || type === "creature") return 2;
-  return 3;
-}
-function escapeXmlAttr(value) {
-  return String(value ?? "").replace(/[<>&"']/g, (ch) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&apos;" })[ch] || ch);
-}
-function hasUnexpectedH3ChineseProse(prompt) {
-  const prose = String(prompt || "").replace(/<d(?:\s[^>]*)?>[\s\S]*?<\/d>/gi, "");
-  if (/^(?:#{1,6}\s*|\d+[.)]\s*)[^\r\n]*\p{Script=Han}/mu.test(prose)) return true;
-  const hanCount = (prose.match(/\p{Script=Han}/gu) || []).length;
-  const latinCount = (prose.match(/[A-Za-z]/g) || []).length;
-  return hanCount >= 40 && hanCount > latinCount * 0.25;
-}
-async function generateVideoPromptForTrack(input) {
-  if (isVideoPromptRunning(input.trackId)) throw Object.assign(new Error("\u8BE5\u89C6\u9891\u6BB5\u63D0\u793A\u8BCD\u6B63\u5728\u751F\u6210\uFF0C\u8BF7\u5B8C\u6210\u540E\u518D\u91CD\u8BD5"), { status: 409 });
-  runningTracks.add(input.trackId);
-  try {
-    return await generateForTrack(input);
-  } finally {
-    runningTracks.delete(input.trackId);
-  }
-}
-async function generateForTrack(input) {
-  const { trackId, projectId, info, model, mode } = input;
-  if (!await utils_default.db("o_videoTrack").where({ id: trackId, projectId }).first()) throw Object.assign(new Error("\u89C6\u9891\u6BB5\u4E0D\u5B58\u5728"), { status: 404 });
-  await utils_default.db("o_videoTrack").where({ id: trackId }).update({
-    state: "\u751F\u6210\u4E2D",
-    reason: null
-  });
-  try {
-    const images = await Promise.all(
-      info.map(async (item) => {
-        if (item.sources === "storyboard") {
-          const storyboard2 = await utils_default.db("o_storyboard").where({ "o_storyboard.id": item.id, "o_storyboard.projectId": projectId }).select("id", "videoDesc", "prompt", "track", "duration", "shouldGenerateImage", "filePath").first();
-          if (!storyboard2) throw new Error(`\u5206\u955C ${item.id} \u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE`);
-          const assetRows = await utils_default.db("o_assets2Storyboard").where("storyboardId", item.id).orderBy("rowid").select("assetId");
-          const associateAssetsIds = assetRows.map((row) => row.assetId);
-          return {
-            ...storyboard2,
-            associateAssetsIds,
-            _type: "storyboard",
-            // 标记类型，便于后续区分
-            _reference: item.reference !== false,
-            _slotType: item.slotType,
-            _fileType: item.fileType
-          };
-        }
-        if (item.sources === "assets") {
-          const assetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where({ "o_assets.id": item.id, "o_assets.projectId": projectId }).select("o_assets.id", "o_assets.assetsId", "o_assets.type", "o_assets.name", "o_assets.describe", "o_assets.prompt as assetPrompt", "o_image.filePath").first();
-          if (!assetsData) throw new Error(`\u8D44\u4EA7 ${item.id} \u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE`);
-          return {
-            ...assetsData,
-            _type: "assets",
-            // 标记类型
-            _reference: item.reference !== false,
-            _slotType: item.slotType,
-            _fileType: item.fileType
-          };
-        }
-      })
-    );
-    const assets = [];
-    const storyboard = [];
-    for (const item of images) {
-      if (!item) continue;
-      if (item._type === "assets")
-        assets.push({
-          id: item.id,
-          type: item.type,
-          name: item.name,
-          describe: item.describe,
-          assetPrompt: item.assetPrompt,
-          filePath: item.filePath,
-          _reference: item._reference,
-          _slotType: item._slotType,
-          _fileType: item._fileType
-        });
-      if (item._type === "storyboard")
-        storyboard.push({
-          videoDesc: item.videoDesc,
-          prompt: item.prompt,
-          track: item.track,
-          duration: item.duration,
-          associateAssetsIds: item.associateAssetsIds,
-          shouldGenerateImage: item.shouldGenerateImage,
-          id: item.id,
-          filePath: item.filePath,
-          _reference: item._reference,
-          _slotType: item._slotType,
-          _fileType: item._fileType
-        });
-    }
-    const assetsNotAudioIds = assets.filter((i) => i.type == "audio").map((i) => i.id);
-    const assets2Audio = await utils_default.db("o_assets").whereIn("o_assets.id", assetsNotAudioIds).join("o_assetsRole2Audio", "o_assetsRole2Audio.assetsAudioId", "o_assets.assetsId").select("o_assets.assetsId", "o_assets.id", "o_assetsRole2Audio.assetsAudioId", "o_assetsRole2Audio.assetsRoleId");
-    const assetsAudioRecord = {};
-    assets2Audio.forEach((i) => {
-      assetsAudioRecord[i.assetsRoleId] = i.id;
-    });
-    const [id, modelData] = model.split(/:(.+)/);
-    const modelLower = (modelData ?? "").toLowerCase();
-    const h3PromptMode = isMiniMaxH3(modelData ?? "");
-    const h3RefPromptMode = h3PromptMode && typeof mode === "string" && /^\s*\[/.test(mode);
-    const h3PromptInstruction = h3RefPromptMode ? h3EnglishPromptInstruction : "Write the complete H3 prompt prose in English. Preserve requested dialogue language, event order, timing and camera instructions.";
-    const projectData = await utils_default.db("o_project").select("*").where({ id: projectId }).first();
-    const videoTrackData = await utils_default.db("o_videoTrack").select("duration").where({ id: trackId }).first();
-    const videoPrompt = await utils_default.db("o_prompt").where("type", "videoPromptGeneration").first();
-    let videoPromptGeneration = "";
-    const modelPromptData = await utils_default.db("o_modelPrompt").where("vendorId", id).where("model", modelData).first();
-    if (h3RefPromptMode) {
-      videoPromptGeneration = await import_promises6.default.readFile(import_path12.default.join(utils_default.getPath(["modelPrompt"]), "video", "minimaxH3Multi-referenceMode.md"), "utf-8");
-      if (!videoPromptGeneration.trim()) throw new Error("H3 \u591A\u53C2\u8003\u63D0\u793A\u8BCD\u89C4\u5219\u6587\u4EF6\u4E3A\u7A7A\uFF0C\u8BF7\u4FEE\u590D\u540E\u91CD\u8BD5");
-    } else if (modelPromptData) {
-      const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
-      try {
-        const fullPath = import_path12.default.join(modelPromptRoot, modelPromptData?.path);
-        const content2 = await import_promises6.default.readFile(fullPath, "utf-8");
-        videoPromptGeneration = content2 ?? "";
-      } catch {
-      }
-    }
-    if (!videoPromptGeneration) {
-      const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
-      const videoPromptDir = import_path12.default.join(modelPromptRoot, "video");
-      let fileName = null;
-      if (h3RefPromptMode) {
-        fileName = "minimaxH3Multi-referenceMode.md";
-      } else if (modelLower.includes("wan") && modelLower.includes("2.6")) {
-        fileName = "wan2.6Single-imageFirstFrameMode.md";
-      } else if (/seedance.*2[.\-]0/i.test(modelData)) {
-        fileName = "seedance2Multi-parameterMode.md";
-      } else if (mode === "startEndRequired" || mode === "endFrameOptional" || mode === "startFrameOptional") {
-        fileName = "universalFirstAndLastFrameMode.md";
-      } else if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
-        fileName = "universalMulti-parameterMode.md";
-      }
-      if (fileName) {
-        try {
-          const fullPath = import_path12.default.join(videoPromptDir, fileName);
-          videoPromptGeneration = await import_promises6.default.readFile(fullPath, "utf-8");
-        } catch {
-        }
-      }
-    }
-    if (!videoPromptGeneration) {
-      if (videoPrompt && videoPrompt.useData) {
-        videoPromptGeneration = videoPrompt.useData;
-      } else {
-        videoPromptGeneration = videoPrompt?.data ?? void 0;
-      }
-    }
-    const artStyle = projectData?.artStyle || "\u65E0";
-    const visualManual = utils_default.getArtPrompt(artStyle, "art_skills", "art_storyboard_video");
-    const h3DirectionText = storyboard.map((item) => item.videoDesc || "").join("\n");
-    if (h3PromptMode) assertH3ActiveStates(images.filter((item) => item?._type === "assets" && item._reference !== false).map((item) => ({
-      assetId: Number(item.id),
-      parentAssetId: item.assetsId,
-      assetType: item.type,
-      name: item.name,
-      filePath: item.filePath
-    })));
-    const pictureSourceItems = h3PromptMode ? expandH3AssetSlots(
-      images.filter(
-        (item) => item && item._type === "assets" && item._reference !== false && item._fileType !== "audio" && item._fileType !== "video"
-      ).sort((a, b) => h3AssetRank(a) - h3AssetRank(b)),
-      h3DirectionText
-    ) : images.filter((item) => item && item._reference !== false && item.filePath);
-    const referenceSlotItems = pictureSourceItems.map((item, index) => {
-      const slot = index + 1;
-      const sources = item._type === "assets" ? "assets" : "storyboard";
-      const type = item._type === "assets" ? String(item.type || "asset") : "storyboard";
-      const name28 = item._type === "assets" ? String(item.name || `\u8D44\u4EA7${item.id}`) : `\u5206\u955C\u56FE${item.id}`;
-      return `<reference slot="${slot}" sources="${sources}" id="${item.id}" type="${escapeXmlAttr(type)}" name="${escapeXmlAttr(name28)}" />`;
-    });
-    const referenceSlots = `<referenceSlots>
-${referenceSlotItems.join("\n")}
-</referenceSlots>`;
-    const storyboardDuration = storyboard.reduce((total, item) => total + (Number.parseFloat(String(item.duration || 0)) || 0), 0);
-    const rawTargetDuration = Number(videoTrackData?.duration) || storyboardDuration || 5;
-    if (h3PromptMode && (!Number.isFinite(rawTargetDuration) || rawTargetDuration < 4 || rawTargetDuration > 15)) {
-      throw new Error(`H3 \u89C6\u9891\u6BB5\u65F6\u957F ${rawTargetDuration}s \u8D85\u51FA 4\u201315 \u79D2\u8303\u56F4\uFF0C\u8BF7\u5148\u8C03\u6574\u5206\u955C\u65F6\u957F\uFF1B\u4E0D\u4F1A\u81EA\u52A8\u622A\u77ED\u5267\u60C5`);
-    }
-    const targetDuration = h3PromptMode ? rawTargetDuration : Math.max(4, Math.min(15, Math.round(rawTargetDuration)));
-    const otherReferences = images.filter((item) => item?._type === "assets" && item._reference !== false && ["audio", "video"].includes(item._fileType || item.type)).map((item) => ({ assetId: item.id, name: item.name, mediaType: item._fileType || item.type }));
-    const content = h3PromptMode ? buildH3PromptInput(pictureSourceItems, storyboard, targetDuration, otherReferences) : `
-          **\u6A21\u578B\u540D\u79F0**\uFF1A${modelData},
-          **\u76EE\u6807\u65F6\u957F target_duration**\uFF1A${targetDuration}s,
-          **\u53C2\u8003\u7D20\u6750\u69FD\u4F4D**\uFF1A
-          ${referenceSlots},
-          **\u8D44\u4EA7\u4FE1\u606F**\uFF08\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177\u3001\u97F3\u9891):${assets.filter((i) => i.filePath).map((i) => `[${i.id},${i.type},${i.name} ${assetsAudioRecord[i.id] ? `audio:${assetsAudioRecord[i.id]}` : ""} ] `).join("\uFF0C")},
-          **\u5206\u955C\u4FE1\u606F**\uFF1A${storyboard.map(
-      (i) => `<storyboardItem
-  videoDesc='${i.videoDesc}'
-  duration='${i.duration}'
-></storyboardItem>`
-    )},
-          `;
-    const userContent = [{ type: "text", text: content }];
-    if (h3PromptMode) {
-      const missing = pictureSourceItems.flatMap((item) => {
-        try {
-          h3SlotPath(item);
-          return [];
-        } catch (cause) {
-          return [utils_default.error(cause).message];
-        }
-      });
-      if (missing.length) throw new Error(missing.join("\uFF1B"));
-      for (const [index, item] of pictureSourceItems.entries()) {
-        const referencePath = h3SlotPath(item);
-        if (!referencePath) throw new Error(`${item.name} \u7F3A\u5C11\u5B9E\u9645\u53C2\u8003\u56FE\uFF0C\u8BF7\u5148\u8865\u9F50\u4EBA\u7269\u53C2\u8003\u56FE`);
-        userContent.push({ type: "text", text: `<Picture ${index + 1}>: ${item.name}; actual current reference, identity and wardrobe authority.` });
-        const dataUrl = await utils_default.oss.getImageBase64(referencePath);
-        const preparedImage = await prepareH3VisionImage(dataUrl);
-        userContent.push({ type: "image", ...preparedImage });
-      }
-    }
-    const generateBase = async () => {
-      const system = h3PromptMode ? `${videoPromptGeneration}
-
-${h3PromptInstruction}
-
-Project visual requirements (rendering guidance only; use relevant qualities without replacing the selected H3 prompt template's output structure):
-${visualManual}` : videoPromptGeneration;
-      const messages = h3PromptMode ? [{ role: "user", content: userContent }] : [{ role: "assistant", content: visualManual }, { role: "user", content }];
-      const maxAttempts = h3RefPromptMode ? 5 : 3;
-      for (let attempt = 0; attempt < maxAttempts; attempt++) {
-        const result = { text: (await utils_default.Ai.Text("universalAi", h3PromptMode ? true : void 0, h3PromptMode ? 2 : void 0).invoke({ system, messages })).text };
-        if (!h3PromptMode) return result.text;
-        result.text = normalizeH3PromptFormat(result.text.trim());
-        if (/^(REFERENCE_STATE_REVIEW|LANGUAGE_TIMING_REVIEW):/.test(result.text.trim())) throw new Error(result.text);
-        try {
-          if (h3RefPromptMode) {
-            assertH3PromptContract(result.text, targetDuration, pictureSourceItems.length);
-            assertH3ReferenceBindings(result.text, h3BindingSlots(pictureSourceItems));
-          }
-          if (hasUnexpectedH3ChineseProse(result.text)) throw new Error("PROMPT_LANGUAGE: section headings and non-dialogue prompt prose must be English; keep only required dialogue or visible text in its required language");
-        } catch (cause) {
-          if (attempt === maxAttempts - 1) throw Object.assign(cause, { candidatePrompt: result.text });
-          messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Rewrite and return one complete prompt using the selected H3 template. Do not return a patch. ${h3PromptInstruction} Reinspect the attached images and fix only the reported content contradiction while preserving the story events, speakers, exact dialogue and timing. Review error: ${utils_default.error(cause).message}` });
-          continue;
-        }
-        await saveH3ReferencePlan(db, trackId, result.text, pictureSourceItems);
-        return result.text;
-      }
-      throw new Error("H3 \u63D0\u793A\u8BCD\u6821\u9A8C\u5931\u8D25");
-    };
-    if (input.languages) {
-      const variants = await generateLanguageVariants(
-        db,
-        trackId,
-        input.languages,
-        async () => {
-          const prompt = await generateBase();
-          if (input.replaceBasePrompt === true) {
-            await utils_default.db("o_videoTrack").where({ id: trackId, projectId }).update({ prompt });
-          }
-          return prompt;
-        },
-        async (system, source, language) => {
-          const messages = [{ role: "user", content: source }];
-          const maxAttempts = h3RefPromptMode ? 5 : 3;
-          for (let attempt = 0; attempt < maxAttempts; attempt++) {
-            const result = { text: (await utils_default.Ai.Text("universalAi", h3PromptMode ? true : void 0, h3PromptMode ? 2 : void 0).invoke({ system: h3PromptMode ? `You are a surgical H3 dialogue localizer and visible-text localizer. The source prompt is already complete. Copy every heading, reference definition, shot description, sound cue and camera instruction without reorganizing, summarizing or moving it. Preserve the exact relative order of every vocal event and physical action; never move a laugh or spoken line to after an action that follows it in the source. Translate the contents of <d>...</d>, the directly associated spoken-language or locale wording, and every story-required visible button, interface, sign, subtitle or screen label into the requested target language. Return the entire prompt and nothing else.
-
-${h3PromptInstruction}
-
-For an English language variant, no Chinese characters may remain anywhere in the returned prompt, including quoted visible on-screen text. Do not leave semantic instructions such as "Chinese text", "Chinese system lines", "Chinese interface text", or "Chinese characters"; rewrite those instructions to require English visible text. A visual-style phrase such as "Chinese 3D donghua" may remain because it describes art style, not text language. If the source prompt's non-dialogue prose is Chinese or another language, translate it to English while preserving sentence and event order. Translate visible Chinese text to English as well.
-
-${system}` : system, messages })).text };
-            if (!h3PromptMode || result.text.trim().startsWith("LANGUAGE_TIMING_REVIEW:")) return result.text;
-            result.text = normalizeH3PromptFormat(result.text.trim());
-            try {
-              if (h3RefPromptMode) {
-                assertH3PromptContract(result.text, targetDuration, pictureSourceItems.length);
-                const sourcePlan = await loadH3ReferencePlan(db, trackId, source);
-                if (!sourcePlan) throw new Error("H3 \u53C2\u8003\u56FE\u7ED1\u5B9A\uFF1A\u6E90\u63D0\u793A\u8BCD\u7F3A\u5C11\u4FDD\u5B58\u7684\u53C2\u8003\u56FE\u8BA1\u5212\uFF0C\u8BF7\u91CD\u65B0\u751F\u6210\u89C6\u9891\u63D0\u793A\u8BCD");
-                assertH3ReferenceBindings(result.text, sourcePlan.slots, source);
-              }
-              if (hasUnexpectedH3ChineseProse(result.text)) throw new Error("PROMPT_LANGUAGE: section headings and non-dialogue prompt prose must be English; keep only required dialogue or visible text in its required language");
-              assertTranslatedDialogueLanguage(result.text, language);
-            } catch (cause) {
-              if (attempt === maxAttempts - 1) throw Object.assign(cause, { candidatePrompt: result.text });
-              messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Return the complete corrected translation. Do not return a patch. Copy the source prompt's non-dialogue text and event order without reorganizing it. ${h3PromptInstruction} Fix only this language requirement: ${utils_default.error(cause).message}` });
-              continue;
-            }
-            await copyH3ReferencePlan(db, trackId, source, result.text, h3RefPromptMode);
-            return result.text;
-          }
-          throw new Error("H3 \u7FFB\u8BD1\u683C\u5F0F\u6821\u9A8C\u5931\u8D25");
-        },
-        input.regenerate === true,
-        true,
-        async (prompt, language) => {
-          await assertStoryboardPromptFresh(db, projectId, trackId, prompt);
-          if (!h3RefPromptMode) return;
-          assertTranslatedDialogueLanguage(prompt, language);
-          const plan = await loadH3ReferencePlan(db, trackId, prompt);
-          if (!plan) throw new Error("H3 \u53C2\u8003\u56FE\u7ED1\u5B9A\uFF1A\u63D0\u793A\u8BCD\u7F3A\u5C11\u4FDD\u5B58\u7684\u53C2\u8003\u56FE\u8BA1\u5212");
-          resolveH3ReferencePlan(pictureSourceItems, plan);
-          if (plan.slots.some((slot) => slot.kind)) throw new Error("H3 \u53C2\u8003\u56FE\u7ED1\u5B9A\uFF1A\u4ECD\u4F7F\u7528\u4EBA\u7269\u72EC\u7ACB\u89C6\u56FE\u65E7\u8BA1\u5212");
-          assertH3PromptContract(prompt, targetDuration, plan.slots.length);
-          assertH3ReferenceBindings(prompt, plan.slots);
-        },
-        async (prompt) => {
-          await assertStoryboardPromptFresh(db, projectId, trackId, prompt);
-          if (!h3RefPromptMode) return;
-          const plan = await loadH3ReferencePlan(db, trackId, prompt);
-          if (!plan) throw new Error("H3 \u53C2\u8003\u56FE\u7ED1\u5B9A\uFF1A\u539F\u7248\u63D0\u793A\u8BCD\u7F3A\u5C11\u4FDD\u5B58\u7684\u53C2\u8003\u56FE\u8BA1\u5212");
-          resolveH3ReferencePlan(pictureSourceItems, plan);
-          if (plan.slots.some((slot) => slot.kind)) throw new Error("H3 \u53C2\u8003\u56FE\u7ED1\u5B9A\uFF1A\u539F\u7248\u4ECD\u4F7F\u7528\u4EBA\u7269\u72EC\u7ACB\u89C6\u56FE\u65E7\u8BA1\u5212");
-          assertH3PromptContract(prompt, targetDuration, plan.slots.length);
-          assertH3ReferenceBindings(prompt, plan.slots);
-        }
-      );
-      const failed = variants.filter((v) => input.languages.includes(v.language) && v.state === "\u751F\u6210\u5931\u8D25");
-      await utils_default.db("o_videoTrack").where({ id: trackId }).update({ state: failed.length ? "\u751F\u6210\u5931\u8D25" : "\u5DF2\u5B8C\u6210", reason: failed.map((v) => `${v.language}: ${v.reason}`).join("\uFF1B") });
-      return variants;
-    }
-    const text2 = await generateBase();
-    await utils_default.db("o_videoTrack").where({ id: trackId }).update({
-      state: "\u5DF2\u5B8C\u6210",
-      prompt: text2,
-      reason: null
-    });
-    return text2;
-  } catch (e) {
-    await utils_default.db("o_videoTrack").where({ id: trackId }).update({
-      state: "\u751F\u6210\u5931\u8D25",
-      reason: utils_default.error(e).message
-    });
-    throw e;
-  }
-}
-var import_promises6, import_path12, runningTracks, isVideoPromptRunning, h3EnglishPromptInstruction;
-var init_videoPromptGeneration = __esm({
-  "src/utils/videoPromptGeneration.ts"() {
-    "use strict";
-    init_utils3();
-    init_storyboardPromptFreshness();
-    import_promises6 = __toESM(require("fs/promises"));
-    import_path12 = __toESM(require("path"));
-    init_h3ReferenceSlots();
-    init_h3ReferencePlan();
-    init_h3VisualStateGuard();
-    init_db();
-    init_videoLanguages();
-    init_h3PromptContract();
-    init_h3PromptContext();
-    init_h3ReferenceBindings();
-    init_h3VisionImage();
-    runningTracks = /* @__PURE__ */ new Set();
-    isVideoPromptRunning = (trackId) => runningTracks.has(trackId);
-    h3EnglishPromptInstruction = `${h3FormatChecklist} All section prose must be English. Only spoken dialogue inside <d>...</d> and explicitly required visible screen/sign text may use their requested language.`;
-  }
-});
-
-// src/routes/production/workbench/batchGeneratePrompt.ts
-var import_express80, router80, batchGeneratePrompt_default;
-var init_batchGeneratePrompt = __esm({
-  "src/routes/production/workbench/batchGeneratePrompt.ts"() {
-    "use strict";
-    import_express80 = __toESM(require_express2());
-    init_utils3();
-    init_p_limit();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    init_videoLanguages();
-    init_videoPromptGeneration();
-    router80 = import_express80.default.Router();
-    batchGeneratePrompt_default = router80.post(
-      "/",
-      validateFields({
-        languages: dialogueLanguagesSchema.optional(),
-        regenerate: external_exports.boolean().optional(),
-        replaceBasePrompt: external_exports.boolean().optional(),
-        projectId: external_exports.number(),
-        trackData: external_exports.array(
-          external_exports.object({
-            trackId: external_exports.number(),
-            info: external_exports.array(
-              external_exports.object({
-                id: external_exports.number(),
-                sources: external_exports.string(),
-                reference: external_exports.boolean().optional(),
-                slotType: external_exports.string().optional(),
-                fileType: external_exports.string().optional(),
-                prompt: external_exports.string().optional()
-              })
-            )
-          })
-        ),
-        mode: external_exports.string(),
-        model: external_exports.string(),
-        concurrentCount: external_exports.number().int().min(1).max(10).optional()
-        //并发数
-      }),
-      async (req, res) => {
-        const { trackData, projectId, mode, model, languages, regenerate: regenerate2, replaceBasePrompt, concurrentCount = 5 } = req.body;
-        try {
-          const uniqueTracks = [...new Map(trackData.map((track) => [track.trackId, track])).values()];
-          if (uniqueTracks.some((track) => isVideoPromptRunning(track.trackId))) return res.status(409).send(error50("\u6240\u9009\u89C6\u9891\u6BB5\u63D0\u793A\u8BCD\u6B63\u5728\u751F\u6210\uFF0C\u8BF7\u5B8C\u6210\u540E\u518D\u91CD\u8BD5"));
-          const tracks = await utils_default.db("o_videoTrack").where({ projectId }).whereIn("id", uniqueTracks.map((track) => track.trackId));
-          if (tracks.length !== uniqueTracks.length) return res.status(404).send(error50("\u90E8\u5206\u89C6\u9891\u6BB5\u4E0D\u5B58\u5728"));
-          await utils_default.db("o_videoTrack").where({ projectId }).whereIn("id", uniqueTracks.map((track) => track.trackId)).update({ state: "\u751F\u6210\u4E2D", reason: null });
-          const limit = pLimit(concurrentCount);
-          const tasks = uniqueTracks.map((track) => limit(() => generateVideoPromptForTrack({
-            projectId,
-            mode,
-            model,
-            languages,
-            regenerate: regenerate2,
-            replaceBasePrompt,
-            trackId: track.trackId,
-            info: track.info
-          })));
-          void Promise.allSettled(tasks).then(async (results) => {
-            for (const [index, result] of results.entries()) {
-              if (result.status === "rejected" && result.reason?.status !== 409) await utils_default.db("o_videoTrack").where({ id: uniqueTracks[index].trackId, projectId }).update({ state: "\u751F\u6210\u5931\u8D25", reason: utils_default.error(result.reason).message });
-            }
-          }).catch((cause) => console.error("\u6279\u91CF\u63D0\u793A\u8BCD\u72B6\u6001\u4FDD\u5B58\u5931\u8D25", utils_default.error(cause).message));
-          return res.status(200).send(success3("\u5F00\u59CB\u751F\u6210\u63D0\u793A\u8BCD"));
-        } catch (cause) {
-          return res.status(400).send(error50(utils_default.error(cause).message));
-        }
-      }
-    );
-  }
-});
-
-// src/utils/videoQuality.ts
-async function inspectVideoQuality(userPath) {
-  const localPath = import_node_path6.default.join(getPath_default("oss"), userPath.replace(/^[/\\]+/, "").split("/").join(import_node_path6.default.sep));
-  try {
-    const { stdout } = await execFileAsync("ffprobe", ["-v", "error", "-select_streams", "v:0", "-show_entries", "stream=codec_name,width,height,r_frame_rate,bit_rate:format=duration,bit_rate", "-of", "json", localPath]);
-    const parsed = JSON.parse(stdout);
-    const stream4 = parsed.streams?.[0] || {};
-    const [num, den] = String(stream4.r_frame_rate || "0/1").split("/").map(Number);
-    return {
-      width: Number(stream4.width) || null,
-      height: Number(stream4.height) || null,
-      fps: den ? num / den : null,
-      bitrate: Number(stream4.bit_rate || parsed.format?.bit_rate) || null,
-      codec: stream4.codec_name || null,
-      actualDuration: Number(parsed.format?.duration) || null
-    };
-  } catch {
-    return {};
-  }
-}
-var import_node_child_process, import_node_util, import_node_path6, execFileAsync;
-var init_videoQuality = __esm({
-  "src/utils/videoQuality.ts"() {
-    "use strict";
-    import_node_child_process = require("node:child_process");
-    import_node_util = require("node:util");
-    import_node_path6 = __toESM(require("node:path"));
-    init_getPath();
-    execFileAsync = (0, import_node_util.promisify)(import_node_child_process.execFile);
-  }
-});
-
-// src/routes/production/workbench/batchGenerateVideo.ts
-function referenceMediaType(item) {
-  return item.referenceType === "audioReference" || item.fileType === "audio" ? "audio" : item.referenceType === "videoReference" || item.fileType === "video" ? "video" : "image";
-}
-var import_express81, router81, isMiniMaxH32, batchGenerateVideo_default;
-var init_batchGenerateVideo = __esm({
-  "src/routes/production/workbench/batchGenerateVideo.ts"() {
-    "use strict";
-    import_express81 = __toESM(require_express2());
-    init_storyboardPromptFreshness();
-    init_utils3();
-    init_zod();
-    init_dist_node();
-    init_responseFormat();
-    init_middleware();
-    init_h3ReferencePlan();
-    init_h3ReferenceBindings();
-    init_videoQuality();
-    init_h3VisualStateGuard();
-    init_db();
-    init_videoLanguages();
-    router81 = import_express81.default.Router();
-    isMiniMaxH32 = (model) => {
-      const value = String(model || "").toLowerCase();
-      return value.includes("minimax") && value.includes("h3");
-    };
-    batchGenerateVideo_default = router81.post("/", validateFields({
-      projectId: external_exports.number(),
-      scriptId: external_exports.number(),
-      validateOnly: external_exports.boolean().optional(),
-      trackData: external_exports.array(external_exports.object({
-        uploadData: external_exports.array(external_exports.object({
-          id: external_exports.number(),
-          sources: external_exports.string(),
-          type: external_exports.enum(["imageReference", "startImage", "endImage", "videoReference", "audioReference"]).optional(),
-          fileType: external_exports.enum(["image", "video", "audio"]).optional(),
-          label: external_exports.string().optional(),
-          prompt: external_exports.string().optional()
-        })),
-        language: dialogueLanguageSchema.optional(),
-        trackId: external_exports.number(),
-        prompt: external_exports.string(),
-        duration: external_exports.number()
-      })),
-      model: external_exports.string(),
-      mode: external_exports.string(),
-      resolution: external_exports.string(),
-      audio: external_exports.boolean().optional()
-    }), async (req, res) => {
-      const { scriptId, projectId, trackData, model, resolution, audio, mode } = req.body;
-      const validateOnly = req.body.validateOnly === true;
-      let modeData = [];
-      if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
-        try {
-          modeData = JSON.parse(mode);
-        } catch {
-        }
-      }
-      const ratio = await utils_default.db("o_project").select("videoRatio").where("id", projectId).first();
-      const h3 = isMiniMaxH32(model);
-      let validationTracks = [];
-      let prepared;
-      try {
-        const preparationResults = await Promise.allSettled(
-          trackData.map(async (track) => {
-            const ownedTrack = await utils_default.db("o_videoTrack").where({ id: track.trackId, projectId, scriptId }).first();
-            if (!ownedTrack) throw new Error("\u89C6\u9891\u6BB5\u4E0D\u5B58\u5728");
-            try {
-              track.prompt = await resolveLanguagePrompt(db, track.trackId, track.language, track.prompt, audio);
-              await assertStoryboardPromptFresh(utils_default.db, projectId, track.trackId, track.prompt);
-              const resolved = await Promise.all(track.uploadData.map(async (item) => {
-                if (item.sources === "storyboard") {
-                  const found = await utils_default.db("o_storyboard").where({ id: item.id, projectId }).select("filePath", "prompt").first();
-                  return found ? {
-                    path: found.filePath ?? void 0,
-                    sourceType: "storyboard",
-                    assetType: "storyboard",
-                    fileType: item.fileType || "image",
-                    referenceType: item.type,
-                    label: item.label || `\u5206\u955C\u56FE${item.id}`,
-                    prompt: item.prompt || found.prompt || void 0
-                  } : null;
-                }
-                if (item.sources === "assets") {
-                  const found = await utils_default.db("o_assets").where({ "o_assets.id": item.id, "o_assets.projectId": projectId }).leftJoin("o_image", "o_assets.imageId", "o_image.id").select(
-                    "o_image.filePath",
-                    "o_image.type as imageType",
-                    "o_assets.id as assetId",
-                    "o_assets.assetsId as parentAssetId",
-                    "o_assets.name",
-                    "o_assets.prompt",
-                    "o_assets.type as assetType"
-                  ).first();
-                  return found ? {
-                    path: found.filePath ?? void 0,
-                    sourceType: "assets",
-                    assetId: found.assetId,
-                    parentAssetId: found.parentAssetId,
-                    assetType: found.assetType,
-                    fileType: item.fileType || found.imageType || "image",
-                    referenceType: item.type,
-                    label: item.label || found.name,
-                    prompt: item.prompt || found.prompt || void 0
-                  } : null;
-                }
-                return null;
-              }));
-              const images = resolved.filter(Boolean);
-              let runtimeReferences = images;
-              if (h3) {
-                if (resolved.length !== images.length) throw new Error("\u8F68\u9053 " + track.trackId + "\uFF1A\u53C2\u8003\u8D44\u4EA7\u5DF2\u5220\u9664\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
-                const assetImages = images.filter((item) => item.sourceType === "assets" && referenceMediaType(item) === "image");
-                assertH3ActiveStates(assetImages.map((item) => ({
-                  assetId: Number(item.assetId),
-                  parentAssetId: item.parentAssetId,
-                  assetType: item.assetType,
-                  name: item.label,
-                  filePath: item.path
-                })));
-                const plan = await loadH3ReferencePlan(utils_default.db, track.trackId, track.prompt);
-                if (assetImages.length && !plan) throw new Error("\u8BE5\u89C6\u9891\u6BB5\u4F7F\u7528\u65E7\u7248\u53C2\u8003\u56FE\u89C4\u5219\uFF0C\u8BF7\u91CD\u65B0\u751F\u6210\u89C6\u9891\u63D0\u793A\u8BCD\u540E\u518D\u751F\u6210\u89C6\u9891");
-                const pictureReferences = plan ? resolveH3ReferencePlan(assetImages, plan) : [];
-                assertH3PictureSlots(track.prompt, pictureReferences.length);
-                if (plan) assertH3ReferenceBindings(track.prompt, plan.slots);
-                const otherMedia = images.filter((item) => item.sourceType !== "storyboard" && referenceMediaType(item) !== "image");
-                runtimeReferences = [...pictureReferences, ...otherMedia];
-              }
-              const loaded = await Promise.all(runtimeReferences.map(async (item) => {
-                if (!item.path) return null;
-                return {
-                  base64: await utils_default.oss.getImageBase64(item.path),
-                  type: referenceMediaType(item),
-                  label: item.label,
-                  prompt: item.prompt,
-                  sourceType: item.sourceType,
-                  assetType: item.assetType
-                };
-              }));
-              if (h3 && loaded.some((item) => !item)) throw new Error("H3 \u53C2\u8003\u7D20\u6750\u7F3A\u5931\uFF1A\u4E0D\u80FD\u8DF3\u8FC7\u67D0\u4E2A Picture \u69FD\u4F4D\u7EE7\u7EED\u751F\u6210");
-              return { language: track.language, trackId: track.trackId, prompt: track.prompt, duration: track.duration, referenceList: loaded.filter(Boolean) };
-            } catch (cause) {
-              const reason = "\u89C6\u9891\u53C2\u8003\u68C0\u67E5\u5931\u8D25\uFF1A" + utils_default.error(cause).message;
-              if (!validateOnly) await utils_default.db("o_videoTrack").where({ id: track.trackId, projectId, scriptId }).update({ state: "\u751F\u6210\u5931\u8D25", reason });
-              throw new Error("\u8F68\u9053 " + track.trackId + "\uFF1A" + reason);
-            }
-          })
-        );
-        validationTracks = preparationResults.map((result, index) => ({
-          trackId: trackData[index].trackId,
-          language: trackData[index].language,
-          valid: result.status === "fulfilled",
-          ...result.status === "fulfilled" ? { pictureCount: result.value.referenceList.filter((item) => item.type === "image").length, referenceCount: result.value.referenceList.length } : { reason: utils_default.error(result.reason).message }
-        }));
-        const failed = preparationResults.filter((result) => result.status === "rejected");
-        if (failed.length) throw new Error(failed.map((result) => utils_default.error(result.reason).message).join("\uFF1B"));
-        prepared = preparationResults.filter((result) => result.status === "fulfilled").map((result) => result.value);
-      } catch (cause) {
-        return res.status(409).send(error50(`\u6279\u91CF\u89C6\u9891\u68C0\u67E5\u5931\u8D25\uFF1A${utils_default.error(cause).message}`, { valid: false, tracks: validationTracks }));
-      }
-      if (validateOnly) return res.status(200).send(success3({ valid: true, tracks: validationTracks }));
-      const tasks = await Promise.all(prepared.map(async (item) => {
-        const videoPath = `/${projectId}/video/${v4_default()}.mp4`;
-        const [videoId] = await utils_default.db("o_video").insert({
-          filePath: videoPath,
-          time: Date.now(),
-          state: "\u751F\u6210\u4E2D",
-          scriptId,
-          projectId,
-          videoTrackId: item.trackId
-        });
-        if (item.language) await db("o_videoLanguage").insert({ videoId, language: item.language, prompt: item.prompt });
-        return { ...item, videoId, videoPath };
-      }));
-      res.status(200).send(success3(tasks.map((item) => ({ videoId: item.videoId, trackId: item.trackId, language: item.language }))));
-      const runTask = async ({ videoId, videoPath, prompt, duration: duration4, referenceList }) => {
-        try {
-          const relatedObjects = { projectId, videoId, scriptId, type: "\u89C6\u9891" };
-          const aiVideo = utils_default.Ai.Video(model);
-          await aiVideo.run({
-            prompt,
-            referenceList,
-            mode: modeData.length > 0 ? modeData : mode,
-            duration: duration4,
-            aspectRatio: ratio?.videoRatio || "16:9",
-            resolution,
-            audio
-          }, { projectId, taskClass: "\u89C6\u9891\u751F\u6210", describe: "\u6839\u636E\u63D0\u793A\u8BCD\u751F\u6210\u89C6\u9891", relatedObjects: JSON.stringify(relatedObjects) });
-          await aiVideo.save(videoPath);
-          await utils_default.db("o_video").where("id", videoId).update({ state: "\u751F\u6210\u6210\u529F", errorReason: null, ...await inspectVideoQuality(videoPath) });
-        } catch (cause) {
-          await utils_default.db("o_video").where("id", videoId).update({ state: "\u751F\u6210\u5931\u8D25", errorReason: utils_default.error(cause).message });
-        }
-      };
-      if (h3) {
-        for (const task of tasks) await runTask(task);
-      } else await Promise.all(tasks.map(runTask));
-    });
-  }
-});
-
-// src/routes/production/workbench/checkVideoPrompt.ts
-var import_express82, router82, checkVideoPrompt_default;
-var init_checkVideoPrompt = __esm({
-  "src/routes/production/workbench/checkVideoPrompt.ts"() {
-    "use strict";
-    import_express82 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    init_db();
-    router82 = import_express82.default.Router();
-    checkVideoPrompt_default = router82.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        scriptId: external_exports.number(),
-        trackIds: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { projectId, scriptId, trackIds } = req.body;
-        const promptList = await utils_default.db("o_videoTrack").where("projectId", projectId).where("scriptId", scriptId).whereIn("id", trackIds).whereIn("state", ["\u5DF2\u5B8C\u6210", "\u751F\u6210\u5931\u8D25"]).select("id", "state", "reason", "prompt");
-        res.status(200).send(success3(await Promise.all(promptList.map(async (item) => ({ ...item, variants: await db("o_videoPromptVariant").where({ trackId: item.id }) })))));
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/checkVideoStateList.ts
-var import_express83, router83, checkVideoStateList_default;
-var init_checkVideoStateList = __esm({
-  "src/routes/production/workbench/checkVideoStateList.ts"() {
-    "use strict";
-    import_express83 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router83 = import_express83.default.Router();
-    checkVideoStateList_default = router83.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        scriptId: external_exports.number(),
-        videoIds: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { projectId, scriptId, videoIds } = req.body;
-        const videoList = await utils_default.db("o_video").whereIn("id", videoIds).whereIn("state", ["\u751F\u6210\u6210\u529F", "\u751F\u6210\u5931\u8D25"]).select("id", "state", "errorReason", "filePath");
-        res.status(200).send(
-          success3(
-            await Promise.all(
-              videoList.map(async (s) => ({
-                ...s,
-                src: s.filePath ? await utils_default.oss.getFileUrl(s.filePath) : ""
-              }))
-            )
-          )
-        );
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/deleteTrack.ts
-var import_express84, router84, deleteTrack_default;
-var init_deleteTrack = __esm({
-  "src/routes/production/workbench/deleteTrack.ts"() {
-    "use strict";
-    import_express84 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    init_db();
-    router84 = import_express84.default.Router();
-    deleteTrack_default = router84.post(
-      "/",
-      validateFields({
-        id: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id } = req.body;
-        await db("o_videoPromptVariant").where({ trackId: id }).delete();
-        await utils_default.db("o_videoTrack").where("id", id).delete();
-        await utils_default.db("o_storyboard").where("trackId", id).update({
-          trackId: null
-        });
-        res.status(200).send(success3({ message: "\u89C6\u9891\u6BB5\u5220\u9664\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/delVideo.ts
-var import_express85, router85, delVideo_default;
-var init_delVideo = __esm({
-  "src/routes/production/workbench/delVideo.ts"() {
-    "use strict";
-    import_express85 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    init_db();
-    router85 = import_express85.default.Router();
-    delVideo_default = router85.post(
-      "/",
-      validateFields({
-        id: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id } = req.body;
-        await db("o_videoLanguage").where({ videoId: id }).delete();
-        await db("o_videoPromptVariant").where({ videoId: id }).update({ videoId: null });
-        await utils_default.db("o_video").where("id", id).delete();
-        await utils_default.db("o_videoTrack").where("videoId", id).update({
-          videoId: null
-        });
-        res.status(200).send(success3({ message: "\u89C6\u9891\u5220\u9664\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/generateVideo.ts
-function isMiniMaxH33(model) {
-  const value = String(model || "").toLowerCase();
-  return value.includes("minimax") && value.includes("h3");
-}
-function referenceMediaType2(item) {
-  return item.referenceType === "audioReference" || item.fileType === "audio" ? "audio" : item.referenceType === "videoReference" || item.fileType === "video" ? "video" : "image";
-}
-var import_express86, router86, generateVideo_default;
-var init_generateVideo = __esm({
-  "src/routes/production/workbench/generateVideo.ts"() {
-    "use strict";
-    import_express86 = __toESM(require_express2());
-    init_storyboardPromptFreshness();
-    init_utils3();
-    init_zod();
-    init_dist_node();
-    init_responseFormat();
-    init_middleware();
-    init_h3ReferencePlan();
-    init_h3ReferenceBindings();
-    init_videoQuality();
-    init_h3VisualStateGuard();
-    init_db();
-    init_videoLanguages();
-    router86 = import_express86.default.Router();
-    generateVideo_default = router86.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        scriptId: external_exports.number(),
-        validateOnly: external_exports.boolean().optional(),
-        uploadData: external_exports.array(external_exports.object({
-          id: external_exports.number(),
-          sources: external_exports.string(),
-          type: external_exports.enum(["imageReference", "startImage", "endImage", "videoReference", "audioReference"]).optional(),
-          fileType: external_exports.enum(["image", "video", "audio"]).optional(),
-          label: external_exports.string().optional(),
-          prompt: external_exports.string().optional()
-        })),
-        language: dialogueLanguageSchema.optional(),
-        prompt: external_exports.string(),
-        model: external_exports.string(),
-        mode: external_exports.string(),
-        resolution: external_exports.string(),
-        duration: external_exports.number(),
-        audio: external_exports.boolean().optional(),
-        trackId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { scriptId, projectId, uploadData, model, duration: duration4, resolution, audio, mode, trackId, language } = req.body;
-        const validateOnly = req.body.validateOnly === true;
-        const ownedTrack = await utils_default.db("o_videoTrack").where({ id: trackId, projectId, scriptId }).first();
-        if (!ownedTrack) return res.status(404).send(error50("\u89C6\u9891\u6BB5\u4E0D\u5B58\u5728"));
-        let prompt;
-        let modeData = [];
-        if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
-          try {
-            modeData = JSON.parse(mode);
-          } catch {
-          }
-        }
-        const ratio = await utils_default.db("o_project").select("videoRatio").where("id", projectId).first();
-        const videoPath = `/${projectId}/video/${v4_default()}.mp4`;
-        const h3 = isMiniMaxH33(model);
-        let base644;
-        try {
-          prompt = await resolveLanguagePrompt(db, trackId, language, req.body.prompt, audio);
-          await assertStoryboardPromptFresh(utils_default.db, projectId, trackId, prompt);
-          const resolved = await Promise.all(
-            uploadData.map(async (item) => {
-              if (item.sources === "storyboard") {
-                const source = await utils_default.db("o_storyboard").where({ id: item.id, projectId }).select("filePath", "prompt").first();
-                return source ? {
-                  path: source.filePath ?? void 0,
-                  sourceType: "storyboard",
-                  assetType: "storyboard",
-                  fileType: item.fileType || "image",
-                  referenceType: item.type,
-                  label: item.label || `\u5206\u955C\u56FE${item.id}`,
-                  prompt: item.prompt || source.prompt || void 0
-                } : null;
-              }
-              if (item.sources === "assets") {
-                const source = await utils_default.db("o_assets").where({ "o_assets.id": item.id, "o_assets.projectId": projectId }).leftJoin("o_image", "o_assets.imageId", "o_image.id").select(
-                  "o_image.filePath",
-                  "o_image.type as imageType",
-                  "o_assets.id as assetId",
-                  "o_assets.assetsId as parentAssetId",
-                  "o_assets.name",
-                  "o_assets.prompt",
-                  "o_assets.type as assetType"
-                ).first();
-                return source ? {
-                  path: source.filePath ?? void 0,
-                  sourceType: "assets",
-                  assetId: source.assetId,
-                  parentAssetId: source.parentAssetId,
-                  assetType: source.assetType,
-                  fileType: item.fileType || source.imageType || "image",
-                  referenceType: item.type,
-                  label: item.label || source.name,
-                  prompt: item.prompt || source.prompt || void 0
-                } : null;
-              }
-              return null;
-            })
-          );
-          const images = resolved.filter(Boolean);
-          let runtimeReferences = images;
-          if (h3) {
-            if (resolved.length !== images.length) throw new Error("\u90E8\u5206 H3 \u53C2\u8003\u8D44\u4EA7\u5DF2\u88AB\u5220\u9664\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\uFF1B\u8BF7\u91CD\u65B0\u751F\u6210\u89C6\u9891\u63D0\u793A\u8BCD\u5E76\u9009\u62E9\u53C2\u8003\u56FE");
-            const assetImages = images.filter((item) => item.sourceType === "assets" && referenceMediaType2(item) === "image");
-            assertH3ActiveStates(assetImages.map((item) => ({
-              assetId: Number(item.assetId),
-              parentAssetId: item.parentAssetId,
-              assetType: item.assetType,
-              name: item.label,
-              filePath: item.path
-            })));
-            const plan = await loadH3ReferencePlan(utils_default.db, trackId, prompt);
-            if (assetImages.length && !plan) throw new Error("\u8BE5\u89C6\u9891\u6BB5\u4F7F\u7528\u65E7\u7248\u53C2\u8003\u56FE\u89C4\u5219\uFF0C\u8BF7\u91CD\u65B0\u751F\u6210\u89C6\u9891\u63D0\u793A\u8BCD\u540E\u518D\u751F\u6210\u89C6\u9891");
-            const pictureReferences = plan ? resolveH3ReferencePlan(assetImages, plan) : [];
-            assertH3PictureSlots(prompt, pictureReferences.length);
-            if (plan) assertH3ReferenceBindings(prompt, plan.slots);
-            const otherMedia = images.filter((item) => item.sourceType !== "storyboard" && referenceMediaType2(item) !== "image");
-            runtimeReferences = [...pictureReferences, ...otherMedia];
-          }
-          const loaded = await Promise.all(runtimeReferences.map(async (item) => {
-            if (!item.path) return null;
-            return {
-              base64: await utils_default.oss.getImageBase64(item.path),
-              type: referenceMediaType2(item),
-              label: item.label,
-              prompt: item.prompt,
-              sourceType: item.sourceType,
-              assetType: item.assetType
-            };
-          }));
-          if (h3 && loaded.some((item) => !item)) throw new Error("H3 \u67D0\u5F20\u53C2\u8003\u7D20\u6750\u7F3A\u5931\uFF0C\u4E0D\u5141\u8BB8\u8DF3\u8FC7\u8BE5\u69FD\u4F4D\u7EE7\u7EED\u751F\u6210");
-          base644 = loaded.filter(Boolean);
-        } catch (cause) {
-          const reason = (h3 ? "H3 " : "") + "\u89C6\u9891\u53C2\u8003\u68C0\u67E5\u5931\u8D25\uFF1A" + utils_default.error(cause).message;
-          if (!validateOnly) await utils_default.db("o_videoTrack").where({ id: trackId, projectId }).update({ state: "\u751F\u6210\u5931\u8D25", reason });
-          return res.status(409).send(error50(reason, { valid: false, tracks: [{ trackId, language, valid: false, reason }] }));
-        }
-        if (validateOnly) return res.status(200).send(success3({ valid: true, tracks: [{
-          trackId,
-          language,
-          valid: true,
-          pictureCount: base644.filter((item) => item.type === "image").length,
-          referenceCount: base644.length
-        }] }));
-        const [videoId] = await utils_default.db("o_video").insert({
-          filePath: videoPath,
-          time: Date.now(),
-          state: "\u751F\u6210\u4E2D",
-          scriptId,
-          projectId,
-          videoTrackId: trackId
-        });
-        if (language) await db("o_videoLanguage").insert({ videoId, language, prompt });
-        await utils_default.db("o_videoTrack").where({ id: trackId, projectId }).update({ state: "\u751F\u6210\u4E2D", reason: null });
-        res.status(200).send(success3(videoId));
-        const relatedObjects = { projectId, videoId, scriptId, type: "\u89C6\u9891" };
-        const aiVideo = utils_default.Ai.Video(model);
-        aiVideo.run({
-          prompt,
-          referenceList: base644,
-          mode: modeData.length > 0 ? modeData : mode,
-          duration: duration4,
-          aspectRatio: ratio?.videoRatio || "16:9",
-          resolution,
-          audio
-        }, {
-          projectId,
-          taskClass: "\u89C6\u9891\u751F\u6210",
-          describe: "\u6839\u636E\u63D0\u793A\u8BCD\u751F\u6210\u89C6\u9891",
-          relatedObjects: JSON.stringify(relatedObjects)
-        }).then(async () => await aiVideo.save(videoPath)).then(async () => await utils_default.db("o_video").where("id", videoId).update({ state: "\u751F\u6210\u6210\u529F", ...await inspectVideoQuality(videoPath) })).catch(async (cause) => {
-          await utils_default.db("o_video").where("id", videoId).update({ state: "\u751F\u6210\u5931\u8D25", errorReason: utils_default.error(cause).message });
-        });
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/generateVideoPrompt.ts
-var import_express87, router87, generateVideoPrompt_default;
-var init_generateVideoPrompt = __esm({
-  "src/routes/production/workbench/generateVideoPrompt.ts"() {
-    "use strict";
-    import_express87 = __toESM(require_express2());
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    init_videoLanguages();
-    init_videoPromptGeneration();
-    router87 = import_express87.default.Router();
-    generateVideoPrompt_default = router87.post(
-      "/",
-      validateFields({
-        trackId: external_exports.number(),
-        languages: dialogueLanguagesSchema.optional(),
-        regenerate: external_exports.boolean().optional(),
-        replaceBasePrompt: external_exports.boolean().optional(),
-        projectId: external_exports.number(),
-        info: external_exports.array(
-          external_exports.object({
-            id: external_exports.number(),
-            sources: external_exports.string(),
-            reference: external_exports.boolean().optional(),
-            slotType: external_exports.string().optional(),
-            fileType: external_exports.string().optional(),
-            prompt: external_exports.string().optional()
-          })
-        ),
-        model: external_exports.string(),
-        mode: external_exports.string()
-      }),
-      async (req, res) => {
-        try {
-          return res.status(200).send(success3(await generateVideoPromptForTrack(req.body)));
-        } catch (cause) {
-          return res.status([404, 409].includes(cause.status) ? cause.status : 400).send(error50(cause.message));
-        }
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/getAudioBindAssetsList.ts
-var import_express88, router88, getAudioBindAssetsList_default;
-var init_getAudioBindAssetsList = __esm({
-  "src/routes/production/workbench/getAudioBindAssetsList.ts"() {
-    "use strict";
-    import_express88 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router88 = import_express88.default.Router();
-    getAudioBindAssetsList_default = router88.post(
-      "/",
-      validateFields({
-        assetsIds: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { assetsIds } = req.body;
-        const assets2AudioData = await utils_default.db("o_assetsRole2Audio").whereIn("assetsRoleId", assetsIds).select("assetsAudioId", "assetsRoleId");
-        if (assets2AudioData.length) {
-          const assetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assets.assetsId", assets2AudioData.map((i) => i.assetsAudioId)).select("o_assets.id", "o_image.filePath", "o_assets.prompt", "o_assets.assetsId");
-          await Promise.all(
-            assetsData.map(async (i) => {
-              i.filePath && (i.src = await utils_default.oss.getFileUrl(i.filePath));
-            })
-          );
-          return res.status(200).send(
-            success3(
-              assetsData.map((i) => ({
-                fileType: "audio",
-                sources: "assets",
-                src: i.src,
-                id: i.id,
-                prompt: i.prompt
-              }))
-            )
-          );
-        }
-        res.status(200).send(success3());
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/getFileUrl.ts
-var import_express89, router89, getFileUrl_default;
-var init_getFileUrl = __esm({
-  "src/routes/production/workbench/getFileUrl.ts"() {
-    "use strict";
-    import_express89 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router89 = import_express89.default.Router();
-    getFileUrl_default = router89.post(
-      "/",
-      validateFields({
-        items: external_exports.array(external_exports.object({
-          id: external_exports.number(),
-          sources: external_exports.string()
-        }))
-      }),
-      async (req, res) => {
-        const { items } = req.body;
-        const result = {};
-        const storyboardIds = items.filter((item) => item.sources == "storyboard").map((item) => item.id);
-        const totalFilePaths = [];
-        if (storyboardIds.length) {
-          const storyBoardPaths = await utils_default.db("o_storyboard").whereIn("id", storyboardIds).select("id", "filePath");
-          totalFilePaths.push(...storyBoardPaths.map((i) => ({ id: i.id, filePath: i.filePath, sources: "storyboard" })));
-        }
-        const assetsIds = items.filter((item) => item.sources == "assets").map((item) => item.id);
-        if (assetsIds.length) {
-          const assetsPaths = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assets.id", assetsIds).select("o_assets.id", "o_image.filePath");
-          totalFilePaths.push(...assetsPaths.map((i) => ({ id: i.id, filePath: i.filePath, sources: "assets" })));
-        }
-        await Promise.all(
-          totalFilePaths.map(async (item) => {
-            result[`${item.id}:${item.sources}`] = item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : "";
-          })
-        );
-        res.status(200).send(success3({ data: result }));
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/getGenerateData.ts
-var import_express90, router90, getGenerateData_default;
-var init_getGenerateData = __esm({
-  "src/routes/production/workbench/getGenerateData.ts"() {
-    "use strict";
-    import_express90 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    init_db();
-    init_videoLanguages();
-    router90 = import_express90.default.Router();
-    getGenerateData_default = router90.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        scriptId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { projectId, scriptId } = req.body;
-        const projectData = await utils_default.db("o_project").where("id", projectId).select("id", "videoModel", "mode").first();
-        if (!projectData?.videoModel) {
-          return res.status(400).json(success3("\u9879\u76EE\u672A\u914D\u7F6E\u89C6\u9891\u6A21\u578B"));
-        }
-        let videoMode = "";
-        try {
-          videoMode = JSON.parse(projectData?.mode ?? "");
-        } catch (e) {
-          videoMode = projectData?.mode ?? "";
-        }
-        const isRef = Array.isArray(videoMode) ? true : false;
-        const storyboardList = await utils_default.db("o_storyboard").where({ scriptId, projectId }).orderBy("index", "asc");
-        await Promise.all(
-          storyboardList.map(async (i) => {
-            i.filePath = i.filePath ? await utils_default.oss.getSmallImageUrl(i.filePath) : "";
-          })
-        );
-        const storyboardTrackRecord = {};
-        storyboardList.forEach((i) => {
-          if (storyboardTrackRecord[i.trackId]) {
-            storyboardTrackRecord[i.trackId].push({
-              src: i.filePath,
-              fileType: "image",
-              sources: "storyboard",
-              ...i.prompt != null ? { prompt: i.videoDesc } : {},
-              ...i.id != null ? { id: i.id } : {},
-              index: i.index
-            });
-          } else {
-            storyboardTrackRecord[i.trackId] = [
-              {
-                src: i.filePath,
-                fileType: "image",
-                sources: "storyboard",
-                ...i.prompt != null ? { prompt: i.videoDesc } : {},
-                ...i.id != null ? { id: i.id } : {},
-                index: i.index
-              }
-            ];
-          }
-        });
-        const otherDataMap = {};
-        const audioReferenceCount = (() => {
-          if (!Array.isArray(videoMode)) return 0;
-          const item = videoMode.find((v) => v.toLowerCase().startsWith("audioreference:"));
-          if (!item) return 0;
-          const num = parseInt(item.split(":")[1], 10);
-          return isNaN(num) ? 0 : num;
-        })();
-        if (isRef) {
-          const storyIds = storyboardList.map((s) => s.id);
-          const assetDatas = await utils_default.db("o_assets2Storyboard").leftJoin("o_assets", "o_assets2Storyboard.assetId", "o_assets.id").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assets2Storyboard.storyboardId", storyIds).select("o_assets.*", "o_image.filePath", "o_assets2Storyboard.storyboardId");
-          const queryAudioIds = [...assetDatas.map((i) => i.id), ...assetDatas.map((i) => i.assetsId)].filter(Boolean);
-          const assets2AudioData = await utils_default.db("o_assetsRole2Audio").leftJoin("o_assets", "o_assets.assetsId", "o_assetsRole2Audio.assetsAudioId").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assetsRole2Audio.assetsRoleId", queryAudioIds).select(
-            "o_assets.id",
-            "o_assets.name",
-            "o_assetsRole2Audio.assetsRoleId",
-            "o_assets.describe",
-            "o_assets.type",
-            "o_assets.prompt",
-            "o_image.filePath"
-          );
-          const audioRecord = {};
-          await Promise.all(
-            assets2AudioData.map(async (i) => {
-              if (!audioRecord[i.assetsRoleId]) audioRecord[i.assetsRoleId] = [];
-              audioRecord[i.assetsRoleId].push({
-                id: i.id,
-                name: i.name,
-                describe: i.describe,
-                type: i.type,
-                fileType: "audio",
-                sources: "assets",
-                prompt: i.prompt,
-                src: i.filePath ? await utils_default.oss.getFileUrl(i.filePath) : ""
-              });
-            })
-          );
-          await Promise.all(
-            assetDatas.map(async (i) => {
-              const item = {
-                id: i.id,
-                name: i.name,
-                describe: i.describe,
-                type: i.type,
-                fileType: "image",
-                sources: "assets",
-                src: i.filePath ? await utils_default.oss.getSmallImageUrl(i.filePath) : ""
-              };
-              const sid = i.storyboardId;
-              if (!otherDataMap[sid]) otherDataMap[sid] = [];
-              otherDataMap[sid].push(item);
-              if (audioRecord[i.id]) otherDataMap[sid].push(...audioRecord[i.id]);
-              if (audioRecord[i.assetsId]) otherDataMap[sid].push(...audioRecord[i.assetsId]);
-            })
-          );
-        }
-        const trackData = await utils_default.db("o_videoTrack").where({ projectId, scriptId, archived: 0 });
-        const videoList = await utils_default.db("o_video").whereIn(
-          "videoTrackId",
-          trackData.map((t) => t.id)
-        );
-        const variants = await db("o_videoPromptVariant").whereIn("trackId", trackData.map((t) => t.id).filter((id) => id != null));
-        const videoLanguages = await db("o_videoLanguage").whereIn("videoId", videoList.map((v) => v.id).filter((id) => id != null));
-        const selection = await db("o_videoLanguageSelection").where({ projectId, scriptId }).first();
-        const trackList = [];
-        const trackIdMap = [...new Set(trackData.map((t) => t.id))];
-        for (const trackId of trackIdMap) {
-          const item = trackData.find((t) => t.id === trackId);
-          trackList.push({
-            id: trackId,
-            variants: variants.filter((v) => v.trackId === trackId),
-            duration: item?.duration ?? 0,
-            prompt: item?.prompt || "",
-            state: item?.state ?? "\u672A\u751F\u6210",
-            reason: item?.reason ?? "",
-            selectVideoId: Number(item?.videoId),
-            medias: (() => {
-              const storyboardMedias = storyboardTrackRecord[trackId] ?? [];
-              const assetMedias = storyboardMedias.flatMap((s) => otherDataMap[s.id] ?? []);
-              const seenAssetIds = /* @__PURE__ */ new Set();
-              const uniqueAssets = assetMedias.filter((a) => {
-                if (seenAssetIds.has(a.id)) return false;
-                seenAssetIds.add(a.id);
-                return true;
-              });
-              const audioCountMap = {};
-              const filteredAssets = uniqueAssets.filter((a) => {
-                if (a.fileType !== "audio" || audioReferenceCount === 0) return true;
-                const key = String(a.id);
-                audioCountMap[key] = (audioCountMap[key] ?? 0) + 1;
-                const totalAudio = Object.values(audioCountMap).reduce((s, n) => s + n, 0);
-                return totalAudio <= audioReferenceCount;
-              });
-              const hasImageAssetData = filteredAssets.filter((i) => i.src);
-              const notHasImageAssetData = filteredAssets.filter((i) => !i.src);
-              return [...hasImageAssetData, ...storyboardMedias, ...notHasImageAssetData];
-            })(),
-            videoList: await Promise.all(
-              videoList.filter((v) => v.videoTrackId === trackId).map(async (v) => ({
-                id: v.id,
-                language: videoLanguages.find((meta4) => meta4.videoId === v.id)?.language || "",
-                src: v.filePath ? await utils_default.oss.getFileUrl(v.filePath) : "",
-                state: v.state === "\u5DF2\u5B8C\u6210" || v.state === "\u751F\u6210\u6210\u529F" ? "\u5DF2\u5B8C\u6210" : v.state === "\u751F\u6210\u4E2D" ? "\u751F\u6210\u4E2D" : v.state === "\u751F\u6210\u5931\u8D25" ? "\u751F\u6210\u5931\u8D25" : "\u672A\u751F\u6210",
-                errorReason: v?.errorReason ?? ""
-              }))
-            )
-          });
-        }
-        res.status(200).send(
-          success3({
-            storyboardList: await Promise.all(
-              storyboardList.map(async (s) => ({
-                ...s,
-                src: s.filePath
-              }))
-            ),
-            trackList,
-            dialogueLanguages,
-            selectedLanguages: selection ? JSON.parse(selection.languages) : []
-          })
-        );
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/getVideoList.ts
-var import_express91, router91, getVideoList_default;
-var init_getVideoList = __esm({
-  "src/routes/production/workbench/getVideoList.ts"() {
-    "use strict";
-    import_express91 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router91 = import_express91.default.Router();
-    getVideoList_default = router91.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        scriptId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { projectId, scriptId } = req.body;
-        const storyboardList = await utils_default.db("o_storyboard").where({ scriptId, projectId }).orderBy("index", "asc");
-        const videoList = await utils_default.db("o_video").whereIn(
-          "videoTrackId",
-          storyboardList.map((s) => s.trackId)
-        );
-        res.status(200).send(
-          success3(
-            await Promise.all(
-              videoList.map(async (s) => ({
-                ...s,
-                src: s.filePath ? await utils_default.oss.getSmallImageUrl(s.filePath) : ""
-              }))
-            )
-          )
-        );
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/saveDialogueLanguages.ts
-var import_express92, router92, saveDialogueLanguages_default;
-var init_saveDialogueLanguages = __esm({
-  "src/routes/production/workbench/saveDialogueLanguages.ts"() {
-    "use strict";
-    import_express92 = __toESM(require_express2());
-    init_zod();
-    init_db();
-    init_videoLanguages();
-    init_middleware();
-    init_responseFormat();
-    router92 = import_express92.default.Router();
-    saveDialogueLanguages_default = router92.post("/", validateFields({ projectId: external_exports.number(), scriptId: external_exports.number(), languages: dialogueLanguagesSchema }), async (req, res) => {
-      const { projectId, scriptId, languages } = req.body;
-      if (!await db("o_project").where({ id: projectId }).first()) return res.status(404).send(error50("\u9879\u76EE\u4E0D\u5B58\u5728"));
-      await db("o_videoLanguageSelection").insert({ projectId, scriptId, languages: JSON.stringify(languages) }).onConflict(["projectId", "scriptId"]).merge();
-      const saved = await db("o_videoLanguageSelection").where({ projectId, scriptId }).first();
-      res.send(success3(JSON.parse(saved.languages)));
-    });
-  }
-});
-
-// src/routes/production/workbench/selectVideo.ts
-var import_express93, router93, selectVideo_default;
-var init_selectVideo = __esm({
-  "src/routes/production/workbench/selectVideo.ts"() {
-    "use strict";
-    import_express93 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    init_db();
-    router93 = import_express93.default.Router();
-    selectVideo_default = router93.post(
-      "/",
-      validateFields({
-        trackId: external_exports.number(),
-        videoId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { trackId, videoId } = req.body;
-        const meta4 = await db("o_videoLanguage").where({ videoId }).first();
-        if (meta4) {
-          const video = await utils_default.db("o_video").where({ id: videoId, videoTrackId: trackId }).first();
-          if (!video) return res.status(400).send("\u89C6\u9891\u4E0D\u5C5E\u4E8E\u5F53\u524D\u6BB5");
-          await db("o_videoPromptVariant").where({ trackId, language: meta4.language }).update({ videoId });
-          return res.status(200).send(success3({ message: "\u8BED\u8A00\u7248\u672C\u89C6\u9891\u9009\u62E9\u6210\u529F" }));
-        }
-        await utils_default.db("o_videoTrack").where("id", trackId).update({
-          videoId
-        });
-        res.status(200).send(success3({ message: "\u89C6\u9891\u9009\u62E9\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/updateVideoDuration.ts
-var import_express94, router94, updateVideoDuration_default;
-var init_updateVideoDuration = __esm({
-  "src/routes/production/workbench/updateVideoDuration.ts"() {
-    "use strict";
-    import_express94 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router94 = import_express94.default.Router();
-    updateVideoDuration_default = router94.post(
-      "/",
-      validateFields({
-        id: external_exports.number(),
-        duration: external_exports.number().optional()
-      }),
-      async (req, res) => {
-        const { id, duration: duration4 } = req.body;
-        await utils_default.db("o_videoTrack").where("id", id).update({
-          duration: duration4
-        });
-        res.status(200).send(success3("\u66F4\u65B0\u6210\u529F"));
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/updateVideoPrompt.ts
-var import_express95, router95, updateVideoPrompt_default;
-var init_updateVideoPrompt = __esm({
-  "src/routes/production/workbench/updateVideoPrompt.ts"() {
-    "use strict";
-    import_express95 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    init_db();
-    init_videoLanguages();
-    init_h3ReferencePlan();
-    router95 = import_express95.default.Router();
-    updateVideoPrompt_default = router95.post(
-      "/",
-      validateFields({
-        id: external_exports.number(),
-        language: dialogueLanguageSchema.optional(),
-        prompt: external_exports.string().optional()
-      }),
-      async (req, res) => {
-        const { id, prompt } = req.body;
-        const track = await utils_default.db("o_videoTrack").where({ id }).first();
-        if (!track) return res.status(404).send(error50("\u89C6\u9891\u6BB5\u4E0D\u5B58\u5728"));
-        const preservePlan = async (source) => {
-          if (typeof prompt === "string" && prompt.trim()) await copyH3ReferencePlan(db, id, source || "", prompt, false);
-        };
-        if (req.body.language) {
-          if (!await utils_default.db("o_videoTrack").where({ id }).first()) return res.status(404).send(error50("\u89C6\u9891\u6BB5\u4E0D\u5B58\u5728"));
-          const variant = await db("o_videoPromptVariant").where({ trackId: id, language: req.body.language }).first();
-          if (variant?.state === "\u751F\u6210\u4E2D") return res.status(409).send(error50("\u8BE5\u8BED\u8A00\u63D0\u793A\u8BCD\u6B63\u5728\u751F\u6210\uFF0C\u8BF7\u5B8C\u6210\u540E\u518D\u7F16\u8F91"));
-          try {
-            await preservePlan(variant?.prompt || "");
-          } catch (cause) {
-            return res.status(409).send(error50(cause.message));
-          }
-          await db("o_videoPromptVariant").insert({ trackId: id, language: req.body.language, prompt: prompt || "", state: prompt?.trim() ? "\u5DF2\u5B8C\u6210" : "\u672A\u751F\u6210", reason: null }).onConflict(["trackId", "language"]).merge();
-          return res.status(200).send(success3("\u66F4\u65B0\u6210\u529F"));
-        }
-        if (track.state === "\u751F\u6210\u4E2D") return res.status(409).send(error50("\u63D0\u793A\u8BCD\u6B63\u5728\u751F\u6210\uFF0C\u8BF7\u5B8C\u6210\u540E\u518D\u7F16\u8F91"));
-        try {
-          await preservePlan(track.prompt || "");
-        } catch (cause) {
-          return res.status(409).send(error50(cause.message));
-        }
-        await utils_default.db("o_videoTrack").where("id", id).update({
-          prompt
-        });
-        res.status(200).send(success3("\u66F4\u65B0\u6210\u529F"));
-      }
-    );
-  }
-});
-
-// src/routes/project/addDirectorManual.ts
-var import_express96, import_fs9, import_path13, router96, addDirectorManual_default;
-var init_addDirectorManual = __esm({
-  "src/routes/project/addDirectorManual.ts"() {
-    "use strict";
-    import_express96 = __toESM(require_express2());
-    init_utils3();
-    init_responseFormat();
-    import_fs9 = __toESM(require("fs"));
-    import_path13 = __toESM(require("path"));
-    init_middleware();
-    init_zod();
-    router96 = import_express96.default.Router();
-    addDirectorManual_default = router96.post(
-      "/",
-      validateFields({
-        name: external_exports.string(),
-        images: external_exports.array(external_exports.string()),
-        directorManual: external_exports.string(),
-        data: external_exports.array(
-          external_exports.object({
-            label: external_exports.string(),
-            value: external_exports.string(),
-            data: external_exports.string()
-          })
-        )
-      }),
-      async (req, res) => {
-        try {
-          const { name: name28, images, data, directorManual } = req.body;
-          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
-            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
-            return;
-          }
-          const mainPath = utils_default.getPath(["skills", "story_skills", directorManual]);
-          if (import_fs9.default.existsSync(mainPath)) {
-            return res.status(400).send(error50("\u8BF7\u52FF\u586B\u5199\u91CD\u590D\u540D\u79F0\u7684\u89C6\u89C9\u624B\u518C"));
-          }
-          const DATA_MAP3 = [
-            { value: "README" },
-            { value: "director_planning_narrative", subDir: "driector_skills" },
-            { value: "director_storyboard_table_narrative", subDir: "driector_skills" }
-          ];
-          const SUB_DIR_MAP = new Map(DATA_MAP3.map(({ value, subDir }) => [value, subDir ?? ""]));
-          const VALID_KEYS = new Set(DATA_MAP3.map(({ value }) => value));
-          for (const item of data) {
-            if (!VALID_KEYS.has(item.value)) continue;
-            const subDir = SUB_DIR_MAP.get(item.value);
-            const dirArr = subDir ? [mainPath, subDir] : [mainPath];
-            const filePath = utils_default.getPath([...dirArr, `${item.value}.md`]);
-            const fileDir = import_path13.default.dirname(filePath);
-            if (!import_fs9.default.existsSync(fileDir)) {
-              import_fs9.default.mkdirSync(fileDir, { recursive: true });
-            }
-            import_fs9.default.writeFileSync(filePath, item.data, "utf-8");
-          }
-          const imagesDir = import_path13.default.join(mainPath, "images");
-          let existingFiles = [];
-          try {
-            const allFiles = import_fs9.default.readdirSync(imagesDir);
-            existingFiles = allFiles.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f));
-          } catch {
-          }
-          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path13.default.basename(new URL(url4).pathname)));
-          for (const file3 of existingFiles) {
-            if (!retainedFileNames.has(file3)) {
-              const filePath = import_path13.default.join(imagesDir, file3);
-              if (import_fs9.default.existsSync(filePath)) import_fs9.default.unlinkSync(filePath);
-            }
-          }
-          if (!import_fs9.default.existsSync(imagesDir)) {
-            import_fs9.default.mkdirSync(imagesDir, { recursive: true });
-          }
-          for (const item of images) {
-            if (!item.startsWith("http")) {
-              const fileName = `${utils_default.uuid()}.jpg`;
-              const targetPath = import_path13.default.join(imagesDir, fileName);
-              const buffer = Buffer.from(item.replace(/^data:[^;]+;base64,/, ""), "base64");
-              import_fs9.default.writeFileSync(targetPath, buffer);
-            }
-          }
-          res.status(200).send(success3());
-        } catch (err) {
-          res.status(500).send({ error: String(err) });
-        }
-      }
-    );
-  }
-});
-
-// src/routes/project/addProject.ts
-var import_express97, router97, addProject_default;
-var init_addProject = __esm({
-  "src/routes/project/addProject.ts"() {
-    "use strict";
-    import_express97 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router97 = import_express97.default.Router();
-    addProject_default = router97.post(
-      "/",
-      validateFields({
-        projectType: external_exports.string(),
-        name: external_exports.string(),
-        intro: external_exports.string(),
-        type: external_exports.string(),
-        artStyle: external_exports.string(),
-        directorManual: external_exports.string(),
-        videoRatio: external_exports.string(),
-        imageModel: external_exports.string(),
-        videoModel: external_exports.string(),
-        imageQuality: external_exports.string(),
-        mode: external_exports.string()
-      }),
-      async (req, res) => {
-        const { projectType, name: name28, intro, type, directorManual, artStyle, videoRatio, imageModel, videoModel, imageQuality, mode } = req.body;
-        await utils_default.db("o_project").insert({
-          id: Date.now(),
-          projectType,
-          name: name28,
-          intro,
-          type,
-          artStyle,
-          videoRatio,
-          directorManual,
-          userId: 1,
-          imageModel,
-          videoModel,
-          createTime: Date.now(),
-          imageQuality,
-          mode
-        });
-        res.status(200).send(success3({ message: "\u65B0\u589E\u9879\u76EE\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/project/addVisualManual.ts
-var import_express98, import_fs10, import_path14, router98, addVisualManual_default;
-var init_addVisualManual = __esm({
-  "src/routes/project/addVisualManual.ts"() {
-    "use strict";
-    import_express98 = __toESM(require_express2());
-    init_utils3();
-    init_responseFormat();
-    import_fs10 = __toESM(require("fs"));
-    import_path14 = __toESM(require("path"));
-    init_middleware();
-    init_zod();
-    router98 = import_express98.default.Router();
-    addVisualManual_default = router98.post(
-      "/",
-      validateFields({
-        name: external_exports.string(),
-        images: external_exports.array(external_exports.string()),
-        stylePath: external_exports.string(),
-        data: external_exports.array(
-          external_exports.object({
-            label: external_exports.string(),
-            value: external_exports.string(),
-            data: external_exports.string()
-          })
-        )
-      }),
-      async (req, res) => {
-        try {
-          const { name: name28, images, data, stylePath } = req.body;
-          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
-            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
-            return;
-          }
-          const mainPath = utils_default.getPath(["skills", "art_skills", stylePath]);
-          if (import_fs10.default.existsSync(mainPath)) {
-            return res.status(400).send(error50("\u8BF7\u52FF\u586B\u5199\u91CD\u590D\u540D\u79F0\u7684\u89C6\u89C9\u624B\u518C"));
-          }
-          const DATA_MAP3 = [
-            { value: "README" },
-            { value: "prefix" },
-            { value: "art_character", subDir: "art_prompt" },
-            { value: "art_character_derivative", subDir: "art_prompt" },
-            { value: "art_prop", subDir: "art_prompt" },
-            { value: "art_prop_derivative", subDir: "art_prompt" },
-            { value: "art_scene", subDir: "art_prompt" },
-            { value: "art_scene_derivative", subDir: "art_prompt" },
-            { value: "director_storyboard", subDir: "driector_skills" },
-            { value: "art_storyboard_video", subDir: "art_prompt" },
-            { value: "director_planning_style", subDir: "driector_skills" },
-            { value: "director_storyboard_table_style", subDir: "driector_skills" }
-          ];
-          const SUB_DIR_MAP = new Map(DATA_MAP3.map(({ value, subDir }) => [value, subDir ?? ""]));
-          const VALID_KEYS = new Set(DATA_MAP3.map(({ value }) => value));
-          for (const item of data) {
-            if (!VALID_KEYS.has(item.value)) continue;
-            const subDir = SUB_DIR_MAP.get(item.value);
-            const dirArr = subDir ? [mainPath, subDir] : [mainPath];
-            const filePath = utils_default.getPath([...dirArr, `${item.value}.md`]);
-            const fileDir = import_path14.default.dirname(filePath);
-            if (!import_fs10.default.existsSync(fileDir)) {
-              import_fs10.default.mkdirSync(fileDir, { recursive: true });
-            }
-            import_fs10.default.writeFileSync(filePath, item.data, "utf-8");
-          }
-          const imagesDir = import_path14.default.join(mainPath, "images");
-          let existingFiles = [];
-          try {
-            const allFiles = import_fs10.default.readdirSync(imagesDir);
-            existingFiles = allFiles.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f));
-          } catch {
-          }
-          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path14.default.basename(new URL(url4).pathname)));
-          for (const file3 of existingFiles) {
-            if (!retainedFileNames.has(file3)) {
-              const filePath = import_path14.default.join(imagesDir, file3);
-              if (import_fs10.default.existsSync(filePath)) import_fs10.default.unlinkSync(filePath);
-            }
-          }
-          if (!import_fs10.default.existsSync(imagesDir)) {
-            import_fs10.default.mkdirSync(imagesDir, { recursive: true });
-          }
-          for (const item of images) {
-            if (!item.startsWith("http")) {
-              const fileName = `${utils_default.uuid()}.jpg`;
-              const targetPath = import_path14.default.join(imagesDir, fileName);
-              const buffer = Buffer.from(item.replace(/^data:[^;]+;base64,/, ""), "base64");
-              import_fs10.default.writeFileSync(targetPath, buffer);
-            }
-          }
-          res.status(200).send(success3());
-        } catch (err) {
-          res.status(500).send({ error: String(err) });
-        }
-      }
-    );
-  }
-});
-
-// src/routes/project/deleteDirectorManual.ts
-var import_express99, import_promises7, router99, deleteDirectorManual_default;
-var init_deleteDirectorManual = __esm({
-  "src/routes/project/deleteDirectorManual.ts"() {
-    "use strict";
-    import_express99 = __toESM(require_express2());
-    init_utils3();
-    import_promises7 = __toESM(require("node:fs/promises"));
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router99 = import_express99.default.Router();
-    deleteDirectorManual_default = router99.post(
-      "/",
-      validateFields({
-        name: external_exports.string()
-      }),
-      async (req, res) => {
-        try {
-          const { name: name28 } = req.body;
-          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
-            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
-            return;
-          }
-          const artPromptsDir = utils_default.getPath(["skills", "story_skills", name28]);
-          try {
-            const stat = await import_promises7.default.stat(artPromptsDir);
-            if (!stat.isDirectory()) {
-              throw new Error(`${artPromptsDir} \u4E0D\u662F\u6587\u4EF6\u5939`);
-            }
-            await import_promises7.default.rm(artPromptsDir, { recursive: true, force: true });
-          } catch (e) {
-            console.error("[\u5220\u9664\u89C6\u89C9\u624B\u518C] \u5220\u9664\u5931\u8D25:", artPromptsDir, e);
-          }
-          res.status(200).send(success3({ message: "\u5220\u9664\u6210\u529F" }));
-        } catch (err) {
-          res.status(500).send(error50(utils_default.error(err).message || "\u5220\u9664\u5931\u8D25"));
-        }
-      }
-    );
-  }
-});
-
-// src/routes/project/deleteVisualManual.ts
-var import_express100, import_promises8, router100, deleteVisualManual_default;
-var init_deleteVisualManual = __esm({
-  "src/routes/project/deleteVisualManual.ts"() {
-    "use strict";
-    import_express100 = __toESM(require_express2());
-    init_utils3();
-    import_promises8 = __toESM(require("node:fs/promises"));
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router100 = import_express100.default.Router();
-    deleteVisualManual_default = router100.post(
-      "/",
-      validateFields({
-        name: external_exports.string()
-      }),
-      async (req, res) => {
-        try {
-          const { name: name28 } = req.body;
-          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
-            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
-            return;
-          }
-          const artPromptsDir = utils_default.getPath(["skills", "art_skills", name28]);
-          try {
-            const stat = await import_promises8.default.stat(artPromptsDir);
-            if (!stat.isDirectory()) {
-              throw new Error(`${artPromptsDir} \u4E0D\u662F\u6587\u4EF6\u5939`);
-            }
-            await import_promises8.default.rm(artPromptsDir, { recursive: true, force: true });
-          } catch (e) {
-            console.error("[\u5220\u9664\u89C6\u89C9\u624B\u518C] \u5220\u9664\u5931\u8D25:", artPromptsDir, e);
-          }
-          res.status(200).send(success3({ message: "\u5220\u9664\u6210\u529F" }));
-        } catch (err) {
-          res.status(500).send(error50(utils_default.error(err).message || "\u5220\u9664\u5931\u8D25"));
-        }
-      }
-    );
-  }
-});
-
-// src/routes/project/delProject.ts
-var import_express101, router101, delProject_default;
-var init_delProject = __esm({
-  "src/routes/project/delProject.ts"() {
-    "use strict";
-    import_express101 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router101 = import_express101.default.Router();
-    delProject_default = router101.post(
-      "/",
-      validateFields({
-        id: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id } = req.body;
-        await utils_default.db("o_project").where("id", id).delete();
-        await utils_default.db("o_agentWorkData").where("projectId", id).delete();
-        await utils_default.db("o_novel").where("projectId", id).delete();
-        const scriptData = await utils_default.db("o_script").where("projectId", id).select("id");
-        const scriptIds = scriptData.map((item) => item.id);
-        if (scriptIds && scriptIds.length > 0) {
-          await utils_default.db("o_scriptAssets").whereIn("scriptId", scriptIds).delete();
-        }
-        await utils_default.db("o_script").where("projectId", id).delete();
-        await utils_default.db("o_tasks").where("projectId", id).delete();
-        const storyboardData = await utils_default.db("o_storyboard").where("projectId", id).select("id");
-        const storyboardIds = storyboardData.map((item) => item.id);
-        if (storyboardIds.length > 0) {
-          await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", storyboardIds).delete();
-        }
-        await utils_default.db("o_storyboard").where("projectId", id).delete();
-        const assetsData = await utils_default.db("o_assets").where("projectId", id).select("id");
-        const assetsIds = assetsData.map((item) => item.id);
-        if (assetsIds && assetsIds.length > 0) {
-          await utils_default.db("o_assets").whereIn("id", assetsIds).update({ imageId: null });
-          await utils_default.db("o_image").whereIn("assetsId", assetsIds).delete();
-        }
-        await utils_default.db("o_assets").where("projectId", id).delete();
-        await utils_default.db("o_videoTrack").where("projectId", id).delete();
-        await utils_default.db("o_video").where("projectId", id).delete();
-        await utils_default.db("memories").where("isolationKey", "like", `${id}:%`).delete();
-        try {
-          await utils_default.oss.deleteDirectory(`${id}/`);
-          console.log(`\u9879\u76EE ${id} \u7684OSS\u6587\u4EF6\u5939\u5220\u9664\u6210\u529F`);
-        } catch (error73) {
-          console.log(`\u9879\u76EE ${id} \u6CA1\u6709\u5BF9\u5E94\u7684OSS\u6587\u4EF6\u5939\uFF0C\u8DF3\u8FC7\u5220\u9664`);
-        }
-        res.status(200).send(success3({ message: "\u5220\u9664\u9879\u76EE\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/project/editDirectorlManual.ts
-var import_express102, import_fs11, import_path15, router102, editDirectorlManual_default;
-var init_editDirectorlManual = __esm({
-  "src/routes/project/editDirectorlManual.ts"() {
-    "use strict";
-    import_express102 = __toESM(require_express2());
-    init_utils3();
-    init_responseFormat();
-    import_fs11 = __toESM(require("fs"));
-    import_path15 = __toESM(require("path"));
-    init_middleware();
-    init_zod();
-    router102 = import_express102.default.Router();
-    editDirectorlManual_default = router102.post(
-      "/",
-      validateFields({
-        name: external_exports.string(),
-        directorManual: external_exports.string(),
-        images: external_exports.array(external_exports.string()),
-        data: external_exports.array(
-          external_exports.object({
-            label: external_exports.string(),
-            value: external_exports.string(),
-            data: external_exports.string()
-          })
-        )
-      }),
-      async (req, res) => {
-        try {
-          const { name: name28, directorManual, images, data } = req.body;
-          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
-            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
-            return;
-          }
-          const mainPath = utils_default.getPath(["skills", "story_skills", directorManual]);
-          if (!import_fs11.default.existsSync(mainPath)) {
-            return res.status(400).send(error50("\u5BFC\u6F14\u624B\u518C\u4E0D\u5B58\u5728"));
-          }
-          const DATA_MAP3 = [
-            { value: "README" },
-            { value: "director_planning_narrative", subDir: "driector_skills" },
-            { value: "director_storyboard_table_narrative", subDir: "driector_skills" }
-          ];
-          const SUB_DIR_MAP = new Map(DATA_MAP3.map(({ value, subDir }) => [value, subDir ?? ""]));
-          const VALID_KEYS = new Set(DATA_MAP3.map(({ value }) => value));
-          for (const item of data) {
-            if (!VALID_KEYS.has(item.value)) continue;
-            const subDir = SUB_DIR_MAP.get(item.value);
-            const dirArr = subDir ? [mainPath, subDir] : [mainPath];
-            const filePath = utils_default.getPath([...dirArr, `${item.value}.md`]);
-            const fileDir = import_path15.default.dirname(filePath);
-            if (!import_fs11.default.existsSync(fileDir)) {
-              import_fs11.default.mkdirSync(fileDir, { recursive: true });
-            }
-            const content = item.value === "README" ? `${name28}
-${item.data}` : item.data;
-            import_fs11.default.writeFileSync(filePath, content, "utf-8");
-          }
-          const imagesDir = import_path15.default.join(mainPath, "images");
-          let existingFiles = [];
-          try {
-            const allFiles = import_fs11.default.readdirSync(imagesDir);
-            existingFiles = allFiles.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f));
-          } catch {
-          }
-          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path15.default.basename(new URL(url4).pathname)));
-          for (const file3 of existingFiles) {
-            if (!retainedFileNames.has(file3)) {
-              const filePath = import_path15.default.join(imagesDir, file3);
-              if (import_fs11.default.existsSync(filePath)) import_fs11.default.unlinkSync(filePath);
-            }
-          }
-          if (!import_fs11.default.existsSync(imagesDir)) {
-            import_fs11.default.mkdirSync(imagesDir, { recursive: true });
-          }
-          for (const item of images) {
-            if (!item.startsWith("http")) {
-              const fileName = `${utils_default.uuid()}.jpg`;
-              const targetPath = import_path15.default.join(imagesDir, fileName);
-              const buffer = Buffer.from(item.replace(/^data:[^;]+;base64,/, ""), "base64");
-              import_fs11.default.writeFileSync(targetPath, buffer);
-            }
-          }
-          res.status(200).send(success3());
-        } catch (err) {
-          res.status(500).send({ error: String(err) });
-        }
-      }
-    );
-  }
-});
-
-// src/routes/project/editProject.ts
-var import_express103, router103, editProject_default;
-var init_editProject = __esm({
-  "src/routes/project/editProject.ts"() {
-    "use strict";
-    import_express103 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router103 = import_express103.default.Router();
-    editProject_default = router103.post(
-      "/",
-      validateFields({
-        id: external_exports.number(),
-        name: external_exports.string(),
-        intro: external_exports.string(),
-        type: external_exports.string(),
-        artStyle: external_exports.string(),
-        directorManual: external_exports.string(),
-        videoRatio: external_exports.string(),
-        imageModel: external_exports.string(),
-        videoModel: external_exports.string(),
-        projectType: external_exports.string(),
-        imageQuality: external_exports.string(),
-        mode: external_exports.string()
-      }),
-      async (req, res) => {
-        const { id, name: name28, intro, type, artStyle, videoRatio, directorManual, imageModel, videoModel, imageQuality, projectType, mode } = req.body;
-        await utils_default.db("o_project").where("id", id).update({
-          name: name28,
-          intro,
-          type,
-          artStyle,
-          videoRatio,
-          directorManual,
-          imageModel,
-          videoModel,
-          imageQuality,
-          projectType,
-          mode
-        });
-        res.status(200).send(success3({ message: "\u7F16\u8F91\u9879\u76EE\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/project/editVisualManual.ts
-var import_express104, import_fs12, import_path16, router104, editVisualManual_default;
-var init_editVisualManual = __esm({
-  "src/routes/project/editVisualManual.ts"() {
-    "use strict";
-    import_express104 = __toESM(require_express2());
-    init_utils3();
-    init_responseFormat();
-    import_fs12 = __toESM(require("fs"));
-    import_path16 = __toESM(require("path"));
-    init_middleware();
-    init_zod();
-    router104 = import_express104.default.Router();
-    editVisualManual_default = router104.post(
-      "/",
-      validateFields({
-        name: external_exports.string(),
-        stylePath: external_exports.string(),
-        images: external_exports.array(external_exports.string()),
-        data: external_exports.array(
-          external_exports.object({
-            label: external_exports.string(),
-            value: external_exports.string(),
-            data: external_exports.string()
-          })
-        )
-      }),
-      async (req, res) => {
-        try {
-          const { name: name28, stylePath, images, data } = req.body;
-          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
-            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
-            return;
-          }
-          const mainPath = utils_default.getPath(["skills", "art_skills", stylePath]);
-          if (!import_fs12.default.existsSync(mainPath)) {
-            return res.status(400).send(error50("\u89C6\u89C9\u624B\u518C\u4E0D\u5B58\u5728"));
-          }
-          const DATA_MAP3 = [
-            { value: "README" },
-            { value: "prefix" },
-            { value: "art_character", subDir: "art_prompt" },
-            { value: "art_character_derivative", subDir: "art_prompt" },
-            { value: "art_prop", subDir: "art_prompt" },
-            { value: "art_prop_derivative", subDir: "art_prompt" },
-            { value: "art_scene", subDir: "art_prompt" },
-            { value: "art_scene_derivative", subDir: "art_prompt" },
-            { value: "director_storyboard", subDir: "driector_skills" },
-            { value: "art_storyboard_video", subDir: "art_prompt" },
-            { value: "director_planning_style", subDir: "driector_skills" },
-            { value: "director_storyboard_table_style", subDir: "driector_skills" }
-          ];
-          const SUB_DIR_MAP = new Map(DATA_MAP3.map(({ value, subDir }) => [value, subDir ?? ""]));
-          const VALID_KEYS = new Set(DATA_MAP3.map(({ value }) => value));
-          for (const item of data) {
-            if (!VALID_KEYS.has(item.value)) continue;
-            const subDir = SUB_DIR_MAP.get(item.value);
-            const dirArr = subDir ? [mainPath, subDir] : [mainPath];
-            const filePath = utils_default.getPath([...dirArr, `${item.value}.md`]);
-            const fileDir = import_path16.default.dirname(filePath);
-            if (!import_fs12.default.existsSync(fileDir)) {
-              import_fs12.default.mkdirSync(fileDir, { recursive: true });
-            }
-            const content = item.value === "README" ? `${name28}
-${item.data}` : item.data;
-            import_fs12.default.writeFileSync(filePath, content, "utf-8");
-          }
-          const imagesDir = import_path16.default.join(mainPath, "images");
-          let existingFiles = [];
-          try {
-            const allFiles = import_fs12.default.readdirSync(imagesDir);
-            existingFiles = allFiles.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f));
-          } catch {
-          }
-          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path16.default.basename(new URL(url4).pathname)));
-          for (const file3 of existingFiles) {
-            if (!retainedFileNames.has(file3)) {
-              const filePath = import_path16.default.join(imagesDir, file3);
-              if (import_fs12.default.existsSync(filePath)) import_fs12.default.unlinkSync(filePath);
-            }
-          }
-          if (!import_fs12.default.existsSync(imagesDir)) {
-            import_fs12.default.mkdirSync(imagesDir, { recursive: true });
-          }
-          for (const item of images) {
-            if (!item.startsWith("http")) {
-              const fileName = `${utils_default.uuid()}.jpg`;
-              const targetPath = import_path16.default.join(imagesDir, fileName);
-              const buffer = Buffer.from(item.replace(/^data:[^;]+;base64,/, ""), "base64");
-              import_fs12.default.writeFileSync(targetPath, buffer);
-            }
-          }
-          res.status(200).send(success3());
-        } catch (err) {
-          res.status(500).send({ error: String(err) });
-        }
-      }
-    );
-  }
-});
-
-// src/routes/project/getModelDetails.ts
-var import_express105, router105, getModelDetails_default;
-var init_getModelDetails = __esm({
-  "src/routes/project/getModelDetails.ts"() {
-    "use strict";
-    import_express105 = __toESM(require_express2());
-    init_responseFormat();
-    init_utils3();
-    init_zod();
-    init_middleware();
-    router105 = import_express105.default.Router();
-    getModelDetails_default = router105.post(
-      "/",
-      validateFields({
-        key: external_exports.enum(["scriptAgent", "productionAgent"])
-      }),
-      async (req, res) => {
-        const { key } = req.body;
-        const data = await utils_default.db("o_agentDeploy").select("o_agentDeploy.*").where("o_agentDeploy.key", key).first();
-        const [id, modelName] = data ? data.modelName.split(/:(.+)/) : [];
-        const models = await utils_default.vendor.getModelList(id);
-        const model = models.find((m) => m.modelName === modelName);
-        if (!model) return res.status(400).send(error50("\u672A\u627E\u5230\u6A21\u578B"));
-        res.status(200).send(success3(model));
-      }
-    );
-  }
-});
-
-// src/routes/project/getProject.ts
-var import_express106, router106, getProject_default;
-var init_getProject = __esm({
-  "src/routes/project/getProject.ts"() {
-    "use strict";
-    import_express106 = __toESM(require_express2());
-    init_utils3();
-    init_responseFormat();
-    router106 = import_express106.default.Router();
-    getProject_default = router106.post("/", async (req, res) => {
-      const data = await utils_default.db("o_project").select("*");
-      res.status(200).send(success3(data));
-    });
-  }
-});
-
-// src/routes/project/getVisualManual.ts
-function readMd(filePath) {
-  try {
-    return import_fs13.default.readFileSync(filePath, "utf-8");
-  } catch {
-    return "";
-  }
-}
-async function readAllImages(imagesDir) {
-  try {
-    const ossPath = utils_default.getPath(import_path17.default.join("skills", "art_skills", imagesDir, "images"));
-    const files = import_fs13.default.readdirSync(ossPath);
-    const images = files.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f)).map((f) => import_path17.default.join("art_skills", imagesDir, "images", f));
-    if (images.length) {
-      return Promise.all(images.map(async (i) => await utils_default.oss.getFileUrl(i, "skills")));
-    } else {
-      return [];
-    }
-  } catch {
-    return [];
-  }
-}
-var import_express107, import_fs13, import_path17, router107, DATA_MAP, getVisualManual_default;
-var init_getVisualManual = __esm({
-  "src/routes/project/getVisualManual.ts"() {
-    "use strict";
-    import_express107 = __toESM(require_express2());
-    init_utils3();
-    init_responseFormat();
-    import_fs13 = __toESM(require("fs"));
-    import_path17 = __toESM(require("path"));
-    router107 = import_express107.default.Router();
-    DATA_MAP = [
-      { label: "README", value: "README" },
-      { label: "\u524D\u7F00", value: "prefix" },
-      { label: "\u89D2\u8272", value: "art_character", subDir: "art_prompt" },
-      { label: "\u89D2\u8272\u884D\u751F", value: "art_character_derivative", subDir: "art_prompt" },
-      { label: "\u9053\u5177", value: "art_prop", subDir: "art_prompt" },
-      { label: "\u9053\u5177\u884D\u751F", value: "art_prop_derivative", subDir: "art_prompt" },
-      { label: "\u573A\u666F", value: "art_scene", subDir: "art_prompt" },
-      { label: "\u573A\u666F\u884D\u751F", value: "art_scene_derivative", subDir: "art_prompt" },
-      { label: "\u5206\u955C", value: "director_storyboard", subDir: "driector_skills" },
-      { label: "\u5206\u955C\u89C6\u9891", value: "art_storyboard_video", subDir: "art_prompt" },
-      { label: "\u6280\u6CD5-\u5BFC\u6F14\u89C4\u5212", value: "director_planning_style", subDir: "driector_skills" },
-      { label: "\u6280\u6CD5-\u5206\u955C\u8868\u8BBE\u8BA1", value: "director_storyboard_table_style", subDir: "driector_skills" }
-    ];
-    getVisualManual_default = router107.post("/", async (req, res) => {
-      try {
-        const artPromptsDir = utils_default.getPath(["skills", "art_skills"]);
-        const styleDirs = import_fs13.default.readdirSync(artPromptsDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
-        const result = await Promise.all(
-          styleDirs.map(async (styleName) => {
-            const styleDir = import_path17.default.join(artPromptsDir, styleName);
-            const images = await readAllImages(styleName);
-            const readmePath = import_path17.default.join(styleDir, "README.md");
-            const readmeContent = import_fs13.default.readFileSync(readmePath, "utf-8");
-            const firstLine = readmeContent.split("\n")[0].replace(/--/g, "");
-            const data = DATA_MAP.map(({ label, value, subDir }) => {
-              let mdPath;
-              if (subDir) {
-                mdPath = import_path17.default.join(styleDir, subDir, `${value}.md`);
-              } else {
-                mdPath = import_path17.default.join(styleDir, `${value}.md`);
-              }
-              return {
-                label,
-                value,
-                data: readMd(mdPath)
-              };
-            });
-            return {
-              name: firstLine,
-              image: images,
-              stylePath: styleName,
-              data
-            };
-          })
-        );
-        res.status(200).send(success3(result));
-      } catch (err) {
-        res.status(500).send(error50(utils_default.error(err).message));
-      }
-    });
-  }
-});
-
-// src/routes/project/queryDirectorManual.ts
-function readMd2(filePath) {
-  try {
-    return import_fs14.default.readFileSync(filePath, "utf-8");
-  } catch {
-    return "";
-  }
-}
-async function readAllImages2(imagesDir) {
-  try {
-    const ossPath = utils_default.getPath(import_path18.default.join("skills", "story_skills", imagesDir, "images"));
-    const files = import_fs14.default.readdirSync(ossPath);
-    const images = files.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f)).map((f) => import_path18.default.join("story_skills", imagesDir, "images", f));
-    if (images.length) {
-      return Promise.all(images.map(async (i) => await utils_default.oss.getFileUrl(i, "skills")));
-    } else {
-      return [];
-    }
-  } catch {
-    return [];
-  }
-}
-var import_express108, import_fs14, import_path18, router108, DATA_MAP2, queryDirectorManual_default;
-var init_queryDirectorManual = __esm({
-  "src/routes/project/queryDirectorManual.ts"() {
-    "use strict";
-    import_express108 = __toESM(require_express2());
-    init_utils3();
-    init_responseFormat();
-    import_fs14 = __toESM(require("fs"));
-    import_path18 = __toESM(require("path"));
-    router108 = import_express108.default.Router();
-    DATA_MAP2 = [
-      { label: "README", value: "README" },
-      { label: "\u5BFC\u6F14\u89C4\u5212", value: "director_planning_narrative", subDir: "driector_skills" },
-      { label: "\u5206\u955C\u8868", value: "director_storyboard_table_narrative", subDir: "driector_skills" }
-    ];
-    queryDirectorManual_default = router108.post("/", async (req, res) => {
-      try {
-        const artPromptsDir = utils_default.getPath(["skills", "story_skills"]);
-        const styleDirs = import_fs14.default.readdirSync(artPromptsDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
-        const result = await Promise.all(
-          styleDirs.map(async (directorManual) => {
-            const styleDir = import_path18.default.join(artPromptsDir, directorManual);
-            const images = await readAllImages2(directorManual);
-            const readmePath = import_path18.default.join(styleDir, "README.md");
-            const readmeContent = import_fs14.default.readFileSync(readmePath, "utf-8");
-            const firstLine = readmeContent.split("\n")[0].replace(/--/g, "");
-            const data = DATA_MAP2.map(({ label, value, subDir }) => {
-              let mdPath;
-              if (subDir) {
-                mdPath = import_path18.default.join(styleDir, subDir, `${value}.md`);
-              } else {
-                mdPath = import_path18.default.join(styleDir, `${value}.md`);
-              }
-              return {
-                label,
-                value,
-                data: readMd2(mdPath)
-              };
-            });
-            return {
-              name: firstLine,
-              image: images,
-              directorManual,
-              data
-            };
-          })
-        );
-        res.status(200).send(success3(result));
-      } catch (err) {
-        res.status(500).send({ error: String(err) });
-      }
-    });
-  }
-});
-
-// src/routes/project/visualManual.ts
-var import_express109, import_fs15, import_path19, router109, visualManual_default;
-var init_visualManual = __esm({
-  "src/routes/project/visualManual.ts"() {
-    "use strict";
-    import_express109 = __toESM(require_express2());
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    init_getPath();
-    import_fs15 = __toESM(require("fs"));
-    import_path19 = __toESM(require("path"));
-    router109 = import_express109.default.Router();
-    visualManual_default = router109.post(
-      "/",
-      validateFields({
-        type: external_exports.string()
-      }),
-      async (req, res) => {
-        const { type } = req.body;
-        const basePath = getPath_default(["skills", "art_skills", "chinese_sweet_romance"]);
-        const findFile = (dir, target) => {
-          const entries = import_fs15.default.readdirSync(dir, { withFileTypes: true });
-          for (const entry of entries) {
-            const fullPath = import_path19.default.join(dir, entry.name);
-            if (entry.isDirectory()) {
-              const found = findFile(fullPath, target);
-              if (found) return found;
-            } else if (entry.isFile() && entry.name === target) {
-              return fullPath;
-            }
-          }
-          return null;
-        };
-        const filePath = findFile(basePath, `${type}.md`);
-        if (!filePath) {
-          res.status(404).json({ error: `\u672A\u627E\u5230\u5BF9\u5E94\u7684\u6587\u4EF6: ${type}.md` });
-          return;
-        }
-        const content = import_fs15.default.readFileSync(filePath, "utf-8");
-        res.status(200).send(success3(content));
-      }
-    );
-  }
-});
-
-// src/routes/script/addScript.ts
-var import_express110, router110, addScript_default;
-var init_addScript = __esm({
-  "src/routes/script/addScript.ts"() {
-    "use strict";
-    import_express110 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router110 = import_express110.default.Router();
-    addScript_default = router110.post(
-      "/",
-      validateFields({
-        name: external_exports.string(),
-        content: external_exports.string(),
-        projectId: external_exports.number(),
-        assets: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { name: name28, content, projectId, assets } = req.body;
-        const [scriptId] = await utils_default.db("o_script").insert({
-          name: name28,
-          content,
-          projectId,
-          createTime: Date.now()
-        });
-        if (assets.length) {
-          const assetsData = await utils_default.db("o_assets").whereIn("id", assets).select();
-          if (assetsData.length) {
-            const assetsIds = assetsData.map((item) => item.id);
-            const insertData = assetsIds.map((i) => {
-              return {
-                scriptId,
-                assetId: i
-              };
-            });
-            await utils_default.db("o_scriptAssets").insert(insertData);
-          }
-        }
-        res.status(200).send(success3({ message: "\u6DFB\u52A0\u5267\u672C\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/script/batchAddScript.ts
-var import_express111, router111, batchAddScript_default;
-var init_batchAddScript = __esm({
-  "src/routes/script/batchAddScript.ts"() {
-    "use strict";
-    import_express111 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router111 = import_express111.default.Router();
-    batchAddScript_default = router111.post(
-      "/",
-      validateFields({
-        data: external_exports.array(
-          external_exports.object({
-            scriptName: external_exports.string(),
-            scriptData: external_exports.string()
-          })
-        ),
-        projectId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { data, projectId } = req.body;
-        await utils_default.db("o_script").insert(
-          data.map((i) => {
-            return {
-              name: i.scriptName,
-              content: i.scriptData,
-              projectId,
-              createTime: Date.now()
-            };
-          })
-        );
-        res.status(200).send(success3({ message: "\u6DFB\u52A0\u5267\u672C\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/script/delScript.ts
-var import_express112, router112, delScript_default;
-var init_delScript = __esm({
-  "src/routes/script/delScript.ts"() {
-    "use strict";
-    import_express112 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router112 = import_express112.default.Router();
-    delScript_default = router112.post(
-      "/",
-      validateFields({
-        ids: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { ids } = req.body;
-        const scriptData = await utils_default.db("o_script").whereIn("id", ids);
-        if (scriptData && scriptData.length) {
-          const scriptProjectId = new Set(scriptData.map((item) => item.projectId));
-          await utils_default.db("o_agentWorkData").whereIn("projectId", Array.from(scriptProjectId)).whereIn("episodesId", ids).delete();
-        }
-        const storyboardData = await utils_default.db("o_storyboard").whereIn("scriptId", ids);
-        if (storyboardData.length) {
-          await Promise.all(
-            storyboardData.map(async (item) => {
-              try {
-                item.filePath && await utils_default.oss.deleteFile(item.filePath);
-              } catch (e) {
-              }
-            })
-          );
-          const storyboardIds = storyboardData.map((item) => item.id);
-          await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", storyboardIds).delete();
-        }
-        await utils_default.db("o_scriptAssets").whereIn("scriptId", ids).delete();
-        await utils_default.db("o_script").whereIn("id", ids).delete();
-        await utils_default.db("o_storyboard").whereIn("scriptId", ids).delete();
-        await utils_default.db("o_video").whereIn("scriptId", ids).delete();
-        res.status(200).send(success3({ message: "\u5220\u9664\u5267\u672C\u6210\u529F" }));
       }
     );
   }
@@ -251945,7 +246644,7 @@ var require_stream10 = __commonJS({
 var require_get_ready = __commonJS({
   "node_modules/get-ready/index.js"(exports2, module2) {
     "use strict";
-    function ready(flagOrFunction) {
+    function ready2(flagOrFunction) {
       this._ready = !!this._ready;
       this._readyCallbacks = this._readyCallbacks || [];
       if (arguments.length === 0) {
@@ -251967,7 +246666,7 @@ var require_get_ready = __commonJS({
       }
     }
     function mixin(object4) {
-      object4.ready = ready;
+      object4.ready = ready2;
     }
     module2.exports = mixin;
     module2.exports.mixin = mixin;
@@ -251983,7 +246682,7 @@ var require_file_stream = __commonJS({
     var assert3 = require("assert");
     var stream4 = require("stream");
     var utils = require_utils13();
-    var ready = require_get_ready();
+    var ready2 = require_get_ready();
     var ZipFileStream = class extends stream4.Transform {
       constructor(opts) {
         super(opts);
@@ -252021,7 +246720,7 @@ var require_file_stream = __commonJS({
         this.ready(callback);
       }
     };
-    ready.mixin(ZipFileStream.prototype);
+    ready2.mixin(ZipFileStream.prototype);
     module2.exports = ZipFileStream;
   }
 });
@@ -256797,7 +251496,7 @@ var require_file_stream3 = __commonJS({
     var stream4 = require("stream");
     var tar = require_tar_stream();
     var utils = require_utils13();
-    var ready = require_get_ready();
+    var ready2 = require_get_ready();
     var TarFileStream = class extends stream4.Transform {
       constructor(opts) {
         super(opts);
@@ -256862,7 +251561,7 @@ var require_file_stream3 = __commonJS({
         this.ready(callback);
       }
     };
-    ready.mixin(TarFileStream.prototype);
+    ready2.mixin(TarFileStream.prototype);
     module2.exports = TarFileStream;
   }
 });
@@ -256955,7 +251654,7 @@ var require_file_stream4 = __commonJS({
     var utils = require_utils13();
     var stream4 = require("stream");
     var { pipeline: pump } = require("stream");
-    var ready = require_get_ready();
+    var ready2 = require_get_ready();
     var TgzFileStream = class extends stream4.Transform {
       constructor(opts) {
         opts = opts || {};
@@ -256986,7 +251685,7 @@ var require_file_stream4 = __commonJS({
         this.ready(callback);
       }
     };
-    ready.mixin(TgzFileStream.prototype);
+    ready2.mixin(TgzFileStream.prototype);
     module2.exports = TgzFileStream;
   }
 });
@@ -257025,7 +251724,7 @@ var require_uncompress_stream4 = __commonJS({
     "use strict";
     var fs37 = require("fs");
     var utils = require_utils13();
-    var ready = require_get_ready();
+    var ready2 = require_get_ready();
     var streamifier = require_lib8();
     var FlushWritable = require_FlushWritable();
     var GzipUncompressStream = require_gzip().UncompressStream;
@@ -257065,7 +251764,7 @@ var require_uncompress_stream4 = __commonJS({
         this.ready(callback);
       }
     };
-    ready.mixin(TgzUncompressStream.prototype);
+    ready2.mixin(TgzUncompressStream.prototype);
     module2.exports = TgzUncompressStream;
   }
 });
@@ -257099,27 +251798,6179 @@ var require_compressing = __commonJS({
   }
 });
 
-// src/routes/script/exportScript.ts
-var import_express113, import_compressing, router113, exportScript_default;
-var init_exportScript = __esm({
-  "src/routes/script/exportScript.ts"() {
+// src/utils/h3VisualStateGuard.ts
+function assertH3ActiveStates(assets) {
+  const active = /* @__PURE__ */ new Map();
+  for (const asset of assets) {
+    if (!asset.filePath) throw new Error(`H3 \u53C2\u8003\u56FE\u7F3A\u5931\uFF1A${asset.name || asset.assetId}\uFF08\u8D44\u4EA7 ID ${asset.assetId}\uFF09`);
+    if (!["role", "character"].includes(String(asset.assetType || "").toLowerCase())) continue;
+    const rootId = Number(asset.parentAssetId) > 0 ? Number(asset.parentAssetId) : Number(asset.assetId);
+    const existing = active.get(rootId);
+    if (existing) {
+      if (existing.assetId !== asset.assetId) {
+        throw new Error(`\u540C\u4E00\u4EBA\u7269\u7684\u4E92\u65A5\u5F62\u6001\u4E0D\u53EF\u540C\u65F6\u5F15\u7528\uFF1A${existing.name || existing.assetId}\uFF08${existing.assetId}\uFF09\u4E0E ${asset.name || asset.assetId}\uFF08${asset.assetId}\uFF09\uFF1B\u8BF7\u9009\u62E9\u5F53\u524D\u955C\u5934\u552F\u4E00\u6709\u6548\u72B6\u6001`);
+      }
+      throw new Error(`H3 \u4EBA\u7269\u8D44\u4EA7\u91CD\u590D\u5F15\u7528\uFF1A${asset.name || asset.assetId}\uFF08${asset.assetId}\uFF09\uFF1B\u540C\u4E00\u4EBA\u7269\u53EA\u9009\u62E9\u4E00\u6B21\uFF0C\u6240\u9700\u89C6\u89D2\u4F1A\u6309\u955C\u5934\u548C\u56FE\u7247\u989D\u5EA6\u5206\u914D`);
+    }
+    active.set(rootId, asset);
+  }
+}
+function assertH3PictureSlots(prompt, slotCount) {
+  if (!Number.isInteger(slotCount) || slotCount < 0 || slotCount > 9) throw new Error(`MiniMax H3 \u53C2\u8003\u56FE\u6570\u91CF\u65E0\u6548\uFF1A${slotCount}\uFF0C\u6700\u591A9\u5F20`);
+  const raw = [...prompt.replace(/<d>[\s\S]*?<\/d>/g, "").matchAll(/<Picture\s*(\d+)\s*>/gi)];
+  if (!slotCount) {
+    if (raw.length) throw new Error("\u5F53\u524D\u6CA1\u6709\u4E0A\u4F20 H3 \u53C2\u8003\u56FE\uFF0C\u4F46\u63D0\u793A\u8BCD\u4ECD\u5F15\u7528\u4E86 Picture \u69FD\u4F4D");
+    return;
+  }
+  const ids = new Set(raw.map((match) => Number(match[1])));
+  if (ids.size !== slotCount || [...ids].some((n) => !Number.isInteger(n) || n < 1 || n > slotCount)) {
+    throw new Error(`H3 \u63D0\u793A\u8BCD Picture \u69FD\u4F4D\u4E0E\u5B9E\u9645\u4E0A\u4F20\u56FE\u4E0D\u4E00\u81F4\uFF1A\u9700\u8981 1..${slotCount}\uFF0C\u5B9E\u9645\u51FA\u73B0 ${[...ids].sort((a, b) => a - b).join(",") || "\u65E0"}`);
+  }
+}
+var init_h3VisualStateGuard = __esm({
+  "src/utils/h3VisualStateGuard.ts"() {
+    "use strict";
+  }
+});
+
+// src/utils/h3ReferenceBindings.ts
+function subjectPictureBindings(prompt, pictureCount) {
+  const bindings = /* @__PURE__ */ new Map();
+  const definitions = prompt.match(/^subject_definitions:\s*\r?\n([\s\S]*?)(?=^summary:\s*$)/im)?.[1];
+  const bindingText = definitions ?? prompt;
+  const mentions = [...bindingText.matchAll(/<Subject\s+(\d+)>/gi)];
+  for (let index = 0; index < mentions.length; index++) {
+    const subject = Number(mentions[index][1]);
+    const start = mentions[index].index;
+    const end = mentions[index + 1]?.index ?? bindingText.length;
+    const pictures = [...new Set([...bindingText.slice(start, end).matchAll(/<Picture\s+(\d+)>/gi)].map((match) => Number(match[1])))].sort((a, b) => a - b);
+    for (const picture of pictures) {
+      if (picture < 1 || picture > pictureCount) fail(`<Subject ${subject}> \u5F15\u7528\u4E86\u4E0D\u5B58\u5728\u7684 <Picture ${picture}>`);
+    }
+    if (!pictures.length) continue;
+    const previous = bindings.get(subject);
+    if (previous && previous.join(",") !== pictures.join(",")) fail(`<Subject ${subject}> \u7684 Picture \u5BF9\u5E94\u5173\u7CFB\u4E0D\u4E00\u81F4`);
+    bindings.set(subject, pictures);
+  }
+  return bindings;
+}
+function assertH3ReferenceBindings(prompt, slots, sourcePrompt) {
+  assertH3PictureSlots(prompt, slots.length);
+  const targetBindings = subjectPictureBindings(prompt, slots.length);
+  if (sourcePrompt !== void 0) {
+    assertH3PictureSlots(sourcePrompt, slots.length);
+    const sourceBindings = subjectPictureBindings(sourcePrompt, slots.length);
+    for (const [subject, pictures] of sourceBindings) {
+      const target = targetBindings.get(subject);
+      if (target && target.join(",") !== pictures.join(",")) fail(`<Subject ${subject}> \u5728\u7FFB\u8BD1\u524D\u540E\u5BF9\u5E94\u4E86\u4E0D\u540C\u7684 Picture`);
+    }
+  }
+}
+var fail;
+var init_h3ReferenceBindings = __esm({
+  "src/utils/h3ReferenceBindings.ts"() {
+    "use strict";
+    init_h3VisualStateGuard();
+    fail = (reason) => {
+      throw new Error(`H3 \u53C2\u8003\u56FE\u7ED1\u5B9A\uFF1A${reason}\uFF0C\u8BF7\u91CD\u65B0\u751F\u6210\u89C6\u9891\u63D0\u793A\u8BCD`);
+    };
+  }
+});
+
+// src/utils/importStudioContracts.ts
+function unique(values, label) {
+  if (new Set(values.map((x) => x.toLowerCase())).size !== values.length) throw new Error(`${label}\u5B58\u5728\u91CD\u590D\u7F16\u53F7\uFF08\u4E0D\u533A\u5206\u5927\u5C0F\u5199\uFF09`);
+}
+function parseCsv(source) {
+  const rows = [];
+  let row = [], cell = "", quoted = false, closed = false;
+  source = source.replace(/^\uFEFF/, "");
+  const pushCell = () => {
+    row.push(cell);
+    cell = "";
+    closed = false;
+  };
+  const pushRow = () => {
+    pushCell();
+    if (row.some((c) => c.trim())) rows.push(row);
+    row = [];
+  };
+  for (let i = 0; i < source.length; i++) {
+    const c = source[i];
+    if (quoted) {
+      if (c === '"' && source[i + 1] === '"') {
+        cell += '"';
+        i++;
+      } else if (c === '"') {
+        quoted = false;
+        closed = true;
+      } else cell += c;
+    } else if (c === ",") pushCell();
+    else if (c === "\n" || c === "\r") {
+      if (c === "\r" && source[i + 1] === "\n") i++;
+      pushRow();
+    } else if (c === '"' && !cell && !closed) quoted = true;
+    else {
+      if (closed || c === '"') throw new Error("CSV \u5F15\u53F7\u683C\u5F0F\u9519\u8BEF\uFF0C\u8BF7\u4F7F\u7528\u6A21\u677F\u53E6\u5B58\u4E3A CSV UTF-8");
+      cell += c;
+    }
+  }
+  if (quoted) throw new Error("CSV \u63D0\u793A\u8BCD\u7684\u5F15\u53F7\u6CA1\u6709\u95ED\u5408");
+  if (cell || row.length || closed) pushRow();
+  return rows;
+}
+function parseAssetCsv(buffer) {
+  if (buffer.length > 4 * 1024 * 1024) throw new Error("\u8868\u683C\u4E0D\u80FD\u8D85\u8FC7 4 MB");
+  const source = new TextDecoder("utf-8", { fatal: true }).decode(buffer);
+  const [header, ...rows] = parseCsv(source);
+  const keys2 = ["id", "name", "type", "prompt", "aspectRatio"];
+  if (!header || header.join(",") !== keys2.join(",")) throw new Error(`\u8BF7\u4FDD\u7559\u6A21\u677F\u8868\u5934\uFF1A${keys2.join(",")}`);
+  if (!rows.length || rows.length > 500) throw new Error("\u6BCF\u5F20\u8868\u683C\u9700\u8981 1\u2013500 \u884C\u8D44\u4EA7");
+  const result = rows.map((row, i) => {
+    if (row.length !== keys2.length) throw new Error(`\u7B2C ${i + 2} \u884C\u5217\u6570\u4E0D\u6B63\u786E`);
+    const parsed = imageRowSchema.safeParse(Object.fromEntries(keys2.map((key, j) => [key, row[j].trim() || (key === "aspectRatio" ? "1:1" : "")])));
+    if (!parsed.success) throw new Error(`\u7B2C ${i + 2} \u884C\uFF1A${parsed.error.issues.map((x) => `${x.path.join(".")} ${x.message}`).join("\uFF1B")}`);
+    return parsed.data;
+  });
+  unique(result.map((x) => x.id), "\u8D44\u4EA7");
+  return result;
+}
+function safeZipPath(name28) {
+  if (!name28 || name28.length > 240 || /[\\:\x00-\x1f]/.test(name28) || name28.startsWith("/") || name28.split("/").some((x) => x === ".." || x === "." || /[. ]$/.test(x))) {
+    throw new Error(`\u538B\u7F29\u5305\u8DEF\u5F84\u4E0D\u5B89\u5168\uFF1A${name28}`);
+  }
+  return name28;
+}
+async function readZip(buffer) {
+  if (buffer.length > MAX_UPLOAD) throw new Error("\u538B\u7F29\u5305\u4E0D\u80FD\u8D85\u8FC7 45 MB");
+  const files = /* @__PURE__ */ new Map(), seen = /* @__PURE__ */ new Set();
+  let total = 0, count = 0;
+  return new Promise((resolve3, reject) => {
+    const stream4 = new import_compressing.zip.UncompressStream({ source: buffer });
+    let failed = false;
+    const fail2 = (error73) => {
+      failed = true;
+      stream4.destroy();
+      reject(error73);
+    };
+    stream4.on("error", fail2);
+    stream4.on("finish", () => {
+      if (!failed) resolve3(files);
+    });
+    stream4.on("entry", async (header, entry, next) => {
+      try {
+        safeZipPath(header.name);
+        if (++count > 1100 || (header.mode & 61440) === 40960) throw new Error("\u538B\u7F29\u5305\u6587\u4EF6\u8FC7\u591A\u6216\u5305\u542B\u7B26\u53F7\u94FE\u63A5");
+        const key = header.name.toLowerCase();
+        if (seen.has(key)) throw new Error(`\u538B\u7F29\u5305\u6709\u91CD\u590D\u8DEF\u5F84\uFF1A${header.name}`);
+        seen.add(key);
+        if (header.type === "directory") {
+          entry.resume();
+          next();
+          return;
+        }
+        if (header.yauzl.uncompressedSize > 20 * 1024 * 1024) throw new Error(`\u6587\u4EF6\u8D85\u8FC7 20 MB\uFF1A${header.name}`);
+        const chunks = [];
+        let size = 0;
+        for await (const chunk of entry) {
+          size += chunk.length;
+          total += chunk.length;
+          if (size > 20 * 1024 * 1024 || total > 200 * 1024 * 1024) throw new Error("\u538B\u7F29\u5305\u89E3\u538B\u540E\u8D85\u8FC7\u5927\u5C0F\u9650\u5236");
+          chunks.push(chunk);
+        }
+        if (!failed) {
+          files.set(header.name, Buffer.concat(chunks));
+          next();
+        }
+      } catch (e) {
+        entry.destroy();
+        fail2(e);
+      }
+    });
+  });
+}
+function validateManifest(value) {
+  const parsed = manifestSchema.safeParse(value);
+  if (!parsed.success) throw new Error(parsed.error.issues.map((x) => `${x.path.join(".")} ${x.message}`).join("\uFF1B"));
+  const manifest = parsed.data;
+  unique(manifest.assets.map((x) => x.id), "\u8D44\u4EA7");
+  unique(manifest.shots.map((x) => x.id), "\u5206\u955C");
+  const assets = new Map(manifest.assets.map((a, index) => [a.id, { ...a, index }]));
+  for (const asset of manifest.assets) safeZipPath(asset.file);
+  for (const shot of manifest.shots) {
+    unique(shot.assets, `\u5206\u955C ${shot.id} \u7684\u7ED1\u5B9A\u8D44\u4EA7`);
+    const slots = shot.assets.map((assetId) => {
+      const asset = assets.get(assetId);
+      if (!asset) throw new Error(`\u5206\u955C ${shot.id} \u5F15\u7528\u4E86\u4E0D\u5B58\u5728\u7684\u8D44\u4EA7\uFF1A${assetId}`);
+      return { assetId: asset.index + 1, assetType: asset.type };
+    });
+    try {
+      assertH3ReferenceBindings(shot.prompt, slots);
+    } catch (e) {
+      throw new Error(`\u5206\u955C ${shot.id}\uFF1A${e.message}`);
+    }
+  }
+  return manifest;
+}
+async function parseVideoZip(buffer) {
+  const files = await readZip(buffer);
+  const roots = [...files.keys()].filter((x) => x === "manifest.json" || x.endsWith("/manifest.json"));
+  if (roots.length !== 1) throw new Error("\u538B\u7F29\u5305\u9700\u8981\u4E14\u53EA\u80FD\u5305\u542B\u4E00\u4E2A manifest.json");
+  const root2 = roots[0].slice(0, -"manifest.json".length);
+  const manifest = validateManifest(JSON.parse(files.get(roots[0]).toString("utf8").replace(/^\uFEFF/, "")));
+  const images = /* @__PURE__ */ new Map();
+  let normalizedBytes = 0;
+  for (const asset of manifest.assets) {
+    const file3 = files.get(root2 + asset.file);
+    if (!file3) throw new Error(`\u7F3A\u5C11\u8D44\u4EA7\u56FE\u7247\uFF1A${asset.file}`);
+    if (!/\.(png|jpe?g|webp)$/i.test(asset.file)) throw new Error(`\u56FE\u7247\u4EC5\u652F\u6301 PNG\u3001JPG\u3001WebP\uFF1A${asset.file}`);
+    try {
+      const image = (0, import_sharp8.default)(file3, { limitInputPixels: 4e7, animated: false });
+      const info = await image.metadata();
+      if (!["png", "jpeg", "webp"].includes(info.format || "")) throw new Error("\u65E0\u6548\u683C\u5F0F");
+      const normalized = await image.png().toBuffer();
+      normalizedBytes += normalized.length;
+      if (normalizedBytes > 200 * 1024 * 1024) throw new Error("\u56FE\u7247\u603B\u5927\u5C0F\u8FC7\u5927");
+      images.set(asset.id, normalized);
+    } catch {
+      throw new Error(`\u8D44\u4EA7\u56FE\u7247\u65E0\u6548\u3001\u635F\u574F\u6216\u5C3A\u5BF8\u8FC7\u5927\uFF1A${asset.file}`);
+    }
+  }
+  return { manifest, images };
+}
+async function makeZip(files) {
+  const stream4 = new import_compressing.zip.Stream();
+  for (const [name28, file3] of files) stream4.addEntry(file3, { relativePath: safeZipPath(name28) });
+  const chunks = [];
+  for await (const chunk of stream4) chunks.push(chunk);
+  return Buffer.concat(chunks);
+}
+var import_compressing, import_sharp8, MAX_UPLOAD, id, text2, assetType, imageRowSchema, shotSchema, manifestSchema, ASSET_CSV, EXAMPLE_MANIFEST, IMPORT_README;
+var init_importStudioContracts = __esm({
+  "src/utils/importStudioContracts.ts"() {
+    "use strict";
+    init_zod();
+    import_compressing = __toESM(require_compressing());
+    import_sharp8 = __toESM(require("sharp"));
+    init_h3ReferenceBindings();
+    MAX_UPLOAD = 45 * 1024 * 1024;
+    id = external_exports.string().trim().min(1).max(100).regex(/^[\w-]+$/, "\u7F16\u53F7\u53EA\u80FD\u4F7F\u7528\u82F1\u6587\u5B57\u6BCD\u3001\u6570\u5B57\u3001\u4E0B\u5212\u7EBF\u548C\u77ED\u6A2A\u7EBF").refine((value) => !/^(con|prn|aux|nul|com[0-9]|lpt[0-9])$/i.test(value), "\u7F16\u53F7\u4E0D\u80FD\u4F7F\u7528 Windows \u4FDD\u7559\u6587\u4EF6\u540D");
+    text2 = external_exports.string().trim().min(1).max(3e4);
+    assetType = external_exports.enum(["role", "scene", "tool", "creature"]);
+    imageRowSchema = external_exports.object({
+      id,
+      name: text2.max(200),
+      type: assetType,
+      prompt: text2,
+      aspectRatio: external_exports.enum(["1:1", "16:9", "9:16", "2:3", "3:2", "4:3", "3:4"]).default("1:1")
+    });
+    shotSchema = external_exports.object({
+      id,
+      name: text2.max(200),
+      prompt: text2,
+      duration: external_exports.number().int().min(5).max(15),
+      aspectRatio: external_exports.enum(["16:9", "9:16"]).default("16:9"),
+      resolution: external_exports.enum(["768p"]).default("768p"),
+      audio: external_exports.boolean().default(true),
+      assets: external_exports.array(id).min(1).max(9)
+    });
+    manifestSchema = external_exports.object({
+      version: external_exports.literal(1),
+      name: text2.max(200),
+      assets: external_exports.array(external_exports.object({ id, name: text2.max(200), type: assetType, file: text2.max(240) })).min(1).max(500),
+      shots: external_exports.array(shotSchema).min(1).max(500)
+    });
+    ASSET_CSV = '\uFEFFid,name,type,prompt,aspectRatio\r\nhero,\u4E3B\u89D2,role,"\u5B8C\u6574\u4EBA\u7269\u56DB\u89C6\u56FE\uFF0C\u540C\u4E00\u540D\u9752\u5E74\u7537\u6027\uFF0C\u9ED1\u8272\u77ED\u53D1\uFF0C\u84DD\u8272\u5916\u5957\uFF0C\u7EDF\u4E00\u670D\u88C5\u4E0E\u8EAB\u4EFD\uFF0C\u5E72\u51C0\u80CC\u666F",3:2\r\nroom,\u5BA2\u5385,scene,"\u73B0\u4EE3\u5BA2\u5385\uFF0C\u6728\u8D28\u5BB6\u5177\uFF0C\u6E05\u6668\u7A97\u5149\uFF0C\u65E0\u4EBA\u7269",16:9\r\nwatch,\u8155\u8868,tool,"\u9ED1\u8272\u7535\u5B50\u8155\u8868\uFF0C\u4EA7\u54C1\u5C55\u793A\uFF0C\u5E72\u51C0\u80CC\u666F",1:1\r\n';
+    EXAMPLE_MANIFEST = {
+      version: 1,
+      name: "H3 \u5BFC\u5165\u793A\u4F8B\uFF08\u8BF7\u66FF\u6362\u793A\u4F8B\u56FE\u7247\uFF09",
+      assets: [{ id: "hero", name: "\u4E3B\u89D2", type: "role", file: "assets/hero.png" }, { id: "room", name: "\u5BA2\u5385", type: "scene", file: "assets/room.png" }],
+      shots: [{ id: "shot_001", name: "\u4E3B\u89D2\u8D70\u5165\u5BA2\u5385", prompt: "\u4E00\u4E2A\u8FDE\u7EED\u955C\u5934\uFF0C<Picture 1> \u4E2D\u7684\u4EBA\u7269\u8D70\u5165 <Picture 2> \u7684\u5BA2\u5385\uFF0C\u4FDD\u6301\u53C2\u8003\u4EBA\u7269\u7684\u8EAB\u4EFD\u548C\u670D\u88C5\uFF1B\u4EBA\u7269\u8BBE\u5B9A\u56FE\u7684\u591A\u4E2A\u89C6\u89D2\u8868\u793A\u540C\u4E00\u4E2A\u4EBA\uFF0C\u4E0D\u5728\u89C6\u9891\u4E2D\u5C55\u793A\u6392\u7248\u3002\u955C\u5934\u7F13\u6162\u8DDF\u968F\uFF0C\u534A\u5199\u5B9E\u4E09\u7EF4\u52A8\u753B\u3001\u56FD\u6F2B\u5F0F\u4EBA\u7269\u8BBE\u8BA1\u3001\u771F\u5B9E\u6750\u8D28\u548C\u7535\u5F71\u5149\u7167\u3002", duration: 5, aspectRatio: "16:9", resolution: "768p", audio: true, assets: ["hero", "room"] }]
+    };
+    IMPORT_README = `\u6279\u91CF\u8D44\u4EA7\u4E0E H3 \u89C6\u9891\u5BFC\u5165\u89C4\u5219
+
+\u5148\u5728\u201C\u6279\u91CF\u8D44\u4EA7\u201D\u6216\u201C\u5BFC\u5165\u89C6\u9891\u201D\u4E2D\u521B\u5EFA\u9879\u76EE\uFF0C\u9009\u62E9\u672C\u5730\u6A21\u578B\uFF0C\u518D\u8FDB\u5165\u9879\u76EE\u4E0B\u8F7D\u6A21\u677F\u548C\u5BFC\u5165\u3002
+
+\u8D44\u4EA7\u8868\u683C\uFF1A\u7528 Excel/WPS \u6253\u5F00 CSV \u6A21\u677F\uFF0C\u4FDD\u7559\u8868\u5934\uFF0C\u53E6\u5B58\u4E3A CSV UTF-8\uFF08\u9017\u53F7\u5206\u9694\uFF09\u3002
+\u6BCF\u884C\u4E00\u4E2A\u8D44\u4EA7\uFF0Cid \u552F\u4E00\uFF0C\u53EA\u4F7F\u7528\u5B57\u6BCD\u3001\u6570\u5B57\u3001\u4E0B\u5212\u7EBF\u3001\u77ED\u6A2A\u7EBF\u3002
+name \u4E3A\u540D\u79F0\uFF1Btype \u4F7F\u7528 role\uFF08\u4EBA\u7269\uFF09\u3001scene\uFF08\u573A\u666F\uFF09\u3001tool\uFF08\u9053\u5177\uFF09\u3001creature\uFF08\u751F\u7269\uFF09\uFF1Bprompt \u4E3A\u5B8C\u6574\u56FE\u7247\u63D0\u793A\u8BCD\u3002
+creature \u4FDD\u7559\u5728\u5BFC\u5165\u8BB0\u5F55\u4E2D\uFF0C\u5DE5\u4F5C\u53F0\u5F52\u5165\u201C\u9053\u5177\u201D\uFF0C\u4F7F\u7528\u73B0\u6709\u9053\u5177\u4E0E\u751F\u7269\u89C4\u5219\uFF0C\u4E0D\u8D70\u4EBA\u7269\u56DB\u89C6\u56FE\u6D41\u7A0B\u3002
+aspectRatio \u4F7F\u7528 1:1\u300116:9\u30019:16\u30012:3\u30013:2\u30014:3\u30013:4\u3002\u6BCF\u6B21\u6700\u591A 500 \u884C\u30014 MB\u3002
+\u56FE\u7247\u4F7F\u7528\u8D44\u4EA7\u9875\u76F8\u540C\u7684\u751F\u6210\u903B\u8F91\uFF1A\u89D2\u8272\u56DB\u89C6\u56FE\u3001\u53C2\u8003\u56FE\u3001\u5206\u8FA8\u7387\u548C\u5386\u53F2\u56FE\u7247\u7BA1\u7406\u3002\u5B9E\u9645\u753B\u5E03\u6309\u8D44\u4EA7\u7C7B\u578B\u548C\u6A21\u578B\u89C4\u5219\u51B3\u5B9A\uFF0CaspectRatio \u4F5C\u4E3A\u5BFC\u5165\u4FE1\u606F\u4FDD\u7559\u3002
+
+\u89C6\u9891\u538B\u7F29\u5305\uFF1AZIP \u4E2D\u653E manifest.json \u4E0E assets \u56FE\u7247\u76EE\u5F55\uFF1B\u5141\u8BB8\u6574\u4F53\u5957\u4E00\u5C42\u6587\u4EF6\u5939\u3002
+version \u56FA\u5B9A\u4E3A 1\uFF1Bname \u662F\u6279\u6B21\u540D\u79F0\u3002assets \u5B9A\u4E49\u8D44\u4EA7\u7F16\u53F7\u3001\u540D\u79F0\u3001\u7C7B\u578B\u548C\u56FE\u7247\u7684\u76F8\u5BF9\u8DEF\u5F84\u3002
+\u8D44\u4EA7 type \u652F\u6301 role\uFF08\u4EBA\u7269\uFF09\u3001scene\uFF08\u573A\u666F\uFF09\u3001tool\uFF08\u9053\u5177\uFF09\u3001creature\uFF08\u751F\u7269\uFF09\u3002\u751F\u7269\u5728\u5DE5\u4F5C\u53F0\u5F52\u5165\u201C\u9053\u5177\u201D\uFF0C\u6BCF\u5F20\u751F\u7269\u56FE\u7247\u4ECD\u72EC\u7ACB\u5360\u7528\u4E00\u4E2A Picture\uFF0C\u5BFC\u5165\u8BB0\u5F55\u4FDD\u7559\u539F\u59CB\u7C7B\u578B\u3002
+shots \u4E2D\u6BCF\u9879\u662F\u4E00\u4E2A\u89C6\u9891\uFF1Aid\u3001name\u3001prompt\u3001duration\uFF085\u201315 \u79D2\u6574\u6570\uFF09\u3001aspectRatio\uFF0816:9 \u6216 9:16\uFF09\u3001resolution\uFF08768p\uFF09\u3001audio\uFF08true/false\uFF09\u3001assets\u3002
+\u5206\u955C assets \u6570\u7EC4\u7684\u987A\u5E8F\u5C31\u662F Picture \u987A\u5E8F\uFF1A\u7B2C\u4E00\u4E2A\u662F <Picture 1>\uFF0C\u7B2C\u4E8C\u4E2A\u662F <Picture 2>\u3002
+\u63D0\u793A\u8BCD\u5FC5\u987B\u5F15\u7528\u5168\u90E8\u5DF2\u7ED1\u5B9A Picture\uFF0C\u4E0D\u5F97\u5F15\u7528\u672A\u7ED1\u5B9A\u7684\u5E8F\u53F7\u3002\u6BCF\u955C\u5934 1\u20139 \u5F20\u56FE\uFF0C\u4E0D\u5141\u8BB8\u91CD\u590D\u7F16\u53F7\u3002
+\u4EBA\u7269\u5B8C\u6574\u56DB\u89C6\u56FE\u6309\u4E00\u5F20\u56FE\u7247\u7ED1\u5B9A\uFF0C\u4E0D\u62C6\u5206\u89C6\u89D2\u3002Subject \u6807\u7B7E\u53EF\u9009\uFF0C\u4F7F\u7528\u65F6\u9700\u4FDD\u6301\u7ED1\u5B9A\u4E00\u81F4\u3002
+\u56FE\u7247\u4EC5\u652F\u6301 PNG/JPG/WebP\uFF1B\u8DEF\u5F84\u4E0D\u80FD\u662F\u7EDD\u5BF9\u8DEF\u5F84\u3001\u7F51\u7EDC\u5730\u5740\u6216\u542B ..\uFF1BZIP \u6700\u591A 45 MB\uFF0C\u89E3\u538B\u540E\u6700\u591A 200 MB\uFF0C\u5355\u6587\u4EF6\u6700\u591A 20 MB\uFF0C\u56FE\u7247\u6700\u591A 4000 \u4E07\u50CF\u7D20\u3002
+\u6A21\u677F\u4E2D\u7684\u56FE\u7247\u662F\u6807\u660E\u7528\u9014\u7684\u793A\u4F8B\u5360\u4F4D\u56FE\uFF0C\u4F7F\u7528\u524D\u8BF7\u66FF\u6362\u3002\u6700\u591A 500 \u4E2A\u8D44\u4EA7\u3001500 \u4E2A\u5206\u955C\u3002
+
+\u5148\u68C0\u67E5\u6587\u4EF6\uFF0C\u786E\u8BA4\u9884\u89C8\u540E\u5BFC\u5165\uFF1B\u5BFC\u5165\u4E0D\u4F1A\u81EA\u52A8\u5F00\u59CB\u751F\u6210\u3002\u6A21\u578B\u6CBF\u7528\u8BBE\u7F6E\u4E2D\u5DF2\u542F\u7528\u7684\u672C\u5730 ComfyUI \u914D\u7F6E\u3002
+\u56FE\u7247\u5728\u8D44\u4EA7\u5DE5\u4F5C\u53F0\u751F\u6210\uFF1B\u89C6\u9891\u5728\u89C6\u9891\u5DE5\u4F5C\u53F0\u7F16\u8F91\u63D0\u793A\u8BCD\u3001\u53C2\u8003\u56FE\uFF0C\u5355\u6761\u751F\u6210\u6216\u52FE\u9009\u6279\u91CF\u751F\u6210\u3002\u91CD\u65B0\u751F\u6210\u4F1A\u4FDD\u7559\u5386\u53F2\u7ED3\u679C\u3002
+\u89C6\u9891\u65E0\u9700\u518D\u6B21\u751F\u6210\u5BF9\u767D\u8BED\u8A00\u63D0\u793A\u8BCD\u3002\u5355\u6761\u4F7F\u7528\u5F53\u524D\u8BBE\u7F6E\uFF1B\u6279\u91CF\u4FDD\u7559\u6BCF\u6761\u5BFC\u5165\u7684\u58F0\u97F3\u3001\u5206\u8FA8\u7387\u3001\u753B\u5E45\u548C\u65F6\u957F\u3002H3 \u5728\u540C\u4E00\u6279\u6B21\u5185\u4E32\u884C\u751F\u6210\uFF0C\u72B6\u6001\u81EA\u52A8\u66F4\u65B0\u3002
+\u5173\u95ED\u9875\u9762\u4E0D\u4F1A\u4E2D\u65AD\u670D\u52A1\u7AEF\u4EFB\u52A1\u3002\u670D\u52A1\u91CD\u542F\u540E\u8BF7\u68C0\u67E5\u539F\u751F\u4EFB\u52A1\u4E2D\u5FC3\u53CA ComfyUI \u961F\u5217\u518D\u91CD\u8BD5\u3002
+\u540C\u4E00\u9879\u76EE\u5185\u76F8\u540C\u6587\u4EF6\u91CD\u590D\u5BFC\u5165\u4F1A\u6253\u5F00\u5DF2\u6709\u6279\u6B21\u3002\u4E0D\u540C\u6587\u4EF6\u521B\u5EFA\u65B0\u6279\u6B21\uFF0C\u540C\u540D\u7F16\u53F7\u4E0D\u8986\u76D6\u539F\u6709\u8D44\u4EA7\uFF1B\u4E0D\u540C\u9879\u76EE\u53EF\u5206\u522B\u5BFC\u5165\u540C\u4E00\u4E2A\u6587\u4EF6\u3002
+`;
+  }
+});
+
+// src/utils/importStudioQueue.ts
+async function initStudioTables(db2) {
+  if (!await db2.schema.hasTable("o_importBatch")) await db2.schema.createTable("o_importBatch", (t) => {
+    t.string("id").primary();
+    t.string("kind").notNullable();
+    t.string("name").notNullable();
+    t.string("fingerprint").notNullable().unique();
+    t.text("assets").notNullable();
+    t.bigInteger("createdAt").notNullable();
+  });
+  if (!await db2.schema.hasTable("o_importItem")) await db2.schema.createTable("o_importItem", (t) => {
+    t.string("id").primary();
+    t.string("batchId").notNullable().index();
+    t.integer("position").notNullable();
+    t.text("spec").notNullable();
+    t.string("state").notNullable();
+    t.string("model");
+    t.text("error");
+    t.text("output");
+  });
+  await db2("o_importItem").whereIn("state", ["queued", "running"]).update({ state: "interrupted", error: "\u670D\u52A1\u5DF2\u91CD\u542F\uFF0C\u8BF7\u68C0\u67E5 ComfyUI \u961F\u5217\u540E\u518D\u91CD\u8BD5" });
+}
+var init_importStudioQueue = __esm({
+  "src/utils/importStudioQueue.ts"() {
+    "use strict";
+  }
+});
+
+// src/utils/h3ReferenceSlots.ts
+function h3AssetType(item) {
+  const type = String(item.assetType || item.type || "").toLowerCase();
+  if (type === "character") return "role";
+  if (type === "environment") return "scene";
+  if (type === "prop" || type === "creature") return "tool";
+  return type;
+}
+function h3ImageAssetItems(items) {
+  const seen = /* @__PURE__ */ new Set();
+  return items.filter((item, index) => {
+    const mediaType = String(item.fileType || item._fileType || "").toLowerCase();
+    const referenceType = String(item.referenceType || item._slotType || "").toLowerCase();
+    const source = item.sourceType || item.sources || item._type;
+    if (item._reference === false || item.reference === false || source === "storyboard" || h3AssetType(item) === "storyboard") return false;
+    if (["audio", "video"].includes(mediaType) || ["audio", "video"].includes(h3AssetType(item)) || ["audioreference", "videoreference"].includes(referenceType)) return false;
+    const id2 = item.assetId ?? item.id;
+    const key = id2 == null ? `anonymous:${index}` : `asset:${id2}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+function expandH3AssetSlots(items, _directionText = "") {
+  const assets = h3ImageAssetItems(items);
+  if (assets.length > 9) throw new Error(`MiniMax H3 \u6700\u591A\u652F\u6301 9 \u5F20\u53C2\u8003\u56FE\uFF0C\u5F53\u524D\u6709 ${assets.length} \u4E2A\u72EC\u7ACB\u56FE\u7247\u8D44\u4EA7\uFF1B\u8BF7\u62C6\u5206\u955C\u5934\u6216\u51CF\u5C11\u53EF\u89C1\u8D44\u4EA7\u540E\u91CD\u65B0\u751F\u6210\u63D0\u793A\u8BCD`);
+  return assets.map(({ _referenceRole, referenceKind, ...item }) => item);
+}
+var init_h3ReferenceSlots = __esm({
+  "src/utils/h3ReferenceSlots.ts"() {
+    "use strict";
+  }
+});
+
+// src/utils/h3ReferencePlan.ts
+function h3SlotPath(item) {
+  const kind = item._referenceRole || item.referenceKind;
+  const name28 = String(item.name || item.label || "\u8D44\u4EA7").replace(/(?:脸部身份参考|正面全身参考|侧面全身参考|背面全身参考)$/, "");
+  if (kind && !Object.hasOwn(fields, kind)) throw regenerate(`${name28}\u7684\u4EBA\u7269\u53C2\u8003\u7C7B\u578B\u65E0\u6548`);
+  const path34 = kind ? item[fields[kind]] : item.filePath || item.path;
+  if (typeof path34 !== "string" || !path34.trim()) throw new Error(`${name28}\u7F3A\u5C11${kind ? labels[kind] : "\u56FE\u7247"}\uFF0C\u8BF7\u5148\u8865\u9F50\u5F53\u524D\u8D44\u4EA7\u53C2\u8003\u56FE\u540E\u91CD\u65B0\u751F\u6210\u89C6\u9891\u63D0\u793A\u8BCD`);
+  return path34;
+}
+function validatePlan(value) {
+  const plan = value;
+  if (!plan || plan.version !== 1 || !Array.isArray(plan.slots) || plan.slots.length > 9) throw regenerate("\u5DF2\u4FDD\u5B58\u7684 H3 \u53C2\u8003\u56FE\u8BA1\u5212\u65E0\u6548");
+  const seen = /* @__PURE__ */ new Set();
+  for (const slot of plan.slots) {
+    if (!slot || !Number.isSafeInteger(slot.assetId) || typeof slot.assetType !== "string" || !slot.assetType || typeof slot.path !== "string" || !slot.path.trim() || typeof slot.label !== "string" || slot.kind && !Object.hasOwn(fields, slot.kind)) throw regenerate("\u5DF2\u4FDD\u5B58\u7684 H3 \u53C2\u8003\u56FE\u8BA1\u5212\u4E0D\u5B8C\u6574");
+    if (slot.kind && slot.assetType !== "role") throw regenerate("\u5DF2\u4FDD\u5B58\u7684 H3 \u4EBA\u7269\u53C2\u8003\u7C7B\u578B\u4E0D\u4E00\u81F4");
+    const key = `${slot.assetId}:${slot.kind || "image"}`;
+    if (seen.has(key)) throw regenerate("\u5DF2\u4FDD\u5B58\u7684 H3 \u53C2\u8003\u56FE\u8BA1\u5212\u5B58\u5728\u91CD\u590D\u69FD\u4F4D");
+    seen.add(key);
+  }
+  const roles = new Set(plan.slots.filter((slot) => slot.assetType === "role").map((slot) => slot.assetId));
+  for (const id2 of roles) {
+    const slots = plan.slots.filter((slot) => slot.assetId === id2);
+    if (slots.some((slot) => !slot.kind)) {
+      if (slots.length !== 1) throw regenerate("\u4EBA\u7269\u6574\u56FE\u4E0D\u80FD\u4E0E\u72EC\u7ACB\u89C6\u56FE\u6DF7\u7528");
+    } else if (!slots.some((slot) => slot.kind === "FULL_BODY_FRONT")) throw regenerate("\u5DF2\u4FDD\u5B58\u7684 H3 \u8BA1\u5212\u7F3A\u5C11\u4EBA\u7269\u6B63\u9762\u5168\u8EAB\u53C2\u8003");
+  }
+  return plan;
+}
+async function ensurePlanTable(db2) {
+  let pending = pendingTables.get(db2);
+  if (!pending) {
+    pending = (async () => {
+      if (await db2.schema.hasTable("o_h3ReferencePlan")) return;
+      try {
+        await db2.schema.createTable("o_h3ReferencePlan", (table) => {
+          table.bigInteger("trackId").notNullable();
+          table.string("promptHash", 64).notNullable();
+          table.text("plan").notNullable();
+          table.primary(["trackId", "promptHash"]);
+        });
+      } catch (cause) {
+        if (!await db2.schema.hasTable("o_h3ReferencePlan")) throw cause;
+      }
+    })();
+    pendingTables.set(db2, pending);
+  }
+  try {
+    await pending;
+  } catch (cause) {
+    if (pendingTables.get(db2) === pending) pendingTables.delete(db2);
+    throw cause;
+  }
+}
+async function persistPlan(db2, trackId, prompt, plan) {
+  if (!Number.isSafeInteger(trackId) || !prompt.trim()) throw regenerate("H3 \u63D0\u793A\u8BCD\u6216\u89C6\u9891\u6BB5\u65E0\u6548");
+  validatePlan(plan);
+  await ensurePlanTable(db2);
+  const key = { trackId, promptHash: promptHash(prompt) };
+  const serialized = JSON.stringify(plan);
+  await db2("o_h3ReferencePlan").insert({ ...key, plan: serialized }).onConflict(["trackId", "promptHash"]).ignore();
+  const stored = await db2("o_h3ReferencePlan").where(key).first();
+  if (stored?.plan !== serialized) throw regenerate("\u540C\u4E00\u63D0\u793A\u8BCD\u5DF2\u7ED1\u5B9A\u4E0D\u540C\u7684\u53C2\u8003\u56FE\uFF0C\u4E0D\u53EF\u8986\u76D6\u5386\u53F2\u8BA1\u5212");
+  return plan;
+}
+async function saveH3ReferencePlan(db2, trackId, prompt, slots) {
+  const plan = {
+    version: 1,
+    slots: slots.filter((slot) => h3ImageAssetItems([slot]).length > 0).map((slot) => ({
+      assetId: Number(slot.assetId ?? slot.id),
+      assetType: h3AssetType(slot),
+      ...slot._referenceRole || slot.referenceKind ? { kind: slot._referenceRole || slot.referenceKind } : {},
+      path: h3SlotPath(slot),
+      label: String(slot.name || slot.label || `\u8D44\u4EA7${slot.assetId ?? slot.id}`)
+    }))
+  };
+  return persistPlan(db2, trackId, prompt, plan);
+}
+async function loadH3ReferencePlan(db2, trackId, prompt) {
+  if (!await db2.schema.hasTable("o_h3ReferencePlan")) return null;
+  const stored = await db2("o_h3ReferencePlan").where({ trackId, promptHash: promptHash(prompt) }).first();
+  if (!stored) return null;
+  try {
+    return validatePlan(JSON.parse(stored.plan));
+  } catch {
+    throw regenerate("\u5DF2\u4FDD\u5B58\u7684 H3 \u53C2\u8003\u56FE\u8BA1\u5212\u65E0\u6CD5\u8BFB\u53D6");
+  }
+}
+function resolveH3ReferencePlan(items, plan) {
+  validatePlan(plan);
+  if (plan.slots.some((slot) => slot.kind)) throw regenerate("\u8BE5\u89C6\u9891\u6BB5\u4ECD\u7ED1\u5B9A\u4EBA\u7269\u72EC\u7ACB\u89C6\u56FE\uFF0C\u73B0\u5DF2\u6539\u4E3A\u6BCF\u4E2A\u4EBA\u7269\u4E00\u5F20\u5B8C\u6574\u53C2\u8003\u56FE");
+  const assets = h3ImageAssetItems(items);
+  const byId = new Map(assets.map((item) => [Number(item.assetId ?? item.id), item]));
+  const expectedIds = new Set(plan.slots.map((slot) => slot.assetId));
+  if (byId.size !== expectedIds.size || [...expectedIds].some((id2) => !byId.has(id2))) throw regenerate("\u5F53\u524D\u56FE\u7247\u8D44\u4EA7\u96C6\u5408\u4E0E\u63D0\u793A\u8BCD\u4FDD\u5B58\u7684\u53C2\u8003\u56FE\u8BA1\u5212\u4E0D\u4E00\u81F4");
+  return plan.slots.map((slot) => {
+    const current = byId.get(slot.assetId);
+    if (h3AssetType(current) !== slot.assetType) throw regenerate(`${slot.label}\u7684\u8D44\u4EA7\u7C7B\u578B\u5DF2\u53D8\u5316`);
+    const currentPath = h3SlotPath({ ...current, _referenceRole: slot.kind, referenceKind: slot.kind });
+    if (canonicalPath(currentPath) !== canonicalPath(slot.path)) throw regenerate(`${slot.label}\u7684\u53C2\u8003\u56FE\u7247\u5DF2\u53D8\u5316`);
+    return {
+      path: slot.path,
+      label: slot.label,
+      sourceType: "assets",
+      assetType: slot.assetType,
+      fileType: "image",
+      referenceType: "imageReference",
+      assetId: slot.assetId,
+      ...slot.kind ? { referenceKind: slot.kind } : {},
+      ...current.prompt ? { prompt: current.prompt } : {}
+    };
+  });
+}
+function pictureNumbers(prompt) {
+  return [...new Set([...prompt.replace(/<d>[\s\S]*?<\/d>/g, "").matchAll(/<Picture\s+(\d+)>/g)].map((match) => Number(match[1])))].sort((a, b) => a - b);
+}
+async function copyH3ReferencePlan(db2, trackId, sourcePrompt, targetPrompt, validatePrompt = true) {
+  const plan = await loadH3ReferencePlan(db2, trackId, sourcePrompt);
+  if (!plan) return null;
+  if (validatePrompt) {
+    const expected = plan.slots.map((_, index) => index + 1);
+    if (JSON.stringify(pictureNumbers(sourcePrompt)) !== JSON.stringify(expected) || JSON.stringify(pictureNumbers(targetPrompt)) !== JSON.stringify(expected)) throw regenerate("\u53C2\u8003\u56FE\u7F16\u53F7\u5DF2\u53D8\u5316");
+    assertH3ReferenceBindings(targetPrompt, plan.slots, sourcePrompt);
+  }
+  return persistPlan(db2, trackId, targetPrompt, plan);
+}
+var import_node_crypto15, fields, labels, canonicalPath, promptHash, regenerate, pendingTables;
+var init_h3ReferencePlan = __esm({
+  "src/utils/h3ReferencePlan.ts"() {
+    "use strict";
+    import_node_crypto15 = require("node:crypto");
+    init_h3ReferenceSlots();
+    init_h3ReferenceBindings();
+    fields = {
+      FACE: "faceReferencePath",
+      FULL_BODY_FRONT: "fullBodyReferencePath",
+      FULL_BODY_SIDE: "sideReferencePath",
+      FULL_BODY_BACK: "backReferencePath"
+    };
+    labels = {
+      FACE: "\u8138\u90E8\u8EAB\u4EFD\u53C2\u8003",
+      FULL_BODY_FRONT: "\u6B63\u9762\u5168\u8EAB\u53C2\u8003",
+      FULL_BODY_SIDE: "\u4FA7\u9762\u5168\u8EAB\u53C2\u8003",
+      FULL_BODY_BACK: "\u80CC\u9762\u5168\u8EAB\u53C2\u8003"
+    };
+    canonicalPath = (path34) => path34.replace(/\\/g, "/").replace(/^\/+/, "");
+    promptHash = (prompt) => (0, import_node_crypto15.createHash)("sha256").update(prompt, "utf8").digest("hex");
+    regenerate = (reason) => new Error(`${reason}\uFF0C\u8BF7\u91CD\u65B0\u751F\u6210\u89C6\u9891\u63D0\u793A\u8BCD`);
+    pendingTables = /* @__PURE__ */ new WeakMap();
+  }
+});
+
+// src/utils/importStudioNative.ts
+async function createImportProject(db2, kind, fields2) {
+  const [id2] = await db2("o_project").insert({
+    name: fields2.name,
+    intro: fields2.intro || "",
+    projectType: importProjectType(kind),
+    type: "\u5BFC\u5165\u521B\u4F5C",
+    artStyle: fields2.artStyle || "",
+    videoRatio: fields2.videoRatio || "16:9",
+    imageQuality: fields2.imageQuality || "1K",
+    imageModel: fields2.imageModel || "comfyui_local:qwen-image-2.1-local",
+    videoModel: fields2.videoModel || "comfyui_local:MiniMax-H3-local",
+    mode: '["imageReference:9"]',
+    directorManual: "",
+    userId: 1,
+    createTime: Date.now()
+  });
+  return Number(id2);
+}
+async function materializeImportBatch(db2, batch, projectId) {
+  const [scriptId] = await db2("o_script").insert({
+    projectId,
+    name: batch.name,
+    content: "\u5916\u90E8\u5BFC\u5165\u7684\u8D44\u4EA7\u4E0E\u5206\u955C",
+    createTime: batch.createdAt
+  });
+  const items = await db2("o_importItem").where({ batchId: batch.id }).orderBy("position");
+  const assets = JSON.parse(batch.assets);
+  const assetIds = /* @__PURE__ */ new Map();
+  const addAsset = async (spec, output, model, failure) => {
+    const nativeType = spec.type === "creature" ? "tool" : spec.type;
+    const [assetId] = await db2("o_assets").insert({
+      projectId,
+      scriptId,
+      name: spec.name,
+      type: nativeType,
+      describe: spec.prompt || spec.name,
+      prompt: spec.prompt || "",
+      promptState: spec.prompt ? "\u5DF2\u5B8C\u6210" : "\u672A\u751F\u6210",
+      assetsId: null,
+      descriptionVersion: 0,
+      promptDescriptionVersion: 0,
+      imageDescriptionVersion: 0,
+      ...output && spec.type === "role" ? { referenceLayout: "four_view", designStatus: "ready" } : {}
+    });
+    await db2("o_scriptAssets").insert({ scriptId, assetId });
+    if (output || failure) {
+      const [imageId] = await db2("o_image").insert({
+        assetsId: assetId,
+        filePath: output || null,
+        type: nativeType,
+        state: output ? "\u5DF2\u5B8C\u6210" : "\u751F\u6210\u5931\u8D25",
+        model: model || "\u5BFC\u5165\u56FE\u7247",
+        errorReason: failure || null
+      });
+      if (output)
+        await db2("o_assets").where({ id: assetId }).update({ imageId });
+    }
+    return Number(assetId);
+  };
+  if (batch.kind === "video")
+    for (const asset of assets) {
+      const assetId = await addAsset(asset, asset.path);
+      assetIds.set(asset.id, {
+        id: assetId,
+        name: asset.name,
+        type: asset.type,
+        filePath: asset.path
+      });
+    }
+  for (const item of items) {
+    const spec = JSON.parse(item.spec);
+    if (batch.kind === "image") {
+      const assetId = await addAsset(
+        spec,
+        item.state === "succeeded" ? item.output : void 0,
+        item.model,
+        ["failed", "interrupted"].includes(item.state) ? item.error : void 0
+      );
+      await db2("o_importItem").where({ id: item.id }).update({ assetId });
+    } else {
+      const [trackId] = await db2("o_videoTrack").insert({
+        projectId,
+        scriptId,
+        prompt: spec.prompt,
+        duration: spec.duration,
+        state: "\u5DF2\u5B8C\u6210",
+        archived: 0
+      });
+      const [storyboardId] = await db2("o_storyboard").insert({
+        projectId,
+        scriptId,
+        trackId,
+        prompt: spec.name,
+        videoDesc: spec.prompt,
+        duration: String(spec.duration),
+        index: item.position,
+        shouldGenerateImage: 0,
+        createTime: batch.createdAt
+      });
+      const slots = spec.assets.map((id2) => {
+        const asset = assetIds.get(id2);
+        if (!asset) throw new Error(`\u5206\u955C ${spec.id} \u7F3A\u5C11\u8D44\u4EA7 ${id2}`);
+        return asset;
+      });
+      for (const slot of slots)
+        await db2("o_assets2Storyboard").insert({
+          storyboardId,
+          assetId: slot.id
+        });
+      await saveH3ReferencePlan(db2, Number(trackId), spec.prompt, slots);
+      if (item.output && item.state === "succeeded") {
+        const [videoId] = await db2("o_video").insert({
+          projectId,
+          scriptId,
+          videoTrackId: trackId,
+          filePath: item.output,
+          state: "\u751F\u6210\u6210\u529F",
+          time: batch.createdAt
+        });
+        await db2("o_videoTrack").where({ id: trackId }).update({ videoId });
+      }
+      await db2("o_importItem").where({ id: item.id }).update({ trackId });
+    }
+  }
+  await db2("o_importBatch").where({ id: batch.id }).update({ projectId, scriptId });
+  return Number(scriptId);
+}
+async function initImportStudioNative(db2) {
+  for (const column of ["projectId", "scriptId"])
+    if (!await db2.schema.hasColumn("o_importBatch", column)) {
+      await db2.schema.alterTable(
+        "o_importBatch",
+        (t) => t.integer(column).index()
+      );
+    }
+  for (const column of ["assetId", "trackId"])
+    if (!await db2.schema.hasColumn("o_importItem", column)) {
+      await db2.schema.alterTable(
+        "o_importItem",
+        (t) => t.integer(column).index()
+      );
+    }
+  const legacy = await db2("o_importBatch").whereNull("projectId").orderBy("createdAt");
+  for (const batch of legacy)
+    await db2.transaction(async (trx) => {
+      if ((await trx("o_importBatch").where({ id: batch.id }).first()).projectId)
+        return;
+      const firstItem = await trx("o_importItem").where({ batchId: batch.id }).orderBy("position").first();
+      const spec = firstItem ? JSON.parse(firstItem.spec) : {};
+      const projectId = await createImportProject(trx, batch.kind, {
+        name: batch.name,
+        videoRatio: batch.kind === "video" ? spec.aspectRatio : "16:9",
+        ...batch.kind === "image" && firstItem?.model ? { imageModel: firstItem.model } : {}
+      });
+      await materializeImportBatch(trx, batch, projectId);
+      await trx("o_importBatch").where({ id: batch.id }).update({
+        fingerprint: (0, import_node_crypto16.createHash)("sha256").update(`${projectId}:${batch.fingerprint}`).digest("hex")
+      });
+    });
+}
+var import_node_crypto16, importProjectType;
+var init_importStudioNative = __esm({
+  "src/utils/importStudioNative.ts"() {
+    "use strict";
+    import_node_crypto16 = require("node:crypto");
+    init_h3ReferencePlan();
+    importProjectType = (kind) => `import-${kind}`;
+  }
+});
+
+// src/routes/importStudio/index.ts
+async function models(kind) {
+  const vendors = await db("o_vendorConfig").where({ enable: 1 });
+  const result = [];
+  for (const config3 of vendors) {
+    const vendor = await utils_default.vendor.getVendor(String(config3.id));
+    if (!String(vendor?.id || "").startsWith("comfyui")) continue;
+    const values = {
+      ...vendor.inputValues,
+      ...JSON.parse(config3.inputValues || "{}")
+    };
+    if (kind === "video" && values.videoBackend && values.videoBackend !== "comfyui")
+      continue;
+    for (const model of await utils_default.vendor.getModelList(String(config3.id))) {
+      if (model.type !== kind || kind === "video" && !/minimax.*h3/i.test(model.modelName))
+        continue;
+      result.push({
+        value: `${config3.id}:${model.modelName}`,
+        label: `${model.name} \xB7 ${vendor.name}`
+      });
+    }
+  }
+  return result;
+}
+var import_express36, import_node_crypto17, import_node_path6, import_sharp9, import_compressing2, router36, ready, ensureReady, projectFields, importStudio_default;
+var init_importStudio = __esm({
+  "src/routes/importStudio/index.ts"() {
+    "use strict";
+    import_express36 = __toESM(require_express2());
+    import_node_crypto17 = require("node:crypto");
+    import_node_path6 = require("node:path");
+    init_zod();
+    import_sharp9 = __toESM(require("sharp"));
+    import_compressing2 = __toESM(require_compressing());
+    init_utils3();
+    init_db();
+    init_responseFormat();
+    init_importStudioContracts();
+    init_importStudioQueue();
+    init_importStudioNative();
+    router36 = import_express36.default.Router();
+    ensureReady = () => ready ??= initStudioTables(db).then(() => initImportStudioNative(db)).catch((e) => {
+      ready = void 0;
+      throw e;
+    });
+    projectFields = external_exports.object({
+      name: external_exports.string().trim().min(1).max(200),
+      intro: external_exports.string().max(2e3).default(""),
+      artStyle: external_exports.string().max(3e3).default(""),
+      videoRatio: external_exports.enum(["16:9", "9:16"]).default("16:9"),
+      imageQuality: external_exports.enum(["1K", "2K", "4K"]).default("1K"),
+      imageModel: external_exports.string().max(200).default(""),
+      videoModel: external_exports.string().max(200).default("")
+    });
+    router36.use(async (_req, _res, next) => {
+      try {
+        await ensureReady();
+        next();
+      } catch (e) {
+        next(e);
+      }
+    });
+    router36.post("/", async (req, res) => {
+      try {
+        const action = external_exports.enum([
+          "projects",
+          "createProject",
+          "project",
+          "updateProject",
+          "list",
+          "detail",
+          "models",
+          "preview",
+          "import",
+          "download",
+          "template"
+        ]).parse(req.body.action);
+        if (action === "models")
+          return res.send(
+            success3(await models(external_exports.enum(["image", "video"]).parse(req.body.kind)))
+          );
+        if (action === "projects") {
+          const kind = external_exports.enum(["image", "video"]).parse(req.body.kind);
+          const projects = await db("o_project").where({ projectType: importProjectType(kind) }).orderBy("createTime", "desc");
+          for (const project2 of projects)
+            project2.batchCount = Number(
+              (await db("o_importBatch").where({ projectId: project2.id }).count({ count: "id" }).first())?.count || 0
+            );
+          return res.send(success3(projects));
+        }
+        if (action === "createProject") {
+          const kind = external_exports.enum(["image", "video"]).parse(req.body.kind);
+          const fields2 = projectFields.parse(req.body);
+          const selected = kind === "image" ? fields2.imageModel : fields2.videoModel;
+          if (!(await models(kind)).some((x) => x.value === selected))
+            throw new Error("\u8BF7\u9009\u62E9\u5DF2\u542F\u7528\u7684\u672C\u5730 ComfyUI \u6A21\u578B");
+          return res.send(
+            success3({ id: await createImportProject(db, kind, fields2) })
+          );
+        }
+        if (action === "template") {
+          const kind = external_exports.enum(["image", "video"]).parse(req.body.kind);
+          if (kind === "image")
+            return res.type("text/csv; charset=utf-8").attachment("assets-template.csv").send(ASSET_CSV);
+          const placeholder = async (label) => (0, import_sharp9.default)(
+            Buffer.from(
+              `<svg width="768" height="512"><rect width="768" height="512" fill="#edf2fa"/><text x="384" y="235" text-anchor="middle" font-family="sans-serif" font-size="36" fill="#0052d9">${label}</text><text x="384" y="300" text-anchor="middle" font-family="sans-serif" font-size="25" fill="#555">REPLACE THIS SAMPLE IMAGE</text></svg>`
+            )
+          ).png().toBuffer();
+          const files = /* @__PURE__ */ new Map([
+            [
+              "manifest.json",
+              Buffer.from(JSON.stringify(EXAMPLE_MANIFEST, null, 2))
+            ],
+            ["\u4F7F\u7528\u8BF4\u660E.txt", Buffer.from(IMPORT_README)],
+            ["assets/hero.png", await placeholder("Picture 1 / hero")],
+            ["assets/room.png", await placeholder("Picture 2 / room")]
+          ]);
+          return res.type("application/zip").attachment("h3-video-template.zip").send(await makeZip(files));
+        }
+        const projectId = external_exports.number().int().positive().parse(req.body.projectId);
+        const project = await db("o_project").where({ id: projectId }).whereIn("projectType", ["import-image", "import-video"]).first();
+        if (!project)
+          return res.status(404).send(error50("\u5BFC\u5165\u9879\u76EE\u4E0D\u5B58\u5728\uFF0C\u8BF7\u5148\u65B0\u5EFA\u9879\u76EE"));
+        const projectKind = project.projectType === "import-image" ? "image" : "video";
+        if (req.body.kind && req.body.kind !== projectKind)
+          throw new Error("\u9879\u76EE\u7C7B\u578B\u4E0E\u5BFC\u5165\u6587\u4EF6\u4E0D\u4E00\u81F4");
+        if (action === "project")
+          return res.send(
+            success3({
+              project,
+              batches: await db("o_importBatch").where({ projectId }).select("id", "name", "scriptId", "createdAt").orderBy("createdAt", "desc")
+            })
+          );
+        if (action === "updateProject") {
+          const fields2 = projectFields.parse(req.body);
+          const selected = projectKind === "image" ? fields2.imageModel : fields2.videoModel;
+          if (!(await models(projectKind)).some((x) => x.value === selected))
+            throw new Error("\u8BF7\u9009\u62E9\u5DF2\u542F\u7528\u7684\u672C\u5730 ComfyUI \u6A21\u578B");
+          await db("o_project").where({ id: projectId }).update(fields2);
+          return res.send(success3({ id: projectId }));
+        }
+        if (action === "list")
+          return res.send(
+            success3(
+              await db("o_importBatch").where({ projectId }).select("id", "name", "scriptId", "createdAt").orderBy("createdAt", "desc")
+            )
+          );
+        if (action === "preview" || action === "import") {
+          const { kind, file: file3, name: name28 } = external_exports.object({
+            kind: external_exports.enum(["image", "video"]),
+            file: external_exports.string().max(Math.ceil(MAX_UPLOAD / 3) * 4),
+            name: external_exports.string().trim().min(1).max(200)
+          }).parse(req.body);
+          if (file3.length % 4 || /[^A-Za-z0-9+/=]/.test(file3))
+            throw new Error("\u6587\u4EF6\u7F16\u7801\u65E0\u6548");
+          const buffer = Buffer.from(file3, "base64");
+          if (buffer.toString("base64") !== file3 || buffer.length > MAX_UPLOAD)
+            throw new Error("\u6587\u4EF6\u7F16\u7801\u65E0\u6548\u6216\u8D85\u8FC7\u5927\u5C0F\u9650\u5236");
+          const sourceHash = (0, import_node_crypto17.createHash)("sha256").update(kind).update(buffer).digest("hex");
+          const fingerprint = (0, import_node_crypto17.createHash)("sha256").update(`${projectId}:${sourceHash}`).digest("hex");
+          const existing = await db("o_importBatch").where({ fingerprint }).first();
+          if (existing)
+            return res.send(
+              success3({ id: existing.id, existing: true, name: existing.name })
+            );
+          const video = kind === "video" ? await parseVideoZip(buffer) : void 0;
+          const specs = video ? video.manifest.shots : parseAssetCsv(buffer);
+          if (action === "preview")
+            return res.send(
+              success3({
+                name: video?.manifest.name || name28,
+                count: specs.length,
+                assets: video?.manifest.assets || [],
+                items: specs
+              })
+            );
+          const batchId2 = (0, import_node_crypto17.randomUUID)();
+          const assets = video ? video.manifest.assets.map((asset) => ({
+            ...asset,
+            path: `/import-studio/${batchId2}/assets/${asset.id}.png`
+          })) : [];
+          try {
+            for (const asset of assets)
+              await utils_default.oss.writeFile(asset.path, video.images.get(asset.id));
+            await db.transaction(async (trx) => {
+              const batch2 = {
+                id: batchId2,
+                projectId,
+                kind,
+                name: video?.manifest.name || name28,
+                fingerprint,
+                assets: JSON.stringify(assets),
+                createdAt: Date.now()
+              };
+              await trx("o_importBatch").insert(batch2);
+              for (let position = 0; position < specs.length; position++)
+                await trx("o_importItem").insert({
+                  id: (0, import_node_crypto17.randomUUID)(),
+                  batchId: batchId2,
+                  position,
+                  spec: JSON.stringify(specs[position]),
+                  state: "ready"
+                });
+              await materializeImportBatch(trx, batch2, projectId);
+            });
+          } catch (e) {
+            for (const asset of assets)
+              await utils_default.oss.deleteFile(asset.path).catch(() => {
+              });
+            const duplicate = await db("o_importBatch").where({ fingerprint }).first();
+            if (duplicate)
+              return res.send(success3({ id: duplicate.id, existing: true }));
+            throw e;
+          }
+          return res.send(success3({ id: batchId2 }));
+        }
+        const batchId = external_exports.string().uuid().parse(req.body.batchId);
+        const batch = await db("o_importBatch").where({ id: batchId, projectId }).first();
+        if (!batch) return res.status(404).send(error50("\u5BFC\u5165\u6279\u6B21\u4E0D\u5B58\u5728"));
+        if (action === "detail") {
+          const items = await db("o_importItem").where({ batchId }).orderBy("position");
+          const assets = await Promise.all(
+            JSON.parse(batch.assets).map(async (asset) => ({
+              ...asset,
+              url: await utils_default.oss.getFileUrl(asset.path)
+            }))
+          );
+          return res.send(
+            success3({
+              id: batch.id,
+              name: batch.name,
+              kind: batch.kind,
+              assets,
+              items: await Promise.all(
+                items.map(async (item) => ({
+                  ...item,
+                  spec: JSON.parse(item.spec),
+                  url: item.output ? await utils_default.oss.getFileUrl(item.output) : null
+                }))
+              )
+            })
+          );
+        }
+        if (action === "download") {
+          const candidates = await db("o_importItem").where({ batchId }).orderBy("position");
+          const items = [];
+          for (const item of candidates) {
+            const asset = item.assetId ? await db("o_assets").where({ id: item.assetId, projectId }).first() : null;
+            const image = asset?.imageId ? await db("o_image").where({ id: asset.imageId, state: "\u5DF2\u5B8C\u6210" }).first() : null;
+            const track = item.trackId ? await db("o_videoTrack").where({ id: item.trackId, projectId, archived: 0 }).first() : null;
+            const videos = track ? await db("o_video").where({ videoTrackId: track.id, projectId }).whereIn("state", ["\u751F\u6210\u6210\u529F", "\u5DF2\u5B8C\u6210"]).orderBy("id", "desc") : [];
+            const video = videos.find((v) => v.id === track.videoId) || videos[0];
+            const output = image?.filePath || video?.filePath;
+            if (output)
+              items.push({ ...item, output, model: image?.model || item.model });
+          }
+          if (!items.length) throw new Error("\u8FD8\u6CA1\u6709\u6210\u529F\u751F\u6210\u7684\u6587\u4EF6");
+          const archive = new import_compressing2.zip.Stream();
+          for (const item of items)
+            archive.addEntry(utils_default.getPath(["oss", item.output.replace(/^\//, "")]), {
+              relativePath: `${batch.kind === "image" ? "assets" : "videos"}/${JSON.parse(item.spec).id}${(0, import_node_path6.extname)(item.output)}`
+            });
+          archive.addEntry(
+            Buffer.from(
+              JSON.stringify(
+                items.map((x) => ({ ...JSON.parse(x.spec), model: x.model })),
+                null,
+                2
+              )
+            ),
+            { relativePath: "results.json" }
+          );
+          res.type("application/zip").attachment(`${batch.kind}-results.zip`);
+          archive.on("error", (e) => res.destroy(e));
+          res.on("close", () => archive.destroy());
+          archive.pipe(res);
+          return;
+        }
+      } catch (e) {
+        return res.status(400).send(error50(e.message));
+      }
+    });
+    importStudio_default = router36;
+  }
+});
+
+// src/routes/login/login.ts
+function setToken(payload, expiresIn, secret) {
+  if (!payload || typeof secret !== "string" || !secret) {
+    throw new Error("\u53C2\u6570\u4E0D\u5408\u6CD5");
+  }
+  return import_jsonwebtoken4.default.sign(payload, secret, { expiresIn });
+}
+var import_express37, import_jsonwebtoken4, router37, login_default;
+var init_login = __esm({
+  "src/routes/login/login.ts"() {
+    "use strict";
+    import_express37 = __toESM(require_express2());
+    init_utils3();
+    import_jsonwebtoken4 = __toESM(require_jsonwebtoken());
+    init_responseFormat();
+    init_middleware();
+    init_zod();
+    router37 = import_express37.default.Router();
+    login_default = router37.post(
+      "/",
+      validateFields({
+        username: external_exports.string(),
+        password: external_exports.string()
+      }),
+      async (req, res) => {
+        const { username, password } = req.body;
+        const data = await utils_default.db("o_user").where("name", "=", username).first();
+        if (!data) return res.status(400).send(error50("\u767B\u5F55\u5931\u8D25"));
+        if (data.password == password && data.name == username) {
+          const tokenData = await utils_default.db("o_setting").where("key", "tokenKey").first();
+          if (!tokenData) return res.status(400).send(error50("\u672A\u627E\u5230tokenKey"));
+          const token = setToken(
+            {
+              id: data.id,
+              name: data.name
+            },
+            "180Days",
+            tokenData?.value
+          );
+          return res.status(200).send(success3({ token: "Bearer " + token, name: data.name, id: data.id }, "\u767B\u5F55\u6210\u529F"));
+        } else {
+          return res.status(400).send(error50("\u7528\u6237\u540D\u6216\u5BC6\u7801\u9519\u8BEF"));
+        }
+      }
+    );
+  }
+});
+
+// src/routes/modelSelect/getModelDetail.ts
+var import_express38, router38, getModelDetail_default;
+var init_getModelDetail = __esm({
+  "src/routes/modelSelect/getModelDetail.ts"() {
+    "use strict";
+    import_express38 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router38 = import_express38.default.Router();
+    getModelDetail_default = router38.post(
+      "/",
+      validateFields({
+        modelId: external_exports.string()
+      }),
+      async (req, res) => {
+        const { modelId } = req.body;
+        const [id2, name28] = modelId.split(/:(.+)/);
+        const models2 = await utils_default.vendor.getModelList(id2);
+        const findData = models2.find((i) => i.modelName == name28);
+        res.status(200).send(success3(findData));
+      }
+    );
+  }
+});
+
+// src/routes/modelSelect/getModelList.ts
+var import_express39, router39, getModelList_default;
+var init_getModelList = __esm({
+  "src/routes/modelSelect/getModelList.ts"() {
+    "use strict";
+    import_express39 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router39 = import_express39.default.Router();
+    getModelList_default = router39.post(
+      "/",
+      validateFields({
+        type: external_exports.enum(["text", "image", "video", "all"])
+      }),
+      async (req, res) => {
+        const { type } = req.body;
+        const dataList = await utils_default.db("o_vendorConfig").select("id").where("enable", 1);
+        if (!dataList || dataList.length === 0) {
+          return res.status(404).send({ error: "\u6A21\u578B\u672A\u627E\u5230" });
+        }
+        const modelList = await Promise.all(dataList.map((i) => utils_default.vendor.getModelList(i.id)));
+        const result = await Promise.all(
+          dataList.map(async (data, index) => {
+            const vendorData2 = await utils_default.vendor.getVendor(data.id);
+            const models2 = modelList[index];
+            const filtered = type === "all" ? models2.filter((item) => item.type !== "video") : models2.filter((item) => item.type === type);
+            return filtered.map((item) => ({
+              id: data.id,
+              label: item.name,
+              value: item.modelName,
+              type: item.type,
+              name: vendorData2.name
+            }));
+          })
+        );
+        res.status(200).send(success3(result.flat()));
+      }
+    );
+  }
+});
+
+// src/routes/novel/addNovel.ts
+var import_express40, router40, addNovel_default;
+var init_addNovel = __esm({
+  "src/routes/novel/addNovel.ts"() {
+    "use strict";
+    import_express40 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router40 = import_express40.default.Router();
+    addNovel_default = router40.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        data: external_exports.array(
+          external_exports.object({
+            index: external_exports.number(),
+            reel: external_exports.string(),
+            chapter: external_exports.string(),
+            chapterData: external_exports.string()
+          })
+        )
+      }),
+      async (req, res) => {
+        const { projectId, data } = req.body;
+        const totalNovelId = [];
+        const getLastChapterIndex = await utils_default.db("o_novel").where("projectId", projectId).select("chapterIndex").orderBy("chapterIndex", "desc").first();
+        let lastChapterIndex = 0;
+        if (getLastChapterIndex) {
+          lastChapterIndex = getLastChapterIndex.chapterIndex;
+        }
+        for (const item of data) {
+          const [id2] = await utils_default.db("o_novel").insert({
+            projectId,
+            chapterIndex: ++lastChapterIndex,
+            reel: item.reel,
+            chapter: item.chapter,
+            chapterData: item.chapterData,
+            createTime: Date.now(),
+            eventState: 0
+          });
+          totalNovelId.push(id2);
+        }
+        const chapterAllList = await utils_default.db("o_novel").where("projectId", projectId).whereIn("id", totalNovelId);
+        const novelClass = new utils_default.cleanNovel();
+        novelClass.emitter.on("item", async (item) => {
+          await utils_default.db("o_novel").where("id", item.id).update({ event: item.event, eventState: item.event ? 1 : -1, errorReason: item?.errReason ?? null });
+        });
+        novelClass.start(chapterAllList, projectId);
+        res.status(200).send(success3({ message: "\u65B0\u589E\u539F\u6587\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/novel/batchDeleteNovel.ts
+var import_express41, router41, batchDeleteNovel_default;
+var init_batchDeleteNovel = __esm({
+  "src/routes/novel/batchDeleteNovel.ts"() {
+    "use strict";
+    import_express41 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router41 = import_express41.default.Router();
+    batchDeleteNovel_default = router41.post(
+      "/",
+      validateFields({
+        ids: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { ids } = req.body;
+        if (!ids.length) {
+          return res.status(400).send(error50("\u8BF7\u5148\u9009\u62E9\u9700\u8981\u5220\u9664\u7684\u5185\u5BB9"));
+        }
+        const chapterData = await utils_default.db("o_eventChapter").whereIn("novelId", ids);
+        await utils_default.db("o_eventChapter").whereIn("novelId", ids).delete();
+        const eventIds = chapterData.map((i) => i.id);
+        if (eventIds.length) await utils_default.db("o_event").whereIn("id", eventIds).delete();
+        await utils_default.db("o_novel").whereIn("id", ids).del();
+        res.status(200).send(success3({ message: "\u5220\u9664\u539F\u6587\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/novel/delNovel.ts
+var import_express42, router42, delNovel_default;
+var init_delNovel = __esm({
+  "src/routes/novel/delNovel.ts"() {
+    "use strict";
+    import_express42 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router42 = import_express42.default.Router();
+    delNovel_default = router42.post(
+      "/",
+      validateFields({
+        id: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id: id2 } = req.body;
+        const chapterData = await utils_default.db("o_eventChapter").where("novelId", id2);
+        await utils_default.db("o_eventChapter").where("novelId", id2).delete();
+        const eventIds = chapterData.map((i) => i.id);
+        if (eventIds.length) await utils_default.db("o_event").whereIn("id", eventIds).delete();
+        await utils_default.db("o_novel").where("id", id2).del();
+        res.status(200).send(success3({ message: "\u5220\u9664\u539F\u6587\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/novel/event/batchDeleteEvent.ts
+var import_express43, router43, batchDeleteEvent_default;
+var init_batchDeleteEvent = __esm({
+  "src/routes/novel/event/batchDeleteEvent.ts"() {
+    "use strict";
+    import_express43 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router43 = import_express43.default.Router();
+    batchDeleteEvent_default = router43.post(
+      "/",
+      validateFields({
+        ids: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { ids } = req.body;
+        await utils_default.db("o_event").whereIn("id", ids).del();
+        await utils_default.db("o_eventChapter").whereIn("eventId", ids).del();
+        res.status(200).send(success3({ message: "\u5220\u9664\u4E8B\u4EF6\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/novel/event/deletEvent.ts
+var import_express44, router44, deletEvent_default;
+var init_deletEvent = __esm({
+  "src/routes/novel/event/deletEvent.ts"() {
+    "use strict";
+    import_express44 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router44 = import_express44.default.Router();
+    deletEvent_default = router44.post(
+      "/",
+      validateFields({
+        id: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id: id2 } = req.body;
+        await utils_default.db("o_event").where("id", id2).del();
+        await utils_default.db("o_eventChapter").where("eventId", id2).del();
+        res.status(200).send(success3({ message: "\u5220\u9664\u4E8B\u4EF6\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/novel/event/generateEvents.ts
+var import_express45, router45, generateEvents_default;
+var init_generateEvents = __esm({
+  "src/routes/novel/event/generateEvents.ts"() {
+    "use strict";
+    import_express45 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router45 = import_express45.default.Router();
+    generateEvents_default = router45.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        novelIds: external_exports.array(external_exports.number()),
+        concurrentCount: external_exports.number().min(1).optional()
+      }),
+      async (req, res) => {
+        const { projectId, novelIds, concurrentCount = 5 } = req.body;
+        const [allChapters, novel] = await Promise.all([
+          utils_default.db("o_novel").where("projectId", projectId).whereIn("id", novelIds),
+          Promise.resolve(new utils_default.cleanNovel(concurrentCount))
+        ]);
+        if (allChapters.length === 0) {
+          return res.status(400).send(success3("\u6CA1\u6709\u5BF9\u5E94\u7AE0\u8282"));
+        }
+        await utils_default.db("o_novel").where("projectId", projectId).whereIn("id", novelIds).update({ eventState: 0, event: null });
+        novel.emitter.on("item", async (item) => {
+          await utils_default.db("o_novel").where("id", item.id).update({ event: item.event, eventState: item.event ? 1 : -1, errorReason: item?.errorReason ?? null });
+        });
+        novel.start(allChapters, projectId);
+        return res.status(200).send(success3("\u751F\u6210\u4E8B\u4EF6\u6210\u529F"));
+      }
+    );
+  }
+});
+
+// src/routes/novel/event/getEvent.ts
+var import_express46, router46, getEvent_default;
+var init_getEvent = __esm({
+  "src/routes/novel/event/getEvent.ts"() {
+    "use strict";
+    import_express46 = __toESM(require_express2());
+    init_utils3();
+    init_db();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router46 = import_express46.default.Router();
+    getEvent_default = router46.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        page: external_exports.number(),
+        limit: external_exports.number(),
+        search: external_exports.string().optional()
+      }),
+      async (req, res) => {
+        const { projectId, page, limit, search } = req.body;
+        const offset = (page - 1) * limit;
+        const baseQuery = utils_default.db("o_event as e").join("o_eventChapter as ec", "ec.eventId", "e.id").join("o_novel as n", "n.id", "ec.novelId").where("n.projectId", projectId);
+        if (search) {
+          baseQuery.where("e.name", "like", `%${search}%`);
+        }
+        const [{ total }] = await baseQuery.clone().countDistinct("e.id as total");
+        if (!Number(total)) {
+          return res.status(200).send(success3({ list: [], total: 0 }));
+        }
+        const rows = await baseQuery.clone().select("e.id", "e.name as eventName", "e.detail", "e.createTime", db.raw("GROUP_CONCAT(n.chapterIndex) as chapterIndexes")).groupBy("e.id").limit(limit).offset(offset);
+        const list2 = rows.map((e) => ({
+          id: e.id,
+          eventName: e.eventName,
+          detail: e.detail,
+          createTime: e.createTime,
+          chapters: e.chapterIndexes ? e.chapterIndexes.split(",").map(Number) : []
+        }));
+        res.status(200).send(success3({ list: list2, total: Number(total) }));
+      }
+    );
+  }
+});
+
+// src/routes/novel/getNovel.ts
+var import_express47, router47, getNovel_default;
+var init_getNovel = __esm({
+  "src/routes/novel/getNovel.ts"() {
+    "use strict";
+    import_express47 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router47 = import_express47.default.Router();
+    getNovel_default = router47.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        page: external_exports.number(),
+        limit: external_exports.number(),
+        search: external_exports.string().optional()
+      }),
+      async (req, res) => {
+        const { projectId, page, limit, search } = req.body;
+        const offset = (page - 1) * limit;
+        const data = await utils_default.db("o_novel").where("projectId", projectId).select("id", "chapterIndex as index", "reel", "chapter", "chapterData", "event", "eventState", "errorReason").andWhere((qb) => {
+          if (search) {
+            qb.where("chapter", "like", `%${search}%`);
+          }
+        }).orderBy("chapterIndex", "asc").limit(limit).offset(offset);
+        const totalQuery = await utils_default.db("o_novel").where("projectId", projectId).andWhere((qb) => {
+          if (search) {
+            qb.where("chapter", "like", `%${search}%`);
+          }
+        }).count("* as total").first();
+        res.status(200).send(success3({ data, total: totalQuery.total }));
+      }
+    );
+  }
+});
+
+// src/routes/novel/getNovelData.ts
+var import_express48, router48, getNovelData_default;
+var init_getNovelData = __esm({
+  "src/routes/novel/getNovelData.ts"() {
+    "use strict";
+    import_express48 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router48 = import_express48.default.Router();
+    getNovelData_default = router48.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { projectId } = req.body;
+        const data = await utils_default.db("o_novel").where("projectId", projectId).select("*");
+        res.status(200).send(success3(data));
+      }
+    );
+  }
+});
+
+// src/routes/novel/getNovelEventState.ts
+var import_express49, router49, getNovelEventState_default;
+var init_getNovelEventState = __esm({
+  "src/routes/novel/getNovelEventState.ts"() {
+    "use strict";
+    import_express49 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router49 = import_express49.default.Router();
+    getNovelEventState_default = router49.post(
+      "/",
+      validateFields({
+        ids: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { ids } = req.body;
+        const data = await utils_default.db("o_novel").whereIn("id", ids).whereNot("eventState", 0).select("id", "event", "eventState", "errorReason");
+        res.status(200).send(success3(data));
+      }
+    );
+  }
+});
+
+// src/routes/novel/getNovelIndex.ts
+var import_express50, router50, getNovelIndex_default;
+var init_getNovelIndex = __esm({
+  "src/routes/novel/getNovelIndex.ts"() {
+    "use strict";
+    import_express50 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router50 = import_express50.default.Router();
+    getNovelIndex_default = router50.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { projectId } = req.body;
+        const data = await utils_default.db("o_novel").where("projectId", projectId).select("id", "chapterIndex as index", "chapter").orderBy("chapterIndex", "asc");
+        res.status(200).send(success3(data));
+      }
+    );
+  }
+});
+
+// src/routes/novel/updateNovel.ts
+var import_express51, router51, updateNovel_default;
+var init_updateNovel = __esm({
+  "src/routes/novel/updateNovel.ts"() {
+    "use strict";
+    import_express51 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router51 = import_express51.default.Router();
+    updateNovel_default = router51.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        index: external_exports.union([external_exports.number(), external_exports.string()]),
+        reel: external_exports.string(),
+        chapter: external_exports.string(),
+        chapterData: external_exports.string(),
+        event: external_exports.string()
+      }),
+      async (req, res) => {
+        const { id: id2, index, reel, chapter, chapterData, event } = req.body;
+        await utils_default.db("o_novel").where("id", id2).update({
+          chapterIndex: index,
+          reel,
+          chapter,
+          chapterData,
+          event
+        });
+        res.status(200).send(success3({ message: "\u66F4\u65B0\u539F\u6587\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/other/deleteAllData.ts
+var import_express52, router52, deleteAllData_default;
+var init_deleteAllData = __esm({
+  "src/routes/other/deleteAllData.ts"() {
+    "use strict";
+    import_express52 = __toESM(require_express2());
+    init_initDB();
+    init_db();
+    init_responseFormat();
+    router52 = import_express52.default.Router();
+    deleteAllData_default = router52.post(
+      "/",
+      async (req, res) => {
+        await initDB_default(db, true);
+        res.status(200).send(success3({ message: "\u6E05\u7A7A\u6570\u636E\u8868\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/other/getVersion.ts
+var import_express53, router53, getVersion_default;
+var init_getVersion = __esm({
+  "src/routes/other/getVersion.ts"() {
+    "use strict";
+    import_express53 = __toESM(require_express2());
+    init_responseFormat();
+    init_writeVersion();
+    router53 = import_express53.default.Router();
+    getVersion_default = router53.get("/", async (req, res) => {
+      const version3 = await getVersion();
+      res.status(200).send(success3(version3));
+    });
+  }
+});
+
+// src/routes/production/assets/batchGenerateAssetsImage.ts
+var import_express54, router54, activeAssetGenerationRequests, batchGenerateAssetsImage_default;
+var init_batchGenerateAssetsImage = __esm({
+  "src/routes/production/assets/batchGenerateAssetsImage.ts"() {
+    "use strict";
+    import_express54 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_operationReceipt();
+    init_assetPromptGeneration();
+    init_assetDescriptionVersion();
+    init_assetReferenceMedia();
+    router54 = import_express54.default.Router();
+    activeAssetGenerationRequests = /* @__PURE__ */ new Set();
+    batchGenerateAssetsImage_default = router54.post(
+      "/",
+      validateFields({
+        assetIds: external_exports.array(external_exports.number()),
+        projectId: external_exports.number(),
+        scriptId: external_exports.number(),
+        concurrentCount: external_exports.number().min(1).optional(),
+        requestId: external_exports.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional()
+      }),
+      async (req, res) => {
+        const { assetIds, projectId, scriptId, concurrentCount = 5 } = req.body;
+        const requestId = req.body.requestId ?? `assetgen_${utils_default.uuid()}`;
+        const normalizedIds = [...new Set(assetIds.map(Number))].sort((a, b) => a - b);
+        if (!normalizedIds.length) return res.status(400).send(error50("assetIds\u4E0D\u80FD\u4E3A\u7A7A"));
+        const generationKey = `${projectId}:${scriptId}:${requestId}`;
+        let ownsGenerationWorker = false;
+        try {
+          const projectSettingData = await utils_default.db("o_project").where("id", projectId).select("imageModel", "imageQuality", "artStyle").first();
+          if (!projectSettingData) return res.status(400).send(error50("\u9879\u76EE\u4E0D\u5B58\u5728"));
+          const operationInput = { assetIds: normalizedIds, projectId, scriptId };
+          const claimed = await withOperationReceipt(
+            utils_default.db,
+            { projectId, episodesId: scriptId },
+            "asset-generate",
+            requestId,
+            operationInput,
+            async (trx) => {
+              const script = await trx("o_script").where({ id: scriptId, projectId }).select("id").first();
+              if (!script) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C");
+              const assets = await trx("o_assets").where({ projectId }).whereIn("id", normalizedIds).select("id", "type", "assetsId", "imageId");
+              const found = new Set(assets.map((item) => Number(item.id)));
+              const missing = normalizedIds.filter((id2) => !found.has(id2));
+              if (missing.length) throw new Error(`\u8D44\u4EA7\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u6216\u4E0D\u5B58\u5728\uFF1A${missing.join(",")}`);
+              const links = await trx("o_scriptAssets").where({ scriptId }).whereIn("assetId", normalizedIds).select("assetId");
+              const linked = new Set(links.map((item) => Number(item.assetId)));
+              const unlinked = normalizedIds.filter((id2) => !linked.has(id2));
+              if (unlinked.length) throw new Error(`\u8D44\u4EA7\u672A\u7ED1\u5B9A\u5230\u5F53\u524D\u5267\u96C6\uFF1A${unlinked.join(",")}`);
+              const referenceImageIdMap2 = {};
+              const referenceIds = [...new Set(assets.flatMap((a) => [a.id, a.assetsId]).filter(Boolean))];
+              const referenceAssets = await trx("o_assets").where({ projectId }).whereIn("id", referenceIds).select("id", "imageId");
+              for (const a of referenceAssets) referenceImageIdMap2[Number(a.id)] = a.imageId ?? null;
+              const imageIdMap = {};
+              for (const item of assets) {
+                const [imageId] = await trx("o_image").insert({
+                  assetsId: item.id,
+                  type: item.type,
+                  state: "\u751F\u6210\u4E2D",
+                  resolution: projectSettingData.imageQuality,
+                  model: projectSettingData.imageModel
+                });
+                imageIdMap[Number(item.id)] = Number(imageId);
+                const updated = await trx("o_assets").where({ id: item.id, projectId }).update({ imageId });
+                if (updated !== 1) throw new Error(`\u8D44\u4EA7 ${item.id} \u7684\u56FE\u7247\u4EFB\u52A1\u7ED1\u5B9A\u5931\u8D25`);
+              }
+              return { assetIds: normalizedIds, imageIdMap, referenceImageIdMap: referenceImageIdMap2 };
+            }
+          );
+          if (!claimed.duplicate || !activeAssetGenerationRequests.has(generationKey)) {
+            activeAssetGenerationRequests.add(generationKey);
+            ownsGenerationWorker = true;
+          }
+          const currentRows = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").where({ "o_assets.projectId": projectId }).whereIn("o_assets.id", normalizedIds).select("o_assets.id", "o_image.state", "o_image.filePath", "o_image.errorReason", "o_assets.prompt");
+          const currentData = await Promise.all(
+            currentRows.map(async (item) => ({
+              id: item.id,
+              state: item.state ?? "\u672A\u751F\u6210",
+              src: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : null,
+              errorReason: item.errorReason ?? "",
+              prompt: item.prompt ?? ""
+            }))
+          );
+          res.status(200).send(success3(currentData));
+          if (!ownsGenerationWorker) return;
+          const receiptImages = claimed.duplicate ? await utils_default.db("o_image").whereIn("id", Object.values(claimed.receipt.data.imageIdMap)).select("id", "assetsId", "state") : [];
+          const generationIds = claimed.duplicate ? receiptImages.filter((item) => item.state === "\u751F\u6210\u4E2D" && Number(item.id) === Number(claimed.receipt.data.imageIdMap[item.assetsId])).map((item) => Number(item.assetsId)) : normalizedIds;
+          if (!generationIds.length) {
+            activeAssetGenerationRequests.delete(generationKey);
+            ownsGenerationWorker = false;
+            return;
+          }
+          const assetsDataArr = await utils_default.db("o_assets").where({ projectId }).whereIn("id", generationIds).select("id", "describe", "name", "type", "assetsId");
+          const visionDeps = { loadImage: (path34) => utils_default.oss.getImageBase64(path34), invoke: (input) => utils_default.Ai.Text("universalAi").invoke(input) };
+          const referenceImageIdMap = claimed.receipt.data.referenceImageIdMap || {};
+          const generateSingleAsset = async (item) => {
+            const imageId = Number(claimed.receipt.data.imageIdMap[item.id]);
+            try {
+              const context2 = await loadAssetPromptContext(utils_default.db, { projectId, assetsId: item.id, type: item.type, name: item.name, describe: item.describe || "" }, referenceImageIdMap);
+              const manualKind = item.type === "role" ? "character" : item.type === "scene" ? "scene" : "prop";
+              const manual = utils_default.getArtPrompt(projectSettingData.artStyle, "art_skills", `art_${manualKind}${context2.parent ? "_derivative" : ""}`);
+              if (!manual) throw new Error("\u89C6\u89C9\u624B\u518C\u672A\u5B9A\u4E49");
+              const text3 = await generateAssetPrompt(visionDeps, context2, manual);
+              await saveGeneratedAssetPrompt(utils_default.db, context2.asset, text3);
+              const sourcePath = context2.parent ? context2.parent.selectedImagePath : context2.asset.selectedImagePath;
+              const imageBase64 = sourcePath ? await utils_default.oss.getImageBase64(sourcePath) : null;
+              if (context2.parent && !imageBase64) throw new Error("\u884D\u751F\u8D44\u4EA7\u7F3A\u5C11\u53EF\u8BFB\u53D6\u7684\u539F\u8D44\u4EA7\u56FE\u7247\uFF0C\u4E0D\u80FD\u4F7F\u7528\u6587\u751F\u56FE");
+              const repeloadObj = {
+                prompt: text3,
+                size: projectSettingData.imageQuality,
+                aspectRatio: "16:9"
+              };
+              const imageCls = await utils_default.Ai.Image(projectSettingData.imageModel).run(
+                {
+                  referenceList: imageBase64 ? [{ type: "image", base64: imageBase64 }] : [],
+                  ...repeloadObj
+                },
+                {
+                  taskClass: "\u751F\u6210\u56FE\u7247",
+                  describe: "\u8D44\u4EA7\u56FE\u7247\u751F\u6210",
+                  relatedObjects: JSON.stringify({
+                    ...repeloadObj,
+                    assetId: item.id,
+                    parentAssetId: context2.parent?.id ?? null,
+                    referenceImagePath: sourcePath ?? null,
+                    generationMode: imageBase64 ? "image-to-image" : "text-to-image"
+                  }),
+                  projectId
+                }
+              );
+              const savePath = `/${projectId}/assets/${scriptId}/${item.type}/${utils_default.uuid()}.jpg`;
+              await imageCls.save(savePath);
+              await utils_default.db("o_image").where({ id: imageId, assetsId: item.id }).update({ filePath: savePath });
+              const layout = "four_view";
+              const referenceFields = item.type === "role" ? {
+                designStatus: "ready",
+                designVersion: utils_default.db.raw("COALESCE(designVersion, 0) + 1"),
+                referenceLayout: layout,
+                referenceFingerprint: await roleReferenceFingerprint(savePath)
+              } : null;
+              await utils_default.db.transaction(async (trx) => {
+                const completed = await trx("o_image").where({ id: imageId, assetsId: item.id, state: "\u751F\u6210\u4E2D" }).update({
+                  state: "\u5DF2\u5B8C\u6210",
+                  filePath: savePath,
+                  errorReason: null,
+                  ...context2.asset.descriptionVersion !== void 0 ? { descriptionVersion: descriptionVersion(context2.asset) } : {}
+                });
+                if (completed && (referenceFields || context2.asset.descriptionVersion !== void 0)) {
+                  await trx("o_assets").where({ id: item.id, projectId, imageId }).update({
+                    ...referenceFields,
+                    ...context2.asset.descriptionVersion !== void 0 ? { imageDescriptionVersion: descriptionVersion(context2.asset) } : {}
+                  });
+                }
+              });
+            } catch (reason) {
+              if (Object.hasOwn(referenceImageIdMap, item.id)) {
+                await utils_default.db("o_assets").where({ id: item.id, projectId, imageId }).update({ imageId: referenceImageIdMap[item.id] });
+              }
+              await utils_default.db("o_assets").where({ id: item.id, projectId }).update({ promptState: "\u751F\u6210\u5931\u8D25", promptErrorReason: utils_default.error(reason).message });
+              await utils_default.db("o_image").where({ id: imageId, assetsId: item.id }).update({
+                state: "\u751F\u6210\u5931\u8D25",
+                errorReason: utils_default.error(reason).message
+              });
+            }
+          };
+          try {
+            for (let i = 0; i < assetsDataArr.length; i += concurrentCount) {
+              const batch = assetsDataArr.slice(i, i + concurrentCount);
+              await Promise.all(batch.map(generateSingleAsset));
+            }
+          } finally {
+            if (ownsGenerationWorker) {
+              activeAssetGenerationRequests.delete(generationKey);
+              ownsGenerationWorker = false;
+            }
+          }
+        } catch (reason) {
+          const message = utils_default.error(reason).message;
+          console.error("[assets/batchGenerateAssetsImage]", reason);
+          if (ownsGenerationWorker) {
+            activeAssetGenerationRequests.delete(generationKey);
+            ownsGenerationWorker = false;
+          }
+          if (res.headersSent) {
+            try {
+              const receipt = await getOperationReceipt(
+                utils_default.db,
+                { projectId, episodesId: scriptId },
+                "asset-generate",
+                requestId
+              );
+              const imageIds = Object.values(receipt?.data?.imageIdMap ?? {}).map(Number).filter(Number.isSafeInteger);
+              if (imageIds.length) {
+                await utils_default.db("o_image").whereIn("id", imageIds).where({ state: "\u751F\u6210\u4E2D" }).update({
+                  state: "\u751F\u6210\u5931\u8D25",
+                  errorReason: `\u751F\u6210\u4EFB\u52A1\u521D\u59CB\u5316\u5931\u8D25\uFF1A${message}`
+                });
+              }
+            } catch (markError) {
+              console.error("[assets/batchGenerateAssetsImage] \u6807\u8BB0\u521D\u59CB\u5316\u5931\u8D25\u72B6\u6001\u5931\u8D25:", markError);
+            }
+            return;
+          }
+          return res.status(400).send(error50(message));
+        }
+      }
+    );
+  }
+});
+
+// src/routes/production/assets/deleteAssetsDireve.ts
+var import_express55, router55, deleteAssetsDireve_default;
+var init_deleteAssetsDireve = __esm({
+  "src/routes/production/assets/deleteAssetsDireve.ts"() {
+    "use strict";
+    import_express55 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router55 = import_express55.default.Router();
+    deleteAssetsDireve_default = router55.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        projectId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id: id2, projectId } = req.body;
+        const assetsFirstData = await utils_default.db("o_assets").where("id", id2).first();
+        if (!assetsFirstData) {
+          return res.status(404).send({ error: "\u8D44\u6E90\u672A\u627E\u5230" });
+        }
+        if (assetsFirstData?.flowId) await utils_default.db("o_imageFlow").where("id", assetsFirstData?.flowId).delete();
+        await utils_default.db("o_assets").where("id", id2).delete();
+        await utils_default.db("o_assets2Storyboard").where("assetId", id2).delete();
+        res.status(200).send(success3({ message: "\u89C6\u9891\u5220\u9664\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/production/assets/pollingImage.ts
+var import_express56, router56, pollingImage_default;
+var init_pollingImage = __esm({
+  "src/routes/production/assets/pollingImage.ts"() {
+    "use strict";
+    import_express56 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router56 = import_express56.default.Router();
+    pollingImage_default = router56.post(
+      "/",
+      validateFields({
+        ids: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { ids } = req.body;
+        const data = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").whereIn("o_assets.id", ids).whereNot("o_image.state", "\u751F\u6210\u4E2D").select("o_image.state", "o_assets.id", "o_image.filePath", "o_image.errorReason", "o_assets.prompt");
+        const result = await Promise.all(
+          data.map(async (item) => ({
+            ...item,
+            src: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : null
+          }))
+        );
+        res.status(200).send(success3(result));
+      }
+    );
+  }
+});
+
+// src/routes/production/assets/updateAssetsUrl.ts
+var import_express57, router57, updateAssetsUrl_default;
+var init_updateAssetsUrl = __esm({
+  "src/routes/production/assets/updateAssetsUrl.ts"() {
+    "use strict";
+    import_express57 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router57 = import_express57.default.Router();
+    updateAssetsUrl_default = router57.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        url: external_exports.string(),
+        flowId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id: id2, url: url4, flowId } = req.body;
+        const [imageId] = await utils_default.db("o_image").insert({
+          filePath: utils_default.replaceUrl(url4),
+          state: "\u5DF2\u5B8C\u6210",
+          assetsId: id2
+        });
+        await utils_default.db("o_assets").where({ id: id2 }).update({ flowId, imageId });
+        res.status(200).send(success3({ message: "\u66F4\u65B0\u63D0\u793A\u8BCD\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/production/editImage/generateFlowImage.ts
+async function urlToBase643(imageUrl) {
+  if (imageUrl.startsWith("/oss/")) {
+    return await utils_default.oss.getImageBase64(utils_default.replaceUrl(imageUrl).replace("/smallImage", ""));
+  }
+  imageUrl = await utils_default.oss.getFileUrl(utils_default.replaceUrl(imageUrl));
+  const response = await axios_default.get(imageUrl, { responseType: "arraybuffer" });
+  const contentType = response.headers["content-type"] || "image/png";
+  const base644 = Buffer.from(response.data, "binary").toString("base64");
+  return `data:${contentType};base64,${base644}`;
+}
+var import_express58, router58, generateFlowImage_default;
+var init_generateFlowImage = __esm({
+  "src/routes/production/editImage/generateFlowImage.ts"() {
+    "use strict";
+    import_express58 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_axios2();
+    router58 = import_express58.default.Router();
+    generateFlowImage_default = router58.post(
+      "/",
+      validateFields({
+        model: external_exports.string(),
+        references: external_exports.array(external_exports.string()).optional(),
+        quality: external_exports.string(),
+        ratio: external_exports.string(),
+        prompt: external_exports.string(),
+        projectId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { model, references = [], quality, ratio, prompt, projectId } = req.body;
+        try {
+          const imageClass = await utils_default.Ai.Image(model).run(
+            {
+              prompt,
+              referenceList: await (async () => {
+                const list2 = [];
+                for (const url5 of references) {
+                  list2.push({ type: "image", base64: await urlToBase643(url5) });
+                }
+                return list2;
+              })(),
+              size: quality,
+              aspectRatio: ratio
+            },
+            {
+              taskClass: "\u5DE5\u4F5C\u6D41\u56FE\u7247\u751F\u6210",
+              describe: "\u5DE5\u4F5C\u6D41\u56FE\u7247\u751F\u6210",
+              relatedObjects: JSON.stringify(req.body),
+              projectId
+            }
+          );
+          const savePath = `${projectId}/workFlow/${utils_default.uuid()}.jpg`;
+          await imageClass.save(savePath);
+          const url4 = await utils_default.oss.getSmallImageUrl(savePath);
+          return res.status(200).send(success3({ url: url4 }));
+        } catch (e) {
+          res.status(400).send(error50(utils_default.error(e).message));
+        }
+      }
+    );
+  }
+});
+
+// src/routes/production/editImage/getImageDefaultModle.ts
+var import_express59, router59, getImageDefaultModle_default;
+var init_getImageDefaultModle = __esm({
+  "src/routes/production/editImage/getImageDefaultModle.ts"() {
+    "use strict";
+    import_express59 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router59 = import_express59.default.Router();
+    getImageDefaultModle_default = router59.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { projectId } = req.body;
+        const imageFlowData = await utils_default.db("o_project").where("id", projectId).select("imageModel", "imageQuality").first();
+        return res.status(200).send(success3(imageFlowData));
+      }
+    );
+  }
+});
+
+// src/routes/production/editImage/getImageFlow.ts
+var import_express60, router60, getImageFlow_default;
+var init_getImageFlow = __esm({
+  "src/routes/production/editImage/getImageFlow.ts"() {
+    "use strict";
+    import_express60 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router60 = import_express60.default.Router();
+    getImageFlow_default = router60.post(
+      "/",
+      validateFields({
+        id: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id: id2, type } = req.body;
+        const imageFlowData = await utils_default.db("o_imageFlow").where("id", id2).first();
+        if (imageFlowData?.flowData) {
+          const parseFlow = JSON.parse(imageFlowData.flowData);
+          await Promise.all(
+            parseFlow.nodes.map(async (node) => {
+              if (node.type === "upload") {
+                node.data.image = node.data.image ? await utils_default.oss.getSmallImageUrl(node.data.image) : "";
+              } else if (node.type === "generated") {
+                node.data.generatedImage = node.data.generatedImage ? await utils_default.oss.getSmallImageUrl(node.data.generatedImage) : "";
+                node.data.references = await Promise.all(node.data.references.map(async (item) => {
+                  return {
+                    image: await utils_default.oss.getSmallImageUrl(item.image)
+                  };
+                }));
+              }
+            })
+          );
+          return res.status(200).send(success3({ ...parseFlow, id: imageFlowData.id }));
+        }
+        return res.status(200).send(success3(null));
+      }
+    );
+  }
+});
+
+// src/routes/production/editImage/saveImageFlow.ts
+var import_express61, router61, saveImageFlow_default;
+var init_saveImageFlow = __esm({
+  "src/routes/production/editImage/saveImageFlow.ts"() {
+    "use strict";
+    import_express61 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router61 = import_express61.default.Router();
+    saveImageFlow_default = router61.post(
+      "/",
+      validateFields({
+        edges: external_exports.any(),
+        nodes: external_exports.any()
+      }),
+      async (req, res) => {
+        const { edges, nodes } = req.body;
+        nodes.forEach((node) => {
+          if (node.type == "upload") {
+            node.data.image = node.data.image ? utils_default.replaceUrl(node.data.image) : "";
+          }
+          if (node.type == "generated") {
+            node.data.generatedImage = node.data.generatedImage ? utils_default.replaceUrl(node.data.generatedImage) : "";
+            node.data.references.forEach((item) => {
+              item.image = item.image ? utils_default.replaceUrl(item.image) : "";
+            });
+          }
+        });
+        const [insertFlowId] = await utils_default.db("o_imageFlow").insert({
+          flowData: JSON.stringify({ edges, nodes })
+        });
+        return res.status(200).send(success3({ id: insertFlowId }));
+      }
+    );
+  }
+});
+
+// src/routes/production/editImage/updateImageFlow.ts
+var import_express62, router62, updateImageFlow_default;
+var init_updateImageFlow = __esm({
+  "src/routes/production/editImage/updateImageFlow.ts"() {
+    "use strict";
+    import_express62 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router62 = import_express62.default.Router();
+    updateImageFlow_default = router62.post(
+      "/",
+      validateFields({
+        edges: external_exports.any(),
+        nodes: external_exports.any(),
+        flowId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { edges, nodes, flowId } = req.body;
+        nodes.forEach((node) => {
+          if (node.type == "upload") {
+            node.data.image = node.data.image ? utils_default.replaceUrl(node.data.image) : "";
+          }
+          if (node.type == "generated") {
+            node.data.generatedImage = node.data.generatedImage ? utils_default.replaceUrl(node.data.generatedImage) : "";
+            node.data.references.forEach((item) => {
+              item.image = item.image ? utils_default.replaceUrl(item.image) : "";
+            });
+          }
+        });
+        await utils_default.db("o_imageFlow").where("id", flowId).update({
+          flowData: JSON.stringify({ edges, nodes })
+        });
+        return res.status(200).send(success3());
+      }
+    );
+  }
+});
+
+// src/routes/production/editImage/uploadImage.ts
+var import_express63, router63, uploadImage_default;
+var init_uploadImage = __esm({
+  "src/routes/production/editImage/uploadImage.ts"() {
+    "use strict";
+    import_express63 = __toESM(require_express2());
+    init_utils3();
+    init_responseFormat();
+    init_middleware();
+    init_zod();
+    init_dist_node();
+    router63 = import_express63.default.Router();
+    uploadImage_default = router63.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        scriptId: external_exports.number(),
+        base64Data: external_exports.string()
+      }),
+      async (req, res) => {
+        const { base64Data, projectId, scriptId } = req.body;
+        function getExtFromBase642(base64Data2) {
+          const mime = base64Data2.match(/^data:([^;]+);base64,/)?.[1] ?? "";
+          const mimeMap = {
+            // 图片
+            "image/jpeg": "jpeg",
+            "image/jpg": "jpg",
+            "image/png": "png",
+            // 音频
+            "audio/mpeg": "mp3",
+            "audio/mp3": "mp3",
+            "audio/wav": "wav",
+            // 视频
+            "video/mp4": "mp4",
+            "video/webm": "webm"
+          };
+          return mimeMap[mime] ?? "bin";
+        }
+        const ext = getExtFromBase642(base64Data);
+        if (!["jpeg", "jpg", "png"].includes(ext)) {
+          return res.status(400).send(error50("\u4E0D\u652F\u6301\u7684\u6587\u4EF6\u7C7B\u578B"));
+        }
+        const savePath = `/${projectId}/imageFlow/${scriptId}/${v4_default()}.${ext}`;
+        await utils_default.oss.writeFile(savePath, Buffer.from(base64Data.match(/base64,([A-Za-z0-9+/=]+)/)[1] ?? "", "base64"));
+        const url4 = await utils_default.oss.getSmallImageUrl(savePath);
+        res.status(200).send(success3(url4));
+      }
+    );
+  }
+});
+
+// src/routes/production/getFlowData.ts
+var import_express64, router64, getFlowData_default;
+var init_getFlowData = __esm({
+  "src/routes/production/getFlowData.ts"() {
+    "use strict";
+    import_express64 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router64 = import_express64.default.Router();
+    getFlowData_default = router64.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        episodesId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { projectId, episodesId } = req.body;
+        const sqlData = await utils_default.db("o_agentWorkData").where("projectId", String(projectId)).andWhere("episodesId", String(episodesId)).andWhere("key", "productionAgent").select("data").first();
+        const scriptData = await utils_default.db("o_script").where("projectId", projectId).where("id", episodesId).first();
+        if (!scriptData) return res.status(400).send(error50("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C"));
+        const scriptAssets = await utils_default.db("o_scriptAssets").where("scriptId", episodesId);
+        const assetIds = scriptAssets.map((i) => i.assetId);
+        const assetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_assets.*", "o_image.filePath", "o_image.state", "o_image.errorReason").where("o_assets.id", "in", assetIds).andWhere("o_assets.assetsId", null).where("o_assets.projectId", projectId);
+        let childAssetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_assets.*", "o_image.filePath", "o_image.state", "o_image.errorReason").where("o_assets.projectId", projectId).where("o_assets.assetsId", "in", assetIds).whereNotNull("o_assets.assetsId");
+        if (!sqlData) {
+          const flowData = {
+            script: scriptData.content ?? "",
+            scriptPlan: "",
+            assets: await Promise.all(
+              assetsData.map(async (item) => ({
+                id: item.id,
+                name: item.name ?? "",
+                type: item.type ?? "",
+                prompt: item.prompt ?? "",
+                desc: item.describe ?? "",
+                src: item.filePath && await utils_default.oss.getSmallImageUrl(item.filePath),
+                derive: await Promise.all(
+                  childAssetsData.filter((child) => child.assetsId === item.id).map(async (child) => ({
+                    id: child.id,
+                    assetsId: item.id,
+                    name: child.name ?? "",
+                    type: child.type,
+                    prompt: child.prompt,
+                    desc: child.describe ?? "",
+                    src: child.filePath && await utils_default.oss.getSmallImageUrl(child.filePath),
+                    state: child.state ?? "\u672A\u751F\u6210"
+                    //todo：矫正状态值
+                  }))
+                )
+              }))
+            ),
+            storyboardTable: "",
+            storyboard: [],
+            //todo：矫正workbench数据
+            //@ts-ignore
+            workbench: {
+              videoList: []
+            }
+            // //todo：矫正封面数据
+            // poster: {
+            //   items: [],
+            // },
+          };
+          return res.status(200).send(success3(flowData));
+        } else {
+          try {
+            const storyboardData = await utils_default.db("o_storyboard").where({ scriptId: episodesId, projectId });
+            await Promise.all(
+              storyboardData.map(async (i) => {
+                if (i.filePath) {
+                  try {
+                    i.filePath = await utils_default.oss.getSmallImageUrl(i.filePath);
+                  } catch {
+                    i.filePath = "";
+                  }
+                } else {
+                  i.filePath = "";
+                }
+              })
+            );
+            const storyboardIds = storyboardData.map((i) => i.id);
+            const assetsIds = await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", storyboardIds).orderBy("rowid");
+            const assets2StoryboardMap = {};
+            assetsIds.forEach((i) => {
+              if (!assets2StoryboardMap[i.storyboardId]) {
+                assets2StoryboardMap[i.storyboardId] = [];
+              }
+              assets2StoryboardMap[i.storyboardId].push(i.assetId);
+            });
+            const flowData = JSON.parse(sqlData.data ?? "{}");
+            flowData.assets = await Promise.all(
+              assetsData.map(async (item) => ({
+                id: item.id,
+                name: item.name ?? "",
+                type: item.type ?? "",
+                prompt: item.prompt ?? "",
+                desc: item.describe ?? "",
+                src: item.filePath && await utils_default.oss.getSmallImageUrl(item.filePath),
+                flowId: item.flowId,
+                derive: await Promise.all(
+                  childAssetsData.filter((child) => child.assetsId === item.id).map(async (child) => ({
+                    id: child.id,
+                    assetsId: item.id,
+                    name: child.name ?? "",
+                    prompt: child.prompt,
+                    type: child.type,
+                    desc: child.describe ?? "",
+                    src: child.filePath && await utils_default.oss.getSmallImageUrl(child.filePath),
+                    state: child.state ?? "\u672A\u751F\u6210",
+                    errorReason: child?.errorReason ?? "",
+                    flowId: child.flowId
+                  }))
+                )
+              }))
+            );
+            flowData.storyboard = storyboardData.map((i) => ({
+              id: i.id,
+              index: i.index,
+              duration: i.duration ? +i.duration : 0,
+              prompt: i.prompt,
+              associateAssetsIds: assets2StoryboardMap[i.id] ?? [],
+              src: i.filePath,
+              state: i.state,
+              videoDesc: i.videoDesc,
+              shouldGenerateImage: i.shouldGenerateImage,
+              reason: i?.reason ?? "",
+              flowId: i.flowId
+            })).sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
+            flowData.script = scriptData.content ?? "";
+            res.status(200).send(success3(flowData));
+          } catch (err) {
+            res.status(400).send(error50());
+          }
+        }
+      }
+    );
+  }
+});
+
+// src/routes/production/getStoryboardData.ts
+var import_express65, router65, getStoryboardData_default;
+var init_getStoryboardData = __esm({
+  "src/routes/production/getStoryboardData.ts"() {
+    "use strict";
+    import_express65 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router65 = import_express65.default.Router();
+    getStoryboardData_default = router65.post(
+      "/",
+      validateFields({
+        scriptId: external_exports.number(),
+        projectId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { scriptId, projectId } = req.body;
+        const storyboardData = await utils_default.db("o_storyboard").where({ scriptId, projectId }).orderBy("index", "asc");
+        const data = await Promise.all(
+          storyboardData.map(async (i) => {
+            return {
+              ...i,
+              filePath: i.filePath ? await utils_default.oss.getSmallImageUrl(i.filePath) : ""
+            };
+          })
+        );
+        const storyboardIds = storyboardData.map((s) => s.id);
+        const storyboardConfigs = await utils_default.db("o_assets2Storyboard").leftJoin("o_assets", "o_assets2Storyboard.assetId", "o_assets.id").leftJoin("o_image", "o_assets.imageId", "o_image.id").whereIn("o_assets2Storyboard.storyboardId", storyboardIds).select("o_assets2Storyboard.storyboardId", "o_assets.id as assetId", "o_assets.name", "o_assets.type", "o_image.filePath as avatar");
+        const storyboardCharactersMap = storyboardConfigs.reduce((acc, cur) => {
+          const storyboardId = cur.storyboardId;
+          if (!acc[storyboardId]) {
+            acc[storyboardId] = [];
+          }
+          const character = {
+            name: cur.name ?? "",
+            type: cur.type ?? ""
+          };
+          if (cur.avatar) {
+            character.avatar = cur.avatar;
+          }
+          acc[storyboardId].push(character);
+          return acc;
+        }, {});
+        const result = await Promise.all(
+          data.map(async (item) => {
+            const characters = storyboardCharactersMap[item.id] ?? [];
+            const charactersWithUrl = await Promise.all(
+              characters.map(async (c) => {
+                if (c.avatar) {
+                  return { ...c, avatar: await utils_default.oss.getSmallImageUrl(c.avatar) };
+                }
+                return c;
+              })
+            );
+            return {
+              id: String(item.id),
+              createTime: item.createTime ?? void 0,
+              duration: item.duration ? Number(item.duration) : void 0,
+              filePath: item.filePath || void 0,
+              prompt: item.prompt ?? void 0,
+              scriptId: item.scriptId ?? void 0,
+              characters: charactersWithUrl,
+              index: item.index
+            };
+          })
+        );
+        res.status(200).send(success3(result));
+      }
+    );
+  }
+});
+
+// src/routes/production/getStoryboardRevisionContext.ts
+var import_express66, router66, getStoryboardRevisionContext_default;
+var init_getStoryboardRevisionContext = __esm({
+  "src/routes/production/getStoryboardRevisionContext.ts"() {
+    "use strict";
+    import_express66 = __toESM(require_express2());
+    init_zod();
+    init_utils3();
+    init_responseFormat();
+    init_middleware();
+    init_storyboardProgress();
+    init_storyboardTable();
+    init_storyboardRevision();
+    router66 = import_express66.default.Router();
+    getStoryboardRevisionContext_default = router66.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number().int().positive(),
+        episodesId: external_exports.number().int().positive()
+      }),
+      async (req, res) => {
+        try {
+          const { projectId, episodesId } = req.body;
+          const progress = await readStoryboardProgress(utils_default.db, projectId, episodesId);
+          if (!progress.valid || progress.mode !== "scene") {
+            throw new Error(progress.conflict?.message ?? "\u5F53\u524D\u5DE5\u4F5C\u533A\u6CA1\u6709\u53EF\u4FEE\u8BA2\u7684\u9010\u573A\u5206\u955C\u8FDB\u5EA6");
+          }
+          const snapshot = await readStoryboardTableSnapshot(utils_default.db, projectId, episodesId);
+          const scenes = snapshot.storyboardTableProgress?.scenes ?? {};
+          if (snapshot.storyboardTableProgress?.taskId !== progress.taskId || snapshot.storyboardTableProgress?.revision !== progress.revision) {
+            throw new Error("\u8BFB\u53D6\u671F\u95F4\u5206\u955C\u8FDB\u5EA6\u53D1\u751F\u53D8\u5316\uFF0C\u8BF7\u91CD\u65B0\u83B7\u53D6\u4FEE\u8BA2\u4E0A\u4E0B\u6587");
+          }
+          return res.status(200).send(success3({
+            taskId: progress.taskId,
+            total: progress.total,
+            revision: progress.revision,
+            savedScenes: progress.savedScenes,
+            missingScenes: progress.missingScenes,
+            scenes: Object.fromEntries(Object.entries(scenes).map(([scene, text3]) => [scene, {
+              content: text3,
+              hash: storyboardSceneHash(text3)
+            }]))
+          }));
+        } catch (error73) {
+          const message = error73 instanceof Error ? error73.message : "\u65E0\u6CD5\u8BFB\u53D6\u5206\u955C\u4FEE\u8BA2\u4E0A\u4E0B\u6587";
+          return res.status(409).send({ code: 409, message, data: null });
+        }
+      }
+    );
+  }
+});
+
+// src/routes/production/reviseStoryboardScene.ts
+var import_express67, router67, reviseStoryboardScene_default;
+var init_reviseStoryboardScene = __esm({
+  "src/routes/production/reviseStoryboardScene.ts"() {
+    "use strict";
+    import_express67 = __toESM(require_express2());
+    init_zod();
+    init_utils3();
+    init_responseFormat();
+    init_middleware();
+    init_storyboardRevision();
+    router67 = import_express67.default.Router();
+    reviseStoryboardScene_default = router67.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number().int().positive(),
+        episodesId: external_exports.number().int().positive(),
+        taskId: external_exports.string().min(8).max(128),
+        scene: external_exports.number().int().positive(),
+        expectedRevision: external_exports.number().int().nonnegative(),
+        expectedSceneHash: external_exports.string().regex(/^[a-f0-9]{64}$/),
+        revisedScene: external_exports.string().min(1).max(6e4),
+        reason: external_exports.string().min(1).max(2e3)
+      }),
+      async (req, res) => {
+        try {
+          const result = await reviseStoryboardScene(utils_default.db, req.body);
+          return res.status(200).send(success3(result));
+        } catch (error73) {
+          const message = error73 instanceof Error ? error73.message : "\u5206\u955C\u4FEE\u8BA2\u5931\u8D25";
+          console.error("[production/reviseStoryboardScene]", error73);
+          return res.status(409).send({ code: 409, message, data: null });
+        }
+      }
+    );
+  }
+});
+
+// src/routes/production/saveFlowData.ts
+var import_express68, router68, saveFlowData_default;
+var init_saveFlowData = __esm({
+  "src/routes/production/saveFlowData.ts"() {
+    "use strict";
+    import_express68 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_storyboardScenes();
+    router68 = import_express68.default.Router();
+    saveFlowData_default = router68.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        episodesId: external_exports.number(),
+        data: external_exports.any().optional(),
+        scene: external_exports.object({
+          taskId: external_exports.string().min(8).max(128),
+          index: external_exports.number().int().min(1),
+          total: external_exports.number().int().min(1).max(1e3),
+          content: external_exports.string().min(1).max(6e4)
+        }).optional(),
+        writeFields: external_exports.array(external_exports.enum(["scriptPlan", "storyboardTable"])).max(2).optional()
+      }),
+      async (req, res) => {
+        const { data, projectId, episodesId, scene, writeFields = [] } = req.body;
+        if (scene && data !== void 0) return res.status(400).send({ code: 400, message: "\u5355\u573A\u4FDD\u5B58\u4E0E\u6574\u4EFD\u5DE5\u4F5C\u533A\u4FDD\u5B58\u4E0D\u80FD\u540C\u65F6\u63D0\u4EA4", data: null });
+        const serialized = scene ? void 0 : JSON.stringify(data);
+        if (!scene && (serialized === void 0 || !data || typeof data !== "object" || Array.isArray(data))) {
+          return res.status(400).send({ code: 400, message: "\u5DE5\u4F5C\u533A\u6570\u636E\u683C\u5F0F\u9519\u8BEF", data: null });
+        }
+        try {
+          const result = await utils_default.db.transaction(async (trx) => {
+            const scope = { projectId, episodesId, key: "productionAgent" };
+            const script = await trx("o_script").where({ id: episodesId, projectId }).first();
+            if (!script) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C");
+            const existing = await trx("o_agentWorkData").where(scope).first();
+            const storedData = existing ? JSON.parse(existing.data || "{}") : {
+              script: script.content ?? "",
+              scriptPlan: "",
+              assets: [],
+              storyboardTable: "",
+              storyboard: [],
+              workbench: { videoList: [] }
+            };
+            let nextData;
+            let sceneResult;
+            if (scene) {
+              sceneResult = mergeStoryboardScene(
+                storedData.storyboardTable ?? "",
+                storedData.storyboardTableProgress,
+                scene.taskId,
+                scene.index,
+                scene.total,
+                scene.content
+              );
+              nextData = { ...storedData, storyboardTable: sceneResult.storyboardTable, storyboardTableProgress: sceneResult.storyboardTableProgress };
+            } else {
+              const explicitWrites = new Set(writeFields);
+              const explicitStoryboardTable = explicitWrites.has("storyboardTable") || data.resetStoryboardTable === true;
+              const clientData = { ...data };
+              delete clientData.storyboardRevisionHistory;
+              delete clientData.storyboardAuditHistory;
+              delete clientData.storyboardApproval;
+              delete clientData.storyboardSceneAudits;
+              delete clientData.storyboardTaskArchives;
+              nextData = { ...storedData, ...clientData };
+              nextData.script = script.content ?? "";
+              if (!explicitWrites.has("scriptPlan")) {
+                nextData.scriptPlan = storedData.scriptPlan ?? "";
+              }
+              const previous = storedData.storyboardTableProgress;
+              const incoming = nextData.storyboardTableProgress;
+              if (!explicitStoryboardTable) {
+                nextData.storyboardTable = storedData.storyboardTable ?? "";
+                if (previous) nextData.storyboardTableProgress = previous;
+                else delete nextData.storyboardTableProgress;
+              } else if (previous) {
+                if (nextData.resetStoryboardTable === true && incoming?.revision !== previous.revision) {
+                  throw new Error("\u5DF2\u6709\u9010\u573A\u5206\u955C\u8FDB\u5EA6\uFF0C\u6574\u8868\u8986\u76D6\u524D\u8BF7\u5148\u663E\u5F0F\u6E05\u7A7A\u6216\u5B8C\u6210\u5F53\u524D\u4EFB\u52A1");
+                }
+                if (incoming?.revision !== previous.revision || incoming?.taskId !== previous.taskId) {
+                  nextData.storyboardTable = storedData.storyboardTable;
+                  nextData.storyboardTableProgress = previous;
+                } else if (nextData.storyboardTable !== storedData.storyboardTable) {
+                  delete nextData.storyboardTableProgress;
+                }
+              } else if (incoming) {
+                nextData.storyboardTable = storedData.storyboardTable;
+                delete nextData.storyboardTableProgress;
+              }
+              delete nextData.resetStoryboardTable;
+              if (Array.isArray(data.storyboard) && data.storyboard.length && data.storyboard.every((item) => item.id)) {
+                for (const [index, item] of data.storyboard.entries()) {
+                  const updated = await trx("o_storyboard").where({ id: item.id, projectId, scriptId: episodesId }).update({ index });
+                  if (updated !== 1) throw new Error(`\u5206\u955C ${item.id} \u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u548C\u5267\u672C\uFF0C\u5DE5\u4F5C\u533A\u672A\u4FDD\u5B58`);
+                }
+              }
+            }
+            const payload = JSON.stringify(nextData);
+            if (existing) {
+              const updated = await trx("o_agentWorkData").where({ id: existing.id, data: existing.data }).update({ data: payload });
+              if (updated !== 1) throw new Error("\u4FDD\u5B58\u671F\u95F4\u5DE5\u4F5C\u533A\u7248\u672C\u5DF2\u53D8\u5316\uFF0C\u8BF7\u91CD\u65B0\u52A0\u8F7D\u540E\u91CD\u8BD5");
+            } else {
+              await trx("o_agentWorkData").insert({ ...scope, data: payload });
+            }
+            const saved = await trx("o_agentWorkData").where(scope).select("data").first();
+            if (!saved || saved.data !== payload) throw new Error("\u5DE5\u4F5C\u533A\u6570\u636E\u5199\u5165\u6821\u9A8C\u5931\u8D25");
+            return sceneResult;
+          });
+          return res.status(200).send(success3(result ?? null));
+        } catch (reason) {
+          const message = reason instanceof Error ? reason.message : "\u5DE5\u4F5C\u533A\u4FDD\u5B58\u5931\u8D25";
+          console.error("[production/saveFlowData]", reason);
+          return res.status(400).send({ code: 400, message, data: null });
+        }
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/addStoryboard.ts
+var import_express69, router69, addStoryboard_default;
+var init_addStoryboard = __esm({
+  "src/routes/production/storyboard/addStoryboard.ts"() {
+    "use strict";
+    import_express69 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router69 = import_express69.default.Router();
+    addStoryboard_default = router69.post(
+      "/",
+      validateFields({
+        prompt: external_exports.string(),
+        duration: external_exports.number(),
+        state: external_exports.string(),
+        videoDesc: external_exports.string(),
+        shouldGenerateImage: external_exports.number(),
+        src: external_exports.string().nullable(),
+        scriptId: external_exports.number(),
+        projectId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { prompt, duration: duration4, state, src, scriptId, projectId, videoDesc, shouldGenerateImage } = req.body;
+        const trackId = Date.now();
+        await utils_default.db("o_videoTrack").insert({
+          id: trackId,
+          scriptId,
+          projectId
+        });
+        const [id2] = await utils_default.db("o_storyboard").insert({
+          prompt,
+          duration: duration4,
+          state,
+          filePath: utils_default.replaceUrl(src),
+          trackId,
+          videoDesc,
+          shouldGenerateImage: src ? 1 : 0,
+          scriptId,
+          projectId
+        });
+        return res.status(200).send(success3({ id: id2 }));
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/batchAddStoryboardInfo.ts
+var import_express70, import_node_crypto18, router70, batchAddStoryboardInfo_default;
+var init_batchAddStoryboardInfo = __esm({
+  "src/routes/production/storyboard/batchAddStoryboardInfo.ts"() {
+    "use strict";
+    import_express70 = __toESM(require_express2());
+    import_node_crypto18 = require("node:crypto");
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router70 = import_express70.default.Router();
+    batchAddStoryboardInfo_default = router70.post(
+      "/",
+      validateFields({
+        data: external_exports.array(
+          external_exports.object({
+            prompt: external_exports.string(),
+            duration: external_exports.number(),
+            track: external_exports.string(),
+            state: external_exports.string(),
+            src: external_exports.string().nullable(),
+            videoDesc: external_exports.string(),
+            shouldGenerateImage: external_exports.number(),
+            associateAssetsIds: external_exports.array(external_exports.number())
+          })
+        ),
+        scriptId: external_exports.number(),
+        projectId: external_exports.number(),
+        // 可选：同一个业务写入操作的重试必须复用相同的 requestId；旧客户端无需提供。
+        requestId: external_exports.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional()
+      }),
+      async (req, res) => {
+        const { data, scriptId, projectId, requestId } = req.body;
+        if (!data.length) return res.status(400).send(error50("\u6570\u636E\u4E0D\u80FD\u4E3A\u7A7A"));
+        const requestKey = requestId ? `storyboardWrite:${requestId}` : null;
+        const payloadHash = requestKey ? (0, import_node_crypto18.createHash)("sha256").update(JSON.stringify(data)).digest("hex") : null;
+        try {
+          const { stored, createdIds, associationMap } = await utils_default.db.transaction(async (trx) => {
+            const script = await trx("o_script").where({ id: scriptId, projectId }).first();
+            if (!script) throw new Error("\u5267\u672C\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\uFF0C\u5206\u955C\u672A\u5199\u5165");
+            let createdIds2 = null;
+            if (requestKey) {
+              const previous = await trx("o_agentWorkData").where({ projectId, episodesId: scriptId, key: requestKey }).first();
+              if (previous) {
+                const prior = JSON.parse(previous.data ?? "{}");
+                if (prior.payloadHash !== payloadHash || !Array.isArray(prior.createdIds) || prior.createdIds.length !== data.length) {
+                  throw new Error("\u76F8\u540C requestId \u5BF9\u5E94\u4E0D\u540C\u7684\u5206\u955C\u5185\u5BB9\uFF0C\u5DF2\u62D2\u7EDD\u91CD\u590D\u63D0\u4EA4");
+                }
+                createdIds2 = prior.createdIds;
+                const persisted = await trx("o_storyboard").where({ scriptId, projectId }).whereIn("id", createdIds2).select("id");
+                if (persisted.length !== createdIds2.length) {
+                  throw new Error("\u539F\u8BF7\u6C42\u7684\u90E8\u5206\u5206\u955C\u5DF2\u4E0D\u5B58\u5728\uFF0C\u4E0D\u80FD\u4F5C\u4E3A\u6210\u529F\u7684\u91CD\u8BD5\u8FD4\u56DE");
+                }
+              }
+            }
+            if (!createdIds2) {
+              const assetIds = [...new Set(data.flatMap((item) => item.associateAssetsIds))];
+              if (assetIds.length) {
+                const assets = await trx("o_assets").where({ projectId }).whereIn("id", assetIds).select("id");
+                const found = new Set(assets.map((item) => Number(item.id)));
+                const missing = assetIds.filter((id2) => !found.has(id2));
+                if (missing.length) throw new Error(`\u5F15\u7528\u8D44\u4EA7\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u6216\u4E0D\u5B58\u5728\uFF1A${missing.join(",")}`);
+              }
+              createdIds2 = [];
+              for (const item of data) {
+                const [id2] = await trx("o_storyboard").insert({
+                  prompt: item.prompt,
+                  duration: String(item.duration),
+                  state: item.state,
+                  scriptId,
+                  projectId,
+                  track: item.track,
+                  videoDesc: item.videoDesc,
+                  shouldGenerateImage: item.shouldGenerateImage,
+                  createTime: Date.now()
+                });
+                createdIds2.push(id2);
+                if (item.associateAssetsIds?.length) {
+                  await trx("o_assets2Storyboard").insert(
+                    [...new Set(item.associateAssetsIds)].map((assetId) => ({ assetId, storyboardId: id2 }))
+                  );
+                }
+              }
+              const lastStoryboard = await trx("o_storyboard").where({ scriptId, projectId });
+              if (!lastStoryboard.length) throw new Error("\u672A\u67E5\u5230\u5206\u955C\u6570\u636E");
+              const storyboardGroupByTrack = {};
+              for (const item of lastStoryboard) {
+                (storyboardGroupByTrack[item.track] ??= []).push(item.id);
+              }
+              for (const track of Object.keys(storyboardGroupByTrack)) {
+                const storyboardIds2 = storyboardGroupByTrack[track];
+                const trackDuration = lastStoryboard.filter((item) => item.track === track).reduce((sum, item) => sum + Number(item.duration), 0);
+                const existingStoryboard = await trx("o_storyboard").where({ scriptId, projectId, track }).whereNotNull("trackId").first();
+                let trackId;
+                if (existingStoryboard?.trackId) {
+                  trackId = existingStoryboard.trackId;
+                  const updated = await trx("o_videoTrack").where({ id: trackId, scriptId, projectId }).update({ duration: trackDuration });
+                  if (updated !== 1) throw new Error(`\u5206\u955C\u5206\u7EC4 ${track} \u4E0D\u5C5E\u4E8E\u5F53\u524D\u5267\u672C`);
+                } else {
+                  const maxRow = await trx("o_videoTrack").max({ maxId: "id" }).first();
+                  trackId = Math.max(Date.now(), Number(maxRow?.maxId ?? 0) + 1);
+                  await trx("o_videoTrack").insert({ id: trackId, scriptId, projectId, duration: trackDuration });
+                }
+                await trx("o_storyboard").where({ scriptId, projectId }).whereIn("id", storyboardIds2).update({ trackId });
+              }
+              const verified = await trx("o_storyboard").where({ scriptId, projectId });
+              if (verified.length !== lastStoryboard.length || verified.some((item) => !item.trackId)) {
+                throw new Error("\u5206\u955C\u5206\u7EC4\u4FDD\u5B58\u4E0D\u5B8C\u6574");
+              }
+              if (requestKey) {
+                await trx("o_agentWorkData").insert({
+                  projectId,
+                  episodesId: scriptId,
+                  key: requestKey,
+                  data: JSON.stringify({ payloadHash, createdIds: createdIds2 })
+                });
+              }
+            }
+            const stored2 = await trx("o_storyboard").where({ scriptId, projectId });
+            const storyboardIds = stored2.map((item) => item.id);
+            const links = storyboardIds.length ? await trx("o_assets2Storyboard").whereIn("storyboardId", storyboardIds).orderBy("rowid").select("storyboardId", "assetId") : [];
+            const associationMap2 = {};
+            for (const link of links) {
+              (associationMap2[link.storyboardId] ??= []).push(link.assetId);
+            }
+            return { stored: stored2, createdIds: createdIds2, associationMap: associationMap2 };
+          });
+          const storyboardData = await Promise.all(
+            stored.map(async (item) => ({
+              associateAssetsIds: associationMap[item.id] ?? [],
+              src: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath).catch(() => "") : "",
+              id: item.id,
+              trackId: item.trackId,
+              prompt: item.prompt,
+              duration: Number(item.duration),
+              state: item.state,
+              scriptId: item.scriptId,
+              reason: item.reason,
+              videoDesc: item.videoDesc
+            }))
+          );
+          return res.status(200).send({ ...success3(storyboardData), createdIds });
+        } catch (reason) {
+          console.error("[storyboard/batchAddStoryboardInfo]", reason);
+          return res.status(400).send(error50(reason instanceof Error ? reason.message : "\u5206\u955C\u6279\u91CF\u5199\u5165\u5931\u8D25"));
+        }
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/batchDelete.ts
+var import_express71, router71, batchDelete_default2;
+var init_batchDelete2 = __esm({
+  "src/routes/production/storyboard/batchDelete.ts"() {
+    "use strict";
+    import_express71 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router71 = import_express71.default.Router();
+    batchDelete_default2 = router71.post(
+      "/",
+      validateFields({
+        ids: external_exports.array(external_exports.number()),
+        projectId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { ids, projectId } = req.body;
+        if (!ids.length) return res.status(400).send(error50("\u8BF7\u5148\u9009\u62E9\u5206\u955C"));
+        const removed = await utils_default.db.transaction(async (trx) => {
+          const storyboardDataList = await trx("o_storyboard").whereIn("id", ids).where("projectId", projectId).select("id", "trackId", "flowId");
+          if (!storyboardDataList.length) return 0;
+          const storyBoardIds = storyboardDataList.map((item) => item.id);
+          const flowIds = storyboardDataList.map((item) => item.flowId).filter((id2) => id2 != null);
+          const trackIds = [...new Set(storyboardDataList.map((item) => item.trackId).filter((id2) => id2 != null))];
+          await trx("o_assets2Storyboard").whereIn("storyboardId", storyBoardIds).delete();
+          await trx("o_storyboard").whereIn("id", storyBoardIds).delete();
+          if (flowIds.length) await trx("o_imageFlow").whereIn("id", flowIds).delete();
+          for (const trackId of trackIds) {
+            const remaining = await trx("o_storyboard").where({ trackId }).first("id");
+            if (!remaining) await trx("o_videoTrack").where({ id: trackId, projectId }).update({ archived: 1 });
+          }
+          return storyBoardIds.length;
+        });
+        if (!removed) return res.status(400).send(error50("\u5F53\u524D\u9009\u62E9\u5206\u955C\u4E0D\u5B58\u5728"));
+        res.status(200).send(success3({ message: "\u89C6\u9891\u5220\u9664\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/batchGenerateImage.ts
+async function getAssetsImageBase64(imageIds) {
+  if (!imageIds.length) return [];
+  const imagePaths = await utils_default.db("o_image").whereIn("o_image.id", imageIds).select("o_image.id", "o_image.filePath");
+  const id2Path = /* @__PURE__ */ new Map();
+  for (const row of imagePaths) id2Path.set(row.id, row.filePath);
+  const imageUrls = await Promise.all(
+    imageIds.map(async (id2) => {
+      const filePath = id2Path.get(id2);
+      if (!filePath) return null;
+      try {
+        return await utils_default.oss.getImageBase64(filePath);
+      } catch {
+        return null;
+      }
+    })
+  );
+  return imageUrls.filter(Boolean).map((url4) => ({ type: "image", base64: url4 }));
+}
+var import_express72, router72, activeStoryboardGenerationRequests, batchGenerateImage_default;
+var init_batchGenerateImage = __esm({
+  "src/routes/production/storyboard/batchGenerateImage.ts"() {
+    "use strict";
+    import_express72 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_operationReceipt();
+    router72 = import_express72.default.Router();
+    activeStoryboardGenerationRequests = /* @__PURE__ */ new Set();
+    batchGenerateImage_default = router72.post(
+      "/",
+      validateFields({
+        storyboardIds: external_exports.array(external_exports.number()),
+        projectId: external_exports.number(),
+        scriptId: external_exports.number(),
+        concurrentCount: external_exports.number().min(1).optional(),
+        compulsory: external_exports.boolean().optional(),
+        requestId: external_exports.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional()
+      }),
+      async (req, res) => {
+        const {
+          storyboardIds,
+          projectId,
+          scriptId,
+          concurrentCount = 5,
+          compulsory = false
+        } = req.body;
+        const requestId = req.body.requestId ?? `storygen_${utils_default.uuid()}`;
+        const normalizedIds = [...new Set(storyboardIds.map(Number))].sort((a, b) => a - b);
+        if (!normalizedIds.length) return res.status(400).send(error50("storyboardIds\u4E0D\u80FD\u4E3A\u7A7A"));
+        const generationKey = `${projectId}:${scriptId}:${requestId}`;
+        let ownsGenerationWorker = false;
+        try {
+          const projectSettingData = await utils_default.db("o_project").where("id", projectId).select("imageModel", "imageQuality", "artStyle", "videoRatio").first();
+          if (!projectSettingData) return res.status(400).send(error50("\u9879\u76EE\u4E0D\u5B58\u5728"));
+          const operationInput = { storyboardIds: normalizedIds, projectId, scriptId, compulsory };
+          const claimed = await withOperationReceipt(
+            utils_default.db,
+            { projectId, episodesId: scriptId },
+            "storyboard-generate",
+            requestId,
+            operationInput,
+            async (trx) => {
+              const script = await trx("o_script").where({ id: scriptId, projectId }).select("id").first();
+              if (!script) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C");
+              const rows = await trx("o_storyboard").where({ scriptId, projectId }).whereIn("id", normalizedIds).select("id", "shouldGenerateImage");
+              const found = new Set(rows.map((item) => Number(item.id)));
+              const missing = normalizedIds.filter((id2) => !found.has(id2));
+              if (missing.length) throw new Error(`\u5206\u955C\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u6216\u5267\u96C6\uFF1A${missing.join(",")}`);
+              if (compulsory) {
+                await trx("o_storyboard").where({ scriptId, projectId }).whereIn("id", normalizedIds).update({ state: "\u751F\u6210\u4E2D", shouldGenerateImage: 1, reason: null });
+              } else {
+                const skippedIds = rows.filter((item) => Number(item.shouldGenerateImage) === 0).map((item) => Number(item.id));
+                const generateIds = rows.filter((item) => Number(item.shouldGenerateImage) !== 0).map((item) => Number(item.id));
+                if (skippedIds.length) {
+                  await trx("o_storyboard").where({ scriptId, projectId }).whereIn("id", skippedIds).update({ state: "\u672A\u751F\u6210", reason: null });
+                }
+                if (generateIds.length) {
+                  await trx("o_storyboard").where({ scriptId, projectId }).whereIn("id", generateIds).update({ state: "\u751F\u6210\u4E2D", reason: null });
+                }
+              }
+              return { storyboardIds: normalizedIds, compulsory };
+            }
+          );
+          if (!claimed.duplicate || !activeStoryboardGenerationRequests.has(generationKey)) {
+            activeStoryboardGenerationRequests.add(generationKey);
+            ownsGenerationWorker = true;
+          }
+          const assets2StoryboardRows = await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", normalizedIds).orderBy("rowid").select("storyboardId", "assetId");
+          const allAssetIds = [...new Set(assets2StoryboardRows.map((row) => Number(row.assetId)))];
+          const assetImageMap = {};
+          if (allAssetIds.length) {
+            const assetRows = await utils_default.db("o_assets").where({ projectId }).whereIn("id", allAssetIds).select("id", "imageId");
+            assetRows.forEach((row) => {
+              if (row.imageId != null) assetImageMap[row.id] = row.imageId;
+            });
+          }
+          const assetRecord = {};
+          assets2StoryboardRows.forEach((item) => {
+            const imageId = assetImageMap[item.assetId];
+            if (imageId != null) (assetRecord[item.storyboardId] ??= []).push(imageId);
+          });
+          const storyboardData = await utils_default.db("o_storyboard").where({ scriptId, projectId }).whereIn("id", normalizedIds).orderBy("index", "asc");
+          const responseData = await Promise.all(storyboardData.map(async (item) => ({
+            id: item.id,
+            prompt: item.prompt,
+            associateAssetsIds: assetRecord[item.id] ?? [],
+            src: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : null,
+            state: item.state,
+            videoDesc: item.videoDesc,
+            shouldGenerateImage: item.shouldGenerateImage
+          })));
+          res.status(200).send(success3(responseData));
+          if (!ownsGenerationWorker) return;
+          const generationIds = claimed.duplicate ? storyboardData.filter((item) => item.state === "\u751F\u6210\u4E2D" && (compulsory || Number(item.shouldGenerateImage) !== 0)).map((item) => Number(item.id)) : normalizedIds;
+          if (!generationIds.length) {
+            activeStoryboardGenerationRequests.delete(generationKey);
+            ownsGenerationWorker = false;
+            return;
+          }
+          const generateTask = async (item) => {
+            const repeloadObj = {
+              prompt: item.prompt,
+              size: projectSettingData.imageQuality,
+              aspectRatio: projectSettingData.videoRatio
+            };
+            try {
+              const imageCls = await utils_default.Ai.Image(projectSettingData.imageModel).run(
+                {
+                  referenceList: await getAssetsImageBase64(assetRecord[item.id] || []),
+                  ...repeloadObj
+                },
+                {
+                  taskClass: "\u751F\u6210\u5206\u955C\u56FE\u7247",
+                  describe: "\u5206\u955C\u56FE\u7247\u751F\u6210",
+                  relatedObjects: JSON.stringify(repeloadObj),
+                  projectId
+                }
+              );
+              const savePath = `/${projectId}/assets/${scriptId}/${utils_default.uuid()}.jpg`;
+              await imageCls.save(savePath);
+              await utils_default.db("o_storyboard").where({ id: item.id, scriptId, projectId }).update({
+                filePath: savePath,
+                state: "\u5DF2\u5B8C\u6210",
+                reason: null
+              });
+            } catch (reason) {
+              await utils_default.db("o_storyboard").where({ id: item.id, scriptId, projectId }).update({
+                filePath: "",
+                reason: utils_default.error(reason).message,
+                state: "\u751F\u6210\u5931\u8D25"
+              });
+            }
+          };
+          const generationIdSet = new Set(generationIds);
+          const generateList = (compulsory ? storyboardData : storyboardData.filter((item) => item.shouldGenerateImage !== 0)).filter((item) => generationIdSet.has(Number(item.id)));
+          try {
+            for (let i = 0; i < generateList.length; i += concurrentCount) {
+              const batch = generateList.slice(i, i + concurrentCount);
+              await Promise.all(batch.map(generateTask));
+            }
+          } finally {
+            if (ownsGenerationWorker) {
+              activeStoryboardGenerationRequests.delete(generationKey);
+              ownsGenerationWorker = false;
+            }
+          }
+        } catch (reason) {
+          const message = utils_default.error(reason).message;
+          console.error("[storyboard/batchGenerateImage]", reason);
+          if (ownsGenerationWorker) {
+            activeStoryboardGenerationRequests.delete(generationKey);
+            ownsGenerationWorker = false;
+          }
+          if (!res.headersSent) return res.status(400).send(error50(message));
+        }
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/downPreviewImage.ts
+var import_express73, import_sharp10, router73, downPreviewImage_default;
+var init_downPreviewImage = __esm({
+  "src/routes/production/storyboard/downPreviewImage.ts"() {
+    "use strict";
+    import_express73 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    import_sharp10 = __toESM(require("sharp"));
+    init_middleware();
+    router73 = import_express73.default.Router();
+    downPreviewImage_default = router73.post(
+      "/",
+      validateFields({
+        storyboardIds: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { storyboardIds } = req.body;
+        const storyboardImage = await utils_default.db("o_storyboard").whereIn("id", storyboardIds).select("id", "filePath");
+        const filePathMap = {};
+        storyboardImage.forEach((i) => {
+          filePathMap[i.id] = i.filePath || "";
+        });
+        const orderedFilePaths = storyboardIds.map((id2) => filePathMap[id2]);
+        const loaded = await Promise.all(
+          orderedFilePaths.map(async (filePath) => {
+            if (!filePath) return null;
+            const buffer = await utils_default.oss.getFile(filePath);
+            const metadata = await (0, import_sharp10.default)(buffer).metadata();
+            return { buffer, width: metadata.width || 0, height: metadata.height || 0 };
+          })
+        );
+        const validImages = loaded.filter((img) => img !== null && img.width > 0 && img.height > 0);
+        if (validImages.length === 0) {
+          res.status(204).end();
+          return;
+        }
+        const cols = Math.min(5, validImages.length);
+        const rows = Math.ceil(validImages.length / cols);
+        const colWidths = Array(cols).fill(0);
+        const rowHeights = Array(rows).fill(0);
+        validImages.forEach((img, idx) => {
+          const c = idx % cols;
+          const r = Math.floor(idx / cols);
+          colWidths[c] = Math.max(colWidths[c], img.width);
+          rowHeights[r] = Math.max(rowHeights[r], img.height);
+        });
+        const canvasWidth = colWidths.reduce((a, b) => a + b, 0);
+        const canvasHeight = rowHeights.reduce((a, b) => a + b, 0);
+        const compositeInputs = [];
+        for (let i = 0; i < validImages.length; i++) {
+          const img = validImages[i];
+          const c = i % cols;
+          const r = Math.floor(i / cols);
+          const x = colWidths.slice(0, c).reduce((a, b) => a + b, 0);
+          const y = rowHeights.slice(0, r).reduce((a, b) => a + b, 0);
+          compositeInputs.push({
+            input: img.buffer,
+            left: x,
+            top: y
+          });
+          const label = `S${String(i + 1).padStart(2, "0")}`;
+          const fontSize = Math.max(14, Math.min(img.width, img.height) * 0.06);
+          const padding = Math.round(fontSize * 0.4);
+          const textWidth = Math.round(label.length * fontSize * 0.65);
+          const bgW = textWidth + padding * 2;
+          const bgH = Math.round(fontSize) + padding * 2;
+          const labelSvg = Buffer.from(
+            `<svg xmlns="http://www.w3.org/2000/svg" width="${bgW}" height="${bgH}">
+          <rect x="0" y="0" width="${bgW}" height="${bgH}" rx="4" ry="4" fill="rgba(0,0,0,0.55)"/>
+          <text x="${padding}" y="${padding + fontSize * 0.85}" font-family="Arial, sans-serif" font-weight="bold" font-size="${fontSize}" fill="#fff">${label}</text>
+        </svg>`
+          );
+          compositeInputs.push({
+            input: labelSvg,
+            left: x + 4,
+            top: y + 4
+          });
+        }
+        const resultBuffer = await (0, import_sharp10.default)({
+          create: {
+            width: canvasWidth,
+            height: canvasHeight,
+            channels: 4,
+            background: { r: 255, g: 255, b: 255, alpha: 1 }
+          }
+        }).composite(compositeInputs).png({ compressionLevel: 3 }).toBuffer();
+        res.setHeader("Content-Type", "image/png");
+        res.setHeader("Content-Disposition", "attachment; filename=storyboard-preview.png");
+        res.setHeader("Content-Length", resultBuffer.length);
+        res.status(200).send(resultBuffer);
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/editStoryboardInfo.ts
+var import_express74, router74, editStoryboardInfo_default;
+var init_editStoryboardInfo = __esm({
+  "src/routes/production/storyboard/editStoryboardInfo.ts"() {
+    "use strict";
+    import_express74 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router74 = import_express74.default.Router();
+    editStoryboardInfo_default = router74.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        prompt: external_exports.string(),
+        videoDesc: external_exports.string()
+      }),
+      async (req, res) => {
+        const { id: id2, prompt, videoDesc } = req.body;
+        await utils_default.db("o_storyboard").where({ id: id2 }).update({
+          prompt,
+          videoDesc
+        });
+        res.status(200).send(success3({ message: "\u66F4\u65B0\u63D0\u793A\u8BCD\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/getStoryboardData.ts
+var import_express75, router75, getStoryboardData_default2;
+var init_getStoryboardData2 = __esm({
+  "src/routes/production/storyboard/getStoryboardData.ts"() {
+    "use strict";
+    import_express75 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router75 = import_express75.default.Router();
+    getStoryboardData_default2 = router75.post(
+      "/",
+      validateFields({
+        scriptId: external_exports.number(),
+        page: external_exports.number(),
+        limit: external_exports.number(),
+        name: external_exports.string().optional().nullable()
+      }),
+      async (req, res) => {
+        const { scriptId, page, limit, name: name28 } = req.body;
+        const offset = (page - 1) * limit;
+        const storyboardData = await utils_default.db("o_storyboard").where({ scriptId }).modify((qb) => {
+          if (name28) {
+            qb.andWhere("title", "like", `%${name28}%`);
+          }
+        }).offset(offset).limit(limit);
+        const data = await Promise.all(
+          storyboardData.map(async (i) => {
+            return {
+              id: i.id,
+              prompt: i.prompt,
+              state: i.state,
+              src: i.filePath ? await utils_default.oss.getSmallImageUrl(i.filePath) : ""
+            };
+          })
+        );
+        const totalQuery = await utils_default.db("o_storyboard").where({ scriptId }).modify((qb) => {
+          if (name28) {
+            qb.andWhere("title", "like", `%${name28}%`);
+          }
+        }).count("* as total").first();
+        res.status(200).send(success3({ data, total: totalQuery?.total }));
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/pollingImage.ts
+var import_express76, router76, pollingImage_default2;
+var init_pollingImage2 = __esm({
+  "src/routes/production/storyboard/pollingImage.ts"() {
+    "use strict";
+    import_express76 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router76 = import_express76.default.Router();
+    pollingImage_default2 = router76.post(
+      "/",
+      validateFields({
+        ids: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { ids } = req.body;
+        const data = await utils_default.db("o_storyboard").whereIn("id", ids).whereNot("state", "\u751F\u6210\u4E2D").select("id", "state", "reason", "filePath", "prompt");
+        const result = await Promise.all(
+          data.map(async (item) => ({
+            ...item,
+            src: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : null
+          }))
+        );
+        res.status(200).send(success3(result));
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/previewImage.ts
+var import_express77, import_sharp11, router77, previewImage_default;
+var init_previewImage = __esm({
+  "src/routes/production/storyboard/previewImage.ts"() {
+    "use strict";
+    import_express77 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    import_sharp11 = __toESM(require("sharp"));
+    init_responseFormat();
+    init_middleware();
+    router77 = import_express77.default.Router();
+    previewImage_default = router77.post(
+      "/",
+      validateFields({
+        storyboardIds: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { storyboardIds } = req.body;
+        const storyboardImage = await utils_default.db("o_storyboard").whereIn("id", storyboardIds).select("id", "filePath");
+        const filePathMap = {};
+        storyboardImage.forEach((i) => {
+          filePathMap[i.id] = i.filePath || "";
+        });
+        const orderedFilePaths = storyboardIds.map((id2) => filePathMap[id2]);
+        const loaded = await Promise.all(
+          orderedFilePaths.map(async (filePath) => {
+            if (!filePath) return null;
+            const buffer = await utils_default.oss.getFile(filePath);
+            const metadata = await (0, import_sharp11.default)(buffer).metadata();
+            return { buffer, width: metadata.width || 0, height: metadata.height || 0 };
+          })
+        );
+        const validImages = loaded.filter((img) => img !== null && img.width > 0 && img.height > 0);
+        if (validImages.length === 0) {
+          return res.status(200).send(success3(null));
+        }
+        const maxThumbWidth = 512;
+        const resizedImages = await Promise.all(
+          validImages.map(async (img) => {
+            if (img.width <= maxThumbWidth) {
+              return img;
+            }
+            const scale = maxThumbWidth / img.width;
+            const newWidth = maxThumbWidth;
+            const newHeight = Math.round(img.height * scale);
+            const buffer = await (0, import_sharp11.default)(img.buffer).resize(newWidth, newHeight).toBuffer();
+            return { buffer, width: newWidth, height: newHeight };
+          })
+        );
+        const cols = Math.min(5, resizedImages.length);
+        const rows = Math.ceil(resizedImages.length / cols);
+        const colWidths = Array(cols).fill(0);
+        const rowHeights = Array(rows).fill(0);
+        resizedImages.forEach((img, idx) => {
+          const c = idx % cols;
+          const r = Math.floor(idx / cols);
+          colWidths[c] = Math.max(colWidths[c], img.width);
+          rowHeights[r] = Math.max(rowHeights[r], img.height);
+        });
+        const canvasWidth = colWidths.reduce((a, b) => a + b, 0);
+        const canvasHeight = rowHeights.reduce((a, b) => a + b, 0);
+        const compositeInputs = [];
+        for (let i = 0; i < resizedImages.length; i++) {
+          const img = resizedImages[i];
+          const c = i % cols;
+          const r = Math.floor(i / cols);
+          const x = colWidths.slice(0, c).reduce((a, b) => a + b, 0);
+          const y = rowHeights.slice(0, r).reduce((a, b) => a + b, 0);
+          compositeInputs.push({
+            input: img.buffer,
+            left: x,
+            top: y
+          });
+          const label = `S${String(i + 1).padStart(2, "0")}`;
+          const fontSize = Math.max(14, Math.min(img.width, img.height) * 0.06);
+          const padding = Math.round(fontSize * 0.4);
+          const textWidth = Math.round(label.length * fontSize * 0.65);
+          const bgW = textWidth + padding * 2;
+          const bgH = Math.round(fontSize) + padding * 2;
+          const labelSvg = Buffer.from(
+            `<svg xmlns="http://www.w3.org/2000/svg" width="${bgW}" height="${bgH}">
+          <rect x="0" y="0" width="${bgW}" height="${bgH}" rx="4" ry="4" fill="rgba(0,0,0,0.55)"/>
+          <text x="${padding}" y="${padding + fontSize * 0.85}" font-family="Arial, sans-serif" font-weight="bold" font-size="${fontSize}" fill="#fff">${label}</text>
+        </svg>`
+          );
+          compositeInputs.push({
+            input: labelSvg,
+            left: x + 4,
+            top: y + 4
+          });
+        }
+        const resultBuffer = await (0, import_sharp11.default)({
+          create: {
+            width: canvasWidth,
+            height: canvasHeight,
+            channels: 4,
+            background: { r: 255, g: 255, b: 255, alpha: 1 }
+          }
+        }).composite(compositeInputs).jpeg({ quality: 80 }).toBuffer();
+        const base644 = resultBuffer.toString("base64");
+        const dataUrl = `data:image/jpeg;base64,${base644}`;
+        return res.status(200).send(success3(dataUrl));
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/removeFrame.ts
+var import_express78, router78, removeFrame_default;
+var init_removeFrame = __esm({
+  "src/routes/production/storyboard/removeFrame.ts"() {
+    "use strict";
+    import_express78 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router78 = import_express78.default.Router();
+    removeFrame_default = router78.post(
+      "/",
+      validateFields({
+        id: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id: id2 } = req.body;
+        const removed = await utils_default.db.transaction(async (trx) => {
+          const storyboardData = await trx("o_storyboard").where({ id: id2 }).select("id", "trackId", "flowId", "projectId", "scriptId").first();
+          if (!storyboardData) return false;
+          await trx("o_assets2Storyboard").where("storyboardId", id2).delete();
+          await trx("o_storyboard").where({ id: id2 }).delete();
+          if (storyboardData.flowId != null) await trx("o_imageFlow").where("id", storyboardData.flowId).delete();
+          if (storyboardData.trackId != null) {
+            const remaining = await trx("o_storyboard").where({ trackId: storyboardData.trackId }).first("id");
+            if (!remaining) {
+              await trx("o_videoTrack").where({ id: storyboardData.trackId, projectId: storyboardData.projectId, scriptId: storyboardData.scriptId }).update({ archived: 1 });
+            }
+          }
+          return true;
+        });
+        if (!removed) return res.status(400).send(error50("\u672A\u627E\u5230\u8BE5\u5206\u955C"));
+        res.status(200).send(success3({ message: "\u89C6\u9891\u5220\u9664\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/updateStoryboardUrl.ts
+var import_express79, router79, updateStoryboardUrl_default;
+var init_updateStoryboardUrl = __esm({
+  "src/routes/production/storyboard/updateStoryboardUrl.ts"() {
+    "use strict";
+    import_express79 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router79 = import_express79.default.Router();
+    updateStoryboardUrl_default = router79.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        url: external_exports.string(),
+        flowId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id: id2, url: url4, flowId } = req.body;
+        await utils_default.db("o_storyboard").where({ id: id2 }).update({
+          filePath: utils_default.replaceUrl(url4),
+          flowId,
+          state: "\u5DF2\u5B8C\u6210",
+          shouldGenerateImage: url4 ? 1 : 0
+        });
+        res.status(200).send(success3({ message: "\u66F4\u65B0\u5206\u955C\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/addTrack.ts
+var import_express80, router80, addTrack_default;
+var init_addTrack = __esm({
+  "src/routes/production/workbench/addTrack.ts"() {
+    "use strict";
+    import_express80 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router80 = import_express80.default.Router();
+    addTrack_default = router80.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        scriptId: external_exports.number(),
+        duration: external_exports.number().optional()
+      }),
+      async (req, res) => {
+        const { projectId, scriptId, duration: duration4 } = req.body;
+        const data = await utils_default.db("o_project").where("id", projectId).first();
+        const video = data?.videoModel?.split(":");
+        const vemdor = await utils_default.vendor.getModelList(video?.[0]);
+        const trackId = Date.now();
+        await utils_default.db("o_videoTrack").insert({
+          id: trackId,
+          projectId,
+          scriptId,
+          duration: duration4
+        });
+        res.status(200).send(success3(trackId));
+      }
+    );
+  }
+});
+
+// src/utils/h3PromptContract.ts
+function normalizeH3DialogueLocales(prompt) {
+  return prompt.replace(dialogueLocalePrefix, (_, label, locale) => "(spoken locale: " + locale + ") " + label + " ");
+}
+function normalizeH3PromptFormat(prompt) {
+  const normalized = normalizeH3DialogueLocales(prompt).replace(/(<(?:Subject|Picture|Video|Audio)\s+\d+>)\{=html\}/g, "$1").split(/(<d>[\s\S]*?<\/d>)/g).map((part, index) => index % 2 ? part.replace(/。(?=<\/d>)/g, ".").replace(/！(?=<\/d>)/g, "!").replace(/？(?=<\/d>)/g, "?") : part.replace(
+    /^(\[Shot ([2-9]|[1-9]\d+)\])\s+At\s+(\d{1,2}):([0-5]\d)(?:\.(\d{1,3}))?\s*[,，:：]/gm,
+    (_, shot, _number3, minutes, seconds, fraction) => `${shot} At ${minutes.padStart(2, "0")}:${seconds}.${(fraction || "").padEnd(3, "0")},`
+  ).replace(
+    /^(\[Shot (?:[2-9]|[1-9]\d+)\])\s+At\s+([0-5]?\d)\.(\d{1,3})\s*[,，:：]/gm,
+    (_, shot, seconds, fraction) => `${shot} At 00:${seconds.padStart(2, "0")}.${fraction.padEnd(3, "0")},`
+  ).replace(/[“”]/g, '"')).join("").replace(
+    /(^subject_definitions:\s*\n)([\s\S]*?)(?=^summary:)/m,
+    (_, heading, body) => heading + body.replace(/([.!?;])[^\S\r\n]+(?=<(?:Subject|Picture|Video|Audio) \d+> (?:is|are|represents|defines|provides)\b)/g, "$1\n")
+  );
+  return normalized.replace(/(^retention_analysis:\s*\n)([\s\S]*?)(?=^detailed_description:)/m, (_, heading, body) => heading + body.replace(/^(<(?:Subject|Picture|Video|Audio) \d+>) (appears in \[Shot \d+\](?:,? (?:and )?\[Shot \d+\])*):/gm, "$1 ($2):"));
+}
+function assertH3PromptContract(prompt, duration4, pictureCount) {
+  const fail2 = (reason) => {
+    throw new Error(`H3 \u63D0\u793A\u8BCD\u683C\u5F0F\uFF1A${reason}`);
+  };
+  const value = String(prompt || "");
+  if (!value.trim()) fail2("\u5185\u5BB9\u4E0D\u80FD\u4E3A\u7A7A");
+  if (value.length > MAX_H3_PROMPT_LENGTH) fail2(`\u957F\u5EA6\u4E0D\u80FD\u8D85\u8FC7 ${MAX_H3_PROMPT_LENGTH} \u4E2A\u5B57\u7B26`);
+  if (/\u0000|[\u0001-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(value)) fail2("\u5305\u542B\u975E\u6CD5\u63A7\u5236\u5B57\u7B26");
+  const headings = [...value.matchAll(/^(subject_definitions|summary|retention_analysis|detailed_description|overall_soundscape|non_diegetic_music):\s*/gm)];
+  const missing = sections.filter((section) => !headings.some((m) => m[1] === section));
+  if (missing.length) fail2(`\u516D\u4E2A\u7AE0\u8282\u4E0D\u5B8C\u6574\uFF0C\u7F3A\u5C11\uFF1A${missing.join(", ")}\u3002\u8BF7\u8FD4\u56DE\u5B8C\u6574\u63D0\u793A\u8BCD`);
+  if (headings.length !== sections.length || headings.some((heading, index) => heading[1] !== sections[index])) fail2("\u516D\u4E2A\u7AE0\u8282\u5FC5\u987B\u5404\u51FA\u73B0\u4E00\u6B21\u5E76\u6309\u5B98\u65B9\u987A\u5E8F\u6392\u5217");
+  if (value.slice(0, headings[0].index).trim()) fail2("subject_definitions \u4E4B\u524D\u4E0D\u80FD\u51FA\u73B0\u989D\u5916\u6B63\u6587");
+  const body = Object.fromEntries(headings.map((m, i) => [m[1], value.slice(m.index + m[0].length, headings[i + 1]?.index ?? value.length).trim()]));
+  if (Object.values(body).some((section) => !section)) fail2("\u7AE0\u8282\u5185\u5BB9\u4E0D\u80FD\u4E3A\u7A7A");
+  const dialogueRanges = [];
+  let dialogueStart;
+  for (const tag of body.detailed_description.matchAll(/<\/?d\b[^>]*>/g)) {
+    if (tag[0] === "<d>") {
+      if (dialogueStart !== void 0) fail2("\u5BF9\u767D\u6807\u7B7E\u4E0D\u5F97\u5D4C\u5957");
+      dialogueStart = tag.index;
+    } else if (tag[0] === "</d>") {
+      if (dialogueStart === void 0) fail2("\u5BF9\u767D\u7ED3\u675F\u6807\u7B7E\u6CA1\u6709\u5BF9\u5E94\u7684\u5F00\u59CB\u6807\u7B7E");
+      const start = dialogueStart;
+      const content = body.detailed_description.slice(start + 3, tag.index).trim();
+      if (!/^\[[A-Za-z][A-Za-z -]*\]\s*\S/.test(content)) fail2("\u5BF9\u767D\u5FC5\u987B\u4F7F\u7528 <d>[English] ...</d> \u683C\u5F0F\uFF0C\u5730\u533A/\u53E3\u97F3\u5199\u5728\u6807\u7B7E\u5916");
+      if (!/[.?!][\"']?$/.test(content)) fail2("\u5B8C\u6574\u5BF9\u767D\u5FC5\u987B\u5728 </d> \u524D\u4F7F\u7528\u53E5\u53F7\u3001\u95EE\u53F7\u6216\u611F\u53F9\u53F7\u7ED3\u5C3E");
+      dialogueRanges.push({ start, end: tag.index + tag[0].length });
+      dialogueStart = void 0;
+    } else fail2("\u5BF9\u767D\u5FC5\u987B\u4F7F\u7528 <d>[English] ...</d> \u683C\u5F0F\uFF0C\u5730\u533A/\u53E3\u97F3\u5199\u5728\u6807\u7B7E\u5916");
+  }
+  if (dialogueStart !== void 0) fail2("\u5BF9\u767D\u6807\u7B7E\u672A\u95ED\u5408");
+  if (sections.filter((s) => s !== "detailed_description").some((s) => /<\/?d\b/.test(body[s]))) fail2("\u5B8C\u6574\u5BF9\u767D\u53EA\u80FD\u51FA\u73B0\u5728 detailed_description");
+  const shotDescription = maskDialogue(body.detailed_description);
+  const structuredPrompt = sections.map((section) => body[section]).join("\n");
+  const prose = structuredPrompt.replace(/<d\b[^>]*>[\s\S]*?<\/d>/g, "").replace(/"[^"\n]*"|“[^”\n]*”|『[^』\n]*』|「[^」\n]*」/g, "").replace(/^([^\n]*(?:text|title|caption|subtitle|label|screen|display|card)[^\n]*:\s*\r?\n)[^\n]*\p{Script=Han}[^\n]*$/gimu, "$1");
+  if (/[\u3400-\u9fff]/.test(prose)) fail2("\u516D\u6BB5\u8BF4\u660E\u5FC5\u987B\u7528\u82F1\u6587\uFF1B\u4E2D\u6587\u4EC5\u53EF\u4FDD\u7559\u5728\u5BF9\u767D\u6216\u660E\u786E\u5F15\u7528\u7684\u53EF\u89C1\u6587\u5B57\u4E2D");
+  assertH3PictureSlots(maskDialogue(structuredPrompt), pictureCount);
+  const label = /<(Subject|Picture|Video|Audio)\s+\d+>/g;
+  const definitionLines = [...body.subject_definitions.matchAll(/^(<(?:Subject|Picture|Video|Audio) \d+>)\s+.+$/gm)];
+  const definitions = definitionLines.map((m) => m[1]);
+  if (!definitions.length || new Set(definitions).size !== definitions.length) fail2("\u5F15\u7528\u5B9A\u4E49\u7F3A\u5931\u6216\u91CD\u590D");
+  const sourceVideos = new Set(definitionLines.flatMap((line) => [...line[0].matchAll(/<Video \d+>/g)].map((match) => match[0])));
+  for (const [section, text3] of Object.entries(body)) {
+    for (const m of maskDialogue(text3).matchAll(label)) {
+      if (m[1] === "Picture" || definitions.includes(m[0])) continue;
+      if (section === "subject_definitions" && m[1] === "Video" && sourceVideos.has(m[0])) continue;
+      fail2(`\u672A\u5B9A\u4E49\u5F15\u7528 ${m[0]}`);
+    }
+  }
+  const rows = body.retention_analysis.split(/\r?\n/).filter((line) => line.trim());
+  const retained = [];
+  for (const row of rows) {
+    const m = /^(<(Subject|Picture|Video|Audio) \d+>)(?:\s*\([^\n]*\))?\s*:\s*(\w+)\s*[-–—]/.exec(row);
+    if (!m) fail2("\u4FDD\u7559\u5206\u6790\u5FC5\u987B\u9010\u6761\u5BF9\u5E94\u5DF2\u5B9A\u4E49\u7684 Subject \u6216\u72EC\u7ACB\u951A\u70B9");
+    if (!definitions.includes(m[1])) fail2("\u4FDD\u7559\u5206\u6790\u5FC5\u987B\u9010\u6761\u5BF9\u5E94\u5DF2\u5B9A\u4E49\u7684 Subject \u6216\u72EC\u7ACB\u951A\u70B9");
+    const allowed = m[2] === "Audio" ? ["fully_copy", "partially_copy", "reference", "weak_reference"] : ["fully_preserved", "partially_preserved", "attribute_transfer", "weak_reference"];
+    if (!allowed.includes(m[3]) || /\(S\d+(?:\s*,\s*S\d+)*\)/.test(row)) fail2("\u4FDD\u7559\u5173\u7CFB\u6807\u8BB0\u6216\u8BF4\u8BDD\u4EBA\u6807\u8BB0\u4E0D\u7B26\u5408\u89C4\u8303");
+    retained.push(m[1]);
+  }
+  if (retained.length !== definitions.length || new Set(retained).size !== definitions.length) fail2("\u6BCF\u4E2A\u5B9A\u4E49\u9700\u8981\u4E14\u53EA\u80FD\u6709\u4E00\u6761\u4FDD\u7559\u5206\u6790");
+  if (!/^\[(?:reference generation|keyframe completion|video editing|video continuation|audio reuse|audio reference)(?: \+ (?:reference generation|keyframe completion|video editing|video continuation|audio reuse|audio reference))*\]/.test(body.summary)) fail2("summary \u7F3A\u5C11\u5B98\u65B9\u4EFB\u52A1\u7C7B\u578B\u524D\u7F00");
+  if (definitions.some((d) => d.startsWith("<Subject ")) && !/<Subject \d+>/.test(body.summary)) fail2("summary \u5E94\u4F7F\u7528\u5DF2\u5B9A\u4E49\u7684 Subject \u6807\u7B7E\u63CF\u8FF0\u4E3B\u4F53\u5173\u7CFB");
+  const shots = [...shotDescription.matchAll(/\[Shot (\d+)\]/g)];
+  if (!shots.length || !shotDescription.slice(0, shots[0].index).trim()) fail2("\u7B2C\u4E00\u955C\u4E4B\u524D\u9700\u8981\u5177\u4F53\u753B\u98CE\u63CF\u8FF0");
+  let previousTime = 0;
+  shots.forEach((shot, index) => {
+    if (Number(shot[1]) !== index + 1) fail2("\u955C\u5934\u7F16\u53F7\u5FC5\u987B\u8FDE\u7EED");
+    const tail = shotDescription.slice(shot.index + shot[0].length);
+    const time4 = /^\s*At (\d{2}):([0-5]\d)\.(\d{3}),/.exec(tail);
+    if (index === 0) {
+      if (/^\s*At\s+\d/.test(tail)) fail2("Shot 1 \u4E0D\u80FD\u5E26\u65F6\u95F4\u6233");
+      return;
+    }
+    if (!time4) fail2(`Shot ${index + 1} \u5E94\u4EE5 [Shot ${index + 1}] At MM:SS.mmm, \u5F00\u59CB`);
+    const matchedTime = time4;
+    const seconds = Number(matchedTime[1]) * 60 + Number(matchedTime[2]) + Number(matchedTime[3]) / 1e3;
+    if (seconds <= previousTime || seconds >= duration4) fail2("\u5207\u955C\u65F6\u95F4\u5FC5\u987B\u9012\u589E\u4E14\u5728\u76EE\u6807\u65F6\u957F\u4EE5\u5185");
+    previousTime = seconds;
+  });
+  for (const definition of definitions.filter((item) => item.startsWith("<Subject "))) {
+    if (!shotDescription.includes(definition)) fail2(`${definition} \u5DF2\u5B9A\u4E49\u4F46\u672A\u5728 detailed_description \u4E2D\u4F7F\u7528`);
+  }
+  const shotNumbers = new Set(shots.map((shot) => Number(shot[1])));
+  for (const row of rows) {
+    for (const mention of row.matchAll(/\[Shot (\d+)\]/g)) {
+      if (!shotNumbers.has(Number(mention[1]))) fail2(`\u4FDD\u7559\u5206\u6790\u5F15\u7528\u4E86\u4E0D\u5B58\u5728\u7684 ${mention[0]}`);
+    }
+  }
+  if (normalizeH3DialogueLocales(value) !== value) fail2("\u5BF9\u767D\u5F00\u5934\u7684\u5730\u533A\u6807\u8BB0\u5FC5\u987B\u5199\u5728\u6807\u7B7E\u5916");
+  const copiedAudio = new Set(rows.flatMap((row) => /^(<Audio \d+>)(?:\s*\([^\n]*\))?\s*:\s*(?:fully_copy|partially_copy)\s*[-–—]/.exec(row)?.slice(1, 2) ?? []));
+  const introducedSpeakers = /* @__PURE__ */ new Set();
+  const subjectSpeakers = /* @__PURE__ */ new Map();
+  const speakerSubjects = /* @__PURE__ */ new Map();
+  const shotProse = shotDescription.slice(shots[0].index);
+  for (const speaker of shotProse.matchAll(/\(S\d+(?:\s*,\s*S\d+)*\)/g)) {
+    const ids = [...speaker[0].matchAll(/S(\d+)/g)].map((match) => Number(match[1]));
+    if (new Set(ids).size !== ids.length) fail2("\u7EC4\u5408\u8BF4\u8BDD\u4EBA\u6807\u8BB0\u4E0D\u80FD\u91CD\u590D\u540C\u4E00\u7F16\u53F7");
+    if (ids.length > 1 && ids.some((id2) => !introducedSpeakers.has(id2))) fail2("\u7EC4\u5408\u8BF4\u8BDD\u4EBA\u6807\u8BB0\u53EA\u80FD\u4F7F\u7528\u4E4B\u524D\u5DF2\u5355\u72EC\u6807\u660E\u7684\u8BF4\u8BDD\u4EBA\u7F16\u53F7");
+    for (const id2 of ids) introducedSpeakers.add(id2);
+    const subject = /(<Subject \d+>)\s*$/.exec(shotProse.slice(0, speaker.index))?.[1];
+    if (subject && ids.length === 1) {
+      const id2 = ids[0];
+      if (subjectSpeakers.has(subject) && subjectSpeakers.get(subject) !== id2 || speakerSubjects.has(id2) && speakerSubjects.get(id2) !== subject) fail2("\u540C\u4E00 Subject \u5FC5\u987B\u4FDD\u6301\u540C\u4E00\u8BF4\u8BDD\u4EBA\u7F16\u53F7\uFF0C\u4E0D\u540C Subject \u4E0D\u80FD\u5171\u7528\u540C\u4E00\u7F16\u53F7");
+      subjectSpeakers.set(subject, id2);
+      speakerSubjects.set(id2, subject);
+    }
+  }
+  if ([...introducedSpeakers].sort((a, b) => a - b).some((id2, index) => id2 !== index + 1)) fail2("\u8BF4\u8BDD\u4EBA\u7F16\u53F7\u5FC5\u987B\u4ECE (S1) \u8FDE\u7EED\u7F16\u53F7\uFF0C\u4E0D\u80FD\u7F3A\u53F7");
+  let previousDialogueEnd = 0;
+  for (const dialogue of dialogueRanges) {
+    const currentShot = shots.filter((shot) => shot.index < dialogue.start).at(-1);
+    if (!currentShot) fail2("\u5BF9\u767D\u5FC5\u987B\u4F4D\u4E8E\u5B9E\u9645\u955C\u5934\u4E2D");
+    const activeShot = currentShot;
+    const prelude = shotDescription.slice(Math.max(previousDialogueEnd, activeShot.index + activeShot[0].length), dialogue.start);
+    previousDialogueEnd = dialogue.end;
+    const speaker = [...prelude.matchAll(/\(S\d+(?:\s*,\s*S\d+)*\)/g)].at(-1);
+    if (!speaker) {
+      const audio = [...prelude.matchAll(/<Audio \d+>/g)].at(-1)?.[0];
+      if (audio && copiedAudio.has(audio)) continue;
+      fail2("\u6BCF\u6B21\u5BF9\u767D\u9700\u8981\u660E\u786E\u7684 (Sx) \u8BF4\u8BDD\u4EBA\u6807\u8BB0\uFF1B\u76F4\u63A5\u590D\u7528\u97F3\u8F68\u4E2D\u7684\u6B4C\u8BCD\u63D0\u793A\u5E94\u5F15\u7528\u5BF9\u5E94 Audio");
+    }
+  }
+}
+var sections, MAX_H3_PROMPT_LENGTH, maskDialogue, dialogueLocalePrefix, h3FormatChecklist;
+var init_h3PromptContract = __esm({
+  "src/utils/h3PromptContract.ts"() {
+    "use strict";
+    init_h3VisualStateGuard();
+    sections = ["subject_definitions", "summary", "retention_analysis", "detailed_description", "overall_soundscape", "non_diegetic_music"];
+    MAX_H3_PROMPT_LENGTH = 3e4;
+    maskDialogue = (text3) => text3.replace(/<d>[\s\S]*?<\/d>/g, (content) => content.replace(/[^\r\n]/g, " "));
+    dialogueLocalePrefix = /(<d>\[[A-Za-z][A-Za-z -]*\])\s*\(([a-z]{2,3}-(?:[A-Z][a-z]{3}(?:-(?:[A-Z]{2}|\d{3}))?|[A-Z]{2}|\d{3}))\)\s*/g;
+    h3FormatChecklist = `Mandatory MiniMax H3 Ref2VA output syntax: return exactly six complete English sections in this order: subject_definitions, summary, retention_analysis, detailed_description, overall_soundscape, non_diegetic_music. In subject_definitions, put each definition on its own unbulleted line beginning exactly <Subject N> is ... <Picture N> ...; never emit {=html}. summary must begin exactly with an official bracketed task prefix such as [reference generation]. retention_analysis must use one unbulleted line per definition in the form <Subject N> (appears in [Shot 1]): fully_preserved - ... using an official marker. Put each shot heading on a new line: [Shot 1] without a timestamp; later cuts use [Shot N] At MM:SS.mmm, with sequential numbers and increasing times inside target_duration. Give every vocal event a stable consecutive (Sx); put that source marker immediately before its dialogue, and write a referenced speaker as <Subject N> (Sx). Dialogue uses <d>[Language] complete sentence.</d>. Enclose every non-English visible screen, title, sign, subtitle or interface string in straight double quotation marks, including a string placed on its own line. Keep actual image bindings, spoken lines, event order and cause/effect. Return the whole prompt on correction, never a partial patch.`;
+  }
+});
+
+// src/utils/h3PromptContext.ts
+function h3BindingSlots(slots) {
+  return slots.map((item) => ({ assetId: Number(item.assetId ?? item.id), assetType: h3AssetType(item), kind: item._referenceRole ?? item.referenceKind }));
+}
+function buildH3ReferenceSubjects(slots) {
+  const groups = /* @__PURE__ */ new Map();
+  slots.forEach((item, index) => {
+    const id2 = Number(item.assetId ?? item.id);
+    let group = groups.get(id2);
+    if (!group) {
+      group = {
+        subject: `<Subject ${groups.size + 1}>`,
+        assetId: id2,
+        assetType: h3AssetType(item),
+        name: String(item._assetName || item.name || item.label || `asset ${id2}`).replace(/(?:脸部身份参考|正面全身参考|侧面全身参考|背面全身参考)$/, ""),
+        ...item.assetsId || item.parentAssetId ? { parentAssetId: Number(item.assetsId || item.parentAssetId) } : {},
+        pictures: []
+      };
+      groups.set(id2, group);
+    }
+    group.pictures.push({ picture: `<Picture ${index + 1}>`, ...item._referenceRole || item.referenceKind ? { view: item._referenceRole || item.referenceKind } : h3AssetType(item) === "role" ? { view: "CHARACTER_SHEET" } : {} });
+  });
+  return [...groups.values()];
+}
+function buildH3PromptInput(slots, storyboards, duration4, otherReferences = []) {
+  const subjects = buildH3ReferenceSubjects(slots);
+  const references = slots.map((item, index) => `<reference slot="${index + 1}" sources="assets" id="${Number(item.assetId ?? item.id)}" />`).join("\n");
+  return `Mode: MiniMax H3 Ref2VA. target_duration: ${duration4}s.
+appearanceAuthority=the actual attached current image. Images establish appearance; storyboard facts establish events, dialogue and timing.
+The grouped sources below are authoritative. Each character uses ONE complete reference sheet in ONE Picture slot. Its face, front, side and back panels depict the SAME person in ONE current state, not multiple people or separate uploaded Pictures. Treat each asset as one consistent subject and cite its actual Picture where it affects the video. Describe only views visible in the attached sheet. Preserve identity and outfit; never render the panel layout, repeated figures or display background in the video. Each selected image asset consumes one of the nine available image slots.
+<referenceSlots>
+${references}
+</referenceSlots>
+<referenceSubjects>
+${JSON.stringify(subjects)}
+</referenceSubjects>
+${otherReferences.length ? `<otherReferences>${JSON.stringify(otherReferences)}</otherReferences>
+` : ""}<storyboardFacts>
+${JSON.stringify(storyboards.map((item) => ({ id: item.id, duration: item.duration, videoDesc: item.videoDesc || "" })))}
+</storyboardFacts>
+Write the complete MiniMax H3 Ref2VA generation prompt using exactly these six non-empty sections in this order:
+subject_definitions:
+summary:
+retention_analysis:
+detailed_description:
+overall_soundscape:
+non_diegetic_music:
+
+Define every reusable visible asset as one stable <Subject N> and cite the actual source <Picture N> in its definition. Use the same Subject/Picture meaning everywhere. summary must start with the applicable official task-type prefix. retention_analysis must contain exactly one valid preservation entry for every definition.
+
+In detailed_description, establish the requested rendering style before [Shot 1]. [Shot 1] has no timestamp. Every later explicit cut uses [Shot N] At MM:SS.mmm, with sequential numbers and increasing times inside target_duration. Give every vocal source a stable consecutive (S1), (S2), etc.; a referenced speaker is written <Subject N> (Sx). Dialogue uses <d>[Language] complete sentence.</d> and stays in the requested spoken language.
+
+Analyze the attached reference images and describe composition, appearance, position, environment and lighting, actions and state changes, camera movement, synchronized physical sound and reference usage. Preserve supplied cause and effect, speaker, exact dialogue, timing and event order. Do not replace an intentional action with an accident.
+
+Output only the complete six-section prompt. Do not explain reasoning.`;
+}
+var init_h3PromptContext = __esm({
+  "src/utils/h3PromptContext.ts"() {
+    "use strict";
+    init_h3ReferenceSlots();
+  }
+});
+
+// src/utils/h3VisionImage.ts
+async function prepareH3VisionImage(dataUrl) {
+  const encoded = /^data:(image\/[^;]+);base64,([\s\S]+)$/.exec(dataUrl);
+  if (!encoded) throw new Error("H3 \u63D0\u793A\u8BCD\u53C2\u8003\u56FE\u7F16\u7801\u65E0\u6548");
+  const source = Buffer.from(encoded[2], "base64");
+  if (source.length <= maxVisionBytes && ["image/jpeg", "image/png", "image/webp"].includes(encoded[1])) {
+    return { image: source, mediaType: encoded[1] };
+  }
+  for (const quality of [92, 82, 72]) {
+    const image = await (0, import_sharp12.default)(source).rotate().flatten({ background: "#ffffff" }).jpeg({ quality, chromaSubsampling: "4:4:4" }).toBuffer();
+    if (image.length <= maxVisionBytes) return { image, mediaType: "image/jpeg" };
+  }
+  for (const size of [4096, 3072, 2048]) {
+    const image = await (0, import_sharp12.default)(source).rotate().resize({ width: size, height: size, fit: "inside", withoutEnlargement: true }).flatten({ background: "#ffffff" }).jpeg({ quality: 85 }).toBuffer();
+    if (image.length <= maxVisionBytes) return { image, mediaType: "image/jpeg" };
+  }
+  throw new Error("H3 \u63D0\u793A\u8BCD\u53C2\u8003\u56FE\u8FC7\u5927\uFF0C\u65E0\u6CD5\u5728\u4FDD\u7559\u5B8C\u6574\u753B\u9762\u7684\u60C5\u51B5\u4E0B\u7F16\u7801");
+}
+var import_sharp12, maxVisionBytes;
+var init_h3VisionImage = __esm({
+  "src/utils/h3VisionImage.ts"() {
+    "use strict";
+    import_sharp12 = __toESM(require("sharp"));
+    maxVisionBytes = 7 * 1024 * 1024;
+  }
+});
+
+// src/utils/videoPromptGeneration.ts
+function isMiniMaxH3(modelName) {
+  const value = String(modelName || "").toLowerCase();
+  return value.includes("minimax") && value.includes("h3");
+}
+function h3AssetRank(item) {
+  const type = String(item?.type || "").toLowerCase();
+  if (type === "role" || type === "character") return 0;
+  if (type === "scene" || type === "environment") return 1;
+  if (type === "tool" || type === "prop" || type === "creature") return 2;
+  return 3;
+}
+function escapeXmlAttr(value) {
+  return String(value ?? "").replace(/[<>&"']/g, (ch) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&apos;" })[ch] || ch);
+}
+function hasUnexpectedH3ChineseProse(prompt) {
+  const prose = String(prompt || "").replace(/<d(?:\s[^>]*)?>[\s\S]*?<\/d>/gi, "");
+  if (/^(?:#{1,6}\s*|\d+[.)]\s*)[^\r\n]*\p{Script=Han}/mu.test(prose)) return true;
+  const hanCount = (prose.match(/\p{Script=Han}/gu) || []).length;
+  const latinCount = (prose.match(/[A-Za-z]/g) || []).length;
+  return hanCount >= 40 && hanCount > latinCount * 0.25;
+}
+async function generateVideoPromptForTrack(input) {
+  if (isVideoPromptRunning(input.trackId)) throw Object.assign(new Error("\u8BE5\u89C6\u9891\u6BB5\u63D0\u793A\u8BCD\u6B63\u5728\u751F\u6210\uFF0C\u8BF7\u5B8C\u6210\u540E\u518D\u91CD\u8BD5"), { status: 409 });
+  runningTracks.add(input.trackId);
+  try {
+    return await generateForTrack(input);
+  } finally {
+    runningTracks.delete(input.trackId);
+  }
+}
+async function generateForTrack(input) {
+  const { trackId, projectId, info, model, mode } = input;
+  if (!await utils_default.db("o_videoTrack").where({ id: trackId, projectId }).first()) throw Object.assign(new Error("\u89C6\u9891\u6BB5\u4E0D\u5B58\u5728"), { status: 404 });
+  await utils_default.db("o_videoTrack").where({ id: trackId }).update({
+    state: "\u751F\u6210\u4E2D",
+    reason: null
+  });
+  try {
+    const images = await Promise.all(
+      info.map(async (item) => {
+        if (item.sources === "storyboard") {
+          const storyboard2 = await utils_default.db("o_storyboard").where({ "o_storyboard.id": item.id, "o_storyboard.projectId": projectId }).select("id", "videoDesc", "prompt", "track", "duration", "shouldGenerateImage", "filePath").first();
+          if (!storyboard2) throw new Error(`\u5206\u955C ${item.id} \u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE`);
+          const assetRows = await utils_default.db("o_assets2Storyboard").where("storyboardId", item.id).orderBy("rowid").select("assetId");
+          const associateAssetsIds = assetRows.map((row) => row.assetId);
+          return {
+            ...storyboard2,
+            associateAssetsIds,
+            _type: "storyboard",
+            // 标记类型，便于后续区分
+            _reference: item.reference !== false,
+            _slotType: item.slotType,
+            _fileType: item.fileType
+          };
+        }
+        if (item.sources === "assets") {
+          const assetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where({ "o_assets.id": item.id, "o_assets.projectId": projectId }).select("o_assets.id", "o_assets.assetsId", "o_assets.type", "o_assets.name", "o_assets.describe", "o_assets.prompt as assetPrompt", "o_image.filePath").first();
+          if (!assetsData) throw new Error(`\u8D44\u4EA7 ${item.id} \u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE`);
+          return {
+            ...assetsData,
+            _type: "assets",
+            // 标记类型
+            _reference: item.reference !== false,
+            _slotType: item.slotType,
+            _fileType: item.fileType
+          };
+        }
+      })
+    );
+    const assets = [];
+    const storyboard = [];
+    for (const item of images) {
+      if (!item) continue;
+      if (item._type === "assets")
+        assets.push({
+          id: item.id,
+          type: item.type,
+          name: item.name,
+          describe: item.describe,
+          assetPrompt: item.assetPrompt,
+          filePath: item.filePath,
+          _reference: item._reference,
+          _slotType: item._slotType,
+          _fileType: item._fileType
+        });
+      if (item._type === "storyboard")
+        storyboard.push({
+          videoDesc: item.videoDesc,
+          prompt: item.prompt,
+          track: item.track,
+          duration: item.duration,
+          associateAssetsIds: item.associateAssetsIds,
+          shouldGenerateImage: item.shouldGenerateImage,
+          id: item.id,
+          filePath: item.filePath,
+          _reference: item._reference,
+          _slotType: item._slotType,
+          _fileType: item._fileType
+        });
+    }
+    const assetsNotAudioIds = assets.filter((i) => i.type == "audio").map((i) => i.id);
+    const assets2Audio = await utils_default.db("o_assets").whereIn("o_assets.id", assetsNotAudioIds).join("o_assetsRole2Audio", "o_assetsRole2Audio.assetsAudioId", "o_assets.assetsId").select("o_assets.assetsId", "o_assets.id", "o_assetsRole2Audio.assetsAudioId", "o_assetsRole2Audio.assetsRoleId");
+    const assetsAudioRecord = {};
+    assets2Audio.forEach((i) => {
+      assetsAudioRecord[i.assetsRoleId] = i.id;
+    });
+    const [id2, modelData] = model.split(/:(.+)/);
+    const modelLower = (modelData ?? "").toLowerCase();
+    const h3PromptMode = isMiniMaxH3(modelData ?? "");
+    const h3RefPromptMode = h3PromptMode && typeof mode === "string" && /^\s*\[/.test(mode);
+    const h3PromptInstruction = h3RefPromptMode ? h3EnglishPromptInstruction : "Write the complete H3 prompt prose in English. Preserve requested dialogue language, event order, timing and camera instructions.";
+    const projectData = await utils_default.db("o_project").select("*").where({ id: projectId }).first();
+    const videoTrackData = await utils_default.db("o_videoTrack").select("duration").where({ id: trackId }).first();
+    const videoPrompt = await utils_default.db("o_prompt").where("type", "videoPromptGeneration").first();
+    let videoPromptGeneration = "";
+    const modelPromptData = await utils_default.db("o_modelPrompt").where("vendorId", id2).where("model", modelData).first();
+    if (h3RefPromptMode) {
+      videoPromptGeneration = await import_promises6.default.readFile(import_path12.default.join(utils_default.getPath(["modelPrompt"]), "video", "minimaxH3Multi-referenceMode.md"), "utf-8");
+      if (!videoPromptGeneration.trim()) throw new Error("H3 \u591A\u53C2\u8003\u63D0\u793A\u8BCD\u89C4\u5219\u6587\u4EF6\u4E3A\u7A7A\uFF0C\u8BF7\u4FEE\u590D\u540E\u91CD\u8BD5");
+    } else if (modelPromptData) {
+      const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
+      try {
+        const fullPath = import_path12.default.join(modelPromptRoot, modelPromptData?.path);
+        const content2 = await import_promises6.default.readFile(fullPath, "utf-8");
+        videoPromptGeneration = content2 ?? "";
+      } catch {
+      }
+    }
+    if (!videoPromptGeneration) {
+      const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
+      const videoPromptDir = import_path12.default.join(modelPromptRoot, "video");
+      let fileName = null;
+      if (h3RefPromptMode) {
+        fileName = "minimaxH3Multi-referenceMode.md";
+      } else if (modelLower.includes("wan") && modelLower.includes("2.6")) {
+        fileName = "wan2.6Single-imageFirstFrameMode.md";
+      } else if (/seedance.*2[.\-]0/i.test(modelData)) {
+        fileName = "seedance2Multi-parameterMode.md";
+      } else if (mode === "startEndRequired" || mode === "endFrameOptional" || mode === "startFrameOptional") {
+        fileName = "universalFirstAndLastFrameMode.md";
+      } else if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
+        fileName = "universalMulti-parameterMode.md";
+      }
+      if (fileName) {
+        try {
+          const fullPath = import_path12.default.join(videoPromptDir, fileName);
+          videoPromptGeneration = await import_promises6.default.readFile(fullPath, "utf-8");
+        } catch {
+        }
+      }
+    }
+    if (!videoPromptGeneration) {
+      if (videoPrompt && videoPrompt.useData) {
+        videoPromptGeneration = videoPrompt.useData;
+      } else {
+        videoPromptGeneration = videoPrompt?.data ?? void 0;
+      }
+    }
+    const artStyle = projectData?.artStyle || "\u65E0";
+    const visualManual = utils_default.getArtPrompt(artStyle, "art_skills", "art_storyboard_video");
+    const h3DirectionText = storyboard.map((item) => item.videoDesc || "").join("\n");
+    if (h3PromptMode) assertH3ActiveStates(images.filter((item) => item?._type === "assets" && item._reference !== false).map((item) => ({
+      assetId: Number(item.id),
+      parentAssetId: item.assetsId,
+      assetType: item.type,
+      name: item.name,
+      filePath: item.filePath
+    })));
+    const pictureSourceItems = h3PromptMode ? expandH3AssetSlots(
+      images.filter(
+        (item) => item && item._type === "assets" && item._reference !== false && item._fileType !== "audio" && item._fileType !== "video"
+      ).sort((a, b) => h3AssetRank(a) - h3AssetRank(b)),
+      h3DirectionText
+    ) : images.filter((item) => item && item._reference !== false && item.filePath);
+    const referenceSlotItems = pictureSourceItems.map((item, index) => {
+      const slot = index + 1;
+      const sources = item._type === "assets" ? "assets" : "storyboard";
+      const type = item._type === "assets" ? String(item.type || "asset") : "storyboard";
+      const name28 = item._type === "assets" ? String(item.name || `\u8D44\u4EA7${item.id}`) : `\u5206\u955C\u56FE${item.id}`;
+      return `<reference slot="${slot}" sources="${sources}" id="${item.id}" type="${escapeXmlAttr(type)}" name="${escapeXmlAttr(name28)}" />`;
+    });
+    const referenceSlots = `<referenceSlots>
+${referenceSlotItems.join("\n")}
+</referenceSlots>`;
+    const storyboardDuration = storyboard.reduce((total, item) => total + (Number.parseFloat(String(item.duration || 0)) || 0), 0);
+    const rawTargetDuration = Number(videoTrackData?.duration) || storyboardDuration || 5;
+    if (h3PromptMode && (!Number.isFinite(rawTargetDuration) || rawTargetDuration < 4 || rawTargetDuration > 15)) {
+      throw new Error(`H3 \u89C6\u9891\u6BB5\u65F6\u957F ${rawTargetDuration}s \u8D85\u51FA 4\u201315 \u79D2\u8303\u56F4\uFF0C\u8BF7\u5148\u8C03\u6574\u5206\u955C\u65F6\u957F\uFF1B\u4E0D\u4F1A\u81EA\u52A8\u622A\u77ED\u5267\u60C5`);
+    }
+    const targetDuration = h3PromptMode ? rawTargetDuration : Math.max(4, Math.min(15, Math.round(rawTargetDuration)));
+    const otherReferences = images.filter((item) => item?._type === "assets" && item._reference !== false && ["audio", "video"].includes(item._fileType || item.type)).map((item) => ({ assetId: item.id, name: item.name, mediaType: item._fileType || item.type }));
+    const content = h3PromptMode ? buildH3PromptInput(pictureSourceItems, storyboard, targetDuration, otherReferences) : `
+          **\u6A21\u578B\u540D\u79F0**\uFF1A${modelData},
+          **\u76EE\u6807\u65F6\u957F target_duration**\uFF1A${targetDuration}s,
+          **\u53C2\u8003\u7D20\u6750\u69FD\u4F4D**\uFF1A
+          ${referenceSlots},
+          **\u8D44\u4EA7\u4FE1\u606F**\uFF08\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177\u3001\u97F3\u9891):${assets.filter((i) => i.filePath).map((i) => `[${i.id},${i.type},${i.name} ${assetsAudioRecord[i.id] ? `audio:${assetsAudioRecord[i.id]}` : ""} ] `).join("\uFF0C")},
+          **\u5206\u955C\u4FE1\u606F**\uFF1A${storyboard.map(
+      (i) => `<storyboardItem
+  videoDesc='${i.videoDesc}'
+  duration='${i.duration}'
+></storyboardItem>`
+    )},
+          `;
+    const userContent = [{ type: "text", text: content }];
+    if (h3PromptMode) {
+      const missing = pictureSourceItems.flatMap((item) => {
+        try {
+          h3SlotPath(item);
+          return [];
+        } catch (cause) {
+          return [utils_default.error(cause).message];
+        }
+      });
+      if (missing.length) throw new Error(missing.join("\uFF1B"));
+      for (const [index, item] of pictureSourceItems.entries()) {
+        const referencePath = h3SlotPath(item);
+        if (!referencePath) throw new Error(`${item.name} \u7F3A\u5C11\u5B9E\u9645\u53C2\u8003\u56FE\uFF0C\u8BF7\u5148\u8865\u9F50\u4EBA\u7269\u53C2\u8003\u56FE`);
+        userContent.push({ type: "text", text: `<Picture ${index + 1}>: ${item.name}; actual current reference, identity and wardrobe authority.` });
+        const dataUrl = await utils_default.oss.getImageBase64(referencePath);
+        const preparedImage = await prepareH3VisionImage(dataUrl);
+        userContent.push({ type: "image", ...preparedImage });
+      }
+    }
+    const generateBase = async () => {
+      const system = h3PromptMode ? `${videoPromptGeneration}
+
+${h3PromptInstruction}
+
+Project visual requirements (rendering guidance only; use relevant qualities without replacing the selected H3 prompt template's output structure):
+${visualManual}` : videoPromptGeneration;
+      const messages = h3PromptMode ? [{ role: "user", content: userContent }] : [{ role: "assistant", content: visualManual }, { role: "user", content }];
+      const maxAttempts = h3RefPromptMode ? 5 : 3;
+      for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        const result = { text: (await utils_default.Ai.Text("universalAi", h3PromptMode ? true : void 0, h3PromptMode ? 2 : void 0).invoke({ system, messages })).text };
+        if (!h3PromptMode) return result.text;
+        result.text = normalizeH3PromptFormat(result.text.trim());
+        if (/^(REFERENCE_STATE_REVIEW|LANGUAGE_TIMING_REVIEW):/.test(result.text.trim())) throw new Error(result.text);
+        try {
+          if (h3RefPromptMode) {
+            assertH3PromptContract(result.text, targetDuration, pictureSourceItems.length);
+            assertH3ReferenceBindings(result.text, h3BindingSlots(pictureSourceItems));
+          }
+          if (hasUnexpectedH3ChineseProse(result.text)) throw new Error("PROMPT_LANGUAGE: section headings and non-dialogue prompt prose must be English; keep only required dialogue or visible text in its required language");
+        } catch (cause) {
+          if (attempt === maxAttempts - 1) throw Object.assign(cause, { candidatePrompt: result.text });
+          messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Rewrite and return one complete prompt using the selected H3 template. Do not return a patch. ${h3PromptInstruction} Reinspect the attached images and fix only the reported content contradiction while preserving the story events, speakers, exact dialogue and timing. Review error: ${utils_default.error(cause).message}` });
+          continue;
+        }
+        await saveH3ReferencePlan(db, trackId, result.text, pictureSourceItems);
+        return result.text;
+      }
+      throw new Error("H3 \u63D0\u793A\u8BCD\u6821\u9A8C\u5931\u8D25");
+    };
+    if (input.languages) {
+      const variants = await generateLanguageVariants(
+        db,
+        trackId,
+        input.languages,
+        async () => {
+          const prompt = await generateBase();
+          if (input.replaceBasePrompt === true) {
+            await utils_default.db("o_videoTrack").where({ id: trackId, projectId }).update({ prompt });
+          }
+          return prompt;
+        },
+        async (system, source, language) => {
+          const messages = [{ role: "user", content: source }];
+          const maxAttempts = h3RefPromptMode ? 5 : 3;
+          for (let attempt = 0; attempt < maxAttempts; attempt++) {
+            const result = { text: (await utils_default.Ai.Text("universalAi", h3PromptMode ? true : void 0, h3PromptMode ? 2 : void 0).invoke({ system: h3PromptMode ? `You are a surgical H3 dialogue localizer and visible-text localizer. The source prompt is already complete. Copy every heading, reference definition, shot description, sound cue and camera instruction without reorganizing, summarizing or moving it. Preserve the exact relative order of every vocal event and physical action; never move a laugh or spoken line to after an action that follows it in the source. Translate the contents of <d>...</d>, the directly associated spoken-language or locale wording, and every story-required visible button, interface, sign, subtitle or screen label into the requested target language. Return the entire prompt and nothing else.
+
+${h3PromptInstruction}
+
+For an English language variant, no Chinese characters may remain anywhere in the returned prompt, including quoted visible on-screen text. Do not leave semantic instructions such as "Chinese text", "Chinese system lines", "Chinese interface text", or "Chinese characters"; rewrite those instructions to require English visible text. A visual-style phrase such as "Chinese 3D donghua" may remain because it describes art style, not text language. If the source prompt's non-dialogue prose is Chinese or another language, translate it to English while preserving sentence and event order. Translate visible Chinese text to English as well.
+
+${system}` : system, messages })).text };
+            if (!h3PromptMode || result.text.trim().startsWith("LANGUAGE_TIMING_REVIEW:")) return result.text;
+            result.text = normalizeH3PromptFormat(result.text.trim());
+            try {
+              if (h3RefPromptMode) {
+                assertH3PromptContract(result.text, targetDuration, pictureSourceItems.length);
+                const sourcePlan = await loadH3ReferencePlan(db, trackId, source);
+                if (!sourcePlan) throw new Error("H3 \u53C2\u8003\u56FE\u7ED1\u5B9A\uFF1A\u6E90\u63D0\u793A\u8BCD\u7F3A\u5C11\u4FDD\u5B58\u7684\u53C2\u8003\u56FE\u8BA1\u5212\uFF0C\u8BF7\u91CD\u65B0\u751F\u6210\u89C6\u9891\u63D0\u793A\u8BCD");
+                assertH3ReferenceBindings(result.text, sourcePlan.slots, source);
+              }
+              if (hasUnexpectedH3ChineseProse(result.text)) throw new Error("PROMPT_LANGUAGE: section headings and non-dialogue prompt prose must be English; keep only required dialogue or visible text in its required language");
+              assertTranslatedDialogueLanguage(result.text, language);
+            } catch (cause) {
+              if (attempt === maxAttempts - 1) throw Object.assign(cause, { candidatePrompt: result.text });
+              messages.push({ role: "assistant", content: result.text }, { role: "user", content: `Return the complete corrected translation. Do not return a patch. Copy the source prompt's non-dialogue text and event order without reorganizing it. ${h3PromptInstruction} Fix only this language requirement: ${utils_default.error(cause).message}` });
+              continue;
+            }
+            await copyH3ReferencePlan(db, trackId, source, result.text, h3RefPromptMode);
+            return result.text;
+          }
+          throw new Error("H3 \u7FFB\u8BD1\u683C\u5F0F\u6821\u9A8C\u5931\u8D25");
+        },
+        input.regenerate === true,
+        true,
+        async (prompt, language) => {
+          await assertStoryboardPromptFresh(db, projectId, trackId, prompt);
+          if (!h3RefPromptMode) return;
+          assertTranslatedDialogueLanguage(prompt, language);
+          const plan = await loadH3ReferencePlan(db, trackId, prompt);
+          if (!plan) throw new Error("H3 \u53C2\u8003\u56FE\u7ED1\u5B9A\uFF1A\u63D0\u793A\u8BCD\u7F3A\u5C11\u4FDD\u5B58\u7684\u53C2\u8003\u56FE\u8BA1\u5212");
+          resolveH3ReferencePlan(pictureSourceItems, plan);
+          if (plan.slots.some((slot) => slot.kind)) throw new Error("H3 \u53C2\u8003\u56FE\u7ED1\u5B9A\uFF1A\u4ECD\u4F7F\u7528\u4EBA\u7269\u72EC\u7ACB\u89C6\u56FE\u65E7\u8BA1\u5212");
+          assertH3PromptContract(prompt, targetDuration, plan.slots.length);
+          assertH3ReferenceBindings(prompt, plan.slots);
+        },
+        async (prompt) => {
+          await assertStoryboardPromptFresh(db, projectId, trackId, prompt);
+          if (!h3RefPromptMode) return;
+          const plan = await loadH3ReferencePlan(db, trackId, prompt);
+          if (!plan) throw new Error("H3 \u53C2\u8003\u56FE\u7ED1\u5B9A\uFF1A\u539F\u7248\u63D0\u793A\u8BCD\u7F3A\u5C11\u4FDD\u5B58\u7684\u53C2\u8003\u56FE\u8BA1\u5212");
+          resolveH3ReferencePlan(pictureSourceItems, plan);
+          if (plan.slots.some((slot) => slot.kind)) throw new Error("H3 \u53C2\u8003\u56FE\u7ED1\u5B9A\uFF1A\u539F\u7248\u4ECD\u4F7F\u7528\u4EBA\u7269\u72EC\u7ACB\u89C6\u56FE\u65E7\u8BA1\u5212");
+          assertH3PromptContract(prompt, targetDuration, plan.slots.length);
+          assertH3ReferenceBindings(prompt, plan.slots);
+        }
+      );
+      const failed = variants.filter((v) => input.languages.includes(v.language) && v.state === "\u751F\u6210\u5931\u8D25");
+      await utils_default.db("o_videoTrack").where({ id: trackId }).update({ state: failed.length ? "\u751F\u6210\u5931\u8D25" : "\u5DF2\u5B8C\u6210", reason: failed.map((v) => `${v.language}: ${v.reason}`).join("\uFF1B") });
+      return variants;
+    }
+    const text3 = await generateBase();
+    await utils_default.db("o_videoTrack").where({ id: trackId }).update({
+      state: "\u5DF2\u5B8C\u6210",
+      prompt: text3,
+      reason: null
+    });
+    return text3;
+  } catch (e) {
+    await utils_default.db("o_videoTrack").where({ id: trackId }).update({
+      state: "\u751F\u6210\u5931\u8D25",
+      reason: utils_default.error(e).message
+    });
+    throw e;
+  }
+}
+var import_promises6, import_path12, runningTracks, isVideoPromptRunning, h3EnglishPromptInstruction;
+var init_videoPromptGeneration = __esm({
+  "src/utils/videoPromptGeneration.ts"() {
+    "use strict";
+    init_utils3();
+    init_storyboardPromptFreshness();
+    import_promises6 = __toESM(require("fs/promises"));
+    import_path12 = __toESM(require("path"));
+    init_h3ReferenceSlots();
+    init_h3ReferencePlan();
+    init_h3VisualStateGuard();
+    init_db();
+    init_videoLanguages();
+    init_h3PromptContract();
+    init_h3PromptContext();
+    init_h3ReferenceBindings();
+    init_h3VisionImage();
+    runningTracks = /* @__PURE__ */ new Set();
+    isVideoPromptRunning = (trackId) => runningTracks.has(trackId);
+    h3EnglishPromptInstruction = `${h3FormatChecklist} All section prose must be English. Only spoken dialogue inside <d>...</d> and explicitly required visible screen/sign text may use their requested language.`;
+  }
+});
+
+// src/routes/production/workbench/batchGeneratePrompt.ts
+var import_express81, router81, batchGeneratePrompt_default;
+var init_batchGeneratePrompt = __esm({
+  "src/routes/production/workbench/batchGeneratePrompt.ts"() {
+    "use strict";
+    import_express81 = __toESM(require_express2());
+    init_utils3();
+    init_p_limit();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_videoLanguages();
+    init_videoPromptGeneration();
+    router81 = import_express81.default.Router();
+    batchGeneratePrompt_default = router81.post(
+      "/",
+      validateFields({
+        languages: dialogueLanguagesSchema.optional(),
+        regenerate: external_exports.boolean().optional(),
+        replaceBasePrompt: external_exports.boolean().optional(),
+        projectId: external_exports.number(),
+        trackData: external_exports.array(
+          external_exports.object({
+            trackId: external_exports.number(),
+            info: external_exports.array(
+              external_exports.object({
+                id: external_exports.number(),
+                sources: external_exports.string(),
+                reference: external_exports.boolean().optional(),
+                slotType: external_exports.string().optional(),
+                fileType: external_exports.string().optional(),
+                prompt: external_exports.string().optional()
+              })
+            )
+          })
+        ),
+        mode: external_exports.string(),
+        model: external_exports.string(),
+        concurrentCount: external_exports.number().int().min(1).max(10).optional()
+        //并发数
+      }),
+      async (req, res) => {
+        const { trackData, projectId, mode, model, languages, regenerate: regenerate2, replaceBasePrompt, concurrentCount = 5 } = req.body;
+        try {
+          const uniqueTracks = [...new Map(trackData.map((track) => [track.trackId, track])).values()];
+          if (uniqueTracks.some((track) => isVideoPromptRunning(track.trackId))) return res.status(409).send(error50("\u6240\u9009\u89C6\u9891\u6BB5\u63D0\u793A\u8BCD\u6B63\u5728\u751F\u6210\uFF0C\u8BF7\u5B8C\u6210\u540E\u518D\u91CD\u8BD5"));
+          const tracks = await utils_default.db("o_videoTrack").where({ projectId }).whereIn("id", uniqueTracks.map((track) => track.trackId));
+          if (tracks.length !== uniqueTracks.length) return res.status(404).send(error50("\u90E8\u5206\u89C6\u9891\u6BB5\u4E0D\u5B58\u5728"));
+          await utils_default.db("o_videoTrack").where({ projectId }).whereIn("id", uniqueTracks.map((track) => track.trackId)).update({ state: "\u751F\u6210\u4E2D", reason: null });
+          const limit = pLimit(concurrentCount);
+          const tasks = uniqueTracks.map((track) => limit(() => generateVideoPromptForTrack({
+            projectId,
+            mode,
+            model,
+            languages,
+            regenerate: regenerate2,
+            replaceBasePrompt,
+            trackId: track.trackId,
+            info: track.info
+          })));
+          void Promise.allSettled(tasks).then(async (results) => {
+            for (const [index, result] of results.entries()) {
+              if (result.status === "rejected" && result.reason?.status !== 409) await utils_default.db("o_videoTrack").where({ id: uniqueTracks[index].trackId, projectId }).update({ state: "\u751F\u6210\u5931\u8D25", reason: utils_default.error(result.reason).message });
+            }
+          }).catch((cause) => console.error("\u6279\u91CF\u63D0\u793A\u8BCD\u72B6\u6001\u4FDD\u5B58\u5931\u8D25", utils_default.error(cause).message));
+          return res.status(200).send(success3("\u5F00\u59CB\u751F\u6210\u63D0\u793A\u8BCD"));
+        } catch (cause) {
+          return res.status(400).send(error50(utils_default.error(cause).message));
+        }
+      }
+    );
+  }
+});
+
+// src/utils/videoQuality.ts
+async function inspectVideoQuality(userPath) {
+  const localPath = import_node_path7.default.join(getPath_default("oss"), userPath.replace(/^[/\\]+/, "").split("/").join(import_node_path7.default.sep));
+  try {
+    const { stdout } = await execFileAsync("ffprobe", ["-v", "error", "-select_streams", "v:0", "-show_entries", "stream=codec_name,width,height,r_frame_rate,bit_rate:format=duration,bit_rate", "-of", "json", localPath]);
+    const parsed = JSON.parse(stdout);
+    const stream4 = parsed.streams?.[0] || {};
+    const [num, den] = String(stream4.r_frame_rate || "0/1").split("/").map(Number);
+    return {
+      width: Number(stream4.width) || null,
+      height: Number(stream4.height) || null,
+      fps: den ? num / den : null,
+      bitrate: Number(stream4.bit_rate || parsed.format?.bit_rate) || null,
+      codec: stream4.codec_name || null,
+      actualDuration: Number(parsed.format?.duration) || null
+    };
+  } catch {
+    return {};
+  }
+}
+var import_node_child_process, import_node_util, import_node_path7, execFileAsync;
+var init_videoQuality = __esm({
+  "src/utils/videoQuality.ts"() {
+    "use strict";
+    import_node_child_process = require("node:child_process");
+    import_node_util = require("node:util");
+    import_node_path7 = __toESM(require("node:path"));
+    init_getPath();
+    execFileAsync = (0, import_node_util.promisify)(import_node_child_process.execFile);
+  }
+});
+
+// src/routes/production/workbench/batchGenerateVideo.ts
+function referenceMediaType(item) {
+  return item.referenceType === "audioReference" || item.fileType === "audio" ? "audio" : item.referenceType === "videoReference" || item.fileType === "video" ? "video" : "image";
+}
+var import_express82, router82, isMiniMaxH32, batchGenerateVideo_default;
+var init_batchGenerateVideo = __esm({
+  "src/routes/production/workbench/batchGenerateVideo.ts"() {
+    "use strict";
+    import_express82 = __toESM(require_express2());
+    init_storyboardPromptFreshness();
+    init_utils3();
+    init_zod();
+    init_dist_node();
+    init_responseFormat();
+    init_middleware();
+    init_h3ReferencePlan();
+    init_h3ReferenceBindings();
+    init_videoQuality();
+    init_h3VisualStateGuard();
+    init_db();
+    init_videoLanguages();
+    router82 = import_express82.default.Router();
+    isMiniMaxH32 = (model) => {
+      const value = String(model || "").toLowerCase();
+      return value.includes("minimax") && value.includes("h3");
+    };
+    batchGenerateVideo_default = router82.post("/", validateFields({
+      projectId: external_exports.number(),
+      scriptId: external_exports.number(),
+      validateOnly: external_exports.boolean().optional(),
+      trackData: external_exports.array(external_exports.object({
+        uploadData: external_exports.array(external_exports.object({
+          id: external_exports.number(),
+          sources: external_exports.string(),
+          type: external_exports.enum(["imageReference", "startImage", "endImage", "videoReference", "audioReference"]).optional(),
+          fileType: external_exports.enum(["image", "video", "audio"]).optional(),
+          label: external_exports.string().optional(),
+          prompt: external_exports.string().optional()
+        })),
+        language: dialogueLanguageSchema.optional(),
+        trackId: external_exports.number(),
+        prompt: external_exports.string(),
+        duration: external_exports.number(),
+        audio: external_exports.boolean().optional(),
+        resolution: external_exports.string().optional(),
+        aspectRatio: external_exports.enum(["16:9", "9:16"]).optional()
+      })),
+      model: external_exports.string(),
+      mode: external_exports.string(),
+      resolution: external_exports.string(),
+      audio: external_exports.boolean().optional()
+    }), async (req, res) => {
+      const { scriptId, projectId, trackData, model, resolution, audio, mode } = req.body;
+      const validateOnly = req.body.validateOnly === true;
+      let modeData = [];
+      if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
+        try {
+          modeData = JSON.parse(mode);
+        } catch {
+        }
+      }
+      const ratio = await utils_default.db("o_project").select("videoRatio").where("id", projectId).first();
+      const h3 = isMiniMaxH32(model);
+      let validationTracks = [];
+      let prepared;
+      try {
+        const preparationResults = await Promise.allSettled(
+          trackData.map(async (track) => {
+            const ownedTrack = await utils_default.db("o_videoTrack").where({ id: track.trackId, projectId, scriptId }).first();
+            if (!ownedTrack) throw new Error("\u89C6\u9891\u6BB5\u4E0D\u5B58\u5728");
+            try {
+              track.prompt = await resolveLanguagePrompt(db, track.trackId, track.language, track.prompt, track.audio ?? audio);
+              await assertStoryboardPromptFresh(utils_default.db, projectId, track.trackId, track.prompt);
+              const resolved = await Promise.all(track.uploadData.map(async (item) => {
+                if (item.sources === "storyboard") {
+                  const found = await utils_default.db("o_storyboard").where({ id: item.id, projectId }).select("filePath", "prompt").first();
+                  return found ? {
+                    path: found.filePath ?? void 0,
+                    sourceType: "storyboard",
+                    assetType: "storyboard",
+                    fileType: item.fileType || "image",
+                    referenceType: item.type,
+                    label: item.label || `\u5206\u955C\u56FE${item.id}`,
+                    prompt: item.prompt || found.prompt || void 0
+                  } : null;
+                }
+                if (item.sources === "assets") {
+                  const found = await utils_default.db("o_assets").where({ "o_assets.id": item.id, "o_assets.projectId": projectId }).leftJoin("o_image", "o_assets.imageId", "o_image.id").select(
+                    "o_image.filePath",
+                    "o_image.type as imageType",
+                    "o_assets.id as assetId",
+                    "o_assets.assetsId as parentAssetId",
+                    "o_assets.name",
+                    "o_assets.prompt",
+                    "o_assets.type as assetType"
+                  ).first();
+                  return found ? {
+                    path: found.filePath ?? void 0,
+                    sourceType: "assets",
+                    assetId: found.assetId,
+                    parentAssetId: found.parentAssetId,
+                    assetType: found.assetType,
+                    fileType: item.fileType || found.imageType || "image",
+                    referenceType: item.type,
+                    label: item.label || found.name,
+                    prompt: item.prompt || found.prompt || void 0
+                  } : null;
+                }
+                return null;
+              }));
+              const images = resolved.filter(Boolean);
+              let runtimeReferences = images;
+              if (h3) {
+                if (resolved.length !== images.length) throw new Error("\u8F68\u9053 " + track.trackId + "\uFF1A\u53C2\u8003\u8D44\u4EA7\u5DF2\u5220\u9664\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
+                const assetImages = images.filter((item) => item.sourceType === "assets" && referenceMediaType(item) === "image");
+                assertH3ActiveStates(assetImages.map((item) => ({
+                  assetId: Number(item.assetId),
+                  parentAssetId: item.parentAssetId,
+                  assetType: item.assetType,
+                  name: item.label,
+                  filePath: item.path
+                })));
+                const plan = await loadH3ReferencePlan(utils_default.db, track.trackId, track.prompt);
+                if (assetImages.length && !plan) throw new Error("\u8BE5\u89C6\u9891\u6BB5\u4F7F\u7528\u65E7\u7248\u53C2\u8003\u56FE\u89C4\u5219\uFF0C\u8BF7\u91CD\u65B0\u751F\u6210\u89C6\u9891\u63D0\u793A\u8BCD\u540E\u518D\u751F\u6210\u89C6\u9891");
+                const pictureReferences = plan ? resolveH3ReferencePlan(assetImages, plan) : [];
+                assertH3PictureSlots(track.prompt, pictureReferences.length);
+                if (plan) assertH3ReferenceBindings(track.prompt, plan.slots);
+                const otherMedia = images.filter((item) => item.sourceType !== "storyboard" && referenceMediaType(item) !== "image");
+                runtimeReferences = [...pictureReferences, ...otherMedia];
+              }
+              const loaded = await Promise.all(runtimeReferences.map(async (item) => {
+                if (!item.path) return null;
+                return {
+                  base64: await utils_default.oss.getImageBase64(item.path),
+                  type: referenceMediaType(item),
+                  label: item.label,
+                  prompt: item.prompt,
+                  sourceType: item.sourceType,
+                  assetType: item.assetType
+                };
+              }));
+              if (h3 && loaded.some((item) => !item)) throw new Error("H3 \u53C2\u8003\u7D20\u6750\u7F3A\u5931\uFF1A\u4E0D\u80FD\u8DF3\u8FC7\u67D0\u4E2A Picture \u69FD\u4F4D\u7EE7\u7EED\u751F\u6210");
+              return {
+                language: track.language,
+                trackId: track.trackId,
+                prompt: track.prompt,
+                duration: track.duration,
+                referenceList: loaded.filter(Boolean),
+                audio: track.audio ?? audio,
+                resolution: track.resolution || resolution,
+                aspectRatio: track.aspectRatio || ratio?.videoRatio || "16:9"
+              };
+            } catch (cause) {
+              const reason = "\u89C6\u9891\u53C2\u8003\u68C0\u67E5\u5931\u8D25\uFF1A" + utils_default.error(cause).message;
+              if (!validateOnly) await utils_default.db("o_videoTrack").where({ id: track.trackId, projectId, scriptId }).update({ state: "\u751F\u6210\u5931\u8D25", reason });
+              throw new Error("\u8F68\u9053 " + track.trackId + "\uFF1A" + reason);
+            }
+          })
+        );
+        validationTracks = preparationResults.map((result, index) => ({
+          trackId: trackData[index].trackId,
+          language: trackData[index].language,
+          valid: result.status === "fulfilled",
+          ...result.status === "fulfilled" ? { pictureCount: result.value.referenceList.filter((item) => item.type === "image").length, referenceCount: result.value.referenceList.length } : { reason: utils_default.error(result.reason).message }
+        }));
+        const failed = preparationResults.filter((result) => result.status === "rejected");
+        if (failed.length) throw new Error(failed.map((result) => utils_default.error(result.reason).message).join("\uFF1B"));
+        prepared = preparationResults.filter((result) => result.status === "fulfilled").map((result) => result.value);
+      } catch (cause) {
+        return res.status(409).send(error50(`\u6279\u91CF\u89C6\u9891\u68C0\u67E5\u5931\u8D25\uFF1A${utils_default.error(cause).message}`, { valid: false, tracks: validationTracks }));
+      }
+      if (validateOnly) return res.status(200).send(success3({ valid: true, tracks: validationTracks }));
+      const tasks = await Promise.all(prepared.map(async (item) => {
+        const videoPath = `/${projectId}/video/${v4_default()}.mp4`;
+        const [videoId] = await utils_default.db("o_video").insert({
+          filePath: videoPath,
+          time: Date.now(),
+          state: "\u751F\u6210\u4E2D",
+          scriptId,
+          projectId,
+          videoTrackId: item.trackId
+        });
+        if (item.language) await db("o_videoLanguage").insert({ videoId, language: item.language, prompt: item.prompt });
+        return { ...item, videoId, videoPath };
+      }));
+      res.status(200).send(success3(tasks.map((item) => ({ videoId: item.videoId, trackId: item.trackId, language: item.language }))));
+      const runTask = async ({ videoId, videoPath, prompt, duration: duration4, referenceList, audio: audio2, resolution: resolution2, aspectRatio }) => {
+        try {
+          const relatedObjects = { projectId, videoId, scriptId, type: "\u89C6\u9891" };
+          const aiVideo = utils_default.Ai.Video(model);
+          await aiVideo.run({
+            prompt,
+            referenceList,
+            mode: modeData.length > 0 ? modeData : mode,
+            duration: duration4,
+            aspectRatio,
+            resolution: resolution2,
+            audio: audio2
+          }, { projectId, taskClass: "\u89C6\u9891\u751F\u6210", describe: "\u6839\u636E\u63D0\u793A\u8BCD\u751F\u6210\u89C6\u9891", relatedObjects: JSON.stringify(relatedObjects) });
+          await aiVideo.save(videoPath);
+          await utils_default.db("o_video").where("id", videoId).update({ state: "\u751F\u6210\u6210\u529F", errorReason: null, ...await inspectVideoQuality(videoPath) });
+        } catch (cause) {
+          await utils_default.db("o_video").where("id", videoId).update({ state: "\u751F\u6210\u5931\u8D25", errorReason: utils_default.error(cause).message });
+        }
+      };
+      if (h3) {
+        for (const task of tasks) await runTask(task);
+      } else await Promise.all(tasks.map(runTask));
+    });
+  }
+});
+
+// src/routes/production/workbench/checkVideoPrompt.ts
+var import_express83, router83, checkVideoPrompt_default;
+var init_checkVideoPrompt = __esm({
+  "src/routes/production/workbench/checkVideoPrompt.ts"() {
+    "use strict";
+    import_express83 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_db();
+    router83 = import_express83.default.Router();
+    checkVideoPrompt_default = router83.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        scriptId: external_exports.number(),
+        trackIds: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { projectId, scriptId, trackIds } = req.body;
+        const promptList = await utils_default.db("o_videoTrack").where("projectId", projectId).where("scriptId", scriptId).whereIn("id", trackIds).whereIn("state", ["\u5DF2\u5B8C\u6210", "\u751F\u6210\u5931\u8D25"]).select("id", "state", "reason", "prompt");
+        res.status(200).send(success3(await Promise.all(promptList.map(async (item) => ({ ...item, variants: await db("o_videoPromptVariant").where({ trackId: item.id }) })))));
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/checkVideoStateList.ts
+var import_express84, router84, checkVideoStateList_default;
+var init_checkVideoStateList = __esm({
+  "src/routes/production/workbench/checkVideoStateList.ts"() {
+    "use strict";
+    import_express84 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router84 = import_express84.default.Router();
+    checkVideoStateList_default = router84.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        scriptId: external_exports.number(),
+        videoIds: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { projectId, scriptId, videoIds } = req.body;
+        const videoList = await utils_default.db("o_video").whereIn("id", videoIds).whereIn("state", ["\u751F\u6210\u6210\u529F", "\u751F\u6210\u5931\u8D25"]).select("id", "state", "errorReason", "filePath");
+        res.status(200).send(
+          success3(
+            await Promise.all(
+              videoList.map(async (s) => ({
+                ...s,
+                src: s.filePath ? await utils_default.oss.getFileUrl(s.filePath) : ""
+              }))
+            )
+          )
+        );
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/deleteTrack.ts
+var import_express85, router85, deleteTrack_default;
+var init_deleteTrack = __esm({
+  "src/routes/production/workbench/deleteTrack.ts"() {
+    "use strict";
+    import_express85 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_db();
+    router85 = import_express85.default.Router();
+    deleteTrack_default = router85.post(
+      "/",
+      validateFields({
+        id: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id: id2 } = req.body;
+        await db("o_videoPromptVariant").where({ trackId: id2 }).delete();
+        await utils_default.db("o_videoTrack").where("id", id2).delete();
+        await utils_default.db("o_storyboard").where("trackId", id2).update({
+          trackId: null
+        });
+        res.status(200).send(success3({ message: "\u89C6\u9891\u6BB5\u5220\u9664\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/delVideo.ts
+var import_express86, router86, delVideo_default;
+var init_delVideo = __esm({
+  "src/routes/production/workbench/delVideo.ts"() {
+    "use strict";
+    import_express86 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_db();
+    router86 = import_express86.default.Router();
+    delVideo_default = router86.post(
+      "/",
+      validateFields({
+        id: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id: id2 } = req.body;
+        await db("o_videoLanguage").where({ videoId: id2 }).delete();
+        await db("o_videoPromptVariant").where({ videoId: id2 }).update({ videoId: null });
+        await utils_default.db("o_video").where("id", id2).delete();
+        await utils_default.db("o_videoTrack").where("videoId", id2).update({
+          videoId: null
+        });
+        res.status(200).send(success3({ message: "\u89C6\u9891\u5220\u9664\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/generateVideo.ts
+function isMiniMaxH33(model) {
+  const value = String(model || "").toLowerCase();
+  return value.includes("minimax") && value.includes("h3");
+}
+function referenceMediaType2(item) {
+  return item.referenceType === "audioReference" || item.fileType === "audio" ? "audio" : item.referenceType === "videoReference" || item.fileType === "video" ? "video" : "image";
+}
+var import_express87, router87, generateVideo_default;
+var init_generateVideo = __esm({
+  "src/routes/production/workbench/generateVideo.ts"() {
+    "use strict";
+    import_express87 = __toESM(require_express2());
+    init_storyboardPromptFreshness();
+    init_utils3();
+    init_zod();
+    init_dist_node();
+    init_responseFormat();
+    init_middleware();
+    init_h3ReferencePlan();
+    init_h3ReferenceBindings();
+    init_videoQuality();
+    init_h3VisualStateGuard();
+    init_db();
+    init_videoLanguages();
+    router87 = import_express87.default.Router();
+    generateVideo_default = router87.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        scriptId: external_exports.number(),
+        validateOnly: external_exports.boolean().optional(),
+        uploadData: external_exports.array(external_exports.object({
+          id: external_exports.number(),
+          sources: external_exports.string(),
+          type: external_exports.enum(["imageReference", "startImage", "endImage", "videoReference", "audioReference"]).optional(),
+          fileType: external_exports.enum(["image", "video", "audio"]).optional(),
+          label: external_exports.string().optional(),
+          prompt: external_exports.string().optional()
+        })),
+        language: dialogueLanguageSchema.optional(),
+        prompt: external_exports.string(),
+        model: external_exports.string(),
+        mode: external_exports.string(),
+        resolution: external_exports.string(),
+        duration: external_exports.number(),
+        audio: external_exports.boolean().optional(),
+        trackId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { scriptId, projectId, uploadData, model, duration: duration4, resolution, audio, mode, trackId, language } = req.body;
+        const validateOnly = req.body.validateOnly === true;
+        const ownedTrack = await utils_default.db("o_videoTrack").where({ id: trackId, projectId, scriptId }).first();
+        if (!ownedTrack) return res.status(404).send(error50("\u89C6\u9891\u6BB5\u4E0D\u5B58\u5728"));
+        let prompt;
+        let modeData = [];
+        if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
+          try {
+            modeData = JSON.parse(mode);
+          } catch {
+          }
+        }
+        const ratio = await utils_default.db("o_project").select("videoRatio").where("id", projectId).first();
+        const videoPath = `/${projectId}/video/${v4_default()}.mp4`;
+        const h3 = isMiniMaxH33(model);
+        let base644;
+        try {
+          prompt = await resolveLanguagePrompt(db, trackId, language, req.body.prompt, audio);
+          await assertStoryboardPromptFresh(utils_default.db, projectId, trackId, prompt);
+          const resolved = await Promise.all(
+            uploadData.map(async (item) => {
+              if (item.sources === "storyboard") {
+                const source = await utils_default.db("o_storyboard").where({ id: item.id, projectId }).select("filePath", "prompt").first();
+                return source ? {
+                  path: source.filePath ?? void 0,
+                  sourceType: "storyboard",
+                  assetType: "storyboard",
+                  fileType: item.fileType || "image",
+                  referenceType: item.type,
+                  label: item.label || `\u5206\u955C\u56FE${item.id}`,
+                  prompt: item.prompt || source.prompt || void 0
+                } : null;
+              }
+              if (item.sources === "assets") {
+                const source = await utils_default.db("o_assets").where({ "o_assets.id": item.id, "o_assets.projectId": projectId }).leftJoin("o_image", "o_assets.imageId", "o_image.id").select(
+                  "o_image.filePath",
+                  "o_image.type as imageType",
+                  "o_assets.id as assetId",
+                  "o_assets.assetsId as parentAssetId",
+                  "o_assets.name",
+                  "o_assets.prompt",
+                  "o_assets.type as assetType"
+                ).first();
+                return source ? {
+                  path: source.filePath ?? void 0,
+                  sourceType: "assets",
+                  assetId: source.assetId,
+                  parentAssetId: source.parentAssetId,
+                  assetType: source.assetType,
+                  fileType: item.fileType || source.imageType || "image",
+                  referenceType: item.type,
+                  label: item.label || source.name,
+                  prompt: item.prompt || source.prompt || void 0
+                } : null;
+              }
+              return null;
+            })
+          );
+          const images = resolved.filter(Boolean);
+          let runtimeReferences = images;
+          if (h3) {
+            if (resolved.length !== images.length) throw new Error("\u90E8\u5206 H3 \u53C2\u8003\u8D44\u4EA7\u5DF2\u88AB\u5220\u9664\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\uFF1B\u8BF7\u91CD\u65B0\u751F\u6210\u89C6\u9891\u63D0\u793A\u8BCD\u5E76\u9009\u62E9\u53C2\u8003\u56FE");
+            const assetImages = images.filter((item) => item.sourceType === "assets" && referenceMediaType2(item) === "image");
+            assertH3ActiveStates(assetImages.map((item) => ({
+              assetId: Number(item.assetId),
+              parentAssetId: item.parentAssetId,
+              assetType: item.assetType,
+              name: item.label,
+              filePath: item.path
+            })));
+            const plan = await loadH3ReferencePlan(utils_default.db, trackId, prompt);
+            if (assetImages.length && !plan) throw new Error("\u8BE5\u89C6\u9891\u6BB5\u4F7F\u7528\u65E7\u7248\u53C2\u8003\u56FE\u89C4\u5219\uFF0C\u8BF7\u91CD\u65B0\u751F\u6210\u89C6\u9891\u63D0\u793A\u8BCD\u540E\u518D\u751F\u6210\u89C6\u9891");
+            const pictureReferences = plan ? resolveH3ReferencePlan(assetImages, plan) : [];
+            assertH3PictureSlots(prompt, pictureReferences.length);
+            if (plan) assertH3ReferenceBindings(prompt, plan.slots);
+            const otherMedia = images.filter((item) => item.sourceType !== "storyboard" && referenceMediaType2(item) !== "image");
+            runtimeReferences = [...pictureReferences, ...otherMedia];
+          }
+          const loaded = await Promise.all(runtimeReferences.map(async (item) => {
+            if (!item.path) return null;
+            return {
+              base64: await utils_default.oss.getImageBase64(item.path),
+              type: referenceMediaType2(item),
+              label: item.label,
+              prompt: item.prompt,
+              sourceType: item.sourceType,
+              assetType: item.assetType
+            };
+          }));
+          if (h3 && loaded.some((item) => !item)) throw new Error("H3 \u67D0\u5F20\u53C2\u8003\u7D20\u6750\u7F3A\u5931\uFF0C\u4E0D\u5141\u8BB8\u8DF3\u8FC7\u8BE5\u69FD\u4F4D\u7EE7\u7EED\u751F\u6210");
+          base644 = loaded.filter(Boolean);
+        } catch (cause) {
+          const reason = (h3 ? "H3 " : "") + "\u89C6\u9891\u53C2\u8003\u68C0\u67E5\u5931\u8D25\uFF1A" + utils_default.error(cause).message;
+          if (!validateOnly) await utils_default.db("o_videoTrack").where({ id: trackId, projectId }).update({ state: "\u751F\u6210\u5931\u8D25", reason });
+          return res.status(409).send(error50(reason, { valid: false, tracks: [{ trackId, language, valid: false, reason }] }));
+        }
+        if (validateOnly) return res.status(200).send(success3({ valid: true, tracks: [{
+          trackId,
+          language,
+          valid: true,
+          pictureCount: base644.filter((item) => item.type === "image").length,
+          referenceCount: base644.length
+        }] }));
+        const [videoId] = await utils_default.db("o_video").insert({
+          filePath: videoPath,
+          time: Date.now(),
+          state: "\u751F\u6210\u4E2D",
+          scriptId,
+          projectId,
+          videoTrackId: trackId
+        });
+        if (language) await db("o_videoLanguage").insert({ videoId, language, prompt });
+        await utils_default.db("o_videoTrack").where({ id: trackId, projectId }).update({ state: "\u751F\u6210\u4E2D", reason: null });
+        res.status(200).send(success3(videoId));
+        const relatedObjects = { projectId, videoId, scriptId, type: "\u89C6\u9891" };
+        const aiVideo = utils_default.Ai.Video(model);
+        aiVideo.run({
+          prompt,
+          referenceList: base644,
+          mode: modeData.length > 0 ? modeData : mode,
+          duration: duration4,
+          aspectRatio: ratio?.videoRatio || "16:9",
+          resolution,
+          audio
+        }, {
+          projectId,
+          taskClass: "\u89C6\u9891\u751F\u6210",
+          describe: "\u6839\u636E\u63D0\u793A\u8BCD\u751F\u6210\u89C6\u9891",
+          relatedObjects: JSON.stringify(relatedObjects)
+        }).then(async () => await aiVideo.save(videoPath)).then(async () => await utils_default.db("o_video").where("id", videoId).update({ state: "\u751F\u6210\u6210\u529F", ...await inspectVideoQuality(videoPath) })).catch(async (cause) => {
+          await utils_default.db("o_video").where("id", videoId).update({ state: "\u751F\u6210\u5931\u8D25", errorReason: utils_default.error(cause).message });
+        });
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/generateVideoPrompt.ts
+var import_express88, router88, generateVideoPrompt_default;
+var init_generateVideoPrompt = __esm({
+  "src/routes/production/workbench/generateVideoPrompt.ts"() {
+    "use strict";
+    import_express88 = __toESM(require_express2());
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_videoLanguages();
+    init_videoPromptGeneration();
+    router88 = import_express88.default.Router();
+    generateVideoPrompt_default = router88.post(
+      "/",
+      validateFields({
+        trackId: external_exports.number(),
+        languages: dialogueLanguagesSchema.optional(),
+        regenerate: external_exports.boolean().optional(),
+        replaceBasePrompt: external_exports.boolean().optional(),
+        projectId: external_exports.number(),
+        info: external_exports.array(
+          external_exports.object({
+            id: external_exports.number(),
+            sources: external_exports.string(),
+            reference: external_exports.boolean().optional(),
+            slotType: external_exports.string().optional(),
+            fileType: external_exports.string().optional(),
+            prompt: external_exports.string().optional()
+          })
+        ),
+        model: external_exports.string(),
+        mode: external_exports.string()
+      }),
+      async (req, res) => {
+        try {
+          return res.status(200).send(success3(await generateVideoPromptForTrack(req.body)));
+        } catch (cause) {
+          return res.status([404, 409].includes(cause.status) ? cause.status : 400).send(error50(cause.message));
+        }
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/getAudioBindAssetsList.ts
+var import_express89, router89, getAudioBindAssetsList_default;
+var init_getAudioBindAssetsList = __esm({
+  "src/routes/production/workbench/getAudioBindAssetsList.ts"() {
+    "use strict";
+    import_express89 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router89 = import_express89.default.Router();
+    getAudioBindAssetsList_default = router89.post(
+      "/",
+      validateFields({
+        assetsIds: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { assetsIds } = req.body;
+        const assets2AudioData = await utils_default.db("o_assetsRole2Audio").whereIn("assetsRoleId", assetsIds).select("assetsAudioId", "assetsRoleId");
+        if (assets2AudioData.length) {
+          const assetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assets.assetsId", assets2AudioData.map((i) => i.assetsAudioId)).select("o_assets.id", "o_image.filePath", "o_assets.prompt", "o_assets.assetsId");
+          await Promise.all(
+            assetsData.map(async (i) => {
+              i.filePath && (i.src = await utils_default.oss.getFileUrl(i.filePath));
+            })
+          );
+          return res.status(200).send(
+            success3(
+              assetsData.map((i) => ({
+                fileType: "audio",
+                sources: "assets",
+                src: i.src,
+                id: i.id,
+                prompt: i.prompt
+              }))
+            )
+          );
+        }
+        res.status(200).send(success3());
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/getFileUrl.ts
+var import_express90, router90, getFileUrl_default;
+var init_getFileUrl = __esm({
+  "src/routes/production/workbench/getFileUrl.ts"() {
+    "use strict";
+    import_express90 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router90 = import_express90.default.Router();
+    getFileUrl_default = router90.post(
+      "/",
+      validateFields({
+        items: external_exports.array(external_exports.object({
+          id: external_exports.number(),
+          sources: external_exports.string()
+        }))
+      }),
+      async (req, res) => {
+        const { items } = req.body;
+        const result = {};
+        const storyboardIds = items.filter((item) => item.sources == "storyboard").map((item) => item.id);
+        const totalFilePaths = [];
+        if (storyboardIds.length) {
+          const storyBoardPaths = await utils_default.db("o_storyboard").whereIn("id", storyboardIds).select("id", "filePath");
+          totalFilePaths.push(...storyBoardPaths.map((i) => ({ id: i.id, filePath: i.filePath, sources: "storyboard" })));
+        }
+        const assetsIds = items.filter((item) => item.sources == "assets").map((item) => item.id);
+        if (assetsIds.length) {
+          const assetsPaths = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assets.id", assetsIds).select("o_assets.id", "o_image.filePath");
+          totalFilePaths.push(...assetsPaths.map((i) => ({ id: i.id, filePath: i.filePath, sources: "assets" })));
+        }
+        await Promise.all(
+          totalFilePaths.map(async (item) => {
+            result[`${item.id}:${item.sources}`] = item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : "";
+          })
+        );
+        res.status(200).send(success3({ data: result }));
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/getGenerateData.ts
+var import_express91, router91, getGenerateData_default;
+var init_getGenerateData = __esm({
+  "src/routes/production/workbench/getGenerateData.ts"() {
+    "use strict";
+    import_express91 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_db();
+    init_videoLanguages();
+    init_h3ReferencePlan();
+    router91 = import_express91.default.Router();
+    getGenerateData_default = router91.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        scriptId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { projectId, scriptId } = req.body;
+        const projectData = await utils_default.db("o_project").where("id", projectId).select("id", "videoModel", "mode").first();
+        if (!projectData?.videoModel) {
+          return res.status(400).json(success3("\u9879\u76EE\u672A\u914D\u7F6E\u89C6\u9891\u6A21\u578B"));
+        }
+        let videoMode = "";
+        try {
+          videoMode = JSON.parse(projectData?.mode ?? "");
+        } catch (e) {
+          videoMode = projectData?.mode ?? "";
+        }
+        const isRef = Array.isArray(videoMode) ? true : false;
+        const storyboardList = await utils_default.db("o_storyboard").where({ scriptId, projectId }).orderBy("index", "asc");
+        await Promise.all(
+          storyboardList.map(async (i) => {
+            i.filePath = i.filePath ? await utils_default.oss.getSmallImageUrl(i.filePath) : "";
+          })
+        );
+        const storyboardTrackRecord = {};
+        storyboardList.forEach((i) => {
+          if (storyboardTrackRecord[i.trackId]) {
+            storyboardTrackRecord[i.trackId].push({
+              src: i.filePath,
+              fileType: "image",
+              sources: "storyboard",
+              ...i.prompt != null ? { prompt: i.videoDesc } : {},
+              ...i.id != null ? { id: i.id } : {},
+              index: i.index
+            });
+          } else {
+            storyboardTrackRecord[i.trackId] = [
+              {
+                src: i.filePath,
+                fileType: "image",
+                sources: "storyboard",
+                ...i.prompt != null ? { prompt: i.videoDesc } : {},
+                ...i.id != null ? { id: i.id } : {},
+                index: i.index
+              }
+            ];
+          }
+        });
+        const otherDataMap = {};
+        const audioReferenceCount = (() => {
+          if (!Array.isArray(videoMode)) return 0;
+          const item = videoMode.find((v) => v.toLowerCase().startsWith("audioreference:"));
+          if (!item) return 0;
+          const num = parseInt(item.split(":")[1], 10);
+          return isNaN(num) ? 0 : num;
+        })();
+        if (isRef) {
+          const storyIds = storyboardList.map((s) => s.id);
+          const assetDatas = await utils_default.db("o_assets2Storyboard").leftJoin("o_assets", "o_assets2Storyboard.assetId", "o_assets.id").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assets2Storyboard.storyboardId", storyIds).select("o_assets.*", "o_image.filePath", "o_assets2Storyboard.storyboardId");
+          const queryAudioIds = [...assetDatas.map((i) => i.id), ...assetDatas.map((i) => i.assetsId)].filter(Boolean);
+          const assets2AudioData = await utils_default.db("o_assetsRole2Audio").leftJoin("o_assets", "o_assets.assetsId", "o_assetsRole2Audio.assetsAudioId").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assetsRole2Audio.assetsRoleId", queryAudioIds).select(
+            "o_assets.id",
+            "o_assets.name",
+            "o_assetsRole2Audio.assetsRoleId",
+            "o_assets.describe",
+            "o_assets.type",
+            "o_assets.prompt",
+            "o_image.filePath"
+          );
+          const audioRecord = {};
+          await Promise.all(
+            assets2AudioData.map(async (i) => {
+              if (!audioRecord[i.assetsRoleId]) audioRecord[i.assetsRoleId] = [];
+              audioRecord[i.assetsRoleId].push({
+                id: i.id,
+                name: i.name,
+                describe: i.describe,
+                type: i.type,
+                fileType: "audio",
+                sources: "assets",
+                prompt: i.prompt,
+                src: i.filePath ? await utils_default.oss.getFileUrl(i.filePath) : ""
+              });
+            })
+          );
+          await Promise.all(
+            assetDatas.map(async (i) => {
+              const item = {
+                id: i.id,
+                name: i.name,
+                describe: i.describe,
+                type: i.type,
+                fileType: "image",
+                sources: "assets",
+                src: i.filePath ? await utils_default.oss.getSmallImageUrl(i.filePath) : ""
+              };
+              const sid = i.storyboardId;
+              if (!otherDataMap[sid]) otherDataMap[sid] = [];
+              otherDataMap[sid].push(item);
+              if (audioRecord[i.id]) otherDataMap[sid].push(...audioRecord[i.id]);
+              if (audioRecord[i.assetsId]) otherDataMap[sid].push(...audioRecord[i.assetsId]);
+            })
+          );
+        }
+        const trackData = await utils_default.db("o_videoTrack").where({ projectId, scriptId, archived: 0 });
+        const videoList = await utils_default.db("o_video").whereIn(
+          "videoTrackId",
+          trackData.map((t) => t.id)
+        );
+        const variants = await db("o_videoPromptVariant").whereIn("trackId", trackData.map((t) => t.id).filter((id2) => id2 != null));
+        const videoLanguages = await db("o_videoLanguage").whereIn("videoId", videoList.map((v) => v.id).filter((id2) => id2 != null));
+        const selection = await db("o_videoLanguageSelection").where({ projectId, scriptId }).first();
+        const trackList = [];
+        const trackIdMap = [...new Set(trackData.map((t) => t.id))];
+        for (const trackId of trackIdMap) {
+          const item = trackData.find((t) => t.id === trackId);
+          trackList.push({
+            id: trackId,
+            variants: variants.filter((v) => v.trackId === trackId),
+            duration: item?.duration ?? 0,
+            prompt: item?.prompt || "",
+            state: item?.state ?? "\u672A\u751F\u6210",
+            reason: item?.reason ?? "",
+            selectVideoId: Number(item?.videoId),
+            medias: (() => {
+              const storyboardMedias = storyboardTrackRecord[trackId] ?? [];
+              const assetMedias = storyboardMedias.flatMap((s) => otherDataMap[s.id] ?? []);
+              const seenAssetIds = /* @__PURE__ */ new Set();
+              const uniqueAssets = assetMedias.filter((a) => {
+                if (seenAssetIds.has(a.id)) return false;
+                seenAssetIds.add(a.id);
+                return true;
+              });
+              const audioCountMap = {};
+              const filteredAssets = uniqueAssets.filter((a) => {
+                if (a.fileType !== "audio" || audioReferenceCount === 0) return true;
+                const key = String(a.id);
+                audioCountMap[key] = (audioCountMap[key] ?? 0) + 1;
+                const totalAudio = Object.values(audioCountMap).reduce((s, n) => s + n, 0);
+                return totalAudio <= audioReferenceCount;
+              });
+              const hasImageAssetData = filteredAssets.filter((i) => i.src);
+              const notHasImageAssetData = filteredAssets.filter((i) => !i.src);
+              return [...hasImageAssetData, ...storyboardMedias, ...notHasImageAssetData];
+            })(),
+            videoList: await Promise.all(
+              videoList.filter((v) => v.videoTrackId === trackId).map(async (v) => ({
+                id: v.id,
+                language: videoLanguages.find((meta4) => meta4.videoId === v.id)?.language || "",
+                src: v.filePath ? await utils_default.oss.getFileUrl(v.filePath) : "",
+                state: v.state === "\u5DF2\u5B8C\u6210" || v.state === "\u751F\u6210\u6210\u529F" ? "\u5DF2\u5B8C\u6210" : v.state === "\u751F\u6210\u4E2D" ? "\u751F\u6210\u4E2D" : v.state === "\u751F\u6210\u5931\u8D25" ? "\u751F\u6210\u5931\u8D25" : "\u672A\u751F\u6210",
+                errorReason: v?.errorReason ?? ""
+              }))
+            )
+          });
+        }
+        if (await db.schema.hasColumn("o_importItem", "trackId")) {
+          const imports = await db("o_importItem").whereIn("trackId", trackIdMap);
+          for (const item of imports) {
+            const track = trackList.find((t) => t.id === item.trackId);
+            if (!track) continue;
+            const spec = JSON.parse(item.spec);
+            track.importSettings = { audio: spec.audio, resolution: spec.resolution, aspectRatio: spec.aspectRatio };
+            const plan = await loadH3ReferencePlan(db, item.trackId, track.prompt);
+            if (plan) track.medias = plan.slots.flatMap((slot) => track.medias.filter((media) => media.id === slot.assetId && media.sources === "assets"));
+          }
+        }
+        res.status(200).send(
+          success3({
+            storyboardList: await Promise.all(
+              storyboardList.map(async (s) => ({
+                ...s,
+                src: s.filePath
+              }))
+            ),
+            trackList,
+            dialogueLanguages,
+            selectedLanguages: selection ? JSON.parse(selection.languages) : []
+          })
+        );
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/getVideoList.ts
+var import_express92, router92, getVideoList_default;
+var init_getVideoList = __esm({
+  "src/routes/production/workbench/getVideoList.ts"() {
+    "use strict";
+    import_express92 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router92 = import_express92.default.Router();
+    getVideoList_default = router92.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        scriptId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { projectId, scriptId } = req.body;
+        const storyboardList = await utils_default.db("o_storyboard").where({ scriptId, projectId }).orderBy("index", "asc");
+        const videoList = await utils_default.db("o_video").whereIn(
+          "videoTrackId",
+          storyboardList.map((s) => s.trackId)
+        );
+        res.status(200).send(
+          success3(
+            await Promise.all(
+              videoList.map(async (s) => ({
+                ...s,
+                src: s.filePath ? await utils_default.oss.getSmallImageUrl(s.filePath) : ""
+              }))
+            )
+          )
+        );
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/saveDialogueLanguages.ts
+var import_express93, router93, saveDialogueLanguages_default;
+var init_saveDialogueLanguages = __esm({
+  "src/routes/production/workbench/saveDialogueLanguages.ts"() {
+    "use strict";
+    import_express93 = __toESM(require_express2());
+    init_zod();
+    init_db();
+    init_videoLanguages();
+    init_middleware();
+    init_responseFormat();
+    router93 = import_express93.default.Router();
+    saveDialogueLanguages_default = router93.post("/", validateFields({ projectId: external_exports.number(), scriptId: external_exports.number(), languages: dialogueLanguagesSchema }), async (req, res) => {
+      const { projectId, scriptId, languages } = req.body;
+      if (!await db("o_project").where({ id: projectId }).first()) return res.status(404).send(error50("\u9879\u76EE\u4E0D\u5B58\u5728"));
+      await db("o_videoLanguageSelection").insert({ projectId, scriptId, languages: JSON.stringify(languages) }).onConflict(["projectId", "scriptId"]).merge();
+      const saved = await db("o_videoLanguageSelection").where({ projectId, scriptId }).first();
+      res.send(success3(JSON.parse(saved.languages)));
+    });
+  }
+});
+
+// src/routes/production/workbench/selectVideo.ts
+var import_express94, router94, selectVideo_default;
+var init_selectVideo = __esm({
+  "src/routes/production/workbench/selectVideo.ts"() {
+    "use strict";
+    import_express94 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_db();
+    router94 = import_express94.default.Router();
+    selectVideo_default = router94.post(
+      "/",
+      validateFields({
+        trackId: external_exports.number(),
+        videoId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { trackId, videoId } = req.body;
+        const meta4 = await db("o_videoLanguage").where({ videoId }).first();
+        if (meta4) {
+          const video = await utils_default.db("o_video").where({ id: videoId, videoTrackId: trackId }).first();
+          if (!video) return res.status(400).send("\u89C6\u9891\u4E0D\u5C5E\u4E8E\u5F53\u524D\u6BB5");
+          await db("o_videoPromptVariant").where({ trackId, language: meta4.language }).update({ videoId });
+          return res.status(200).send(success3({ message: "\u8BED\u8A00\u7248\u672C\u89C6\u9891\u9009\u62E9\u6210\u529F" }));
+        }
+        await utils_default.db("o_videoTrack").where("id", trackId).update({
+          videoId
+        });
+        res.status(200).send(success3({ message: "\u89C6\u9891\u9009\u62E9\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/updateVideoDuration.ts
+var import_express95, router95, updateVideoDuration_default;
+var init_updateVideoDuration = __esm({
+  "src/routes/production/workbench/updateVideoDuration.ts"() {
+    "use strict";
+    import_express95 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router95 = import_express95.default.Router();
+    updateVideoDuration_default = router95.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        duration: external_exports.number().optional()
+      }),
+      async (req, res) => {
+        const { id: id2, duration: duration4 } = req.body;
+        await utils_default.db("o_videoTrack").where("id", id2).update({
+          duration: duration4
+        });
+        res.status(200).send(success3("\u66F4\u65B0\u6210\u529F"));
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/updateVideoPrompt.ts
+var import_express96, router96, updateVideoPrompt_default;
+var init_updateVideoPrompt = __esm({
+  "src/routes/production/workbench/updateVideoPrompt.ts"() {
+    "use strict";
+    import_express96 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_db();
+    init_videoLanguages();
+    init_h3ReferencePlan();
+    router96 = import_express96.default.Router();
+    updateVideoPrompt_default = router96.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        language: dialogueLanguageSchema.optional(),
+        prompt: external_exports.string().optional()
+      }),
+      async (req, res) => {
+        const { id: id2, prompt } = req.body;
+        const track = await utils_default.db("o_videoTrack").where({ id: id2 }).first();
+        if (!track) return res.status(404).send(error50("\u89C6\u9891\u6BB5\u4E0D\u5B58\u5728"));
+        const preservePlan = async (source) => {
+          if (typeof prompt === "string" && prompt.trim()) await copyH3ReferencePlan(db, id2, source || "", prompt, false);
+        };
+        if (req.body.language) {
+          if (!await utils_default.db("o_videoTrack").where({ id: id2 }).first()) return res.status(404).send(error50("\u89C6\u9891\u6BB5\u4E0D\u5B58\u5728"));
+          const variant = await db("o_videoPromptVariant").where({ trackId: id2, language: req.body.language }).first();
+          if (variant?.state === "\u751F\u6210\u4E2D") return res.status(409).send(error50("\u8BE5\u8BED\u8A00\u63D0\u793A\u8BCD\u6B63\u5728\u751F\u6210\uFF0C\u8BF7\u5B8C\u6210\u540E\u518D\u7F16\u8F91"));
+          try {
+            await preservePlan(variant?.prompt || "");
+          } catch (cause) {
+            return res.status(409).send(error50(cause.message));
+          }
+          await db("o_videoPromptVariant").insert({ trackId: id2, language: req.body.language, prompt: prompt || "", state: prompt?.trim() ? "\u5DF2\u5B8C\u6210" : "\u672A\u751F\u6210", reason: null }).onConflict(["trackId", "language"]).merge();
+          return res.status(200).send(success3("\u66F4\u65B0\u6210\u529F"));
+        }
+        if (track.state === "\u751F\u6210\u4E2D") return res.status(409).send(error50("\u63D0\u793A\u8BCD\u6B63\u5728\u751F\u6210\uFF0C\u8BF7\u5B8C\u6210\u540E\u518D\u7F16\u8F91"));
+        try {
+          await preservePlan(track.prompt || "");
+        } catch (cause) {
+          return res.status(409).send(error50(cause.message));
+        }
+        await utils_default.db("o_videoTrack").where("id", id2).update({
+          prompt
+        });
+        res.status(200).send(success3("\u66F4\u65B0\u6210\u529F"));
+      }
+    );
+  }
+});
+
+// src/routes/project/addDirectorManual.ts
+var import_express97, import_fs9, import_path13, router97, addDirectorManual_default;
+var init_addDirectorManual = __esm({
+  "src/routes/project/addDirectorManual.ts"() {
+    "use strict";
+    import_express97 = __toESM(require_express2());
+    init_utils3();
+    init_responseFormat();
+    import_fs9 = __toESM(require("fs"));
+    import_path13 = __toESM(require("path"));
+    init_middleware();
+    init_zod();
+    router97 = import_express97.default.Router();
+    addDirectorManual_default = router97.post(
+      "/",
+      validateFields({
+        name: external_exports.string(),
+        images: external_exports.array(external_exports.string()),
+        directorManual: external_exports.string(),
+        data: external_exports.array(
+          external_exports.object({
+            label: external_exports.string(),
+            value: external_exports.string(),
+            data: external_exports.string()
+          })
+        )
+      }),
+      async (req, res) => {
+        try {
+          const { name: name28, images, data, directorManual } = req.body;
+          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
+            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
+            return;
+          }
+          const mainPath = utils_default.getPath(["skills", "story_skills", directorManual]);
+          if (import_fs9.default.existsSync(mainPath)) {
+            return res.status(400).send(error50("\u8BF7\u52FF\u586B\u5199\u91CD\u590D\u540D\u79F0\u7684\u89C6\u89C9\u624B\u518C"));
+          }
+          const DATA_MAP3 = [
+            { value: "README" },
+            { value: "director_planning_narrative", subDir: "driector_skills" },
+            { value: "director_storyboard_table_narrative", subDir: "driector_skills" }
+          ];
+          const SUB_DIR_MAP = new Map(DATA_MAP3.map(({ value, subDir }) => [value, subDir ?? ""]));
+          const VALID_KEYS = new Set(DATA_MAP3.map(({ value }) => value));
+          for (const item of data) {
+            if (!VALID_KEYS.has(item.value)) continue;
+            const subDir = SUB_DIR_MAP.get(item.value);
+            const dirArr = subDir ? [mainPath, subDir] : [mainPath];
+            const filePath = utils_default.getPath([...dirArr, `${item.value}.md`]);
+            const fileDir = import_path13.default.dirname(filePath);
+            if (!import_fs9.default.existsSync(fileDir)) {
+              import_fs9.default.mkdirSync(fileDir, { recursive: true });
+            }
+            import_fs9.default.writeFileSync(filePath, item.data, "utf-8");
+          }
+          const imagesDir = import_path13.default.join(mainPath, "images");
+          let existingFiles = [];
+          try {
+            const allFiles = import_fs9.default.readdirSync(imagesDir);
+            existingFiles = allFiles.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f));
+          } catch {
+          }
+          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path13.default.basename(new URL(url4).pathname)));
+          for (const file3 of existingFiles) {
+            if (!retainedFileNames.has(file3)) {
+              const filePath = import_path13.default.join(imagesDir, file3);
+              if (import_fs9.default.existsSync(filePath)) import_fs9.default.unlinkSync(filePath);
+            }
+          }
+          if (!import_fs9.default.existsSync(imagesDir)) {
+            import_fs9.default.mkdirSync(imagesDir, { recursive: true });
+          }
+          for (const item of images) {
+            if (!item.startsWith("http")) {
+              const fileName = `${utils_default.uuid()}.jpg`;
+              const targetPath = import_path13.default.join(imagesDir, fileName);
+              const buffer = Buffer.from(item.replace(/^data:[^;]+;base64,/, ""), "base64");
+              import_fs9.default.writeFileSync(targetPath, buffer);
+            }
+          }
+          res.status(200).send(success3());
+        } catch (err) {
+          res.status(500).send({ error: String(err) });
+        }
+      }
+    );
+  }
+});
+
+// src/routes/project/addProject.ts
+var import_express98, router98, addProject_default;
+var init_addProject = __esm({
+  "src/routes/project/addProject.ts"() {
+    "use strict";
+    import_express98 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router98 = import_express98.default.Router();
+    addProject_default = router98.post(
+      "/",
+      validateFields({
+        projectType: external_exports.string(),
+        name: external_exports.string(),
+        intro: external_exports.string(),
+        type: external_exports.string(),
+        artStyle: external_exports.string(),
+        directorManual: external_exports.string(),
+        videoRatio: external_exports.string(),
+        imageModel: external_exports.string(),
+        videoModel: external_exports.string(),
+        imageQuality: external_exports.string(),
+        mode: external_exports.string()
+      }),
+      async (req, res) => {
+        const { projectType, name: name28, intro, type, directorManual, artStyle, videoRatio, imageModel, videoModel, imageQuality, mode } = req.body;
+        await utils_default.db("o_project").insert({
+          id: Date.now(),
+          projectType,
+          name: name28,
+          intro,
+          type,
+          artStyle,
+          videoRatio,
+          directorManual,
+          userId: 1,
+          imageModel,
+          videoModel,
+          createTime: Date.now(),
+          imageQuality,
+          mode
+        });
+        res.status(200).send(success3({ message: "\u65B0\u589E\u9879\u76EE\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/project/addVisualManual.ts
+var import_express99, import_fs10, import_path14, router99, addVisualManual_default;
+var init_addVisualManual = __esm({
+  "src/routes/project/addVisualManual.ts"() {
+    "use strict";
+    import_express99 = __toESM(require_express2());
+    init_utils3();
+    init_responseFormat();
+    import_fs10 = __toESM(require("fs"));
+    import_path14 = __toESM(require("path"));
+    init_middleware();
+    init_zod();
+    router99 = import_express99.default.Router();
+    addVisualManual_default = router99.post(
+      "/",
+      validateFields({
+        name: external_exports.string(),
+        images: external_exports.array(external_exports.string()),
+        stylePath: external_exports.string(),
+        data: external_exports.array(
+          external_exports.object({
+            label: external_exports.string(),
+            value: external_exports.string(),
+            data: external_exports.string()
+          })
+        )
+      }),
+      async (req, res) => {
+        try {
+          const { name: name28, images, data, stylePath } = req.body;
+          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
+            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
+            return;
+          }
+          const mainPath = utils_default.getPath(["skills", "art_skills", stylePath]);
+          if (import_fs10.default.existsSync(mainPath)) {
+            return res.status(400).send(error50("\u8BF7\u52FF\u586B\u5199\u91CD\u590D\u540D\u79F0\u7684\u89C6\u89C9\u624B\u518C"));
+          }
+          const DATA_MAP3 = [
+            { value: "README" },
+            { value: "prefix" },
+            { value: "art_character", subDir: "art_prompt" },
+            { value: "art_character_derivative", subDir: "art_prompt" },
+            { value: "art_prop", subDir: "art_prompt" },
+            { value: "art_prop_derivative", subDir: "art_prompt" },
+            { value: "art_scene", subDir: "art_prompt" },
+            { value: "art_scene_derivative", subDir: "art_prompt" },
+            { value: "director_storyboard", subDir: "driector_skills" },
+            { value: "art_storyboard_video", subDir: "art_prompt" },
+            { value: "director_planning_style", subDir: "driector_skills" },
+            { value: "director_storyboard_table_style", subDir: "driector_skills" }
+          ];
+          const SUB_DIR_MAP = new Map(DATA_MAP3.map(({ value, subDir }) => [value, subDir ?? ""]));
+          const VALID_KEYS = new Set(DATA_MAP3.map(({ value }) => value));
+          for (const item of data) {
+            if (!VALID_KEYS.has(item.value)) continue;
+            const subDir = SUB_DIR_MAP.get(item.value);
+            const dirArr = subDir ? [mainPath, subDir] : [mainPath];
+            const filePath = utils_default.getPath([...dirArr, `${item.value}.md`]);
+            const fileDir = import_path14.default.dirname(filePath);
+            if (!import_fs10.default.existsSync(fileDir)) {
+              import_fs10.default.mkdirSync(fileDir, { recursive: true });
+            }
+            import_fs10.default.writeFileSync(filePath, item.data, "utf-8");
+          }
+          const imagesDir = import_path14.default.join(mainPath, "images");
+          let existingFiles = [];
+          try {
+            const allFiles = import_fs10.default.readdirSync(imagesDir);
+            existingFiles = allFiles.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f));
+          } catch {
+          }
+          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path14.default.basename(new URL(url4).pathname)));
+          for (const file3 of existingFiles) {
+            if (!retainedFileNames.has(file3)) {
+              const filePath = import_path14.default.join(imagesDir, file3);
+              if (import_fs10.default.existsSync(filePath)) import_fs10.default.unlinkSync(filePath);
+            }
+          }
+          if (!import_fs10.default.existsSync(imagesDir)) {
+            import_fs10.default.mkdirSync(imagesDir, { recursive: true });
+          }
+          for (const item of images) {
+            if (!item.startsWith("http")) {
+              const fileName = `${utils_default.uuid()}.jpg`;
+              const targetPath = import_path14.default.join(imagesDir, fileName);
+              const buffer = Buffer.from(item.replace(/^data:[^;]+;base64,/, ""), "base64");
+              import_fs10.default.writeFileSync(targetPath, buffer);
+            }
+          }
+          res.status(200).send(success3());
+        } catch (err) {
+          res.status(500).send({ error: String(err) });
+        }
+      }
+    );
+  }
+});
+
+// src/routes/project/deleteDirectorManual.ts
+var import_express100, import_promises7, router100, deleteDirectorManual_default;
+var init_deleteDirectorManual = __esm({
+  "src/routes/project/deleteDirectorManual.ts"() {
+    "use strict";
+    import_express100 = __toESM(require_express2());
+    init_utils3();
+    import_promises7 = __toESM(require("node:fs/promises"));
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router100 = import_express100.default.Router();
+    deleteDirectorManual_default = router100.post(
+      "/",
+      validateFields({
+        name: external_exports.string()
+      }),
+      async (req, res) => {
+        try {
+          const { name: name28 } = req.body;
+          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
+            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
+            return;
+          }
+          const artPromptsDir = utils_default.getPath(["skills", "story_skills", name28]);
+          try {
+            const stat = await import_promises7.default.stat(artPromptsDir);
+            if (!stat.isDirectory()) {
+              throw new Error(`${artPromptsDir} \u4E0D\u662F\u6587\u4EF6\u5939`);
+            }
+            await import_promises7.default.rm(artPromptsDir, { recursive: true, force: true });
+          } catch (e) {
+            console.error("[\u5220\u9664\u89C6\u89C9\u624B\u518C] \u5220\u9664\u5931\u8D25:", artPromptsDir, e);
+          }
+          res.status(200).send(success3({ message: "\u5220\u9664\u6210\u529F" }));
+        } catch (err) {
+          res.status(500).send(error50(utils_default.error(err).message || "\u5220\u9664\u5931\u8D25"));
+        }
+      }
+    );
+  }
+});
+
+// src/routes/project/deleteVisualManual.ts
+var import_express101, import_promises8, router101, deleteVisualManual_default;
+var init_deleteVisualManual = __esm({
+  "src/routes/project/deleteVisualManual.ts"() {
+    "use strict";
+    import_express101 = __toESM(require_express2());
+    init_utils3();
+    import_promises8 = __toESM(require("node:fs/promises"));
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router101 = import_express101.default.Router();
+    deleteVisualManual_default = router101.post(
+      "/",
+      validateFields({
+        name: external_exports.string()
+      }),
+      async (req, res) => {
+        try {
+          const { name: name28 } = req.body;
+          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
+            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
+            return;
+          }
+          const artPromptsDir = utils_default.getPath(["skills", "art_skills", name28]);
+          try {
+            const stat = await import_promises8.default.stat(artPromptsDir);
+            if (!stat.isDirectory()) {
+              throw new Error(`${artPromptsDir} \u4E0D\u662F\u6587\u4EF6\u5939`);
+            }
+            await import_promises8.default.rm(artPromptsDir, { recursive: true, force: true });
+          } catch (e) {
+            console.error("[\u5220\u9664\u89C6\u89C9\u624B\u518C] \u5220\u9664\u5931\u8D25:", artPromptsDir, e);
+          }
+          res.status(200).send(success3({ message: "\u5220\u9664\u6210\u529F" }));
+        } catch (err) {
+          res.status(500).send(error50(utils_default.error(err).message || "\u5220\u9664\u5931\u8D25"));
+        }
+      }
+    );
+  }
+});
+
+// src/routes/project/delProject.ts
+var import_express102, router102, delProject_default;
+var init_delProject = __esm({
+  "src/routes/project/delProject.ts"() {
+    "use strict";
+    import_express102 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router102 = import_express102.default.Router();
+    delProject_default = router102.post(
+      "/",
+      validateFields({
+        id: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id: id2 } = req.body;
+        await utils_default.db("o_project").where("id", id2).delete();
+        await utils_default.db("o_agentWorkData").where("projectId", id2).delete();
+        await utils_default.db("o_novel").where("projectId", id2).delete();
+        const scriptData = await utils_default.db("o_script").where("projectId", id2).select("id");
+        const scriptIds = scriptData.map((item) => item.id);
+        if (scriptIds && scriptIds.length > 0) {
+          await utils_default.db("o_scriptAssets").whereIn("scriptId", scriptIds).delete();
+        }
+        await utils_default.db("o_script").where("projectId", id2).delete();
+        await utils_default.db("o_tasks").where("projectId", id2).delete();
+        const storyboardData = await utils_default.db("o_storyboard").where("projectId", id2).select("id");
+        const storyboardIds = storyboardData.map((item) => item.id);
+        if (storyboardIds.length > 0) {
+          await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", storyboardIds).delete();
+        }
+        await utils_default.db("o_storyboard").where("projectId", id2).delete();
+        const assetsData = await utils_default.db("o_assets").where("projectId", id2).select("id");
+        const assetsIds = assetsData.map((item) => item.id);
+        if (assetsIds && assetsIds.length > 0) {
+          await utils_default.db("o_assets").whereIn("id", assetsIds).update({ imageId: null });
+          await utils_default.db("o_image").whereIn("assetsId", assetsIds).delete();
+        }
+        await utils_default.db("o_assets").where("projectId", id2).delete();
+        await utils_default.db("o_videoTrack").where("projectId", id2).delete();
+        await utils_default.db("o_video").where("projectId", id2).delete();
+        await utils_default.db("memories").where("isolationKey", "like", `${id2}:%`).delete();
+        try {
+          await utils_default.oss.deleteDirectory(`${id2}/`);
+          console.log(`\u9879\u76EE ${id2} \u7684OSS\u6587\u4EF6\u5939\u5220\u9664\u6210\u529F`);
+        } catch (error73) {
+          console.log(`\u9879\u76EE ${id2} \u6CA1\u6709\u5BF9\u5E94\u7684OSS\u6587\u4EF6\u5939\uFF0C\u8DF3\u8FC7\u5220\u9664`);
+        }
+        res.status(200).send(success3({ message: "\u5220\u9664\u9879\u76EE\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/project/editDirectorlManual.ts
+var import_express103, import_fs11, import_path15, router103, editDirectorlManual_default;
+var init_editDirectorlManual = __esm({
+  "src/routes/project/editDirectorlManual.ts"() {
+    "use strict";
+    import_express103 = __toESM(require_express2());
+    init_utils3();
+    init_responseFormat();
+    import_fs11 = __toESM(require("fs"));
+    import_path15 = __toESM(require("path"));
+    init_middleware();
+    init_zod();
+    router103 = import_express103.default.Router();
+    editDirectorlManual_default = router103.post(
+      "/",
+      validateFields({
+        name: external_exports.string(),
+        directorManual: external_exports.string(),
+        images: external_exports.array(external_exports.string()),
+        data: external_exports.array(
+          external_exports.object({
+            label: external_exports.string(),
+            value: external_exports.string(),
+            data: external_exports.string()
+          })
+        )
+      }),
+      async (req, res) => {
+        try {
+          const { name: name28, directorManual, images, data } = req.body;
+          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
+            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
+            return;
+          }
+          const mainPath = utils_default.getPath(["skills", "story_skills", directorManual]);
+          if (!import_fs11.default.existsSync(mainPath)) {
+            return res.status(400).send(error50("\u5BFC\u6F14\u624B\u518C\u4E0D\u5B58\u5728"));
+          }
+          const DATA_MAP3 = [
+            { value: "README" },
+            { value: "director_planning_narrative", subDir: "driector_skills" },
+            { value: "director_storyboard_table_narrative", subDir: "driector_skills" }
+          ];
+          const SUB_DIR_MAP = new Map(DATA_MAP3.map(({ value, subDir }) => [value, subDir ?? ""]));
+          const VALID_KEYS = new Set(DATA_MAP3.map(({ value }) => value));
+          for (const item of data) {
+            if (!VALID_KEYS.has(item.value)) continue;
+            const subDir = SUB_DIR_MAP.get(item.value);
+            const dirArr = subDir ? [mainPath, subDir] : [mainPath];
+            const filePath = utils_default.getPath([...dirArr, `${item.value}.md`]);
+            const fileDir = import_path15.default.dirname(filePath);
+            if (!import_fs11.default.existsSync(fileDir)) {
+              import_fs11.default.mkdirSync(fileDir, { recursive: true });
+            }
+            const content = item.value === "README" ? `${name28}
+${item.data}` : item.data;
+            import_fs11.default.writeFileSync(filePath, content, "utf-8");
+          }
+          const imagesDir = import_path15.default.join(mainPath, "images");
+          let existingFiles = [];
+          try {
+            const allFiles = import_fs11.default.readdirSync(imagesDir);
+            existingFiles = allFiles.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f));
+          } catch {
+          }
+          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path15.default.basename(new URL(url4).pathname)));
+          for (const file3 of existingFiles) {
+            if (!retainedFileNames.has(file3)) {
+              const filePath = import_path15.default.join(imagesDir, file3);
+              if (import_fs11.default.existsSync(filePath)) import_fs11.default.unlinkSync(filePath);
+            }
+          }
+          if (!import_fs11.default.existsSync(imagesDir)) {
+            import_fs11.default.mkdirSync(imagesDir, { recursive: true });
+          }
+          for (const item of images) {
+            if (!item.startsWith("http")) {
+              const fileName = `${utils_default.uuid()}.jpg`;
+              const targetPath = import_path15.default.join(imagesDir, fileName);
+              const buffer = Buffer.from(item.replace(/^data:[^;]+;base64,/, ""), "base64");
+              import_fs11.default.writeFileSync(targetPath, buffer);
+            }
+          }
+          res.status(200).send(success3());
+        } catch (err) {
+          res.status(500).send({ error: String(err) });
+        }
+      }
+    );
+  }
+});
+
+// src/routes/project/editProject.ts
+var import_express104, router104, editProject_default;
+var init_editProject = __esm({
+  "src/routes/project/editProject.ts"() {
+    "use strict";
+    import_express104 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router104 = import_express104.default.Router();
+    editProject_default = router104.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        name: external_exports.string(),
+        intro: external_exports.string(),
+        type: external_exports.string(),
+        artStyle: external_exports.string(),
+        directorManual: external_exports.string(),
+        videoRatio: external_exports.string(),
+        imageModel: external_exports.string(),
+        videoModel: external_exports.string(),
+        projectType: external_exports.string(),
+        imageQuality: external_exports.string(),
+        mode: external_exports.string()
+      }),
+      async (req, res) => {
+        const { id: id2, name: name28, intro, type, artStyle, videoRatio, directorManual, imageModel, videoModel, imageQuality, projectType, mode } = req.body;
+        await utils_default.db("o_project").where("id", id2).update({
+          name: name28,
+          intro,
+          type,
+          artStyle,
+          videoRatio,
+          directorManual,
+          imageModel,
+          videoModel,
+          imageQuality,
+          projectType,
+          mode
+        });
+        res.status(200).send(success3({ message: "\u7F16\u8F91\u9879\u76EE\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/project/editVisualManual.ts
+var import_express105, import_fs12, import_path16, router105, editVisualManual_default;
+var init_editVisualManual = __esm({
+  "src/routes/project/editVisualManual.ts"() {
+    "use strict";
+    import_express105 = __toESM(require_express2());
+    init_utils3();
+    init_responseFormat();
+    import_fs12 = __toESM(require("fs"));
+    import_path16 = __toESM(require("path"));
+    init_middleware();
+    init_zod();
+    router105 = import_express105.default.Router();
+    editVisualManual_default = router105.post(
+      "/",
+      validateFields({
+        name: external_exports.string(),
+        stylePath: external_exports.string(),
+        images: external_exports.array(external_exports.string()),
+        data: external_exports.array(
+          external_exports.object({
+            label: external_exports.string(),
+            value: external_exports.string(),
+            data: external_exports.string()
+          })
+        )
+      }),
+      async (req, res) => {
+        try {
+          const { name: name28, stylePath, images, data } = req.body;
+          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
+            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
+            return;
+          }
+          const mainPath = utils_default.getPath(["skills", "art_skills", stylePath]);
+          if (!import_fs12.default.existsSync(mainPath)) {
+            return res.status(400).send(error50("\u89C6\u89C9\u624B\u518C\u4E0D\u5B58\u5728"));
+          }
+          const DATA_MAP3 = [
+            { value: "README" },
+            { value: "prefix" },
+            { value: "art_character", subDir: "art_prompt" },
+            { value: "art_character_derivative", subDir: "art_prompt" },
+            { value: "art_prop", subDir: "art_prompt" },
+            { value: "art_prop_derivative", subDir: "art_prompt" },
+            { value: "art_scene", subDir: "art_prompt" },
+            { value: "art_scene_derivative", subDir: "art_prompt" },
+            { value: "director_storyboard", subDir: "driector_skills" },
+            { value: "art_storyboard_video", subDir: "art_prompt" },
+            { value: "director_planning_style", subDir: "driector_skills" },
+            { value: "director_storyboard_table_style", subDir: "driector_skills" }
+          ];
+          const SUB_DIR_MAP = new Map(DATA_MAP3.map(({ value, subDir }) => [value, subDir ?? ""]));
+          const VALID_KEYS = new Set(DATA_MAP3.map(({ value }) => value));
+          for (const item of data) {
+            if (!VALID_KEYS.has(item.value)) continue;
+            const subDir = SUB_DIR_MAP.get(item.value);
+            const dirArr = subDir ? [mainPath, subDir] : [mainPath];
+            const filePath = utils_default.getPath([...dirArr, `${item.value}.md`]);
+            const fileDir = import_path16.default.dirname(filePath);
+            if (!import_fs12.default.existsSync(fileDir)) {
+              import_fs12.default.mkdirSync(fileDir, { recursive: true });
+            }
+            const content = item.value === "README" ? `${name28}
+${item.data}` : item.data;
+            import_fs12.default.writeFileSync(filePath, content, "utf-8");
+          }
+          const imagesDir = import_path16.default.join(mainPath, "images");
+          let existingFiles = [];
+          try {
+            const allFiles = import_fs12.default.readdirSync(imagesDir);
+            existingFiles = allFiles.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f));
+          } catch {
+          }
+          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path16.default.basename(new URL(url4).pathname)));
+          for (const file3 of existingFiles) {
+            if (!retainedFileNames.has(file3)) {
+              const filePath = import_path16.default.join(imagesDir, file3);
+              if (import_fs12.default.existsSync(filePath)) import_fs12.default.unlinkSync(filePath);
+            }
+          }
+          if (!import_fs12.default.existsSync(imagesDir)) {
+            import_fs12.default.mkdirSync(imagesDir, { recursive: true });
+          }
+          for (const item of images) {
+            if (!item.startsWith("http")) {
+              const fileName = `${utils_default.uuid()}.jpg`;
+              const targetPath = import_path16.default.join(imagesDir, fileName);
+              const buffer = Buffer.from(item.replace(/^data:[^;]+;base64,/, ""), "base64");
+              import_fs12.default.writeFileSync(targetPath, buffer);
+            }
+          }
+          res.status(200).send(success3());
+        } catch (err) {
+          res.status(500).send({ error: String(err) });
+        }
+      }
+    );
+  }
+});
+
+// src/routes/project/getModelDetails.ts
+var import_express106, router106, getModelDetails_default;
+var init_getModelDetails = __esm({
+  "src/routes/project/getModelDetails.ts"() {
+    "use strict";
+    import_express106 = __toESM(require_express2());
+    init_responseFormat();
+    init_utils3();
+    init_zod();
+    init_middleware();
+    router106 = import_express106.default.Router();
+    getModelDetails_default = router106.post(
+      "/",
+      validateFields({
+        key: external_exports.enum(["scriptAgent", "productionAgent"])
+      }),
+      async (req, res) => {
+        const { key } = req.body;
+        const data = await utils_default.db("o_agentDeploy").select("o_agentDeploy.*").where("o_agentDeploy.key", key).first();
+        const [id2, modelName] = data ? data.modelName.split(/:(.+)/) : [];
+        const models2 = await utils_default.vendor.getModelList(id2);
+        const model = models2.find((m) => m.modelName === modelName);
+        if (!model) return res.status(400).send(error50("\u672A\u627E\u5230\u6A21\u578B"));
+        res.status(200).send(success3(model));
+      }
+    );
+  }
+});
+
+// src/routes/project/getProject.ts
+var import_express107, router107, getProject_default;
+var init_getProject = __esm({
+  "src/routes/project/getProject.ts"() {
+    "use strict";
+    import_express107 = __toESM(require_express2());
+    init_utils3();
+    init_responseFormat();
+    router107 = import_express107.default.Router();
+    getProject_default = router107.post("/", async (req, res) => {
+      const data = await utils_default.db("o_project").select("*").where((q) => q.whereNull("projectType").orWhereNotIn("projectType", ["import-image", "import-video"]));
+      res.status(200).send(success3(data));
+    });
+  }
+});
+
+// src/routes/project/getVisualManual.ts
+function readMd(filePath) {
+  try {
+    return import_fs13.default.readFileSync(filePath, "utf-8");
+  } catch {
+    return "";
+  }
+}
+async function readAllImages(imagesDir) {
+  try {
+    const ossPath = utils_default.getPath(import_path17.default.join("skills", "art_skills", imagesDir, "images"));
+    const files = import_fs13.default.readdirSync(ossPath);
+    const images = files.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f)).map((f) => import_path17.default.join("art_skills", imagesDir, "images", f));
+    if (images.length) {
+      return Promise.all(images.map(async (i) => await utils_default.oss.getFileUrl(i, "skills")));
+    } else {
+      return [];
+    }
+  } catch {
+    return [];
+  }
+}
+var import_express108, import_fs13, import_path17, router108, DATA_MAP, getVisualManual_default;
+var init_getVisualManual = __esm({
+  "src/routes/project/getVisualManual.ts"() {
+    "use strict";
+    import_express108 = __toESM(require_express2());
+    init_utils3();
+    init_responseFormat();
+    import_fs13 = __toESM(require("fs"));
+    import_path17 = __toESM(require("path"));
+    router108 = import_express108.default.Router();
+    DATA_MAP = [
+      { label: "README", value: "README" },
+      { label: "\u524D\u7F00", value: "prefix" },
+      { label: "\u89D2\u8272", value: "art_character", subDir: "art_prompt" },
+      { label: "\u89D2\u8272\u884D\u751F", value: "art_character_derivative", subDir: "art_prompt" },
+      { label: "\u9053\u5177", value: "art_prop", subDir: "art_prompt" },
+      { label: "\u9053\u5177\u884D\u751F", value: "art_prop_derivative", subDir: "art_prompt" },
+      { label: "\u573A\u666F", value: "art_scene", subDir: "art_prompt" },
+      { label: "\u573A\u666F\u884D\u751F", value: "art_scene_derivative", subDir: "art_prompt" },
+      { label: "\u5206\u955C", value: "director_storyboard", subDir: "driector_skills" },
+      { label: "\u5206\u955C\u89C6\u9891", value: "art_storyboard_video", subDir: "art_prompt" },
+      { label: "\u6280\u6CD5-\u5BFC\u6F14\u89C4\u5212", value: "director_planning_style", subDir: "driector_skills" },
+      { label: "\u6280\u6CD5-\u5206\u955C\u8868\u8BBE\u8BA1", value: "director_storyboard_table_style", subDir: "driector_skills" }
+    ];
+    getVisualManual_default = router108.post("/", async (req, res) => {
+      try {
+        const artPromptsDir = utils_default.getPath(["skills", "art_skills"]);
+        const styleDirs = import_fs13.default.readdirSync(artPromptsDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
+        const result = await Promise.all(
+          styleDirs.map(async (styleName) => {
+            const styleDir = import_path17.default.join(artPromptsDir, styleName);
+            const images = await readAllImages(styleName);
+            const readmePath = import_path17.default.join(styleDir, "README.md");
+            const readmeContent = import_fs13.default.readFileSync(readmePath, "utf-8");
+            const firstLine = readmeContent.split("\n")[0].replace(/--/g, "");
+            const data = DATA_MAP.map(({ label, value, subDir }) => {
+              let mdPath;
+              if (subDir) {
+                mdPath = import_path17.default.join(styleDir, subDir, `${value}.md`);
+              } else {
+                mdPath = import_path17.default.join(styleDir, `${value}.md`);
+              }
+              return {
+                label,
+                value,
+                data: readMd(mdPath)
+              };
+            });
+            return {
+              name: firstLine,
+              image: images,
+              stylePath: styleName,
+              data
+            };
+          })
+        );
+        res.status(200).send(success3(result));
+      } catch (err) {
+        res.status(500).send(error50(utils_default.error(err).message));
+      }
+    });
+  }
+});
+
+// src/routes/project/queryDirectorManual.ts
+function readMd2(filePath) {
+  try {
+    return import_fs14.default.readFileSync(filePath, "utf-8");
+  } catch {
+    return "";
+  }
+}
+async function readAllImages2(imagesDir) {
+  try {
+    const ossPath = utils_default.getPath(import_path18.default.join("skills", "story_skills", imagesDir, "images"));
+    const files = import_fs14.default.readdirSync(ossPath);
+    const images = files.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f)).map((f) => import_path18.default.join("story_skills", imagesDir, "images", f));
+    if (images.length) {
+      return Promise.all(images.map(async (i) => await utils_default.oss.getFileUrl(i, "skills")));
+    } else {
+      return [];
+    }
+  } catch {
+    return [];
+  }
+}
+var import_express109, import_fs14, import_path18, router109, DATA_MAP2, queryDirectorManual_default;
+var init_queryDirectorManual = __esm({
+  "src/routes/project/queryDirectorManual.ts"() {
+    "use strict";
+    import_express109 = __toESM(require_express2());
+    init_utils3();
+    init_responseFormat();
+    import_fs14 = __toESM(require("fs"));
+    import_path18 = __toESM(require("path"));
+    router109 = import_express109.default.Router();
+    DATA_MAP2 = [
+      { label: "README", value: "README" },
+      { label: "\u5BFC\u6F14\u89C4\u5212", value: "director_planning_narrative", subDir: "driector_skills" },
+      { label: "\u5206\u955C\u8868", value: "director_storyboard_table_narrative", subDir: "driector_skills" }
+    ];
+    queryDirectorManual_default = router109.post("/", async (req, res) => {
+      try {
+        const artPromptsDir = utils_default.getPath(["skills", "story_skills"]);
+        const styleDirs = import_fs14.default.readdirSync(artPromptsDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
+        const result = await Promise.all(
+          styleDirs.map(async (directorManual) => {
+            const styleDir = import_path18.default.join(artPromptsDir, directorManual);
+            const images = await readAllImages2(directorManual);
+            const readmePath = import_path18.default.join(styleDir, "README.md");
+            const readmeContent = import_fs14.default.readFileSync(readmePath, "utf-8");
+            const firstLine = readmeContent.split("\n")[0].replace(/--/g, "");
+            const data = DATA_MAP2.map(({ label, value, subDir }) => {
+              let mdPath;
+              if (subDir) {
+                mdPath = import_path18.default.join(styleDir, subDir, `${value}.md`);
+              } else {
+                mdPath = import_path18.default.join(styleDir, `${value}.md`);
+              }
+              return {
+                label,
+                value,
+                data: readMd2(mdPath)
+              };
+            });
+            return {
+              name: firstLine,
+              image: images,
+              directorManual,
+              data
+            };
+          })
+        );
+        res.status(200).send(success3(result));
+      } catch (err) {
+        res.status(500).send({ error: String(err) });
+      }
+    });
+  }
+});
+
+// src/routes/project/visualManual.ts
+var import_express110, import_fs15, import_path19, router110, visualManual_default;
+var init_visualManual = __esm({
+  "src/routes/project/visualManual.ts"() {
+    "use strict";
+    import_express110 = __toESM(require_express2());
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_getPath();
+    import_fs15 = __toESM(require("fs"));
+    import_path19 = __toESM(require("path"));
+    router110 = import_express110.default.Router();
+    visualManual_default = router110.post(
+      "/",
+      validateFields({
+        type: external_exports.string()
+      }),
+      async (req, res) => {
+        const { type } = req.body;
+        const basePath = getPath_default(["skills", "art_skills", "chinese_sweet_romance"]);
+        const findFile = (dir, target) => {
+          const entries = import_fs15.default.readdirSync(dir, { withFileTypes: true });
+          for (const entry of entries) {
+            const fullPath = import_path19.default.join(dir, entry.name);
+            if (entry.isDirectory()) {
+              const found = findFile(fullPath, target);
+              if (found) return found;
+            } else if (entry.isFile() && entry.name === target) {
+              return fullPath;
+            }
+          }
+          return null;
+        };
+        const filePath = findFile(basePath, `${type}.md`);
+        if (!filePath) {
+          res.status(404).json({ error: `\u672A\u627E\u5230\u5BF9\u5E94\u7684\u6587\u4EF6: ${type}.md` });
+          return;
+        }
+        const content = import_fs15.default.readFileSync(filePath, "utf-8");
+        res.status(200).send(success3(content));
+      }
+    );
+  }
+});
+
+// src/routes/script/addScript.ts
+var import_express111, router111, addScript_default;
+var init_addScript = __esm({
+  "src/routes/script/addScript.ts"() {
+    "use strict";
+    import_express111 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router111 = import_express111.default.Router();
+    addScript_default = router111.post(
+      "/",
+      validateFields({
+        name: external_exports.string(),
+        content: external_exports.string(),
+        projectId: external_exports.number(),
+        assets: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { name: name28, content, projectId, assets } = req.body;
+        const [scriptId] = await utils_default.db("o_script").insert({
+          name: name28,
+          content,
+          projectId,
+          createTime: Date.now()
+        });
+        if (assets.length) {
+          const assetsData = await utils_default.db("o_assets").whereIn("id", assets).select();
+          if (assetsData.length) {
+            const assetsIds = assetsData.map((item) => item.id);
+            const insertData = assetsIds.map((i) => {
+              return {
+                scriptId,
+                assetId: i
+              };
+            });
+            await utils_default.db("o_scriptAssets").insert(insertData);
+          }
+        }
+        res.status(200).send(success3({ message: "\u6DFB\u52A0\u5267\u672C\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/script/batchAddScript.ts
+var import_express112, router112, batchAddScript_default;
+var init_batchAddScript = __esm({
+  "src/routes/script/batchAddScript.ts"() {
+    "use strict";
+    import_express112 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router112 = import_express112.default.Router();
+    batchAddScript_default = router112.post(
+      "/",
+      validateFields({
+        data: external_exports.array(
+          external_exports.object({
+            scriptName: external_exports.string(),
+            scriptData: external_exports.string()
+          })
+        ),
+        projectId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { data, projectId } = req.body;
+        await utils_default.db("o_script").insert(
+          data.map((i) => {
+            return {
+              name: i.scriptName,
+              content: i.scriptData,
+              projectId,
+              createTime: Date.now()
+            };
+          })
+        );
+        res.status(200).send(success3({ message: "\u6DFB\u52A0\u5267\u672C\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/script/delScript.ts
+var import_express113, router113, delScript_default;
+var init_delScript = __esm({
+  "src/routes/script/delScript.ts"() {
     "use strict";
     import_express113 = __toESM(require_express2());
     init_utils3();
     init_zod();
-    import_compressing = __toESM(require_compressing());
+    init_responseFormat();
     init_middleware();
     router113 = import_express113.default.Router();
-    exportScript_default = router113.post(
+    delScript_default = router113.post(
+      "/",
+      validateFields({
+        ids: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { ids } = req.body;
+        const scriptData = await utils_default.db("o_script").whereIn("id", ids);
+        if (scriptData && scriptData.length) {
+          const scriptProjectId = new Set(scriptData.map((item) => item.projectId));
+          await utils_default.db("o_agentWorkData").whereIn("projectId", Array.from(scriptProjectId)).whereIn("episodesId", ids).delete();
+        }
+        const storyboardData = await utils_default.db("o_storyboard").whereIn("scriptId", ids);
+        if (storyboardData.length) {
+          await Promise.all(
+            storyboardData.map(async (item) => {
+              try {
+                item.filePath && await utils_default.oss.deleteFile(item.filePath);
+              } catch (e) {
+              }
+            })
+          );
+          const storyboardIds = storyboardData.map((item) => item.id);
+          await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", storyboardIds).delete();
+        }
+        await utils_default.db("o_scriptAssets").whereIn("scriptId", ids).delete();
+        await utils_default.db("o_script").whereIn("id", ids).delete();
+        await utils_default.db("o_storyboard").whereIn("scriptId", ids).delete();
+        await utils_default.db("o_video").whereIn("scriptId", ids).delete();
+        res.status(200).send(success3({ message: "\u5220\u9664\u5267\u672C\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/script/exportScript.ts
+var import_express114, import_compressing3, router114, exportScript_default;
+var init_exportScript = __esm({
+  "src/routes/script/exportScript.ts"() {
+    "use strict";
+    import_express114 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    import_compressing3 = __toESM(require_compressing());
+    init_middleware();
+    router114 = import_express114.default.Router();
+    exportScript_default = router114.post(
       "/",
       validateFields({
         id: external_exports.array(external_exports.number())
       }),
       async (req, res) => {
-        const { id } = req.body;
-        const scripts = await utils_default.db("o_script").whereIn("id", id);
+        const { id: id2 } = req.body;
+        const scripts = await utils_default.db("o_script").whereIn("id", id2);
         const textList = scripts.map((s) => ({ name: s.name, text: s.content }));
-        const zipStream = new import_compressing.default.zip.Stream();
+        const zipStream = new import_compressing3.default.zip.Stream();
         textList.forEach((item) => {
           zipStream.addEntry(Buffer.from(item.text), { relativePath: `${item.name}.txt` });
         });
@@ -257197,9 +258048,9 @@ ${assetDiscoveryRules}
     });
     if (!result.newAssets.length && !result.existingAssetRefs.length) throw new Error("AI \u672A\u8FD4\u56DE\u4EFB\u4F55\u8D44\u4EA7");
     const add = (key, value, scriptIds) => {
-      if (!scriptIds.length || scriptIds.some((id) => !allowed.has(id))) throw new Error("\u8D44\u4EA7\u5173\u8054\u5267\u672CID\u65E0\u6548");
+      if (!scriptIds.length || scriptIds.some((id2) => !allowed.has(id2))) throw new Error("\u8D44\u4EA7\u5173\u8054\u5267\u672CID\u65E0\u6548");
       const target = targets.get(key) || { ...value, scriptIds: /* @__PURE__ */ new Set() };
-      for (const id of scriptIds) target.scriptIds.add(id);
+      for (const id2 of scriptIds) target.scriptIds.add(id2);
       targets.set(key, target);
     };
     for (const ref of result.existingAssetRefs) {
@@ -257284,8 +258135,8 @@ ${refreshRules}
       let asset = target.old;
       if (!asset) {
         if (await trx("o_assets").where({ projectId, type: target.type, name: target.name }).whereNull("assetsId").first()) throw new Error(`${target.name}\uFF1A\u63D0\u53D6\u671F\u95F4\u65B0\u589E\u4E86\u540C\u540D\u8D44\u4EA7\uFF0C\u8BF7\u91CD\u8BD5`);
-        const [id] = await trx("o_assets").insert({ projectId, type: target.type, name: target.name, describe: "", startTime: Date.now() });
-        asset = await trx("o_assets").where({ id, projectId }).first();
+        const [id2] = await trx("o_assets").insert({ projectId, type: target.type, name: target.name, describe: "", startTime: Date.now() });
+        asset = await trx("o_assets").where({ id: id2, projectId }).first();
         created++;
       }
       const design = designs.get(key);
@@ -257302,16 +258153,16 @@ ${refreshRules}
     return { created, updated, reused: targets.size - created - updated };
   });
 }
-var assetType, discoverySchema, assetDiscoveryRules, visualFields, designSchema, refreshRules;
+var assetType2, discoverySchema, assetDiscoveryRules, visualFields, designSchema, refreshRules;
 var init_scriptAssetExtraction = __esm({
   "src/utils/scriptAssetExtraction.ts"() {
     "use strict";
     init_zod();
     init_dist22();
     init_assetDescriptionVersion();
-    assetType = external_exports.enum(["role", "scene", "tool"]);
+    assetType2 = external_exports.enum(["role", "scene", "tool"]);
     discoverySchema = external_exports.object({
-      newAssets: external_exports.array(external_exports.object({ name: external_exports.string().min(1), desc: external_exports.string().min(1), type: assetType, scriptIds: external_exports.array(external_exports.number()).min(1) })),
+      newAssets: external_exports.array(external_exports.object({ name: external_exports.string().min(1), desc: external_exports.string().min(1), type: assetType2, scriptIds: external_exports.array(external_exports.number()).min(1) })),
       existingAssetRefs: external_exports.array(external_exports.object({ assetId: external_exports.number(), scriptIds: external_exports.array(external_exports.number()).min(1) }))
     });
     assetDiscoveryRules = `\u3010\u8D44\u4EA7\u5165\u9009\u89C4\u5219\uFF5C\u4F18\u5148\u4E8E\u65E7\u6A21\u677F\u7684\u201C\u6240\u6709\u6D89\u53CA\u8D44\u4EA7\u201D\u548C\u5916\u89C2\u8BBE\u8BA1\u8865\u5168\u8981\u6C42\u3011
@@ -257345,18 +258196,18 @@ scriptFacts \u53EA\u8BB0\u4E0E\u672C\u8D44\u4EA7\u6709\u5173\u7684\u660E\u786E\u
 });
 
 // src/routes/script/extractAssets.ts
-var import_express114, router114, assetExtractionDesignRules, extractingProjects, extractAssets_default;
+var import_express115, router115, assetExtractionDesignRules, extractingProjects, extractAssets_default;
 var init_extractAssets = __esm({
   "src/routes/script/extractAssets.ts"() {
     "use strict";
-    import_express114 = __toESM(require_express2());
+    import_express115 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
     init_assetVisualDesignSkill();
     init_scriptAssetExtraction();
-    router114 = import_express114.default.Router();
+    router115 = import_express115.default.Router();
     assetExtractionDesignRules = `
 \u3010\u8D44\u4EA7\u63CF\u8FF0\u5BA1\u7F8E\u8BBE\u8BA1\u89C4\u5219\uFF5C\u9AD8\u4E8E\u65E7\u63D0\u53D6\u6A21\u677F\u4E2D\u7684\u5BBD\u6CDB\u8981\u6C42\u3011
 
@@ -257378,7 +258229,7 @@ var init_extractAssets = __esm({
 - desc \u53EA\u8BB0\u5F55\u7A33\u5B9A\u5916\u5F62\u3001\u7ED3\u6784\u3001\u6750\u8D28\u3001\u989C\u8272\u548C\u8BC6\u522B\u7279\u5F81\uFF1B\u6309\u7F51\u7EDC\u5E7B\u60F3\u8D44\u4EA7\u8BBE\u8BA1\u5F3A\u5316\u8F6E\u5ED3\u3001\u6750\u8D28\u5BF9\u6BD4\u4E0E\u6807\u5FD7\u6027\u7EC6\u8282\u3002\u6301\u63E1\u3001\u653B\u51FB\u3001\u98DE\u9A70\u3001\u5F20\u53E3\u54AC\u51FB\u7B49\u77AC\u65F6\u52A8\u4F5C\u4E0D\u5199\u6210\u6C38\u4E45\u5916\u5F62\u3002
 `.trim();
     extractingProjects = /* @__PURE__ */ new Set();
-    extractAssets_default = router114.post(
+    extractAssets_default = router115.post(
       "/",
       validateFields({
         scriptIds: external_exports.array(external_exports.number()).min(1),
@@ -257417,8 +258268,8 @@ var init_extractAssets = __esm({
 });
 
 // src/routes/script/getAiRegex.ts
-function normalizeAiRegex(text2, sample) {
-  const cleaned = text2.trim().replace(/^```(?:regex|javascript|js)?\s*\r?\n/i, "").replace(/\r?\n```\s*$/, "").trim();
+function normalizeAiRegex(text3, sample) {
+  const cleaned = text3.trim().replace(/^```(?:regex|javascript|js)?\s*\r?\n/i, "").replace(/\r?\n```\s*$/, "").trim();
   if (!cleaned) throw new Error("\u6A21\u578B\u672A\u8BC6\u522B\u5230\u96C6\u6570\u6807\u9898\uFF0C\u8BF7\u624B\u52A8\u8F93\u5165\u62C6\u96C6\u6B63\u5219");
   const literal3 = /^\/([\s\S]*)\/([a-z]*)$/i.exec(cleaned);
   const pattern = literal3 ? literal3[1] : cleaned;
@@ -257451,17 +258302,17 @@ function normalizeAiRegex(text2, sample) {
   if (!found) throw new Error("AI\u8FD4\u56DE\u7684\u6B63\u5219\u672A\u5339\u914D\u5230\u6837\u672C\u4E2D\u7684\u96C6\u6807\u9898\uFF0C\u8BF7\u68C0\u67E5\u5267\u672C\u683C\u5F0F");
   return `/${pattern}/${regex.flags}`;
 }
-var import_express115, router115, getAiRegex_default;
+var import_express116, router116, getAiRegex_default;
 var init_getAiRegex = __esm({
   "src/routes/script/getAiRegex.ts"() {
     "use strict";
-    import_express115 = __toESM(require_express2());
+    import_express116 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router115 = import_express115.default.Router();
-    getAiRegex_default = router115.post(
+    router116 = import_express116.default.Router();
+    getAiRegex_default = router116.post(
       "/",
       validateFields({
         content: external_exports.string().min(1).max(6e3)
@@ -257493,17 +258344,17 @@ var init_getAiRegex = __esm({
 });
 
 // src/routes/script/getScrptApi.ts
-var import_express116, router116, getScrptApi_default;
+var import_express117, router117, getScrptApi_default;
 var init_getScrptApi = __esm({
   "src/routes/script/getScrptApi.ts"() {
     "use strict";
-    import_express116 = __toESM(require_express2());
+    import_express117 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router116 = import_express116.default.Router();
-    getScrptApi_default = router116.post(
+    router117 = import_express117.default.Router();
+    getScrptApi_default = router117.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -257544,17 +258395,17 @@ var init_getScrptApi = __esm({
 });
 
 // src/routes/script/pollScriptAssets.ts
-var import_express117, router117, pollScriptAssets_default;
+var import_express118, router118, pollScriptAssets_default;
 var init_pollScriptAssets = __esm({
   "src/routes/script/pollScriptAssets.ts"() {
     "use strict";
-    import_express117 = __toESM(require_express2());
+    import_express118 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router117 = import_express117.default.Router();
-    pollScriptAssets_default = router117.post(
+    router118 = import_express118.default.Router();
+    pollScriptAssets_default = router118.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -257569,17 +258420,17 @@ var init_pollScriptAssets = __esm({
 });
 
 // src/routes/script/updateScript.ts
-var import_express118, router118, updateScript_default;
+var import_express119, router119, updateScript_default;
 var init_updateScript = __esm({
   "src/routes/script/updateScript.ts"() {
     "use strict";
-    import_express118 = __toESM(require_express2());
+    import_express119 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router118 = import_express118.default.Router();
-    updateScript_default = router118.post(
+    router119 = import_express119.default.Router();
+    updateScript_default = router119.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -257588,18 +258439,18 @@ var init_updateScript = __esm({
         assets: external_exports.array(external_exports.number())
       }),
       async (req, res) => {
-        const { id, name: name28, content, assets } = req.body;
-        await utils_default.db("o_script").where({ id }).update({
+        const { id: id2, name: name28, content, assets } = req.body;
+        await utils_default.db("o_script").where({ id: id2 }).update({
           name: name28,
           content
         });
         if (assets.length) {
           const assetsData = await utils_default.db("o_assets").whereIn("id", assets).select();
-          await utils_default.db("o_scriptAssets").where({ scriptId: id }).delete();
+          await utils_default.db("o_scriptAssets").where({ scriptId: id2 }).delete();
           if (assetsData.length) {
             const insertData = assetsData.map((item) => {
               return {
-                scriptId: id,
+                scriptId: id2,
                 assetId: item.id
               };
             });
@@ -257613,17 +258464,17 @@ var init_updateScript = __esm({
 });
 
 // src/routes/scriptAgent/getPlanData.ts
-var import_express119, router119, getPlanData_default;
+var import_express120, router120, getPlanData_default;
 var init_getPlanData = __esm({
   "src/routes/scriptAgent/getPlanData.ts"() {
     "use strict";
-    import_express119 = __toESM(require_express2());
+    import_express120 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router119 = import_express119.default.Router();
-    getPlanData_default = router119.post(
+    router120 = import_express120.default.Router();
+    getPlanData_default = router120.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -257638,12 +258489,12 @@ var init_getPlanData = __esm({
             adaptationStrategy: "",
             script: []
           };
-          const [id] = await utils_default.db("o_agentWorkData").insert({
+          const [id2] = await utils_default.db("o_agentWorkData").insert({
             projectId,
             key: agentType,
             data: JSON.stringify(initialData)
           });
-          return res.status(200).send(success3({ data: initialData, id }));
+          return res.status(200).send(success3({ data: initialData, id: id2 }));
         }
         const data = JSON.parse(row.data ?? "{}");
         data.script = await utils_default.db("o_script").where({ projectId }).select("id", "name", "content");
@@ -257654,17 +258505,17 @@ var init_getPlanData = __esm({
 });
 
 // src/routes/scriptAgent/setPlanData.ts
-var import_express120, router120, setPlanData_default;
+var import_express121, router121, setPlanData_default;
 var init_setPlanData = __esm({
   "src/routes/scriptAgent/setPlanData.ts"() {
     "use strict";
-    import_express120 = __toESM(require_express2());
+    import_express121 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router120 = import_express120.default.Router();
-    setPlanData_default = router120.post(
+    router121 = import_express121.default.Router();
+    setPlanData_default = router121.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -257711,17 +258562,17 @@ var init_setPlanData = __esm({
 });
 
 // src/routes/scriptAgent/updateData.ts
-var import_express121, router121, updateData_default;
+var import_express122, router122, updateData_default;
 var init_updateData = __esm({
   "src/routes/scriptAgent/updateData.ts"() {
     "use strict";
-    import_express121 = __toESM(require_express2());
+    import_express122 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router121 = import_express121.default.Router();
-    updateData_default = router121.post(
+    router122 = import_express122.default.Router();
+    updateData_default = router122.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -257737,8 +258588,8 @@ var init_updateData = __esm({
         })
       }),
       async (req, res) => {
-        const { id, data } = req.body;
-        await utils_default.db("o_agentWorkData").where({ id }).update({
+        const { id: id2, data } = req.body;
+        await utils_default.db("o_agentWorkData").where({ id: id2 }).update({
           data: JSON.stringify(data)
         });
         res.status(200).send(success3("\u66F4\u65B0\u6210\u529F"));
@@ -257748,17 +258599,17 @@ var init_updateData = __esm({
 });
 
 // src/routes/setting/about/checkUpdate.ts
-var import_express122, import_fs16, import_path20, router122, APP_VERSION2, checkUpdate_default;
+var import_express123, import_fs16, import_path20, router123, APP_VERSION2, checkUpdate_default;
 var init_checkUpdate = __esm({
   "src/routes/setting/about/checkUpdate.ts"() {
     "use strict";
-    import_express122 = __toESM(require_express2());
+    import_express123 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_zod();
     import_fs16 = __toESM(require("fs"));
     import_path20 = __toESM(require("path"));
-    router122 = import_express122.default.Router();
+    router123 = import_express123.default.Router();
     APP_VERSION2 = (() => {
       if (true) {
         return "1.1.8";
@@ -257767,7 +258618,7 @@ var init_checkUpdate = __esm({
       const pkg = JSON.parse(import_fs16.default.readFileSync(pkgPath, "utf8"));
       return pkg.version;
     })();
-    checkUpdate_default = router122.post(
+    checkUpdate_default = router123.post(
       "/",
       validateFields({
         source: external_exports.enum(["toonflow", "github", "gitee", "atomgit"]),
@@ -257809,20 +258660,20 @@ var init_checkUpdate = __esm({
 });
 
 // src/routes/setting/about/downloadApp.ts
-var import_express123, import_fs17, import_compressing2, router123, downloadApp_default;
+var import_express124, import_fs17, import_compressing4, router124, downloadApp_default;
 var init_downloadApp = __esm({
   "src/routes/setting/about/downloadApp.ts"() {
     "use strict";
-    import_express123 = __toESM(require_express2());
+    import_express124 = __toESM(require_express2());
     init_zod();
     init_middleware();
     init_utils3();
     import_fs17 = __toESM(require("fs"));
     init_axios2();
-    import_compressing2 = __toESM(require_compressing());
+    import_compressing4 = __toESM(require_compressing());
     init_responseFormat();
-    router123 = import_express123.default.Router();
-    downloadApp_default = router123.post(
+    router124 = import_express124.default.Router();
+    downloadApp_default = router124.post(
       "/",
       validateFields({
         url: zod_default.url(),
@@ -257836,9 +258687,9 @@ var init_downloadApp = __esm({
         } else {
           const rootDir = utils_default.getPath(["temp"]);
           import_fs17.default.mkdirSync(rootDir, { recursive: true });
-          const zip = await axios_default.get(url4, { responseType: "arraybuffer" }).then((res2) => res2.data);
-          import_fs17.default.writeFileSync(`${rootDir}/latest.zip`, zip);
-          await import_compressing2.default.zip.uncompress(`${rootDir}/latest.zip`, rootDir);
+          const zip3 = await axios_default.get(url4, { responseType: "arraybuffer" }).then((res2) => res2.data);
+          import_fs17.default.writeFileSync(`${rootDir}/latest.zip`, zip3);
+          await import_compressing4.default.zip.uncompress(`${rootDir}/latest.zip`, rootDir);
           const dataDir = utils_default.getPath();
           import_fs17.default.cpSync(rootDir, dataDir, { recursive: true, force: true });
           import_fs17.default.rmSync(rootDir, { recursive: true, force: true });
@@ -257850,17 +258701,17 @@ var init_downloadApp = __esm({
 });
 
 // src/routes/setting/agentDeploy/agentSetKey.ts
-var import_express124, router124, agentSetKey_default;
+var import_express125, router125, agentSetKey_default;
 var init_agentSetKey = __esm({
   "src/routes/setting/agentDeploy/agentSetKey.ts"() {
     "use strict";
-    import_express124 = __toESM(require_express2());
+    import_express125 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router124 = import_express124.default.Router();
-    agentSetKey_default = router124.post(
+    router125 = import_express125.default.Router();
+    agentSetKey_default = router125.post(
       "/",
       validateFields({
         key: external_exports.string().optional()
@@ -257909,17 +258760,17 @@ var init_agentSetKey = __esm({
 });
 
 // src/routes/setting/agentDeploy/deployAgentModel.ts
-var import_express125, router125, deployAgentModel_default;
+var import_express126, router126, deployAgentModel_default;
 var init_deployAgentModel = __esm({
   "src/routes/setting/agentDeploy/deployAgentModel.ts"() {
     "use strict";
-    import_express125 = __toESM(require_express2());
+    import_express126 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router125 = import_express125.default.Router();
-    deployAgentModel_default = router125.post(
+    router126 = import_express126.default.Router();
+    deployAgentModel_default = router126.post(
       "/",
       validateFields({
         items: external_exports.array(
@@ -257938,8 +258789,8 @@ var init_deployAgentModel = __esm({
       async (req, res) => {
         const { items } = req.body;
         for (const item of items) {
-          const { id, name: name28, model, modelName, vendorId, desc, temperature, maxOutputTokens } = item;
-          await utils_default.db("o_agentDeploy").where({ id }).update({ id, name: name28, model, modelName, vendorId, desc, temperature, maxOutputTokens });
+          const { id: id2, name: name28, model, modelName, vendorId, desc, temperature, maxOutputTokens } = item;
+          await utils_default.db("o_agentDeploy").where({ id: id2 }).update({ id: id2, name: name28, model, modelName, vendorId, desc, temperature, maxOutputTokens });
         }
         res.status(200).send(success3("\u6279\u91CF\u914D\u7F6E\u6210\u529F"));
       }
@@ -257948,15 +258799,15 @@ var init_deployAgentModel = __esm({
 });
 
 // src/routes/setting/agentDeploy/getAgentDeploy.ts
-var import_express126, router126, getAgentDeploy_default;
+var import_express127, router127, getAgentDeploy_default;
 var init_getAgentDeploy = __esm({
   "src/routes/setting/agentDeploy/getAgentDeploy.ts"() {
     "use strict";
-    import_express126 = __toESM(require_express2());
+    import_express127 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router126 = import_express126.default.Router();
-    getAgentDeploy_default = router126.post("/", async (req, res) => {
+    router127 = import_express127.default.Router();
+    getAgentDeploy_default = router127.post("/", async (req, res) => {
       const allData = await utils_default.db("o_agentDeploy").leftJoin("o_vendorConfig", "o_vendorConfig.id", "o_agentDeploy.vendorId").select("o_agentDeploy.*");
       const qrdinaryData = allData.filter((item) => !item.key?.includes(":"));
       const advancedData = allData.filter((item) => item.key?.includes(":") || item.key == "universalAi");
@@ -257966,15 +258817,15 @@ var init_getAgentDeploy = __esm({
 });
 
 // src/routes/setting/agentDeploy/getAgentUseMode.ts
-var import_express127, router127, getAgentUseMode_default;
+var import_express128, router128, getAgentUseMode_default;
 var init_getAgentUseMode = __esm({
   "src/routes/setting/agentDeploy/getAgentUseMode.ts"() {
     "use strict";
-    import_express127 = __toESM(require_express2());
+    import_express128 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router127 = import_express127.default.Router();
-    getAgentUseMode_default = router127.get("/", async (req, res) => {
+    router128 = import_express128.default.Router();
+    getAgentUseMode_default = router128.get("/", async (req, res) => {
       const useMode = await utils_default.db("o_setting").where("key", "agentUseMode").first();
       console.log("%c Line:9 \u{1F353} useMode", "background:#33a5ff", useMode);
       res.status(200).send(success3(useMode?.value || "0"));
@@ -257983,17 +258834,17 @@ var init_getAgentUseMode = __esm({
 });
 
 // src/routes/setting/agentDeploy/updateAgentModel.ts
-var import_express128, router128, updateAgentModel_default;
+var import_express129, router129, updateAgentModel_default;
 var init_updateAgentModel = __esm({
   "src/routes/setting/agentDeploy/updateAgentModel.ts"() {
     "use strict";
-    import_express128 = __toESM(require_express2());
+    import_express129 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router128 = import_express128.default.Router();
-    updateAgentModel_default = router128.post(
+    router129 = import_express129.default.Router();
+    updateAgentModel_default = router129.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -258006,8 +258857,8 @@ var init_updateAgentModel = __esm({
         maxOutputTokens: external_exports.number().optional()
       }),
       async (req, res) => {
-        const { id, name: name28, model, modelName, vendorId, desc, temperature, maxOutputTokens } = req.body;
-        await utils_default.db("o_agentDeploy").where({ id }).update({ id, name: name28, model, modelName, vendorId, desc, temperature, maxOutputTokens });
+        const { id: id2, name: name28, model, modelName, vendorId, desc, temperature, maxOutputTokens } = req.body;
+        await utils_default.db("o_agentDeploy").where({ id: id2 }).update({ id: id2, name: name28, model, modelName, vendorId, desc, temperature, maxOutputTokens });
         res.status(200).send(success3("\u914D\u7F6E\u6210\u529F"));
       }
     );
@@ -258015,17 +258866,17 @@ var init_updateAgentModel = __esm({
 });
 
 // src/routes/setting/agentDeploy/updateUseMode.ts
-var import_express129, router129, updateUseMode_default;
+var import_express130, router130, updateUseMode_default;
 var init_updateUseMode = __esm({
   "src/routes/setting/agentDeploy/updateUseMode.ts"() {
     "use strict";
-    import_express129 = __toESM(require_express2());
+    import_express130 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router129 = import_express129.default.Router();
-    updateUseMode_default = router129.post(
+    router130 = import_express130.default.Router();
+    updateUseMode_default = router130.post(
       "/",
       validateFields({
         agentUseMode: external_exports.string()
@@ -258042,16 +258893,16 @@ var init_updateUseMode = __esm({
 });
 
 // src/routes/setting/dbConfig/clearData.ts
-var import_express130, router130, clearData_default;
+var import_express131, router131, clearData_default;
 var init_clearData = __esm({
   "src/routes/setting/dbConfig/clearData.ts"() {
     "use strict";
-    import_express130 = __toESM(require_express2());
+    import_express131 = __toESM(require_express2());
     init_responseFormat();
     init_db();
     init_initDB();
-    router130 = import_express130.default.Router();
-    clearData_default = router130.get("/", async (req, res) => {
+    router131 = import_express131.default.Router();
+    clearData_default = router131.get("/", async (req, res) => {
       try {
         const tables = await db.raw(
           `SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'knex_%'`
@@ -258071,15 +258922,15 @@ var init_clearData = __esm({
 });
 
 // src/routes/setting/dbConfig/clearTable.ts
-var import_express131, router131, clearTable_default;
+var import_express132, router132, clearTable_default;
 var init_clearTable = __esm({
   "src/routes/setting/dbConfig/clearTable.ts"() {
     "use strict";
-    import_express131 = __toESM(require_express2());
+    import_express132 = __toESM(require_express2());
     init_responseFormat();
     init_db();
-    router131 = import_express131.default.Router();
-    clearTable_default = router131.post("/", async (req, res) => {
+    router132 = import_express132.default.Router();
+    clearTable_default = router132.post("/", async (req, res) => {
       try {
         const { tableName } = req.body;
         if (!tableName || typeof tableName !== "string") {
@@ -258102,15 +258953,15 @@ var init_clearTable = __esm({
 });
 
 // src/routes/setting/dbConfig/dbInfo.ts
-var import_express132, router132, dbInfo_default;
+var import_express133, router133, dbInfo_default;
 var init_dbInfo = __esm({
   "src/routes/setting/dbConfig/dbInfo.ts"() {
     "use strict";
-    import_express132 = __toESM(require_express2());
+    import_express133 = __toESM(require_express2());
     init_responseFormat();
     init_db();
-    router132 = import_express132.default.Router();
-    dbInfo_default = router132.get("/", async (req, res) => {
+    router133 = import_express133.default.Router();
+    dbInfo_default = router133.get("/", async (req, res) => {
       try {
         const tables = await db.raw(
           `SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'knex_%'`
@@ -258132,15 +258983,15 @@ var init_dbInfo = __esm({
 });
 
 // src/routes/setting/dbConfig/exportData.ts
-var import_express133, router133, exportData_default;
+var import_express134, router134, exportData_default;
 var init_exportData = __esm({
   "src/routes/setting/dbConfig/exportData.ts"() {
     "use strict";
-    import_express133 = __toESM(require_express2());
+    import_express134 = __toESM(require_express2());
     init_responseFormat();
     init_db();
-    router133 = import_express133.default.Router();
-    exportData_default = router133.get("/", async (req, res) => {
+    router134 = import_express134.default.Router();
+    exportData_default = router134.get("/", async (req, res) => {
       try {
         const tables = await db.raw(
           `SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'knex_%'`
@@ -258164,16 +259015,16 @@ var init_exportData = __esm({
 });
 
 // src/routes/setting/dbConfig/importData.ts
-var import_express134, router134, importData_default;
+var import_express135, router135, importData_default;
 var init_importData = __esm({
   "src/routes/setting/dbConfig/importData.ts"() {
     "use strict";
-    import_express134 = __toESM(require_express2());
+    import_express135 = __toESM(require_express2());
     init_responseFormat();
     init_db();
     init_initDB();
-    router134 = import_express134.default.Router();
-    importData_default = router134.post("/", async (req, res) => {
+    router135 = import_express135.default.Router();
+    importData_default = router135.post("/", async (req, res) => {
       try {
         const { tables: importTables } = req.body;
         if (!importTables || typeof importTables !== "object") {
@@ -258212,15 +259063,15 @@ var init_importData = __esm({
 });
 
 // src/routes/setting/dev/getSwitchAiDevTool.ts
-var import_express135, router135, getSwitchAiDevTool_default;
+var import_express136, router136, getSwitchAiDevTool_default;
 var init_getSwitchAiDevTool = __esm({
   "src/routes/setting/dev/getSwitchAiDevTool.ts"() {
     "use strict";
-    import_express135 = __toESM(require_express2());
+    import_express136 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router135 = import_express135.default.Router();
-    getSwitchAiDevTool_default = router135.get("/", async (req, res) => {
+    router136 = import_express136.default.Router();
+    getSwitchAiDevTool_default = router136.get("/", async (req, res) => {
       const switchAiDevTool = await utils_default.db("o_setting").where("key", "switchAiDevTool").first();
       res.status(200).send(success3(switchAiDevTool?.value || "0"));
     });
@@ -258228,17 +259079,17 @@ var init_getSwitchAiDevTool = __esm({
 });
 
 // src/routes/setting/dev/updateSwitchAiDevTool.ts
-var import_express136, router136, updateSwitchAiDevTool_default;
+var import_express137, router137, updateSwitchAiDevTool_default;
 var init_updateSwitchAiDevTool = __esm({
   "src/routes/setting/dev/updateSwitchAiDevTool.ts"() {
     "use strict";
-    import_express136 = __toESM(require_express2());
+    import_express137 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router136 = import_express136.default.Router();
-    updateSwitchAiDevTool_default = router136.post(
+    router137 = import_express137.default.Router();
+    updateSwitchAiDevTool_default = router137.post(
       "/",
       validateFields({
         switchAiDevTool: external_exports.string()
@@ -258255,19 +259106,19 @@ var init_updateSwitchAiDevTool = __esm({
 });
 
 // src/routes/setting/fileManagement/openFolder.ts
-var import_express137, import_child_process, router137, openFolder_default;
+var import_express138, import_child_process, router138, openFolder_default;
 var init_openFolder = __esm({
   "src/routes/setting/fileManagement/openFolder.ts"() {
     "use strict";
-    import_express137 = __toESM(require_express2());
+    import_express138 = __toESM(require_express2());
     init_zod();
     import_child_process = require("child_process");
     init_responseFormat();
     init_middleware();
     init_getPath();
     init_utils3();
-    router137 = import_express137.default.Router();
-    openFolder_default = router137.post(
+    router138 = import_express138.default.Router();
+    openFolder_default = router138.post(
       "/",
       validateFields({
         path: external_exports.string()
@@ -258292,14 +259143,14 @@ var init_openFolder = __esm({
 });
 
 // src/routes/setting/getTextModel.ts
-var import_express138, router138, getTextModel_default;
+var import_express139, router139, getTextModel_default;
 var init_getTextModel = __esm({
   "src/routes/setting/getTextModel.ts"() {
     "use strict";
-    import_express138 = __toESM(require_express2());
+    import_express139 = __toESM(require_express2());
     init_responseFormat();
-    router138 = import_express138.default.Router();
-    getTextModel_default = router138.post(
+    router139 = import_express139.default.Router();
+    getTextModel_default = router139.post(
       "/",
       async (req, res) => {
         res.status(200).send(success3("123"));
@@ -258309,15 +259160,15 @@ var init_getTextModel = __esm({
 });
 
 // src/routes/setting/loginConfig/getUser.ts
-var import_express139, router139, getUser_default;
+var import_express140, router140, getUser_default;
 var init_getUser = __esm({
   "src/routes/setting/loginConfig/getUser.ts"() {
     "use strict";
-    import_express139 = __toESM(require_express2());
+    import_express140 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router139 = import_express139.default.Router();
-    getUser_default = router139.get("/", async (req, res) => {
+    router140 = import_express140.default.Router();
+    getUser_default = router140.get("/", async (req, res) => {
       const data = await utils_default.db("o_user").select("*").first();
       res.status(200).send(success3(data));
     });
@@ -258325,17 +259176,17 @@ var init_getUser = __esm({
 });
 
 // src/routes/setting/loginConfig/updateUserPwd.ts
-var import_express140, router140, updateUserPwd_default;
+var import_express141, router141, updateUserPwd_default;
 var init_updateUserPwd = __esm({
   "src/routes/setting/loginConfig/updateUserPwd.ts"() {
     "use strict";
-    import_express140 = __toESM(require_express2());
+    import_express141 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router140 = import_express140.default.Router();
-    updateUserPwd_default = router140.post(
+    router141 = import_express141.default.Router();
+    updateUserPwd_default = router141.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -258343,8 +259194,8 @@ var init_updateUserPwd = __esm({
         id: external_exports.number()
       }),
       async (req, res) => {
-        const { name: name28, password, id } = req.body;
-        await utils_default.db("o_user").where("id", id).update({
+        const { name: name28, password, id: id2 } = req.body;
+        await utils_default.db("o_user").where("id", id2).update({
           name: name28,
           password
         });
@@ -258355,15 +259206,15 @@ var init_updateUserPwd = __esm({
 });
 
 // src/routes/setting/memoryConfig/delAllMemory.ts
-var import_express141, router141, delAllMemory_default;
+var import_express142, router142, delAllMemory_default;
 var init_delAllMemory = __esm({
   "src/routes/setting/memoryConfig/delAllMemory.ts"() {
     "use strict";
-    import_express141 = __toESM(require_express2());
+    import_express142 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router141 = import_express141.default.Router();
-    delAllMemory_default = router141.post("/", async (req, res) => {
+    router142 = import_express142.default.Router();
+    delAllMemory_default = router142.post("/", async (req, res) => {
       await utils_default.db("memories").del();
       res.status(200).send(success3(true));
     });
@@ -258371,14 +259222,14 @@ var init_delAllMemory = __esm({
 });
 
 // src/routes/setting/memoryConfig/getMemory.ts
-var import_express142, router142, KEYS, NUMBER_KEYS, BOOLEAN_KEYS, getMemory_default2;
+var import_express143, router143, KEYS, NUMBER_KEYS, BOOLEAN_KEYS, getMemory_default2;
 var init_getMemory2 = __esm({
   "src/routes/setting/memoryConfig/getMemory.ts"() {
     "use strict";
-    import_express142 = __toESM(require_express2());
+    import_express143 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router142 = import_express142.default.Router();
+    router143 = import_express143.default.Router();
     KEYS = [
       "messagesPerSummary",
       "shortTermLimit",
@@ -258410,7 +259261,7 @@ var init_getMemory2 = __esm({
       "memoryVectorScanPageSize"
     ]);
     BOOLEAN_KEYS = /* @__PURE__ */ new Set(["memoryHybridRetrieval", "memoryRerankerEnabled"]);
-    getMemory_default2 = router142.get("/", async (_req, res) => {
+    getMemory_default2 = router143.get("/", async (_req, res) => {
       try {
         const settingData = await utils_default.db("o_setting").whereIn("key", [...KEYS]).select("key", "value");
         const memoryObj = {};
@@ -258437,18 +259288,18 @@ var init_getMemory2 = __esm({
 });
 
 // src/routes/setting/memoryConfig/sureMemory.ts
-var import_express143, router143, localRerankerUrl, sureMemory_default;
+var import_express144, router144, localRerankerUrl, sureMemory_default;
 var init_sureMemory = __esm({
   "src/routes/setting/memoryConfig/sureMemory.ts"() {
     "use strict";
-    import_express143 = __toESM(require_express2());
+    import_express144 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
     init_embedding();
     init_ollamaEmbedding();
-    router143 = import_express143.default.Router();
+    router144 = import_express144.default.Router();
     localRerankerUrl = external_exports.string().url().max(256).refine((value) => {
       try {
         const url4 = new URL(value);
@@ -258457,7 +259308,7 @@ var init_sureMemory = __esm({
         return false;
       }
     }, "Reranker \u53EA\u5141\u8BB8\u4F7F\u7528\u672C\u673A HTTP \u5730\u5740");
-    sureMemory_default = router143.post(
+    sureMemory_default = router144.post(
       "/",
       validateFields({
         messagesPerSummary: external_exports.number().int().min(1).max(200),
@@ -258529,17 +259380,17 @@ var init_sureMemory = __esm({
 });
 
 // src/routes/setting/modelMap/bindingPrompt.ts
-var import_express144, router144, bindingPrompt_default;
+var import_express145, router145, bindingPrompt_default;
 var init_bindingPrompt = __esm({
   "src/routes/setting/modelMap/bindingPrompt.ts"() {
     "use strict";
-    import_express144 = __toESM(require_express2());
+    import_express145 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router144 = import_express144.default.Router();
-    bindingPrompt_default = router144.post(
+    router145 = import_express145.default.Router();
+    bindingPrompt_default = router145.post(
       "/",
       validateFields({
         vendorId: external_exports.string(),
@@ -258563,19 +259414,19 @@ var init_bindingPrompt = __esm({
 });
 
 // src/routes/setting/modelMap/deletePrompt.ts
-var import_express145, import_promises9, import_path21, router145, deletePrompt_default;
+var import_express146, import_promises9, import_path21, router146, deletePrompt_default;
 var init_deletePrompt = __esm({
   "src/routes/setting/modelMap/deletePrompt.ts"() {
     "use strict";
-    import_express145 = __toESM(require_express2());
+    import_express146 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
     import_promises9 = __toESM(require("fs/promises"));
     import_path21 = __toESM(require("path"));
-    router145 = import_express145.default.Router();
-    deletePrompt_default = router145.post(
+    router146 = import_express146.default.Router();
+    deletePrompt_default = router146.post(
       "/",
       validateFields({
         path: external_exports.string()
@@ -258601,15 +259452,15 @@ var init_deletePrompt = __esm({
 });
 
 // src/routes/setting/modelMap/getImageAndVideoModel.ts
-var import_express146, router146, getImageAndVideoModel_default;
+var import_express147, router147, getImageAndVideoModel_default;
 var init_getImageAndVideoModel = __esm({
   "src/routes/setting/modelMap/getImageAndVideoModel.ts"() {
     "use strict";
-    import_express146 = __toESM(require_express2());
+    import_express147 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router146 = import_express146.default.Router();
-    getImageAndVideoModel_default = router146.post("/", async (req, res) => {
+    router147 = import_express147.default.Router();
+    getImageAndVideoModel_default = router147.post("/", async (req, res) => {
       const dataList = await utils_default.db("o_vendorConfig").select("id").where("enable", 1);
       if (!dataList || dataList.length === 0) {
         return res.status(404).send({ error: "\u6A21\u578B\u672A\u627E\u5230" });
@@ -258619,8 +259470,8 @@ var init_getImageAndVideoModel = __esm({
           const vendor = utils_default.vendor.getVendor(item.id);
           const promptList = await utils_default.db("o_modelPrompt").andWhere("vendorId", vendor.id).select("*");
           const promptMap = new Map(promptList.map((p3) => [p3.model, { fileName: p3.fileName, path: p3.path }]));
-          const models = await utils_default.vendor.getModelList(item.id);
-          const filteredModels = models.filter((m) => m.type === "video").map((m) => ({
+          const models2 = await utils_default.vendor.getModelList(item.id);
+          const filteredModels = models2.filter((m) => m.type === "video").map((m) => ({
             name: m.name,
             type: m.type,
             model: m.modelName,
@@ -258639,18 +259490,18 @@ var init_getImageAndVideoModel = __esm({
 });
 
 // src/routes/setting/modelMap/getPromptList.ts
-var import_express147, import_fast_glob3, import_promises10, import_path22, router147, getPromptList_default;
+var import_express148, import_fast_glob3, import_promises10, import_path22, router148, getPromptList_default;
 var init_getPromptList = __esm({
   "src/routes/setting/modelMap/getPromptList.ts"() {
     "use strict";
-    import_express147 = __toESM(require_express2());
+    import_express148 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     import_fast_glob3 = __toESM(require_out4());
     import_promises10 = __toESM(require("fs/promises"));
     import_path22 = __toESM(require("path"));
-    router147 = import_express147.default.Router();
-    getPromptList_default = router147.get("/", async (req, res) => {
+    router148 = import_express148.default.Router();
+    getPromptList_default = router148.get("/", async (req, res) => {
       const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
       const entries = await (0, import_fast_glob3.default)("**/*.md", {
         cwd: modelPromptRoot.replace(/\\/g, "/"),
@@ -258671,19 +259522,19 @@ var init_getPromptList = __esm({
 });
 
 // src/routes/setting/modelMap/savePrompt.ts
-var import_express148, import_promises11, import_path23, router148, savePrompt_default;
+var import_express149, import_promises11, import_path23, router149, savePrompt_default;
 var init_savePrompt = __esm({
   "src/routes/setting/modelMap/savePrompt.ts"() {
     "use strict";
-    import_express148 = __toESM(require_express2());
+    import_express149 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
     import_promises11 = __toESM(require("fs/promises"));
     import_path23 = __toESM(require("path"));
-    router148 = import_express148.default.Router();
-    savePrompt_default = router148.post(
+    router149 = import_express149.default.Router();
+    savePrompt_default = router149.post(
       "/",
       validateFields({
         name: external_exports.string().min(1),
@@ -258704,19 +259555,19 @@ var init_savePrompt = __esm({
 });
 
 // src/routes/setting/modelMap/updatePrompt.ts
-var import_express149, import_promises12, import_path24, router149, updatePrompt_default;
+var import_express150, import_promises12, import_path24, router150, updatePrompt_default;
 var init_updatePrompt = __esm({
   "src/routes/setting/modelMap/updatePrompt.ts"() {
     "use strict";
-    import_express149 = __toESM(require_express2());
+    import_express150 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
     import_promises12 = __toESM(require("fs/promises"));
     import_path24 = __toESM(require("path"));
-    router149 = import_express149.default.Router();
-    updatePrompt_default = router149.post(
+    router150 = import_express150.default.Router();
+    updatePrompt_default = router150.post(
       "/",
       validateFields({
         name: external_exports.string().min(1),
@@ -258745,15 +259596,15 @@ var init_updatePrompt = __esm({
 });
 
 // src/routes/setting/promptManage/getPrompt.ts
-var import_express150, router150, getPrompt_default;
+var import_express151, router151, getPrompt_default;
 var init_getPrompt = __esm({
   "src/routes/setting/promptManage/getPrompt.ts"() {
     "use strict";
-    import_express150 = __toESM(require_express2());
+    import_express151 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router150 = import_express150.default.Router();
-    getPrompt_default = router150.post("/", async (req, res) => {
+    router151 = import_express151.default.Router();
+    getPrompt_default = router151.post("/", async (req, res) => {
       const list2 = await utils_default.db("o_prompt").select("*");
       const data = await Promise.all(
         list2.map(async (item) => {
@@ -258769,24 +259620,24 @@ var init_getPrompt = __esm({
 });
 
 // src/routes/setting/promptManage/updatePrompt.ts
-var import_express151, router151, updatePrompt_default2;
+var import_express152, router152, updatePrompt_default2;
 var init_updatePrompt2 = __esm({
   "src/routes/setting/promptManage/updatePrompt.ts"() {
     "use strict";
-    import_express151 = __toESM(require_express2());
+    import_express152 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router151 = import_express151.default.Router();
-    updatePrompt_default2 = router151.post(
+    router152 = import_express152.default.Router();
+    updatePrompt_default2 = router152.post(
       "/",
       validateFields({
         id: external_exports.number()
       }),
       async (req, res) => {
-        const { id, data } = req.body;
-        await utils_default.db("o_prompt").where("id", id).update({
+        const { id: id2, data } = req.body;
+        await utils_default.db("o_prompt").where("id", id2).update({
           useData: data
         });
         res.status(200).send(success3(123));
@@ -258796,11 +259647,11 @@ var init_updatePrompt2 = __esm({
 });
 
 // src/routes/setting/skillManagement/getSkillContent.ts
-var import_express152, import_path25, fs32, router152, getSkillContent_default;
+var import_express153, import_path25, fs32, router153, getSkillContent_default;
 var init_getSkillContent = __esm({
   "src/routes/setting/skillManagement/getSkillContent.ts"() {
     "use strict";
-    import_express152 = __toESM(require_express2());
+    import_express153 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_zod();
@@ -258808,8 +259659,8 @@ var init_getSkillContent = __esm({
     init_utils3();
     import_path25 = __toESM(require("path"));
     fs32 = __toESM(require("fs"));
-    router152 = import_express152.default.Router();
-    getSkillContent_default = router152.post(
+    router153 = import_express153.default.Router();
+    getSkillContent_default = router153.post(
       "/",
       validateFields({
         path: external_exports.string()
@@ -258829,16 +259680,16 @@ var init_getSkillContent = __esm({
 });
 
 // src/routes/setting/skillManagement/getSkillList.ts
-var import_express153, import_fast_glob4, router153, getSkillList_default;
+var import_express154, import_fast_glob4, router154, getSkillList_default;
 var init_getSkillList = __esm({
   "src/routes/setting/skillManagement/getSkillList.ts"() {
     "use strict";
-    import_express153 = __toESM(require_express2());
+    import_express154 = __toESM(require_express2());
     init_responseFormat();
     import_fast_glob4 = __toESM(require_out4());
     init_utils3();
-    router153 = import_express153.default.Router();
-    getSkillList_default = router153.post("/", async (req, res) => {
+    router154 = import_express154.default.Router();
+    getSkillList_default = router154.post("/", async (req, res) => {
       const skillsRoot = utils_default.getPath(["skills"]);
       const entries = await (0, import_fast_glob4.default)("**/*.md", {
         cwd: skillsRoot.replace(/\\/g, "/"),
@@ -258850,11 +259701,11 @@ var init_getSkillList = __esm({
 });
 
 // src/routes/setting/skillManagement/saveSkillContent.ts
-var import_express154, import_path26, fs33, router154, saveSkillContent_default;
+var import_express155, import_path26, fs33, router155, saveSkillContent_default;
 var init_saveSkillContent = __esm({
   "src/routes/setting/skillManagement/saveSkillContent.ts"() {
     "use strict";
-    import_express154 = __toESM(require_express2());
+    import_express155 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_zod();
@@ -258862,8 +259713,8 @@ var init_saveSkillContent = __esm({
     init_utils3();
     import_path26 = __toESM(require("path"));
     fs33 = __toESM(require("fs"));
-    router154 = import_express154.default.Router();
-    saveSkillContent_default = router154.post(
+    router155 = import_express155.default.Router();
+    saveSkillContent_default = router155.post(
       "/",
       validateFields({
         path: external_exports.string(),
@@ -258887,17 +259738,17 @@ var init_saveSkillContent = __esm({
 });
 
 // src/routes/setting/vendorConfig/addVendor.ts
-var import_express155, import_sucrase4, router155, vendorConfigSchema, addVendor_default;
+var import_express156, import_sucrase4, router156, vendorConfigSchema, addVendor_default;
 var init_addVendor = __esm({
   "src/routes/setting/vendorConfig/addVendor.ts"() {
     "use strict";
-    import_express155 = __toESM(require_express2());
+    import_express156 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
     import_sucrase4 = __toESM(require_dist5());
-    router155 = import_express155.default.Router();
+    router156 = import_express156.default.Router();
     vendorConfigSchema = external_exports.object({
       id: external_exports.string(),
       author: external_exports.string(),
@@ -258949,7 +259800,7 @@ var init_addVendor = __esm({
         ])
       )
     });
-    addVendor_default = router155.post(
+    addVendor_default = router156.post(
       "/",
       validateFields({
         tsCode: external_exports.string()
@@ -258987,7 +259838,7 @@ ${issueLines.join("\n")}`));
         if (vendor.id.includes(":")) return res.status(400).send(error50("id\u4E0D\u80FD\u5305\u542B\u82F1\u6587\u5192\u53F7"));
         const data = await utils_default.db("o_vendorConfig").where("id", vendor.id).first();
         if (data) return res.status(500).send(error50("\u4F9B\u5E94\u5546id\u5DF2\u5B58\u5728"));
-        const [id] = await utils_default.db("o_vendorConfig").insert({
+        const [id2] = await utils_default.db("o_vendorConfig").insert({
           id: vendor.id,
           inputValues: JSON.stringify(vendor.inputValues ?? {}),
           models: JSON.stringify([]),
@@ -259001,17 +259852,17 @@ ${issueLines.join("\n")}`));
 });
 
 // src/routes/setting/vendorConfig/addVendorModel.ts
-var import_express156, router156, addVendorModel_default;
+var import_express157, router157, addVendorModel_default;
 var init_addVendorModel = __esm({
   "src/routes/setting/vendorConfig/addVendorModel.ts"() {
     "use strict";
-    import_express156 = __toESM(require_express2());
+    import_express157 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router156 = import_express156.default.Router();
-    addVendorModel_default = router156.post(
+    router157 = import_express157.default.Router();
+    addVendorModel_default = router157.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -259049,12 +259900,12 @@ var init_addVendorModel = __esm({
         ])
       }),
       async (req, res) => {
-        const { id, model } = req.body;
-        const models = await utils_default.db("o_vendorConfig").where("id", id).first("models");
-        if (models?.models) {
-          const existingModels = JSON.parse(models.models);
+        const { id: id2, model } = req.body;
+        const models2 = await utils_default.db("o_vendorConfig").where("id", id2).first("models");
+        if (models2?.models) {
+          const existingModels = JSON.parse(models2.models);
           existingModels.push(model);
-          await utils_default.db("o_vendorConfig").where("id", id).update({
+          await utils_default.db("o_vendorConfig").where("id", id2).update({
             models: JSON.stringify(existingModels)
           });
         }
@@ -259065,31 +259916,31 @@ var init_addVendorModel = __esm({
 });
 
 // src/routes/setting/vendorConfig/deleteVendor.ts
-var import_express157, import_path27, import_fs18, router157, deleteVendor_default;
+var import_express158, import_path27, import_fs18, router158, deleteVendor_default;
 var init_deleteVendor = __esm({
   "src/routes/setting/vendorConfig/deleteVendor.ts"() {
     "use strict";
-    import_express157 = __toESM(require_express2());
+    import_express158 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     import_path27 = __toESM(require("path"));
     import_fs18 = __toESM(require("fs"));
     init_utils3();
     init_zod();
-    router157 = import_express157.default.Router();
-    deleteVendor_default = router157.post(
+    router158 = import_express158.default.Router();
+    deleteVendor_default = router158.post(
       "/",
       validateFields({
         id: external_exports.string()
       }),
       async (req, res) => {
-        const { id } = req.body;
-        await utils_default.db("o_vendorConfig").where("id", id).del();
-        await utils_default.db("o_agentDeploy").where("vendorId", id).update({
+        const { id: id2 } = req.body;
+        await utils_default.db("o_vendorConfig").where("id", id2).del();
+        await utils_default.db("o_agentDeploy").where("vendorId", id2).update({
           model: null,
           vendorId: null
         });
-        import_fs18.default.rmSync(import_path27.default.join(utils_default.getPath("vendor"), `${id}.ts`), { recursive: true, force: true });
+        import_fs18.default.rmSync(import_path27.default.join(utils_default.getPath("vendor"), `${id2}.ts`), { recursive: true, force: true });
         res.status(200).send(success3("\u5220\u9664\u6210\u529F"));
       }
     );
@@ -259097,32 +259948,32 @@ var init_deleteVendor = __esm({
 });
 
 // src/routes/setting/vendorConfig/delVendorModel.ts
-var import_express158, router158, delVendorModel_default;
+var import_express159, router159, delVendorModel_default;
 var init_delVendorModel = __esm({
   "src/routes/setting/vendorConfig/delVendorModel.ts"() {
     "use strict";
-    import_express158 = __toESM(require_express2());
+    import_express159 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router158 = import_express158.default.Router();
-    delVendorModel_default = router158.post(
+    router159 = import_express159.default.Router();
+    delVendorModel_default = router159.post(
       "/",
       validateFields({
         id: external_exports.string(),
         modelName: external_exports.string()
       }),
       async (req, res) => {
-        const { id, modelName } = req.body;
-        const models = await utils_default.db("o_vendorConfig").where("id", id).first("models");
-        if (models?.models) {
-          const existingModels = JSON.parse(models.models);
+        const { id: id2, modelName } = req.body;
+        const models2 = await utils_default.db("o_vendorConfig").where("id", id2).first("models");
+        if (models2?.models) {
+          const existingModels = JSON.parse(models2.models);
           if (!existingModels.some((model) => model.modelName === modelName)) {
             return res.status(400).send(error50("\u57FA\u672C\u6A21\u578B\u4E0D\u5141\u8BB8\u5220\u9664"));
           }
           const updatedModels = existingModels.filter((model) => model.modelName !== modelName);
-          await utils_default.db("o_vendorConfig").where("id", id).update({
+          await utils_default.db("o_vendorConfig").where("id", id2).update({
             models: JSON.stringify(updatedModels)
           });
         }
@@ -259133,25 +259984,25 @@ var init_delVendorModel = __esm({
 });
 
 // src/routes/setting/vendorConfig/enableVendor.ts
-var import_express159, router159, enableVendor_default;
+var import_express160, router160, enableVendor_default;
 var init_enableVendor = __esm({
   "src/routes/setting/vendorConfig/enableVendor.ts"() {
     "use strict";
-    import_express159 = __toESM(require_express2());
+    import_express160 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router159 = import_express159.default.Router();
-    enableVendor_default = router159.post(
+    router160 = import_express160.default.Router();
+    enableVendor_default = router160.post(
       "/",
       validateFields({
         id: external_exports.string(),
         enable: external_exports.number()
       }),
       async (req, res) => {
-        const { id, enable } = req.body;
-        await utils_default.db("o_vendorConfig").where("id", id).update({ enable });
+        const { id: id2, enable } = req.body;
+        await utils_default.db("o_vendorConfig").where("id", id2).update({ enable });
         res.status(200).send(success3("\u66F4\u65B0\u6210\u529F"));
       }
     );
@@ -259159,39 +260010,39 @@ var init_enableVendor = __esm({
 });
 
 // src/routes/setting/vendorConfig/getCodeByLink.ts
-var import_express160, router160, getCodeByLink_default;
+var import_express161, router161, getCodeByLink_default;
 var init_getCodeByLink = __esm({
   "src/routes/setting/vendorConfig/getCodeByLink.ts"() {
     "use strict";
-    import_express160 = __toESM(require_express2());
+    import_express161 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_zod();
-    router160 = import_express160.default.Router();
-    getCodeByLink_default = router160.post(
+    router161 = import_express161.default.Router();
+    getCodeByLink_default = router161.post(
       "/",
       validateFields({
         link: external_exports.string()
       }),
       async (req, res) => {
         const { link } = req.body;
-        const text2 = await fetch(link).then((res2) => res2.text());
-        res.status(200).send(success3(text2));
+        const text3 = await fetch(link).then((res2) => res2.text());
+        res.status(200).send(success3(text3));
       }
     );
   }
 });
 
 // src/routes/setting/vendorConfig/getVendorList.ts
-var import_express161, router161, getVendorList_default;
+var import_express162, router162, getVendorList_default;
 var init_getVendorList = __esm({
   "src/routes/setting/vendorConfig/getVendorList.ts"() {
     "use strict";
-    import_express161 = __toESM(require_express2());
+    import_express162 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router161 = import_express161.default.Router();
-    getVendorList_default = router161.post("/", async (req, res) => {
+    router162 = import_express162.default.Router();
+    getVendorList_default = router162.post("/", async (req, res) => {
       const data = await utils_default.db("o_vendorConfig").select("*");
       const list2 = (await Promise.all(
         data.map(async (item) => {
@@ -259221,18 +260072,18 @@ var init_getVendorList = __esm({
 });
 
 // src/routes/setting/vendorConfig/modelTest.ts
-var import_express162, router162, modelTest_default;
+var import_express163, router163, modelTest_default;
 var init_modelTest = __esm({
   "src/routes/setting/vendorConfig/modelTest.ts"() {
     "use strict";
-    import_express162 = __toESM(require_express2());
+    import_express163 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
     init_dist22();
-    router162 = import_express162.default.Router();
-    modelTest_default = router162.post(
+    router163 = import_express163.default.Router();
+    modelTest_default = router163.post(
       "/",
       validateFields({
         modelName: external_exports.string(),
@@ -259240,7 +260091,7 @@ var init_modelTest = __esm({
         id: external_exports.string()
       }),
       async (req, res) => {
-        const { modelName, type, id } = req.body;
+        const { modelName, type, id: id2 } = req.body;
         try {
           const requestFn = {
             text: { fnName: "textRequest" },
@@ -259258,7 +260109,7 @@ var init_modelTest = __esm({
             },
             video: { fnName: "videoRequest", modelData: {} }
           };
-          const vendorConfigData = await utils_default.db("o_vendorConfig").where("id", id).first();
+          const vendorConfigData = await utils_default.db("o_vendorConfig").where("id", id2).first();
           if (!vendorConfigData) return res.status(500).send(error50("\u672A\u627E\u5230\u8BE5\u4F9B\u5E94\u5546\u914D\u7F6E"));
           if (!vendorConfigData.models) return res.status(500).send(error50("\u672A\u627E\u5230\u6A21\u578B\u5217\u8868"));
           const modelList = await utils_default.vendor.getModelList(vendorConfigData.id);
@@ -259291,7 +260142,7 @@ var init_modelTest = __esm({
             }
           });
           if (type == "text") {
-            const { textStream } = await utils_default.Ai.Text(`${id}:${modelName}`).stream({
+            const { textStream } = await utils_default.Ai.Text(`${id2}:${modelName}`).stream({
               prompt: "\u8BF7\u8C03\u7528\u5DE5\u5177\u83B7\u53D6\u706B\u661F\u7684\u5929\u6C14\uFF0C\u5E76\u56DE\u7B54\u6211\u591A\u5C11\u6C14\u6E29",
               tools: { getWeatherTool }
             });
@@ -259306,7 +260157,7 @@ var init_modelTest = __esm({
               image: "Image",
               video: "Video"
             };
-            const reqFn = await utils_default.Ai[aiTypeFn[type]](`${id}:${modelName}`).run({
+            const reqFn = await utils_default.Ai[aiTypeFn[type]](`${id2}:${modelName}`).run({
               ...reqConfig.modelData
             });
             await reqFn.save(type == "video" ? "test.mp4" : "testImage.jpg");
@@ -259325,17 +260176,17 @@ var init_modelTest = __esm({
 });
 
 // src/routes/setting/vendorConfig/modelTest/imageTest.ts
-var import_express163, router163, imageTest_default;
+var import_express164, router164, imageTest_default;
 var init_imageTest = __esm({
   "src/routes/setting/vendorConfig/modelTest/imageTest.ts"() {
     "use strict";
-    import_express163 = __toESM(require_express2());
+    import_express164 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router163 = import_express163.default.Router();
-    imageTest_default = router163.post(
+    router164 = import_express164.default.Router();
+    imageTest_default = router164.post(
       "/",
       validateFields({
         modelName: external_exports.string(),
@@ -259344,12 +260195,12 @@ var init_imageTest = __esm({
         prompt: external_exports.string()
       }),
       async (req, res) => {
-        const { modelName, imageBase64, id, prompt } = req.body;
+        const { modelName, imageBase64, id: id2, prompt } = req.body;
         try {
-          const vendorConfigData = await utils_default.db("o_vendorConfig").where("id", id).first();
+          const vendorConfigData = await utils_default.db("o_vendorConfig").where("id", id2).first();
           if (!vendorConfigData) return res.status(500).send(error50("\u672A\u627E\u5230\u8BE5\u4F9B\u5E94\u5546\u914D\u7F6E"));
           if (!vendorConfigData.models) return res.status(500).send(error50("\u672A\u627E\u5230\u6A21\u578B\u5217\u8868"));
-          const reqFn = await utils_default.Ai.Image(`${id}:${modelName}`).run({
+          const reqFn = await utils_default.Ai.Image(`${id2}:${modelName}`).run({
             prompt,
             referenceList: imageBase64 ? [{ type: "image", base64: imageBase64 }] : [],
             //输入的图片提示词
@@ -259372,18 +260223,18 @@ var init_imageTest = __esm({
 });
 
 // src/routes/setting/vendorConfig/modelTest/textTest.ts
-var import_express164, router164, textTest_default;
+var import_express165, router165, textTest_default;
 var init_textTest = __esm({
   "src/routes/setting/vendorConfig/modelTest/textTest.ts"() {
     "use strict";
-    import_express164 = __toESM(require_express2());
+    import_express165 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
     init_dist22();
-    router164 = import_express164.default.Router();
-    textTest_default = router164.post(
+    router165 = import_express165.default.Router();
+    textTest_default = router165.post(
       "/",
       validateFields({
         modelName: external_exports.string(),
@@ -259396,9 +260247,9 @@ var init_textTest = __esm({
         )
       }),
       async (req, res) => {
-        const { modelName, messages, id } = req.body;
+        const { modelName, messages, id: id2 } = req.body;
         try {
-          const vendorConfigData = await utils_default.db("o_vendorConfig").where("id", id).first();
+          const vendorConfigData = await utils_default.db("o_vendorConfig").where("id", id2).first();
           if (!vendorConfigData) return res.status(500).send(error50("\u672A\u627E\u5230\u8BE5\u4F9B\u5E94\u5546\u914D\u7F6E"));
           if (!vendorConfigData.models) return res.status(500).send(error50("\u672A\u627E\u5230\u6A21\u578B\u5217\u8868"));
           const modelList = await utils_default.vendor.getModelList(vendorConfigData.id);
@@ -259416,7 +260267,7 @@ var init_textTest = __esm({
               };
             }
           });
-          const data = await utils_default.Ai.Text(`${id}:${modelName}`).invoke({
+          const data = await utils_default.Ai.Text(`${id2}:${modelName}`).invoke({
             messages,
             tools: { getWeatherTool }
           });
@@ -259435,17 +260286,17 @@ var init_textTest = __esm({
 });
 
 // src/routes/setting/vendorConfig/modelTest/videoTest.ts
-var import_express165, router165, videoTest_default;
+var import_express166, router166, videoTest_default;
 var init_videoTest = __esm({
   "src/routes/setting/vendorConfig/modelTest/videoTest.ts"() {
     "use strict";
-    import_express165 = __toESM(require_express2());
+    import_express166 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router165 = import_express165.default.Router();
-    videoTest_default = router165.post(
+    router166 = import_express166.default.Router();
+    videoTest_default = router166.post(
       "/",
       validateFields({
         modelName: external_exports.string(),
@@ -259472,9 +260323,9 @@ var init_videoTest = __esm({
         )
       }),
       async (req, res) => {
-        const { modelName, id, mode, prompt, images, videos, audios } = req.body;
+        const { modelName, id: id2, mode, prompt, images, videos, audios } = req.body;
         try {
-          const vendorConfigData = await utils_default.db("o_vendorConfig").where("id", id).first();
+          const vendorConfigData = await utils_default.db("o_vendorConfig").where("id", id2).first();
           if (!vendorConfigData) return res.status(500).send(error50("\u672A\u627E\u5230\u8BE5\u4F9B\u5E94\u5546\u914D\u7F6E"));
           if (!vendorConfigData.models) return res.status(500).send(error50("\u672A\u627E\u5230\u6A21\u578B\u5217\u8868"));
           const modelList = await utils_default.vendor.getModelList(vendorConfigData.id);
@@ -259487,7 +260338,7 @@ var init_videoTest = __esm({
             } catch (e) {
             }
           }
-          const reqFn = await utils_default.Ai.Video(`${id}:${modelName}`).run({
+          const reqFn = await utils_default.Ai.Video(`${id2}:${modelName}`).run({
             duration: selectedModel.durationResolutionMap[0].duration[0],
             resolution: selectedModel.durationResolutionMap[0].resolution[0],
             aspectRatio: "16:9",
@@ -259511,18 +260362,18 @@ var init_videoTest = __esm({
 });
 
 // src/routes/setting/vendorConfig/updateCode.ts
-var import_express166, import_sucrase5, router166, vendorConfigSchema2, updateCode_default;
+var import_express167, import_sucrase5, router167, vendorConfigSchema2, updateCode_default;
 var init_updateCode = __esm({
   "src/routes/setting/vendorConfig/updateCode.ts"() {
     "use strict";
-    import_express166 = __toESM(require_express2());
+    import_express167 = __toESM(require_express2());
     init_serialize_error();
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
     import_sucrase5 = __toESM(require_dist5());
-    router166 = import_express166.default.Router();
+    router167 = import_express167.default.Router();
     vendorConfigSchema2 = external_exports.object({
       id: external_exports.string(),
       author: external_exports.string(),
@@ -259574,7 +260425,7 @@ var init_updateCode = __esm({
         ])
       )
     });
-    updateCode_default = router166.post(
+    updateCode_default = router167.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -259582,7 +260433,7 @@ var init_updateCode = __esm({
       }),
       async (req, res) => {
         try {
-          const { tsCode, id } = req.body;
+          const { tsCode, id: id2 } = req.body;
           const jsCode = (0, import_sucrase5.transform)(tsCode, { transforms: ["typescript"] }).code;
           const exports2 = utils_default.vm(jsCode);
           if (!exports2) return res.status(400).send(success3("\u811A\u672C\u6587\u4EF6\u5FC5\u987B\u5BFC\u51FA\u5BF9\u8C61"));
@@ -259596,10 +260447,10 @@ var init_updateCode = __esm({
             const errorMsg = result.error.issues.map((e) => `${e.path.join(".")}: ${e.message}`).join("; ");
             return res.status(400).send(error50(`vendor\u914D\u7F6E\u6821\u9A8C\u5931\u8D25: ${errorMsg}`));
           }
-          await utils_default.db("o_vendorConfig").where("id", id).update({
+          await utils_default.db("o_vendorConfig").where("id", id2).update({
             models: JSON.stringify(vendor.models ?? [])
           });
-          utils_default.vendor.writeCode(id, tsCode);
+          utils_default.vendor.writeCode(id2, tsCode);
           res.status(200).send(success3(result.data));
         } catch (err) {
           console.log(err);
@@ -259611,25 +260462,25 @@ var init_updateCode = __esm({
 });
 
 // src/routes/setting/vendorConfig/updateVendorInputs.ts
-var import_express167, router167, updateVendorInputs_default;
+var import_express168, router168, updateVendorInputs_default;
 var init_updateVendorInputs = __esm({
   "src/routes/setting/vendorConfig/updateVendorInputs.ts"() {
     "use strict";
-    import_express167 = __toESM(require_express2());
+    import_express168 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router167 = import_express167.default.Router();
-    updateVendorInputs_default = router167.post(
+    router168 = import_express168.default.Router();
+    updateVendorInputs_default = router168.post(
       "/",
       validateFields({
         id: external_exports.string(),
         inputValues: external_exports.record(external_exports.string(), external_exports.string())
       }),
       async (req, res) => {
-        const { id, inputValues } = req.body;
-        await utils_default.db("o_vendorConfig").where("id", id).update({
+        const { id: id2, inputValues } = req.body;
+        await utils_default.db("o_vendorConfig").where("id", id2).update({
           inputValues: JSON.stringify(inputValues)
         });
         res.status(200).send(success3("\u66F4\u65B0\u6210\u529F"));
@@ -259639,17 +260490,17 @@ var init_updateVendorInputs = __esm({
 });
 
 // src/routes/setting/vendorConfig/upVendorModel.ts
-var import_express168, router168, upVendorModel_default;
+var import_express169, router169, upVendorModel_default;
 var init_upVendorModel = __esm({
   "src/routes/setting/vendorConfig/upVendorModel.ts"() {
     "use strict";
-    import_express168 = __toESM(require_express2());
+    import_express169 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router168 = import_express168.default.Router();
-    upVendorModel_default = router168.post(
+    router169 = import_express169.default.Router();
+    upVendorModel_default = router169.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -259688,16 +260539,16 @@ var init_upVendorModel = __esm({
         ])
       }),
       async (req, res) => {
-        const { id, modelName, model } = req.body;
-        const models = await utils_default.db("o_vendorConfig").where("id", id).first("models");
-        if (models?.models) {
-          const existingModels = JSON.parse(models.models);
+        const { id: id2, modelName, model } = req.body;
+        const models2 = await utils_default.db("o_vendorConfig").where("id", id2).first("models");
+        if (models2?.models) {
+          const existingModels = JSON.parse(models2.models);
           const modelIndex = existingModels.findIndex((m) => m.modelName !== modelName);
           if (modelIndex === -1) {
             existingModels.push(model);
           }
           existingModels[modelIndex] = model;
-          await utils_default.db("o_vendorConfig").where("id", id).update({
+          await utils_default.db("o_vendorConfig").where("id", id2).update({
             models: JSON.stringify(existingModels)
           });
         }
@@ -259708,15 +260559,15 @@ var init_upVendorModel = __esm({
 });
 
 // src/routes/task/getProject.ts
-var import_express169, router169, getProject_default2;
+var import_express170, router170, getProject_default2;
 var init_getProject2 = __esm({
   "src/routes/task/getProject.ts"() {
     "use strict";
-    import_express169 = __toESM(require_express2());
+    import_express170 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router169 = import_express169.default.Router();
-    getProject_default2 = router169.post("/", async (req, res) => {
+    router170 = import_express170.default.Router();
+    getProject_default2 = router170.post("/", async (req, res) => {
       const list2 = await utils_default.db("o_project").select("id", "name").groupBy("name");
       const data = list2.filter((item) => item.name);
       res.status(200).send(success3(data));
@@ -259725,17 +260576,17 @@ var init_getProject2 = __esm({
 });
 
 // src/routes/task/getTaskApi.ts
-var import_express170, router170, getTaskApi_default;
+var import_express171, router171, getTaskApi_default;
 var init_getTaskApi = __esm({
   "src/routes/task/getTaskApi.ts"() {
     "use strict";
-    import_express170 = __toESM(require_express2());
+    import_express171 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     init_middleware();
     init_zod();
-    router170 = import_express170.default.Router();
-    getTaskApi_default = router170.post(
+    router171 = import_express171.default.Router();
+    getTaskApi_default = router171.post(
       "/",
       validateFields({
         state: external_exports.string().optional().nullable(),
@@ -259776,15 +260627,15 @@ var init_getTaskApi = __esm({
 });
 
 // src/routes/task/getTaskCategories.ts
-var import_express171, router171, getTaskCategories_default;
+var import_express172, router172, getTaskCategories_default;
 var init_getTaskCategories = __esm({
   "src/routes/task/getTaskCategories.ts"() {
     "use strict";
-    import_express171 = __toESM(require_express2());
+    import_express172 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router171 = import_express171.default.Router();
-    getTaskCategories_default = router171.post("/", async (req, res) => {
+    router172 = import_express172.default.Router();
+    getTaskCategories_default = router172.post("/", async (req, res) => {
       const list2 = await utils_default.db("o_tasks").select("taskClass").groupBy("taskClass");
       const data = list2.filter((item) => item.taskClass);
       res.status(200).send(success3(data));
@@ -259793,17 +260644,17 @@ var init_getTaskCategories = __esm({
 });
 
 // src/routes/task/taskDetails.ts
-var import_express172, router172, taskDetails_default;
+var import_express173, router173, taskDetails_default;
 var init_taskDetails = __esm({
   "src/routes/task/taskDetails.ts"() {
     "use strict";
-    import_express172 = __toESM(require_express2());
+    import_express173 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     init_middleware();
     init_zod();
-    router172 = import_express172.default.Router();
-    taskDetails_default = router172.post(
+    router173 = import_express173.default.Router();
+    taskDetails_default = router173.post(
       "/",
       validateFields({
         taskId: external_exports.number()
@@ -259818,15 +260669,15 @@ var init_taskDetails = __esm({
 });
 
 // src/routes/test/test.ts
-var import_express173, import_fs19, router173, test_default;
+var import_express174, import_fs19, router174, test_default;
 var init_test = __esm({
   "src/routes/test/test.ts"() {
     "use strict";
-    import_express173 = __toESM(require_express2());
+    import_express174 = __toESM(require_express2());
     init_utils3();
     import_fs19 = __toESM(require("fs"));
-    router173 = import_express173.default.Router();
-    test_default = router173.get("/", async (req, res) => {
+    router174 = import_express174.default.Router();
+    test_default = router174.get("/", async (req, res) => {
       return res.send("ok");
       const test2 = await utils_default.db("o_vendorConfig").select("*");
       import_fs19.default.writeFileSync("test.json", JSON.stringify(test2, null, 2));
@@ -259879,6 +260730,7 @@ var init_router = __esm({
     init_generalStatistics();
     init_getSingleProject();
     init_updateProject();
+    init_importStudio();
     init_login();
     init_getModelDetail();
     init_getModelList();
@@ -260053,6 +260905,7 @@ var init_router = __esm({
       app2.use("/api/general/generalStatistics", generalStatistics_default);
       app2.use("/api/general/getSingleProject", getSingleProject_default);
       app2.use("/api/general/updateProject", updateProject_default);
+      app2.use("/api/importStudio", importStudio_default);
       app2.use("/api/login/login", login_default);
       app2.use("/api/modelSelect/getModelDetail", getModelDetail_default);
       app2.use("/api/modelSelect/getModelList", getModelList_default);
@@ -260246,7 +261099,7 @@ if (!env) {
 }
 
 // src/app.ts
-var import_express174 = __toESM(require_express2());
+var import_express175 = __toESM(require_express2());
 
 // node_modules/socket.io/wrapper.mjs
 var import_dist = __toESM(require_dist3(), 1);
@@ -260344,8 +261197,8 @@ init_db();
 init_embedding();
 
 // src/utils/agent/retrieval/terms.ts
-function searchTerms(text2, limit = 80) {
-  const normalized = text2.normalize("NFKC").toLowerCase();
+function searchTerms(text3, limit = 80) {
+  const normalized = text3.normalize("NFKC").toLowerCase();
   const terms = /* @__PURE__ */ new Set();
   for (const word of normalized.match(/[a-z0-9_]{2,}/g) ?? []) terms.add(word);
   for (const segment of normalized.match(/[\p{Script=Han}]+/gu) ?? []) {
@@ -260391,13 +261244,13 @@ function startMemoryIndex() {
         const claimed = await db_default("o_memoryJob").where({ id: job.id, status: "pending" }).update({ status: "running", updateTime: Date.now() });
         if (claimed !== 1) continue;
         try {
-          const memory = await db_default("memories").where({ id: job.memoryId }).first();
-          if (!memory?.id || !memory.isolationKey || memory.content == null) throw new Error("\u539F\u59CB\u8BB0\u5FC6\u4E0D\u5B58\u5728\u6216\u5B57\u6BB5\u4E0D\u5B8C\u6574");
-          await indexMemoryTerms(memory.id, memory.isolationKey, memory.content);
-          const embedding = await getEmbedding(memory.content);
+          const memory2 = await db_default("memories").where({ id: job.memoryId }).first();
+          if (!memory2?.id || !memory2.isolationKey || memory2.content == null) throw new Error("\u539F\u59CB\u8BB0\u5FC6\u4E0D\u5B58\u5728\u6216\u5B57\u6BB5\u4E0D\u5B8C\u6574");
+          await indexMemoryTerms(memory2.id, memory2.isolationKey, memory2.content);
+          const embedding = await getEmbedding(memory2.content);
           if (!embedding.length || !embedding.every(Number.isFinite)) throw new Error("Embedding \u8FD4\u56DE\u65E0\u6548\u5411\u91CF");
           await db_default("o_memoryVector").insert({
-            memoryId: memory.id,
+            memoryId: memory2.id,
             modelId,
             embedding: JSON.stringify(embedding),
             dimension: embedding.length,
@@ -260426,7 +261279,7 @@ async function lexicalCandidates(isolationKey, query, limit = 100) {
   const terms = searchTerms(query);
   if (!terms.length) return [];
   const rows = await db_default("o_memoryTerm").where({ isolationKey }).whereIn("term", terms).select("memoryId").count({ matches: "*" }).groupBy("memoryId").orderBy("matches", "desc").limit(limit);
-  return rows.map((row) => row.memoryId).filter((id) => typeof id === "string");
+  return rows.map((row) => row.memoryId).filter((id2) => typeof id2 === "string");
 }
 
 // src/utils/agent/retrieval/reranker.ts
@@ -260503,19 +261356,19 @@ var VectorTopK = class {
   add(rows) {
     if (this.limit <= 0) return;
     for (const row of rows) {
-      const id = typeof row.id === "string" ? row.id : "";
-      if (!id) continue;
+      const id2 = typeof row.id === "string" ? row.id : "";
+      if (!id2) continue;
       let embedding = [];
       try {
         embedding = JSON.parse(row.embedding ?? "[]");
       } catch {
       }
       const valid = embedding.length === this.queryEmbedding.length && embedding.every(Number.isFinite);
-      const lexical = this.lexicalIds.has(id);
+      const lexical = this.lexicalIds.has(id2);
       const similarity = valid ? cosineSimilarity(this.queryEmbedding, embedding) + (lexical ? 0.08 : 0) : lexical ? 0.08 : Number.NEGATIVE_INFINITY;
       if (!Number.isFinite(similarity)) continue;
-      const prior = this.entries.get(id);
-      if (!prior || similarity > prior.similarity) this.entries.set(id, { ...row, similarity });
+      const prior = this.entries.get(id2);
+      if (!prior || similarity > prior.similarity) this.entries.set(id2, { ...row, similarity });
     }
     if (this.entries.size > this.limit * 3) this.trim();
   }
@@ -260556,15 +261409,15 @@ var Memory = class {
   }
   async generateSummary(contents) {
     const { summaryMaxLength } = await this.getConfigData({ summaryMaxLength: DEFAULTS.summaryMaxLength });
-    const { text: text2 } = await utils_default.Ai.Text(this.agentType).invoke({
+    const { text: text3 } = await utils_default.Ai.Text(this.agentType).invoke({
       system: `\u4F60\u662F\u4E00\u4E2A\u8BB0\u5FC6\u538B\u7F29\u52A9\u624B\u3002\u8BF7\u5C06\u4EE5\u4E0B\u591A\u6761\u8BB0\u5FC6\u5185\u5BB9\u538B\u7F29\u4E3A\u4E00\u6BB5\u7B80\u6D01\u7684\u6458\u8981\uFF0C\u4E0D\u8D85\u8FC7${summaryMaxLength}\u4E2A\u5B57\u7B26\u3002\u53EA\u8F93\u51FA\u6458\u8981\u5185\u5BB9\uFF0C\u4E0D\u8981\u52A0\u4EFB\u4F55\u524D\u7F00\u6216\u89E3\u91CA\u3002`,
       messages: [{ role: "user", content: contents.map((c, i) => `${i + 1}. ${c}`).join("\n") }]
     });
-    return text2.slice(0, Number(summaryMaxLength));
+    return text3.slice(0, Number(summaryMaxLength));
   }
   async judgeSummaryRelevance(keyword, summaries) {
     const list2 = summaries.map((s) => `[${s.id}] ${s.content}`).join("\n");
-    const { text: text2 } = await utils_default.Ai.Text(this.agentType).invoke({
+    const { text: text3 } = await utils_default.Ai.Text(this.agentType).invoke({
       system: '\u4F60\u662F\u4E00\u4E2A\u4FE1\u606F\u68C0\u7D22\u52A9\u624B\u3002\u7528\u6237\u4F1A\u7ED9\u4F60\u4E00\u4E2A\u5173\u952E\u8BCD\u548C\u4E00\u7EC4\u6458\u8981\uFF0C\u8BF7\u5224\u65AD\u54EA\u4E9B\u6458\u8981\u53EF\u80FD\u5305\u542B\u4E0E\u5173\u952E\u8BCD\u76F8\u5173\u7684\u8BE6\u7EC6\u4FE1\u606F\u3002\u53EA\u8FD4\u56DE\u76F8\u5173\u6458\u8981\u7684id\u5217\u8868\uFF0C\u7528JSON\u6570\u7EC4\u683C\u5F0F\uFF0C\u4F8B\u5982 ["id1","id2"]\u3002\u4E0D\u8981\u89E3\u91CA\u3002',
       messages: [{ role: "user", content: `\u5173\u952E\u8BCD: ${keyword}
 
@@ -260572,7 +261425,7 @@ var Memory = class {
 ${list2}` }]
     });
     try {
-      const ids = JSON.parse(text2);
+      const ids = JSON.parse(text3);
       if (Array.isArray(ids)) return ids.map(String);
     } catch {
     }
@@ -260594,15 +261447,15 @@ ${list2}` }]
     }
     return result;
   }
-  async search(type, text2, limit) {
+  async search(type, text3, limit) {
     if (limit <= 0) return [];
     try {
       const modelId = await getEmbeddingModelId();
       await queueMissingVectors(this.isolationKey, modelId);
       startMemoryIndex();
-      const queryEmbedding = await getEmbedding(text2, "query");
+      const queryEmbedding = await getEmbedding(text3, "query");
       const hybrid = await utils_default.db("o_setting").where({ key: "memoryHybridRetrieval" }).select("value").first();
-      const ids = hybrid?.value !== "0" ? await lexicalCandidates(this.isolationKey, text2) : [];
+      const ids = hybrid?.value !== "0" ? await lexicalCandidates(this.isolationKey, text3) : [];
       const lexicalIds = new Set(ids);
       const candidateLimit = await getRerankerCandidateLimit(limit);
       const pageSetting = await utils_default.db("o_setting").where({ key: "memoryVectorScanPageSize" }).select("value").first();
@@ -260639,7 +261492,7 @@ ${list2}` }]
       }
       const candidates = topK.values();
       try {
-        return await rerankRows(text2, candidates, limit);
+        return await rerankRows(text3, candidates, limit);
       } catch (rerankError) {
         console.error("[Memory] Reranker \u964D\u7EA7:", rerankError instanceof Error ? rerankError.message : rerankError);
         return candidates.slice(0, limit);
@@ -260647,11 +261500,11 @@ ${list2}` }]
     } catch (error73) {
       console.error("[Memory] \u68C0\u7D22\u964D\u7EA7:", error73 instanceof Error ? error73.message : error73);
       try {
-        const ids = await lexicalCandidates(this.isolationKey, text2, limit);
+        const ids = await lexicalCandidates(this.isolationKey, text3, limit);
         if (!ids.length) return [];
         const rows = await utils_default.db("memories").where({ isolationKey: this.isolationKey, type }).whereIn("id", ids);
         const byId = new Map(rows.map((row) => [row.id, row]));
-        return ids.map((id) => byId.get(id)).filter((row) => !!row).map((row) => ({ ...row, similarity: 0 })).slice(0, limit);
+        return ids.map((id2) => byId.get(id2)).filter((row) => !!row).map((row) => ({ ...row, similarity: 0 })).slice(0, limit);
       } catch {
         return [];
       }
@@ -260662,7 +261515,7 @@ ${list2}` }]
     const count = Math.max(2, Number(messagesPerSummary));
     const batch = await utils_default.db("memories").where({ isolationKey: this.isolationKey, type: "message", summarized: 0 }).orderBy("createTime", "asc").limit(count);
     if (batch.length < count) return;
-    const batchIds = batch.map((row) => row.id).filter((id) => typeof id === "string");
+    const batchIds = batch.map((row) => row.id).filter((id2) => typeof id2 === "string");
     const summaryId = (0, import_node_crypto4.createHash)("sha256").update(`${this.isolationKey}:${batchIds.join(",")}`).digest("hex");
     const summaryContent = await this.generateSummary(batch.map((row) => row.content));
     await utils_default.db.transaction(async (trx) => {
@@ -260686,10 +261539,10 @@ ${list2}` }]
     }
   }
   async add(role = "user", content, options) {
-    const id = v4_default();
+    const id2 = v4_default();
     const isolationKey = this.isolationKey;
     await utils_default.db("memories").insert({
-      id,
+      id: id2,
       isolationKey,
       type: "message",
       role,
@@ -260701,14 +261554,14 @@ ${list2}` }]
       createTime: options?.createTime ?? Date.now()
     });
     void (async () => {
-      await indexMemoryTerms(id, isolationKey, content);
+      await indexMemoryTerms(id2, isolationKey, content);
       await this.summarizePending();
       const modelId = await getEmbeddingModelId();
-      await queueMemoryVector(id, modelId);
+      await queueMemoryVector(id2, modelId);
       startMemoryIndex();
     })().catch((error73) => console.error("[Memory] \u540E\u53F0\u7D22\u5F15\u5931\u8D25:", error73 instanceof Error ? error73.message : error73));
   }
-  async get(text2) {
+  async get(text3) {
     const { shortTermLimit, summaryLimit, ragLimit } = await this.getConfigData({
       shortTermLimit: DEFAULTS.shortTermLimit,
       summaryLimit: DEFAULTS.summaryLimit,
@@ -260719,7 +261572,7 @@ ${list2}` }]
     shortTerm.reverse();
     const summaries = await utils_default.db("memories").where({ isolationKey, type: "summary" }).orderBy("createTime", "desc").limit(Number(summaryLimit));
     summaries.reverse();
-    const ragResults = await this.search("message", text2, Number(ragLimit));
+    const ragResults = await this.search("message", text3, Number(ragLimit));
     return {
       shortTerm: shortTerm.map((m) => ({ id: m.id, role: m.role, name: m.name, content: m.content, createTime: m.createTime })),
       summaries: summaries.map((s) => ({
@@ -261263,44 +262116,44 @@ var tools_default = (toolCpnfig) => {
           requestId: external_exports.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional().describe("\u53EF\u9009\u64CD\u4F5C\u6807\u8BC6\uFF1B\u5931\u8D25\u91CD\u8BD5\u5FC5\u987B\u590D\u7528\u9519\u8BEF\u4FE1\u606F\u4E2D\u7684 requestId")
         }).toJSONSchema()
       ),
-      execute: async ({ assetsId, id, requestId: rawRequestId }) => {
+      execute: async ({ assetsId, id: id2, requestId: rawRequestId }) => {
         const thinking = msg.thinking("\u6B63\u5728\u64CD\u4F5C\u8D44\u4EA7...");
         const { scriptId, projectId } = resTool.data;
         const requestId = rawRequestId ?? `dd_${(0, import_node_crypto6.randomUUID)()}`;
-        const payloadHash = (0, import_node_crypto6.createHash)("sha256").update(JSON.stringify({ assetsId, id })).digest("hex");
+        const payloadHash = (0, import_node_crypto6.createHash)("sha256").update(JSON.stringify({ assetsId, id: id2 })).digest("hex");
         const receiptKey = `deriveAssetDelete:${requestId}`;
         try {
           const reused = await utils_default.db.transaction(async (trx) => {
             const priorReceipt = await trx("o_agentWorkData").where({ projectId, episodesId: scriptId, key: receiptKey }).select("data").first();
             if (priorReceipt?.data) {
               const prior = JSON.parse(priorReceipt.data);
-              if (prior.payloadHash !== payloadHash || Number(prior.assetId) !== id) {
+              if (prior.payloadHash !== payloadHash || Number(prior.assetId) !== id2) {
                 throw new Error("\u76F8\u540C requestId \u5BF9\u5E94\u4E0D\u540C\u7684\u884D\u751F\u8D44\u4EA7\u5220\u9664\u5185\u5BB9");
               }
-              const asset2 = await trx("o_assets").where({ id, projectId, assetsId }).first();
-              const linked2 = await trx("o_scriptAssets").where({ scriptId, assetId: id }).first();
+              const asset2 = await trx("o_assets").where({ id: id2, projectId, assetsId }).first();
+              const linked2 = await trx("o_scriptAssets").where({ scriptId, assetId: id2 }).first();
               if (asset2 || linked2) throw new Error("\u5220\u9664\u56DE\u6267\u5B58\u5728\uFF0C\u4F46\u5F53\u524D\u6570\u636E\u5E93\u4ECD\u5B58\u5728\u8BE5\u884D\u751F\u8D44\u4EA7\u6216\u5267\u96C6\u5173\u8054");
               return true;
             }
-            const linked = await trx("o_scriptAssets").where({ scriptId, assetId: id }).first();
-            const asset = await trx("o_assets").where({ id, projectId, assetsId }).first();
+            const linked = await trx("o_scriptAssets").where({ scriptId, assetId: id2 }).first();
+            const asset = await trx("o_assets").where({ id: id2, projectId, assetsId }).first();
             if (!linked || !asset) throw new Error("\u884D\u751F\u8D44\u4EA7\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u6216\u5267\u96C6");
-            await trx("o_scriptAssets").where({ scriptId, assetId: id }).del();
-            await trx("o_assets").where({ id, projectId, assetsId }).del();
-            const remainingAsset = await trx("o_assets").where({ id, projectId }).first();
-            const remainingLink = await trx("o_scriptAssets").where({ scriptId, assetId: id }).first();
+            await trx("o_scriptAssets").where({ scriptId, assetId: id2 }).del();
+            await trx("o_assets").where({ id: id2, projectId, assetsId }).del();
+            const remainingAsset = await trx("o_assets").where({ id: id2, projectId }).first();
+            const remainingLink = await trx("o_scriptAssets").where({ scriptId, assetId: id2 }).first();
             if (remainingAsset || remainingLink) throw new Error("\u884D\u751F\u8D44\u4EA7\u5220\u9664\u540E\u6821\u9A8C\u5931\u8D25");
             await trx("o_agentWorkData").insert({
               projectId,
               episodesId: scriptId,
               key: receiptKey,
-              data: JSON.stringify({ payloadHash, assetId: id, assetsId, action: "delete" })
+              data: JSON.stringify({ payloadHash, assetId: id2, assetsId, action: "delete" })
             });
             return false;
           });
           const ack = await new Promise((resolve3, reject) => {
             const timeout = setTimeout(() => reject(new Error("\u884D\u751F\u8D44\u4EA7\u5DF2\u4ECE\u6570\u636E\u5E93\u5220\u9664\uFF0C\u4F46\u524D\u7AEF\u540C\u6B65\u56DE\u6267\u8D85\u65F6")), 3e4);
-            socket.emit("delDeriveAsset", { assetsId, id }, (response) => {
+            socket.emit("delDeriveAsset", { assetsId, id: id2 }, (response) => {
               clearTimeout(timeout);
               if (response === false || response?.success === false || response?.error) {
                 reject(new Error(response?.error ?? response?.message ?? "\u524D\u7AEF\u540C\u6B65\u5220\u9664\u5931\u8D25"));
@@ -261309,11 +262162,11 @@ var tools_default = (toolCpnfig) => {
               resolve3(response);
             });
           });
-          thinking.appendText(`${reused ? "\u5DF2\u590D\u7528\u5220\u9664\u56DE\u6267" : "\u5DF2\u5220\u9664"}\u884D\u751F\u8D44\u4EA7\uFF0CID: ${id}
+          thinking.appendText(`${reused ? "\u5DF2\u590D\u7528\u5220\u9664\u56DE\u6267" : "\u5DF2\u5220\u9664"}\u884D\u751F\u8D44\u4EA7\uFF0CID: ${id2}
 `);
           thinking.updateTitle("\u8D44\u4EA7\u64CD\u4F5C\u5B8C\u6210");
           thinking.complete();
-          return { success: true, requestId, id, reused, ack };
+          return { success: true, requestId, id: id2, reused, ack };
         } catch (error73) {
           const detail = `${utils_default.error(error73).message}\uFF1B\u540C\u4E00\u5220\u9664\u64CD\u4F5C\u5982\u9700\u91CD\u8BD5\uFF0C\u8BF7\u590D\u7528 requestId=${requestId}`;
           thinking.appendText("\u8D44\u4EA7\u5220\u9664\u5931\u8D25:\n" + detail);
@@ -261554,17 +262407,17 @@ ${input}`).digest("hex").slice(0, 20);
   }
   async begin(input) {
     this.validateScope(input);
-    const id = input.requestId && /^[a-zA-Z0-9_-]{8,128}$/.test(input.requestId) ? input.requestId : (0, import_node_crypto7.randomUUID)();
+    const id2 = input.requestId && /^[a-zA-Z0-9_-]{8,128}$/.test(input.requestId) ? input.requestId : (0, import_node_crypto7.randomUUID)();
     const inputHash = (0, import_node_crypto7.createHash)("sha256").update(input.content).digest("hex");
     return this.db.transaction(async (trx) => {
-      const previous = await trx("o_agentRun").where({ id }).first();
+      const previous = await trx("o_agentRun").where({ id: id2 }).first();
       if (previous) {
         if (previous.agentType !== input.agentType || Number(previous.projectId) !== input.projectId || (previous.episodesId == null ? void 0 : Number(previous.episodesId)) !== input.episodesId || previous.isolationKey !== input.isolationKey || previous.inputHash !== inputHash) throw new Error("\u76F8\u540C requestId \u5BF9\u5E94\u4E0D\u540C\u4EFB\u52A1\u5185\u5BB9\uFF0C\u5DF2\u62D2\u7EDD\u91CD\u590D\u63D0\u4EA4");
-        return { id, status: previous.status, duplicate: true };
+        return { id: id2, status: previous.status, duplicate: true };
       }
       const now2 = Date.now();
       await trx("o_agentRun").insert({
-        id,
+        id: id2,
         agentType: input.agentType,
         projectId: input.projectId,
         episodesId: input.episodesId ?? null,
@@ -261575,7 +262428,7 @@ ${input}`).digest("hex").slice(0, 20);
         createTime: now2,
         updateTime: now2
       });
-      return { id, status: "running", duplicate: false };
+      return { id: id2, status: "running", duplicate: false };
     });
   }
   async beginStep(runId, stepKey, inputContent) {
@@ -261651,8 +262504,8 @@ ${input}`).digest("hex").slice(0, 20);
     });
     if (count !== 1) throw new Error(`\u6B65\u9AA4 ${stepKey} \u4E0D\u5728\u53EF\u6838\u5BF9\u72B6\u6001`);
   }
-  async resolveToolCall(runId, id, resolution, output, error73) {
-    const count = await this.db("o_agentToolCall").where({ id, runId, sideEffect: 1 }).whereIn("status", ["running", "reconciling", "failed", "retryable"]).update({
+  async resolveToolCall(runId, id2, resolution, output, error73) {
+    const count = await this.db("o_agentToolCall").where({ id: id2, runId, sideEffect: 1 }).whereIn("status", ["running", "reconciling", "failed", "retryable"]).update({
       status: resolution,
       outputJson: resolution === "completed" ? JSON.stringify(output ?? null) : null,
       error: resolution === "completed" ? null : error73 ?? (resolution === "retryable" ? "\u5DF2\u6838\u5BF9\uFF0C\u53EF\u5B89\u5168\u91CD\u8BD5" : "\u5DF2\u6838\u5BF9\u5E76\u53D6\u6D88\u8BE5\u5199\u5DE5\u5177\u8C03\u7528"),
@@ -261984,9 +262837,9 @@ async function getStoryboardRebuildContext(db2, projectId, episodesId) {
 
 // src/agents/productionAgent/storyboardRebuildDispatch.ts
 function isExplicitStoryboardRebuildRequest(input) {
-  const text2 = input.trim().replace(/[\s，。！!？?、]/g, "");
-  if (/^(重新构建|重新生成分镜(?:表)?|重新构建分镜(?:表)?|重建分镜(?:表)?|重新制作分镜(?:表)?)$/.test(text2)) return true;
-  return /^(?:请)?(?:以|按)(?:当前|最新)导演(?:计划|规划)(?:为准)?(?:重新构建|重新生成|重建)(?:全部|整集|所有|[一二三四五六七八九十百\d]+场|全部[一二三四五六七八九十百\d]+场)?分镜(?:表)?$/.test(text2);
+  const text3 = input.trim().replace(/[\s，。！!？?、]/g, "");
+  if (/^(重新构建|重新生成分镜(?:表)?|重新构建分镜(?:表)?|重建分镜(?:表)?|重新制作分镜(?:表)?)$/.test(text3)) return true;
+  return /^(?:请)?(?:以|按)(?:当前|最新)导演(?:计划|规划)(?:为准)?(?:重新构建|重新生成|重建)(?:全部|整集|所有|[一二三四五六七八九十百\d]+场|全部[一二三四五六七八九十百\d]+场)?分镜(?:表)?$/.test(text3);
 }
 function storyboardPlanSceneCount(plan) {
   const declared = plan.match(/共规划\s*(\d+)\s*个?场/);
@@ -262125,7 +262978,7 @@ function createStoryboardRevisionTool(options) {
       const script = await db2("o_script").where({ id: episodesId, projectId }).select("content").first();
       if (!script) throw new Error("\u5F53\u524D\u9879\u76EE\u4E0D\u5B58\u5728\u8BE5\u96C6\u5267\u672C");
       const sourceScene = extractSourceScene(String(script.content ?? ""), scene);
-      const text2 = await options.generate({
+      const text3 = await options.generate({
         instruction,
         scene,
         total: before.total,
@@ -262134,7 +262987,7 @@ function createStoryboardRevisionTool(options) {
         sourceScene
       });
       if (abortSignal?.aborted) throw new Error("\u7528\u6237\u5DF2\u505C\u6B62\u5206\u955C\u4FEE\u8BA2\uFF0C\u672A\u63D0\u4EA4\u751F\u6210\u7ED3\u679C");
-      const parsed = extractStoryboardTable(text2);
+      const parsed = extractStoryboardTable(text3);
       if (parsed.mode !== "scene" || parsed.scene !== scene || parsed.total !== before.total || parsed.taskId !== before.taskId) {
         throw new Error(`\u4FEE\u8BA2\u8F93\u51FA\u4E0D\u7B26\u5408\u56FA\u5B9A\u573A\u6B21/task/total \u534F\u8BAE\uFF1B\u7B2C${scene}\u573A\u65E7\u7A3F\u4FDD\u6301\u4E0D\u53D8`);
       }
@@ -262237,7 +263090,7 @@ ${seed}`).digest("hex").slice(0, 32);
 ${options.stepKey ?? "run"}
 ${toolName}
 ${inputHash}`).digest("hex") : null;
-            let id = (0, import_node_crypto12.randomUUID)();
+            let id2 = (0, import_node_crypto12.randomUUID)();
             const now2 = Date.now();
             if (operationKey) {
               const prior = await options.db("o_agentToolCall").where({ operationKey }).first();
@@ -262246,8 +263099,8 @@ ${inputHash}`).digest("hex") : null;
                 if (prior.status !== "retryable") {
                   throw new Error(`\u5DE5\u5177 ${toolName} \u7684\u76F8\u540C\u5199\u64CD\u4F5C\u5F53\u524D\u72B6\u6001\u4E3A ${prior.status}\uFF0C\u5FC5\u987B\u5148\u6838\u5BF9\u7ED3\u679C\uFF0C\u4E0D\u80FD\u91CD\u590D\u6267\u884C`);
                 }
-                id = prior.id;
-                const claimed = await options.db("o_agentToolCall").where({ id, status: "retryable" }).update({
+                id2 = prior.id;
+                const claimed = await options.db("o_agentToolCall").where({ id: id2, status: "retryable" }).update({
                   status: "running",
                   error: null,
                   outputJson: null,
@@ -262256,7 +263109,7 @@ ${inputHash}`).digest("hex") : null;
                 if (claimed !== 1) throw new Error(`\u5DE5\u5177 ${toolName} \u7684\u91CD\u8BD5\u72B6\u6001\u5DF2\u53D8\u5316\uFF0C\u8BF7\u91CD\u65B0\u6838\u5BF9`);
               } else {
                 await options.db("o_agentToolCall").insert({
-                  id,
+                  id: id2,
                   runId: options.runId,
                   stepKey: options.stepKey ?? null,
                   toolName,
@@ -262271,7 +263124,7 @@ ${inputHash}`).digest("hex") : null;
               }
             } else {
               await options.db("o_agentToolCall").insert({
-                id,
+                id: id2,
                 runId: options.runId,
                 stepKey: options.stepKey ?? null,
                 toolName,
@@ -262286,7 +263139,7 @@ ${inputHash}`).digest("hex") : null;
             }
             try {
               const result = await original(...args);
-              await options.db("o_agentToolCall").where({ id, status: "running" }).update({
+              await options.db("o_agentToolCall").where({ id: id2, status: "running" }).update({
                 status: "completed",
                 outputJson: json4(result),
                 error: null,
@@ -262294,7 +263147,7 @@ ${inputHash}`).digest("hex") : null;
               });
               return result;
             } catch (error73) {
-              await options.db("o_agentToolCall").where({ id, status: "running" }).update({
+              await options.db("o_agentToolCall").where({ id: id2, status: "running" }).update({
                 status: sideEffect ? "reconciling" : "failed",
                 error: error73 instanceof Error ? error73.message : String(error73),
                 updateTime: Date.now()
@@ -262309,27 +263162,27 @@ ${inputHash}`).digest("hex") : null;
 }
 
 // src/utils/agent/contextManager.ts
-function estimateTokens(text2) {
-  if (!text2) return 0;
-  const cjk = text2.match(/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/gu)?.length ?? 0;
-  const rest = text2.replace(/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/gu, "");
+function estimateTokens(text3) {
+  if (!text3) return 0;
+  const cjk = text3.match(/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/gu)?.length ?? 0;
+  const rest = text3.replace(/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/gu, "");
   const nonWhitespace = rest.replace(/\s+/g, " ");
-  return Math.max(1, cjk + Math.ceil(nonWhitespace.length / 4) + Math.ceil(text2.length / 80));
+  return Math.max(1, cjk + Math.ceil(nonWhitespace.length / 4) + Math.ceil(text3.length / 80));
 }
-function truncateToTokens(text2, maxTokens) {
+function truncateToTokens(text3, maxTokens) {
   if (maxTokens <= 0) return "";
-  if (estimateTokens(text2) <= maxTokens) return text2;
+  if (estimateTokens(text3) <= maxTokens) return text3;
   let lo = 0;
-  let hi = text2.length;
+  let hi = text3.length;
   while (lo < hi) {
     const mid = Math.ceil((lo + hi) / 2);
-    if (estimateTokens(text2.slice(0, mid)) <= maxTokens) lo = mid;
+    if (estimateTokens(text3.slice(0, mid)) <= maxTokens) lo = mid;
     else hi = mid - 1;
   }
-  const clipped = text2.slice(0, lo).trimEnd();
+  const clipped = text3.slice(0, lo).trimEnd();
   return clipped ? clipped + "\u2026" : "";
 }
-function buildMemoryPrompt(memory, maxTokens = 2400) {
+function buildMemoryPrompt(memory2, maxTokens = 2400) {
   if (!Number.isSafeInteger(maxTokens) || maxTokens < 0) throw new Error("\u8BB0\u5FC6\u4E0A\u4E0B\u6587 Token \u9884\u7B97\u65E0\u6548");
   if (maxTokens < 80) return "";
   const prefix = "## Memory\n\u4EE5\u4E0B\u662F\u4F60\u5BF9\u7528\u6237\u7684\u8BB0\u5FC6\uFF0C\u53EF\u4F5C\u4E3A\u53C2\u8003\u4F46\u4E0D\u8981\u4E3B\u52A8\u63D0\u53CA\uFF1A\n";
@@ -262363,10 +263216,10 @@ function buildMemoryPrompt(memory, maxTokens = 2400) {
   };
   const recentBudget = Math.floor(usable * 0.5);
   const summaryBudget = Math.floor(usable * 0.25);
-  const recent = take(memory.shortTerm.map((m) => `${m.role ?? "message"}: ${m.content}`), recentBudget);
-  const summaries = take(memory.summaries.map((m) => m.content), summaryBudget);
+  const recent = take(memory2.shortTerm.map((m) => `${m.role ?? "message"}: ${m.content}`), recentBudget);
+  const summaries = take(memory2.summaries.map((m) => m.content), summaryBudget);
   const used = recent.reduce((sum, item) => sum + estimateTokens(item), 0) + summaries.reduce((sum, item) => sum + estimateTokens(item), 0);
-  const related = take(memory.rag.map((m) => m.content), Math.max(0, usable - used));
+  const related = take(memory2.rag.map((m) => m.content), Math.max(0, usable - used));
   const sections2 = [
     related.length ? `[\u76F8\u5173\u8BB0\u5FC6]
 ${related.join("\n")}` : "",
@@ -262389,9 +263242,9 @@ var PRODUCTION_SIDE_EFFECT_TOOLS = /* @__PURE__ */ new Set([
   "add_flowData_storyboard"
 ]);
 async function runDecisionAI(ctx) {
-  const { isolationKey, text: text2, abortSignal } = ctx;
-  const memory = new memory_default("productionAgent", isolationKey);
-  await memory.add("user", text2);
+  const { isolationKey, text: text3, abortSignal } = ctx;
+  const memory2 = new memory_default("productionAgent", isolationKey);
+  await memory2.add("user", text3);
   const skill = import_path10.default.join(utils_default.getPath("skills"), "production_agent_decision.md");
   const taskStore = ctx.runId ? new TaskStore(utils_default.db) : null;
   const prompt = taskStore ? await taskStore.readSkill(ctx.runId, skill) : await fs12.promises.readFile(skill, "utf-8");
@@ -262399,9 +263252,9 @@ async function runDecisionAI(ctx) {
   const projectInfo = await utils_default.db("o_project").where("id", ctx.resTool.data.projectId).first();
   if (!projectInfo) throw new Error(`\u9879\u76EE\u4E0D\u5B58\u5728\uFF0CID: ${ctx.resTool.data.projectId}`);
   const [_, imageModelName] = projectInfo.imageModel.split(/:(.+)/);
-  const [id, videoModelName] = projectInfo.videoModel.split(/:(.+)/);
-  const models = await utils_default.vendor.getModelList(id);
-  if (!models.length) throw new Error(`\u9879\u76EE\u4F7F\u7528\u7684\u6A21\u578B\u4E0D\u5B58\u5728\uFF0CID: ${projectInfo.videoModel}`);
+  const [id2, videoModelName] = projectInfo.videoModel.split(/:(.+)/);
+  const models2 = await utils_default.vendor.getModelList(id2);
+  if (!models2.length) throw new Error(`\u9879\u76EE\u4F7F\u7528\u7684\u6A21\u578B\u4E0D\u5B58\u5728\uFF0CID: ${projectInfo.videoModel}`);
   let videoMode = "";
   try {
     videoMode = JSON.parse(projectInfo.mode ?? "");
@@ -262416,23 +263269,23 @@ async function runDecisionAI(ctx) {
   const budgetRow = await utils_default.db("o_setting").where({ key: "memoryContextTokenBudget" }).select("value").first();
   const configuredBudget = Number(budgetRow?.value);
   const memoryBudget = Number.isSafeInteger(configuredBudget) && configuredBudget >= 400 ? configuredBudget : 2400;
-  const mem = buildMemoryPrompt(await memory.get(text2), memoryBudget);
+  const mem = buildMemoryPrompt(await memory2.get(text3), memoryBudget);
   const { fullStream } = await utils_default.Ai.Text("productionAgent:decisionAgent", ctx.thinkConfig.think, ctx.thinkConfig.thinlLevel).stream({
     messages: [
       { role: "system", content: prompt + (checkpoint ? "\n\n\u6062\u590D\u4EFB\u52A1\u65F6\u5FC5\u987B\u9075\u5B88 assistant \u6D88\u606F\u4E2D\u7684 Agent Runtime \u4EFB\u52A1\u68C0\u67E5\u70B9\uFF0C\u4E0D\u5F97\u91CD\u590D\u5DF2\u5B8C\u6210\u4E1A\u52A1\u6B65\u9AA4\u3002" : "") },
       { role: "assistant", content: [mem, modelInfo, checkpoint].filter(Boolean).join("\n\n") },
-      { role: "user", content: text2 }
+      { role: "user", content: text3 }
     ],
     abortSignal,
     tools: {
       ...wrapAgentTools(
-        { ...memory.getTools(), ...tools_default({ resTool: ctx.resTool, msg: ctx.msg }) },
+        { ...memory2.getTools(), ...tools_default({ resTool: ctx.resTool, msg: ctx.msg }) },
         { db: utils_default.db, runId: ctx.runId, sideEffectTools: PRODUCTION_SIDE_EFFECT_TOOLS }
       ),
       ...await createSubAgent(ctx)
     },
     onFinish: async (completion) => {
-      await memory.add("assistant:decision", removeAllXmlTags(completion.text));
+      await memory2.add("assistant:decision", removeAllXmlTags(completion.text));
     }
   });
   let currentMsg = ctx.msg;
@@ -262445,7 +263298,7 @@ async function runDecisionAI(ctx) {
 }
 async function createSubAgent(parentCtx) {
   const { resTool, abortSignal } = parentCtx;
-  const memory = new memory_default("productionAgent", parentCtx.isolationKey);
+  const memory2 = new memory_default("productionAgent", parentCtx.isolationKey);
   const taskStore = new TaskStore(utils_default.db);
   const readSkill = (filePath) => parentCtx.runId ? taskStore.readSkill(parentCtx.runId, filePath) : fs12.promises.readFile(filePath, "utf-8");
   async function runAgent({ key, modelKey, prompt, system, name: name28, memoryKey, tools: extraTools, messages, expectedScene, readOnlyTools }) {
@@ -262529,7 +263382,7 @@ async function createSubAgent(parentCtx) {
       }
       const visibleMemory = removeAllXmlTags(fullResponse).trim();
       const memoryContent = visibleMemory || (isDirectorPlan ? "\u5BFC\u6F14\u8BA1\u5212\u5DF2\u4FDD\u5B58\u5230\u5DE5\u4F5C\u533A\u3002" : isStoryboardTable ? "\u5206\u955C\u8868\u4EA7\u51FA\u5DF2\u4FDD\u5B58\u5230\u5DE5\u4F5C\u533A\u3002" : "");
-      if (memoryContent) await memory.add(memoryKey, memoryContent, { name: name28, createTime: new Date(subMsg.datetime).getTime() });
+      if (memoryContent) await memory2.add(memoryKey, memoryContent, { name: name28, createTime: new Date(subMsg.datetime).getTime() });
       if (parentCtx.runId) {
         let resultRef = `message:${subMsg.id}`;
         if (isDirectorPlan) resultRef = `directorPlan:${scope.projectId}:${scope.episodesId}`;
@@ -262550,9 +263403,9 @@ async function createSubAgent(parentCtx) {
   const projectInfo = await utils_default.db("o_project").where("id", resTool.data.projectId).first();
   if (!projectInfo) throw new Error(`\u9879\u76EE\u4E0D\u5B58\u5728\uFF0CID: ${resTool.data.projectId}`);
   const [_, imageModelName] = projectInfo.imageModel.split(/:(.+)/);
-  const [id, videoModelName] = projectInfo.videoModel.split(/:(.+)/);
-  const models = await utils_default.vendor.getModelList(id);
-  if (!models.length) throw new Error(`\u9879\u76EE\u4F7F\u7528\u7684\u6A21\u578B\u4E0D\u5B58\u5728\uFF0CID: ${projectInfo.videoModel}`);
+  const [id2, videoModelName] = projectInfo.videoModel.split(/:(.+)/);
+  const models2 = await utils_default.vendor.getModelList(id2);
+  if (!models2.length) throw new Error(`\u9879\u76EE\u4F7F\u7528\u7684\u6A21\u578B\u4E0D\u5B58\u5728\uFF0CID: ${projectInfo.videoModel}`);
   let videoMode = "";
   try {
     videoMode = JSON.parse(projectInfo.mode ?? "");
@@ -262853,7 +263706,7 @@ ${buildSkillPrompt(mainSkills)}`,
 }
 async function consumeFullStream(fullStream, initialMsg, syncMsg, completeMessage = true) {
   let msg = initialMsg;
-  let text2 = msg.text();
+  let text3 = msg.text();
   let thinking = null;
   let thinkTime = 0;
   let fullResponse = "";
@@ -262863,7 +263716,7 @@ async function consumeFullStream(fullStream, initialMsg, syncMsg, completeMessag
         const newMsg = syncMsg();
         if (newMsg !== msg) {
           msg = newMsg;
-          text2 = msg.text();
+          text3 = msg.text();
         }
       }
       if (chunk.type === "reasoning-start") {
@@ -262877,7 +263730,7 @@ async function consumeFullStream(fullStream, initialMsg, syncMsg, completeMessag
         thinking?.complete();
         thinking = null;
       } else if (chunk.type === "text-delta") {
-        text2.append(chunk.text);
+        text3.append(chunk.text);
         fullResponse += chunk.text;
       } else if (chunk.type === "error") {
         throw chunk.error;
@@ -262885,23 +263738,23 @@ async function consumeFullStream(fullStream, initialMsg, syncMsg, completeMessag
         break;
       }
     }
-    text2.complete();
+    text3.complete();
     if (completeMessage) msg.complete();
   } catch (err) {
     thinking?.complete();
     const errMsg = err?.message ?? String(err);
-    text2.append(errMsg);
-    text2.error();
+    text3.append(errMsg);
+    text3.error();
     msg.error();
     throw err;
   }
   return fullResponse;
 }
-function removeAllXmlTags(text2) {
-  text2 = text2.replace(/<([a-zA-Z][\w-]*)(\s+[^>]*)?>([\s\S]*?)<\/\1>/g, "");
-  text2 = text2.replace(/<([a-zA-Z][\w-]*)(\s+[^>]*)?\/>/g, "");
-  text2 = text2.replace(/<\/?[a-zA-Z][\w-]*(\s+[^>]*)?>/g, "");
-  return text2.trim();
+function removeAllXmlTags(text3) {
+  text3 = text3.replace(/<([a-zA-Z][\w-]*)(\s+[^>]*)?>([\s\S]*?)<\/\1>/g, "");
+  text3 = text3.replace(/<([a-zA-Z][\w-]*)(\s+[^>]*)?\/>/g, "");
+  text3 = text3.replace(/<\/?[a-zA-Z][\w-]*(\s+[^>]*)?>/g, "");
+  return text3.trim();
 }
 function buildSkillPrompt(skills) {
   const skillEntries = skills.map((s) => `  <skill>
@@ -263361,14 +264214,14 @@ var AutoThinkingTextStream = class _AutoThinkingTextStream extends ContentStream
     return super.error();
   }
   /** 输出普通文本 */
-  flushText(text2) {
-    if (!text2) return;
-    super.append(text2);
+  flushText(text3) {
+    if (!text3) return;
+    super.append(text3);
   }
   /** 输出思考文本：累积完整内容，用 merge 策略发送，避免前端 append 丢失 */
-  flushThinking(text2) {
-    if (!text2) return;
-    this.thinkingBuffer += text2;
+  flushThinking(text3) {
+    if (!text3) return;
+    this.thinkingBuffer += text3;
     this.ensureThinkingStream().merge({ title: "\u601D\u8003\u4E2D...", text: this.thinkingBuffer });
   }
   ensureThinkingStream() {
@@ -263955,15 +264808,15 @@ var keySchema2 = external_exports.enum(Object.keys(planData.shape));
 var planDataKeyLabels = Object.fromEntries(
   Object.entries(planData.shape).map(([key, schema]) => [key, schema.description ?? key])
 );
-function optionalTextChunk(text2, offset, limit) {
-  if (offset === void 0 && limit === void 0) return text2;
-  const start = Math.min(offset ?? 0, text2.length);
-  const end = Math.min(start + (limit ?? 6e3), text2.length);
+function optionalTextChunk(text3, offset, limit) {
+  if (offset === void 0 && limit === void 0) return text3;
+  const start = Math.min(offset ?? 0, text3.length);
+  const end = Math.min(start + (limit ?? 6e3), text3.length);
   return {
-    data: text2.slice(start, end),
+    data: text3.slice(start, end),
     offset: start,
-    total: text2.length,
-    nextOffset: end < text2.length ? end : null
+    total: text3.length,
+    nextOffset: end < text3.length ? end : null
   };
 }
 var tools_default2 = (toolCpnfig) => {
@@ -264049,8 +264902,8 @@ var tools_default2 = (toolCpnfig) => {
         console.log("[tools] get_novel_text", chapterIndex);
         const thinking = msg.thinking(`\u6B63\u5728\u83B7\u53D6\u5C0F\u8BF4\u7AE0\u8282\u539F\u6587...`);
         const data = await utils_default.db("o_novel").where("projectId", resTool.data.projectId).where({ chapterIndex }).select("chapterData").first();
-        const text2 = data && data?.chapterData ? data.chapterData : "";
-        const result = optionalTextChunk(text2, offset, limit);
+        const text3 = data && data?.chapterData ? data.chapterData : "";
+        const result = optionalTextChunk(text3, offset, limit);
         thinking.appendText(`\u83B7\u53D6\u5230\u539F\u6587:
 ` + (typeof result === "string" ? result : JSON.stringify(result)));
         thinking.updateTitle(`\u83B7\u53D6\u5C0F\u8BF4\u7AE0\u8282\u539F\u6587\u5B8C\u6210`);
@@ -264071,8 +264924,8 @@ var tools_default2 = (toolCpnfig) => {
         console.log("[tools] get_script_content", ids);
         const thinking = msg.thinking(`\u6B63\u5728\u83B7\u53D6\u811A\u672C\u5185\u5BB9...`);
         const data = await utils_default.db("o_script").where("projectId", resTool.data.projectId).whereIn("id", ids).select("content", "name");
-        const text2 = data && data.length ? data.map((d) => `<scriptItem name="${d.name}">${d.content}</scriptItem>`).join("\n") : "";
-        const result = optionalTextChunk(text2, offset, limit);
+        const text3 = data && data.length ? data.map((d) => `<scriptItem name="${d.name}">${d.content}</scriptItem>`).join("\n") : "";
+        const result = optionalTextChunk(text3, offset, limit);
         thinking.appendText(`\u83B7\u53D6\u5230\u811A\u672C\u5185\u5BB9:
 ` + (typeof result === "string" ? JSON.stringify(data, null, 2) : JSON.stringify(result)));
         thinking.updateTitle(`\u83B7\u53D6\u811A\u672C\u5185\u5BB9\u5B8C\u6210`);
@@ -264165,10 +265018,10 @@ async function saveScriptItem(db2, projectId, item, expectedContent) {
     const current = await trx("o_script").where({ projectId, name: item.name }).first();
     if (expectedContent === null) {
       if (current) throw new Error(`\u5267\u672C\u201C${item.name}\u201D\u5728\u751F\u6210\u671F\u95F4\u5DF2\u88AB\u521B\u5EFA\uFF0C\u8BF7\u5148\u67E5\u770B\u5F53\u524D\u7248\u672C\u518D\u91CD\u8BD5`);
-      const [id] = await trx("o_script").insert({ projectId, name: item.name, content: item.content });
-      const saved2 = await trx("o_script").where({ id, projectId }).first();
+      const [id2] = await trx("o_script").insert({ projectId, name: item.name, content: item.content });
+      const saved2 = await trx("o_script").where({ id: id2, projectId }).first();
       if (!saved2 || saved2.content !== item.content) throw new Error("\u5267\u672C\u6B63\u6587\u5199\u5165\u540E\u6821\u9A8C\u5931\u8D25");
-      return Number(id);
+      return Number(id2);
     }
     if (!current || String(current.content ?? "") !== expectedContent) {
       throw new Error(`\u5267\u672C\u201C${item.name}\u201D\u5728\u751F\u6210\u671F\u95F4\u5DF2\u88AB\u4FEE\u6539\uFF0C\u8BF7\u5148\u67E5\u770B\u5F53\u524D\u7248\u672C\u518D\u91CD\u8BD5`);
@@ -264203,9 +265056,9 @@ async function reconcileScriptStepOutput(db2, projectId, stepKey, output) {
 
 // src/agents/scriptAgent/index.ts
 async function runDecisionAI2(ctx) {
-  const { isolationKey, text: text2, userMessageTime, abortSignal, resTool } = ctx;
-  const memory = new memory_default("scriptAgent", isolationKey);
-  await memory.add("user", text2, { createTime: userMessageTime });
+  const { isolationKey, text: text3, userMessageTime, abortSignal, resTool } = ctx;
+  const memory2 = new memory_default("scriptAgent", isolationKey);
+  await memory2.add("user", text3, { createTime: userMessageTime });
   const skill = import_path11.default.join(utils_default.getPath("skills"), "script_agent_decision.md");
   const taskStore = ctx.runId ? new TaskStore(utils_default.db) : null;
   const prompt = taskStore ? await taskStore.readSkill(ctx.runId, skill) : await fs13.promises.readFile(skill, "utf-8");
@@ -264213,7 +265066,7 @@ async function runDecisionAI2(ctx) {
   const budgetRow = await utils_default.db("o_setting").where({ key: "memoryContextTokenBudget" }).select("value").first();
   const configuredBudget = Number(budgetRow?.value);
   const memoryBudget = Number.isSafeInteger(configuredBudget) && configuredBudget >= 400 ? configuredBudget : 2400;
-  const mem = buildMemoryPrompt(await memory.get(text2), memoryBudget);
+  const mem = buildMemoryPrompt(await memory2.get(text3), memoryBudget);
   const projectData = await utils_default.db("o_project").where("id", resTool.data.projectId).first();
   const novelData = await utils_default.db("o_novel").where("projectId", resTool.data.projectId).select("chapterIndex");
   const projectInfo = [
@@ -264232,18 +265085,18 @@ async function runDecisionAI2(ctx) {
         content: prompt + (checkpoint ? "\n\n\u6062\u590D\u4EFB\u52A1\u65F6\u5FC5\u987B\u9075\u5B88 assistant \u6D88\u606F\u4E2D\u7684 Agent Runtime \u4EFB\u52A1\u68C0\u67E5\u70B9\uFF0C\u4E0D\u5F97\u91CD\u590D\u5DF2\u5B8C\u6210\u4E1A\u52A1\u6B65\u9AA4\u3002" : "")
       },
       { role: "assistant", content: [projectInfo, mem, checkpoint].filter(Boolean).join("\n\n") },
-      { role: "user", content: text2 }
+      { role: "user", content: text3 }
     ],
     abortSignal,
     tools: {
       ...wrapAgentTools(
-        { ...memory.getTools(), ...tools_default2({ resTool: ctx.resTool, msg: ctx.msg }) },
+        { ...memory2.getTools(), ...tools_default2({ resTool: ctx.resTool, msg: ctx.msg }) },
         { db: utils_default.db, runId: ctx.runId }
       ),
       ...createSubAgent2(ctx)
     },
     onFinish: async (completion) => {
-      await memory.add("assistant:decision", removeAllXmlTags2(completion.text));
+      await memory2.add("assistant:decision", removeAllXmlTags2(completion.text));
     }
   });
   let currentMsg = ctx.msg;
@@ -264256,7 +265109,7 @@ async function runDecisionAI2(ctx) {
 }
 function createSubAgent2(parentCtx) {
   const { resTool, abortSignal } = parentCtx;
-  const memory = new memory_default("scriptAgent", parentCtx.isolationKey);
+  const memory2 = new memory_default("scriptAgent", parentCtx.isolationKey);
   const taskStore = new TaskStore(utils_default.db);
   const readSkill = (filePath) => parentCtx.runId ? taskStore.readSkill(parentCtx.runId, filePath) : fs13.promises.readFile(filePath, "utf-8");
   async function runAgent({
@@ -264314,7 +265167,7 @@ function createSubAgent2(parentCtx) {
       }
       const visibleMemory = removeAllXmlTags2(fullResponse).trim();
       if (visibleMemory) {
-        await memory.add(memoryKey, visibleMemory, {
+        await memory2.add(memoryKey, visibleMemory, {
           name: name28,
           createTime: new Date(subMsg.datetime).getTime()
         });
@@ -264413,7 +265266,7 @@ function createSubAgent2(parentCtx) {
 }
 async function consumeFullStream2(fullStream, initialMsg, syncMsg) {
   let msg = initialMsg;
-  let text2 = msg.text();
+  let text3 = msg.text();
   let thinking = null;
   let thinkTime = 0;
   let fullResponse = "";
@@ -264423,7 +265276,7 @@ async function consumeFullStream2(fullStream, initialMsg, syncMsg) {
         const newMsg = syncMsg();
         if (newMsg !== msg) {
           msg = newMsg;
-          text2 = msg.text();
+          text3 = msg.text();
         }
       }
       if (chunk.type === "reasoning-start") {
@@ -264437,29 +265290,29 @@ async function consumeFullStream2(fullStream, initialMsg, syncMsg) {
         thinking?.complete();
         thinking = null;
       } else if (chunk.type === "text-delta") {
-        text2.append(chunk.text);
+        text3.append(chunk.text);
         fullResponse += chunk.text;
       } else if (chunk.type === "error") {
         throw chunk.error;
       }
     }
-    text2.complete();
+    text3.complete();
     msg.complete();
   } catch (err) {
     thinking?.complete();
     const errMsg = err?.message ?? String(err);
-    text2.append(errMsg);
-    text2.error();
+    text3.append(errMsg);
+    text3.error();
     msg.error();
     throw err;
   }
   return fullResponse;
 }
-function removeAllXmlTags2(text2) {
-  text2 = text2.replace(/<([a-zA-Z][\w-]*)(\s+[^>]*)?>([\s\S]*?)<\/\1>/g, "");
-  text2 = text2.replace(/<([a-zA-Z][\w-]*)(\s+[^>]*)?\/>/g, "");
-  text2 = text2.replace(/<\/?[a-zA-Z][\w-]*(\s+[^>]*)?>/g, "");
-  return text2.trim();
+function removeAllXmlTags2(text3) {
+  text3 = text3.replace(/<([a-zA-Z][\w-]*)(\s+[^>]*)?>([\s\S]*?)<\/\1>/g, "");
+  text3 = text3.replace(/<([a-zA-Z][\w-]*)(\s+[^>]*)?\/>/g, "");
+  text3 = text3.replace(/<\/?[a-zA-Z][\w-]*(\s+[^>]*)?>/g, "");
+  return text3.trim();
 }
 
 // src/socket/routes/scriptAgent.ts
@@ -264727,7 +265580,7 @@ async function ensureThumbnail(originalPath, thumbnailPath, size) {
 }
 
 // src/app.ts
-var app = (0, import_express174.default)();
+var app = (0, import_express175.default)();
 var server = import_node_http.default.createServer(app);
 async function checkPermissions() {
   if (!isEletron()) return true;
@@ -264764,8 +265617,8 @@ async function startServe(randomPort = false) {
   (0, import_express_ws.default)(app);
   app.use((0, import_morgan.default)("dev"));
   app.use((0, import_cors.default)({ origin: "*" }));
-  app.use(import_express174.default.json({ limit: "100mb" }));
-  app.use(import_express174.default.urlencoded({ extended: true, limit: "100mb" }));
+  app.use(import_express175.default.json({ limit: "100mb" }));
+  app.use(import_express175.default.urlencoded({ extended: true, limit: "100mb" }));
   const ossDir = utils_default.getPath("oss");
   if (!import_fs20.default.existsSync(ossDir)) {
     import_fs20.default.mkdirSync(ossDir, { recursive: true });
@@ -264792,7 +265645,7 @@ async function startServe(randomPort = false) {
           sizeSubDir = `${percentMatch[1]}p`;
           sizeOpts = { type: "percentage", value: pct };
         } else {
-          import_express174.default.static(ossDir, { acceptRanges: false })(req, res, next);
+          import_express175.default.static(ossDir, { acceptRanges: false })(req, res, next);
           return;
         }
         const ext = import_path28.default.extname(req.path);
@@ -264803,14 +265656,14 @@ async function startServe(randomPort = false) {
           if (thumbnailPath) {
             res.sendFile(thumbnailPath);
           } else {
-            import_express174.default.static(ossDir, { acceptRanges: false })(req, res, next);
+            import_express175.default.static(ossDir, { acceptRanges: false })(req, res, next);
           }
         });
         return;
       }
       next();
     },
-    import_express174.default.static(ossDir, { acceptRanges: false })
+    import_express175.default.static(ossDir, { acceptRanges: false })
   );
   const skillsDir = utils_default.getPath("skills");
   if (!import_fs20.default.existsSync(skillsDir)) {
@@ -264822,18 +265675,18 @@ async function startServe(randomPort = false) {
     (req, res, next) => {
       /\.(jpe?g|png|gif|webp|svg|ico|bmp)$/i.test(req.path) ? next() : res.status(403).end();
     },
-    import_express174.default.static(skillsDir, { acceptRanges: false })
+    import_express175.default.static(skillsDir, { acceptRanges: false })
   );
   const assetsDir = utils_default.getPath("assets");
   if (!import_fs20.default.existsSync(assetsDir)) {
     import_fs20.default.mkdirSync(assetsDir, { recursive: true });
   }
   console.log("\u6587\u4EF6\u76EE\u5F55:", assetsDir);
-  app.use("/assets", import_express174.default.static(assetsDir, { acceptRanges: false }));
+  app.use("/assets", import_express175.default.static(assetsDir, { acceptRanges: false }));
   const webDir = utils_default.getPath("web");
   if (import_fs20.default.existsSync(webDir)) {
     console.log("\u9759\u6001\u7F51\u7AD9\u76EE\u5F55:", webDir);
-    app.use(import_express174.default.static(webDir, { acceptRanges: false }));
+    app.use(import_express175.default.static(webDir, { acceptRanges: false }));
   } else {
     console.warn("\u9759\u6001\u7F51\u7AD9\u76EE\u5F55\u4E0D\u5B58\u5728:", webDir);
   }
@@ -264853,8 +265706,8 @@ async function startServe(randomPort = false) {
       return res.status(401).send({ message: "\u65E0\u6548\u7684token" });
     }
   });
-  const router174 = await Promise.resolve().then(() => (init_router(), router_exports));
-  await router174.default(app);
+  const router175 = await Promise.resolve().then(() => (init_router(), router_exports));
+  await router175.default(app);
   app.use((_, res, next) => {
     return res.status(404).send({ message: "API 404 Not Found" });
   });

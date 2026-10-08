@@ -1,0 +1,242 @@
+[
+  {
+    "path": "data/skills/production_agent_supervision.md",
+    "beforeSha256": "059ff280d5a01d9c916aa0a710e9cd7d72320f35e56f9b400dc0cf0ff0d66547",
+    "beforeBytes": 20406,
+    "afterSha256": "d34891219e3453ca86ace80d293b4875a9febd6958c2d43c026641c10abb55e3",
+    "afterBytes": 22391,
+    "changed": true
+  },
+  {
+    "path": "data/skills/production_agent_decision.md",
+    "beforeSha256": "a4b80358b05f0458cc4eb0dfecbb8f2d00696325030ccecf543b9dbd843a7932",
+    "beforeBytes": 7409,
+    "afterSha256": "a4b80358b05f0458cc4eb0dfecbb8f2d00696325030ccecf543b9dbd843a7932",
+    "afterBytes": 7409,
+    "changed": false
+  },
+  {
+    "path": "data/skills/production_execution_director_plan.md",
+    "beforeSha256": "30635c03467f3e3699270beeb9e34de3225b78f5ec75fd73545188d54f4b03ae",
+    "beforeBytes": 11641,
+    "afterSha256": "a3d1400fca36775c044dcfa0ce2e7e43a513307df1a6ff462b4e9d768aa64720",
+    "afterBytes": 11882,
+    "changed": true
+  },
+  {
+    "path": "data/skills/production_execution_storyboard_table.md",
+    "beforeSha256": "6d456d18ceaa8ecb3a90d01db1cbc29ca1a88b39843caf85536d813a037330bc",
+    "beforeBytes": 8513,
+    "afterSha256": "63ea4a044538b15f939a6262a2eb14505762c5c799a921bc8273205c03f1a45b",
+    "afterBytes": 9067,
+    "changed": true
+  },
+  {
+    "path": "data/skills/production_execution_storyboard_panel.md",
+    "beforeSha256": "17e4c9a08f1af54b233ff2640aa38013a12180ae578782306c1505831fa08c67",
+    "beforeBytes": 6002,
+    "afterSha256": "10d3730736762073641d51c5f3a93adc95f9c9c8a895985fa5ac81538d11cbc7",
+    "afterBytes": 6464,
+    "changed": true
+  },
+  {
+    "path": "data/skills/production_execution_derive_assets.md",
+    "beforeSha256": "acb0831e67ca76add4f4ce4a085771789a10b578f701bb789b68229b28112152",
+    "beforeBytes": 3517,
+    "afterSha256": "acb0831e67ca76add4f4ce4a085771789a10b578f701bb789b68229b28112152",
+    "afterBytes": 3517,
+    "changed": false
+  },
+  {
+    "path": "data/skills/asset_visual_design.md",
+    "beforeSha256": "4a2d726eb85094f65305a4fa393f5ff1efe8af8f9d473cce8f1b033da6f715b5",
+    "beforeBytes": 15970,
+    "afterSha256": "7e0e9660969eb5797a4d7cbb9cc46132b09ce1aad4a0cf3a0da4164b19d2f9c6",
+    "afterBytes": 16424,
+    "changed": true
+  },
+  {
+    "path": "data/skills/production_skills/storyboard_table_techniques.md",
+    "beforeSha256": "cba1ce7a7506f2d976539ada1324feb0b52ce9f663186a4de8e689f5f53eb5e5",
+    "beforeBytes": 14787,
+    "afterSha256": "1e125e57457b0138406feff05111a15d88b80a5b30b8b59ee28fe6f0a21644b1",
+    "afterBytes": 12101,
+    "changed": true
+  },
+  {
+    "path": "data/skills/production_skills/storyboard_prompt_techniques.md",
+    "beforeSha256": "14bfbe440f89746047d597b8c7066fe738fa17edfb491df61b9b21fd67f1414d",
+    "beforeBytes": 5401,
+    "afterSha256": "87e678c2e3c8a4bc0e68e9d37ce79d968bd9560e72a95046602ce4cd88a1b8b4",
+    "afterBytes": 5583,
+    "changed": true
+  },
+  {
+    "path": "data/modelPrompt/video/minimaxH3Multi-referenceMode.md",
+    "beforeSha256": "6562edbd146544d9be21085a5413b61a2e44528712ca98927e2f7db62c5f1ea2",
+    "beforeBytes": 12447,
+    "afterSha256": "bbd6e222e5b0f6fb411de80438dabbd16d412f6c84e3ed3b55a6c8062ad7dd83",
+    "afterBytes": 7715,
+    "changed": true
+  },
+  {
+    "path": "src/utils/assetPrompt.ts",
+    "beforeSha256": "d9e1ce939da0d3990e7b2db612f6c9df27c775a20d4f2c16972ab6cb789d6299",
+    "beforeBytes": 11420,
+    "afterSha256": "b47bbc7e5e16869ef27153eb8d35273eeae4272882d032e94a25f182f15cc303",
+    "afterBytes": 13975,
+    "changed": true
+  },
+  {
+    "path": "src/utils/assetPromptGeneration.ts",
+    "beforeSha256": "8623a6fa5f4ffbee7eef8f568cb0fe4665f64bc0f4a5d474e04b994b60cfb79a",
+    "beforeBytes": 15941,
+    "afterSha256": "8623a6fa5f4ffbee7eef8f568cb0fe4665f64bc0f4a5d474e04b994b60cfb79a",
+    "afterBytes": 15941,
+    "changed": false
+  },
+  {
+    "path": "src/utils/h3PromptContext.ts",
+    "beforeSha256": "4ddefae5cf4512f81fcc0d57c87d8fce5f51f8b774c086a4fe2b494ae1b7545f",
+    "beforeBytes": 5164,
+    "afterSha256": "184bdd7ae18286c3d656948abf251f2253fa3b9f5c396bc1bae5af2300fdab78",
+    "afterBytes": 9868,
+    "changed": true
+  },
+  {
+    "path": "src/utils/videoPromptGeneration.ts",
+    "beforeSha256": "ef154ab6f7fb523b161ce9ec9a54a872cf173e3b7ea5ff83229911ad2c481d0e",
+    "beforeBytes": 23426,
+    "afterSha256": "5dc2b9ac9ede4e124add40a4c44dcb621b64c9689ab7a18680331523da0b3fde",
+    "afterBytes": 25046,
+    "changed": true
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/art_prompt/art_character.md",
+    "beforeSha256": "f1d8c78056dad9ae10bbb6c38b592b6a98a97bda0f53692fa2458e5ebc4803fb",
+    "beforeBytes": 5677,
+    "afterSha256": "58b50e811ad92ffd962c1e3db5a3118bf3dcc5b8b982e1f5131f853ae29ccc0c",
+    "afterBytes": 5955,
+    "changed": true
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/art_prompt/art_character_derivative.md",
+    "beforeSha256": "7d20fb58b5b6a1e77068746b0a93b180e8ca7d770d1ac590ea7af3fc5da67f24",
+    "beforeBytes": 4979,
+    "afterSha256": "d20699fa6659c98a621ccfd985387ac2a39c16f749719404c6fbe9c06dd9ce24",
+    "afterBytes": 5442,
+    "changed": true
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/art_prompt/art_prop.md",
+    "beforeSha256": "646a14618a5c6d4abb1e2b6b11e7163a0253f8969572b19e41cf75a288ca9a97",
+    "beforeBytes": 1637,
+    "afterSha256": "646a14618a5c6d4abb1e2b6b11e7163a0253f8969572b19e41cf75a288ca9a97",
+    "afterBytes": 1637,
+    "changed": false
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/art_prompt/art_prop_derivative.md",
+    "beforeSha256": "aa4bba6066ef34524684ac7b55a13721376ae1cf914843b24af2097f742e6cd0",
+    "beforeBytes": 1637,
+    "afterSha256": "aa4bba6066ef34524684ac7b55a13721376ae1cf914843b24af2097f742e6cd0",
+    "afterBytes": 1637,
+    "changed": false
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/art_prompt/art_scene.md",
+    "beforeSha256": "c41426c5f2dd8123b64c11e871776a89065ac4104acf0ad08195d42a977c7bae",
+    "beforeBytes": 1712,
+    "afterSha256": "c41426c5f2dd8123b64c11e871776a89065ac4104acf0ad08195d42a977c7bae",
+    "afterBytes": 1712,
+    "changed": false
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/art_prompt/art_scene_derivative.md",
+    "beforeSha256": "3ca02e17e389da1b323ecd3fff7e2fd11a9405d6da1853b4f7df638bd9599401",
+    "beforeBytes": 1624,
+    "afterSha256": "58fac58b2c1dd9b39baf0c1edb8666b126810bc449507190800071e07c47553f",
+    "afterBytes": 1687,
+    "changed": true
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/art_prompt/art_storyboard_video.md",
+    "beforeSha256": "ef8f25ebc802ff532539cdbec8249ddfb42c5bdf1b7a2dfe9b75cfb8cfc77122",
+    "beforeBytes": 4915,
+    "afterSha256": "0ddf095dca7adc9520e733195cdaf103b1fee057a2f899b1bd7993c3bfcd091b",
+    "afterBytes": 2240,
+    "changed": true
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/driector_skills/director_planning_style.md",
+    "beforeSha256": "1c1cd68319c4c902e4248b03fc1e8e784866a5d5fe4acc84aa41c1562b2d0f59",
+    "beforeBytes": 710,
+    "afterSha256": "d7a19c7afe0eb5e58589778d5f730fb2f874d7e09b46bde092cf2d1bde15b34e",
+    "afterBytes": 887,
+    "changed": true
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/driector_skills/director_storyboard.md",
+    "beforeSha256": "850fe5975095704f0e37d4dc3b1af275e51275534e78bd79195798f259909071",
+    "beforeBytes": 988,
+    "afterSha256": "9a96acdd14e3af67ac4afc97fd5038a3f1500984348da51ab34fbe328aa1e6de",
+    "afterBytes": 1353,
+    "changed": true
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/driector_skills/director_storyboard_table_style.md",
+    "beforeSha256": "79e9f6b6373c30376ee591c7e4287cd2a9fc910e20dd93b7e13ab9c42f88c165",
+    "beforeBytes": 1376,
+    "afterSha256": "2166412df979f4a9d87ef80929645ad7c86fe73f3b9eb1bf6956068bba29cc28",
+    "afterBytes": 1583,
+    "changed": true
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/prefix.md",
+    "beforeSha256": "686b736916d6d735f33083526ab216c71126bef175f43922344b10e00b252e39",
+    "beforeBytes": 3932,
+    "afterSha256": "fbd6031c2eefabf6a5d84871290f94b0cfbf785fab624eac60835305acc83dd2",
+    "afterBytes": 4337,
+    "changed": true
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/README.md",
+    "beforeSha256": "ffcaeabd9643a916a2d94f5dc14f7883e886cd61f84a07d84053937ef27f2b48",
+    "beforeBytes": 1396,
+    "afterSha256": "ffcaeabd9643a916a2d94f5dc14f7883e886cd61f84a07d84053937ef27f2b48",
+    "afterBytes": 1396,
+    "changed": false
+  },
+  {
+    "path": "data/skills/art_skills/realistic_3d_anime/video_prefix.md",
+    "beforeSha256": "b615bcdb19b24ccf87c8dd7aa246fbad53e73515e31206c4f8587989bc157f67",
+    "beforeBytes": 4857,
+    "afterSha256": "c304e69ac090c0726ccb8aca748e7663c02be3c4729c9c61684cdd84253ff53c",
+    "afterBytes": 1589,
+    "changed": true
+  },
+  {
+    "path": "src/routes/script/extractAssets.ts",
+    "beforeSha256": "831ba86a74d451e8ae63c9ddaf4775e6bf48fc2b3aa0716236800a645a2fef0d",
+    "beforeBytes": 5920,
+    "afterSha256": "3499e0c2acd929d7bbe872cc4c1d790d1c468f0066f02d41ef1219b51260abbb",
+    "afterBytes": 6409,
+    "changed": true
+  },
+  {
+    "path": "data/skills/story_skills/Scifi_post_apocalypse/driector_skills/director_planning_narrative.md",
+    "beforeSha256": "46755d6dc6db0c459cfb269c9d0b1fac09ffc265b2e43140a30be4dbd73c754c",
+    "beforeBytes": 8788,
+    "afterSha256": "bfe832f3c0b395c1860221df22bb96575966354fda929e0f93758a6a1e85bf61",
+    "afterBytes": 3607,
+    "changed": true
+  },
+  {
+    "path": "data/skills/story_skills/Scifi_post_apocalypse/driector_skills/director_storyboard_table_narrative.md",
+    "beforeSha256": "4dce31880afb29c5d01cafb7d964744ed0eec097e71f2da25cd89fe14a872ef6",
+    "beforeBytes": 6972,
+    "afterSha256": "f706c365333b748b6f2fda6d8fd554f75413ee7be795046aa959b577a5e1c950",
+    "afterBytes": 3763,
+    "changed": true
+  }
+]

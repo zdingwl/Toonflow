@@ -1,0 +1,21 @@
+{
+  "projectId": 1790665121730,
+  "productionWorkspaceRows": [
+    {
+      "id": 1,
+      "sha256": "f9668719b137a62fdd619b8c1470d4f2d220c7da14e6fcaf4f9f035fc8b1df9c",
+      "matchesPreChange": true
+    },
+    {
+      "id": 38,
+      "sha256": "f2b457f9d6f920d3c1602f951dbee766456ae758b35564ab8aeb6a589b453f63",
+      "matchesPreChange": true
+    }
+  ],
+  "counts": {
+    "assets": 217,
+    "videos": 25
+  },
+  "readOnly": true,
+  "mediaSubmitted": false
+}

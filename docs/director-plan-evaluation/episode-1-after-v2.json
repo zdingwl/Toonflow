@@ -1,0 +1,39 @@
+{
+  "episodeId": 1,
+  "projectId": 1790665121730,
+  "model": "QWEN3.8:27b",
+  "temperature": 1,
+  "reasoning": "none",
+  "seed": 42,
+  "context": "current",
+  "elapsedMs": 43182,
+  "finishReason": "stop",
+  "usage": {
+    "inputTokens": 8338,
+    "inputTokenDetails": {
+      "noCacheTokens": 751,
+      "cacheReadTokens": 7587
+    },
+    "outputTokens": 4205,
+    "outputTokenDetails": {
+      "textTokens": 4205,
+      "reasoningTokens": 0
+    },
+    "totalTokens": 12543,
+    "raw": {
+      "prompt_tokens": 8338,
+      "completion_tokens": 4205,
+      "total_tokens": 12543,
+      "prompt_tokens_details": {
+        "cached_tokens": 7587
+      }
+    },
+    "reasoningTokens": 0,
+    "cachedInputTokens": 7587
+  },
+  "steps": 2,
+  "characters": 0,
+  "factErrors": [
+    "导演计划输出不完整：需要且只能有一份非空的 scriptPlan"
+  ]
+}
