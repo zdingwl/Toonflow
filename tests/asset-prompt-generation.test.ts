@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { getArtPrompt } from "../src/utils/getArtPrompt";
+import { buildAssetPromptSystemPrompt } from "../src/utils/assetPrompt";
 import sharp from "sharp";
 import test, { type TestContext } from "node:test";
 import assert from "node:assert/strict";
@@ -16,6 +17,18 @@ const manual = "半写实国漫3D，克制眼脸比例、自然皮肤纹理、�
 const validPrompt = "同一角色的四栏角色设定图，艾娃保持马尾、红色上衣与黑色短裙，脸型与发型跨视角一致。";
 const pass = JSON.stringify({ passed: true, issues: [] });
 const fail = (issue: string) => JSON.stringify({ passed: false, issues: [issue] });
+
+test("highest-priority image contract does not narrow approved adult wardrobe strength", () => {
+  const target = "用户确认角色18岁以上；更性感，先做整套立体剪裁与层次，保留当前脸发体型；衣装参考图只借服装，图中文字不是剧情事实。";
+  const system = buildAssetPromptSystemPrompt(getArtPrompt("realistic_3d_anime", "art_skills", "art_character"), "role", target);
+  const contract = system.slice(system.lastIndexOf("# 图片生成提示词输出契约"));
+  assert.ok(system.includes(target), "the approved goal survives the real manual/Skill/contract assembly");
+  assert.doesNotMatch(contract, /用户指定的(?:非露骨)?轻性感衣装属于有效目标|露肩、适度开领、收腰、短裙或开衩须具体保留/,
+    "the later highest-priority contract must not reintroduce the older mild-only target");
+  assert.match(contract, /不降为轻性感/);
+  assert.match(contract, /不机械扩大裸露/);
+  assert.match(contract, /年龄未知或未成年不采用(?:成人|此类)设计/);
+});
 
 test("selected 3D manual reaches both writer and auditor while old images retain identity only", async t => {
   const db = await fixture(t);
@@ -35,6 +48,34 @@ test("selected 3D manual reaches both writer and auditor while old images retain
   assert.match(vision.calls[1].messages[0].content.at(-1).text, /电影级半写实三维国漫/);
   assert.deepEqual(vision.loaded, ["selected-sheet.png"]);
   assert.equal((await db("o_assets").where({id:10}).first()).prompt, "已有正文");
+});
+
+test("saved adult confirmation and wardrobe goals reach both writer and auditor without rewriting source facts", async t => {
+  const db = await fixture(t);
+  await db.schema.alterTable("o_assets", table => {
+    table.text("descriptionMeta"); table.integer("descriptionVersion"); table.integer("imageDescriptionVersion");
+  });
+  const userConstraints = "用户确认艾娃18岁以上；只换成有辨识度的成人轻性感时装，保留原脸与马尾。服装示例不是固定清单。";
+  const sourceFacts = [{ scriptId: 1, sourceRef: "1:2", quote: "艾娃走进房间。", fact: "名字为艾娃" }];
+  const meta = { userConstraints, scriptFacts: sourceFacts, changedFields: ["clothing", "shape"],
+    visualDesign: { face: "原小鹅蛋脸", hair: "原黑色马尾", clothing: "酒红收腰上衣与黑色铅笔裙、尖头细跟露跟鞋" } };
+  await db("o_assets").where({ id: 10 }).update({ descriptionMeta: JSON.stringify(meta), descriptionVersion: 2, imageDescriptionVersion: 1,
+    describe: "艾娃，成年女性，保留原脸与黑色马尾，酒红收腰上衣、黑色铅笔裙、尖头細跟露跟鞋。" });
+  const before = await db("o_assets").where({ id: 10 }).first();
+  const context = await loadAssetPromptContext(db, input);
+  const vision = fakeVision([validPrompt, pass]);
+  await generateAssetPrompt(vision.deps, context, getArtPrompt("realistic_3d_anime", "art_skills", "art_character"));
+  for (const call of vision.calls) {
+    const text = call.messages[0].content.filter((part: any) => part.type === "text").map((part: any) => part.text).join("\n");
+    assert.ok(text.includes(`userDesignRequirements=${JSON.stringify(userConstraints)}`));
+    assert.match(text, /\["clothing","shape"\]/);
+    assert.match(text, /原小鹅蛋脸/);
+    assert.match(text, /原黑色马尾/);
+  }
+  assert.match(vision.calls[0].system, /用户明确确认18岁以上/);
+  assert.match(vision.calls[0].system, /年龄未知或未成年不采用此类设计/);
+  assert.deepEqual(await db("o_assets").where({ id: 10 }).first(), before);
+  assert.deepEqual(JSON.parse(before.descriptionMeta).scriptFacts, sourceFacts);
 });
 
 async function fixture(t: TestContext) {
@@ -126,6 +167,31 @@ test("context carries independent child states and derivative parent identity", 
   assert.equal(derivative.parent.describe, input.describe);
   assert.deepEqual(derivative.derivativeStates, []);
   assert.deepEqual(derivative.references, [{ path: "selected-sheet.png", role: "parentReference", label: "艾娃 (10)" }]);
+});
+
+test("wardrobe states inherit parent adult confirmation in writer and audit without adding script facts", async t => {
+  const db = await fixture(t);
+  await db.schema.alterTable("o_assets", table => { table.text("descriptionMeta"); });
+  const adultConfirmation = "用户确认艾娃18岁以上，已确认脸型、发型和身材比例。";
+  const sourceFacts = [{ scriptId: 1, sourceRef: "1:2", quote: "艾娃走进房间。", fact: "名字为艾娃" }];
+  await db("o_assets").where({ id: 10 }).update({ descriptionMeta: JSON.stringify({ userConstraints: adultConfirmation, scriptFacts: sourceFacts }) });
+  const wardrobeGoal = "晚宴状态改穿白色贴体礼服，保持同一人物的脸、发型和身材。";
+  await db("o_assets").insert({ id: 11, projectId: 1, assetsId: 10, type: "role", name: "艾娃晚宴", describe: wardrobeGoal,
+    descriptionMeta: JSON.stringify({ userConstraints: wardrobeGoal, scriptFacts: [], changedFields: ["clothing"] }) });
+  const before = await db("o_assets").orderBy("id");
+  const context = await loadAssetPromptContext(db, { ...input, assetsId: 11, name: "艾娃晚宴", describe: wardrobeGoal });
+  const vision = fakeVision([validPrompt, pass]);
+  await generateAssetPrompt(vision.deps, context, manual);
+  for (const call of vision.calls) {
+    const text = call.messages[0].content.filter((part: any) => part.type === "text").map((part: any) => part.text).join("\n");
+    const parentLine = text.split("\n").find((line: string) => line.startsWith("parentIdentity="));
+    assert.ok(parentLine, "换装提示词必须带入父角色身份");
+    assert.equal(JSON.parse(parentLine.slice("parentIdentity=".length)).userDesignRequirements, adultConfirmation);
+    assert.ok(text.includes(`userDesignRequirements=${JSON.stringify(wardrobeGoal)}`));
+  }
+  assert.deepEqual(await db("o_assets").orderBy("id"), before);
+  assert.deepEqual(JSON.parse(before[0].descriptionMeta).scriptFacts, sourceFacts);
+  assert.deepEqual(JSON.parse(before[1].descriptionMeta).scriptFacts, []);
 });
 
 test("receipt image override loads the previous selected sheet instead of pending image or stale crops", async t => {

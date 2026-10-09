@@ -3,7 +3,7 @@ import u from "@/utils";
 import { z } from "zod";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
-import { getAssetVisualDesignSkill } from "@/utils/assetVisualDesignSkill";
+import { buildAssetExtractionTemplateContext, getAssetExtractionVisualDesignSkill } from "@/utils/assetVisualDesignSkill";
 import { extractScriptAssets } from "@/utils/scriptAssetExtraction";
 import fs from "fs";
 import { buildAssetExtractionArtContext } from "@/utils/assetPrompt";
@@ -23,10 +23,11 @@ const assetExtractionDesignRules = `
 资产 desc 不是剧情摘要，而是后续图片生成的稳定视觉设计依据。先保留剧本明确事实，再对未规定但生成图片所必需的外观做审美化设计补全；不得加入剧情动作、台词、镜头、临时表情或未来状态。
 
 角色：
-- 不只写“漂亮、帅气、身材好”。每个角色 desc 必须落到可观察字段：脸型与下颌、眉眼鼻唇关系、视线气质、发型整体轮廓与发束、体型剪影、服装大轮廓、功能结构、主辅色、材质和一至两个稳定识别点。
-- 先根据身份与性格从 asset_visual_design.md 选择合适的女性或男性视觉原型，再补足未规定字段。成年女性主角保留健康成熟曲线与清楚腰臀轮廓，成年男性主角保留俊朗骨相、宽肩收腰和运动型胸背；具体强度服从职业、性格与衣装，不把所有角色套成同一张网红脸、同一种发型或同一种身材。
-- 发型必须有可辨认的大轮廓，服装必须同时具备身份功能和审美剪影；每套衣装至少写一个大轮廓、一个功能结构和一个克制识别点，不用无关紧身、裸露、镂空、开叉、绑带或装饰堆砌代替设计。
-- 未成年、儿童或年龄无法确认的角色禁止使用成人胸腰臀、性感或裸露设计；按年龄与身份采用自然、得体的外观。剧本明确的年龄、族裔、肤色、体型、伤病、职业和朴素形象始终优先。
+- 角色 desc 写清脸型、眉眼鼻唇、妆发轮廓、体型剪影和完整衣装，不只写“漂亮、帅气”。按用户美型目标设计明确五官与搭配，各角色有辨识度，不退回通用脸或灰衫灰裤；美术选择不是剧本事实。
+- 核对原文性别及原文明示或 userConstraints 中用户明确确认的年龄；任一来源明确本角色已满18岁即可按成人设计，用户确认保存在 userConstraints，不伪称 scriptFacts 的原文年龄。不得由姓名、姐姐称呼、驾驶或交易猜年龄、成年或职业。
+- 衣装按当前资产设计Skill落实成年女主默认方向及用户强度，原文明示朴素、职业、装备与伤病状态优先；美术选择不编家世财富职业。各人有不同轮廓材质，鞋型不一律浅口细跟或靴子。成人JK/洛丽塔仅指服装，不改学生或幼态。已确认成年且用户要求轻性感时装时按目标设计，不自动改回保守衣装；轻性感不是上限，要求更性感/不够性感须实质提高剪裁强度，不靠饰品换色，保持正常覆盖与中性站姿。首饰包袋有主次、不强制全套，不新增工具腰带或胸牌。
+- 未成年、儿童或年龄无法确认（原文和用户均未确认成年）的角色禁止使用成人胸腰臀、性感或裸露设计；剧本明确年龄、身份、外形和朴素设定优先，与用户成年设定冲突时待确认。
+- 原文与用户均无年龄依据时，不写“成年”或具体年龄。scriptFacts 只收原文直接明示事实，不收用户补充的年龄与衣装设计；称呼、场景署名不扩成年龄、产权或照护责任。最终只输出一套设计，不输出可选清单或人生背景。
 - 基础角色 desc 只记录稳定身份和默认衣装；觉醒、湿身、受伤、换装、红眼、发光等持续变化留给衍生状态，不混入基础描述。
 
 场景：
@@ -60,15 +61,20 @@ export default router.post(
       const project = await u.db("o_project").where({ id: projectId }).first();
       if (!project) throw new Error("项目不存在");
       const template = await u.db("o_prompt").where({ type: "scriptAssetExtraction" }).first();
+      const templateContext = buildAssetExtractionTemplateContext(template);
       const prefixPath = u.getPath(["skills", "art_skills", project.artStyle || "", "prefix.md"]);
       const artContext = fs.existsSync(prefixPath) ? buildAssetExtractionArtContext(fs.readFileSync(prefixPath, "utf-8")) : "";
-      const system = (template?.useData || template?.data || "") + "\n\n" + getAssetVisualDesignSkill() + "\n\n" + assetExtractionDesignRules
+      const discoverySystem = templateContext.discoverySystem + "\n当前步骤只发现实体与关联，不补全外观；当前 resultTool 的字段结构为准。";
+      // The default template governs discovery. Design already has its complete
+      // field/evidence contract in extractScriptAssets; preserve custom instructions
+      // verbatim without loading the default discovery rules a second time.
+      const system = templateContext.designSystem + "\n\n" + getAssetExtractionVisualDesignSkill() + "\n\n" + assetExtractionDesignRules
         + "\n项目画风标识：" + (project.artStyle || "") + (artContext ? "\n\n" + artContext : "")
         + "\n当前 resultTool 的字段结构优先于旧模板。";
       await u.db("o_script").where({ projectId }).whereIn("id", scriptIds).update({ extractState: 0, errorReason: null });
       res.send(success("开始提取资产"));
       void extractScriptAssets({
-        db: u.db, invoke: input => u.Ai.Text("universalAi").invoke(input), system,
+        db: u.db, invoke: input => u.Ai.Text("universalAi").invoke(input), system, discoverySystem,
       }, { projectId, scriptIds, groupSize, updateExistingDescriptions }).catch(async cause => {
         await u.db("o_script").where({ projectId }).whereIn("id", scriptIds).update({ extractState: -1, errorReason: u.error(cause).message });
       }).finally(() => extractingProjects.delete(projectId));

@@ -3,6 +3,7 @@ import path from "node:path";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { buildAssetExtractionArtContext } from "../src/utils/assetPrompt";
+import { buildAssetExtractionVisualDesignSkill } from "../src/utils/assetVisualDesignSkill";
 
 const selectedPrefix = readFileSync(path.resolve("data/skills/art_skills/realistic_3d_anime/prefix.md"), "utf8");
 const syntheticPrefix = `---
@@ -56,4 +57,20 @@ test("separate selections do not reuse another style's design context", () => {
 test("empty or template-only input adds no invented design context", () => {
   assert.equal(buildAssetExtractionArtContext(""), "");
   assert.equal(buildAssetExtractionArtContext(`---\nname: metadata\n---\n## 输出格式\nOUTPUT_ONLY\n## 视频模板\nVIDEO_ONLY`), "");
+});
+
+test("extraction loads stable design and state guidance without downstream image protocols", () => {
+  const skill = readFileSync("data/skills/asset_visual_design.md", "utf8");
+  const selected = buildAssetExtractionVisualDesignSkill(skill);
+  assert.match(selected, /大众审美设计补全/);
+  assert.match(selected, /身份 identity/);
+  assert.match(selected, /场景保存固定空间结构/);
+  assert.match(selected, /年龄未知时不写精确年龄/);
+  // Extraction must not prime unconfirmed ages with concrete adult body defaults.
+  assert.doesNotMatch(selected, /胸部丰满但自然承托|腰臀比清楚|运动型胸背与腹部轮廓/);
+  assert.match(skill, /胸部丰满但自然承托/);
+  assert.match(skill, /本节只在后续绘制阶段/);
+  assert.doesNotMatch(selected, /actualReference|parentReference|四栏角色设定图|## 输出验收/);
+  assert.ok(selected.length < skill.length * 0.65);
+  assert.match(buildAssetExtractionVisualDesignSkill("## 自定义设计要求\n保留这条用户造型约束"), /保留这条用户造型约束/);
 });

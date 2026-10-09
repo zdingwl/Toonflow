@@ -55,7 +55,9 @@ test('asset design skill applies differentiated adult lead aesthetics without se
   assert.match(visual, /运动型胸背与腹部轮廓/);
   assert.match(visual, /冷静强势型/);
   assert.match(visual, /冷峻精英型/);
-  assert.match(visual, /每套衣装至少具备一个清楚的大轮廓、一个功能结构和一个克制的识别点/);
+  assert.match(visual, /每套衣装具备清楚的大轮廓和合理功能结构/);
+  assert.match(visual, /不因姓名、亲属称呼、驾驶或交易推断成年/);
+  assert.match(visual, /不为了凑数量新增腕表、饰品、痣疤、纹样或精确左右位置/);
   assert.match(visual, /年龄无法确认/);
   assert.match(character, /大众审美设计补全/);
   assert.match(character, /至少有两项稳定外观差异/);

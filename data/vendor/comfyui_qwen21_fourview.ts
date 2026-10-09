@@ -12,7 +12,7 @@ declare const Buffer: any;
 declare const pollTask: (fn: () => Promise<{ completed: boolean; data?: string; error?: string }>, interval?: number, timeout?: number) => Promise<{ completed: boolean; data?: string; error?: string }>;
 
 const vendor = {
-  id: "comfyui_qwen21_fourview", version: "1.1.4", author: "Toonflow",
+  id: "comfyui_qwen21_fourview", version: "1.1.8", author: "Toonflow",
   name: "本机 Qwen-Image-2.1 四视图（LoRA 可选）",
   description: "任意角色四栏：头像特写、正面全身、90°左侧面全身、背面全身；角色身份、外观及形态由当前资产提示词提供。首张参考图必须是当前目标状态的正面全身锚点；第二张可选风格参考。LoRA 权重需另外安装。",
   inputs: [
@@ -69,9 +69,9 @@ function identityFactsOnly(prompt: string): string {
   // doing so discards names, outfits and state facts before any view is rendered.
   // Strip presentation instructions, not the identity/wardrobe that may share
   // their sentence. Replacing 四栏 with 各视角 still requests a multi-view image.
-  const portraitView = "(?:正面(?:脸部至肩胸|头肩|脸部)特写|脸部(?:正面)?特写(?:正面)?|脸部特写)(?:[（(][^）)]*[）)])?(?:，?(?:完整)?头部(?:至|到|与)?肩胸?)?";
+  const portraitView = "(?:正面(?:脸部至肩胸|头肩|脸部)特写|脸部(?:正面)?特写(?:正面)?|脸部特写)(?:[（(](?:头顶|头部)(?:至|到|与)肩胸完整[）)])?(?:，?(?:完整)?头部(?:至|到|与)?肩胸?)?";
   const frontView = "正面全身(?:中性站姿)?(?:，?头顶(?:至|到)脚底完整)?";
-  const sideView = "(?:(?:严格)?90[°度])?(?:严格)?左侧(?:面)?全身(?:严格侧面)?(?:，?头脚完整)?";
+  const sideView = "(?:(?:严格)?(?:90[°度]|九十度))?(?:严格)?左侧(?:面)?全身(?:严格侧面)?(?:，?头脚完整)?";
   const backView = "(?:正后方|背面)全身(?:展示(?:披发、)?(?:(?:后脑)(?:与|、))?后背(?:与鞋后跟)?|展示后脑与后背)?(?:，?头脚完整)?";
   const viewName = `(?:${portraitView}|${frontView}|${sideView}|${backView}|脸部|正面|侧面|背面)`;
   const numberedView = "(?:第[一二三四1-4]栏[：:]?\\s*)?" + viewName + "(?:视图|视角)?(?=[、，,；;。.!?\\s]|$)";
@@ -79,34 +79,91 @@ function identityFactsOnly(prompt: string): string {
     "(?:(?:(?:四栏|四格|四宫格|四视图|四个视角|展示板)(?:角色设定(?:展示)?(?:图|板)|角色设定|设定板|展示板)?[，,]?\\s*)?从左到右(?:固定)?(?:排列)?(?:分别|依次)?(?:为)?[：:]?|(?:四栏|四格|四宫格|四视图|四个视角)(?:固定)?(?:分别为|依次为|为|[：:]))\\s*" + numberedView + "(?:[、，,；;]\\s*" + numberedView + "){1,}",
     "g",
   );
+  // Lists often include framing/pose clauses between the view names, so they
+  // are not one contiguous orderedViews match. Strip their introducer only
+  // when a recognizable camera list follows; retain e.g. hair-color gradients
+  // described as 从左到右由黑过渡到银白.
+  const layoutLead = new RegExp(
+    "(?:四栏|四格|四宫格|四视图|四个视角)?从左到右(?:固定)?(?:排列)?(?:分别|依次)?(?:为)?[：:]?\\s*(?=(?:第[一二三四1-4]栏[：:]?\\s*)?" + viewName + ")",
+    "g",
+  );
   return prompt
     // New prompts may delimit the presentation block. It is never identity input
     // for a single-view job, so remove it before handling legacy prose.
     .replace(/【展示板布局】[\s\S]*?(?=【\/展示板布局】|$)/g, "")
     .replace(/【\/展示板布局】/g, "")
+    .replace(/(?:一张)?展示板(?:呈现|展示)同一(?:个)?人的(?:四个视角|四视角)/g, "")
     .replace(orderedViews, "")
+    .replace(layoutLead, "")
     .replace(/(?:四栏|四格|四宫格|四视图|四个视角)从左到右(?:固定)?(?:排列)?(?:分别|依次)?(?:为)?[：:]?/g, "")
     // Consume ordinal markers before 四栏, otherwise 第四栏 becomes 第各视角.
     .replace(/第[一二三四1-4]栏(?:[：:]?\s*(?:为|是))?/g, "")
     .replace(/(?:后|前)[二三四234]栏/g, "")
     .replace(/(?:正面)?(?:脸部|头部)(?:正面)?(?:至|到)?(?:肩胸)?特写|正面头肩特写/g, "")
-    .replace(/(?:严格)?(?:90[°度])?左侧面全身(?:严格侧面)?|严格90[°度]左侧全身|正面全身(?:中性站姿)?|正后方全身|背面全身/g, "")
+    .replace(/(?:严格)?(?:(?:90[°度]|九十度))?左侧(?:面)?全身(?:严格侧面)?|正面全身(?:中性站姿)?|正后方全身|背面全身/g, "")
     .replace(/(?:严格90[°度]左侧面|侧面严格90[°度]|严格90[°度]|正后方)(?=[，,；;。.!?\s]|$)/g, "")
-    .replace(/完整头部(?:至|到)肩胸|(?:完整)?头部与肩胸|(?:头顶(?:与|到)|头)脚(?:底)?完整(?:入画)?|头顶到脚底完整(?:入画)?/g, "")
+    .replace(/[（(](?:头顶|头部)(?:至|到|与)肩胸完整[）)]|(?:头顶|头部)(?:至|到|与)肩胸完整(?:入画)?|完整头部(?:至|到)肩胸|(?:完整)?头部与肩胸|(?:头顶(?:与|到)|头)脚(?:底)?完整(?:入画)?|头顶(?:与|至|到)脚底完整(?:入画)?/g, "")
+    .replace(/后脑(?:与|、)后背朝向观众|正面朝向|中性站姿/g, "")
     .replace(/(?:正面|侧面|背面)[，,](?=\s*(?:第[一二三四1-4]栏|严格90))/g, "")
     .replace(/(?:CHARACTER\s+)?(?:TURNAROUND|DESIGN|REFERENCE)\s+(?:SHEET|BOARD)/gi, "single character design")
     .replace(/(?:exactly\s+)?four[- ](?:panels?|views?)(?:\s+in\s+(?:one|a|single)\s+horizontal\s+row)?/gi, "one character")
     .replace(/(?:first|second|third|fourth)\s+panel/gi, "")
     .replace(/(?:portrait|front\s+view|side\s+view|back\s+view)(?:\s*[,/+、]\s*(?:portrait|front\s+view|side\s+view|back\s+view)){1,}/gi, "")
+    // Remove presentation wrappers before replacing remaining view-count
+    // words. Keep their following fact list verbatim, including scars, face
+    // geometry, clothing and current-state details in a mixed sentence.
+    .replace(/(?:四栏|四格|四宫格|四视图|四(?:个|名)视角|四视角|各视角|跨视角|多个视角)(?:中|为)?同一(?:个)?(?:人|角色)(?:同一套设计)?(?:的)?/g, "")
+    .replace(/(?:四栏|四格|四宫格|四视图|四(?:个|名)视角|四视角)(?:角色设定(?:展示)?(?:图|板)|角色设定|设定板|展示板)/g, "")
     .replace(/(?:四栏|四格|四宫格|四视图|四(?:个|名)视角|四视角|各视角|跨视角|多个视角)(?:角色设定(?:展示)?(?:图|板)|角色设定|设定板|展示板)?/g, "本角色")
     .replace(/(?:一张)?展示板(?:呈现|展示)同一个人的本角色/g, "同一角色")
     .replace(/同一角色([^，。；]{0,30})的本角色/g, "同一角色$1")
+    .replace(/(?:角色设定(?:展示)?(?:图|板)|设定展示板|展示板)/g, "角色设计")
+    .replace(/同一角色同一状态(?:的)?(?=[，,；;。.!?\s]|$)/g, "")
+    .replace(/不因视角增减饰物或改变遮挡关系/g, "保持所列饰物与自然遮挡关系")
     .replace(/不是四个角色/g, "仅一个人物")
     .replace(/背面(?:可见|展示)|能看到/g, "")
     .replace(/同一角色(?:、同一[^，。；]+)?的(?=[。！？])/g, "同一角色")
     .replace(/[,，;；、]\s*[,，;；、]+/g, "，")
+    .replace(/(?:[，,；;：:]\s*)+(?=[。.!?])/g, "")
+    .replace(/([。.!?])(?:\s*[，,；;：:])+/g, "$1")
+    .replace(/([。.!?])(?:\s*[。.!?])+/g, "$1")
     .replace(/\s{2,}/g, " ")
     .trim();
+}
+function hasPersistentBag(facts: string): boolean {
+  return facts.split(/[，,；;。.!?\n]/).some(clause =>
+    /手提包|挎包|皮包|肩包|背包|手袋|晚宴包|链条包|迷你包|皮革包/.test(clause) &&
+    !/禁止|不要|不(?:带|持|背|携带|添加|新增)|没有|无(?:任何)?(?:手提包|挎包|皮包|肩包|背包|手袋|晚宴包|链条包|迷你包|皮革包)/.test(clause));
+}
+function garmentBackDesign(facts: string): string {
+  // A front anchor cannot establish an explicitly designed opening on the
+  // garment's back. Carry only that local construction, never body/layout facts.
+  const garment = /衣装|服装|上衣|外套|衬衫|背心|礼服|礼裙|连衣裙|裙|吊带衫|泳衣|连体衣/;
+  const opening = /(?:(?:低|深|浅|大|高)?\s*[UVＵＶ](?:字形|形|字)?\s*)?(?:开背|露背)|(?:背部|后背)(?:(?:采用|设为|为|的)?(?:低|深|浅|大|高)?\s*[UVＵＶ](?:字形|形|字)?)?(?:领口|开口|开襟|挖空|开(?=至|到))/i;
+  const prohibited = /禁止|不要|不得|不(?:采用|使用|做|添加|新增|开背|露背)|没有|无(?:任何)?(?:开背|露背|背部开口|后背开口)/;
+  const nonGarment = /伤疤|伤痕|刀疤|伤口|后脑|转身|背影|朝向|镜头|视角|正后方|侧面全身|背面全身/;
+  const continuation = /^(?:(?:开口|领口)?(?:下缘|底缘|边缘|最低点)|(?:下探|延伸|终止|止|收)(?:于|至|到)?|(?:至|到)(?:腰|背)|(?:细|横向|背部)?固定带)/;
+  const snippets: string[] = [];
+  for (const sentence of facts.split(/[。.!?\n]/)) {
+    const clauses = sentence.split(/[，,；;]/).map(part => part.trim()).filter(Boolean);
+    for (let i = 0; i < clauses.length; i++) {
+      const clause = clauses[i], match = opening.exec(clause);
+      if (!match || prohibited.test(clause) || nonGarment.test(clause)) continue;
+      // Allow a following construction clause to omit the garment noun, but
+      // require nearby actual clothing rather than bare-skin/back descriptions.
+      if (!garment.test(clauses.slice(Math.max(0, i - 3), i + 1).join("，"))) continue;
+      const parts = [clause.slice(match.index)];
+      for (let j = i + 1; j <= i + 2 && j < clauses.length; j++) {
+        if (!continuation.test(clauses[j]) || nonGarment.test(clauses[j])) break;
+        parts.push(clauses[j]);
+      }
+      const snippet = parts.join("，");
+      // Never expand a very long mixed clause into a second full design block.
+      if (Array.from(snippet).length <= 140 && !snippets.includes(snippet)) snippets.push(snippet);
+      if (snippets.length === 3) return snippets.join("；");
+    }
+  }
+  return snippets.join("；");
 }
 function characterPrompt(facts: string, view: "front" | "portrait" | "side" | "back", hasStyle: boolean): string {
   const style = view === "front"
@@ -116,14 +173,21 @@ function characterPrompt(facts: string, view: "front" | "portrait" | "side" | "b
   // body/face/back inventory in an image-edit request induces contact sheets.
   const identity = view === "front" ? `CURRENT ASSET FACTS (identity and CURRENT state, authoritative): ${facts}. Preserve the specified identity, wardrobe and state.` : "";
   const noGrid = "This is a SINGLE-VIEW render of ONE character. Output a single continuous image containing exactly one person, viewed once.";
-  const viewPrompt = view === "front" ? "Standing neutral, exact straight-on front FULL BODY, whole head and both feet in frame with margins." :
+  const viewPrompt = view === "front" ? "Create ONE straight-on front FULL-BODY image of ONE individual standing neutrally, shown ONCE, with the whole head and both feet in frame and margins. 唯一一人，正面全身中性站姿，只呈现一次；从头顶到双脚完整入画并留边。This single front-view framing is authoritative; use the asset facts for this individual's identity, appearance, current state, rendering style, background and lighting." :
     view === "portrait" ? "Replace the entire composition with a straight-on HEAD-AND-SHOULDERS close-up of the same individual. Show the full head and shoulders only; the bottom edge ends at the upper chest. 单人正面头肩近景，整个画面只有一个头像，上胸以下不入画。" :
     view === "side" ? "Replace the original pose with a strict 90-degree LEFT SIDE PROFILE of the same individual, full body and both feet in frame. Only the resulting side view fills the image. 单人严格左侧面全身。" :
     "Replace the original pose with a straight 180-degree BACK view of the same individual, full body and both feet in frame. Shoulders face directly away; neither cheek is visible. Only the resulting back view fills the image. 单人正后方全身，只呈现背影。";
   const references = view === "front" ? "" : view === "back"
-    ? `Use <image1> as the approved strict side-view identity and CURRENT-STATE anchor. Continue rotating the SAME person another 90 degrees until the face and chest are completely invisible and only the back of the head, shoulders, torso and heels face the camera. ${hasStyle ? "Use <image2> only for the requested project rendering style, NEVER for identity, clothing, scene, or composition." : ""}`
+    ? `Use <image1> as the approved strict side-view identity and CURRENT-STATE anchor. Continue rotating the SAME person another 90 degrees TOWARD THE BACK, not back toward the front, until the face and chest are completely invisible and only the back of the head, shoulders, torso and heels face the camera. Use <image${hasStyle ? 3 : 2}> as the approved front-view structure supplement for the SAME individual: preserve complete body proportions and garment construction on BOTH sides, including asymmetric shoulder, strap and sleeve shapes, lengths, colors and materials. Keep wearer-relative LEFT and RIGHT attached to the body as it rotates; never mirror, swap or symmetrize the design. This front supplement must not replace the BACK-view composition or copy the front-facing pose, face, chest or front-only garment details onto the back. Render this individual once. ${hasStyle ? "Use <image2> only for the requested project rendering style, NEVER for identity, clothing, scene, or composition." : ""}`
     : `Use <image1> as the approved front-view identity and CURRENT-STATE anchor; only change the requested camera/view. ${hasStyle ? "Use <image2> only for the requested project rendering style, NEVER for identity, clothing, scene, or composition." : ""}`;
-  return [noGrid, references, viewPrompt, identity, style, `FINAL FRAMING: ${viewPrompt} Render exactly ONE person in this ONE view.`].filter(Boolean).join("\n");
+  const accessories = (view === "side" || view === "back") && hasPersistentBag(facts)
+    ? `The bag shown in the front anchor is a persistent part of this SAME outfit. Preserve that exact bag, its strap or chain, size, material and attachment to the same wearer-relative body side while rotating. Keep the bag on the body even when partly occluded; show its visible silhouette and strap wherever this view exposes the bag-bearing side. Do not delete the bag or its entire chain. A bag is not a front-only garment detail. Do not introduce any accessory absent from the reference. ${view === "back" ? `Check the original front supplement <image${hasStyle ? 3 : 2}> for the bag even if the side anchor omitted it.` : ""}`
+    : "";
+  const backDesign = view === "side" || view === "back" ? garmentBackDesign(facts) : "";
+  const backConstruction = backDesign
+    ? `CURRENT GARMENT BACK DESIGN (clothing only): ${backDesign}. This explicit construction defines garment surfaces hidden in the front anchor. Apply its stated neckline or opening shape and extent while preserving the same person's identity, proportions and all other approved outfit details. If an opening is explicitly specified, do not close it or extend it below its stated end point; never infer an opening that is not specified. Keep the requested view and natural occlusion; do not turn the person to reveal the opening.`
+    : "";
+  return [noGrid, references, viewPrompt, identity, accessories, backConstruction, style, `FINAL FRAMING: ${viewPrompt} Render exactly ONE person in this ONE view.`].filter(Boolean).join("\n");
 }
 function graphFor(config: ImageConfig, anchorFilename?: string, styleFilename?: string): Record<string, any> {
   const v = vendor.inputValues;
@@ -158,6 +222,10 @@ function graphFor(config: ImageConfig, anchorFilename?: string, styleFilename?: 
     const viewAnchor = view === "back" ? ref(32) : anchor;
     const inputs: Record<string, any> = { clip, vae: ref(3), prompt: characterPrompt(facts, view, Boolean(styleFilename)), negative_prompt: "", resolution: height, "images.image_1": viewAnchor };
     if (styleFilename) inputs["images.image_2"] = ref(15);
+    // Keep the side view first for rotation. It cannot establish the opposite
+    // shoulder's construction, so supplement it with the complete front anchor.
+    // The existing optional style slot stays image2; insert image3 after it.
+    if (view === "back") inputs[styleFilename ? "images.image_3" : "images.image_2"] = anchor;
     graph[String(id)] = node("TextEncodeQwenImage21", inputs);
     graph[String(id + 1)] = node("KSampler", { model, seed: Math.floor(Math.random() * 2147483647), steps, cfg: 1, sampler_name: "euler", scheduler: "simple", positive: ref(id), negative: ref(id, 1), latent_image: ref(id, 2), denoise: 1 });
     graph[String(id + 2)] = node("VAEDecode", { samples: ref(id + 1), vae: ref(3) });
