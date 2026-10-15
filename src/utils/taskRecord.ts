@@ -5,6 +5,17 @@ const taskStateMap = {
   "1": "已完成",
   "-1": "生成失败",
 };
+
+export interface ProviderTaskReceipt {
+  provider: string;
+  promptId: string;
+  baseUrl: string;
+  outputNode?: string;
+}
+
+export type TaskRecordHandle = ((state: 1 | -1, reason?: string) => Promise<void>) & {
+  onTaskSubmitted: (receipt: ProviderTaskReceipt) => Promise<void>;
+};
 /**
  * 记录任务并返回结束函数
  * @param projectId  项目 ID
@@ -20,7 +31,7 @@ export default async function taskRecord(
     describe?: string;
     content?: any;
   } = {},
-) {
+): Promise<TaskRecordHandle> {
   const { content, describe = "" } = opts;
 
   let opteorContent: string | undefined;
@@ -49,7 +60,7 @@ export default async function taskRecord(
   });
 
   /** 任务成功时调用 done(1)，失败时调用 done(-1, '原因') */
-  return async function done(state: 1 | -1, reason?: string) {
+  const done = async function (state: 1 | -1, reason?: string) {
     await db("o_tasks")
       .where("id", id)
       .update({
@@ -57,4 +68,23 @@ export default async function taskRecord(
         reason: state === -1 ? (reason ?? "") : null,
       });
   };
+
+  done.onTaskSubmitted = async (receipt: ProviderTaskReceipt) => {
+    let relatedObjects: Record<string, unknown> = {};
+    if (opteorContent) {
+      try {
+        const parsed = JSON.parse(opteorContent);
+        relatedObjects = parsed && typeof parsed === "object" && !Array.isArray(parsed)
+          ? parsed : { originalContent: opteorContent };
+      } catch {
+        relatedObjects = { originalContent: opteorContent };
+      }
+    }
+    // Bind the receipt to this insert, even when another task starts before submission finishes.
+    await db("o_tasks").where("id", id).update({
+      relatedObjects: JSON.stringify({ ...relatedObjects, providerTask: receipt }),
+    });
+  };
+
+  return done;
 }

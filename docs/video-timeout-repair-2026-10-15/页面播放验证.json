@@ -1,0 +1,36 @@
+{
+  "playback2": {
+    "currentTime": 6.37567,
+    "duration": 15.083333,
+    "error": null,
+    "height": 768,
+    "paused": false,
+    "readyState": 4,
+    "src": "http://localhost:10588/oss/1791442875669/video/2f8d3f2e-7419-493c-978e-1189420babd4.mp4",
+    "width": 1344
+  },
+  "playback5": {
+    "currentTime": 15.083333,
+    "duration": 15.083333,
+    "error": null,
+    "height": 768,
+    "paused": true,
+    "readyState": 4,
+    "src": "http://localhost:10588/oss/1791442875669/video/8aa09607-a2fd-449b-9c35-ef4765d529f2.mp4",
+    "width": 1344
+  },
+  "page5": {
+    "cards": [
+      "#5 视频提示词",
+      "#5生成视频"
+    ],
+    "failedCards": 0,
+    "historyCount": 1,
+    "media": []
+  },
+  "focusedTests": {
+    "passed": 42,
+    "failed": 0
+  },
+  "backendBuild": "passed"
+}

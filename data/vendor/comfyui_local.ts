@@ -16,6 +16,7 @@ type VideoConfig = {
   prompt: string; duration: number; resolution: string; aspectRatio: string;
   mode: string | string[]; audio?: boolean;
   referenceList?: { type: "image" | "video" | "audio"; base64: string; label?: string; prompt?: string; sourceType?: string; assetType?: string }[];
+  onTaskSubmitted?: (task: { provider: "comfyui"; promptId: string; baseUrl: string; outputNode?: string }) => void | Promise<void>;
 };
 type InputTarget = { node: string; input: string };
 type WorkflowMapping = {
@@ -419,6 +420,10 @@ function findVideo(task: any, outputNode?: string): any {
   return null;
 }
 
+// Native 768p H3 clips can take longer than 30 minutes even without queueing.
+// A local polling deadline does not stop the submitted ComfyUI prompt.
+const H3_VIDEO_TIMEOUT_MS = 3 * 60 * 60 * 1000;
+
 async function comfyVideoRequest(config: VideoConfig): Promise<string> {
   // Defense in depth: even an older frontend/backend may still send storyboard images.
   // Never feed them into Ref2VA; they are composition guidance only and can otherwise override faces.
@@ -439,7 +444,12 @@ async function comfyVideoRequest(config: VideoConfig): Promise<string> {
     promptId = response.data?.prompt_id;
     if (!promptId) throw new Error(`ComfyUI 未返回 prompt_id：${JSON.stringify(response.data?.node_errors || response.data?.error || {})}`);
   } catch (error) { throw videoError("提交 H3 工作流", error); }
-  const result = await pollTask(async () => {
+  try {
+    await runtimeConfig.onTaskSubmitted?.({ provider: "comfyui", promptId, baseUrl: baseUrl(), outputNode });
+  } catch (error: any) {
+    throw new Error(`ComfyUI H3 任务已提交，但保存任务回执失败：${error?.message || String(error)}；prompt_id=${promptId}；地址 ${baseUrl()}；请先查询已有任务，避免重复生成`);
+  }
+  const readResult = async () => {
     let task: any;
     try {
       const response = await axios.get(`${baseUrl()}/history/${encodeURIComponent(promptId)}`, { timeout: 20000, proxy: false });
@@ -461,8 +471,17 @@ async function comfyVideoRequest(config: VideoConfig): Promise<string> {
     }
     if (status.completed === true || status.status_str === "success") return { completed: true, error: `ComfyUI H3 工作流已完成但未找到视频输出（节点 ${outputNode || "auto"}）` };
     return { completed: false };
-  }, 3000, 1800000);
-  if (result.error || !result.data) throw new Error(result.error || "ComfyUI H3 生成超时（30 分钟）");
+  };
+  let result = await pollTask(readResult, 3000, H3_VIDEO_TIMEOUT_MS);
+  // Reconcile once more at the deadline, including transient history failures,
+  // so an output completed between the last poll and timeout is still saved.
+  if (result.error === "timeout") result = await pollTask(readResult, 3000, 30000);
+  if (result.error || !result.data) {
+    const reason = result.error && result.error !== "timeout"
+      ? result.error
+      : "等待视频结果超时（3 小时）；ComfyUI 任务可能仍在执行，请先查询已有任务，避免重复生成";
+    throw new Error(`${reason}；ComfyUI prompt_id=${promptId}；地址 ${baseUrl()}`);
+  }
   return result.data;
 }
 

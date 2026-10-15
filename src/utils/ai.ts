@@ -5,6 +5,7 @@ import { transform } from "sucrase";
 import u from "@/utils";
 import { withContentConstraints, withNonGraphicVisuals } from "./contentConstraints";
 import { withComfyuiMemory } from "./comfyuiMemory";
+import type { TaskRecordHandle } from "./taskRecord";
 
 type AiType =
   | "scriptAgent"
@@ -148,18 +149,18 @@ async function withTaskRecord<T>(
   describe: string,
   relatedObjects: string,
   projectId: number,
-  fn: (modelName: `${string}:${string}`, think: Boolean, thinkLevel: 0 | 1 | 2 | 3) => Promise<T>,
+  fn: (modelName: `${string}:${string}`, think: Boolean, thinkLevel: 0 | 1 | 2 | 3, task: TaskRecordHandle) => Promise<T>,
 ): Promise<T> {
   const modelName = await resolveModelName(modelKey);
   const [_, model] = modelName.split(/:(.+)/);
   const taskRecord = await u.task(projectId, taskClass, model, { describe: describe, content: relatedObjects });
   try {
-    const result = await fn(modelName, false, 0);
+    const result = await fn(modelName, false, 0, taskRecord);
 
-    taskRecord(1);
+    await taskRecord(1);
     return result;
   } catch (e) {
-    taskRecord(-1, u.error(e).message);
+    await taskRecord(-1, u.error(e).message);
     throw new Error(u.error(e).message);
   }
 }
@@ -309,11 +310,11 @@ class AiVideo {
     input = { ...input, prompt: withNonGraphicVisuals(input.prompt) };
     const modelName = await resolveModelName(this.key);
     try {
-      const exec = async (mn: `${string}:${string}`) => {
+      const exec = async (mn: `${string}:${string}`, _think?: Boolean, _thinkLevel?: 0 | 1 | 2 | 3, task?: TaskRecordHandle) => {
         const fn = await getVendorTemplateFn("videoRequest", mn);
         await referenceList2imageBase642(mn.split(/:(.+)/)[0], input);
 
-        this.result = await fn(input);
+        this.result = await fn(task ? { ...input, onTaskSubmitted: task.onTaskSubmitted } : input);
 
         if (this.result.startsWith("http")) this.result = await urlToBase64(this.result);
       };

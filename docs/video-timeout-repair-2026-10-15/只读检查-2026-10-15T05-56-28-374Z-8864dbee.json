@@ -1,0 +1,469 @@
+{
+  "说明": "仅恢复两个原视频记录及其任务；不重新生成，不修改轨道、选片、提示词或参考计划。生成成功不代表画面、台词或参考绑定已通过人工验收。",
+  "模式": "只读检查",
+  "时间UTC": "2026-10-15T05:56:28.375Z",
+  "数据库": "D:\\Toonflow-app-master\\data\\db2.sqlite",
+  "结果": "只读检查通过；未修改数据库或视频文件。",
+  "记录": [
+    {
+      "视频ID": 104,
+      "任务ID": 652,
+      "轨道ID": 1790766041590,
+      "Comfy任务ID": "1855cdf6-9593-42a5-bb7a-57d500d1b545",
+      "完整提示词SHA256": "c189b28864f4a6d297bf15aec9c8d0dd347729b42a1ec1dea1d50ef8acfe1f4f",
+      "全历史唯一匹配数量": 1,
+      "提交延迟毫秒": 18428,
+      "Comfy状态": {
+        "status_str": "success",
+        "completed": true,
+        "messages": [
+          [
+            "execution_start",
+            {
+              "prompt_id": "1855cdf6-9593-42a5-bb7a-57d500d1b545",
+              "timestamp": 1792028358543
+            }
+          ],
+          [
+            "execution_cached",
+            {
+              "nodes": [
+                "1",
+                "2",
+                "3",
+                "4",
+                "8",
+                "9"
+              ],
+              "prompt_id": "1855cdf6-9593-42a5-bb7a-57d500d1b545",
+              "timestamp": 1792028358657
+            }
+          ],
+          [
+            "execution_success",
+            {
+              "prompt_id": "1855cdf6-9593-42a5-bb7a-57d500d1b545",
+              "timestamp": 1792030410870
+            }
+          ]
+        ]
+      },
+      "输出": {
+        "filename": "H3_1792028358373_44679577_00001_.mp4",
+        "subfolder": "Toonflow",
+        "type": "output",
+        "metadata": {
+          "kind": "video",
+          "width": 1344,
+          "height": 768,
+          "duration": 15.083333333333334,
+          "fps": 24,
+          "frame_count": 362
+        },
+        "id": "759e2412-ea43-4644-b51c-5fa066aac71a"
+      },
+      "源路径": "D:\\new_comfyui\\output\\Toonflow\\H3_1792028358373_44679577_00001_.mp4",
+      "源URL": "http://127.0.0.1:8188/view?filename=H3_1792028358373_44679577_00001_.mp4&subfolder=Toonflow&type=output",
+      "原目标路径": "D:\\Toonflow-app-master\\data\\oss\\1791442875669\\video\\2f8d3f2e-7419-493c-978e-1189420babd4.mp4",
+      "字节数": 11301775,
+      "SHA256": "f042f10a8c1cfcebcf0f195481e76d5ccfaf250bad188d55882db1626f7b5a7f",
+      "媒体": {
+        "fields": {
+          "width": 1344,
+          "height": 768,
+          "fps": 24,
+          "bitrate": 5851692,
+          "codec": "h264",
+          "actualDuration": 15.083333
+        },
+        "audioCodec": "aac",
+        "bytes": 11301775,
+        "frames": 362
+      },
+      "历史参考图": [
+        {
+          "Picture": 1,
+          "历史实际资产": "A01",
+          "Comfy输入文件": "toonflow_h3_1792028341378_0_955129486.png",
+          "SHA256": "810d48fdaf98aa76d74c32e2f4081c135284671e7a2195bf624230d373ad99f4"
+        },
+        {
+          "Picture": 2,
+          "历史实际资产": "A04",
+          "Comfy输入文件": "toonflow_h3_1792028344960_1_734159984.png",
+          "SHA256": "cee949c3fef6acb8fd973b5bd452cb4658eeeb5fa1cb4ac400f8479c49be1513"
+        },
+        {
+          "Picture": 3,
+          "历史实际资产": "A03",
+          "Comfy输入文件": "toonflow_h3_1792028348164_2_745723956.png",
+          "SHA256": "c96b74667495b07864e3a7a06a16b6c588244f060d627e22a03583d5d770b71a"
+        },
+        {
+          "Picture": 4,
+          "历史实际资产": "A06",
+          "Comfy输入文件": "toonflow_h3_1792028351465_3_307165896.png",
+          "SHA256": "a0c993230b0b1f59c5ff8977f330da082affaf72a51a30053330fe3b7979ab13"
+        },
+        {
+          "Picture": 5,
+          "历史实际资产": "A05",
+          "Comfy输入文件": "toonflow_h3_1792028356109_4_200975389.png",
+          "SHA256": "957c14daafba81af73c2ff602255ba2ecf1ca9138df8668f114577b6f43c9bf5"
+        }
+      ],
+      "注意": "历史实际参考槽位与当前保存计划存在排列差异。仅恢复原生成结果，不据此判定内容合格，不自动选片。",
+      "拟更新视频字段": {
+        "state": "生成成功",
+        "errorReason": null,
+        "width": 1344,
+        "height": 768,
+        "fps": 24,
+        "bitrate": 5851692,
+        "codec": "h264",
+        "actualDuration": 15.083333
+      },
+      "拟更新任务字段": {
+        "state": "已完成",
+        "reason": null,
+        "relatedObjects": {
+          "projectId": 1791442875669,
+          "videoId": 104,
+          "scriptId": 96,
+          "type": "视频",
+          "providerTask": {
+            "provider": "comfyui",
+            "promptId": "1855cdf6-9593-42a5-bb7a-57d500d1b545",
+            "baseUrl": "http://127.0.0.1:8188",
+            "outputNode": "14"
+          }
+        }
+      }
+    },
+    {
+      "视频ID": 107,
+      "任务ID": 655,
+      "轨道ID": 1790766041593,
+      "Comfy任务ID": "c91aa840-a458-40a1-8bf5-dbea1f41ac14",
+      "完整提示词SHA256": "8ab8c355f485eb3f074dcdd26765816348b0cabb541643a31d5a9d880dc4d2ae",
+      "全历史唯一匹配数量": 1,
+      "提交延迟毫秒": 16805,
+      "Comfy状态": {
+        "status_str": "success",
+        "completed": true,
+        "messages": [
+          [
+            "execution_start",
+            {
+              "prompt_id": "c91aa840-a458-40a1-8bf5-dbea1f41ac14",
+              "timestamp": 1792032610562
+            }
+          ],
+          [
+            "execution_cached",
+            {
+              "nodes": [
+                "1",
+                "2",
+                "3",
+                "4",
+                "8",
+                "9"
+              ],
+              "prompt_id": "c91aa840-a458-40a1-8bf5-dbea1f41ac14",
+              "timestamp": 1792032610674
+            }
+          ],
+          [
+            "execution_success",
+            {
+              "prompt_id": "c91aa840-a458-40a1-8bf5-dbea1f41ac14",
+              "timestamp": 1792034593250
+            }
+          ]
+        ]
+      },
+      "输出": {
+        "filename": "H3_1792032610429_860203766_00001_.mp4",
+        "subfolder": "Toonflow",
+        "type": "output",
+        "metadata": {
+          "kind": "video",
+          "width": 1344,
+          "height": 768,
+          "duration": 15.083333333333334,
+          "fps": 24,
+          "frame_count": 362
+        },
+        "id": "01d21bfd-d498-41be-abf8-f458bb201f6f"
+      },
+      "源路径": "D:\\new_comfyui\\output\\Toonflow\\H3_1792032610429_860203766_00001_.mp4",
+      "源URL": "http://127.0.0.1:8188/view?filename=H3_1792032610429_860203766_00001_.mp4&subfolder=Toonflow&type=output",
+      "原目标路径": "D:\\Toonflow-app-master\\data\\oss\\1791442875669\\video\\8aa09607-a2fd-449b-9c35-ef4765d529f2.mp4",
+      "字节数": 12800408,
+      "SHA256": "419ab3816f5a5d02b5e9043793741621bf2814cb530e4d14bbbc88e3dcc515b1",
+      "媒体": {
+        "fields": {
+          "width": 1344,
+          "height": 768,
+          "fps": 24,
+          "bitrate": 6648624,
+          "codec": "h264",
+          "actualDuration": 15.083333
+        },
+        "audioCodec": "aac",
+        "bytes": 12800408,
+        "frames": 362
+      },
+      "历史参考图": [
+        {
+          "Picture": 1,
+          "历史实际资产": "A01",
+          "Comfy输入文件": "toonflow_h3_1792032595044_0_56480951.png",
+          "SHA256": "810d48fdaf98aa76d74c32e2f4081c135284671e7a2195bf624230d373ad99f4"
+        },
+        {
+          "Picture": 2,
+          "历史实际资产": "A08",
+          "Comfy输入文件": "toonflow_h3_1792032598550_1_182320108.png",
+          "SHA256": "72dfafa8c32378b0fdb440d8c845111a37d5ea3a3abb6bba6a467c460ff65015"
+        },
+        {
+          "Picture": 3,
+          "历史实际资产": "A06",
+          "Comfy输入文件": "toonflow_h3_1792032603246_2_127526045.png",
+          "SHA256": "a0c993230b0b1f59c5ff8977f330da082affaf72a51a30053330fe3b7979ab13"
+        },
+        {
+          "Picture": 4,
+          "历史实际资产": "A12",
+          "Comfy输入文件": "toonflow_h3_1792032607940_3_808055252.png",
+          "SHA256": "134652b7e8cc8757330229eeac9c91ca31aba6734049ea7b95f5e30d7a25ccf9"
+        }
+      ],
+      "注意": "历史实际参考槽位与当前保存计划存在排列差异。仅恢复原生成结果，不据此判定内容合格，不自动选片。",
+      "拟更新视频字段": {
+        "state": "生成成功",
+        "errorReason": null,
+        "width": 1344,
+        "height": 768,
+        "fps": 24,
+        "bitrate": 6648624,
+        "codec": "h264",
+        "actualDuration": 15.083333
+      },
+      "拟更新任务字段": {
+        "state": "已完成",
+        "reason": null,
+        "relatedObjects": {
+          "projectId": 1791442875669,
+          "videoId": 107,
+          "scriptId": 96,
+          "type": "视频",
+          "providerTask": {
+            "provider": "comfyui",
+            "promptId": "c91aa840-a458-40a1-8bf5-dbea1f41ac14",
+            "baseUrl": "http://127.0.0.1:8188",
+            "outputNode": "14"
+          }
+        }
+      }
+    }
+  ],
+  "恢复前": [
+    {
+      "video": {
+        "id": 104,
+        "filePath": "/1791442875669/video/2f8d3f2e-7419-493c-978e-1189420babd4.mp4",
+        "errorReason": "timeout",
+        "time": 1792027229482,
+        "state": "生成失败",
+        "scriptId": 96,
+        "projectId": 1791442875669,
+        "videoTrackId": 1790766041590,
+        "width": null,
+        "height": null,
+        "fps": null,
+        "bitrate": null,
+        "codec": null,
+        "actualDuration": null
+      },
+      "task": {
+        "id": 652,
+        "projectId": 1791442875669,
+        "taskClass": "视频生成",
+        "relatedObjects": "{\"projectId\":1791442875669,\"videoId\":104,\"scriptId\":96,\"type\":\"视频\"}",
+        "model": "MiniMax-H3-local",
+        "describe": "根据提示词生成视频",
+        "state": "生成失败",
+        "startTime": 1792028340113,
+        "reason": "timeout"
+      },
+      "track": {
+        "id": 1790766041590,
+        "videoId": null,
+        "projectId": 1791442875669,
+        "scriptId": 96,
+        "state": "已完成",
+        "reason": null,
+        "prompt": "subject_definitions:\n<Subject 1>: Young Chinese noblewoman Chu Jiaojiao, retain the exact approved facial identity, hairstyle, accessories, costume design, proportions, and lively comic performance style shown in the reference. Identity/style derives from <Picture 1> supplied through ref_image_0. If the asset is a multi-view identity sheet, its views are ONE subject only. Do not reproduce the reference sheet or its background in the video.\n<Subject 2>: The horse trader, retain the exact approved male identity, sly bargaining expression, and hand-rubbing mannerism. Identity/style derives from <Picture 2> supplied through ref_image_1. If the asset is a multi-view identity sheet, its views are ONE subject only. Do not reproduce the reference sheet or its background in the video.\n<Subject 3>: Marquis residence main courtyard in warm daylight, preserving the same table-chair-horse placement and geometry from the previous shot. Identity/style derives from <Picture 3> supplied through ref_image_2. If the asset is a multi-view identity sheet, its views are ONE subject only. Do not reproduce the reference sheet or its background in the video.\n<Subject 4>: Taxue, ONE pure white precious Ferghana horse with stable tack and noble bearing. Identity/style derives from <Picture 4> supplied through ref_image_3. If the asset is a multi-view identity sheet, its views are ONE subject only. Do not reproduce the reference sheet or its background in the video.\n<Subject 5>: Lüzhu, the maid, retain the exact approved identity and keep her as an anxious edge-of-frame presence when needed. Identity/style derives from <Picture 5> supplied through ref_image_4. If the asset is a multi-view identity sheet, its views are ONE subject only. Do not reproduce the reference sheet or its background in the video.\nPicture references are connected in the exact order listed in column D. Any reference used only for identity does not itself become an opening or closing keyframe.\n\nsummary:\n[video generation] Create one 15.00-second audiovisual clip from Episode 1 of “侯爷回府” in stylized ancient-Chinese romantic-comedy animation. Continue the courtyard bargaining scene. Chu Jiaojiao opens at ten thousand taels, the horse trader counters at eight thousand, and Chu Jiaojiao ends by raising the pressure and demanding nine thousand. All spoken content must be natural Mandarin Chinese.\n\nretention_analysis:\nVisible content: Preserve Chu Jiaojiao’s bold comic authority, the trader’s sly manner, Taxue’s pure white coat, and the same courtyard layout. If Lüzhu appears, keep her identity stable and anxious.\nTemporal and spatial continuity: The table, scattered shells, horse position, and courtyard lighting remain continuous. The bargain logic must be explicit and irreversible: 10,000 → 8,000 → 9,000.\nAudio: Preserve the exact Mandarin Chinese dialogue lines and speaking order. Mouth movements must sync only when a visible character is speaking.\n\ndetailed_description:\n[Shot 1] A medium close shot from a slightly low frontal angle begins the 15.00-second clip from 0.00 to 2.00 seconds. Chu Jiaojiao spits out a sunflower-seed shell and slams one palm onto the table.\n[Shot 2] At 00:02.000, the camera cuts to a fixed tabletop close-up from 2.00 to 4.00 seconds. Seed shells jump up from the force of the table slap.\n[Shot 3] At 00:04.000, the camera cuts to a front medium close shot with a short push from 4.00 to 6.00 seconds. Chu Jiaojiao leans into the negotiation and speaks forcefully.\n[Shot 4] At 00:06.000, the camera cuts to a close shot of the horse trader from 6.00 to 9.00 seconds with a slight lateral drift. He rubs his hands, narrows his eyes, looks first at Chu Jiaojiao and then toward Taxue, and delivers the counteroffer.\n[Shot 5] At 00:09.000, the camera cuts to a side two-shot from 9.00 to 12.00 seconds with a short push-pull. Chu Jiaojiao raises one finger clearly to indicate ten thousand while the trader talks down to eight thousand.\n[Shot 6] At 00:12.000, the camera cuts to a low-angle side medium two-shot from 12.00 to 15.00 seconds, rapidly pushing in as Chu Jiaojiao stands, slaps the table again, and points at the trader while declaring nine thousand.\nDialogue in original story order, synchronized to the corresponding beats above:\n<Subject 1> (S1), Chu Jiaojiao, speaks in fast, forceful Mandarin Chinese: <d>[Chinese] 给个痛快话！一万两！要不是侯府急变现，你连根毛都摸不到！</d>\n<Subject 2> (S2), the horse trader, replies in a sly bargaining tone: <d>[Chinese] 夫人，这马是好马，可侯爷毕竟……人都不在了。八千两，一口价！</d>\n<Subject 1> (S1), Chu Jiaojiao, rises in indignation and barks out her new price: <d>[Chinese] 九千！少一两我把它宰了吃肉，也不便宜你！</d>\nContinuity and safety of depiction: Keep the price logic exact, avoid number errors, keep the horse and courtyard positions continuous, and avoid over-villainizing the trader.\n\noverall_soundscape:\nA sharp table slap, bouncing seed-shell sounds, subtle horse snorts, and bright courtyard ambience under clear bargaining dialogue.\n\nnon_diegetic_music:\nUse elastic comedic underscore with small rhythmic accents that punctuate the slap beats and Chu Jiaojiao’s final standing escalation.",
+        "selectVideoId": null,
+        "duration": 15,
+        "archived": 0
+      }
+    },
+    {
+      "video": {
+        "id": 107,
+        "filePath": "/1791442875669/video/8aa09607-a2fd-449b-9c35-ef4765d529f2.mp4",
+        "errorReason": "timeout",
+        "time": 1792027229482,
+        "state": "生成失败",
+        "scriptId": 96,
+        "projectId": 1791442875669,
+        "videoTrackId": 1790766041593,
+        "width": null,
+        "height": null,
+        "fps": null,
+        "bitrate": null,
+        "codec": null,
+        "actualDuration": null
+      },
+      "task": {
+        "id": 655,
+        "projectId": 1791442875669,
+        "taskClass": "视频生成",
+        "relatedObjects": "{\"projectId\":1791442875669,\"videoId\":107,\"scriptId\":96,\"type\":\"视频\"}",
+        "model": "MiniMax-H3-local",
+        "describe": "根据提示词生成视频",
+        "state": "生成失败",
+        "startTime": 1792032593756,
+        "reason": "timeout"
+      },
+      "track": {
+        "id": 1790766041593,
+        "videoId": null,
+        "projectId": 1791442875669,
+        "scriptId": 96,
+        "state": "已完成",
+        "reason": null,
+        "prompt": "subject_definitions:\n<Subject 1>: Young Chinese noblewoman Chu Jiaojiao, retain the exact approved face, costume, and emotional transition from panic to calculation. Identity/style derives from <Picture 1> supplied through ref_image_0. If the asset is a multi-view identity sheet, its views are ONE subject only. Do not reproduce the reference sheet or its background in the video.\n<Subject 2>: Traditional marquis-bedroom architecture used only for the awakening flashback, with stable bed placement and ancient interior language. Identity/style derives from <Picture 2> supplied through ref_image_1. If the asset is a multi-view identity sheet, its views are ONE subject only. Do not reproduce the reference sheet or its background in the video.\n<Subject 3>: The star-patterned brocade pouch at Chu Jiaojiao’s waist, containing limited pre-existing medical supplies only. Identity/style derives from <Picture 3> supplied through ref_image_2. If the asset is a multi-view identity sheet, its views are ONE subject only. Do not reproduce the reference sheet or its background in the video.\n<Subject 4>: The marquis-residence main courtyard, preserved as the exact present-time return environment during the final two seconds, with Chu Jiaojiao looking toward the tethered horse and stable garden geometry. Identity/style derives from <Picture 4> supplied through ref_image_3. Do not invent a different exterior.\nPicture references are connected in the exact order listed in column D. Any reference used only for identity does not itself become an opening or closing keyframe.\n\nsummary:\n[video generation] Create one 15.00-second audiovisual clip from Episode 1 of “侯爷回府” in stylized ancient-Chinese romantic-comedy animation. Continue the three-days-earlier flashback: Chu Jiaojiao awakens in the marquis bedroom, discovers the flashing star-patterned pouch, hears the system warning that medical supplies cannot be replenished and recall depends on a key-fate threshold, then decides to save money and survive first. The memory ends by returning to the present courtyard.\n\nretention_analysis:\nVisible content: Preserve the approved look of Chu Jiaojiao, the marquis bedroom, and the pouch. The floating system text is temporary, clean, and functional, not a permanent UI layer.\nTemporal and spatial continuity: This clip completes the flashback chain and must visually return to the present by its end. The system rule and Chu Jiaojiao’s resolution belong to the flashback context.\nAudio: Preserve the neutral system voice and Chu Jiaojiao’s internal monologue in Mandarin Chinese. These are off-screen or internal lines and should not force visible lip-sync.\n\ndetailed_description:\n[Shot 1] A face close-up begins the 15.00-second clip from 0.00 to 3.00 seconds, rapidly widening as Chu Jiaojiao jerks awake on the bed-couch and props herself up, staring around the unfamiliar ancient room.\n[Shot 2] At 00:03.000, the camera cuts to a macro overhead shot from 3.00 to 5.00 seconds. At her waist, the star-patterned pouch emits a brief flash.\n[Shot 3] At 00:05.000, the camera cuts to a top-down hand close-up from 5.00 to 9.00 seconds. She grips the pouch and lifts it into her hands while brief semi-transparent system text appears.\n[Shot 4] At 00:09.000, the camera cuts to a side close shot from 9.00 to 13.00 seconds. The system text fades. Chu Jiaojiao stares at the pouch as her expression changes from alarmed uncertainty into practical determination.\n[Shot 5] At 00:13.000, the camera holds a medium shot from 13.00 to 15.00 seconds as the memory dissolves away and transitions back to the same marquis-residence courtyard from <Picture 4>, where Chu Jiaojiao looks toward Taxue.\nDialogue and off-screen voices in original story order, synchronized to the corresponding beats above:\nSystem voice (S1), neutral and clear, off-screen, states in Mandarin Chinese: <d>[Chinese] 医疗物资不可补充；关键命运干预达到阈值将触发召回。</d>\n<Subject 1> (S2), Chu Jiaojiao’s internal monologue, replies in Mandarin Chinese: <d>[Chinese] 召回阈值有多高也不知道，先攒钱活下来再说。</d>\nContinuity and safety of depiction: The pouch cannot generate new supplies. The system text must be brief, clear, and non-persistent. End by returning visually to the present-day courtyard setup.\n\noverall_soundscape:\nUse a soft electronic prompt tone on the pouch flash, then near-silence around the system announcement. Let ambience gradually morph back toward the courtyard by the end.\n\nnon_diegetic_music:\nBlend a subtle uncanny-system texture into the ancient-drama palette, then resolve back toward the series’ lighter present-time comedic tone as the flashback ends.",
+        "selectVideoId": null,
+        "duration": 15,
+        "archived": 0
+      }
+    }
+  ],
+  "无关记录恢复前": {
+    "视频": {
+      "行数": 113,
+      "JSON_SHA256": "2219f47972b33ee94b59ed53282a28da4f71a1ea42bffdf1958e464ff10f8447"
+    },
+    "任务": {
+      "行数": 661,
+      "JSON_SHA256": "4e5180266b2b9c4795047fb661c13fb7d5930212e355e91b395531f3578e1b80"
+    },
+    "全部轨道": {
+      "行数": 139,
+      "JSON_SHA256": "9ae26fc4b06257cb55c148b70a3a133fe26089f02965557b7ef0abe2c4498bac"
+    }
+  },
+  "恢复后": [
+    {
+      "video": {
+        "id": 104,
+        "filePath": "/1791442875669/video/2f8d3f2e-7419-493c-978e-1189420babd4.mp4",
+        "errorReason": "timeout",
+        "time": 1792027229482,
+        "state": "生成失败",
+        "scriptId": 96,
+        "projectId": 1791442875669,
+        "videoTrackId": 1790766041590,
+        "width": null,
+        "height": null,
+        "fps": null,
+        "bitrate": null,
+        "codec": null,
+        "actualDuration": null
+      },
+      "task": {
+        "id": 652,
+        "projectId": 1791442875669,
+        "taskClass": "视频生成",
+        "relatedObjects": "{\"projectId\":1791442875669,\"videoId\":104,\"scriptId\":96,\"type\":\"视频\"}",
+        "model": "MiniMax-H3-local",
+        "describe": "根据提示词生成视频",
+        "state": "生成失败",
+        "startTime": 1792028340113,
+        "reason": "timeout"
+      },
+      "track": {
+        "id": 1790766041590,
+        "videoId": null,
+        "projectId": 1791442875669,
+        "scriptId": 96,
+        "state": "已完成",
+        "reason": null,
+        "prompt": "subject_definitions:\n<Subject 1>: Young Chinese noblewoman Chu Jiaojiao, retain the exact approved facial identity, hairstyle, accessories, costume design, proportions, and lively comic performance style shown in the reference. Identity/style derives from <Picture 1> supplied through ref_image_0. If the asset is a multi-view identity sheet, its views are ONE subject only. Do not reproduce the reference sheet or its background in the video.\n<Subject 2>: The horse trader, retain the exact approved male identity, sly bargaining expression, and hand-rubbing mannerism. Identity/style derives from <Picture 2> supplied through ref_image_1. If the asset is a multi-view identity sheet, its views are ONE subject only. Do not reproduce the reference sheet or its background in the video.\n<Subject 3>: Marquis residence main courtyard in warm daylight, preserving the same table-chair-horse placement and geometry from the previous shot. Identity/style derives from <Picture 3> supplied through ref_image_2. If the asset is a multi-view identity sheet, its views are ONE subject only. Do not reproduce the reference sheet or its background in the video.\n<Subject 4>: Taxue, ONE pure white precious Ferghana horse with stable tack and noble bearing. Identity/style derives from <Picture 4> supplied through ref_image_3. If the asset is a multi-view identity sheet, its views are ONE subject only. Do not reproduce the reference sheet or its background in the video.\n<Subject 5>: Lüzhu, the maid, retain the exact approved identity and keep her as an anxious edge-of-frame presence when needed. Identity/style derives from <Picture 5> supplied through ref_image_4. If the asset is a multi-view identity sheet, its views are ONE subject only. Do not reproduce the reference sheet or its background in the video.\nPicture references are connected in the exact order listed in column D. Any reference used only for identity does not itself become an opening or closing keyframe.\n\nsummary:\n[video generation] Create one 15.00-second audiovisual clip from Episode 1 of “侯爷回府” in stylized ancient-Chinese romantic-comedy animation. Continue the courtyard bargaining scene. Chu Jiaojiao opens at ten thousand taels, the horse trader counters at eight thousand, and Chu Jiaojiao ends by raising the pressure and demanding nine thousand. All spoken content must be natural Mandarin Chinese.\n\nretention_analysis:\nVisible content: Preserve Chu Jiaojiao’s bold comic authority, the trader’s sly manner, Taxue’s pure white coat, and the same courtyard layout. If Lüzhu appears, keep her identity stable and anxious.\nTemporal and spatial continuity: The table, scattered shells, horse position, and courtyard lighting remain continuous. The bargain logic must be explicit and irreversible: 10,000 → 8,000 → 9,000.\nAudio: Preserve the exact Mandarin Chinese dialogue lines and speaking order. Mouth movements must sync only when a visible character is speaking.\n\ndetailed_description:\n[Shot 1] A medium close shot from a slightly low frontal angle begins the 15.00-second clip from 0.00 to 2.00 seconds. Chu Jiaojiao spits out a sunflower-seed shell and slams one palm onto the table.\n[Shot 2] At 00:02.000, the camera cuts to a fixed tabletop close-up from 2.00 to 4.00 seconds. Seed shells jump up from the force of the table slap.\n[Shot 3] At 00:04.000, the camera cuts to a front medium close shot with a short push from 4.00 to 6.00 seconds. Chu Jiaojiao leans into the negotiation and speaks forcefully.\n[Shot 4] At 00:06.000, the camera cuts to a close shot of the horse trader from 6.00 to 9.00 seconds with a slight lateral drift. He rubs his hands, narrows his eyes, looks first at Chu Jiaojiao and then toward Taxue, and delivers the counteroffer.\n[Shot 5] At 00:09.000, the camera cuts to a side two-shot from 9.00 to 12.00 seconds with a short push-pull. Chu Jiaojiao raises one finger clearly to indicate ten thousand while the trader talks down to eight thousand.\n[Shot 6] At 00:12.000, the camera cuts to a low-angle side medium two-shot from 12.00 to 15.00 seconds, rapidly pushing in as Chu Jiaojiao stands, slaps the table again, and points at the trader while declaring nine thousand.\nDialogue in original story order, synchronized to the corresponding beats above:\n<Subject 1> (S1), Chu Jiaojiao, speaks in fast, forceful Mandarin Chinese: <d>[Chinese] 给个痛快话！一万两！要不是侯府急变现，你连根毛都摸不到！</d>\n<Subject 2> (S2), the horse trader, replies in a sly bargaining tone: <d>[Chinese] 夫人，这马是好马，可侯爷毕竟……人都不在了。八千两，一口价！</d>\n<Subject 1> (S1), Chu Jiaojiao, rises in indignation and barks out her new price: <d>[Chinese] 九千！少一两我把它宰了吃肉，也不便宜你！</d>\nContinuity and safety of depiction: Keep the price logic exact, avoid number errors, keep the horse and courtyard positions continuous, and avoid over-villainizing the trader.\n\noverall_soundscape:\nA sharp table slap, bouncing seed-shell sounds, subtle horse snorts, and bright courtyard ambience under clear bargaining dialogue.\n\nnon_diegetic_music:\nUse elastic comedic underscore with small rhythmic accents that punctuate the slap beats and Chu Jiaojiao’s final standing escalation.",
+        "selectVideoId": null,
+        "duration": 15,
+        "archived": 0
+      }
+    },
+    {
+      "video": {
+        "id": 107,
+        "filePath": "/1791442875669/video/8aa09607-a2fd-449b-9c35-ef4765d529f2.mp4",
+        "errorReason": "timeout",
+        "time": 1792027229482,
+        "state": "生成失败",
+        "scriptId": 96,
+        "projectId": 1791442875669,
+        "videoTrackId": 1790766041593,
+        "width": null,
+        "height": null,
+        "fps": null,
+        "bitrate": null,
+        "codec": null,
+        "actualDuration": null
+      },
+      "task": {
+        "id": 655,
+        "projectId": 1791442875669,
+        "taskClass": "视频生成",
+        "relatedObjects": "{\"projectId\":1791442875669,\"videoId\":107,\"scriptId\":96,\"type\":\"视频\"}",
+        "model": "MiniMax-H3-local",
+        "describe": "根据提示词生成视频",
+        "state": "生成失败",
+        "startTime": 1792032593756,
+        "reason": "timeout"
+      },
+      "track": {
+        "id": 1790766041593,
+        "videoId": null,
+        "projectId": 1791442875669,
+        "scriptId": 96,
+        "state": "已完成",
+        "reason": null,
+        "prompt": "subject_definitions:\n<Subject 1>: Young Chinese noblewoman Chu Jiaojiao, retain the exact approved face, costume, and emotional transition from panic to calculation. Identity/style derives from <Picture 1> supplied through ref_image_0. If the asset is a multi-view identity sheet, its views are ONE subject only. Do not reproduce the reference sheet or its background in the video.\n<Subject 2>: Traditional marquis-bedroom architecture used only for the awakening flashback, with stable bed placement and ancient interior language. Identity/style derives from <Picture 2> supplied through ref_image_1. If the asset is a multi-view identity sheet, its views are ONE subject only. Do not reproduce the reference sheet or its background in the video.\n<Subject 3>: The star-patterned brocade pouch at Chu Jiaojiao’s waist, containing limited pre-existing medical supplies only. Identity/style derives from <Picture 3> supplied through ref_image_2. If the asset is a multi-view identity sheet, its views are ONE subject only. Do not reproduce the reference sheet or its background in the video.\n<Subject 4>: The marquis-residence main courtyard, preserved as the exact present-time return environment during the final two seconds, with Chu Jiaojiao looking toward the tethered horse and stable garden geometry. Identity/style derives from <Picture 4> supplied through ref_image_3. Do not invent a different exterior.\nPicture references are connected in the exact order listed in column D. Any reference used only for identity does not itself become an opening or closing keyframe.\n\nsummary:\n[video generation] Create one 15.00-second audiovisual clip from Episode 1 of “侯爷回府” in stylized ancient-Chinese romantic-comedy animation. Continue the three-days-earlier flashback: Chu Jiaojiao awakens in the marquis bedroom, discovers the flashing star-patterned pouch, hears the system warning that medical supplies cannot be replenished and recall depends on a key-fate threshold, then decides to save money and survive first. The memory ends by returning to the present courtyard.\n\nretention_analysis:\nVisible content: Preserve the approved look of Chu Jiaojiao, the marquis bedroom, and the pouch. The floating system text is temporary, clean, and functional, not a permanent UI layer.\nTemporal and spatial continuity: This clip completes the flashback chain and must visually return to the present by its end. The system rule and Chu Jiaojiao’s resolution belong to the flashback context.\nAudio: Preserve the neutral system voice and Chu Jiaojiao’s internal monologue in Mandarin Chinese. These are off-screen or internal lines and should not force visible lip-sync.\n\ndetailed_description:\n[Shot 1] A face close-up begins the 15.00-second clip from 0.00 to 3.00 seconds, rapidly widening as Chu Jiaojiao jerks awake on the bed-couch and props herself up, staring around the unfamiliar ancient room.\n[Shot 2] At 00:03.000, the camera cuts to a macro overhead shot from 3.00 to 5.00 seconds. At her waist, the star-patterned pouch emits a brief flash.\n[Shot 3] At 00:05.000, the camera cuts to a top-down hand close-up from 5.00 to 9.00 seconds. She grips the pouch and lifts it into her hands while brief semi-transparent system text appears.\n[Shot 4] At 00:09.000, the camera cuts to a side close shot from 9.00 to 13.00 seconds. The system text fades. Chu Jiaojiao stares at the pouch as her expression changes from alarmed uncertainty into practical determination.\n[Shot 5] At 00:13.000, the camera holds a medium shot from 13.00 to 15.00 seconds as the memory dissolves away and transitions back to the same marquis-residence courtyard from <Picture 4>, where Chu Jiaojiao looks toward Taxue.\nDialogue and off-screen voices in original story order, synchronized to the corresponding beats above:\nSystem voice (S1), neutral and clear, off-screen, states in Mandarin Chinese: <d>[Chinese] 医疗物资不可补充；关键命运干预达到阈值将触发召回。</d>\n<Subject 1> (S2), Chu Jiaojiao’s internal monologue, replies in Mandarin Chinese: <d>[Chinese] 召回阈值有多高也不知道，先攒钱活下来再说。</d>\nContinuity and safety of depiction: The pouch cannot generate new supplies. The system text must be brief, clear, and non-persistent. End by returning visually to the present-day courtyard setup.\n\noverall_soundscape:\nUse a soft electronic prompt tone on the pouch flash, then near-silence around the system announcement. Let ambience gradually morph back toward the courtyard by the end.\n\nnon_diegetic_music:\nBlend a subtle uncanny-system texture into the ancient-drama palette, then resolve back toward the series’ lighter present-time comedic tone as the flashback ends.",
+        "selectVideoId": null,
+        "duration": 15,
+        "archived": 0
+      }
+    }
+  ],
+  "无关记录恢复后": {
+    "视频": {
+      "行数": 113,
+      "JSON_SHA256": "2219f47972b33ee94b59ed53282a28da4f71a1ea42bffdf1958e464ff10f8447"
+    },
+    "任务": {
+      "行数": 661,
+      "JSON_SHA256": "4e5180266b2b9c4795047fb661c13fb7d5930212e355e91b395531f3578e1b80"
+    },
+    "全部轨道": {
+      "行数": 139,
+      "JSON_SHA256": "9ae26fc4b06257cb55c148b70a3a133fe26089f02965557b7ef0abe2c4498bac"
+    }
+  }
+}

@@ -225471,12 +225471,27 @@ async function taskRecord(projectId, taskClass, modelName, opts = {}) {
     state: taskStateMap[0],
     startTime: Date.now()
   });
-  return async function done(state, reason) {
+  const done = async function(state, reason) {
     await db_default("o_tasks").where("id", id2).update({
       state: taskStateMap[state],
       reason: state === -1 ? reason ?? "" : null
     });
   };
+  done.onTaskSubmitted = async (receipt) => {
+    let relatedObjects = {};
+    if (opteorContent) {
+      try {
+        const parsed = JSON.parse(opteorContent);
+        relatedObjects = parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : { originalContent: opteorContent };
+      } catch {
+        relatedObjects = { originalContent: opteorContent };
+      }
+    }
+    await db_default("o_tasks").where("id", id2).update({
+      relatedObjects: JSON.stringify({ ...relatedObjects, providerTask: receipt })
+    });
+  };
+  return done;
 }
 var taskStateMap;
 var init_taskRecord = __esm({
@@ -237167,11 +237182,11 @@ async function withTaskRecord(modelKey, taskClass, describe4, relatedObjects, pr
   const [_, model] = modelName.split(/:(.+)/);
   const taskRecord2 = await utils_default.task(projectId, taskClass, model, { describe: describe4, content: relatedObjects });
   try {
-    const result = await fn(modelName, false, 0);
-    taskRecord2(1);
+    const result = await fn(modelName, false, 0, taskRecord2);
+    await taskRecord2(1);
     return result;
   } catch (e) {
-    taskRecord2(-1, utils_default.error(e).message);
+    await taskRecord2(-1, utils_default.error(e).message);
     throw new Error(utils_default.error(e).message);
   }
 }
@@ -237307,10 +237322,10 @@ var init_ai = __esm({
         input = { ...input, prompt: withNonGraphicVisuals(input.prompt) };
         const modelName = await resolveModelName(this.key);
         try {
-          const exec2 = async (mn) => {
+          const exec2 = async (mn, _think, _thinkLevel, task) => {
             const fn = await getVendorTemplateFn("videoRequest", mn);
             await referenceList2imageBase642(mn.split(/:(.+)/)[0], input);
-            this.result = await fn(input);
+            this.result = await fn(task ? { ...input, onTaskSubmitted: task.onTaskSubmitted } : input);
             if (this.result.startsWith("http")) this.result = await urlToBase642(this.result);
           };
           if (taskRecord2) {
