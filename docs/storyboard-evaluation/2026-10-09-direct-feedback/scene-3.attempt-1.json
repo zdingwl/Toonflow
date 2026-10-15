@@ -1,0 +1,74 @@
+{
+  "scene": 3,
+  "attempt": 1,
+  "errors": [
+    "片段3镜头7运镜包含镜内切换，需另列镜头并分配时长"
+  ],
+  "finishReason": "stop",
+  "usage": {
+    "inputTokens": 38061,
+    "inputTokenDetails": {
+      "noCacheTokens": 14709,
+      "cacheReadTokens": 23352
+    },
+    "outputTokens": 3158,
+    "outputTokenDetails": {
+      "textTokens": 3158,
+      "reasoningTokens": 0
+    },
+    "totalTokens": 41219,
+    "raw": {
+      "prompt_tokens": 38061,
+      "completion_tokens": 3158,
+      "total_tokens": 41219,
+      "prompt_tokens_details": {
+        "cached_tokens": 23352
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "reasoningTokens": 0,
+    "cachedInputTokens": 23352
+  },
+  "elapsedMs": 59393,
+  "rawHash": "790fd996fd6b768218220a9ea79138eb68d8081ed9b2ede8ae8f9de2226508f0",
+  "raw": "D:\\Toonflow-app-master\\docs\\storyboard-evaluation\\2026-10-09-direct-feedback\\scene-3.attempt-1.response.xml",
+  "markdown": "D:\\Toonflow-app-master\\docs\\storyboard-evaluation\\2026-10-09-direct-feedback\\scene-3.attempt-1.md",
+  "toolCalls": [
+    {
+      "name": "activate_skill",
+      "input": {
+        "name": "storyboard_table_techniques"
+      }
+    },
+    {
+      "name": "get_flowData",
+      "input": {
+        "key": "script",
+        "limit": 12000
+      }
+    },
+    {
+      "name": "get_flowData",
+      "input": {
+        "key": "assets",
+        "limit": 12000
+      }
+    },
+    {
+      "name": "get_flowData",
+      "input": {
+        "key": "scriptPlan",
+        "limit": 12000
+      }
+    },
+    {
+      "name": "get_flowData",
+      "input": {
+        "key": "storyboardTable",
+        "limit": 12000
+      }
+    }
+  ]
+}

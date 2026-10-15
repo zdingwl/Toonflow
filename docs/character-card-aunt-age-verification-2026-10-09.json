@@ -1,0 +1,228 @@
+{
+  "sourcePath": "D:\\Toonflow-app-master\\data\\db2.sqlite",
+  "projectId": 1791442875668,
+  "assetId": 394,
+  "productionReadOnly": true,
+  "extractionDatabase": ":memory:",
+  "imageCalls": 0,
+  "requests": [
+    {
+      "stage": "discovery",
+      "estimated": 8405,
+      "budget": 14000,
+      "elapsedMs": 0,
+      "provider": false,
+      "sources": 1,
+      "excerpts": 0,
+      "finishReason": "fixed-discovery"
+    },
+    {
+      "stage": "facts",
+      "estimated": 4690,
+      "budget": 14000,
+      "elapsedMs": 2029,
+      "provider": true,
+      "sources": 1,
+      "excerpts": 65,
+      "finishReason": "tool-calls",
+      "usage": {
+        "inputTokens": 3334,
+        "inputTokenDetails": {
+          "noCacheTokens": 1486,
+          "cacheReadTokens": 1848
+        },
+        "outputTokens": 34,
+        "outputTokenDetails": {
+          "textTokens": 34,
+          "reasoningTokens": 0
+        },
+        "totalTokens": 3368,
+        "raw": {
+          "prompt_tokens": 3334,
+          "completion_tokens": 34,
+          "total_tokens": 3368,
+          "prompt_tokens_details": {
+            "cached_tokens": 1848
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "reasoningTokens": 0,
+        "cachedInputTokens": 1848
+      },
+      "toolErrors": []
+    },
+    {
+      "stage": "match",
+      "estimated": 2747,
+      "budget": 14000,
+      "elapsedMs": 1881,
+      "provider": true,
+      "facts": 0,
+      "finishReason": "tool-calls",
+      "usage": {
+        "inputTokens": 1784,
+        "inputTokenDetails": {
+          "noCacheTokens": 448,
+          "cacheReadTokens": 1336
+        },
+        "outputTokens": 76,
+        "outputTokenDetails": {
+          "textTokens": 76,
+          "reasoningTokens": 0
+        },
+        "totalTokens": 1860,
+        "raw": {
+          "prompt_tokens": 1784,
+          "completion_tokens": 76,
+          "total_tokens": 1860,
+          "prompt_tokens_details": {
+            "cached_tokens": 1336
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "reasoningTokens": 0,
+        "cachedInputTokens": 1336
+      },
+      "toolErrors": []
+    },
+    {
+      "stage": "card",
+      "estimated": 11888,
+      "budget": 14000,
+      "elapsedMs": 9476,
+      "provider": true,
+      "sources": 0,
+      "excerpts": 0,
+      "facts": 0,
+      "finishReason": "tool-calls",
+      "usage": {
+        "inputTokens": 7544,
+        "inputTokenDetails": {
+          "noCacheTokens": 4672,
+          "cacheReadTokens": 2872
+        },
+        "outputTokens": 597,
+        "outputTokenDetails": {
+          "textTokens": 597,
+          "reasoningTokens": 0
+        },
+        "totalTokens": 8141,
+        "raw": {
+          "prompt_tokens": 7544,
+          "completion_tokens": 597,
+          "total_tokens": 8141,
+          "prompt_tokens_details": {
+            "cached_tokens": 2872
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "reasoningTokens": 0,
+        "cachedInputTokens": 2872
+      },
+      "toolErrors": []
+    }
+  ],
+  "startedAt": "2026-10-09T12:29:06.739Z",
+  "success": true,
+  "model": "volcengine:doubao-seed-2-1-pro-260915",
+  "scriptCount": 1,
+  "sourceCharacters": 864,
+  "peerCount": 8,
+  "imageIdBefore": null,
+  "budget": {
+    "inputTokenBudget": 14000,
+    "retryTokenReserve": 1000,
+    "maxOutputTokens": 6144
+  },
+  "result": {
+    "created": 0,
+    "updated": 1,
+    "reused": 0
+  },
+  "imageIdAfter": null,
+  "productionAssetUnchanged": true,
+  "productionScriptsUnchanged": true,
+  "cardCountBefore": 10,
+  "cardCountAfter": 11,
+  "cardBinding": {
+    "cardId": 11,
+    "version": 1,
+    "name": "舅妈·角色卡",
+    "mode": "reference",
+    "roleDefinition": "端庄亲切的长辈感女性，柔和方圆脸与温和沉稳眉眼，深棕黑发整洁低发髻；雾灰蓝收腰针织外套、米白针织内搭、深灰直筒裤与棕色低跟踝靴，整体稳重克制、自然得体。",
+    "ageBand": "unknown",
+    "ageMin": null,
+    "ageMax": null,
+    "ageBounds": {
+      "min": null,
+      "max": null
+    },
+    "gender": "unknown",
+    "references": [
+      {
+        "cardId": 10,
+        "version": 1,
+        "borrowedFields": [
+          "face",
+          "hair",
+          "clothing"
+        ]
+      }
+    ]
+  },
+  "savedFactCount": 0,
+  "savedFacts": [],
+  "card": {
+    "id": 11,
+    "ownerId": 1,
+    "name": "舅妈·角色卡",
+    "artStyle": "realistic_3d_anime",
+    "roleDefinition": "端庄亲切的长辈感女性，柔和方圆脸与温和沉稳眉眼，深棕黑发整洁低发髻；雾灰蓝收腰针织外套、米白针织内搭、深灰直筒裤与棕色低跟踝靴，整体稳重克制、自然得体。",
+    "ageBand": "unknown",
+    "gender": "unknown",
+    "visualDesign": {
+      "face": "柔和方圆脸，颧骨平缓，下颌圆润清楚；偏长温和眼型，自然弯眉，鼻梁挺直适中，唇形饱满自然；自然暖调肤色，轻薄自然底妆，低饱和豆沙棕唇色，神情端庄亲切",
+      "body": "自然匀称的女性比例，肩线舒展，站姿端正克制；不使用成人胸腰臀夸张曲线或性感裸露设计",
+      "hair": "深棕黑色头发，侧分后在脑后盘成整洁低发髻，发丝服帖，鬓边有少量柔和碎发，发束层次清楚并带细微光泽",
+      "clothing": "雾灰蓝色收腰中长款针织外套，规整翻领与暗扣前襟，内搭米白色圆领柔细针织衫；深炭灰色直筒长裤；深棕色圆润鞋头低跟踝靴，哑光细腻皮面；整体整洁端庄，无多余配饰",
+      "environment": "",
+      "shape": "中等长度外套形成稳重直身微收腰轮廓，上柔下直，鞋靴体量轻巧，整体呈现温和、可靠的长辈女性剪影"
+    },
+    "describe": "柔和方圆脸，颧骨平缓，下颌圆润清楚；偏长温和眼型，自然弯眉，鼻梁挺直适中，唇形饱满自然；自然暖调肤色，轻薄自然底妆，低饱和豆沙棕唇色，神情端庄亲切；自然匀称的女性比例，肩线舒展，站姿端正克制；不使用成人胸腰臀夸张曲线或性感裸露设计；深棕黑色头发，侧分后在脑后盘成整洁低发髻，发丝服帖，鬓边有少量柔和碎发，发束层次清楚并带细微光泽；雾灰蓝色收腰中长款针织外套，规整翻领与暗扣前襟，内搭米白色圆领柔细针织衫；深炭灰色直筒长裤；深棕色圆润鞋头低跟踝靴，哑光细腻皮面；整体整洁端庄，无多余配饰；中等长度外套形成稳重直身微收腰轮廓，上柔下直，鞋靴体量轻巧，整体呈现温和、可靠的长辈女性剪影",
+    "status": "active",
+    "provenance": {
+      "method": "generated",
+      "references": [
+        {
+          "cardId": 10,
+          "version": 1,
+          "borrowedFields": [
+            "face",
+            "hair",
+            "clothing"
+          ]
+        }
+      ]
+    },
+    "ageMin": null,
+    "ageMax": null,
+    "version": 1,
+    "sourceProjectId": 1791442875668,
+    "sourceAssetId": 394,
+    "createdAt": 1791548960191,
+    "updatedAt": 1791548960191,
+    "imagePath": null,
+    "imageId": null,
+    "imageState": "missing",
+    "imageNeedsRegeneration": false,
+    "imageErrorReason": null
+  },
+  "description": "一位气质端庄亲切、自然得体的长辈感女性。柔和方圆脸，颧骨平缓，下颌圆润清楚；偏长温和眼型，眼神沉稳柔和，自然弯眉，鼻梁挺直适中，唇形饱满自然。自然暖调肤色，轻薄自然底妆，低饱和豆沙棕唇色，妆面干净克制。深棕黑色头发侧分后在脑后盘成整洁低发髻，发丝服帖，鬓边有少量柔和碎发，发束层次清楚并带细微光泽。身形为自然匀称的女性比例，肩线舒展，站姿端正克制，不做夸张曲线或性感裸露设计。身穿雾灰蓝色收腰中长款针织外套，规整翻领与暗扣前襟，衣长至膝上；内搭米白色圆领柔细针织衫，下身配深炭灰色直筒长裤，脚穿深棕色圆润鞋头低跟踝靴，哑光细腻皮面。整体为中等长度外套形成的稳重直身微收腰轮廓，上柔下直，鞋靴体量轻巧，整洁端庄，无多余配饰。",
+  "finishedAt": "2026-10-09T12:29:20.195Z"
+}

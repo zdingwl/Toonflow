@@ -37,13 +37,15 @@ test("单剧本批次自动修复模型遗漏或幻觉的 scriptIds，多剧本�
 // against SQLite by asset-description-refresh.test.ts.
 
 test("资产提取在 desc 源头完成差异化成年主角审美设计并保持场景为纯环境", () => {
+  const skill = readFileSync(path.join(root, "data/skills/asset_visual_design.md"), "utf8");
   assert.match(routeSource, /资产 desc 不是剧情摘要/);
-  assert.match(routeSource, /脸型与下颌、眉眼鼻唇关系/);
-  assert.match(routeSource, /成年女性主角保留健康成熟曲线与清楚腰臀轮廓/);
-  assert.match(routeSource, /成年男性主角保留俊朗骨相、宽肩收腰和运动型胸背/);
-  assert.match(routeSource, /一个大轮廓、一个功能结构和一个克制识别点/);
+  assert.match(routeSource, /getAssetExtractionVisualDesignSkill/);
+  assert.match(skill, /成年女性主角[\s\S]*健康协调的成熟曲线/);
+  assert.match(skill, /成年男性主角[\s\S]*宽肩窄腰、运动型胸背/);
+  assert.match(routeSource, /脸型、眉眼鼻唇、妆发轮廓、体型剪影和完整衣装/);
+  assert.match(routeSource, /轮廓、材质对比与标志性细节/);
   assert.match(routeSource, /未成年、儿童或年龄无法确认/);
-  assert.match(routeSource, /网文封面\/精品幻想动画/);
+  assert.match(routeSource, /当前项目美术方向允许/);
   assert.match(routeSource, /具名人物、人影、动物、怪物、独立生物/);
   assert.match(routeSource, /assetExtractionDesignRules/);
 });

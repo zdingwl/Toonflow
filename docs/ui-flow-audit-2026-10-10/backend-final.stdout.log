@@ -1,0 +1,149 @@
+[环境变量：dev]
+数据库目录: D:\Toonflow-app-master\data\db2.sqlite
+[Socket] 注册命名空间: /api/socket/productionAgent
+[Socket] 注册命名空间: /api/socket/scriptAgent
+文件目录: D:\Toonflow-app-master\data\oss
+文件目录: D:\Toonflow-app-master\data\skills
+文件目录: D:\Toonflow-app-master\data\assets
+静态网站目录: D:\Toonflow-app-master\data\web
+[服务启动成功]: http://localhost:10588
+[productionAgent] 已连接: GDeiMwNR7af4ToDzAAAB
+[0mOPTIONS /api/agents/getMemory [32m204[0m 0.563 ms - 0[0m
+[0mPOST /api/agents/getMemory [32m200[0m 11.678 ms - 411486[0m
+[0mGET / [32m200[0m 1.495 ms - 26955277[0m
+[productionAgent] 已连接: I5EC6IXSqkA-ww2uAAAD
+[0mPOST /api/agents/getMemory [32m200[0m 4.144 ms - 411486[0m
+[0mGET / [36m304[0m 0.836 ms - -[0m
+[0mPOST /api/script/getScrptApi [32m200[0m 4.593 ms - 56454[0m
+[0mPOST /api/production/getFlowData [32m200[0m 3.307 ms - 86710[0m
+[0mPOST /api/production/getFlowData [32m200[0m 2.193 ms - 86710[0m
+[0mPOST /api/project/getModelDetails [32m200[0m 3.413 ms - 121[0m
+[0mGET /oss/1791442875668/role/984f6b15-daaf-47c6-a813-dcb227631fbd.jpg?size=20 [36m304[0m 1.605 ms - -[0m
+[0mGET /oss/1791442875668/role/2477f1fc-ed49-49e9-a9f2-81e6177f5cba.jpg?size=20 [36m304[0m 0.456 ms - -[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 245.132 ms - 140[0m
+[0mGET /oss/1791442875668/scene/6294efb7-9733-4951-b148-10cda80f8f18.jpg?size=20 [36m304[0m 0.810 ms - -[0m
+[0mGET /oss/1791442875668/scene/07f85c50-bd10-4893-9505-31c878d1441b.jpg?size=20 [36m304[0m 1.763 ms - -[0m
+[0mGET /oss/1791442875668/scene/851febf9-776d-400e-a636-4a5173a4f906.jpg?size=20 [36m304[0m 0.500 ms - -[0m
+[0mGET /oss/1791442875668/props/20359d2d-ca07-4dd5-bce5-cdea59655114.jpg?size=20 [36m304[0m 0.318 ms - -[0m
+[0mGET /oss/1791442875668/props/59b02905-302e-4b00-a187-26d0e93d74e3.jpg?size=20 [36m304[0m 0.529 ms - -[0m
+[0mGET /oss/1791442875668/props/6181a3ac-1154-4588-b948-e176f5be5f9a.jpg?size=20 [36m304[0m 0.440 ms - -[0m
+[0mPOST /api/agents/getMemory [32m200[0m 6.587 ms - 411486[0m
+[0mPOST /api/agents/getMemory [32m200[0m 6.389 ms - 411486[0m
+[0mGET /favicon.ico [36m304[0m 0.364 ms - -[0m
+[productionAgent] 已连接: bGFHQRSy15kjrsTEAAAF
+[productionAgent] 上下文已更新: 1791442875668:productionAgent:71
+[0mPOST /api/agents/getMemory [32m200[0m 6.632 ms - 411486[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.204 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 161.021 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.106 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 128.904 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 172.795 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.122 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 165.493 ms - 140[0m
+⚡[主技能] ✓ 已读取主技能文件： D:/Toonflow-app-master/data/skills/production_skills/storyboard_table_techniques.md（5818 字符）
+⚡[主技能] ✓ 技能 "storyboard_table_techniques" 已激活
+[0mOPTIONS /api/importStudio [32m204[0m 0.080 ms - 0[0m
+[0mPOST /api/importStudio [32m200[0m 87.929 ms - 461[0m
+[0mPOST /api/importStudio [32m200[0m 3.766 ms - 1159[0m
+[0mPOST /api/importStudio [32m200[0m 59.500 ms - 461[0m
+[0mPOST /api/importStudio [32m200[0m 2.182 ms - 574[0m
+[0mOPTIONS /api/modelSelect/getModelList [32m204[0m 0.113 ms - 0[0m
+[0mPOST /api/modelSelect/getModelList [32m200[0m 71.822 ms - 1188[0m
+[0mOPTIONS /api/cornerScape/getAllAssets [32m204[0m 0.052 ms - 0[0m
+[0mPOST /api/cornerScape/getAllAssets [32m200[0m 6.809 ms - 89428[0m
+[0mGET /oss/1790665121735/role/4f452976-47ee-407e-a962-d0ba9ba95e9a.jpg?size=20 [32m200[0m 11.023 ms - 51122[0m
+[0mGET /oss/1790665121735/role/f8e874cc-ed22-4789-9e88-f95917639b2f.jpg?size=20 [32m200[0m 19.835 ms - 33614[0m
+[0mGET /oss/1790665121735/role/d29ca474-580d-4d50-8b1e-6cddafb0fe99.jpg?size=20 [32m200[0m 31.290 ms - 46862[0m
+[0mGET /oss/1790665121735/role/b7e9c044-6a53-449d-b70c-4a436e80d9f9.jpg?size=20 [32m200[0m 32.022 ms - 52423[0m
+[0mGET /oss/1790665121735/role/d5db37b0-40a3-4114-8001-9b18ca9bddc6.jpg?size=20 [32m200[0m 37.693 ms - 44637[0m
+[0mGET /oss/1790665121735/role/924c267f-d907-484e-a796-1b7efb8a6fb2.jpg?size=20 [32m200[0m 47.648 ms - 37225[0m
+[0mGET /oss/1790665121735/role/a9ccea5a-d4a1-4257-9159-8914a16190b0.jpg?size=20 [32m200[0m 36.886 ms - 42847[0m
+[0mGET /oss/1790665121735/role/32bd672c-4396-4e17-aef1-3c4041fa5c33.jpg?size=20 [32m200[0m 39.845 ms - 59251[0m
+[0mGET /oss/1790665121735/scene/93e2cab0-29ce-4c7f-bc25-953bddfbf4d0.jpg?size=20 [32m200[0m 11.745 ms - 17613[0m
+[0mGET /oss/1790665121735/scene/41084b02-ec10-4e57-bbf6-c3823c468f15.jpg?size=20 [32m200[0m 13.101 ms - 14242[0m
+[0mGET /oss/1790665121735/scene/783da0a9-c580-4d3c-bbca-68cfd96bb5f6.jpg?size=20 [32m200[0m 14.259 ms - 15542[0m
+[0mGET /oss/1790665121735/scene/f8dd5f0d-c780-4845-bdb6-6005c616fd6e.jpg?size=20 [32m200[0m 22.540 ms - 4292[0m
+[0mGET /oss/1790665121735/scene/abb8cd8e-2433-4591-abbc-66be55d16b83.jpg?size=20 [32m200[0m 2.097 ms - 20002[0m
+[0mGET /oss/1790665121735/scene/d78bc12a-a685-4d80-ba1c-c8f6609e2cd9.jpg?size=20 [32m200[0m 2.748 ms - 20031[0m
+[0mGET /oss/1790665121735/scene/f21354f6-1b33-4ddc-b636-bf9d5ded0fb0.jpg?size=20 [32m200[0m 15.858 ms - 19334[0m
+[0mGET /oss/1790665121735/scene/a48a6e82-7cdc-416f-8ba4-30f17b2b397c.jpg?size=20 [32m200[0m 18.503 ms - 7465[0m
+[0mGET /oss/1790665121735/scene/79f15ed8-1204-4cf4-9981-1c6445739809.jpg?size=20 [32m200[0m 1.199 ms - 6007[0m
+[0mGET /oss/1790665121735/scene/de76d0d4-2cc1-4736-9e7f-e49a21e78b46.jpg?size=20 [32m200[0m 2.562 ms - 18849[0m
+[0mGET /oss/1790665121735/scene/c29e5028-c48c-4b5a-a6f3-b1d9a9b616af.jpg?size=20 [32m200[0m 5.022 ms - 13011[0m
+[0mGET /oss/1790665121735/scene/82193292-55b9-4557-9fd9-d05abc75cab9.jpg?size=20 [32m200[0m 17.645 ms - 10624[0m
+[0mGET /oss/1790665121735/scene/9522a98f-e1cb-4305-96c1-c8b5af6b79ce.jpg?size=20 [32m200[0m 1.214 ms - 20435[0m
+[0mGET /oss/1790665121735/scene/849f78c6-5a7a-46d0-ad5f-a90807d22aeb.jpg?size=20 [32m200[0m 4.278 ms - 9796[0m
+[0mGET /oss/1790665121735/scene/22ea6416-8b6e-4371-ac61-6628dacca59b.jpg?size=20 [32m200[0m 9.777 ms - 9419[0m
+[0mGET /oss/1790665121735/scene/25f752da-dd9d-4ca3-817d-d4391e3951ea.jpg?size=20 [32m200[0m 11.009 ms - 16813[0m
+[0mGET /oss/1790665121735/scene/96bbc62a-2978-495e-a463-31448e3691b6.jpg?size=20 [32m200[0m 1.351 ms - 14338[0m
+[0mGET /oss/1790665121735/scene/56679065-0f18-4204-95a3-6a43e5a5db89.jpg?size=20 [32m200[0m 11.044 ms - 24329[0m
+[0mGET /oss/1790665121735/scene/3d4f4194-4f13-474c-a5c1-4d88bfa19e6a.jpg?size=20 [32m200[0m 13.781 ms - 19041[0m
+[0mGET /oss/1790665121735/scene/b6b1aefe-8f6a-4361-b416-aa69a2009658.jpg?size=20 [32m200[0m 13.665 ms - 20426[0m
+[0mGET /oss/1790665121735/scene/4943ecbf-a566-464a-b078-fa6ebe1c220e.jpg?size=20 [32m200[0m 0.767 ms - 18570[0m
+[0mGET /oss/1790665121735/scene/40955108-31b9-4475-a6f3-d11fbebef197.jpg?size=20 [32m200[0m 1.279 ms - 17410[0m
+[0mGET /oss/1790665121735/scene/274897ff-9254-4460-b883-d48a28f6aa6d.jpg?size=20 [32m200[0m 2.526 ms - 21394[0m
+[0mGET /oss/1790665121735/scene/4ffbe895-eeea-4cdc-91cb-6fcf72f8cec1.jpg?size=20 [32m200[0m 2.483 ms - 15973[0m
+[0mGET /oss/1790665121735/scene/87fe7fcb-dabe-403f-8c5b-46051dd94f91.jpg?size=20 [32m200[0m 0.881 ms - 19492[0m
+[0mGET /oss/1790665121735/props/50973c67-7823-423a-9068-3d0890de7516.jpg?size=20 [32m200[0m 8.670 ms - 31725[0m
+[0mGET /oss/1790665121735/scene/ae96f137-3694-45bf-9570-4f7bd328d6bd.jpg?size=20 [32m200[0m 12.800 ms - 3005[0m
+[0mGET /oss/1790665121735/props/e30de6a1-6b2d-40df-94fd-8d07f1f4759e.jpg?size=20 [32m200[0m 18.341 ms - 31973[0m
+[0mGET /oss/1790665121735/props/7d8fdb7a-4f91-4cfd-b6d3-9dc4609549b0.jpg?size=20 [32m200[0m 1.622 ms - 31886[0m
+[0mGET /oss/1790665121735/props/81971442-3148-4586-aaaa-b4250233b26f.jpg?size=20 [32m200[0m 15.785 ms - 21841[0m
+[0mGET /oss/1790665121735/props/f601daaf-ec92-4022-893a-f568a6899e94.jpg?size=20 [32m200[0m 16.856 ms - 24624[0m
+[0mGET /oss/1790665121735/props/ec232e2a-7628-4375-a376-5667acd50eef.jpg?size=20 [32m200[0m 25.265 ms - 36267[0m
+[0mGET /oss/1790665121735/props/74b6a215-6d16-4bd8-94ff-1b1f9e1d02fd.jpg?size=20 [32m200[0m 0.525 ms - 23849[0m
+[0mGET /oss/1790665121735/props/c32f6540-e5ff-404a-8368-ada26fde93ec.jpg?size=20 [32m200[0m 1.314 ms - 23096[0m
+[0mGET /oss/1790665121735/props/5021a27c-4441-46af-9076-3ffb4791844c.jpg?size=20 [32m200[0m 3.747 ms - 26753[0m
+[0mGET /oss/1790665121735/props/c0edb9db-312a-45ba-8591-57cb207370e2.jpg?size=20 [32m200[0m 17.172 ms - 19590[0m
+[0mGET /oss/1790665121735/props/dbe395ad-b907-44d8-b35e-917ca3a45532.jpg?size=20 [32m200[0m 0.923 ms - 26819[0m
+[0mGET /oss/1790665121735/props/1f0000c1-f6ab-447c-9c74-94ce738c031d.jpg?size=20 [32m200[0m 15.384 ms - 23887[0m
+[0mGET /oss/1790665121735/props/495bc75d-51fc-4959-ab5e-37960e9c00e5.jpg?size=20 [32m200[0m 15.994 ms - 27898[0m
+[0mGET /oss/1790665121735/props/18491bcb-e34d-47da-bdd4-7ba8e4a9bd3e.jpg?size=20 [32m200[0m 24.209 ms - 27831[0m
+[0mGET /oss/1790665121735/props/6a538c1f-b6e6-4bff-9428-ff64ce52b771.jpg?size=20 [32m200[0m 1.311 ms - 25441[0m
+[0mGET /oss/1790665121735/props/6ff88f5e-77fe-4028-8fa9-8342d6e4f94f.jpg?size=20 [32m200[0m 2.478 ms - 29459[0m
+[0mGET /oss/1790665121735/props/5d225a5b-40a7-4f5b-a603-f9066526d237.jpg?size=20 [32m200[0m 4.320 ms - 13323[0m
+[0mGET /oss/1790665121735/props/5fe624fe-14a3-4268-8b2b-1db1267a2fc2.jpg?size=20 [32m200[0m 11.439 ms - 25364[0m
+[0mGET /oss/1790665121735/props/ce80ebfd-1b79-4537-bc7c-79608f205ee7.jpg?size=20 [32m200[0m 1.310 ms - 12001[0m
+[0mGET /oss/1790665121735/props/a6f60d8e-9ea2-40c4-950f-d3041852cf75.jpg?size=20 [32m200[0m 1.397 ms - 18014[0m
+[0mGET /oss/1790665121735/props/c560400e-91df-4610-8ca8-61de04e4dd0e.jpg?size=20 [32m200[0m 9.836 ms - 17369[0m
+[0mGET /oss/1790665121735/props/8fc808df-81fb-4029-abf9-66c689f8c48f.jpg?size=20 [32m200[0m 10.194 ms - 15998[0m
+[0mGET /oss/1790665121735/props/3c0be7d1-a9b2-4644-9326-7e9294adcd6a.jpg?size=20 [32m200[0m 0.608 ms - 24106[0m
+[0mGET /oss/1790665121735/props/928bc9bf-5a52-498f-8f0f-5457671efec7.jpg?size=20 [32m200[0m 3.256 ms - 15265[0m
+[0mGET /oss/1790665121735/props/c463b340-7f07-402f-aa35-8b8a6c06e312.jpg?size=20 [32m200[0m 13.808 ms - 30048[0m
+[0mGET /oss/1790665121735/props/80205a41-d4f3-4b86-bdfa-3aa5b775e2d1.jpg?size=20 [32m200[0m 14.260 ms - 31948[0m
+[0mGET /oss/1790665121735/props/7db31ed7-bd23-4b85-99e9-d80b09b6ea23.jpg?size=20 [32m200[0m 2.021 ms - 17586[0m
+⚡[主技能] ✓ 已读取主技能文件： D:/Toonflow-app-master/data/skills/production_skills/storyboard_table_techniques.md（5818 字符）
+⚡[主技能] ✓ 技能 "storyboard_table_techniques" 已激活
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.062 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 166.334 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.079 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 160.442 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 164.147 ms - 140[0m
+⚡[主技能] ✓ 已读取主技能文件： D:/Toonflow-app-master/data/skills/production_skills/storyboard_table_techniques.md（5818 字符）
+⚡[主技能] ✓ 技能 "storyboard_table_techniques" 已激活
+⚡[主技能] ✓ 已读取主技能文件： D:/Toonflow-app-master/data/skills/story_skills/Scifi_post_apocalypse/driector_skills/director_storyboard_table_narrative.md（1426 字符）
+⚡[主技能] ✓ 技能 "director_storyboard_table_narrative" 已激活
+⚡[主技能] ✓ 已读取主技能文件： D:/Toonflow-app-master/data/skills/production_skills/storyboard_table_techniques.md（5818 字符）
+⚡[主技能] ✓ 技能 "storyboard_table_techniques" 已激活
+⚡[主技能] ✓ 已读取主技能文件： D:/Toonflow-app-master/data/skills/story_skills/Scifi_post_apocalypse/driector_skills/director_storyboard_table_narrative.md（1426 字符）
+⚡[主技能] ✓ 技能 "director_storyboard_table_narrative" 已激活
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.083 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 162.137 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 188.701 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.099 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 128.988 ms - 140[0m
+[0mOPTIONS /api/importStudio [32m204[0m 0.070 ms - 0[0m
+[0mPOST /api/importStudio [32m200[0m 122.083 ms - 461[0m
+[0mPOST /api/importStudio [32m200[0m 3.926 ms - 1159[0m
+[0mPOST /api/importStudio [32m200[0m 55.437 ms - 461[0m
+[0mPOST /api/importStudio [32m200[0m 2.093 ms - 574[0m
+[0mOPTIONS /api/modelSelect/getModelList [32m204[0m 0.061 ms - 0[0m
+[0mOPTIONS /api/cornerScape/getAllAssets [32m204[0m 0.027 ms - 0[0m
+[0mPOST /api/cornerScape/getAllAssets [32m200[0m 14.081 ms - 89428[0m
+[0mPOST /api/modelSelect/getModelList [32m200[0m 64.380 ms - 1188[0m
+[0mPOST /api/importStudio [32m200[0m 1.915 ms - 330[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.049 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 188.035 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.037 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 158.844 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 161.234 ms - 140[0m

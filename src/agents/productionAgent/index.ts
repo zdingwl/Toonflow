@@ -9,13 +9,17 @@ import ResTool from "@/socket/resTool";
 import * as fs from "fs";
 import path from "path";
 import { extractDirectorPlan, saveDirectorPlan } from "./directorPlan";
-import { commitStoryboardTableOutput, extractStoryboardTable, readStoryboardTableSnapshot } from "./storyboardTable";
+import { commitStoryboardTableOutput, extractStoryboardTable, readStoryboardTableSnapshot, type StoryboardTableOutput } from "./storyboardTable";
 import { TaskStore } from "@/utils/agent/runtime/taskStore";
-import { readStoryboardProgress } from "./storyboardProgress";
+import { readStoryboardProgress, hashStoryboardSource } from "./storyboardProgress";
 import { runStoryboardTask } from "./storyboardTaskRunner";
 import { extractSourceScene, validateStoryboardScene } from "./storyboardValidator";
-import { screenplayFacts } from "./screenplay";
-import { buildDirectorPlanContext, readDirectorNarrative, DIRECTOR_PLAN_OUTPUT_CONTRACT, directorPlanTemperature } from "./directorPlanContext";
+import { productionSceneBudget, validateDirectorFacts } from "./screenplay";
+import { validateDirectorExecution } from "./directorPlanQuality";
+import { buildDirectorPlanContext, readDirectorNarrative, DIRECTOR_PLAN_OUTPUT_CONTRACT, directorPlanTemperature, directorPlanOutputTokenLimit } from "./directorPlanContext";
+import { buildStoryboardContext, storyboardTemperature, storyboardOutputTokenLimit, storyboardRoleParentMap } from "./storyboardContext";
+import { buildDeriveAssetContext, readCurrentEpisodeAssets, deriveAssetTemperature, deriveAssetOutputTokenLimit } from "./deriveAssetContext";
+import { buildSupervisionContext, readSupervisionSnapshot, supervisionVersions, validateSupervisionReport, supervisionTemperature, supervisionOutputTokenLimit } from "./supervisionContext";
 import { storyboardPlanSceneCount } from "./storyboardRebuildDispatch";
 import { createStoryboardRevisionTool } from "./storyboardRevisionTool";
 import { wrapAgentTools } from "@/utils/agent/runtime/toolExecutor";
@@ -93,7 +97,7 @@ async function createSubAgent(parentCtx: AgentContext) {
   const taskStore = new TaskStore(u.db);
   const readSkill = (filePath: string) => parentCtx.runId ? taskStore.readSkill(parentCtx.runId, filePath) : fs.promises.readFile(filePath, "utf-8");
 
-  async function runAgent({ key, modelKey, prompt, system, name, memoryKey, tools: extraTools, messages, expectedScene, readOnlyTools, temperature }: {
+  async function runAgent({ key, modelKey, prompt, system, name, memoryKey, tools: extraTools, messages, expectedScene, readOnlyTools, temperature, maxOutputTokens, beforeFinalize }: {
     key: `${string}:${string}`;
     modelKey?: `${string}:${string}`;
     prompt: string;
@@ -102,21 +106,33 @@ async function createSubAgent(parentCtx: AgentContext) {
     memoryKey: string;
     tools?: Record<string, any>;
     messages?: { role: "user" | "assistant" | "system"; content: string }[];
-    expectedScene?: { scene: number; total: number; taskId: string; sourceScene?: string };
+    expectedScene?: { scene: number; total: number; taskId: string; sourceScene?: string; targetDuration?: number; assetIds?: number[]; assetParentMap?: Record<number, number>; sourceHash?: string; planHash?: string };
     readOnlyTools?: boolean;
     temperature?: number;
+    maxOutputTokens?: number;
+    beforeFinalize?: (response: string) => Promise<void>;
   }) {
-    const stepInput = JSON.stringify({ key, prompt, messages: messages ?? null, expectedScene: expectedScene ?? null, ...(temperature !== undefined ? { temperature } : {}) });
+    const stepInput = JSON.stringify({ key, prompt, messages: messages ?? null, expectedScene: expectedScene ?? null, ...(temperature !== undefined ? { temperature } : {}), ...(maxOutputTokens !== undefined ? { maxOutputTokens } : {}) });
     const stepKey = TaskStore.makeStepKey(key, stepInput);
     if (parentCtx.runId) {
       const prior = await taskStore.beginStep(parentCtx.runId, stepKey, stepInput);
-      if (prior.cached) return prior.output ?? "";
+      if (prior.cached) {
+        // Cached read-only reports must still belong to the current review snapshot.
+        try { await beforeFinalize?.(prior.output ?? ""); }
+        catch (error) {
+          await taskStore.invalidateCompletedStep(parentCtx.runId, stepKey, prior.output, u.error(error).message);
+          throw error;
+        }
+        return prior.output ?? "";
+      }
     }
+    let outputRejected = false;
     try {
       parentCtx.msg.complete();
       const subMsg = resTool.newMessage("assistant", name);
       const isDirectorPlan = key === "productionAgent:directorPlanAgent";
       const isStoryboardTable = key === "productionAgent:storyboardTableAgent";
+      const isDeriveAssets = key === "productionAgent:deriveAssetsAgent";
       const scope = { projectId: Number(resTool.data.projectId), episodesId: Number(resTool.data.scriptId), key: "productionAgent" };
       const startingWorkspace = (isDirectorPlan || isStoryboardTable)
         ? await u.db("o_agentWorkData").where(scope).select("data").first() : null;
@@ -124,33 +140,121 @@ async function createSubAgent(parentCtx: AgentContext) {
       const expectedPlan = startingData.scriptPlan ?? "";
       const expectedStoryboardTable = isStoryboardTable
         ? await readStoryboardTableSnapshot(u.db, scope.projectId, scope.episodesId) : undefined;
+      if (expectedStoryboardTable && expectedScene) {
+        if ((expectedScene.sourceHash && expectedScene.sourceHash !== expectedStoryboardTable.sourceHash) ||
+            (expectedScene.planHash && expectedScene.planHash !== expectedStoryboardTable.planHash)) {
+          throw new Error("剧本或导演计划在分镜生成开始前已变化，请重新核对当前版本");
+        }
+      }
       const activeTools = useTools({
         resTool, msg: subMsg,
-        ...(isDirectorPlan ? { toolsNames: ["get_flowData"] } : readOnlyTools ? { toolsNames: ["get_flowData", "get_storyboard_progress"] } : {}),
+        ...(isDirectorPlan ? { toolsNames: ["get_flowData"] } : isDeriveAssets ? { toolsNames: ["get_flowData", "add_deriveAsset"] }
+          : readOnlyTools ? { toolsNames: ["get_flowData", "get_storyboard_progress"] } : {}),
       });
-      const { fullStream } = await u.Ai.Text(modelKey ?? key, parentCtx.thinkConfig.think, parentCtx.thinkConfig.thinlLevel).stream({
-        system,
-        ...(temperature !== undefined ? { temperature } : {}),
-        messages: messages ?? [{ role: "user", content: prompt }],
-        abortSignal,
-        tools: {
-          ...(isDirectorPlan ? {} : extraTools),
-          ...wrapAgentTools(activeTools, {
-            db: u.db, runId: parentCtx.runId, stepKey, sideEffectTools: PRODUCTION_SIDE_EFFECT_TOOLS,
-          }),
-        },
-      });
-      const fullResponse = await consumeFullStream(fullStream, subMsg, undefined, !(isDirectorPlan || isStoryboardTable));
-      if (parentCtx.runId) await taskStore.saveStepOutput(parentCtx.runId, stepKey, fullResponse);
+      const directorSource = isDirectorPlan
+        ? await u.db("o_script").where({ id: scope.episodesId, projectId: scope.projectId }).select("content").first() : null;
+      if (isDirectorPlan && !directorSource) throw new Error("当前项目不存在该集剧本，无法核验导演规划");
+      const modelMessages = [...(messages ?? [{ role: "user" as const, content: prompt }])];
+      // Retain read skill bodies across new model requests; activate_skill itself is idempotent.
+      const readSkillBodies = new Set<string>();
+      const skillTools = Object.fromEntries(Object.entries(isDirectorPlan ? {} : extraTools ?? {})
+        .filter(([toolName]) => !(readOnlyTools || isDeriveAssets) || ["activate_skill", "read_skill_file"].includes(toolName))
+        .map(([toolName, skillTool]) => [toolName, isStoryboardTable && typeof skillTool.execute === "function" ? {
+          ...skillTool,
+          execute: async (...args: any[]) => {
+            const result = await skillTool.execute(...args);
+            if (typeof result?.content === "string") readSkillBodies.add(result.content);
+            return result;
+          },
+        } : skillTool]));
+      let fullResponse = "", directorPlan = "";
+      let storyboardOutput: StoryboardTableOutput | undefined;
+      const attemptLimit = isDirectorPlan || isStoryboardTable ? 3 : 1;
+      for (let attempt = 1; attempt <= attemptLimit; attempt++) {
+        const { fullStream } = await u.Ai.Text(modelKey ?? key, parentCtx.thinkConfig.think, parentCtx.thinkConfig.thinlLevel).stream({
+          system,
+          ...(temperature !== undefined ? { temperature } : {}),
+          ...(maxOutputTokens !== undefined ? { maxOutputTokens } : {}),
+          messages: modelMessages,
+          abortSignal,
+          tools: {
+            ...skillTools,
+            ...wrapAgentTools(activeTools, {
+              db: u.db, runId: parentCtx.runId, stepKey, sideEffectTools: PRODUCTION_SIDE_EFFECT_TOOLS,
+            }),
+          },
+        });
+        fullResponse = await consumeFullStream(fullStream, subMsg, undefined, !(isDirectorPlan || isStoryboardTable || beforeFinalize));
+        if (!isDirectorPlan && !isStoryboardTable) break;
+        if (abortSignal?.aborted) throw new Error(isDirectorPlan ? "导演规划生成已中断，候选未提交" : "分镜任务已中断，旧模型输出未提交");
+        let errors: string[];
+        try {
+          if (isDirectorPlan) {
+            directorPlan = extractDirectorPlan(fullResponse);
+            errors = [...new Set([
+              ...validateDirectorFacts(directorSource?.content ?? "", directorPlan),
+              ...validateDirectorExecution(directorSource?.content ?? "", directorPlan),
+            ])];
+          } else {
+            storyboardOutput = extractStoryboardTable(fullResponse);
+            if (expectedScene) {
+              if (storyboardOutput.mode !== "scene" || storyboardOutput.scene !== expectedScene.scene || storyboardOutput.total !== expectedScene.total || storyboardOutput.taskId !== expectedScene.taskId) {
+                throw new Error(`当前只允许输出第${expectedScene.scene}场及固定 task/total，拒绝其他场次或整表`);
+              }
+              errors = validateStoryboardScene(storyboardOutput.scene, storyboardOutput.content, expectedScene.sourceScene, {
+                targetDuration: expectedScene.targetDuration, assetIds: expectedScene.assetIds, assetParentMap: expectedScene.assetParentMap,
+              }).errors;
+            } else errors = [];
+          }
+        } catch (error) {
+          errors = [u.error(error).message];
+        }
+        if (!errors.length) break;
+        const errorDetails = errors.map((error, index) => `${index + 1}. ${error}`).join("\n");
+        const label = isDirectorPlan ? "导演规划" : `第${expectedScene?.scene ?? "当前"}场分镜`;
+        console.warn(`[${isDirectorPlan ? "directorPlan" : "storyboardTable"}] 第${attempt}/${attemptLimit}次输出未通过校验：${errorDetails}`);
+        if (attempt === attemptLimit) {
+          outputRejected = true;
+          const error = new Error(`${label}连续${attemptLimit}次未通过校验，未保存任何候选：\n${errorDetails}`);
+          subMsg.error(error.message);
+          throw error;
+        }
+        subMsg.text(`本次${label}未通过核对，正在根据具体问题重新生成（${attempt + 1}/${attemptLimit}），候选尚未保存。\n${errorDetails}`).complete();
+        if (isStoryboardTable && readSkillBodies.size) {
+          modelMessages.push({ role: "user", content: `【本任务已读取的 Skill 资料，重试仍须遵守】\n${[...readSkillBodies].join("\n\n")}` });
+          readSkillBodies.clear();
+        }
+        modelMessages.push(
+          { role: "assistant", content: fullResponse },
+          { role: "user", content: `上一候选未通过程序校验，不能提交。请逐项解决以下问题：\n${errorDetails}\n` +
+            (isDirectorPlan ? "保持最初提供的完整原剧本、人物、原台词、事件顺序和已确认制作预算；在这些边界内重新安排导演节拍、表演和时间覆盖。" +
+              "上一候选仅用于定位错误，不是新的剧情事实。不要只回复修改说明或局部补丁；重新输出一份覆盖全部场次的最终规划。" + DIRECTOR_PLAN_OUTPUT_CONTRACT
+              : `保持初始完整原剧本、已确认导演规划、真实资产清单和逐场制作预算，在这些边界内重新安排镜头、台词及可并行的动作。` +
+                `上一候选只是错误示例，不是新增事实；不得删改原台词、抢速、改资产 ID 或调整总预算来规避校验。` +
+                `不要回复补丁或说明；仅输出一份完整闭合的 <storyboardTable scene="${expectedScene?.scene}" total="${expectedScene?.total}" task="${expectedScene?.taskId}">本场完整Markdown</storyboardTable>。`) },
+        );
+      }
+      if (beforeFinalize) {
+        try { await beforeFinalize(fullResponse); }
+        catch (error) {
+          outputRejected = true;
+          subMsg.error(u.error(error).message);
+          throw error;
+        }
+      }
+      if (parentCtx.runId && !isDirectorPlan && !isStoryboardTable) await taskStore.saveStepOutput(parentCtx.runId, stepKey, fullResponse);
       if (isDirectorPlan) {
         try {
-          const plan = extractDirectorPlan(fullResponse);
-          await saveDirectorPlan(u.db, scope.projectId, scope.episodesId, plan, expectedPlan);
-          resTool.socket.emit("scriptPlan:committed", { episodesId: Number(resTool.data.scriptId), plan });
+          await saveDirectorPlan(u.db, scope.projectId, scope.episodesId, directorPlan, expectedPlan,
+            parentCtx.runId ? async (trx) => {
+              await new TaskStore(trx).saveStepOutput(parentCtx.runId!, stepKey, fullResponse);
+            } : undefined,
+          );
+          resTool.socket.emit("scriptPlan:committed", { episodesId: Number(resTool.data.scriptId), plan: directorPlan });
           subMsg.text("导演计划已保存到工作区。").complete();
           subMsg.complete();
         } catch (error) {
-          console.error("[directorPlan] 输出校验失败，文本长度:", fullResponse.length, "开头:", fullResponse.slice(0, 180));
+          console.error("[directorPlan] 合格候选提交失败:", u.error(error).message);
           subMsg.error(u.error(error).message);
           throw error;
         }
@@ -158,16 +262,23 @@ async function createSubAgent(parentCtx: AgentContext) {
         try {
           // An interrupted old model response must never be committed after task replacement.
           if (abortSignal?.aborted) throw new Error("分镜任务已中断，旧模型输出未提交");
-          const parsed = extractStoryboardTable(fullResponse);
+          const parsed = storyboardOutput!;
           if (expectedScene) {
             if (parsed.mode !== "scene" || parsed.scene !== expectedScene.scene || parsed.total !== expectedScene.total || parsed.taskId !== expectedScene.taskId) {
               throw new Error(`当前只允许输出第${expectedScene.scene}场及固定 task/total，拒绝其他场次或整表`);
             }
-            const validation = validateStoryboardScene(parsed.scene, parsed.content, expectedScene.sourceScene);
+            const validation = validateStoryboardScene(parsed.scene, parsed.content, expectedScene.sourceScene, {
+              targetDuration: expectedScene.targetDuration, assetIds: expectedScene.assetIds, assetParentMap: expectedScene.assetParentMap,
+            });
             if (!validation.valid) throw new Error(`第${parsed.scene}场内容校验失败：${validation.errors.join("；")}`);
             if (!validation.coverageVerified) subMsg.text(`第${parsed.scene}场通过结构校验；原剧本逐项覆盖尚待人工或后续核验。`).complete();
           }
-          const committed = await commitStoryboardTableOutput(u.db, scope.projectId, scope.episodesId, parsed, expectedStoryboardTable);
+          const committed = await commitStoryboardTableOutput(u.db, scope.projectId, scope.episodesId, parsed, expectedStoryboardTable,
+            parentCtx.runId ? async (trx) => {
+              if (abortSignal?.aborted) throw new Error("分镜任务已中断，候选与检查点未提交");
+              await new TaskStore(trx).saveStepOutput(parentCtx.runId!, stepKey, fullResponse);
+            } : undefined,
+          );
           resTool.socket.emit("storyboardTable:committed", {
             episodesId: scope.episodesId,
             storyboardTable: committed.storyboardTable,
@@ -200,10 +311,14 @@ async function createSubAgent(parentCtx: AgentContext) {
         }
         await taskStore.finishStep(parentCtx.runId, stepKey, resultRef);
       }
+      if (beforeFinalize) subMsg.complete();
       parentCtx.msg = resTool.newMessage("assistant", "视频策划");
       return fullResponse;
     } catch (error) {
-      if (parentCtx.runId) await taskStore.markStepReconciling(parentCtx.runId, stepKey, u.error(error).message);
+      if (parentCtx.runId) {
+        if (outputRejected) await taskStore.failStep(parentCtx.runId, stepKey, u.error(error).message);
+        else await taskStore.markStepReconciling(parentCtx.runId, stepKey, u.error(error).message);
+      }
       throw error;
     }
   }
@@ -221,16 +336,51 @@ async function createSubAgent(parentCtx: AgentContext) {
   const modelInfo = `项目使用的模型如下：\n图像模型：${imageModelName}\n视频模型：${videoModelName}\n多参：${isRef ? "是" : "否"}`;
   const loadArtSkills = () => createArtSkills(projectInfo?.artStyle!, projectInfo?.directorManual!, readSkill);
   const loadProductionSkills = () => useProductionSkills(projectInfo?.artStyle!, projectInfo?.directorManual!, readSkill);
+  const readStoryboardAssets = async () => {
+    const projectId = Number(resTool.data.projectId), episodesId = Number(resTool.data.scriptId);
+    const parents = await readCurrentEpisodeAssets(u.db, projectId, episodesId);
+    return parents.flatMap(parent => [parent, ...parent.derive]).map(asset => ({
+      id: asset.id, assetsId: asset.assetsId, parentAssetId: asset.assetsId,
+      name: asset.name, type: asset.type, description: asset.desc,
+      imageId: asset.imageId, imageState: asset.state,
+      imageAvailable: asset.imageAvailable, imageError: asset.errorReason,
+    }));
+  };
+  const readStoryboardModelOptions = async () => {
+    const [child, parent, mode] = await Promise.all([
+      u.db("o_agentDeploy").where({ key: "productionAgent:storyboardTableAgent" }).select("modelName", "temperature", "maxOutputTokens").first(),
+      u.db("o_agentDeploy").where({ key: "productionAgent" }).select("modelName", "temperature", "maxOutputTokens").first(),
+      u.db("o_setting").where({ key: "agentUseMode" }).select("value").first(),
+    ]);
+    const effective = mode?.value === "1" ? child : mode?.value === "0" ? parent : child?.modelName ? child : parent;
+    return { temperature: storyboardTemperature(effective?.temperature), maxOutputTokens: storyboardOutputTokenLimit(effective?.maxOutputTokens) };
+  };
 
   const run_sub_agent_derive_assets = tool({
     description: "运行执行subAgent来完成衍生资产分析与信息写入相关任务",
     inputSchema: jsonSchema<{ prompt: string }>(promptInput),
     execute: async ({ prompt }) => {
       const artSkills = await loadArtSkills();
-      const systemPrompt = await readSkill(path.join(u.getPath("skills"), "production_execution_derive_assets.md"));
+      const projectId = Number(resTool.data.projectId), episodesId = Number(resTool.data.scriptId);
+      const [systemPrompt, visualDesign, source, workspace, assets, child, parent, mode] = await Promise.all([
+        readSkill(path.join(u.getPath("skills"), "production_execution_derive_assets.md")),
+        readSkill(path.join(u.getPath("skills"), "asset_visual_design.md")),
+        u.db("o_script").where({ id: episodesId, projectId }).select("content").first(),
+        u.db("o_agentWorkData").where({ projectId, episodesId, key: "productionAgent" }).select("data").first(),
+        readCurrentEpisodeAssets(u.db, projectId, episodesId),
+        u.db("o_agentDeploy").where({ key: "productionAgent:deriveAssetsAgent" }).select("modelName", "temperature", "maxOutputTokens").first(),
+        u.db("o_agentDeploy").where({ key: "productionAgent" }).select("modelName", "temperature", "maxOutputTokens").first(),
+        u.db("o_setting").where({ key: "agentUseMode" }).select("value").first(),
+      ]);
+      if (!source) throw new Error("当前项目不存在该集剧本，无法分析衍生资产");
+      const currentPlan = workspace?.data ? JSON.parse(workspace.data).scriptPlan ?? "" : "";
+      const effective = mode?.value === "1" ? child : mode?.value === "0" ? parent : child?.modelName ? child : parent;
+      const context = buildDeriveAssetContext(source.content ?? "", currentPlan, assets, parentCtx.text);
       return runAgent({ key: "productionAgent:deriveAssetsAgent", prompt, system: systemPrompt,
+        temperature: deriveAssetTemperature(effective?.temperature), maxOutputTokens: deriveAssetOutputTokenLimit(effective?.maxOutputTokens),
         name: "执行导演", memoryKey: "assistant:execution", messages: [
-          { role: "assistant", content: artSkills.prompt + `\n${modelInfo}` }, { role: "user", content: prompt },
+          { role: "assistant", content: artSkills.prompt + `\n${modelInfo}` },
+          { role: "user", content: `${context}\n\n【当前子任务】\n${prompt}\n\n【共同资产视觉设计 Skill】\n${visualDesign}` },
         ], tools: { ...artSkills.tools } });
     },
   });
@@ -259,9 +409,17 @@ async function createSubAgent(parentCtx: AgentContext) {
       const narrative = await readDirectorNarrative(u.getPath("skills"), projectInfo.directorManual, readSkill);
       const facts = "\n" + buildDirectorPlanContext(projectInfo, source?.content ?? "", currentPlan, narrative);
       const addPrompt = DIRECTOR_PLAN_OUTPUT_CONTRACT;
-      const directorConfig = await u.db("o_agentDeploy").where({ key: "productionAgent:directorPlanAgent" }).select("temperature").first();
+      const [directorConfig, parentConfig, agentUseMode] = await Promise.all([
+        u.db("o_agentDeploy").where({ key: "productionAgent:directorPlanAgent" }).select("modelName", "temperature", "maxOutputTokens").first(),
+        u.db("o_agentDeploy").where({ key: "productionAgent" }).select("modelName", "maxOutputTokens").first(),
+        u.db("o_setting").where({ key: "agentUseMode" }).select("value").first(),
+      ]);
+      // Match AiText's advanced/simple/fallback deployment without changing model selection.
+      const effectiveConfig = agentUseMode?.value === "1" ? directorConfig
+        : agentUseMode?.value === "0" ? parentConfig : directorConfig?.modelName ? directorConfig : parentConfig;
       return runAgent({ key: "productionAgent:directorPlanAgent", prompt, system: systemPrompt + addPrompt,
         temperature: directorPlanTemperature(directorConfig?.temperature),
+        maxOutputTokens: directorPlanOutputTokenLimit(effectiveConfig?.maxOutputTokens),
         name: "执行导演", memoryKey: "assistant:execution", messages: [
           { role: "user", content: prompt + addPrompt + facts },
         ] });
@@ -304,7 +462,6 @@ async function createSubAgent(parentCtx: AgentContext) {
       }).toJSONSchema(),
     ),
     execute: async ({ prompt, total: requestedTotal, scope: requestedScope }) => {
-      const productionSkills = await loadProductionSkills();
       const systemPrompt = await readSkill(path.join(u.getPath("skills"), "production_execution_storyboard_table.md"));
       const projectId = Number(resTool.data.projectId);
       const episodesId = Number(resTool.data.scriptId);
@@ -313,32 +470,38 @@ async function createSubAgent(parentCtx: AgentContext) {
       const scriptRow = await u.db("o_script").where({ id: episodesId, projectId }).select("content").first();
       const workspace = await u.db("o_agentWorkData").where({ projectId, episodesId, key: "productionAgent" }).select("data").first();
       const plan = workspace?.data ? (JSON.parse(workspace.data).scriptPlan ?? "") : "";
+      if (!String(plan).trim()) throw new Error("请先完成并核对导演规划，再生成分镜表");
       const planTotal = String(plan).trim() ? storyboardPlanSceneCount(String(plan)) : undefined;
       const total = progress.total ?? requestedTotal ?? planTotal;
       if (!total || !Number.isSafeInteger(total) || total > 1000) throw new Error("无法从已有进度或导演计划确定总场数，请先核对导演计划");
       if (requestedTotal !== undefined && requestedTotal !== total) throw new Error("输入总场数与已保存进度不一致");
       if (planTotal !== undefined && planTotal !== total) throw new Error("导演计划总场数与分镜任务不一致");
       const sourceScript = String(scriptRow?.content ?? "");
+      const modelOptions = await readStoryboardModelOptions();
       const stage = await runStoryboardTask({
         db: u.db, projectId, episodesId, total,
         maxScenes: requestedScope === "single" ? 1 : total,
         maxAttemptsPerScene: 1,
         abortSignal,
         generate: async ({ scene, taskId, total }) => {
+          const productionSkills = await loadProductionSkills();
+          const assets = await readStoryboardAssets();
           const sourceScene = extractSourceScene(sourceScript, scene);
           const before = await readStoryboardTableSnapshot(u.db, projectId, episodesId);
-          const previous = before.storyboardTableProgress?.scenes[String(scene - 1)]?.slice(-800) ?? "";
+          const previous = before.storyboardTableProgress?.scenes[String(scene - 1)] ?? "";
           const protocol = `\n【后端固定任务协议】只处理第${scene}场，共${total}场，task=${taskId}。` +
             `必须仅输出一份完整闭合的 <storyboardTable scene="${scene}" total="${total}" task="${taskId}">该场完整Markdown</storyboardTable>；` +
             `不要生成其他场次，不要自行变更 task/total。\n` +
-            (sourceScene ? `本场原剧本（必须完整覆盖）：\n${sourceScene}\n` :
-              `当前剧本未识别到明确的第${scene}场边界；先调用 get_flowData(script) 定位本场，不得凭空补剧情。\n`) +
-            `【程序核对事实与逐场制作预算】\n${screenplayFacts(sourceScene ?? "", String(plan))}\n` +
-            (previous ? `上一场末尾连续性参考：\n${previous}\n` : "") + `创作要求：${prompt}`;
+            buildStoryboardContext(sourceScript, String(plan), scene, assets, previous) + `\n创作要求：${prompt}`;
           await runAgent({
             key: "productionAgent:storyboardTableAgent", prompt: protocol, system: systemPrompt,
+            ...modelOptions, readOnlyTools: true,
             name: "执行导演", memoryKey: "assistant:execution",
-            expectedScene: { scene, total, taskId, sourceScene },
+            expectedScene: { scene, total, taskId, sourceScene,
+              targetDuration: productionSceneBudget(String(plan), scene, sourceScene), assetIds: assets.map(asset => asset.id),
+              assetParentMap: storyboardRoleParentMap(assets),
+              sourceHash: hashStoryboardSource(sourceScript), planHash: hashStoryboardSource(String(plan)),
+            },
             messages: [
               { role: "assistant", content: productionSkills.prompt + `\n${modelInfo}` },
               { role: "user", content: protocol },
@@ -368,10 +531,16 @@ async function createSubAgent(parentCtx: AgentContext) {
       const systemPrompt = await readSkill(path.join(u.getPath("skills"), "production_execution_storyboard_table.md"));
       const workspace = await u.db("o_agentWorkData").where({ projectId: Number(resTool.data.projectId), episodesId: Number(resTool.data.scriptId), key: "productionAgent" }).select("data").first();
       const plan = workspace?.data ? JSON.parse(workspace.data).scriptPlan ?? "" : "";
+      const source = await u.db("o_script").where({ id: Number(resTool.data.scriptId), projectId: Number(resTool.data.projectId) }).select("content").first();
+      const assets = await readStoryboardAssets();
+      const before = await readStoryboardTableSnapshot(u.db, Number(resTool.data.projectId), Number(resTool.data.scriptId));
+      const previous = before.storyboardTableProgress?.scenes[String(scene - 1)] ?? "";
+      const modelOptions = await readStoryboardModelOptions();
       const revisionPrompt = `【已有场次修订，不是首次生成】仅修订第${scene}场（共${total}场），task=${taskId}。` +
         `保持原剧本必须呈现的内容，不得擅自删除剧情或台词。只输出完整闭合的 ` +
         `<storyboardTable scene="${scene}" total="${total}" task="${taskId}">修订后第${scene}场完整Markdown</storyboardTable>。\n` +
-        `【程序核对事实与逐场制作预算】\n${screenplayFacts(sourceScene ?? "", plan)}\n` +
+        buildStoryboardContext(String(source?.content ?? sourceScene ?? ""), String(plan), scene, assets, previous) + "\n" +
+        `【本轮完整用户要求：不可用派发摘要替代；只落实其中属于当前场次的修订】\n${parentCtx.text}\n` +
         `【本场需解决的审核问题和用户要求】\n${instruction}\n` +
         `【本场已保存旧稿：必须在此基础上修改】\n${original}\n` +
         (sourceScene ? `【对应原剧本：必须完整覆盖】\n${sourceScene}\n` :
@@ -379,11 +548,24 @@ async function createSubAgent(parentCtx: AgentContext) {
       return runAgent({
         key: "productionAgent:storyboardRevisionAgent",
         modelKey: "productionAgent:storyboardTableAgent",
+        ...modelOptions,
         prompt: revisionPrompt,
         system: systemPrompt + "\n本次任务是修改已有分镜；绝不调用保存/新增工具，只返回修订 XML，后端独立提交。",
         name: "执行导演",
         memoryKey: "assistant:execution",
         readOnlyTools: true,
+        beforeFinalize: async (response) => {
+          const parsed = extractStoryboardTable(response);
+          if (parsed.mode !== "scene" || parsed.scene !== scene || parsed.total !== total || parsed.taskId !== taskId) {
+            throw new Error(`当前修订仅允许第${scene}场及原 task/total，拒绝其他场次或整表`);
+          }
+          const validation = validateStoryboardScene(scene, parsed.content, sourceScene, {
+            targetDuration: productionSceneBudget(String(plan), scene, sourceScene),
+            assetIds: assets.map(asset => asset.id), assetParentMap: storyboardRoleParentMap(assets),
+          });
+          if (!validation.valid) throw new Error(`第${scene}场修订候选未通过校验：${validation.errors.join("；")}`);
+        },
+        tools: { ...productionSkills.tools },
         messages: [
           { role: "assistant", content: productionSkills.prompt + `\n${modelInfo}` },
           { role: "user", content: revisionPrompt },
@@ -393,12 +575,35 @@ async function createSubAgent(parentCtx: AgentContext) {
   });
 
   const run_sub_agent_supervision = tool({
-    description: "运行监督层subAgent执行独立任务，完成后返回结果",
+    description: "只读审核当前已保存分镜与完整来源、已确认导演节拍和真实资产，返回版本明确的内容审核结果",
     inputSchema: jsonSchema<{ prompt: string }>(promptInput),
     execute: async ({ prompt }) => {
       const systemPrompt = await readSkill(path.join(u.getPath("skills"), "production_agent_supervision.md"));
-      return runAgent({ key: "productionAgent:supervisionAgent", prompt, system: systemPrompt,
-        name: "监制", memoryKey: "assistant:supervision" });
+      const projectId = Number(resTool.data.projectId), episodesId = Number(resTool.data.scriptId);
+      const snapshot = await readSupervisionSnapshot(u.db, projectId, episodesId);
+      const reviewPrompt = buildSupervisionContext(snapshot, parentCtx.text, prompt, {
+        artStyle: projectInfo.artStyle, directorManual: projectInfo.directorManual, modelInfo,
+      });
+      const [child, parent, mode] = await Promise.all([
+        u.db("o_agentDeploy").where({ key: "productionAgent:supervisionAgent" }).select("modelName", "temperature", "maxOutputTokens").first(),
+        u.db("o_agentDeploy").where({ key: "productionAgent" }).select("modelName", "temperature", "maxOutputTokens").first(),
+        u.db("o_setting").where({ key: "agentUseMode" }).select("value").first(),
+      ]);
+      const effective = mode?.value === "1" ? child : mode?.value === "0" ? parent : child?.modelName ? child : parent;
+      return runAgent({
+        key: "productionAgent:supervisionAgent", prompt: reviewPrompt, system: systemPrompt,
+        name: "监制", memoryKey: "assistant:supervision", readOnlyTools: true,
+        temperature: supervisionTemperature(effective?.temperature), maxOutputTokens: supervisionOutputTokenLimit(effective?.maxOutputTokens),
+        beforeFinalize: async (report) => {
+          if (abortSignal?.aborted) throw new Error("审核已中断，本报告不能作为通过依据");
+          const current = await readSupervisionSnapshot(u.db, projectId, episodesId);
+          if (JSON.stringify(supervisionVersions(snapshot)) !== JSON.stringify(supervisionVersions(current))) {
+            throw new Error("审核期间剧本、导演规划、分镜版本或资产已变化；本报告只属于旧快照，不能作为当前版本通过依据，请重新审核");
+          }
+          const reportErrors = validateSupervisionReport(snapshot, report);
+          if (reportErrors.length) throw new Error(reportErrors.join("\n"));
+        },
+      });
     },
   });
 

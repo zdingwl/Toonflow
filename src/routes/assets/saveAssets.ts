@@ -6,6 +6,7 @@ import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import sharp from "sharp";
 import { roleReferenceFingerprint } from "@/utils/assetReferenceMedia";
+import { syncCharacterCardAssetImageSafely } from "@/utils/characterCardAssetImageSync";
 const router = express.Router();
 
 // These failures describe a finished candidate rejected by the new visual review,
@@ -96,6 +97,7 @@ export default router.post(
           referenceFingerprint: await roleReferenceFingerprint(adoptedPath),
         } : {}),
       });
+      await syncCharacterCardAssetImageSafely(u.db, { asset, imageId: adoptedImageId });
       return res.status(200).send(success({ message: "保存资产图片成功", imageId: adoptedImageId }));
     } catch (cause) {
       return res.status(400).send(error(u.error(cause).message || "所选图片不可用，已保留原资产"));

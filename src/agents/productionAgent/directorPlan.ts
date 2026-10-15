@@ -1,5 +1,6 @@
 import type { Knex } from "knex";
 import { validateDirectorFacts } from "./screenplay";
+import { validateDirectorExecution } from "./directorPlanQuality";
 import { extractSingleXmlResult } from "@/utils/agent/runtime/resultValidator";
 
 export function extractDirectorPlan(response: string): string {
@@ -10,14 +11,17 @@ export function extractDirectorPlan(response: string): string {
   }
 }
 
-export async function saveDirectorPlan(db: Knex, projectId: number, episodesId: number, plan: string, expectedPlan: string): Promise<void> {
+export async function saveDirectorPlan(
+  db: Knex, projectId: number, episodesId: number, plan: string, expectedPlan: string,
+  onCommit?: (trx: Knex.Transaction) => Promise<void>,
+): Promise<void> {
   if (!Number.isSafeInteger(projectId) || !Number.isSafeInteger(episodesId) || !plan.trim()) {
     throw new Error("导演计划缺少有效的项目、剧集或内容");
   }
   await db.transaction(async (trx) => {
     const script = await trx("o_script").where({ id: episodesId, projectId }).select("content").first();
     if (!script) throw new Error("当前项目不存在该集剧本");
-    const factErrors = validateDirectorFacts(script.content ?? "", plan);
+    const factErrors = [...validateDirectorFacts(script.content ?? "", plan), ...validateDirectorExecution(script.content ?? "", plan)];
     if (factErrors.length) throw new Error(factErrors.join("；"));
     const scope = { projectId, episodesId, key: "productionAgent" };
     const existing = await trx("o_agentWorkData").where(scope).first();
@@ -33,6 +37,8 @@ export async function saveDirectorPlan(db: Knex, projectId: number, episodesId: 
     }
     const saved = await trx("o_agentWorkData").where(scope).select("data").first();
     if (!saved || JSON.parse(saved.data ?? "{}").scriptPlan !== plan) throw new Error("导演计划写入后校验失败");
+    // The validated model checkpoint and workspace must commit together for safe recovery.
+    await onCommit?.(trx);
   });
 }
 

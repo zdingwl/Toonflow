@@ -1,0 +1,104 @@
+{
+  "sourceUnchanged": true,
+  "allWorkspacesUnchanged": true,
+  "countsUnchanged": true,
+  "counts": {
+    "o_video": 71,
+    "o_storyboard": 57,
+    "o_assets": 423
+  },
+  "sourceHash": "30bb57154ca32577ecc25a00a0356edc190582e313fb5f23a60cb12ae19feb8c",
+  "savedPlanHash": "b72ebb7ed9c8605754c849494c3ea58d0c6284429304107dc5758c3e818bd147",
+  "savedPlanValidationErrors": [],
+  "activeRuns": [],
+  "activeTasks": [],
+  "skillHash": "13cc2fa210a45af801b9e548e95e6d2f23d2b2bb474b2d20f818421dd0fe8799",
+  "retrospectiveChecks": [
+    {
+      "file": "docs/director-plan-evaluation/2026-10-09-source-candidate.md",
+      "errors": [
+        "Sc1双手抓握到最后一根缺少第二只手的中间解除：执行栏必须交代剩余手如何逐根松脱到仅余最后一根，不能由审核者补想",
+        "Sc2节拍表缺少六列Markdown分隔行",
+        "Sc3节拍表缺少六列Markdown分隔行",
+        "Sc3 B10必须与表头同为六列"
+      ]
+    },
+    {
+      "file": "docs/director-plan-evaluation/2026-10-09-source-candidate-2.md",
+      "errors": [
+        "Sc1双手抓握到最后一根缺少第二只手的中间解除：执行栏必须交代剩余手如何逐根松脱到仅余最后一根，不能由审核者补想",
+        "Sc3节拍表表头必须六列并含注意力与节奏理由",
+        "Sc3节拍表缺少六列Markdown分隔行",
+        "Sc3 B8含1句顺序原台词共23字，按清晰口播4字/秒及必要换通纸面估计至少5.8秒，实际仅4秒；请重分配低信息节拍，不用无依据快语速或合拍复用时间",
+        "Sc3 B9含1句顺序原台词共11字，按清晰口播4字/秒及必要换通纸面估计至少2.8秒，实际仅2秒；请重分配低信息节拍，不用无依据快语速或合拍复用时间",
+        "需确认问题混入已采用方案的假设替代要求；兼容原文的声音/时间省略/全局约束直接执行，只列当前真实来源缺口或实际预算冲突"
+      ]
+    },
+    {
+      "file": "docs/director-plan-evaluation/2026-10-09-source-candidate-3.md",
+      "errors": [
+        "Sc3节拍区间必须从0连续覆盖制作预算，不能沿用来源绝对时段或重叠留空",
+        "Sc1双手抓握到最后一根缺少第二只手的中间解除：执行栏必须交代剩余手如何逐根松脱到仅余最后一根，不能由审核者补想",
+        "Sc2节拍表表头必须六列并含注意力与节奏理由",
+        "Sc2节拍表缺少六列Markdown分隔行",
+        "Sc3只能输出一张最终节拍表，不能保留草稿或修正版",
+        "Sc3 B1重复，只能保留最终节拍",
+        "Sc3 B2重复，只能保留最终节拍",
+        "Sc3 B3重复，只能保留最终节拍",
+        "Sc3 B4重复，只能保留最终节拍",
+        "Sc3 B5重复，只能保留最终节拍",
+        "Sc3 B6重复，只能保留最终节拍",
+        "Sc3 B7重复，只能保留最终节拍",
+        "Sc3 B8重复，只能保留最终节拍",
+        "Sc3 B9重复，只能保留最终节拍",
+        "Sc3 B10重复，只能保留最终节拍",
+        "Sc3 B11重复，只能保留最终节拍",
+        "Sc3 B12重复，只能保留最终节拍",
+        "Sc3 B13重复，只能保留最终节拍",
+        "需确认问题混入已采用方案的假设替代要求；兼容原文的声音/时间省略/全局约束直接执行，只列当前真实来源缺口或实际预算冲突"
+      ]
+    },
+    {
+      "file": "docs/director-plan-evaluation/2026-10-09-source-candidate-4.md",
+      "errors": [
+        "Sc1双手抓握到最后一根缺少第二只手的中间解除：执行栏必须交代剩余手如何逐根松脱到仅余最后一根，不能由审核者补想",
+        "Sc2节拍表缺少六列Markdown分隔行",
+        "Sc3节拍表缺少六列Markdown分隔行",
+        "Sc3 B18含3句顺序原台词共37字，按清晰口播4字/秒及必要换通纸面估计至少10.3秒，实际仅8秒；请重分配低信息节拍，不用无依据快语速或合拍复用时间",
+        "需确认问题混入已采用方案的假设替代要求；兼容原文的声音/时间省略/全局约束直接执行，只列当前真实来源缺口或实际预算冲突"
+      ]
+    },
+    {
+      "file": "docs/director-plan-evaluation/2026-10-09-source-candidate-5.md",
+      "errors": [
+        "Sc1双手抓握到最后一根缺少第二只手的中间解除：执行栏必须交代剩余手如何逐根松脱到仅余最后一根，不能由审核者补想",
+        "Sc1 B4说明称6秒，但实际区间仅5秒，请统一最终表和耗时核算",
+        "Sc3节拍表表头必须六列并含注意力与节奏理由",
+        "Sc3节拍表缺少六列Markdown分隔行",
+        "Sc3 B19含3句顺序原台词共37字，按清晰口播4字/秒及必要换通纸面估计至少10.3秒，实际仅8秒；请重分配低信息节拍，不用无依据快语速或合拍复用时间"
+      ]
+    },
+    {
+      "file": "docs/director-plan-evaluation/2026-10-09-source-feedback-final.attempt-2.md",
+      "errors": [
+        "Sc1双手抓握到最后一根缺少第二只手的中间解除：执行栏必须交代剩余手如何逐根松脱到仅余最后一根，不能由审核者补想",
+        "Sc1 B5自己估计台词至少2.3秒，再为末尾动作保留2秒，合计至少4.3秒却仅分配4秒；请重排预算或明确兼容动作的实际并行区间，最终脱离等结果仍须发生在原文原因之后"
+      ]
+    },
+    {
+      "file": "docs/director-plan-evaluation/2026-10-09-source-direct-review-pass.attempt-1.md",
+      "errors": [
+        "Sc2 B12屏幕有效字符应按原文和程序口径为8、8、8、8，共32；不能让上次候选或审稿中的算术错误覆盖程序事实，保留全部原屏幕文字并修正统计"
+      ]
+    }
+  ],
+  "finalCandidate": {
+    "file": "D:\\Toonflow-app-master\\docs\\director-plan-evaluation\\2026-10-09-source-final-qualified.attempt-1.md",
+    "attempts": 1,
+    "currentValidationErrors": [],
+    "rawResponseUnchanged": true,
+    "candidateExactlyExtractedFromRaw": true,
+    "currentSkillMatchesGeneration": true,
+    "currentSourceMatchesGeneration": true
+  }
+}

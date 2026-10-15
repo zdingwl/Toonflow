@@ -1,0 +1,23 @@
+{
+  "episodeId": 71,
+  "projectId": 1791442875668,
+  "model": "volcengine:doubao-seed-2-1-pro-260915",
+  "vendorId": "volcengine",
+  "deploymentKey": "productionAgent:directorPlanAgent",
+  "agentUseMode": "1",
+  "temperature": 0.6,
+  "think": false,
+  "thinkLevel": 0,
+  "existingPlan": "ignore",
+  "context": "current",
+  "dryRun": true,
+  "sourceHash": "30bb57154ca32577ecc25a00a0356edc190582e313fb5f23a60cb12ae19feb8c",
+  "savedProductionPlanHash": "b72ebb7ed9c8605754c849494c3ea58d0c6284429304107dc5758c3e818bd147",
+  "skillHash": "98f6a0a2a880f6db877e8f6a8c38c5f9d16fbf6cae78f6eb6c7616ff3f74624c",
+  "vendorTemplateHash": "f7563a1bd5f8ccd151625fbf1dd6d459a39bc2172cadb8b6f7910b9b23d2cb44",
+  "inputHash": "e0ce3c8efd6d85b141891881ad94c4e50da042234ebe3717d76a5252e10ca558",
+  "productionWorkspaceHashBefore": "6ef61d49feeb9b51973075f2f5493906e0d48c87034769d620cfd3ab5a211c30",
+  "productionWorkspaceHashAfter": "6ef61d49feeb9b51973075f2f5493906e0d48c87034769d620cfd3ab5a211c30",
+  "productionWorkspaceUnchanged": true,
+  "generated": false
+}

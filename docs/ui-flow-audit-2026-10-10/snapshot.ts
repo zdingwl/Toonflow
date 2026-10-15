@@ -1,0 +1,31 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+import {createRequire} from 'node:module';
+const require=createRequire(path.resolve('package.json'));
+const Database=require('better-sqlite3');
+const db=new Database(path.resolve('data/db2.sqlite'),{readonly:true});
+const hash=(v:any)=>createHash('sha256').update(typeof v==='string'?v:JSON.stringify(v)).digest('hex');
+const label=process.argv[2]??'after-stop';
+if(!/^[a-z0-9-]+$/.test(label))throw Error('invalid snapshot label');
+try {
+ const projectId=1791442875668,scriptId=71;
+ const script=db.prepare('select content from o_script where id=? and projectId=?').get(scriptId,projectId);
+ const row=db.prepare("select id,data from o_agentWorkData where projectId=? and episodesId=? and key='productionAgent'").get(projectId,scriptId);
+ const data=JSON.parse(row?.data??'{}');
+ const assets=db.prepare('select a.id,a.assetsId,a.name,a.type,a.describe,a.prompt,a.imageId,i.filePath,i.state,i.errorReason from o_scriptAssets sa join o_assets a on sa.assetId=a.id left join o_image i on a.imageId=i.id where sa.scriptId=? and a.projectId=? order by a.id').all(scriptId,projectId);
+ const videoHashes=db.prepare('select * from o_video order by id').all().map((v:any)=>({id:v.id,hash:hash(v)}));
+ const imageHashes=db.prepare('select * from o_image order by id').all().map((v:any)=>({id:v.id,hash:hash(v)}));
+ const counts=Object.fromEntries(['o_assets','o_image','o_storyboard','o_video'].map(t=>[t,db.prepare(`select count(*) n from ${t}`).get().n]));
+ const runs=db.prepare("select id,status from o_agentRun where status='running'").all();
+ const tasks=db.prepare("select id,state from o_tasks where state='进行中'").all();
+ const progress=data.storyboardTableProgress;
+ const storyboardProgress=progress?{taskId:progress.taskId,total:progress.total,revision:progress.revision,complete:progress.complete,savedScenes:Object.keys(progress.scenes??{}).map(Number),sceneHashes:Object.fromEntries(Object.entries(progress.scenes??{}).map(([key,value])=>[key,hash(value)])),sourceHash:progress.sourceHash,planHash:progress.planHash}:null;
+ const revisionHistory=(data.storyboardRevisionHistory??[]).map((entry:any)=>({taskId:entry.taskId,scene:entry.scene,fromRevision:entry.fromRevision,toRevision:entry.toRevision,originalHash:entry.originalHash,revisedHash:entry.revisedHash,reason:entry.reason}));
+ const recentRuns=db.prepare('select id,status,error from o_agentRun where projectId=? and episodesId=? order by createTime desc limit 6').all(projectId,scriptId);
+ const result={at:new Date().toISOString(),projectId,scriptId,workspaceId:row?.id,sourceHash:hash(script.content??''),planHash:hash(data.scriptPlan??''),storyboardChars:(data.storyboardTable??'').length,storyboardProgress,revisionHistory,recentRuns,assets,videoHashes,imageHashes,counts,activeRuns:runs,activeTasks:tasks};
+ const dir=path.resolve('docs/ui-flow-audit-2026-10-10');fs.mkdirSync(dir,{recursive:true});
+ fs.writeFileSync(path.join(dir,`${label}.json`),JSON.stringify(result,null,2),{flag:'wx'});
+ fs.writeFileSync(path.join(dir,`${label}.storyboard.md`),data.storyboardTable??'',{flag:'wx'});
+ console.log(JSON.stringify({label,counts,linkedAssets:assets.length,storyboardChars:result.storyboardChars,activeRuns:runs,activeTasks:tasks,derived:assets.filter((a:any)=>a.assetsId).map((a:any)=>({id:a.id,name:a.name,describe:a.describe}))}));
+} finally {db.close();}

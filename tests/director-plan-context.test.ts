@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { test } from "node:test";
-import { buildDirectorPlanContext, readDirectorNarrative, directorPlanTemperature } from "../src/agents/productionAgent/directorPlanContext";
+import { buildDirectorPlanContext, readDirectorNarrative, directorPlanTemperature, directorPlanOutputTokenLimit } from "../src/agents/productionAgent/directorPlanContext";
 import { validateDirectorFacts, productionSceneBudget } from "../src/agents/productionAgent/screenplay";
 import { storyboardPlanSceneCount } from "../src/agents/productionAgent/storyboardRebuildDispatch";
 
@@ -14,7 +14,7 @@ test("导演输入携带完整动作、项目画幅和已确认预算，不让�
   const lines = context.split("\n");
   assert.equal(JSON.parse(lines[1]).aspectRatio, "16:9");
   assert.equal(JSON.parse(lines[3]), script);
-  const facts = JSON.parse(context.split("target_duration 为当前制作预算】\n")[1].split("\n【已有计划")[0]);
+  const facts = JSON.parse(context.slice(context.indexOf("\n["), context.indexOf("\n【已有计划")).trim());
   assert.equal(facts[1].source_duration, 20);
   assert.equal(facts[1].target_duration, 22);
   assert.deepEqual(facts[1].target_timeline, { start: 0, end: 22 });
@@ -23,11 +23,35 @@ test("导演输入携带完整动作、项目画幅和已确认预算，不让�
   assert.ok(context.includes(JSON.stringify(plan)));
 });
 
+test("逐句口播参考不以全场平均掩盖长句，屏幕文字保持独立阅读成本", () => {
+  const script = "场景一 内·屋（0–20秒）\n艾娃\n工业滤芯、移动储水罐、救生设备，有现货的全部给我报价。\n艾娃\nGo now!\n艾娃\n12345。\n【距离风暴：71:58:41】";
+  const context = buildDirectorPlanContext({}, script);
+  const facts = JSON.parse(context.slice(context.indexOf("\n["), context.indexOf("\n【生成前内部执行分配")).trim());
+  const [longLine, englishLine, numberLine] = facts[0].dialogue_timing_reference;
+  assert.equal(longLine.spoken_characters, 23);
+  assert.deepEqual(longLine.estimated_seconds, { at_3_characters_per_second: 7.7, at_4_characters_per_second: 5.8 });
+  assert.equal(englishLine.text, "Go now!");
+  assert.equal(englishLine.estimated_seconds, undefined);
+  assert.ok(englishLine.timing_note);
+  assert.equal(numberLine.estimated_seconds, undefined);
+  assert.deepEqual(facts[0].screen_text_reading_reference, [{ text: "距离风暴：71:58:41", characters: 10 }]);
+  assert.equal(facts[0].dialogue_count, 3);
+  assert.equal(facts[0].dialogue_characters, 33);
+});
+
+test("完整规划有缺省输出额度，但保留用户显式上限", () => {
+  assert.equal(directorPlanOutputTokenLimit(undefined), 12000);
+  assert.equal(directorPlanOutputTokenLimit(null), 12000);
+  assert.equal(directorPlanOutputTokenLimit(0), 12000);
+  assert.equal(directorPlanOutputTokenLimit(2048), 2048);
+  assert.equal(directorPlanOutputTokenLimit(16000), 16000);
+});
+
 test("导演采样限制保留较低的用户配置，减少事实规划时的随机漂移", () => {
-  assert.equal(directorPlanTemperature(1), 0.6);
+  assert.equal(directorPlanTemperature(1), 0.3);
   assert.equal(directorPlanTemperature(0), 0);
   assert.equal(directorPlanTemperature(0.3), 0.3);
-  assert.equal(directorPlanTemperature(null), 0.6);
+  assert.equal(directorPlanTemperature(null), 0.3);
 });
 
 test("只读取所选题材规划文件且使用快照回调，未选择/不存在时无额外读取", async () => {

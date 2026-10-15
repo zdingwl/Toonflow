@@ -6,7 +6,7 @@ import ResTool from "@/socket/resTool";
 import { AgentChatHistoryStore } from "@/utils/agent/chatHistory";
 import { TaskStore } from "@/utils/agent/runtime/taskStore";
 import { reconcileDirectorPlanOutput } from "@/agents/productionAgent/directorPlan";
-import { reconcileStoryboardTableOutput } from "@/agents/productionAgent/storyboardTable";
+import { inspectStoryboardTableRecovery } from "@/agents/productionAgent/storyboardTable";
 import { getOperationReceipt } from "@/utils/agent/runtime/operationReceipt";
 import { isExplicitStoryboardRebuildRequest, prepareAuthorizedStoryboardRebuild } from "@/agents/productionAgent/storyboardRebuildDispatch";
 import { readStoryboardTableSnapshot } from "@/agents/productionAgent/storyboardTable";
@@ -259,7 +259,8 @@ export default (nsp: Namespace) => {
       }
 
       state = await taskStore.reconcile(runId);
-      for (const step of state.steps.filter((item) => item.status === "reconciling")) {
+      for (const step of state.steps.filter((item) => item.status === "reconciling" ||
+        (item.status === "failed" && item.stepKey.startsWith("productionAgent:storyboardTableAgent:")))) {
         try {
           if (step.stepKey.startsWith("productionAgent:directorPlanAgent:")) {
             const resultRef = await reconcileDirectorPlanOutput(u.db, projectId, episodesId, step.output);
@@ -268,9 +269,14 @@ export default (nsp: Namespace) => {
             continue;
           }
           if (step.stepKey.startsWith("productionAgent:storyboardTableAgent:")) {
-            const resultRef = await reconcileStoryboardTableOutput(u.db, projectId, episodesId, step.output);
-            if (resultRef) await taskStore.resolveStep(runId, step.stepKey, "completed", resultRef);
-            else if (!step.output) await taskStore.resolveStep(runId, step.stepKey, "retryable", undefined, "分镜表输出尚未完成，可安全重试");
+            const storedStep = await u.db("o_agentStep").where({ runId, stepKey: step.stepKey }).select("inputContent").first();
+            let expectedScene;
+            try { expectedScene = JSON.parse(storedStep?.inputContent ?? "{}").expectedScene; } catch { /* Old steps may not have structured input. */ }
+            const recovered = await inspectStoryboardTableRecovery(u.db, projectId, episodesId, step.output, {
+              hasSideEffects: state.toolCalls.some(call => call.stepKey === step.stepKey && call.sideEffect), expectedScene,
+            });
+            if (recovered.status === "completed") await taskStore.resolveStep(runId, step.stepKey, "completed", recovered.resultRef);
+            else if (recovered.status === "retryable") await taskStore.resolveStep(runId, step.stepKey, "retryable", undefined, recovered.error);
             continue;
           }
 

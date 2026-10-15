@@ -1,0 +1,74 @@
+{
+  "scene": 3,
+  "attempt": 1,
+  "errors": [],
+  "finishReason": "stop",
+  "usage": {
+    "inputTokens": 30683,
+    "inputTokenDetails": {
+      "noCacheTokens": 10915,
+      "cacheReadTokens": 19768
+    },
+    "outputTokens": 3111,
+    "outputTokenDetails": {
+      "textTokens": 3111,
+      "reasoningTokens": 0
+    },
+    "totalTokens": 33794,
+    "raw": {
+      "prompt_tokens": 30683,
+      "completion_tokens": 3111,
+      "total_tokens": 33794,
+      "prompt_tokens_details": {
+        "cached_tokens": 19768
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "reasoningTokens": 0,
+    "cachedInputTokens": 19768
+  },
+  "elapsedMs": 75145,
+  "rawHash": "4b1815c64f6e8f55c3553281b8e82b2e9106673105922f85734200a316ae4568",
+  "raw": "D:\\Toonflow-app-master\\docs\\storyboard-evaluation\\2026-10-09-source-first\\scene-3.attempt-1.response.xml",
+  "markdown": "D:\\Toonflow-app-master\\docs\\storyboard-evaluation\\2026-10-09-source-first\\scene-3.attempt-1.md",
+  "toolCalls": [
+    {
+      "name": "activate_skill",
+      "input": {
+        "name": "storyboard_table_techniques"
+      }
+    },
+    {
+      "name": "activate_skill",
+      "input": {
+        "name": "director_storyboard_table_narrative"
+      }
+    },
+    {
+      "name": "get_flowData",
+      "input": {
+        "key": "script"
+      }
+    },
+    {
+      "name": "get_flowData",
+      "input": {
+        "key": "assets"
+      }
+    },
+    {
+      "name": "get_flowData",
+      "input": {
+        "key": "scriptPlan"
+      }
+    },
+    {
+      "name": "get_flowData",
+      "input": {
+        "key": "storyboardTable"
+      }
+    }
+  ]
+}

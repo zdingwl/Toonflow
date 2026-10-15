@@ -1,0 +1,17 @@
+✔ 衍生执行完整注入来源、当前导演规划、真实父子资产及未压缩用户反馈，严格限制工具和有效模型参数 (171.3468ms)
+✔ 资产读取绕过浏览器并保持分页/图片状态；写后立即读到新描述，同请求回执与已有图及提示词保留 (22.0092ms)
+✔ 简易与fallback额度来自有效父配置；合法专用额度保留，不更改模型路由 (42.9881ms)
+✔ 只关联衍生时补读真实父资产、错误项目拒绝、无图表安全只读，并生成版本证据 (13.5781ms)
+✔ a committed revision updates the next agent read while preserving generated media (0.7535ms)
+✔ a new committed asset is attached when the parent has no derive array (0.1235ms)
+✔ a missing parent refuses synchronization without changing another asset (0.119ms)
+✔ 分镜首轮得到完整导演执行、当前场原文、真实资产及前场完整状态 (2.5507ms)
+✔ 分镜采用稳定温度和充足默认输出预算，同时尊重显式较低限制 (0.1108ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 515.9159

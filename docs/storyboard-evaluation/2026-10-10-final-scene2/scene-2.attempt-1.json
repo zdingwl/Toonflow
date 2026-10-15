@@ -1,0 +1,86 @@
+{
+  "scene": 2,
+  "attempt": 1,
+  "errors": [],
+  "validation": {
+    "valid": true,
+    "scene": 2,
+    "errors": [],
+    "warnings": [
+      "已核对可解析的台词和屏幕文字；人物动作、空间关系及参考图状态仍需审阅"
+    ],
+    "coverageVerified": true
+  },
+  "previousSceneHash": "2e7cb882d056fa828fbf8dc6a45d1323012b5ba1aceba6d138b7bd1bf8a18564",
+  "finishReason": "stop",
+  "usage": {
+    "inputTokens": 32470,
+    "inputTokenDetails": {
+      "noCacheTokens": 27550,
+      "cacheReadTokens": 4920
+    },
+    "outputTokens": 1428,
+    "outputTokenDetails": {
+      "textTokens": 1428,
+      "reasoningTokens": 0
+    },
+    "totalTokens": 33898,
+    "raw": {
+      "prompt_tokens": 32470,
+      "completion_tokens": 1428,
+      "total_tokens": 33898,
+      "prompt_tokens_details": {
+        "cached_tokens": 4920
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "reasoningTokens": 0,
+    "cachedInputTokens": 4920
+  },
+  "elapsedMs": 33907,
+  "rawHash": "74bdc055e15b254ca4cd843751e8cc75f564e0594dce25c652408612fa1703ff",
+  "raw": "D:\\Toonflow-app-master\\docs\\storyboard-evaluation\\2026-10-10-final-scene2\\scene-2.attempt-1.response.xml",
+  "markdown": "D:\\Toonflow-app-master\\docs\\storyboard-evaluation\\2026-10-10-final-scene2\\scene-2.attempt-1.md",
+  "toolCalls": [
+    {
+      "name": "activate_skill",
+      "input": {
+        "name": "storyboard_table_techniques"
+      }
+    },
+    {
+      "name": "get_flowData",
+      "input": {
+        "key": "script",
+        "offset": 0,
+        "limit": 12000
+      }
+    },
+    {
+      "name": "get_flowData",
+      "input": {
+        "key": "assets",
+        "offset": 0,
+        "limit": 12000
+      }
+    },
+    {
+      "name": "get_flowData",
+      "input": {
+        "key": "scriptPlan",
+        "offset": 0,
+        "limit": 12000
+      }
+    },
+    {
+      "name": "get_flowData",
+      "input": {
+        "key": "storyboardTable",
+        "offset": 0,
+        "limit": 12000
+      }
+    }
+  ]
+}

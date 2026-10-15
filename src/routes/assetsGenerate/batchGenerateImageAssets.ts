@@ -10,6 +10,7 @@ import { buildAssetImagePrompt } from "@/utils/assetPrompt";
 import { validateFields } from "@/middleware/middleware";
 import { isRoleFourViewModel, resolveAssetImageModel } from "@/utils/assetImageModel";
 import { descriptionVersion, requireCurrentAssetPrompt } from "@/utils/assetDescriptionVersion";
+import { syncCharacterCardAssetImageSafely } from "@/utils/characterCardAssetImageSync";
 
 const router = express.Router();
 type AssetType = "role" | "scene" | "tool";
@@ -120,6 +121,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
           referenceFingerprint: await roleReferenceFingerprint(imagePath),
         } : {}),
       });
+      await syncCharacterCardAssetImageSafely(u.db, { asset, imageId });
     } catch (cause) {
       await u.db("o_image").where("id", imageId).update({ state: "生成失败", errorReason: u.error(cause).message });
     }

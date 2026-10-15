@@ -1,0 +1,100 @@
+[环境变量：dev]
+数据库目录: D:\Toonflow-app-master\data\db2.sqlite
+[Socket] 注册命名空间: /api/socket/productionAgent
+[Socket] 注册命名空间: /api/socket/scriptAgent
+文件目录: D:\Toonflow-app-master\data\oss
+文件目录: D:\Toonflow-app-master\data\skills
+文件目录: D:\Toonflow-app-master\data\assets
+静态网站目录: D:\Toonflow-app-master\data\web
+[服务启动成功]: http://localhost:10588
+[productionAgent] 已连接: peAno-6lpAIEBpcZAAAC
+[productionAgent] 已连接: Ar6M8Fmk8kROot-zAAAD
+[0mPOST /api/agents/getMemory [32m200[0m 8.236 ms - 60676[0m
+[0mOPTIONS /api/agents/getMemory [32m204[0m 0.173 ms - 0[0m
+[0mPOST /api/agents/getMemory [32m200[0m 1.502 ms - 60676[0m
+[0mGET / [32m200[0m 1.651 ms - 26955266[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.121 ms - 0[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.056 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 166.158 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 172.872 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 211.575 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.103 ms - 0[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.048 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 142.479 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 159.998 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 178.139 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.125 ms - 0[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.049 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 125.590 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 131.745 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 157.984 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.083 ms - 0[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.051 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 185.142 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 191.297 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 193.256 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.097 ms - 0[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.039 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 154.015 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 157.653 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 164.012 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.052 ms - 0[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.028 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 123.827 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 133.688 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 149.025 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.054 ms - 0[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.031 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 131.043 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 139.701 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 164.885 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.058 ms - 0[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.030 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 130.690 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 126.845 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 159.030 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.058 ms - 0[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.043 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 154.498 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 158.968 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 175.379 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.040 ms - 0[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.030 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 133.763 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 130.966 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 130.774 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.041 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 184.058 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.038 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 47.247 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 148.477 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.086 ms - 0[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.041 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 128.656 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 124.381 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 163.972 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.053 ms - 0[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.036 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 158.850 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 162.031 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 153.056 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.050 ms - 0[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.030 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 135.557 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 157.440 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 160.875 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.095 ms - 0[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.031 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 136.693 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 139.494 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 194.661 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.051 ms - 0[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.103 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 197.036 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 186.880 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 186.852 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.049 ms - 0[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.026 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 123.361 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 151.664 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 162.478 ms - 140[0m

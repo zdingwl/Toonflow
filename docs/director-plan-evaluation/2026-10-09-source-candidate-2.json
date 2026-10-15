@@ -1,0 +1,68 @@
+{
+  "episodeId": 71,
+  "projectId": 1791442875668,
+  "model": "volcengine:doubao-seed-2-1-pro-260915",
+  "vendorId": "volcengine",
+  "deploymentKey": "productionAgent:directorPlanAgent",
+  "agentUseMode": "1",
+  "temperature": 0.6,
+  "maxOutputTokens": 12000,
+  "think": false,
+  "thinkLevel": 0,
+  "existingPlan": "ignore",
+  "context": "current",
+  "dryRun": false,
+  "sourceHash": "30bb57154ca32577ecc25a00a0356edc190582e313fb5f23a60cb12ae19feb8c",
+  "savedProductionPlanHash": "b72ebb7ed9c8605754c849494c3ea58d0c6284429304107dc5758c3e818bd147",
+  "skillHash": "60e263b1614a1efe557c4f19ecf8348340e8ffc7699c50e0dcce29767a2e4925",
+  "vendorTemplateHash": "f7563a1bd5f8ccd151625fbf1dd6d459a39bc2172cadb8b6f7910b9b23d2cb44",
+  "inputHash": "34dcf595215b5b00112c76f185bfa744904684919be652493f79e7bddcb6abb8",
+  "productionWorkspaceHashBefore": "6ef61d49feeb9b51973075f2f5493906e0d48c87034769d620cfd3ab5a211c30",
+  "elapsedMs": 129558,
+  "finishReason": "stop",
+  "usage": {
+    "inputTokens": 9623,
+    "inputTokenDetails": {
+      "noCacheTokens": 7775,
+      "cacheReadTokens": 1848
+    },
+    "outputTokens": 4617,
+    "outputTokenDetails": {
+      "textTokens": 4617,
+      "reasoningTokens": 0
+    },
+    "totalTokens": 14240,
+    "raw": {
+      "prompt_tokens": 9623,
+      "completion_tokens": 4617,
+      "total_tokens": 14240,
+      "prompt_tokens_details": {
+        "cached_tokens": 1848
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "reasoningTokens": 0,
+    "cachedInputTokens": 1848
+  },
+  "steps": 1,
+  "readKeys": [],
+  "characters": 6929,
+  "rawResponseHash": "1d404e8494bfbc159eb1f69722145df2b7cd9f68f54ef3ac980320bd04533071",
+  "factErrors": [],
+  "requestSettings": [
+    {
+      "model": "doubao-seed-2-1-pro-260915",
+      "temperature": 0.6,
+      "max_tokens": 12000,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "minimal"
+    }
+  ],
+  "productionWorkspaceHashAfter": "6ef61d49feeb9b51973075f2f5493906e0d48c87034769d620cfd3ab5a211c30",
+  "productionWorkspaceUnchanged": true,
+  "generated": true
+}

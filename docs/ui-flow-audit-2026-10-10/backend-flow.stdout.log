@@ -1,0 +1,94 @@
+[环境变量：dev]
+数据库目录: D:\Toonflow-app-master\data\db2.sqlite
+[Socket] 注册命名空间: /api/socket/productionAgent
+[Socket] 注册命名空间: /api/socket/scriptAgent
+文件目录: D:\Toonflow-app-master\data\oss
+文件目录: D:\Toonflow-app-master\data\skills
+文件目录: D:\Toonflow-app-master\data\assets
+静态网站目录: D:\Toonflow-app-master\data\web
+[服务启动成功]: http://localhost:10588
+[productionAgent] 已连接: eN7_DAbM8hyLRhHVAAAB
+[0mPOST /api/agents/getMemory [32m200[0m 9.249 ms - 169292[0m
+[productionAgent] 已连接: 87Z6nsH19YgA2_RuAAAD
+[0mOPTIONS /api/agents/getMemory [32m204[0m 0.427 ms - 0[0m
+[0mPOST /api/agents/getMemory [32m200[0m 2.361 ms - 169292[0m
+[0mGET / [36m304[0m 1.472 ms - -[0m
+[0mPOST /api/script/getScrptApi [32m200[0m 5.737 ms - 56454[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 187.388 ms - 140[0m
+[0mPOST /api/production/getFlowData [32m200[0m 7.075 ms - 44342[0m
+[0mPOST /api/production/getFlowData [32m200[0m 5.366 ms - 44342[0m
+[0mPOST /api/project/getModelDetails [32m200[0m 10.726 ms - 121[0m
+[0mPOST /api/agents/getMemory [32m200[0m 4.354 ms - 169292[0m
+[0mPOST /api/agents/getMemory [32m200[0m 3.442 ms - 169292[0m
+[0mGET /oss/1791442875668/role/984f6b15-daaf-47c6-a813-dcb227631fbd.jpg?size=20 [36m304[0m 1.557 ms - -[0m
+[0mGET /favicon.ico [36m304[0m 0.530 ms - -[0m
+[productionAgent] 已连接: -RTx466NVYSp6vZHAAAF
+[productionAgent] 上下文已更新: 1791442875668:productionAgent:71
+[0mPOST /api/agents/getMemory [32m200[0m 4.000 ms - 169292[0m
+[0mGET /oss/1791442875668/role/2477f1fc-ed49-49e9-a9f2-81e6177f5cba.jpg?size=20 [36m304[0m 1.071 ms - -[0m
+[0mGET /oss/1791442875668/scene/6294efb7-9733-4951-b148-10cda80f8f18.jpg?size=20 [36m304[0m 1.593 ms - -[0m
+[0mGET /oss/1791442875668/scene/07f85c50-bd10-4893-9505-31c878d1441b.jpg?size=20 [36m304[0m 2.692 ms - -[0m
+[0mGET /oss/1791442875668/scene/851febf9-776d-400e-a636-4a5173a4f906.jpg?size=20 [36m304[0m 0.937 ms - -[0m
+[0mGET /oss/1791442875668/props/20359d2d-ca07-4dd5-bce5-cdea59655114.jpg?size=20 [36m304[0m 0.436 ms - -[0m
+[0mGET /oss/1791442875668/props/59b02905-302e-4b00-a187-26d0e93d74e3.jpg?size=20 [36m304[0m 0.806 ms - -[0m
+[0mGET /oss/1791442875668/props/6181a3ac-1154-4588-b948-e176f5be5f9a.jpg?size=20 [36m304[0m 0.433 ms - -[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.093 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 183.992 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.227 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 169.141 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 136.494 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.060 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 142.036 ms - 140[0m
+⚡[主技能] ✓ 已读取主技能文件： D:/Toonflow-app-master/data/skills/production_skills/storyboard_table_techniques.md（5685 字符）
+⚡[主技能] ✓ 技能 "storyboard_table_techniques" 已激活
+⚡[主技能] ✓ 已读取主技能文件： D:/Toonflow-app-master/data/skills/story_skills/Scifi_post_apocalypse/driector_skills/director_storyboard_table_narrative.md（1426 字符）
+⚡[主技能] ✓ 技能 "director_storyboard_table_narrative" 已激活
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.127 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 176.881 ms - 140[0m
+⚡[主技能] ✓ 已读取主技能文件： D:/Toonflow-app-master/data/skills/production_skills/storyboard_table_techniques.md（5685 字符）
+⚡[主技能] ✓ 技能 "storyboard_table_techniques" 已激活
+⚡[主技能] ✓ 已读取主技能文件： D:/Toonflow-app-master/data/skills/story_skills/Scifi_post_apocalypse/driector_skills/director_storyboard_table_narrative.md（1426 字符）
+⚡[主技能] ✓ 技能 "director_storyboard_table_narrative" 已激活
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 150.140 ms - 140[0m
+⚡[主技能] ✓ 已读取主技能文件： D:/Toonflow-app-master/data/skills/production_skills/storyboard_table_techniques.md（5685 字符）
+⚡[主技能] ✓ 技能 "storyboard_table_techniques" 已激活
+⚡[主技能] ✓ 已读取主技能文件： D:/Toonflow-app-master/data/skills/story_skills/Scifi_post_apocalypse/driector_skills/director_storyboard_table_narrative.md（1426 字符）
+⚡[主技能] ✓ 技能 "director_storyboard_table_narrative" 已激活
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.092 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 157.223 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.130 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 141.525 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 175.516 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.102 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 152.741 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.145 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 135.205 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 151.266 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.110 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 144.168 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.079 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 127.695 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 250.887 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.043 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 160.038 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.098 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 230.368 ms - 140[0m
+[0mGET / [32m200[0m 1.534 ms - 26955277[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 135.188 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.042 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 126.920 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.095 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 166.262 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 128.554 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.039 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 142.217 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.058 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 159.873 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 165.933 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.057 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 160.344 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.056 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 139.027 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 157.281 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.043 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 160.582 ms - 140[0m

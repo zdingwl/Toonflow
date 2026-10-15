@@ -10,6 +10,8 @@ export type StoryboardTableOutput =
 export type StoryboardTableSnapshot = {
   storyboardTable: string;
   storyboardTableProgress?: StoryboardTableProgress;
+  sourceHash?: string;
+  planHash?: string;
 };
 
 export type StoryboardTableCommit = {
@@ -110,14 +112,15 @@ export async function readStoryboardTableSnapshot(
   projectId: number,
   episodesId: number,
 ): Promise<StoryboardTableSnapshot> {
-  const script = await db("o_script").where({ id: episodesId, projectId }).select("id").first();
+  const script = await db("o_script").where({ id: episodesId, projectId }).select("id", "content").first();
   if (!script) throw new Error("当前项目不存在该集剧本");
   const row = await db("o_agentWorkData").where({ projectId, episodesId, key: "productionAgent" }).select("data").first();
-  if (!row?.data) return { storyboardTable: "" };
-  const data = JSON.parse(row.data);
+  const data = row?.data ? JSON.parse(row.data) : {};
   return {
     storyboardTable: typeof data.storyboardTable === "string" ? data.storyboardTable : "",
     storyboardTableProgress: data.storyboardTableProgress,
+    sourceHash: hashStoryboardSource(script.content ?? ""),
+    planHash: hashStoryboardSource(typeof data.scriptPlan === "string" ? data.scriptPlan : ""),
   };
 }
 
@@ -127,6 +130,7 @@ export async function commitStoryboardTableOutput(
   episodesId: number,
   output: StoryboardTableOutput,
   expected?: StoryboardTableSnapshot,
+  onCommit?: (trx: Knex.Transaction) => Promise<void>,
 ): Promise<StoryboardTableCommit> {
   if (!Number.isSafeInteger(projectId) || !Number.isSafeInteger(episodesId)) throw new Error("分镜表缺少有效项目或剧集 ID");
 
@@ -134,19 +138,25 @@ export async function commitStoryboardTableOutput(
     const { scope, row, data } = await readStoredData(trx, projectId, episodesId);
     const currentTable = typeof data.storyboardTable === "string" ? data.storyboardTable : "";
     const currentProgress = data.storyboardTableProgress as StoryboardTableProgress | undefined;
+    const script = await trx("o_script").where({ id: episodesId, projectId }).select("content").first();
+    if (!script) throw new Error("当前项目不存在该集剧本");
+    const sourceHash = hashStoryboardSource(script.content ?? "");
+    const planHash = hashStoryboardSource(typeof data.scriptPlan === "string" ? data.scriptPlan : "");
+    if (expected?.sourceHash && expected.sourceHash !== sourceHash) {
+      throw new Error("剧本在分镜生成期间已修改，候选不能提交");
+    }
+    if (expected?.planHash && expected.planHash !== planHash) {
+      throw new Error("导演计划在分镜生成期间已修改，候选不能提交");
+    }
 
     if (output.mode === "scene") {
-      const script = await trx("o_script").where({ id: episodesId, projectId }).select("content").first();
-      if (!script) throw new Error("当前项目不存在该集剧本");
-      const sourceHash = hashStoryboardSource(script.content ?? "");
-      const planHash = hashStoryboardSource(typeof data.scriptPlan === "string" ? data.scriptPlan : "");
       if (currentProgress?.sourceHash && currentProgress.sourceHash !== sourceHash) {
         throw new Error("剧本自分镜任务开始后已修改，不能继续混写旧任务");
       }
       if (currentProgress?.planHash && currentProgress.planHash !== planHash) {
         throw new Error("导演计划自分镜任务开始后已修改，不能继续混写旧任务");
       }
-      await guardStoryboardContent(trx, projectId, script.content ?? "", data.scriptPlan ?? "", output.scene, output.content);
+      await guardStoryboardContent(trx, projectId, script.content ?? "", data.scriptPlan ?? "", output.scene, output.content, episodesId);
       const merged = mergeStoryboardScene(
         currentTable,
         currentProgress,
@@ -165,6 +175,7 @@ export async function commitStoryboardTableOutput(
         },
       };
       await writeStoredData(trx, scope, row, nextData);
+      await onCommit?.(trx);
       return {
         resultRef: `storyboardTable:${projectId}:${episodesId}:scene:${output.scene}`,
         ...merged,
@@ -173,6 +184,9 @@ export async function commitStoryboardTableOutput(
     }
 
     if (currentTable === output.content && !currentProgress) {
+      const parts = output.content.split(/(?=^##\s*场\s*\d+\s*[：:])/m).filter(part => part.trim());
+      for (let i = 0; i < parts.length; i++) await guardStoryboardContent(trx, projectId, script.content ?? "", data.scriptPlan ?? "", output.scenes[i], parts[i], episodesId);
+      await onCommit?.(trx);
       return {
         resultRef: `storyboardTable:${projectId}:${episodesId}:full`,
         storyboardTable: currentTable,
@@ -197,10 +211,11 @@ export async function commitStoryboardTableOutput(
 
     const source = await trx("o_script").where({ id: episodesId, projectId }).select("content").first();
     const parts = output.content.split(/(?=^##\s*场\s*\d+\s*[：:])/m).filter(part => part.trim());
-    for (let i = 0; i < parts.length; i++) await guardStoryboardContent(trx, projectId, source?.content ?? "", data.scriptPlan ?? "", output.scenes[i], parts[i]);
+    for (let i = 0; i < parts.length; i++) await guardStoryboardContent(trx, projectId, source?.content ?? "", data.scriptPlan ?? "", output.scenes[i], parts[i], episodesId);
     const nextData = { ...data, storyboardTable: output.content };
     delete nextData.storyboardTableProgress;
     await writeStoredData(trx, scope, row, nextData);
+    await onCommit?.(trx);
     return {
       resultRef: `storyboardTable:${projectId}:${episodesId}:full`,
       storyboardTable: output.content,
@@ -234,4 +249,44 @@ export async function reconcileStoryboardTableOutput(
     return `storyboardTable:${projectId}:${episodesId}:scene:${output.scene}`;
   }
   return null;
+}
+
+/** Read-only recovery: rejected candidates are retryable only when no business write occurred. */
+export async function inspectStoryboardTableRecovery(
+  db: Knex, projectId: number, episodesId: number, response: string | undefined,
+  options: { hasSideEffects: boolean; expectedScene?: { scene: number; total: number; taskId: string } },
+): Promise<{ status: "completed"; resultRef: string } | { status: "retryable" | "blocked"; error: string }> {
+  let output: StoryboardTableOutput | undefined;
+  let rejectedError = "分镜模型输出未完成";
+  if (response?.trim()) {
+    try { output = extractStoryboardTable(response); }
+    catch (error) { rejectedError = error instanceof Error ? error.message : String(error); }
+  }
+  const expected = options.expectedScene;
+  if (output && expected && (output.mode !== "scene" || output.scene !== expected.scene ||
+      output.total !== expected.total || output.taskId !== expected.taskId)) {
+    rejectedError = `旧分镜候选不符合固定第${expected.scene}场及 task/total 协议，不能复用其他场次的已保存稿`;
+    output = undefined;
+  }
+  const snapshot = await readStoryboardTableSnapshot(db, projectId, episodesId);
+  if (output) {
+    const resultRef = await reconcileStoryboardTableOutput(db, projectId, episodesId, response);
+    if (resultRef) return { status: "completed", resultRef };
+  }
+  if (options.hasSideEffects) return { status: "blocked", error: "分镜步骤存在业务写工具调用，须核对副作用后再恢复" };
+  const target = options.expectedScene ?? (output?.mode === "scene" ? output : undefined);
+  const progress = snapshot.storyboardTableProgress;
+  if (progress) {
+    if (!target || progress.taskId !== target.taskId || progress.total !== target.total) {
+      return { status: "blocked", error: "当前分镜任务已变化，不能重试旧候选" };
+    }
+    if (progress.scenes?.[String(target.scene)] !== undefined) {
+      return { status: "blocked", error: "目标场次已有不同的已保存内容，须先核对当前稿" };
+    }
+  } else if (snapshot.storyboardTable.trim()) {
+    return { status: "blocked", error: "工作区已有分镜稿，不能根据未提交候选自动覆盖" };
+  } else if (target && target.scene !== 1) {
+    return { status: "blocked", error: "旧候选对应后续场次但当前任务为空，须先核对任务版本" };
+  }
+  return { status: "retryable", error: `${output ? "分镜候选未写入数据库" : rejectedError}；已确认本步骤没有业务写工具调用，可安全重试` };
 }

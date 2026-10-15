@@ -1,7 +1,31 @@
-/** A conservative estimate, not a tokenizer count. Keep headroom below Ollama's 16K input window. */
+/** Conservative fallback until the effective model advertises its actual input/context limits. */
 export const ASSET_EXTRACTION_INPUT_TOKEN_BUDGET = 14_000;
 export const ASSET_EXTRACTION_RETRY_TOKEN_RESERVE = 1_000;
 const SHARED_SYSTEM_TOKEN_RESERVE = 1_800;
+const MODEL_CONTEXT_HEADROOM = 1_000;
+const DEFAULT_MAX_OUTPUT_TOKENS = 6_144;
+
+export interface AssetExtractionBudgetPolicy {
+  inputTokenBudget: number;
+  retryTokenReserve: number;
+  maxOutputTokens: number;
+}
+
+/** Model names are deliberately not used to guess limits. Explicit configuration is authoritative. */
+export function resolveAssetExtractionBudgetPolicy(model?: {
+  contextWindowTokens?: number; maxInputTokens?: number; maxOutputTokens?: number;
+}, override?: number): AssetExtractionBudgetPolicy {
+  const validLimit = (value: unknown): number | undefined => typeof value === "number" && Number.isFinite(value) && value >= 0
+    ? Math.min(Number.MAX_SAFE_INTEGER, Math.floor(value)) : undefined;
+  const context = validLimit(model?.contextWindowTokens), maxInput = validLimit(model?.maxInputTokens);
+  const configuredOutput = validLimit(model?.maxOutputTokens) ?? DEFAULT_MAX_OUTPUT_TOKENS;
+  const maxOutputTokens = context === undefined ? configuredOutput : Math.min(configuredOutput, context);
+  const safeContextInput = context === undefined ? undefined : Math.max(0, context - maxOutputTokens - MODEL_CONTEXT_HEADROOM);
+  let inputTokenBudget = validLimit(override) ?? maxInput ?? safeContextInput ?? ASSET_EXTRACTION_INPUT_TOKEN_BUDGET;
+  if (maxInput !== undefined) inputTokenBudget = Math.min(inputTokenBudget, maxInput);
+  if (safeContextInput !== undefined) inputTokenBudget = Math.min(inputTokenBudget, safeContextInput);
+  return { inputTokenBudget, retryTokenReserve: Math.min(ASSET_EXTRACTION_RETRY_TOKEN_RESERVE, inputTokenBudget), maxOutputTokens };
+}
 
 export type AssetSourceCatalog = { id: number; name?: string; excerpts: { sourceRef: string; quote: string }[] }[];
 
@@ -29,12 +53,34 @@ export function compactSourceRefSchema(schema: any): any {
   return copy;
 }
 
-export function assertAssetExtractionRequestBudget(system: string, input: unknown, wireSchema: unknown, stage: string) {
+export function assertAssetExtractionRequestBudget(system: string, input: unknown, wireSchema: unknown, stage: string,
+  policy: AssetExtractionBudgetPolicy = resolveAssetExtractionBudgetPolicy()) {
   const estimated = estimateAssetExtractionRequestTokens(system, input, wireSchema);
-  if (estimated > ASSET_EXTRACTION_INPUT_TOKEN_BUDGET) {
-    throw new Error(`${stage}输入超过安全上下文预算（估算 ${estimated} tokens，预算 ${ASSET_EXTRACTION_INPUT_TOKEN_BUDGET}）；未截断原文或事实，请减少单次设计约束或检查模型上下文配置`);
+  if (estimated > policy.inputTokenBudget) {
+    throw new Error(`${stage}输入超过安全上下文预算（估算 ${estimated} tokens，预算 ${policy.inputTokenBudget}）；未截断原文或事实，请减少单次设计约束或检查模型上下文配置`);
   }
   return estimated;
+}
+
+/**
+ * Trim only optional peer/reference candidates, in priority order. All source, fact, user and prior
+ * design fields survive untouched. The schema here is the wire JSON schema used by the estimator.
+ * If required content still cannot fit, return it intact so the caller can collect/merge facts in
+ * smaller stages instead of silently truncating the evidence.
+ */
+export function planAssetDesignInput<T extends Record<string, any>>(wireSchema: unknown, system: string, input: T,
+  policy: AssetExtractionBudgetPolicy = resolveAssetExtractionBudgetPolicy()): T {
+  const fields = ["siblingDesigns", "candidateCards", "cardCandidates", "referenceCandidates", "referenceCards"] as const;
+  const planned = { ...input };
+  for (const field of fields) if (Array.isArray(input[field])) (planned as Record<string, any>)[field] = [...input[field]];
+  const fits = () => estimateAssetExtractionRequestTokens(system, planned, wireSchema) <= Math.max(0, policy.inputTokenBudget - policy.retryTokenReserve);
+  for (const field of fields) {
+    const candidates = planned[field];
+    if (!Array.isArray(candidates)) continue;
+    while (candidates.length && !fits()) candidates.pop();
+    if (fits()) break;
+  }
+  return planned;
 }
 
 /** Contiguous slices preserve every code point, including whitespace and punctuation. */

@@ -1,0 +1,399 @@
+{
+  "sourcePath": "D:\\Toonflow-app-master\\data\\db2.sqlite",
+  "projectId": 1791442875668,
+  "assetId": 352,
+  "productionReadOnly": true,
+  "extractionDatabase": ":memory:",
+  "imageCalls": 0,
+  "requests": [
+    {
+      "stage": "discovery",
+      "estimated": 12222,
+      "budget": 14000,
+      "elapsedMs": 0,
+      "provider": false,
+      "sources": 5,
+      "excerpts": 0,
+      "finishReason": "fixed-discovery"
+    },
+    {
+      "stage": "discovery",
+      "estimated": 12091,
+      "budget": 14000,
+      "elapsedMs": 0,
+      "provider": false,
+      "sources": 5,
+      "excerpts": 0,
+      "finishReason": "fixed-discovery"
+    },
+    {
+      "stage": "discovery",
+      "estimated": 12430,
+      "budget": 14000,
+      "elapsedMs": 0,
+      "provider": false,
+      "sources": 5,
+      "excerpts": 0,
+      "finishReason": "fixed-discovery"
+    },
+    {
+      "stage": "discovery",
+      "estimated": 11651,
+      "budget": 14000,
+      "elapsedMs": 0,
+      "provider": false,
+      "sources": 5,
+      "excerpts": 0,
+      "finishReason": "fixed-discovery"
+    },
+    {
+      "stage": "facts",
+      "estimated": 13005,
+      "budget": 14000,
+      "elapsedMs": 2056,
+      "provider": true,
+      "sources": 7,
+      "excerpts": 455,
+      "finishReason": "tool-calls",
+      "usage": {
+        "inputTokens": 11017,
+        "inputTokenDetails": {
+          "noCacheTokens": 0,
+          "cacheReadTokens": 11017
+        },
+        "outputTokens": 61,
+        "outputTokenDetails": {
+          "textTokens": 61,
+          "reasoningTokens": 0
+        },
+        "totalTokens": 11078,
+        "raw": {
+          "prompt_tokens": 11017,
+          "completion_tokens": 61,
+          "total_tokens": 11078,
+          "prompt_tokens_details": {
+            "cached_tokens": 11017
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "reasoningTokens": 0,
+        "cachedInputTokens": 11017
+      },
+      "toolErrors": []
+    },
+    {
+      "stage": "facts",
+      "estimated": 12986,
+      "budget": 14000,
+      "elapsedMs": 1273,
+      "provider": true,
+      "sources": 7,
+      "excerpts": 467,
+      "finishReason": "tool-calls",
+      "usage": {
+        "inputTokens": 11038,
+        "inputTokenDetails": {
+          "noCacheTokens": 11038,
+          "cacheReadTokens": 0
+        },
+        "outputTokens": 34,
+        "outputTokenDetails": {
+          "textTokens": 34,
+          "reasoningTokens": 0
+        },
+        "totalTokens": 11072,
+        "raw": {
+          "prompt_tokens": 11038,
+          "completion_tokens": 34,
+          "total_tokens": 11072,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "reasoningTokens": 0,
+        "cachedInputTokens": 0
+      },
+      "toolErrors": []
+    },
+    {
+      "stage": "facts",
+      "estimated": 12993,
+      "budget": 14000,
+      "elapsedMs": 2578,
+      "provider": true,
+      "sources": 8,
+      "excerpts": 487,
+      "finishReason": "tool-calls",
+      "usage": {
+        "inputTokens": 11209,
+        "inputTokenDetails": {
+          "noCacheTokens": 11209,
+          "cacheReadTokens": 0
+        },
+        "outputTokens": 34,
+        "outputTokenDetails": {
+          "textTokens": 34,
+          "reasoningTokens": 0
+        },
+        "totalTokens": 11243,
+        "raw": {
+          "prompt_tokens": 11209,
+          "completion_tokens": 34,
+          "total_tokens": 11243,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "reasoningTokens": 0,
+        "cachedInputTokens": 0
+      },
+      "toolErrors": []
+    },
+    {
+      "stage": "facts",
+      "estimated": 3832,
+      "budget": 14000,
+      "elapsedMs": 1735,
+      "provider": true,
+      "sources": 1,
+      "excerpts": 33,
+      "finishReason": "tool-calls",
+      "usage": {
+        "inputTokens": 2641,
+        "inputTokenDetails": {
+          "noCacheTokens": 793,
+          "cacheReadTokens": 1848
+        },
+        "outputTokens": 34,
+        "outputTokenDetails": {
+          "textTokens": 34,
+          "reasoningTokens": 0
+        },
+        "totalTokens": 2675,
+        "raw": {
+          "prompt_tokens": 2641,
+          "completion_tokens": 34,
+          "total_tokens": 2675,
+          "prompt_tokens_details": {
+            "cached_tokens": 1848
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "reasoningTokens": 0,
+        "cachedInputTokens": 1848
+      },
+      "toolErrors": []
+    },
+    {
+      "stage": "match",
+      "estimated": 3351,
+      "budget": 14000,
+      "elapsedMs": 1994,
+      "provider": true,
+      "facts": 1,
+      "finishReason": "tool-calls",
+      "usage": {
+        "inputTokens": 2240,
+        "inputTokenDetails": {
+          "noCacheTokens": 2240,
+          "cacheReadTokens": 0
+        },
+        "outputTokens": 71,
+        "outputTokenDetails": {
+          "textTokens": 71,
+          "reasoningTokens": 0
+        },
+        "totalTokens": 2311,
+        "raw": {
+          "prompt_tokens": 2240,
+          "completion_tokens": 71,
+          "total_tokens": 2311,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "reasoningTokens": 0,
+        "cachedInputTokens": 0
+      },
+      "toolErrors": []
+    },
+    {
+      "stage": "card",
+      "estimated": 11658,
+      "budget": 14000,
+      "elapsedMs": 15421,
+      "provider": true,
+      "sources": 0,
+      "excerpts": 0,
+      "facts": 1,
+      "finishReason": "tool-calls",
+      "usage": {
+        "inputTokens": 7491,
+        "inputTokenDetails": {
+          "noCacheTokens": 7491,
+          "cacheReadTokens": 0
+        },
+        "outputTokens": 1013,
+        "outputTokenDetails": {
+          "textTokens": 1013,
+          "reasoningTokens": 0
+        },
+        "totalTokens": 8504,
+        "raw": {
+          "prompt_tokens": 7491,
+          "completion_tokens": 1013,
+          "total_tokens": 8504,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "reasoningTokens": 0,
+        "cachedInputTokens": 0
+      },
+      "toolErrors": []
+    },
+    {
+      "stage": "card",
+      "estimated": 12937,
+      "budget": 14000,
+      "elapsedMs": 13670,
+      "provider": true,
+      "sources": 0,
+      "excerpts": 0,
+      "facts": 1,
+      "finishReason": "tool-calls",
+      "usage": {
+        "inputTokens": 8314,
+        "inputTokenDetails": {
+          "noCacheTokens": 4418,
+          "cacheReadTokens": 3896
+        },
+        "outputTokens": 1018,
+        "outputTokenDetails": {
+          "textTokens": 1018,
+          "reasoningTokens": 0
+        },
+        "totalTokens": 9332,
+        "raw": {
+          "prompt_tokens": 8314,
+          "completion_tokens": 1018,
+          "total_tokens": 9332,
+          "prompt_tokens_details": {
+            "cached_tokens": 3896
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "reasoningTokens": 0,
+        "cachedInputTokens": 3896
+      },
+      "toolErrors": []
+    }
+  ],
+  "startedAt": "2026-10-09T09:41:59.292Z",
+  "success": true,
+  "model": "volcengine:doubao-seed-2-1-pro-260915",
+  "scriptCount": 20,
+  "sourceCharacters": 18371,
+  "peerCount": 8,
+  "imageIdBefore": 386,
+  "budget": {
+    "inputTokenBudget": 14000,
+    "retryTokenReserve": 1000,
+    "maxOutputTokens": 6144
+  },
+  "result": {
+    "created": 0,
+    "updated": 1,
+    "reused": 0
+  },
+  "imageIdAfter": 386,
+  "productionAssetUnchanged": true,
+  "productionScriptsUnchanged": true,
+  "cardCountBefore": 10,
+  "cardCountAfter": 11,
+  "cardBinding": {
+    "cardId": 11,
+    "version": 1,
+    "name": "艾娃·角色卡",
+    "mode": "reference",
+    "roleDefinition": "18岁以上上层社会冷艳女性，小鹅蛋脸、精致杏眼与玫瑰豆沙柔雾妆，墨黑高马尾；身材丰满纤腰、长腿比例协调。基础造型穿黑色高领短袖真丝绉缎贴身连衣裙，配胸前小菱形镂空、皮革腰带与肩部细扣带、前短后长层叠裙摆、尖头细跟及膝长靴和几何耳坠；另有暴雨搬运外勤装备作为独立换装状态。",
+    "ageBand": "adult",
+    "ageMin": 18,
+    "ageMax": null,
+    "ageBounds": {
+      "min": 18,
+      "max": null
+    },
+    "gender": "female",
+    "references": [
+      {
+        "cardId": 4,
+        "version": 1,
+        "borrowedFields": [
+          "face",
+          "hair"
+        ]
+      }
+    ]
+  },
+  "savedFactCount": 1,
+  "card": {
+    "id": 11,
+    "ownerId": 1,
+    "name": "艾娃·角色卡",
+    "artStyle": "realistic_3d_anime",
+    "roleDefinition": "18岁以上上层社会冷艳女性，小鹅蛋脸、精致杏眼与玫瑰豆沙柔雾妆，墨黑高马尾；身材丰满纤腰、长腿比例协调。基础造型穿黑色高领短袖真丝绉缎贴身连衣裙，配胸前小菱形镂空、皮革腰带与肩部细扣带、前短后长层叠裙摆、尖头细跟及膝长靴和几何耳坠；另有暴雨搬运外勤装备作为独立换装状态。",
+    "ageBand": "adult",
+    "gender": "female",
+    "visualDesign": {
+      "face": "小鹅蛋脸型，下颌线条流畅收束，颧骨与下颌转折协调；舒展杏眼、眼尾微扬，眉形柔挑有辨识度，精致鼻尖，清楚唇峰与自然唇珠；玫瑰豆沙柔雾妆，少量柔粉腮红融入面颊，底妆细腻保留皮肤层次",
+      "body": "18岁以上女性，肩线平直，丰满且自然承托的胸部，明显纤腰，饱满胯臀与修长腿部，四肢比例协调",
+      "hair": "墨黑色长发束成顺滑高马尾，颅顶蓬松自然，脸周留弧形发束修饰轮廓，发丝有清晰三维层次与细微高光",
+      "clothing": "基础时装：黑色高领贴身短袖真丝绉缎连衣裙，领口贴合颈部，胸前正中一枚小菱形镂空；胸腰以公主线纵向省道贴合胸部自然承托并收束纤腰，短袖贴合上臂；腰际窄皮革腰带塑形，两道细肩部皮革扣带自肩头延伸至胸前与腰带呼应；腰下层叠前短后长裙摆，前片至大腿中上段、后片渐长垂至小腿，裙褶自然层叠，内层正常覆盖；黑色尖头细跟及膝长靴，鞋头精致微尖，细高跟，靴筒贴合小腿至膝下，皮面光滑带窄高光；细长几何耳坠垂于耳下，金属冷光；材质分哑光真丝织物、裙褶柔光与皮革窄高光三层，贵气冷艳，无肩包或武器。剧本77:15另有适合暴雨和搬运的外勤装备，应作为独立换装衍生状态，具体款式待确认，不写入本基础衣装",
+      "environment": "",
+      "shape": "高领贴身短袖与层叠前短后长裙摆形成上紧下放的纵向剪影；胸前小菱形镂空、窄皮革腰带与肩部细扣带构成精致结构呼应；前短后长裙摆与及膝长靴形成前腿露出、后裙垂坠的前后层次对比；哑光真丝、裙褶柔光与皮革窄高光形成冷调光泽节奏；高马尾与高领形成纵向延伸，整体轮廓利落冷艳有记忆点"
+    },
+    "describe": "小鹅蛋脸型，下颌线条流畅收束，颧骨与下颌转折协调；舒展杏眼、眼尾微扬，眉形柔挑有辨识度，精致鼻尖，清楚唇峰与自然唇珠；玫瑰豆沙柔雾妆，少量柔粉腮红融入面颊，底妆细腻保留皮肤层次；18岁以上女性，肩线平直，丰满且自然承托的胸部，明显纤腰，饱满胯臀与修长腿部，四肢比例协调；墨黑色长发束成顺滑高马尾，颅顶蓬松自然，脸周留弧形发束修饰轮廓，发丝有清晰三维层次与细微高光；基础时装：黑色高领贴身短袖真丝绉缎连衣裙，领口贴合颈部，胸前正中一枚小菱形镂空；胸腰以公主线纵向省道贴合胸部自然承托并收束纤腰，短袖贴合上臂；腰际窄皮革腰带塑形，两道细肩部皮革扣带自肩头延伸至胸前与腰带呼应；腰下层叠前短后长裙摆，前片至大腿中上段、后片渐长垂至小腿，裙褶自然层叠，内层正常覆盖；黑色尖头细跟及膝长靴，鞋头精致微尖，细高跟，靴筒贴合小腿至膝下，皮面光滑带窄高光；细长几何耳坠垂于耳下，金属冷光；材质分哑光真丝织物、裙褶柔光与皮革窄高光三层，贵气冷艳，无肩包或武器。剧本77:15另有适合暴雨和搬运的外勤装备，应作为独立换装衍生状态，具体款式待确认，不写入本基础衣装；高领贴身短袖与层叠前短后长裙摆形成上紧下放的纵向剪影；胸前小菱形镂空、窄皮革腰带与肩部细扣带构成精致结构呼应；前短后长裙摆与及膝长靴形成前腿露出、后裙垂坠的前后层次对比；哑光真丝、裙褶柔光与皮革窄高光形成冷调光泽节奏；高马尾与高领形成纵向延伸，整体轮廓利落冷艳有记忆点",
+    "status": "active",
+    "provenance": {
+      "method": "generated",
+      "references": [
+        {
+          "cardId": 4,
+          "version": 1,
+          "borrowedFields": [
+            "face",
+            "hair"
+          ]
+        }
+      ]
+    },
+    "ageMin": 18,
+    "ageMax": null,
+    "version": 1,
+    "sourceProjectId": 1791442875668,
+    "sourceAssetId": 352,
+    "createdAt": 1791538958227,
+    "updatedAt": 1791538958227
+  },
+  "description": "艾娃，女性，18岁以上。小鹅蛋脸型，下颌线条流畅收束，颧骨与下颌转折协调；舒展杏眼、眼尾微扬，眉形柔挑有辨识度，精致鼻尖，清楚唇峰与自然唇珠；玫瑰豆沙柔雾妆，少量柔粉腮红融入面颊，底妆细腻保留皮肤层次。墨黑色长发束成顺滑高马尾，颅顶蓬松自然，脸周留弧形发束修饰轮廓，发丝有清晰三维层次与细微高光。肩线平直，丰满且自然承托的胸部，明显纤腰，饱满胯臀与修长腿部，四肢比例协调。默认基础造型为黑色高领贴身短袖真丝绉缎连衣裙，领口贴合颈部，胸前正中一枚小菱形镂空露出少量肌肤；胸腰以公主线纵向省道贴合胸部自然承托并收束纤腰，短袖贴合上臂；腰际一条窄皮革腰带塑形，两道细肩部皮革扣带自肩头延伸至胸前与腰带呼应，扣带窄而利落；腰下层叠前短后长裙摆，前片至大腿中上段，后片渐长垂至小腿，裙褶自然层叠带柔光，内层正常覆盖；黑色尖头细跟及膝长靴，鞋头精致微尖，细高跟，靴筒贴合小腿至膝下，皮面光滑带窄高光；细长几何耳坠垂于耳下，金属冷光。整体材质分哑光真丝织物、裙褶柔光与皮革窄高光三层，贵气冷艳，无肩包或武器。剧本后续另有适合暴雨和搬运的外勤装备换装状态，需作为独立衍生状态处理，不覆盖本基础时装。",
+  "finishedAt": "2026-10-09T09:42:38.230Z"
+}

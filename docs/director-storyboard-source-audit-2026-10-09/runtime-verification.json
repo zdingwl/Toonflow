@@ -1,0 +1,50 @@
+{
+  "verifiedAt": "2026-10-09T16:17:21.747Z",
+  "httpStatus": 200,
+  "processEvidence": {
+    "parentPid": 24600,
+    "listenerPid": 1384,
+    "verifiedBy": "Get-NetTCPConnection and Get-CimInstance after restart",
+    "parentCommand": "node_modules/tsx/dist/cli.mjs src/app.ts",
+    "listenerParentPid": 24600,
+    "launch": "Native PowerShell Start-Process, WindowStyle Hidden, workspace working directory"
+  },
+  "files": [
+    {
+      "file": "src/agents/productionAgent/index.ts",
+      "sha256": "82e3f0eb9b6e27430c44b0bc50aed4184f8bbc54928654bf4137680710c786ee"
+    },
+    {
+      "file": "src/agents/productionAgent/storyboardContext.ts",
+      "sha256": "9da424a2a5ed0828f87f80f1a9b2756283b5c261f7b33078a6972c4e366caa0c"
+    },
+    {
+      "file": "src/agents/productionAgent/storyboardTable.ts",
+      "sha256": "7665e9adaad25e0bdbba9e04de29a70dbc5cb2d75c2603cf3b7bc7cc0f8a2019"
+    },
+    {
+      "file": "src/agents/productionAgent/storyboardValidator.ts",
+      "sha256": "abf4ca731106a977a5bb94e7af520544d6e4352ba12323fa78f8c4c6238d4361"
+    },
+    {
+      "file": "src/socket/routes/productionAgent.ts",
+      "sha256": "00488b5bab380c95b06c8e5b962aa8735e43b8a3e17a540b34f9dbd4d44261ae"
+    },
+    {
+      "file": "data/skills/production_execution_storyboard_table.md",
+      "sha256": "29045dc4ba73151869a0af2750fc24c4ac7aaf9af8ea29a9414dc32fead8ad93"
+    },
+    {
+      "file": "data/skills/production_skills/storyboard_table_techniques.md",
+      "sha256": "6c1168275266b79cd7f9877d25ab6b24e74909ba5ad1cea579d5242005ba8d45"
+    },
+    {
+      "file": "data/skills/art_skills/realistic_3d_anime/driector_skills/director_storyboard_table_style.md",
+      "sha256": "20571f9054bc71b51fd7b29315c8cc5020e9c7088e8dc35d3240087d127a0b3d"
+    },
+    {
+      "file": "data/serve/app.js",
+      "sha256": "b6abd96bb821df8fd254481cec05ba9e97846ad9f6cb0460edbde236473a05ce"
+    }
+  ]
+}

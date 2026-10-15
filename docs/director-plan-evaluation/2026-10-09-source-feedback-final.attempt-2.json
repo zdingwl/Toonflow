@@ -1,0 +1,76 @@
+{
+  "episodeId": 71,
+  "projectId": 1791442875668,
+  "model": "volcengine:doubao-seed-2-1-pro-260915",
+  "vendorId": "volcengine",
+  "deploymentKey": "productionAgent:directorPlanAgent",
+  "agentUseMode": "1",
+  "temperature": 0.3,
+  "maxOutputTokens": 12000,
+  "think": false,
+  "thinkLevel": 0,
+  "existingPlan": "ignore",
+  "context": "current",
+  "dryRun": false,
+  "maxAttempts": 3,
+  "sourceHash": "30bb57154ca32577ecc25a00a0356edc190582e313fb5f23a60cb12ae19feb8c",
+  "savedProductionPlanHash": "b72ebb7ed9c8605754c849494c3ea58d0c6284429304107dc5758c3e818bd147",
+  "skillHash": "599bb3ce572aefbc0344088518d388574bc9d908af9a4bdaee56ae7fcf13dda8",
+  "vendorTemplateHash": "f7563a1bd5f8ccd151625fbf1dd6d459a39bc2172cadb8b6f7910b9b23d2cb44",
+  "inputHash": "b19c1770022245f6bfe997c85ba6086d1b6b9ae46ed4f456764ef8b706a6dc29",
+  "productionWorkspaceHashBefore": "6ef61d49feeb9b51973075f2f5493906e0d48c87034769d620cfd3ab5a211c30",
+  "attempt": 2,
+  "feedback": "上轮导演规划未通过检查，具体问题：\n1. Sc3 B8含3句顺序原台词共37字，按清晰口播4字/秒及必要换通纸面估计至少10.3秒，实际仅7秒；请重分配低信息节拍，不用无依据快语速或合拍复用时间\n依据完整原剧本与原制作预算逐项修复并重新排拍，保留原文事实、台词和顺序，不增加预算。只输出单份最终、唯一闭合的 <scriptPlan>…</scriptPlan>；每场仅一张最终节拍表，不输出草稿、修正版说明或自评。",
+  "elapsedMs": 59008,
+  "finishReason": "stop",
+  "usage": {
+    "inputTokens": 14563,
+    "inputTokenDetails": {
+      "noCacheTokens": 4523,
+      "cacheReadTokens": 10040
+    },
+    "outputTokens": 4006,
+    "outputTokenDetails": {
+      "textTokens": 4006,
+      "reasoningTokens": 0
+    },
+    "totalTokens": 18569,
+    "raw": {
+      "prompt_tokens": 14563,
+      "completion_tokens": 4006,
+      "total_tokens": 18569,
+      "prompt_tokens_details": {
+        "cached_tokens": 10040
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "reasoningTokens": 0,
+    "cachedInputTokens": 10040
+  },
+  "steps": 1,
+  "readKeys": [],
+  "characters": 5930,
+  "rawResponseHash": "3c0271fe8bc29bad3e81c56d0a3ef635fb9695f5765dd5b048258eee2f1ae0b0",
+  "extractionErrors": [],
+  "factErrors": [],
+  "executionErrors": [],
+  "validationErrors": [],
+  "verdict": "PASS",
+  "generated": true,
+  "rawOutput": "D:\\Toonflow-app-master\\docs\\director-plan-evaluation\\2026-10-09-source-feedback-final.attempt-2.response.xml",
+  "planOutput": "D:\\Toonflow-app-master\\docs\\director-plan-evaluation\\2026-10-09-source-feedback-final.attempt-2.md",
+  "metadataOutput": "D:\\Toonflow-app-master\\docs\\director-plan-evaluation\\2026-10-09-source-feedback-final.attempt-2.json",
+  "requestSettings": [
+    {
+      "model": "doubao-seed-2-1-pro-260915",
+      "temperature": 0.3,
+      "max_tokens": 12000,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "minimal"
+    }
+  ]
+}

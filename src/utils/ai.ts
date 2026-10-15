@@ -206,7 +206,7 @@ class AiText {
       system: withContentConstraints(input.system),
       model: await this.resolveModel(),
       temperature: input.temperature ?? config?.temperature ?? undefined,
-      ...(config?.maxOutputTokens && { maxOutputTokens: config.maxOutputTokens }),
+      ...((input.maxOutputTokens ?? config?.maxOutputTokens) ? { maxOutputTokens: input.maxOutputTokens ?? config?.maxOutputTokens } : {}),
     } as Parameters<typeof generateText>[0]);
   }
   async stream(input: Omit<Parameters<typeof streamText>[0], "model">) {
@@ -218,7 +218,7 @@ class AiText {
       system: withContentConstraints(input.system),
       model: await this.resolveModel(extractReasoningMiddleware({ tagName: "reasoning_content", separator: "\n" })),
       temperature: input.temperature ?? config?.temperature ?? undefined,
-      ...(config?.maxOutputTokens && { maxOutputTokens: config.maxOutputTokens }),
+      ...((input.maxOutputTokens ?? config?.maxOutputTokens) ? { maxOutputTokens: input.maxOutputTokens ?? config?.maxOutputTokens } : {}),
     } as Parameters<typeof streamText>[0]);
   }
 }

@@ -1,0 +1,81 @@
+{
+  "episodeId": 71,
+  "projectId": 1791442875668,
+  "model": "volcengine:doubao-seed-2-1-pro-260915",
+  "vendorId": "volcengine",
+  "deploymentKey": "productionAgent:directorPlanAgent",
+  "agentUseMode": "1",
+  "temperature": 0.3,
+  "maxOutputTokens": 12000,
+  "think": false,
+  "thinkLevel": 0,
+  "existingPlan": "ignore",
+  "context": "current",
+  "dryRun": false,
+  "maxAttempts": 3,
+  "sourceHash": "30bb57154ca32577ecc25a00a0356edc190582e313fb5f23a60cb12ae19feb8c",
+  "savedProductionPlanHash": "b72ebb7ed9c8605754c849494c3ea58d0c6284429304107dc5758c3e818bd147",
+  "skillHash": "13cc2fa210a45af801b9e548e95e6d2f23d2b2bb474b2d20f818421dd0fe8799",
+  "vendorTemplateHash": "f7563a1bd5f8ccd151625fbf1dd6d459a39bc2172cadb8b6f7910b9b23d2cb44",
+  "inputHash": "d5bdc1de52b2567bbf48c679689962f3f27e0c6ec8cd7610eb22f0739e09359f",
+  "productionWorkspaceHashBefore": "6ef61d49feeb9b51973075f2f5493906e0d48c87034769d620cfd3ab5a211c30",
+  "hasDirectReviewFeedback": true,
+  "reviewCandidatePath": "D:\\Toonflow-app-master\\docs\\director-plan-evaluation\\2026-10-09-source-direct-review-pass.attempt-1.md",
+  "reviewCandidateHash": "3921e2a3a59cc6944772510e121787623e23f434492f94fccbd28dec52f11557",
+  "reviewFeedbackPath": "D:\\Toonflow-app-master\\docs\\director-plan-source-fix-2026-10-09\\direct-audit-count-correction.md",
+  "reviewFeedbackHash": "9ba75e84f131ef49f18839e732687b1c4490b1cbc5dfcea20fb6ad482f49e990",
+  "attempt": 1,
+  "feedback": null,
+  "elapsedMs": 106476,
+  "finishReason": "stop",
+  "usage": {
+    "inputTokens": 16436,
+    "inputTokenDetails": {
+      "noCacheTokens": 15100,
+      "cacheReadTokens": 1336
+    },
+    "outputTokens": 4932,
+    "outputTokenDetails": {
+      "textTokens": 4932,
+      "reasoningTokens": 0
+    },
+    "totalTokens": 21368,
+    "raw": {
+      "prompt_tokens": 16436,
+      "completion_tokens": 4932,
+      "total_tokens": 21368,
+      "prompt_tokens_details": {
+        "cached_tokens": 1336
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "reasoningTokens": 0,
+    "cachedInputTokens": 1336
+  },
+  "steps": 1,
+  "readKeys": [],
+  "characters": 7273,
+  "rawResponseHash": "f63756e3d08acc3657a3ae8d9c7adb72d006918717784b2ba982518c080c1f3b",
+  "extractionErrors": [],
+  "factErrors": [],
+  "executionErrors": [],
+  "validationErrors": [],
+  "verdict": "PASS",
+  "generated": true,
+  "rawOutput": "D:\\Toonflow-app-master\\docs\\director-plan-evaluation\\2026-10-09-source-final-qualified.attempt-1.response.xml",
+  "planOutput": "D:\\Toonflow-app-master\\docs\\director-plan-evaluation\\2026-10-09-source-final-qualified.attempt-1.md",
+  "metadataOutput": "D:\\Toonflow-app-master\\docs\\director-plan-evaluation\\2026-10-09-source-final-qualified.attempt-1.json",
+  "requestSettings": [
+    {
+      "model": "doubao-seed-2-1-pro-260915",
+      "temperature": 0.3,
+      "max_tokens": 12000,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "minimal"
+    }
+  ]
+}

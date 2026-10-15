@@ -1,0 +1,18 @@
+{
+  "checkedAtUtc": "2026-10-09T15:34:56.0340254Z",
+  "httpStatus": 200,
+  "listenerProcessId": 26160,
+  "parentProcessId": 9836,
+  "entry": "src/app.ts",
+  "commandLine": "\"C:\\Program Files\\nodejs\\node.exe\" --require D:\\Toonflow-app-master\\node_modules\\tsx\\dist\\preflight.cjs --import file:///D:/Toonflow-app-master/node_modules/tsx/dist/loader.mjs src/app.ts",
+  "sourceHashes": {
+    "data/skills/production_execution_director_plan.md": "13cc2fa210a45af801b9e548e95e6d2f23d2b2bb474b2d20f818421dd0fe8799",
+    "src/agents/productionAgent/directorPlanContext.ts": "d87386dacaf1e3da84eeb45ad8ad62000bac5414534f2fe02ebfb76696b37737",
+    "src/agents/productionAgent/directorPlanQuality.ts": "28ee5163373f5b54c79717abef3555abaf0af9fe9cab793882e6a25c17bbad0e",
+    "src/agents/productionAgent/directorPlan.ts": "76ae636f496f753b39a7d091742d531b8ed3a871665e09d2f24f9be2e087440d",
+    "src/agents/productionAgent/index.ts": "f77d10f8e8e00631efd0c8039c5def99d12357896a23b508fb99b3bb62b8a9da",
+    "scripts/evaluate-director-plan.ts": "7f103ab454174fb29b4e2229ac565e2e8f88f2563f3f883487ec57c42fbda427"
+  },
+  "targetedTestsPassed": 33,
+  "backendBuildSucceeded": true
+}

@@ -9,11 +9,16 @@ import rawVendorData from "./vendor.json";
 
 import { migrateVideoLanguages } from "@/utils/videoLanguages";
 import { migrateAssetDescriptions } from "@/utils/assetDescriptionVersion";
+import { migrateCharacterCards } from "@/utils/characterCards";
+import { migrateAssetExtractionCheckpoints, recoverStaleAssetExtractionRuns } from "@/utils/assetExtractionCheckpoint";
 
 const vendorData = rawVendorData as Record<string, string>;
 
 export default async (knex: Knex): Promise<void> => {
   await migrateAssetDescriptions(knex);
+  await migrateCharacterCards(knex);
+  await migrateAssetExtractionCheckpoints(knex);
+  await recoverStaleAssetExtractionRuns(knex);
   const addColumn = async (table: string, column: string, type: string) => {
     if (!(await knex.schema.hasTable(table))) return;
     if (!(await knex.schema.hasColumn(table, column))) {

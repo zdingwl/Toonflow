@@ -1,0 +1,89 @@
+{
+  "verifiedAt": "2026-10-09T16:16:35.020Z",
+  "sourceUnchanged": true,
+  "planUnchanged": true,
+  "allWorkspacesUnchanged": true,
+  "countsUnchanged": true,
+  "counts": {
+    "o_video": 71,
+    "o_storyboard": 57,
+    "o_assets": 423
+  },
+  "sourceHash": "30bb57154ca32577ecc25a00a0356edc190582e313fb5f23a60cb12ae19feb8c",
+  "planHash": "b72ebb7ed9c8605754c849494c3ea58d0c6284429304107dc5758c3e818bd147",
+  "storyboardProductionChars": 0,
+  "missingAssetImages": [],
+  "activeRuns": [],
+  "activeTasks": [],
+  "totalShots": 25,
+  "totalDuration": 95,
+  "finals": [
+    {
+      "scene": 1,
+      "file": "D:\\Toonflow-app-master\\docs\\storyboard-evaluation\\2026-10-10-final-scene1\\scene-1.attempt-1.md",
+      "rawFile": "D:\\Toonflow-app-master\\docs\\storyboard-evaluation\\2026-10-10-final-scene1\\scene-1.attempt-1.response.xml",
+      "rawHash": "b9ba6453628e25f3d7a0fdda6cbef9e1d22cc7c90e915e36039795ad66fc8100",
+      "rawHashUnchanged": true,
+      "exactExtract": true,
+      "model": "volcengine:doubao-seed-2-1-pro-260915",
+      "sourceHashMatches": true,
+      "planHashMatches": true,
+      "validation": {
+        "valid": true,
+        "scene": 1,
+        "errors": [],
+        "warnings": [
+          "已核对可解析的台词和屏幕文字；人物动作、空间关系及参考图状态仍需审阅"
+        ],
+        "coverageVerified": true
+      },
+      "shots": 6,
+      "duration": 25
+    },
+    {
+      "scene": 2,
+      "file": "D:\\Toonflow-app-master\\docs\\storyboard-evaluation\\2026-10-10-final-scene2\\scene-2.attempt-1.md",
+      "rawFile": "D:\\Toonflow-app-master\\docs\\storyboard-evaluation\\2026-10-10-final-scene2\\scene-2.attempt-1.response.xml",
+      "rawHash": "74bdc055e15b254ca4cd843751e8cc75f564e0594dce25c652408612fa1703ff",
+      "rawHashUnchanged": true,
+      "exactExtract": true,
+      "model": "volcengine:doubao-seed-2-1-pro-260915",
+      "sourceHashMatches": true,
+      "planHashMatches": true,
+      "validation": {
+        "valid": true,
+        "scene": 2,
+        "errors": [],
+        "warnings": [
+          "已核对可解析的台词和屏幕文字；人物动作、空间关系及参考图状态仍需审阅"
+        ],
+        "coverageVerified": true
+      },
+      "shots": 5,
+      "duration": 20
+    },
+    {
+      "scene": 3,
+      "file": "D:\\Toonflow-app-master\\docs\\storyboard-evaluation\\2026-10-10-final-scene3\\scene-3.attempt-1.md",
+      "rawFile": "D:\\Toonflow-app-master\\docs\\storyboard-evaluation\\2026-10-10-final-scene3\\scene-3.attempt-1.response.xml",
+      "rawHash": "9d6cc97b4156e48951fb68e0ea2e50740128fd867e5f5ba3ef1d3bb57f9cbd95",
+      "rawHashUnchanged": true,
+      "exactExtract": true,
+      "model": "volcengine:doubao-seed-2-1-pro-260915",
+      "sourceHashMatches": true,
+      "planHashMatches": true,
+      "validation": {
+        "valid": true,
+        "scene": 3,
+        "errors": [],
+        "warnings": [
+          "已核对可解析的台词和屏幕文字；人物动作、空间关系及参考图状态仍需审阅"
+        ],
+        "coverageVerified": true
+      },
+      "shots": 14,
+      "duration": 50
+    }
+  ],
+  "artifactDisposition": "Isolated raw text candidates with direct review feedback; production screenplay, director plan, storyboard, assets and videos were not overwritten. Text execution PASS does not certify pixels or audio."
+}

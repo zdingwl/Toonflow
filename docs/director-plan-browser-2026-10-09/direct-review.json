@@ -1,0 +1,212 @@
+{
+  "reviewer": "Codex直接原文对照审核",
+  "reviewDate": "2026-10-09",
+  "projectId": 1791442875668,
+  "episodeId": 71,
+  "title": "我死在末日第四十七天",
+  "reviewObject": "scriptPlan",
+  "reviewVersion": "b72ebb7ed9c8605754c849494c3ea58d0c6284429304107dc5758c3e818bd147",
+  "sourceVersion": "30bb57154ca32577ecc25a00a0356edc190582e313fb5f23a60cb12ae19feb8c",
+  "verdict": "PASS",
+  "round1": {
+    "verdict": "FAIL",
+    "issues": [
+      "Sc3第三通23字仅3秒",
+      "Sc3结尾11字及到达停顿仅2秒",
+      "双手松脱承重缺少中间状态",
+      "系统四行提示阅读时间不足",
+      "未来三段事件仅用表情代替",
+      "水下真实呼喊不明确",
+      "无原文依据的压价与交易落地",
+      "倒计时差95秒未明确时间省略"
+    ]
+  },
+  "appReviewAssessment": {
+    "usefulFindings": [
+      "第三通时长不足",
+      "系统阅读时间不足",
+      "双手动作缺口",
+      "闪回信息缺口"
+    ],
+    "rejectedSuggestions": [
+      "进一步压缩已只有2秒的结尾",
+      "使用原文未有的手机备忘或新系统时间线",
+      "增加VO叙述未来事件以致改变原台词统计"
+    ],
+    "note": "应用B级报告为首轮旧版本记录；最终合格结论来自直接读取修订文本后的核验。"
+  },
+  "checkedDimensions": [
+    {
+      "dimension": "来源事实与人物动机",
+      "verdict": "PASS",
+      "evidence": "保持最后名额、恐惧背叛、逐指松脱、鲨袭伤腿、重生、筹备三通电话；不补写压价或成交结果。"
+    },
+    {
+      "dimension": "台词与屏幕文字",
+      "verdict": "PASS",
+      "evidence": "Sc1=5条24字、Sc2=2条6字、Sc3=5条53字；原系统提示、3/2/1与两个风暴倒计时数值保留。"
+    },
+    {
+      "dimension": "动作因果与连续性",
+      "verdict": "PASS",
+      "evidence": "Sc1 B4-B5明确一只手失去抓握、剩余手维持、仅余最后一根、松脱坠落；Sc2同一伤腿遇袭后身体下沉。"
+    },
+    {
+      "dimension": "人物已知信息与揭示顺序",
+      "verdict": "PASS",
+      "evidence": "先身体摸腿、手机日期、电视新闻、记忆闪回、系统资源、资产资料、三通电话、窗边宣言。"
+    },
+    {
+      "dimension": "声音与可见表演",
+      "verdict": "PASS",
+      "evidence": "Sc2 B5保留死死睁眼，两句原话用主观内心声音；Sc3记忆有原事件闪回及三个最短时间文字。"
+    },
+    {
+      "dimension": "时间预算与阅读",
+      "verdict": "PASS",
+      "evidence": "25+20+50=95秒，19拍完整连续；Sc2四行系统8秒；Sc3系统7秒，第三通23字8秒，结尾11字含到达与停留共8秒。语速为估计，未作录音实测。"
+    },
+    {
+      "dimension": "现实时间与剪辑时间",
+      "verdict": "PASS",
+      "evidence": "原风暴倒计时差95秒，电话之间明确时间省略；50秒剪辑时长不声称等于现实经过。"
+    },
+    {
+      "dimension": "导演设计完整性与范围",
+      "verdict": "PASS",
+      "evidence": "整集导演意图、八列分场表、三场节拍、过渡、问题五部分齐备；没有阻塞性待确认问题。"
+    }
+  ],
+  "technicalValidation": {
+    "projectId": 1791442875668,
+    "episodeId": 71,
+    "sourceHash": "30bb57154ca32577ecc25a00a0356edc190582e313fb5f23a60cb12ae19feb8c",
+    "candidateHash": "b72ebb7ed9c8605754c849494c3ea58d0c6284429304107dc5758c3e818bd147",
+    "factErrors": [],
+    "headers": [
+      "整集导演意图",
+      "分场汇总表",
+      "逐场导演设计",
+      "场间过渡",
+      "需确认问题"
+    ],
+    "headersValid": true,
+    "anchorErrors": [],
+    "beatCount": 19,
+    "sourceDialogue": [
+      {
+        "scene": 1,
+        "dialogue": [
+          {
+            "speaker": "艾娃",
+            "text": "麦迪逊！拉我上去！"
+          },
+          {
+            "speaker": "麦迪逊",
+            "text": "姐姐……"
+          },
+          {
+            "speaker": "麦迪逊",
+            "text": "位置只有一个。"
+          },
+          {
+            "speaker": "艾娃",
+            "text": "你干什么？！"
+          },
+          {
+            "speaker": "麦迪逊",
+            "text": "我只是想活。"
+          }
+        ],
+        "screenText": []
+      },
+      {
+        "scene": 2,
+        "dialogue": [
+          {
+            "speaker": "艾娃",
+            "text": "回去……"
+          },
+          {
+            "speaker": "艾娃",
+            "text": "我要回去！"
+          }
+        ],
+        "screenText": [
+          "海洋基建核心·07",
+          "宿主生命终止确认",
+          "时序锚点仍可连接",
+          "是否执行一次回溯？",
+          "3",
+          "2",
+          "1"
+        ]
+      },
+      {
+        "scene": 3,
+        "dialogue": [
+          {
+            "speaker": "艾娃",
+            "text": "七十二小时。"
+          },
+          {
+            "speaker": "艾娃",
+            "text": "卖车。今天成交。"
+          },
+          {
+            "speaker": "艾娃",
+            "text": "仓库短租，越偏越好。"
+          },
+          {
+            "speaker": "艾娃",
+            "text": "工业滤芯、移动储水罐、救生设备，有现货的全部给我报价。"
+          },
+          {
+            "speaker": "艾娃",
+            "text": "三天后，这座城会先停下来。"
+          }
+        ],
+        "screenText": [
+          "近海异常高潮位，部分港区暂停夜间作业",
+          "核心07已重启",
+          "初始仓储：30m³",
+          "初始蓝图：一级应急浮台",
+          "距离第一轮极端风暴：71:58:41",
+          "71:57:06"
+        ]
+      }
+    ],
+    "timingBasis": "中文语速为规划估计，非录音实测；台词与兼容动作并行，屏幕与记忆时间文字分阶段呈现。"
+  },
+  "persistenceVerification": {
+    "projectId": 1791442875668,
+    "episodeId": 71,
+    "workspaceId": 42,
+    "savedMatchesCandidate": true,
+    "savedHash": "b72ebb7ed9c8605754c849494c3ea58d0c6284429304107dc5758c3e818bd147",
+    "candidateHash": "b72ebb7ed9c8605754c849494c3ea58d0c6284429304107dc5758c3e818bd147",
+    "sourceUnchanged": true,
+    "factErrors": [],
+    "otherWorkspacesUnchanged": true,
+    "counts": {
+      "o_video": 71,
+      "o_storyboard": 57,
+      "o_assets": 423
+    },
+    "downstreamEmpty": {
+      "storyboardTable": true,
+      "storyboard": true,
+      "videoList": true
+    },
+    "savedCharacters": 6893,
+    "countsUnchanged": true
+  },
+  "pageReloadVerification": {
+    "savedPhone8SecondsPresent": true,
+    "savedEnding4SecondsLineWithin8SecondsPresent": true,
+    "savedVoTreatmentPresent": true,
+    "fiveHeadingsRendered": true
+  },
+  "remainingIssues": [],
+  "scope": "导演规划文本与纸面可执行性审核；不含实际录音、图片或成片验收。"
+}

@@ -1,0 +1,68 @@
+{
+  "episodeId": 71,
+  "projectId": 1791442875668,
+  "model": "volcengine:doubao-seed-2-1-pro-260915",
+  "vendorId": "volcengine",
+  "deploymentKey": "productionAgent:directorPlanAgent",
+  "agentUseMode": "1",
+  "temperature": 0.3,
+  "maxOutputTokens": 12000,
+  "think": false,
+  "thinkLevel": 0,
+  "existingPlan": "ignore",
+  "context": "current",
+  "dryRun": false,
+  "sourceHash": "30bb57154ca32577ecc25a00a0356edc190582e313fb5f23a60cb12ae19feb8c",
+  "savedProductionPlanHash": "b72ebb7ed9c8605754c849494c3ea58d0c6284429304107dc5758c3e818bd147",
+  "skillHash": "9d02cf83910cf1af4c4a766cb3b960ca796446c4b50df35758f6f25d7d112f92",
+  "vendorTemplateHash": "f7563a1bd5f8ccd151625fbf1dd6d459a39bc2172cadb8b6f7910b9b23d2cb44",
+  "inputHash": "e496477bff24d1d75d729a47a60cbe1f922949a90933b6a1d51a043fdf56ebf5",
+  "productionWorkspaceHashBefore": "6ef61d49feeb9b51973075f2f5493906e0d48c87034769d620cfd3ab5a211c30",
+  "elapsedMs": 141493,
+  "finishReason": "stop",
+  "usage": {
+    "inputTokens": 10188,
+    "inputTokenDetails": {
+      "noCacheTokens": 8340,
+      "cacheReadTokens": 1848
+    },
+    "outputTokens": 4899,
+    "outputTokenDetails": {
+      "textTokens": 4899,
+      "reasoningTokens": 0
+    },
+    "totalTokens": 15087,
+    "raw": {
+      "prompt_tokens": 10188,
+      "completion_tokens": 4899,
+      "total_tokens": 15087,
+      "prompt_tokens_details": {
+        "cached_tokens": 1848
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "reasoningTokens": 0,
+    "cachedInputTokens": 1848
+  },
+  "steps": 1,
+  "readKeys": [],
+  "characters": 7301,
+  "rawResponseHash": "17c4db6cf35be08997042b4e8d88d37d1efc1362e5ad4eae3a5bd9a86a83e4c2",
+  "factErrors": [],
+  "requestSettings": [
+    {
+      "model": "doubao-seed-2-1-pro-260915",
+      "temperature": 0.3,
+      "max_tokens": 12000,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "minimal"
+    }
+  ],
+  "productionWorkspaceHashAfter": "6ef61d49feeb9b51973075f2f5493906e0d48c87034769d620cfd3ab5a211c30",
+  "productionWorkspaceUnchanged": true,
+  "generated": true
+}

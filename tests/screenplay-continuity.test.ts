@@ -50,3 +50,49 @@ test("资产 ID 按当前项目校验，必要屏幕文字不可遗漏", () => {
   assert.equal(validateStoryboardScene(2, board, extractSourceScene(source, 2)).valid, false);
   assert.equal(validateStoryboardScene(2, board.replace("挂在船外", "看到【核心07】"), extractSourceScene(source, 2)).valid, true);
 });
+
+test('跨说话人调换顺序不能靠各自台词集合通过', () => {
+  const source = '场景一 船舷（0–5秒）\n艾娃\n拉我。\n麦迪逊\n姐姐。';
+  assert.equal(validateStoryboardScene(1, scene('麦迪逊：『姐姐。』；艾娃：『拉我。』'), source).valid, false);
+  assert.equal(validateStoryboardScene(1, scene('艾娃：『拉我。』；麦迪逊：『姐姐。』'), source).valid, true);
+});
+
+test('备注中的屏幕文字和包含数字的其他文字不能假装落到画面', () => {
+  const original='场景一 海中（0–5秒）\n艾娃\n回去。\n【3】';
+  const notes=scene('艾娃：『回去。』')+'\n备注：需要【3】';
+  assert.equal(validateStoryboardScene(1, notes, original).valid, false);
+  assert.equal(validateStoryboardScene(1, scene('艾娃：『回去。』').replace('艾娃挂在船外','显示【30m³】'), original).valid, false);
+  assert.equal(validateStoryboardScene(1, scene('艾娃：『回去。』').replace('艾娃挂在船外','显示【3】'), original).valid, true);
+});
+
+test('清晰普通中文台词的镜头不能明显超载', () => {
+  const original='场景一 室内（0–5秒）\n艾娃\n工业滤芯、移动储水罐、救生设备，有现货的全部给我报价。';
+  assert.equal(validateStoryboardScene(1, scene('艾娃：『工业滤芯、移动储水罐、救生设备，有现货的全部给我报价。』'), original).valid, false);
+});
+
+test('屏幕承载保留冒号单位和出现次序，不把明确不显示的备注认证为显示',()=>{
+ const source='场景一 海中（0–5秒）\n艾娃\n回去。\n【3】\n【2】\n【1】\n【71:58:41】';
+ const board=(visual:string)=>scene('艾娃：『回去。』').replace('艾娃挂在船外',visual);
+ assert.equal(validateStoryboardScene(1,board('显示【3】、【2】、【1】、【71:58:41】'),source).valid,true);
+ assert.equal(validateStoryboardScene(1,board('显示【1】、【2】、【3】、【71:58:41】'),source).valid,false);
+ assert.equal(validateStoryboardScene(1,board('显示【3】、【2】、【1】、【715841】'),source).valid,false);
+ assert.equal(validateStoryboardScene(1,board('制作备注：本镜不显示【3】、【2】、【1】、【71:58:41】，后期另补'),source).valid,false);
+});
+
+test('一个连续镜头不能把插切蒙太奇藏在运镜列',()=>{
+ assert.equal(validateStoryboardScene(1,scene().replace('| 固定 |','| 静止后再切到另一角度 |'),extractSourceScene(source,1)).valid,false);
+ assert.equal(validateStoryboardScene(1,scene().replace('| 固定 |','| 蒙太奇三次快速硬切 |'),extractSourceScene(source,1)).valid,false);
+ assert.equal(validateStoryboardScene(1,scene().replace('| 固定 |','| 静止，末尾硬切黑屏 |'),extractSourceScene(source,1)).valid,true);
+ assert.equal(validateStoryboardScene(1,scene().replace('| 固定 |','| 固定，不切入其他视点，仅界面切换 |'),extractSourceScene(source,1)).valid,true);
+ assert.equal(validateStoryboardScene(1,scene().replace('| 固定 |','| 固定长镜头，不再切镜，无插切 |'),extractSourceScene(source,1)).valid,true);
+});
+
+test('旁物待补备注不抹除已呈现文字，否定显示和遗漏重复事件不能认证',()=>{
+ const original='场景一 室内（0–5秒）\n艾娃\n回去。\n【71:58:41】';
+ const board=(visual:string)=>scene('艾娃：『回去。』').replace('艾娃挂在船外',visual);
+ assert.equal(validateStoryboardScene(1,board('手机清楚显示【71:58:41】；制作备注：墙上非剧情海报字样后期另补'),original).valid,true);
+ assert.equal(validateStoryboardScene(1,board('手机不会显示【71:58:41】，显示空白页'),original).valid,false);
+ const repeat='场景一 室内（0–5秒）\n艾娃\n回去。\n【A】\n【B】\n【A】';
+ assert.equal(validateStoryboardScene(1,board('依次显示【A】、【B】'),repeat).valid,false);
+ assert.equal(validateStoryboardScene(1,board('依次显示【A】、【B】、【A】'),repeat).valid,true);
+});

@@ -1,0 +1,346 @@
+{
+  "episode": 71,
+  "projectId": 1791442875668,
+  "mode": "1",
+  "model": "volcengine:doubao-seed-2-1-pro-260915",
+  "temperature": 0.3,
+  "maxOutputTokens": 12000,
+  "sourceHash": "30bb57154ca32577ecc25a00a0356edc190582e313fb5f23a60cb12ae19feb8c",
+  "planHash": "b72ebb7ed9c8605754c849494c3ea58d0c6284429304107dc5758c3e818bd147",
+  "systemHash": "42009f493d4732b9aeebc06a140491d975e58c1aeec6dffffb8a315fdf185a1e",
+  "skillReads": [
+    {
+      "path": "D:\\Toonflow-app-master\\data\\skills\\production_execution_storyboard_table.md",
+      "hash": "7969365c58e9f218be31861d8b263b5f3ed9a6436a7fa59a4b73e5c7f9d11657"
+    },
+    {
+      "path": "D:/Toonflow-app-master/data/skills/production_skills/storyboard_table_techniques.md",
+      "hash": "6c1168275266b79cd7f9877d25ab6b24e74909ba5ad1cea579d5242005ba8d45"
+    },
+    {
+      "path": "D:/Toonflow-app-master/data/skills/story_skills/Scifi_post_apocalypse/driector_skills/director_storyboard_table_narrative.md",
+      "hash": "6c1bf4cad8309940015375e66e8a5d7340894a48289eb26b39c67aabc59d6e6b"
+    },
+    {
+      "path": "D:/Toonflow-app-master/data/skills/production_skills/storyboard_table_techniques.md",
+      "hash": "6c1168275266b79cd7f9877d25ab6b24e74909ba5ad1cea579d5242005ba8d45"
+    },
+    {
+      "path": "D:/Toonflow-app-master/data/skills/story_skills/Scifi_post_apocalypse/driector_skills/director_storyboard_table_narrative.md",
+      "hash": "6c1bf4cad8309940015375e66e8a5d7340894a48289eb26b39c67aabc59d6e6b"
+    },
+    {
+      "path": "D:/Toonflow-app-master/data/skills/production_skills/storyboard_table_techniques.md",
+      "hash": "6c1168275266b79cd7f9877d25ab6b24e74909ba5ad1cea579d5242005ba8d45"
+    }
+  ],
+  "requests": [
+    {
+      "model": "doubao-seed-2-1-pro-260915",
+      "temperature": 0.3,
+      "max_tokens": 12000,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "minimal"
+    },
+    {
+      "model": "doubao-seed-2-1-pro-260915",
+      "temperature": 0.3,
+      "max_tokens": 12000,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "minimal"
+    },
+    {
+      "model": "doubao-seed-2-1-pro-260915",
+      "temperature": 0.3,
+      "max_tokens": 12000,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "minimal"
+    },
+    {
+      "model": "doubao-seed-2-1-pro-260915",
+      "temperature": 0.3,
+      "max_tokens": 12000,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "minimal"
+    },
+    {
+      "model": "doubao-seed-2-1-pro-260915",
+      "temperature": 0.3,
+      "max_tokens": 12000,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "minimal"
+    },
+    {
+      "model": "doubao-seed-2-1-pro-260915",
+      "temperature": 0.3,
+      "max_tokens": 12000,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "minimal"
+    },
+    {
+      "model": "doubao-seed-2-1-pro-260915",
+      "temperature": 0.3,
+      "max_tokens": 12000,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "minimal"
+    },
+    {
+      "model": "doubao-seed-2-1-pro-260915",
+      "temperature": 0.3,
+      "max_tokens": 12000,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "minimal"
+    },
+    {
+      "model": "doubao-seed-2-1-pro-260915",
+      "temperature": 0.3,
+      "max_tokens": 12000,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "minimal"
+    }
+  ],
+  "scenes": [
+    {
+      "scene": 1,
+      "attempt": 1,
+      "errors": [],
+      "finishReason": "stop",
+      "usage": {
+        "inputTokens": 28934,
+        "inputTokenDetails": {
+          "noCacheTokens": 15822,
+          "cacheReadTokens": 13112
+        },
+        "outputTokens": 1716,
+        "outputTokenDetails": {
+          "textTokens": 1716,
+          "reasoningTokens": 0
+        },
+        "totalTokens": 30650,
+        "raw": {
+          "prompt_tokens": 28934,
+          "completion_tokens": 1716,
+          "total_tokens": 30650,
+          "prompt_tokens_details": {
+            "cached_tokens": 13112
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "reasoningTokens": 0,
+        "cachedInputTokens": 13112
+      },
+      "elapsedMs": 34222,
+      "rawHash": "43c14dec9f7e4e7f144459a759ecfc6e045031e4dff44261734e8e77514830ab",
+      "raw": "D:\\Toonflow-app-master\\docs\\storyboard-evaluation\\2026-10-09-source-retest\\scene-1.attempt-1.response.xml",
+      "markdown": "D:\\Toonflow-app-master\\docs\\storyboard-evaluation\\2026-10-09-source-retest\\scene-1.attempt-1.md",
+      "toolCalls": [
+        {
+          "name": "activate_skill",
+          "input": {
+            "name": "storyboard_table_techniques"
+          }
+        },
+        {
+          "name": "activate_skill",
+          "input": {
+            "name": "director_storyboard_table_narrative"
+          }
+        },
+        {
+          "name": "get_flowData",
+          "input": {
+            "key": "script"
+          }
+        },
+        {
+          "name": "get_flowData",
+          "input": {
+            "key": "assets"
+          }
+        },
+        {
+          "name": "get_flowData",
+          "input": {
+            "key": "scriptPlan"
+          }
+        },
+        {
+          "name": "get_flowData",
+          "input": {
+            "key": "storyboardTable"
+          }
+        }
+      ]
+    },
+    {
+      "scene": 2,
+      "attempt": 1,
+      "errors": [],
+      "finishReason": "stop",
+      "usage": {
+        "inputTokens": 32862,
+        "inputTokenDetails": {
+          "noCacheTokens": 32862,
+          "cacheReadTokens": 0
+        },
+        "outputTokens": 1376,
+        "outputTokenDetails": {
+          "textTokens": 1376,
+          "reasoningTokens": 0
+        },
+        "totalTokens": 34238,
+        "raw": {
+          "prompt_tokens": 32862,
+          "completion_tokens": 1376,
+          "total_tokens": 34238,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "reasoningTokens": 0,
+        "cachedInputTokens": 0
+      },
+      "elapsedMs": 38656,
+      "rawHash": "e0c9747c45773adff6a49685c2d34674ffa44919c2bb78c401afb996c531d147",
+      "raw": "D:\\Toonflow-app-master\\docs\\storyboard-evaluation\\2026-10-09-source-retest\\scene-2.attempt-1.response.xml",
+      "markdown": "D:\\Toonflow-app-master\\docs\\storyboard-evaluation\\2026-10-09-source-retest\\scene-2.attempt-1.md",
+      "toolCalls": [
+        {
+          "name": "activate_skill",
+          "input": {
+            "name": "storyboard_table_techniques"
+          }
+        },
+        {
+          "name": "activate_skill",
+          "input": {
+            "name": "director_storyboard_table_narrative"
+          }
+        },
+        {
+          "name": "get_flowData",
+          "input": {
+            "key": "script",
+            "offset": 0,
+            "limit": 20000
+          }
+        },
+        {
+          "name": "get_flowData",
+          "input": {
+            "key": "assets",
+            "offset": 0,
+            "limit": 20000
+          }
+        },
+        {
+          "name": "get_flowData",
+          "input": {
+            "key": "scriptPlan",
+            "offset": 0,
+            "limit": 20000
+          }
+        },
+        {
+          "name": "get_flowData",
+          "input": {
+            "key": "storyboardTable",
+            "offset": 0,
+            "limit": 20000
+          }
+        }
+      ]
+    },
+    {
+      "scene": 3,
+      "attempt": 1,
+      "errors": [],
+      "finishReason": "stop",
+      "usage": {
+        "inputTokens": 33121,
+        "inputTokenDetails": {
+          "noCacheTokens": 28201,
+          "cacheReadTokens": 4920
+        },
+        "outputTokens": 3053,
+        "outputTokenDetails": {
+          "textTokens": 3053,
+          "reasoningTokens": 0
+        },
+        "totalTokens": 36174,
+        "raw": {
+          "prompt_tokens": 33121,
+          "completion_tokens": 3053,
+          "total_tokens": 36174,
+          "prompt_tokens_details": {
+            "cached_tokens": 4920
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "reasoningTokens": 0,
+        "cachedInputTokens": 4920
+      },
+      "elapsedMs": 69393,
+      "rawHash": "4973389e7ec83e1a7a98b5d17c97c0acbdc221d3c60412c6541e39420594d6ad",
+      "raw": "D:\\Toonflow-app-master\\docs\\storyboard-evaluation\\2026-10-09-source-retest\\scene-3.attempt-1.response.xml",
+      "markdown": "D:\\Toonflow-app-master\\docs\\storyboard-evaluation\\2026-10-09-source-retest\\scene-3.attempt-1.md",
+      "toolCalls": [
+        {
+          "name": "activate_skill",
+          "input": {
+            "name": "storyboard_table_techniques"
+          }
+        },
+        {
+          "name": "get_flowData",
+          "input": {
+            "key": "script"
+          }
+        },
+        {
+          "name": "get_flowData",
+          "input": {
+            "key": "assets"
+          }
+        },
+        {
+          "name": "get_flowData",
+          "input": {
+            "key": "scriptPlan"
+          }
+        },
+        {
+          "name": "get_flowData",
+          "input": {
+            "key": "storyboardTable"
+          }
+        }
+      ]
+    }
+  ]
+}

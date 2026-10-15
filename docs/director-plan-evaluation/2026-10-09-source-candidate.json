@@ -1,0 +1,68 @@
+{
+  "episodeId": 71,
+  "projectId": 1791442875668,
+  "model": "volcengine:doubao-seed-2-1-pro-260915",
+  "vendorId": "volcengine",
+  "deploymentKey": "productionAgent:directorPlanAgent",
+  "agentUseMode": "1",
+  "temperature": 0.6,
+  "think": false,
+  "thinkLevel": 0,
+  "existingPlan": "ignore",
+  "context": "current",
+  "dryRun": false,
+  "sourceHash": "30bb57154ca32577ecc25a00a0356edc190582e313fb5f23a60cb12ae19feb8c",
+  "savedProductionPlanHash": "b72ebb7ed9c8605754c849494c3ea58d0c6284429304107dc5758c3e818bd147",
+  "skillHash": "21407500b95b6f36d755bf7a7aab1fa63ef2220ad41d3f933846bcbc88ba68dd",
+  "vendorTemplateHash": "f7563a1bd5f8ccd151625fbf1dd6d459a39bc2172cadb8b6f7910b9b23d2cb44",
+  "inputHash": "d1f82bbd817cf990c3d7f5c9e30b836bf91d1a3bfc6c9bf505551bdbbd9cc773",
+  "productionWorkspaceHashBefore": "6ef61d49feeb9b51973075f2f5493906e0d48c87034769d620cfd3ab5a211c30",
+  "elapsedMs": 128790,
+  "finishReason": "length",
+  "usage": {
+    "inputTokens": 9406,
+    "inputTokenDetails": {
+      "noCacheTokens": 9406,
+      "cacheReadTokens": 0
+    },
+    "outputTokens": 4096,
+    "outputTokenDetails": {
+      "textTokens": 4096,
+      "reasoningTokens": 0
+    },
+    "totalTokens": 13502,
+    "raw": {
+      "prompt_tokens": 9406,
+      "completion_tokens": 4096,
+      "total_tokens": 13502,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "reasoningTokens": 0,
+    "cachedInputTokens": 0
+  },
+  "steps": 1,
+  "readKeys": [],
+  "characters": 0,
+  "rawResponseHash": "6606b055a20201638b2ed269329b5bc03a8f396e538cd6057807017ca1fee218",
+  "factErrors": [
+    "导演计划输出不完整：需要且只能有一份非空的 scriptPlan"
+  ],
+  "requestSettings": [
+    {
+      "model": "doubao-seed-2-1-pro-260915",
+      "temperature": 0.6,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "minimal"
+    }
+  ],
+  "productionWorkspaceHashAfter": "6ef61d49feeb9b51973075f2f5493906e0d48c87034769d620cfd3ab5a211c30",
+  "productionWorkspaceUnchanged": true,
+  "generated": true
+}

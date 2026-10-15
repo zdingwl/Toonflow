@@ -60,6 +60,10 @@ const router = createRouter({
           component: () => import("@/views/cornerScape/index.vue"),
         },
         {
+          path: "/characterCards",
+          component: () => import("@/views/characterCards/index.vue"),
+        },
+        {
           path: "/production",
           component: () => import("@/views/production/index.vue"),
         },

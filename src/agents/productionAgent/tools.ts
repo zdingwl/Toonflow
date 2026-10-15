@@ -5,6 +5,7 @@ import ResTool from "@/socket/resTool";
 import u from "@/utils";
 import { createHash, randomUUID } from "node:crypto";
 import { readStoryboardProgress } from "./storyboardProgress";
+import { readCurrentEpisodeAssets } from "./deriveAssetContext";
 
 const deriveAssetSchema = z.object({
   id: z.number().describe("衍生资产ID,如果新增则为空"),
@@ -69,7 +70,7 @@ async function readAuthoritativeTextValue(
   key: keyof FlowData,
   projectIdRaw: unknown,
   scriptIdRaw: unknown,
-): Promise<{ handled: boolean; value?: string }> {
+): Promise<{ handled: boolean; value?: unknown }> {
   const projectId = Number(projectIdRaw);
   const scriptId = Number(scriptIdRaw);
   if (!Number.isSafeInteger(projectId) || !Number.isSafeInteger(scriptId)) {
@@ -80,6 +81,10 @@ async function readAuthoritativeTextValue(
     const script = await u.db("o_script").where({ id: scriptId, projectId }).select("content").first();
     if (!script) throw new Error("当前项目不存在该集剧本");
     return { handled: true, value: script.content ?? "" };
+  }
+
+  if (key === "assets") {
+    return { handled: true, value: await readCurrentEpisodeAssets(u.db, projectId, scriptId) };
   }
 
   if (key === "scriptPlan" || key === "storyboardTable") {
@@ -134,7 +139,7 @@ export default (toolCpnfig: ToolConfig) => {
       },
     }),
     get_flowData: tool({
-      description: "获取工作区数据；script/scriptPlan/storyboardTable 直接读取后端数据库真实值，避免浏览器缓存导致误判。其他字段保持兼容读取。长文本可选 offset/limit 分段。",
+      description: "获取工作区数据；script/scriptPlan/storyboardTable/assets 直接读取后端数据库真实值，资产保留父子嵌套结构及图片状态，避免浏览器缓存导致误判。其他字段保持兼容读取。长文本可选 offset/limit 分段。",
       inputSchema: jsonSchema<{ key: keyof FlowData; offset?: number; limit?: number }>(
         z
           .object({
@@ -192,7 +197,7 @@ export default (toolCpnfig: ToolConfig) => {
       },
     }),
     add_deriveAsset: tool({
-      description: "新增或更新衍生资产。写入使用 requestId 事务回执；重试同一操作必须复用相同 requestId。",
+      description: "新增或更新衍生资产。写入使用 requestId 事务回执；完全相同参数的故障重试复用原 requestId。修改名称、描述、父 ID 或目标 ID 是新操作，省略 requestId 由后端分配新标识；写后读回 assets 核对。",
       inputSchema: jsonSchema<{ assetsId: number; id: number | null; name: string; desc: string; requestId?: string }>(
         z
           .object({
@@ -201,7 +206,7 @@ export default (toolCpnfig: ToolConfig) => {
             name: z.string().describe("衍生资产名称"),
             desc: z.string().describe("衍生资产描述"),
             requestId: z.string().min(8).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional()
-              .describe("可选操作标识；失败重试必须复用错误信息中的 requestId"),
+              .describe("可选操作标识；完全相同参数的故障重试复用原 requestId；名称、描述、父 ID 或目标 ID 已变化时省略此字段，不能沿用旧标识"),
           })
           .toJSONSchema(),
       ),
@@ -301,7 +306,10 @@ export default (toolCpnfig: ToolConfig) => {
           thinking.complete();
           return { success: true, requestId, id: data.id, reused: committed.reused, ack };
         } catch (error) {
-          const detail = `${u.error(error).message}；同一操作如需重试，请复用 requestId=${requestId}`;
+          const reason = u.error(error).message;
+          const detail = reason === "相同 requestId 对应不同的衍生资产写入内容"
+            ? `${reason}；旧标识 ${requestId} 已用于另一组参数。保留获准的新稿，先读取 assets 核对当前值；如仍需提交新内容，省略旧 requestId 作为新操作提交，不要改回旧稿来匹配回执`
+            : `${reason}；仅完全相同参数的故障重试可复用 requestId=${requestId}；名称、描述、父 ID 或目标 ID 变化时是新操作，应省略旧 requestId`;
           thinking.appendText("资产写入失败:\n" + detail);
           thinking.updateTitle("资产操作失败");
           thinking.complete();

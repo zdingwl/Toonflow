@@ -1,0 +1,17 @@
+postcss-px-to-viewport: postcss.plugin was deprecated. Migration guide:
+https://evilmartians.com/chronicles/postcss-8-plugin-migration
+vite v5.4.21 building for production...
+transforming...
+✓ 11104 modules transformed.
+rendering chunks...
+[plugin vite:singlefile] 
+
+[plugin vite:singlefile] Inlining: index-D-9r0C8D.js
+[plugin vite:singlefile] Inlining: style-kdl3-RyT.css
+computing gzip size...
+../data/web/json.worker-usMZ-FED.js     384.37 kB
+../data/web/html.worker-BLJhxQJQ.js     690.01 kB
+../data/web/css.worker-BvV5MPou.js    1,031.26 kB
+../data/web/ts.worker-DGHjMaqB.js     7,020.26 kB
+../data/web/index.html               26,707.28 kB │ gzip: 11,125.45 kB
+✓ built in 1m 3s

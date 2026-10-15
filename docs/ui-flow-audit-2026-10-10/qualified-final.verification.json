@@ -1,0 +1,594 @@
+{
+  "at": "2026-10-09T17:37:25.674Z",
+  "snapshot": "qualified-final",
+  "projectId": 1791442875668,
+  "scriptId": 71,
+  "checks": {
+    "sourceUnchanged": true,
+    "confirmedPlanUnchanged": true,
+    "allImageRecordsUnchanged": true,
+    "allVideoRecordsUnchanged": true,
+    "assetImageSelectionsUnchanged": true,
+    "countsUnchanged": true,
+    "originalStoryboardTaskPreserved": true,
+    "qualifiedFirstScenePreserved": true,
+    "qualifiedSecondScenePreserved": true,
+    "scenesComplete": true,
+    "noActiveGeneration": true,
+    "structurallyValid": true,
+    "budgetsMatched": true
+  },
+  "tableHash": "8457c0e9ec927350e907f5467eb8d18b546d346fef0a410bf8cf0c353af58d97",
+  "storyboardProgress": {
+    "taskId": "storyboard_5c56e1e91f2b4c2b81489c90add89631",
+    "total": 3,
+    "revision": 8,
+    "complete": true,
+    "savedScenes": [
+      1,
+      2,
+      3
+    ],
+    "sceneHashes": {
+      "1": "d8e96d5a774d3182974f28c6029bcd48bdd38099f44541d81a9259409b12a5b7",
+      "2": "be2d39c09748252f66e4a3a7c724baa194093d59401238a05f1b5ed1b7c65529",
+      "3": "5bee2bafd92cac0b5dfd0111a0fe22cba84e7e028495e9fa8fbec297c01734c2"
+    },
+    "sourceHash": "30bb57154ca32577ecc25a00a0356edc190582e313fb5f23a60cb12ae19feb8c",
+    "planHash": "b72ebb7ed9c8605754c849494c3ea58d0c6284429304107dc5758c3e818bd147"
+  },
+  "validations": [
+    {
+      "valid": true,
+      "scene": 1,
+      "errors": [],
+      "warnings": [
+        "已核对可解析的台词和屏幕文字；人物动作、空间关系及参考图状态仍需审阅"
+      ],
+      "coverageVerified": true
+    },
+    {
+      "valid": true,
+      "scene": 2,
+      "errors": [],
+      "warnings": [
+        "已核对可解析的台词和屏幕文字；人物动作、空间关系及参考图状态仍需审阅"
+      ],
+      "coverageVerified": true
+    },
+    {
+      "valid": true,
+      "scene": 3,
+      "errors": [],
+      "warnings": [
+        "已核对可解析的台词和屏幕文字；人物动作、空间关系及参考图状态仍需审阅"
+      ],
+      "coverageVerified": true
+    }
+  ],
+  "ledger": {
+    "scenes": [
+      {
+        "scene": 1,
+        "title": "## 场1：外·倾斜邮轮·暴雨夜 ｜ 参演角色：艾娃、麦迪逊",
+        "from": 0,
+        "to": 25,
+        "duration": 25
+      },
+      {
+        "scene": 2,
+        "title": "## 场2：水下·连续 ｜ 参演角色：艾娃、变异鲨",
+        "from": 0,
+        "to": 20,
+        "duration": 20
+      },
+      {
+        "scene": 3,
+        "title": "## 场3：内·艾娃公寓·清晨 ｜ 参演角色：艾娃",
+        "from": 0,
+        "to": 50,
+        "duration": 50
+      }
+    ],
+    "segments": [
+      {
+        "scene": 1,
+        "segment": 1,
+        "title": "### 片段一（约6s）",
+        "from": 0,
+        "to": 6,
+        "duration": 6
+      },
+      {
+        "scene": 1,
+        "segment": 2,
+        "title": "### 片段二（约4s）",
+        "from": 6,
+        "to": 10,
+        "duration": 4
+      },
+      {
+        "scene": 1,
+        "segment": 3,
+        "title": "### 片段三（约5s）",
+        "from": 10,
+        "to": 15,
+        "duration": 5
+      },
+      {
+        "scene": 1,
+        "segment": 4,
+        "title": "### 片段四（约7s）",
+        "from": 15,
+        "to": 22,
+        "duration": 7
+      },
+      {
+        "scene": 1,
+        "segment": 5,
+        "title": "### 片段五（约3s）",
+        "from": 22,
+        "to": 25,
+        "duration": 3
+      },
+      {
+        "scene": 2,
+        "segment": 1,
+        "title": "### 片段一（约5s）",
+        "from": 0,
+        "to": 5,
+        "duration": 5
+      },
+      {
+        "scene": 2,
+        "segment": 2,
+        "title": "### 片段二（约4s）",
+        "from": 5,
+        "to": 9,
+        "duration": 4
+      },
+      {
+        "scene": 2,
+        "segment": 3,
+        "title": "### 片段三（约8s）",
+        "from": 9,
+        "to": 17,
+        "duration": 8
+      },
+      {
+        "scene": 2,
+        "segment": 4,
+        "title": "### 片段四（约3s）",
+        "from": 17,
+        "to": 20,
+        "duration": 3
+      },
+      {
+        "scene": 3,
+        "segment": 1,
+        "title": "### 片段一（约7s）",
+        "from": 0,
+        "to": 7,
+        "duration": 7
+      },
+      {
+        "scene": 3,
+        "segment": 2,
+        "title": "### 片段二（约5s）",
+        "from": 7,
+        "to": 12,
+        "duration": 5
+      },
+      {
+        "scene": 3,
+        "segment": 3,
+        "title": "### 片段三（约2.3s）",
+        "from": 12,
+        "to": 14.3,
+        "duration": 2.3
+      },
+      {
+        "scene": 3,
+        "segment": 4,
+        "title": "### 片段四（约1.3s）",
+        "from": 14.3,
+        "to": 15.6,
+        "duration": 1.3
+      },
+      {
+        "scene": 3,
+        "segment": 5,
+        "title": "### 片段五（约0.4s）",
+        "from": 15.6,
+        "to": 16,
+        "duration": 0.4
+      },
+      {
+        "scene": 3,
+        "segment": 6,
+        "title": "### 片段六（约7s）",
+        "from": 16,
+        "to": 23,
+        "duration": 7
+      },
+      {
+        "scene": 3,
+        "segment": 7,
+        "title": "### 片段七（约11s）",
+        "from": 23,
+        "to": 34,
+        "duration": 11
+      },
+      {
+        "scene": 3,
+        "segment": 8,
+        "title": "### 片段八（约8s）",
+        "from": 34,
+        "to": 42,
+        "duration": 8
+      },
+      {
+        "scene": 3,
+        "segment": 9,
+        "title": "### 片段九（约8s）",
+        "from": 42,
+        "to": 50,
+        "duration": 8
+      }
+    ],
+    "shots": [
+      {
+        "scene": 1,
+        "segment": 1,
+        "shot": 1,
+        "line": 9,
+        "from": 0,
+        "to": 6,
+        "duration": 6,
+        "durationRaw": "6"
+      },
+      {
+        "scene": 1,
+        "segment": 2,
+        "shot": 2,
+        "line": 17,
+        "from": 6,
+        "to": 10,
+        "duration": 4,
+        "durationRaw": "4"
+      },
+      {
+        "scene": 1,
+        "segment": 3,
+        "shot": 3,
+        "line": 25,
+        "from": 10,
+        "to": 15,
+        "duration": 5,
+        "durationRaw": "5"
+      },
+      {
+        "scene": 1,
+        "segment": 4,
+        "shot": 4,
+        "line": 33,
+        "from": 15,
+        "to": 17.5,
+        "duration": 2.5,
+        "durationRaw": "2.5"
+      },
+      {
+        "scene": 1,
+        "segment": 4,
+        "shot": 5,
+        "line": 34,
+        "from": 17.5,
+        "to": 19,
+        "duration": 1.5,
+        "durationRaw": "1.5"
+      },
+      {
+        "scene": 1,
+        "segment": 4,
+        "shot": 6,
+        "line": 35,
+        "from": 19,
+        "to": 20,
+        "duration": 1,
+        "durationRaw": "1"
+      },
+      {
+        "scene": 1,
+        "segment": 4,
+        "shot": 7,
+        "line": 36,
+        "from": 20,
+        "to": 22,
+        "duration": 2,
+        "durationRaw": "2"
+      },
+      {
+        "scene": 1,
+        "segment": 5,
+        "shot": 8,
+        "line": 44,
+        "from": 22,
+        "to": 23.5,
+        "duration": 1.5,
+        "durationRaw": "1.5"
+      },
+      {
+        "scene": 1,
+        "segment": 5,
+        "shot": 9,
+        "line": 45,
+        "from": 23.5,
+        "to": 24.3,
+        "duration": 0.8,
+        "durationRaw": "0.8"
+      },
+      {
+        "scene": 1,
+        "segment": 5,
+        "shot": 10,
+        "line": 46,
+        "from": 24.3,
+        "to": 25,
+        "duration": 0.7,
+        "durationRaw": "0.7"
+      },
+      {
+        "scene": 2,
+        "segment": 1,
+        "shot": 1,
+        "line": 56,
+        "from": 0,
+        "to": 3,
+        "duration": 3,
+        "durationRaw": "3"
+      },
+      {
+        "scene": 2,
+        "segment": 1,
+        "shot": 2,
+        "line": 57,
+        "from": 3,
+        "to": 5,
+        "duration": 2,
+        "durationRaw": "2"
+      },
+      {
+        "scene": 2,
+        "segment": 2,
+        "shot": 3,
+        "line": 65,
+        "from": 5,
+        "to": 7.5,
+        "duration": 2.5,
+        "durationRaw": "2.5"
+      },
+      {
+        "scene": 2,
+        "segment": 2,
+        "shot": 4,
+        "line": 66,
+        "from": 7.5,
+        "to": 9,
+        "duration": 1.5,
+        "durationRaw": "1.5"
+      },
+      {
+        "scene": 2,
+        "segment": 3,
+        "shot": 5,
+        "line": 74,
+        "from": 9,
+        "to": 13,
+        "duration": 4,
+        "durationRaw": "4"
+      },
+      {
+        "scene": 2,
+        "segment": 3,
+        "shot": 6,
+        "line": 75,
+        "from": 13,
+        "to": 17,
+        "duration": 4,
+        "durationRaw": "4"
+      },
+      {
+        "scene": 2,
+        "segment": 4,
+        "shot": 7,
+        "line": 83,
+        "from": 17,
+        "to": 18,
+        "duration": 1,
+        "durationRaw": "1"
+      },
+      {
+        "scene": 2,
+        "segment": 4,
+        "shot": 8,
+        "line": 84,
+        "from": 18,
+        "to": 18.6,
+        "duration": 0.6,
+        "durationRaw": "0.6"
+      },
+      {
+        "scene": 2,
+        "segment": 4,
+        "shot": 9,
+        "line": 85,
+        "from": 18.6,
+        "to": 20,
+        "duration": 1.4,
+        "durationRaw": "1.4"
+      },
+      {
+        "scene": 3,
+        "segment": 1,
+        "shot": 1,
+        "line": 95,
+        "from": 0,
+        "to": 4,
+        "duration": 4,
+        "durationRaw": "4"
+      },
+      {
+        "scene": 3,
+        "segment": 1,
+        "shot": 2,
+        "line": 96,
+        "from": 4,
+        "to": 7,
+        "duration": 3,
+        "durationRaw": "3"
+      },
+      {
+        "scene": 3,
+        "segment": 2,
+        "shot": 3,
+        "line": 104,
+        "from": 7,
+        "to": 12,
+        "duration": 5,
+        "durationRaw": "5"
+      },
+      {
+        "scene": 3,
+        "segment": 3,
+        "shot": 4,
+        "line": 112,
+        "from": 12,
+        "to": 12.3,
+        "duration": 0.3,
+        "durationRaw": "0.3"
+      },
+      {
+        "scene": 3,
+        "segment": 3,
+        "shot": 5,
+        "line": 113,
+        "from": 12.3,
+        "to": 13.3,
+        "duration": 1,
+        "durationRaw": "1"
+      },
+      {
+        "scene": 3,
+        "segment": 3,
+        "shot": 6,
+        "line": 114,
+        "from": 13.3,
+        "to": 14.3,
+        "duration": 1,
+        "durationRaw": "1"
+      },
+      {
+        "scene": 3,
+        "segment": 4,
+        "shot": 7,
+        "line": 122,
+        "from": 14.3,
+        "to": 15.6,
+        "duration": 1.3,
+        "durationRaw": "1.3"
+      },
+      {
+        "scene": 3,
+        "segment": 5,
+        "shot": 8,
+        "line": 130,
+        "from": 15.6,
+        "to": 16,
+        "duration": 0.4,
+        "durationRaw": "0.4"
+      },
+      {
+        "scene": 3,
+        "segment": 6,
+        "shot": 9,
+        "line": 138,
+        "from": 16,
+        "to": 23,
+        "duration": 7,
+        "durationRaw": "7"
+      },
+      {
+        "scene": 3,
+        "segment": 7,
+        "shot": 10,
+        "line": 146,
+        "from": 23,
+        "to": 26,
+        "duration": 3,
+        "durationRaw": "3"
+      },
+      {
+        "scene": 3,
+        "segment": 7,
+        "shot": 11,
+        "line": 147,
+        "from": 26,
+        "to": 30,
+        "duration": 4,
+        "durationRaw": "4"
+      },
+      {
+        "scene": 3,
+        "segment": 7,
+        "shot": 12,
+        "line": 148,
+        "from": 30,
+        "to": 34,
+        "duration": 4,
+        "durationRaw": "4"
+      },
+      {
+        "scene": 3,
+        "segment": 8,
+        "shot": 13,
+        "line": 156,
+        "from": 34,
+        "to": 42,
+        "duration": 8,
+        "durationRaw": "8"
+      },
+      {
+        "scene": 3,
+        "segment": 9,
+        "shot": 14,
+        "line": 164,
+        "from": 42,
+        "to": 44,
+        "duration": 2,
+        "durationRaw": "2"
+      },
+      {
+        "scene": 3,
+        "segment": 9,
+        "shot": 15,
+        "line": 165,
+        "from": 44,
+        "to": 48,
+        "duration": 4,
+        "durationRaw": "4"
+      },
+      {
+        "scene": 3,
+        "segment": 9,
+        "shot": 16,
+        "line": 166,
+        "from": 48,
+        "to": 50,
+        "duration": 2,
+        "durationRaw": "2"
+      }
+    ],
+    "errors": []
+  },
+  "acceptanceBoundary": "Program checks cover structure, exact parseable dialogue and screen text, timing totals and preservation. Direct content review is recorded separately in review.md. No new image or video was generated or visually accepted."
+}

@@ -27,3 +27,8 @@ export function buildAssetExtractionVisualDesignSkill(skill: string): string {
 export function getAssetExtractionVisualDesignSkill(): string {
   return buildAssetExtractionVisualDesignSkill(getAssetVisualDesignSkill());
 }
+
+export function getCharacterCardGenerationSkill(): string {
+  const file = getPath(["skills", "character-card", "SKILL.md"]);
+  return fs.existsSync(file) ? fs.readFileSync(file, "utf-8").replace(/^---[\s\S]*?---\s*/u, "").trim() : "";
+}

@@ -3,10 +3,15 @@ import u from "@/utils";
 import { z } from "zod";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
-import { buildAssetExtractionTemplateContext, getAssetExtractionVisualDesignSkill } from "@/utils/assetVisualDesignSkill";
-import { extractScriptAssets } from "@/utils/scriptAssetExtraction";
+import { buildAssetExtractionTemplateContext, getAssetExtractionVisualDesignSkill, getCharacterCardGenerationSkill } from "@/utils/assetVisualDesignSkill";
+import { ASSET_EXTRACTION_PIPELINE_VERSION, extractScriptAssets } from "@/utils/scriptAssetExtraction";
 import fs from "fs";
+import { createHash } from "node:crypto";
 import { buildAssetExtractionArtContext } from "@/utils/assetPrompt";
+import { createAssetExtractionCheckpoint, type AssetExtractionCheckpoint } from "@/utils/assetExtractionCheckpoint";
+import { listCharacterCards } from "@/utils/characterCards";
+import { resolveAssetExtractionBudgetPolicy } from "@/utils/assetExtractionContext";
+import { visualConstraint } from "@/utils/contentConstraints";
 
 const router = express.Router();
 
@@ -55,11 +60,15 @@ export default router.post(
     const scriptIds: number[] = req.body.scriptIds;
     if (extractingProjects.has(projectId)) return res.status(409).send(error("当前项目正在提取资产，请完成后再操作"));
     extractingProjects.add(projectId);
+    let checkpoint: AssetExtractionCheckpoint | undefined;
     try {
       const scripts = await u.db("o_script").where({ projectId }).whereIn("id", [...new Set(scriptIds)]).select("id");
       if (scripts.length !== new Set(scriptIds).size) throw new Error("剧本不存在或不属于当前项目");
       const project = await u.db("o_project").where({ id: projectId }).first();
       if (!project) throw new Error("项目不存在");
+      const ownerId = Number(project.userId || (req as any).user?.id || 0);
+      if ((req as any).user?.id && project.userId && Number(project.userId) !== Number((req as any).user.id)) throw new Error("项目不属于当前用户");
+      const cardsEnabled = ownerId > 0 && await u.db.schema.hasTable("o_characterCard");
       const template = await u.db("o_prompt").where({ type: "scriptAssetExtraction" }).first();
       const templateContext = buildAssetExtractionTemplateContext(template);
       const prefixPath = u.getPath(["skills", "art_skills", project.artStyle || "", "prefix.md"]);
@@ -68,18 +77,48 @@ export default router.post(
       // The default template governs discovery. Design already has its complete
       // field/evidence contract in extractScriptAssets; preserve custom instructions
       // verbatim without loading the default discovery rules a second time.
-      const system = templateContext.designSystem + "\n\n" + getAssetExtractionVisualDesignSkill() + "\n\n" + assetExtractionDesignRules
-        + "\n项目画风标识：" + (project.artStyle || "") + (artContext ? "\n\n" + artContext : "")
+      const designContext = templateContext.designSystem + "\n\n" + getAssetExtractionVisualDesignSkill();
+      const styleContext = "\n项目画风标识：" + (project.artStyle || "") + (artContext ? "\n\n" + artContext : "")
         + "\n当前 resultTool 的字段结构优先于旧模板。";
+      const system = designContext + "\n\n" + assetExtractionDesignRules + styleContext;
+      const roleSystem = cardsEnabled ? designContext + "\n\n" + getCharacterCardGenerationSkill() + styleContext : undefined;
+      const deployment = await u.db.schema.hasTable("o_agentDeploy")
+        ? await u.db("o_agentDeploy").where({ key: "universalAi" }).select("modelName", "maxOutputTokens", "temperature").first() : undefined;
+      let capability: any = {};
+      let providerSignature = "";
+      if (deployment?.modelName && await u.db.schema.hasTable("o_vendorConfig")) {
+        const [vendorId, modelName] = deployment.modelName.split(/:(.+)/);
+        const vendor = await u.db("o_vendorConfig").where({ id: vendorId }).select("models", "inputValues").first();
+        providerSignature = createHash("sha256").update(JSON.stringify(vendor) + u.vendor.getCode(vendorId)).digest("hex");
+        try { capability = (await u.vendor.getModelList(vendorId)).find((model: any) => model.modelName === modelName) || {}; } catch { /* conservative fallback */ }
+      }
+      const budget = resolveAssetExtractionBudgetPolicy({ ...capability, maxOutputTokens: deployment?.maxOutputTokens || capability.maxOutputTokens || undefined });
+      const originalScripts = await u.db("o_script").where({ projectId }).select("id", "name", "content");
+      const assets = await u.db("o_assets").where({ projectId }).select("id", "name", "type", "describe", "descriptionMeta", "descriptionVersion", "assetsId");
+      const candidateCards = cardsEnabled ? (await listCharacterCards(u.db, { ownerId, includeArchived: true, limit: Infinity }))
+        .map(card => ({ id: card.id, version: card.version, status: card.status })) : [];
+      const globalConstraintsPath = u.getPath(["skills", "global_content_constraints.md"]);
+      const globalConstraints = fs.existsSync(globalConstraintsPath) ? fs.readFileSync(globalConstraintsPath, "utf-8") : "";
+      checkpoint = await createAssetExtractionCheckpoint(u.db, { projectId, scriptIds,
+        signature: { pipeline: ASSET_EXTRACTION_PIPELINE_VERSION, deployment, providerSignature, globalConstraints, visualConstraint, budget, system, roleSystem, discoverySystem, originalScripts, assets, candidateCards,
+          updateExistingDescriptions, groupSize } });
       await u.db("o_script").where({ projectId }).whereIn("id", scriptIds).update({ extractState: 0, errorReason: null });
       res.send(success("开始提取资产"));
       void extractScriptAssets({
-        db: u.db, invoke: input => u.Ai.Text("universalAi").invoke(input), system, discoverySystem,
+        db: u.db, invoke: input => u.Ai.Text("universalAi").invoke(input), system, roleSystem, discoverySystem, budget, checkpoint,
+        ...(cardsEnabled ? { characterCards: { artStyle: project.artStyle || "", ownerId } } : {}),
       }, { projectId, scriptIds, groupSize, updateExistingDescriptions }).catch(async cause => {
-        await u.db("o_script").where({ projectId }).whereIn("id", scriptIds).update({ extractState: -1, errorReason: u.error(cause).message });
-      }).finally(() => extractingProjects.delete(projectId));
+        await checkpoint?.fail(cause);
+        await u.db("o_script").where({ projectId }).whereIn("id", scriptIds).update({ extractState: -1, errorReason: "本次批量提取未保存：" + u.error(cause).message });
+      }).then(async () => {
+        // A failed run keeps its stage results; complete() only transitions a still-running run.
+        await checkpoint?.complete();
+      }).finally(() => extractingProjects.delete(projectId)).catch(cause => {
+        console.error("资产提取进度保存失败：", u.error(cause).message);
+      });
     } catch (cause) {
       extractingProjects.delete(projectId);
+      await checkpoint?.fail(cause);
       return res.status(400).send(error(u.error(cause).message));
     }
   },

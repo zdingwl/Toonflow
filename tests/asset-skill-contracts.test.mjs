@@ -111,6 +111,77 @@ test('scripted changed eye color is allowed as a derivative state', () => {
   assert.match(skill, /普通虹膜可以在觉醒态变红/);
 });
 
+// Prompt-source regression contracts only; live model results still require direct review.
+test('derive analysis reads the full current director plan before deciding state changes', () => {
+  const skill = read('data/skills/production_execution_derive_assets.md');
+  for (const key of ['script', 'scriptPlan', 'assets']) {
+    assert.ok(skill.includes(`get_flowData({key:"${key}"})`), `missing mandatory ${key} read`);
+  }
+  assert.match(skill, /nextOffset.*null/);
+  assert.match(skill, /不能仅凭摘要、首段或旧记忆判断/);
+  assert.match(skill, /用户明确改编优先于原文对应字段/);
+  assert.match(skill, /导演设计可确定原文未限定的外观/);
+  assert.match(skill, /旧衍生描述、旧生成图和状态名称不是独立证据/);
+  assert.doesNotMatch(skill, /科尔|海兽王|艾娃|麦迪逊|424|428/);
+});
+
+test('derive states inherit default clothing and footwear unless a source authorizes a change', () => {
+  const skill = read('data/skills/production_execution_derive_assets.md');
+  assert.match(skill, /服装类别、剪裁、颜色、鞋履、发型和配饰继承父资产已确认的默认设计/);
+  assert.match(skill, /受伤、湿衣、落水、逃生或床上惊醒不能凭空增加包扎、治疗痕迹、救援装备、新服装或脱鞋/);
+  assert.match(skill, /不能把默认裙装写成裤管破损/);
+  assert.match(skill, /确有明确换装或变身设计时逐项落实/);
+  assert.match(skill, /不能伪称原文/);
+  assert.match(skill, /禁止用“赤脚或低跟鞋”等互斥多选/);
+});
+
+test('reusable derive references exclude interactions, transient lighting and scene UI', () => {
+  const skill = read('data/skills/production_execution_derive_assets.md');
+  assert.match(skill, /不包含另一资产、互动对象、剧情动作、屏幕文字或一次性光效/);
+  assert.match(skill, /系统光映脸及白光转场交给分镜/);
+  assert.match(skill, /明确持续附着于角色的形变或发光纹路可作为状态/);
+  assert.match(skill, /纯机位变化、局部特写、系统面板、倒计时或屏幕内容变化不创建场景衍生/);
+  assert.match(skill, /动态UI不烘焙进场景参考/);
+});
+
+test('authorized derive repairs update real IDs and verify readback without generating media', () => {
+  const skill = read('data/skills/production_execution_derive_assets.md');
+  assert.match(skill, /用户具体要求修复或更新已有项时.*以真实衍生ID修正/);
+  assert.match(skill, /更新已存在项须传真实衍生 ID/);
+  assert.match(skill, /写入后再次调用 `get_flowData\(\{key:"assets"\}\)`/);
+  assert.match(skill, /工具回执与回读一致才计入完成数/);
+  assert.match(skill, /无新增、无获准修复项/);
+  assert.match(skill, /不执行图片、音频或视频生成/);
+  assert.match(skill, /不得因可用工具较多而调用其他副作用工具/);
+  assert.match(skill, /不得将描述修正宣称为图片已经修复/);
+});
+
+test('derive receipt IDs distinguish identical failed retries from a new revision', () => {
+  const skill = read('data/skills/production_execution_derive_assets.md');
+  assert.match(skill, /仅完全同参数的失败或超时重试才复用/);
+  assert.match(skill, /修改 `name`、`desc`、父ID或目标ID，就是新的写操作/);
+  assert.match(skill, /省略 `requestId` 让后端生成新标识/);
+  assert.match(skill, /不能把上次成功回执或错误给出的旧 `requestId` 用于不同参数/);
+  assert.match(skill, /不为匹配旧回执把内容改回旧稿/);
+});
+
+test('global asset design requires an explicit source before separating evacuation gear from default clothing', () => {
+  const skill = read('data/skills/asset_visual_design.md');
+  assert.match(skill, /只有剧本、用户或当前明确采用的视觉设计要求新增撤离装备时，才与默认衣装分态设计/);
+  assert.match(skill, /逃生情境本身不授权新增装备，未明确改变的衣装与鞋履沿用已确认默认设计/);
+  assert.doesNotMatch(skill, /灾前默认时装与暴雨撤离装备分别设计/);
+});
+
+test('non-graphic injury staging preserves source facts without inventing treatment or rescue gear', () => {
+  const skill = read('data/skills/asset_visual_design.md');
+  assert.match(skill, /优先现有衣物与构图遮挡、疼痛和行动后果/);
+  assert.match(skill, /仅明确有包扎来源时保留包扎，不能为非血腥表现新增治疗或救援装备/);
+  assert.doesNotMatch(skill, /优先衣物遮挡、干净包扎、疼痛动作/);
+  assert.match(skill, /必要的少量血迹明确为绿色或黑色/);
+  assert.match(skill, /已指定绿色或黑色时沿用；未指定且必须表现时统一低饱和深绿色/);
+  assert.match(skill, /红衣、红灯、红瞳、锈蚀、自然唇色等非血液特征保持原设定/);
+});
+
 test('H3 prompt and storyboard skill require state-safe references and duration preflight', () => {
   const h3 = read('data/modelPrompt/video/minimaxH3Multi-referenceMode.md');
   const storyboard = read('data/skills/production_execution_storyboard_table.md');

@@ -1,0 +1,23 @@
+{
+  "projectId": 1791442875668,
+  "episodeId": 71,
+  "workspaceId": 42,
+  "savedMatchesCandidate": true,
+  "savedHash": "b72ebb7ed9c8605754c849494c3ea58d0c6284429304107dc5758c3e818bd147",
+  "candidateHash": "b72ebb7ed9c8605754c849494c3ea58d0c6284429304107dc5758c3e818bd147",
+  "sourceUnchanged": true,
+  "factErrors": [],
+  "otherWorkspacesUnchanged": true,
+  "counts": {
+    "o_video": 71,
+    "o_storyboard": 57,
+    "o_assets": 423
+  },
+  "downstreamEmpty": {
+    "storyboardTable": true,
+    "storyboard": true,
+    "videoList": true
+  },
+  "savedCharacters": 6893,
+  "countsUnchanged": true
+}

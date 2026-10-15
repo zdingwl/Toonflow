@@ -1,0 +1,74 @@
+[环境变量：dev]
+数据库目录: D:\Toonflow-app-master\data\db2.sqlite
+[Socket] 注册命名空间: /api/socket/productionAgent
+[Socket] 注册命名空间: /api/socket/scriptAgent
+文件目录: D:\Toonflow-app-master\data\oss
+文件目录: D:\Toonflow-app-master\data\skills
+文件目录: D:\Toonflow-app-master\data\assets
+静态网站目录: D:\Toonflow-app-master\data\web
+[服务启动成功]: http://localhost:10588
+[productionAgent] 已连接: QdvmVkw95_XuG2ZIAAAB
+[0mPOST /api/agents/getMemory [32m200[0m 12.560 ms - 713499[0m
+[productionAgent] 已连接: nfsrAC09-02quk6eAAAD
+[0mOPTIONS /api/agents/getMemory [32m204[0m 0.202 ms - 0[0m
+[0mPOST /api/agents/getMemory [32m200[0m 5.622 ms - 713499[0m
+[0mGET / [36m304[0m 1.345 ms - -[0m
+[0mPOST /api/script/getScrptApi [32m200[0m 4.744 ms - 56454[0m
+[0mPOST /api/production/getFlowData [32m200[0m 6.278 ms - 96471[0m
+[0mPOST /api/production/getFlowData [32m200[0m 4.117 ms - 96471[0m
+[0mPOST /api/project/getModelDetails [32m200[0m 6.829 ms - 121[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 185.234 ms - 140[0m
+[0mPOST /api/agents/getMemory [32m200[0m 11.143 ms - 713499[0m
+[0mGET /oss/1791442875668/role/984f6b15-daaf-47c6-a813-dcb227631fbd.jpg?size=20 [36m304[0m 1.451 ms - -[0m
+[0mPOST /api/agents/getMemory [32m200[0m 12.329 ms - 713499[0m
+[0mGET /favicon.ico [36m304[0m 0.443 ms - -[0m
+[productionAgent] 已连接: EzSUyZUT63TUV2AaAAAF
+[productionAgent] 上下文已更新: 1791442875668:productionAgent:71
+[0mPOST /api/agents/getMemory [32m200[0m 13.438 ms - 713499[0m
+[0mGET /oss/1791442875668/role/2477f1fc-ed49-49e9-a9f2-81e6177f5cba.jpg?size=20 [36m304[0m 0.806 ms - -[0m
+[0mGET /oss/1791442875668/scene/6294efb7-9733-4951-b148-10cda80f8f18.jpg?size=20 [36m304[0m 1.404 ms - -[0m
+[0mGET /oss/1791442875668/scene/07f85c50-bd10-4893-9505-31c878d1441b.jpg?size=20 [36m304[0m 0.527 ms - -[0m
+[0mGET /oss/1791442875668/scene/851febf9-776d-400e-a636-4a5173a4f906.jpg?size=20 [36m304[0m 0.631 ms - -[0m
+[0mGET /oss/1791442875668/props/20359d2d-ca07-4dd5-bce5-cdea59655114.jpg?size=20 [36m304[0m 0.790 ms - -[0m
+[0mGET /oss/1791442875668/props/59b02905-302e-4b00-a187-26d0e93d74e3.jpg?size=20 [36m304[0m 7.686 ms - -[0m
+[0mGET /oss/1791442875668/props/6181a3ac-1154-4588-b948-e176f5be5f9a.jpg?size=20 [36m304[0m 1.188 ms - -[0m
+[0mGET / [32m200[0m 1.486 ms - 26955277[0m
+⚡[主技能] ✓ 已读取主技能文件： D:/Toonflow-app-master/data/skills/production_skills/storyboard_table_techniques.md（5818 字符）
+⚡[主技能] ✓ 技能 "storyboard_table_techniques" 已激活
+⚡[主技能] ✓ 已读取主技能文件： D:/Toonflow-app-master/data/skills/story_skills/Scifi_post_apocalypse/driector_skills/director_storyboard_table_narrative.md（1426 字符）
+⚡[主技能] ✓ 技能 "director_storyboard_table_narrative" 已激活
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.263 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 201.615 ms - 140[0m
+⚡[主技能] ✓ 已读取主技能文件： D:/Toonflow-app-master/data/skills/production_skills/storyboard_table_techniques.md（5818 字符）
+⚡[主技能] ✓ 技能 "storyboard_table_techniques" 已激活
+⚡[主技能] ✓ 已读取主技能文件： D:/Toonflow-app-master/data/skills/story_skills/Scifi_post_apocalypse/driector_skills/director_storyboard_table_narrative.md（1426 字符）
+⚡[主技能] ✓ 技能 "director_storyboard_table_narrative" 已激活
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 145.087 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.122 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 163.523 ms - 140[0m
+⚡[主技能] ✓ 已读取主技能文件： D:/Toonflow-app-master/data/skills/production_skills/storyboard_table_techniques.md（5818 字符）
+⚡[主技能] ✓ 技能 "storyboard_table_techniques" 已激活
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.136 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 179.813 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 167.233 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.094 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 178.348 ms - 140[0m
+⚡[主技能] ✓ 已读取主技能文件： D:/Toonflow-app-master/data/skills/production_skills/storyboard_table_techniques.md（5818 字符）
+⚡[主技能] ✓ 技能 "storyboard_table_techniques" 已激活
+⚡[主技能] ✓ 已读取主技能文件： D:/Toonflow-app-master/data/skills/story_skills/Scifi_post_apocalypse/driector_skills/director_storyboard_table_narrative.md（1426 字符）
+⚡[主技能] ✓ 技能 "director_storyboard_table_narrative" 已激活
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.080 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 157.119 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 168.835 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.123 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 147.054 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.062 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 127.657 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 125.039 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.081 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 140.290 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.103 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 140.262 ms - 140[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 165.605 ms - 140[0m
+[0mOPTIONS /api/setting/about/checkUpdate [32m204[0m 0.086 ms - 0[0m
+[0mPOST /api/setting/about/checkUpdate [32m200[0m 132.462 ms - 140[0m

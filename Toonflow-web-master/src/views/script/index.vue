@@ -15,6 +15,7 @@
           <template #icon><i-plus /></template>
           {{ $t("workbench.script.batchAddScript") }}
         </t-button>
+        <t-button variant="outline" @click="router.push('/characterCards')">角色卡库</t-button>
       </div>
       <div class="actionBar-right f ac w" v-if="scripts.length">
         <t-button :theme="isAllSelected ? 'default' : 'primary'" variant="outline" @click="toggleSelectAll(!isAllSelected)">
@@ -37,6 +38,10 @@
         </t-button>
       </div>
     </div>
+    <div v-if="extractionProgress?.status === 'running' && notCompletedData.length" style="padding: 8px 16px; color: #3155bf">
+      {{ extractionProgress.stageLabel }}：{{ extractionProgress.label || '' }}
+      {{ extractionProgress.completed }}/{{ extractionProgress.total }}
+    </div>
     <div class="contentArea">
       <div v-if="scripts.length === 0" class="emptyState">
         <t-empty />
@@ -57,7 +62,7 @@
             <t-tooltip :content="item.errorReason" v-if="item?.extractState == -1" theme="light">
               <t-tag theme="danger" size="small">{{ $t("workbench.script.msg.extractFailed") }}</t-tag>
             </t-tooltip>
-            <div class="assetTags" v-else-if="item.relatedAssets?.length" @click.stop>
+            <div class="assetTags" v-if="item.relatedAssets?.length" @click.stop>
               <t-tag v-for="asset in item.relatedAssets" :key="asset.id" variant="light-outline" size="small">
                 {{ asset.name }}
               </t-tag>
@@ -84,6 +89,7 @@ import batchAddScript from "./components/batchAddScript.vue";
 import projectStore from "@/stores/project";
 import settingStore from "@/stores/setting";
 import imageListCacheStore from "@/stores/imageListCache";
+const router = useRouter();
 
 const { clearScriptCache } = imageListCacheStore();
 
@@ -110,6 +116,7 @@ const searchQuery = ref("");
 const addScriptShow = ref(false);
 const selectedIds = ref<number[]>([]);
 const scriptLoad = ref(false);
+const extractionProgress = ref<{ status: string; stageLabel: string; label?: string; completed: number; total: number } | null>(null);
 const batchScriptShow = ref(false);
 const isAllSelected = computed(() => scripts.value.length > 0 && selectedIds.value.length === scripts.value.length);
 function toggleSelect(id: number) {
@@ -305,6 +312,10 @@ async function pollScriptAssets() {
   if (notCompletedData.value.length === 0) return;
   const ids = notCompletedData.value.map((item) => item.id);
   try {
+    if (project.value?.id) {
+      const progress = await axios.post("/script/getAssetExtractionProgress", { projectId: project.value.id });
+      extractionProgress.value = progress.data;
+    }
     const { data } = await axios.post("/script/pollScriptAssets", { ids });
     if (data.length) {
       searchScripts();

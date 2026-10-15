@@ -9,6 +9,7 @@ import { validateFields } from "@/middleware/middleware";
 import { buildAssetImagePrompt, buildFluxPromptTranslationRequest, needsFluxPromptTranslation } from "@/utils/assetPrompt";
 import { isRoleFourViewModel, resolveAssetImageModel } from "@/utils/assetImageModel";
 import { descriptionVersion, requireCurrentAssetPrompt } from "@/utils/assetDescriptionVersion";
+import { syncCharacterCardAssetImageSafely } from "@/utils/characterCardAssetImageSync";
 
 const router = express.Router();
 type AssetType = "role" | "scene" | "tool";
@@ -101,6 +102,7 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
         referenceFingerprint: await roleReferenceFingerprint(imagePath),
       } : {}),
     });
+    await syncCharacterCardAssetImageSafely(u.db, { asset, imageId });
     const path = await u.oss.getSmallImageUrl(imagePath);
     return res.status(200).send(success({ path, assetsId: id }));
   } catch (e) {

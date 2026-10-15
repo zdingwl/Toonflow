@@ -133,13 +133,18 @@ test("the production route retains complete user customization in discovery and 
   }
 });
 
-test("eight simultaneously maximum-length peer summaries still fail safely rather than dropping original evidence", async t => {
+test("eight maximum-length peer summaries are budgeted while original evidence and paid images survive", async t => {
   const f = await fixture(t, null, true);
-  await assert.rejects(f.completion, /资产最终设计输入超过安全上下文预算/);
-  assert.ok(f.calls.every(call => !call.input.previousDesign), "no oversized final request reaches the model");
+  await f.completion;
+  const final = f.calls.find(call => call.input.previousDesign);
+  assert.ok(final, "the final design now completes instead of accepting a safe failure");
+  assert.ok(final.estimated <= ASSET_EXTRACTION_INPUT_TOKEN_BUDGET - 1000);
+  assert.ok(final.input.siblingDesigns.length < 8, "optional peer comparisons yield space to actual evidence");
+  assert.equal(final.input.userConstraints, userGoal);
+  assert.deepEqual(final.input.scripts[0].excerpts, [{ sourceRef: "701:1", quote: originalQuote }]);
   const saved = await f.db("o_assets").where({ id: 10 }).first();
-  assert.equal(saved.describe, "女性，黑色长发，白色翻领衬衫配灰色长裤与黑色平底鞋，面部比例协调。");
+  assert.equal(JSON.parse(saved.descriptionMeta).scriptFacts[0].quote, originalQuote);
   assert.equal(saved.imageId, 40); assert.equal(saved.prompt, "保留既有图提示词");
-  assert.equal((await f.db("o_assetDescriptionHistory")).length, 0);
+  assert.equal((await f.db("o_assetDescriptionHistory")).length, 1);
   assert.deepEqual(await f.db("o_scriptAssets"), [{ scriptId: 701, assetId: 10 }]);
 });

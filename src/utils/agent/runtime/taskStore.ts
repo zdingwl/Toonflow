@@ -147,6 +147,14 @@ export class TaskStore {
       .update({ status: "failed", error, updateTime: Date.now() });
   }
 
+  /** Invalidate only the exact completed cache rejected by its caller's read-only guard. */
+  async invalidateCompletedStep(runId: string, stepKey: string, expectedOutput: string | undefined, error: string): Promise<boolean> {
+    const count = await this.db("o_agentStep")
+      .where({ runId, stepKey, status: "completed", output: expectedOutput ?? null })
+      .update({ status: "failed", resultRef: null, error, updateTime: Date.now() });
+    return count === 1;
+  }
+
   /** 对已经开始但无法证明无副作用的步骤，必须进入 reconciling，而不是盲目重跑。 */
   async markStepReconciling(runId: string, stepKey: string, error: string): Promise<void> {
     await this.db("o_agentStep").where({ runId, stepKey }).whereIn("status", ["running", "failed"])

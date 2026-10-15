@@ -9,6 +9,7 @@
         <t-form labelAlign="top">
           <t-form-item :label="$t('workbench.cornerScape.quickActions')">
             <div class="quickActions">
+              <t-button theme="primary" variant="outline" @click="$router.push('/characterCards')">角色卡库</t-button>
               <t-button theme="primary" variant="outline" @click="selectAll">{{ $t("workbench.cornerScape.selectAll") }}</t-button>
               <t-button theme="primary" variant="outline" @click="selectPromptEmpty()">{{ $t("workbench.cornerScape.selectPromptEmpty") }}</t-button>
               <t-button theme="primary" variant="outline" @click="selectByState('')">{{ $t("workbench.cornerScape.selectUngenerated") }}</t-button>

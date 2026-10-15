@@ -1,0 +1,309 @@
+{
+  "sourcePath": "D:\\Toonflow-app-master\\data\\db2.sqlite",
+  "projectId": 1791442875668,
+  "assetId": 354,
+  "productionReadOnly": true,
+  "extractionDatabase": ":memory:",
+  "imageCalls": 0,
+  "requests": [
+    {
+      "stage": "discovery",
+      "estimated": 11716,
+      "budget": 14000,
+      "elapsedMs": 0,
+      "provider": false,
+      "sources": 5,
+      "excerpts": 0,
+      "finishReason": "fixed-discovery"
+    },
+    {
+      "stage": "discovery",
+      "estimated": 12309,
+      "budget": 14000,
+      "elapsedMs": 0,
+      "provider": false,
+      "sources": 5,
+      "excerpts": 0,
+      "finishReason": "fixed-discovery"
+    },
+    {
+      "stage": "facts",
+      "estimated": 12999,
+      "budget": 14000,
+      "elapsedMs": 2474,
+      "provider": true,
+      "sources": 7,
+      "excerpts": 453,
+      "finishReason": "tool-calls",
+      "usage": {
+        "inputTokens": 10942,
+        "inputTokenDetails": {
+          "noCacheTokens": 10942,
+          "cacheReadTokens": 0
+        },
+        "outputTokens": 34,
+        "outputTokenDetails": {
+          "textTokens": 34,
+          "reasoningTokens": 0
+        },
+        "totalTokens": 10976,
+        "raw": {
+          "prompt_tokens": 10942,
+          "completion_tokens": 34,
+          "total_tokens": 10976,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "reasoningTokens": 0,
+        "cachedInputTokens": 0
+      },
+      "toolErrors": []
+    },
+    {
+      "stage": "facts",
+      "estimated": 8431,
+      "budget": 14000,
+      "elapsedMs": 2369,
+      "provider": true,
+      "sources": 4,
+      "excerpts": 254,
+      "finishReason": "tool-calls",
+      "usage": {
+        "inputTokens": 6855,
+        "inputTokenDetails": {
+          "noCacheTokens": 6855,
+          "cacheReadTokens": 0
+        },
+        "outputTokens": 68,
+        "outputTokenDetails": {
+          "textTokens": 68,
+          "reasoningTokens": 0
+        },
+        "totalTokens": 6923,
+        "raw": {
+          "prompt_tokens": 6855,
+          "completion_tokens": 68,
+          "total_tokens": 6923,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "reasoningTokens": 0,
+        "cachedInputTokens": 0
+      },
+      "toolErrors": []
+    },
+    {
+      "stage": "factReview",
+      "estimated": 3135,
+      "budget": 14000,
+      "elapsedMs": 1421,
+      "provider": true,
+      "sources": 1,
+      "excerpts": 1,
+      "finishReason": "tool-calls",
+      "usage": {
+        "inputTokens": 2024,
+        "inputTokenDetails": {
+          "noCacheTokens": 2024,
+          "cacheReadTokens": 0
+        },
+        "outputTokens": 46,
+        "outputTokenDetails": {
+          "textTokens": 46,
+          "reasoningTokens": 0
+        },
+        "totalTokens": 2070,
+        "raw": {
+          "prompt_tokens": 2024,
+          "completion_tokens": 46,
+          "total_tokens": 2070,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "reasoningTokens": 0,
+        "cachedInputTokens": 0
+      },
+      "toolErrors": []
+    },
+    {
+      "stage": "match",
+      "estimated": 3259,
+      "budget": 14000,
+      "elapsedMs": 1804,
+      "provider": true,
+      "facts": 1,
+      "finishReason": "tool-calls",
+      "usage": {
+        "inputTokens": 2192,
+        "inputTokenDetails": {
+          "noCacheTokens": 856,
+          "cacheReadTokens": 1336
+        },
+        "outputTokens": 71,
+        "outputTokenDetails": {
+          "textTokens": 71,
+          "reasoningTokens": 0
+        },
+        "totalTokens": 2263,
+        "raw": {
+          "prompt_tokens": 2192,
+          "completion_tokens": 71,
+          "total_tokens": 2263,
+          "prompt_tokens_details": {
+            "cached_tokens": 1336
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "reasoningTokens": 0,
+        "cachedInputTokens": 1336
+      },
+      "toolErrors": []
+    },
+    {
+      "stage": "card",
+      "estimated": 11990,
+      "budget": 14000,
+      "elapsedMs": 14635,
+      "provider": true,
+      "sources": 0,
+      "excerpts": 0,
+      "facts": 1,
+      "finishReason": "tool-calls",
+      "usage": {
+        "inputTokens": 7672,
+        "inputTokenDetails": {
+          "noCacheTokens": 7672,
+          "cacheReadTokens": 0
+        },
+        "outputTokens": 835,
+        "outputTokenDetails": {
+          "textTokens": 835,
+          "reasoningTokens": 0
+        },
+        "totalTokens": 8507,
+        "raw": {
+          "prompt_tokens": 7672,
+          "completion_tokens": 835,
+          "total_tokens": 8507,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          }
+        },
+        "reasoningTokens": 0,
+        "cachedInputTokens": 0
+      },
+      "toolErrors": []
+    }
+  ],
+  "startedAt": "2026-10-09T12:15:14.235Z",
+  "success": true,
+  "model": "volcengine:doubao-seed-2-1-pro-260915",
+  "scriptCount": 10,
+  "sourceCharacters": 8914,
+  "peerCount": 8,
+  "imageIdBefore": 385,
+  "budget": {
+    "inputTokenBudget": 14000,
+    "retryTokenReserve": 1000,
+    "maxOutputTokens": 6144
+  },
+  "result": {
+    "created": 0,
+    "updated": 1,
+    "reused": 0
+  },
+  "imageIdAfter": 385,
+  "productionAssetUnchanged": true,
+  "productionScriptsUnchanged": true,
+  "cardCountBefore": 10,
+  "cardCountAfter": 11,
+  "cardBinding": {
+    "cardId": 11,
+    "version": 1,
+    "name": "维拉·角色卡",
+    "mode": "reference",
+    "roleDefinition": "成年女性，修长鹅蛋脸与精致柔雾妆，深巧克力棕色锁骨层次发；身形丰满修长，穿黑丝绒露肩深V开背长礼裙，以孔雀绿腰褶、单侧高衩、黑漆皮细跟鞋和祖母绿金饰塑造性感上层社会晚宴造型。",
+    "ageBand": "adult",
+    "ageMin": 18,
+    "ageMax": null,
+    "ageBounds": {
+      "min": 18,
+      "max": null
+    },
+    "gender": "unknown",
+    "references": [
+      {
+        "cardId": 4,
+        "version": 1,
+        "borrowedFields": [
+          "face",
+          "hair"
+        ]
+      }
+    ]
+  },
+  "savedFactCount": 1,
+  "card": {
+    "id": 11,
+    "ownerId": 1,
+    "name": "维拉·角色卡",
+    "artStyle": "realistic_3d_anime",
+    "roleDefinition": "成年女性，修长鹅蛋脸与精致柔雾妆，深巧克力棕色锁骨层次发；身形丰满修长，穿黑丝绒露肩深V开背长礼裙，以孔雀绿腰褶、单侧高衩、黑漆皮细跟鞋和祖母绿金饰塑造性感上层社会晚宴造型。",
+    "ageBand": "adult",
+    "gender": "unknown",
+    "visualDesign": {
+      "face": "修长鹅蛋脸，颧骨与下颌转折清楚流畅；微扬眼尾搭配清晰有弧度的眉形，鼻梁细致挺直，唇峰清楚、唇珠自然；可可玫瑰柔雾妆，细眼线与分明睫毛，柔粉腮红自然融入，皮肤细腻有层次",
+      "body": "成年女性，修长比例，胸部丰满且自然承托，腰身纤细，胯臀饱满，肩颈与脊背线条舒展，四肢修长，站姿挺拔",
+      "hair": "深巧克力棕色侧分锁骨层次发，颅顶自然蓬松，脸周外翻弧形发束修饰轮廓，发尾成组轻盈，三维发束体块清晰并带细微高光",
+      "clothing": "黑丝绒低心形露肩及踝长礼裙，雕塑折片胸托与公主线省道塑造胸腰胯；深V开背至腰上；腰侧孔雀绿紧凑斜褶为唯一对比色；单侧高衩至大腿中上段并设重叠挡片；搭配黑漆皮尖头细跟鞋、祖母绿水滴耳坠、单只雕塑金手镯",
+      "environment": "",
+      "shape": "黑色丝绒长礼服的纵向垂坠及踝剪影，露肩与深V开背展开肩颈和脊背线条，公主线收紧胸腰胯，孔雀绿腰侧斜褶形成视觉焦点，单侧高衩与重叠挡片在走动中显露腿部线条，尖头细跟鞋和祖母绿金饰强化精致晚宴感"
+    },
+    "describe": "修长鹅蛋脸，颧骨与下颌转折清楚流畅；微扬眼尾搭配清晰有弧度的眉形，鼻梁细致挺直，唇峰清楚、唇珠自然；可可玫瑰柔雾妆，细眼线与分明睫毛，柔粉腮红自然融入，皮肤细腻有层次；成年女性，修长比例，胸部丰满且自然承托，腰身纤细，胯臀饱满，肩颈与脊背线条舒展，四肢修长，站姿挺拔；深巧克力棕色侧分锁骨层次发，颅顶自然蓬松，脸周外翻弧形发束修饰轮廓，发尾成组轻盈，三维发束体块清晰并带细微高光；黑丝绒低心形露肩及踝长礼裙，雕塑折片胸托与公主线省道塑造胸腰胯；深V开背至腰上；腰侧孔雀绿紧凑斜褶为唯一对比色；单侧高衩至大腿中上段并设重叠挡片；搭配黑漆皮尖头细跟鞋、祖母绿水滴耳坠、单只雕塑金手镯；黑色丝绒长礼服的纵向垂坠及踝剪影，露肩与深V开背展开肩颈和脊背线条，公主线收紧胸腰胯，孔雀绿腰侧斜褶形成视觉焦点，单侧高衩与重叠挡片在走动中显露腿部线条，尖头细跟鞋和祖母绿金饰强化精致晚宴感",
+    "status": "active",
+    "provenance": {
+      "method": "generated",
+      "references": [
+        {
+          "cardId": 4,
+          "version": 1,
+          "borrowedFields": [
+            "face",
+            "hair"
+          ]
+        }
+      ]
+    },
+    "ageMin": 18,
+    "ageMax": null,
+    "version": 1,
+    "sourceProjectId": 1791442875668,
+    "sourceAssetId": 354,
+    "createdAt": 1791548137073,
+    "updatedAt": 1791548137073,
+    "imagePath": null,
+    "imageId": null,
+    "imageState": "missing",
+    "imageNeedsRegeneration": false,
+    "imageErrorReason": null
+  },
+  "description": "女性，成年设定。修长鹅蛋脸型，颧骨与下颌转折清楚而流畅，眼尾微扬，眉形清晰有弧度，鼻梁细致挺直，唇峰清楚、唇珠自然；可可玫瑰柔雾妆，细眼线贴合眼形，睫毛分明，少量柔粉腮红融入面颊，底妆细腻并保留自然皮肤层次。深巧克力棕色侧分锁骨层次发，颅顶有自然体积，脸周发束呈外翻弧线修饰轮廓，发尾成组带轻盈层次，发丝有清晰三维体块与细微高光。身形修长，胸部丰满且由衣装自然承托，腰身纤细收束，胯臀饱满，肩颈与脊背线条舒展，四肢比例修长。\n\n默认身着黑丝绒低心形露肩长礼裙：低心形领口露出双肩与锁骨，雕塑折片胸托以公主线纵向省道贴合胸腰曲线；背部深V开至腰上，露出修长脊背。腰侧加入孔雀绿紧凑斜褶，形成唯一鲜明色彩对比并强化收腰；丝绒面料厚实柔暗、带受控微光，斜褶部分呈现细腻缎面光泽与垂坠感。单侧高衩开至大腿中上段，前片重叠挡片自然开合、保持覆盖，裙摆垂至脚踝。脚穿黑漆皮尖头细跟鞋，鞋头精致微尖，细高跟，鞋面光滑、鞋底整洁。配饰为祖母绿水滴耳坠与单只雕塑感金手镯。整体为上层社会晚宴式性感长礼服轮廓，黑色丝绒纵向垂坠、孔雀绿腰褶点睛，露肩开背与单侧高衩形成优雅而明确的成人魅力。",
+  "finishedAt": "2026-10-09T12:15:37.078Z"
+}

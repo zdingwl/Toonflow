@@ -2,6 +2,7 @@ import axios from "@/utils/axios";
 import projectStore from "@/stores/project";
 import settingStore from "@/stores/setting";
 import { useChat } from "@/utils/useChat";
+import { syncCommittedDerivedAsset } from "@/utils/productionDerivedAssets";
 import type { FlowData, Storyboard } from "@/views/production/utils/flowBuilder";
 import type { ChatMessagesData } from "@tdesign-vue-next/chat";
 import { useThrottleFn } from "@vueuse/core";
@@ -127,28 +128,12 @@ function makeProductionAgentStore(projectId: string) {
             callback(returnData);
           });
           s.on("addDeriveAsset", async (data, callback) => {
-            const assets = flowData.value.assets.find((a) => a.id === data.assetsId);
-            if (!assets) return callback({ success: false, message: $t("storyboard.assets.notExist") });
-            const deriveAssetList = assets.derive || [];
-            const item = deriveAssetList.find((d) => d.id === data.id);
-            if (item) {
-              if (!item) return callback({ success: false, message: $t("storyboard.assets.notDerivativeExist") });
-              item.name = data.name;
-              item.type = assets.type;
-              callback({ success: true, message: $t("storyboard.assets.derivativeUpdateSuccess") });
-            } else {
-              deriveAssetList.push({
-                assetsId: data.assetsId,
-                id: data.id,
-                name: data.name,
-                type: assets.type,
-                desc: data.describe,
-                prompt: "",
-                state: "未生成" as "未生成" | "生成中" | "已完成" | "生成失败",
-                src: "",
-              });
-              callback({ success: true, message: $t("storyboard.assets.derivativeAddSuccess") });
-            }
+            const result = syncCommittedDerivedAsset(flowData.value.assets, data);
+            if (result === "missing") return callback({ success: false, message: $t("storyboard.assets.notExist") });
+            callback({
+              success: true,
+              message: $t(result === "updated" ? "storyboard.assets.derivativeUpdateSuccess" : "storyboard.assets.derivativeAddSuccess"),
+            });
           });
           s.on("delDeriveAsset", async (data, callback) => {
             const assets = flowData.value.assets.find((a) => a.id === data.assetsId);

@@ -1,0 +1,228 @@
+{
+  "verifiedAt": "2026-10-09T12:46:52.989Z",
+  "projectId": 1791442875668,
+  "backupPath": "data/backups/asset-fact-scope-before-1791548191428.sqlite",
+  "run": {
+    "id": 2,
+    "runId": "e87480c2-3ead-4d6e-b323-8177abccf433",
+    "projectId": 1791442875668,
+    "scriptSetHash": "861ad19ce1caaedf964cf4096d1e67f9f7c76d48c88cfa111fddd1cf0c9bb771",
+    "scriptIds": "[71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90]",
+    "signatureHash": "7b3c9aef580d21f92668da4bc2e5daa95f618ab2ce37a507e58530d2b507ceb6",
+    "status": "completed",
+    "stage": "complete",
+    "completed": 0,
+    "total": 66,
+    "label": null,
+    "error": null,
+    "createdAt": 1791548253725,
+    "updatedAt": 1791549994749,
+    "completedAt": 1791549994749
+  },
+  "scripts": {
+    "total": 20,
+    "succeeded": 20,
+    "failed": []
+  },
+  "assets": {
+    "before": 58,
+    "after": 66,
+    "updatedOrCreated": 66
+  },
+  "protectedData": {
+    "originalScriptContent": true,
+    "originalAssetImagesAndPrompts": true,
+    "originalImageRecords": true,
+    "originalCardImages": true,
+    "originalUserConstraints": true
+  },
+  "originalImageCount": 19,
+  "originalCardsWithImages": 14,
+  "invalidFacts": [],
+  "cardBindings": [
+    {
+      "assetId": 352,
+      "name": "艾娃",
+      "cardId": 15,
+      "version": 1,
+      "exists": true
+    },
+    {
+      "assetId": 353,
+      "name": "麦迪逊",
+      "cardId": 16,
+      "version": 1,
+      "exists": true
+    },
+    {
+      "assetId": 354,
+      "name": "维拉",
+      "cardId": 17,
+      "version": 1,
+      "exists": true
+    },
+    {
+      "assetId": 355,
+      "name": "银行经理",
+      "cardId": 18,
+      "version": 1,
+      "exists": true
+    },
+    {
+      "assetId": 356,
+      "name": "司机",
+      "cardId": 19,
+      "version": 1,
+      "exists": true
+    },
+    {
+      "assetId": 357,
+      "name": "工作人员",
+      "cardId": 20,
+      "version": 1,
+      "exists": true
+    },
+    {
+      "assetId": 358,
+      "name": "陌生男人",
+      "cardId": 22,
+      "version": 1,
+      "exists": true
+    },
+    {
+      "assetId": 366,
+      "name": "琼",
+      "cardId": 24,
+      "version": 1,
+      "exists": true
+    },
+    {
+      "assetId": 367,
+      "name": "混混头目",
+      "cardId": 23,
+      "version": 1,
+      "exists": true
+    },
+    {
+      "assetId": 376,
+      "name": "伊莱亚斯",
+      "cardId": 25,
+      "version": 1,
+      "exists": true
+    },
+    {
+      "assetId": 377,
+      "name": "库管",
+      "cardId": 26,
+      "version": 1,
+      "exists": true
+    },
+    {
+      "assetId": 394,
+      "name": "舅妈",
+      "cardId": 21,
+      "version": 1,
+      "exists": true
+    },
+    {
+      "assetId": 404,
+      "name": "灰狼头目",
+      "cardId": 27,
+      "version": 1,
+      "exists": true
+    }
+  ],
+  "vera": {
+    "imageId": 385,
+    "descriptionVersion": 7,
+    "scriptFacts": [
+      {
+        "scriptId": 81,
+        "sourceRef": "81:73",
+        "quote": "和维拉今天穿的鞋很像。",
+        "fact": "维拉今天穿的鞋与监控画面中雨棚边缘拍到的一双湿鞋很像。"
+      },
+      {
+        "scriptId": 87,
+        "sourceRef": "87:14",
+        "quote": "维拉的账号头像清清楚楚。",
+        "fact": "灰狼头目出示的手机照片角落中，维拉的账号头像清清楚楚。"
+      }
+    ],
+    "characterCard": {
+      "cardId": 17,
+      "version": 1,
+      "name": "维拉·角色卡",
+      "mode": "reference",
+      "roleDefinition": "成年女性，修长鹅蛋脸与微扬眼尾，深巧克力棕侧分锁骨层次发，丰满修长曲线；造型为黑丝绒低心形露肩深V开背长礼裙，孔雀绿腰侧斜褶、单侧高衩、黑漆皮尖头细跟鞋，搭配祖母绿耳坠与金手镯，呈现性感精致的上层社会晚宴风格。",
+      "ageBand": "adult",
+      "ageMin": 18,
+      "ageMax": null,
+      "ageBounds": {
+        "min": 18,
+        "max": null
+      },
+      "gender": "unknown",
+      "references": [
+        {
+          "cardId": 14,
+          "version": 1,
+          "borrowedFields": [
+            "face",
+            "body",
+            "hair",
+            "clothing",
+            "environment",
+            "shape"
+          ]
+        }
+      ]
+    }
+  },
+  "steps": [
+    {
+      "stage": "匹配角色卡",
+      "count": 13
+    },
+    {
+      "stage": "生成角色卡",
+      "count": 19
+    },
+    {
+      "stage": "资产事实收集",
+      "count": 69
+    },
+    {
+      "stage": "资产事实范围复核",
+      "count": 11
+    },
+    {
+      "stage": "资产最终设计",
+      "count": 53
+    },
+    {
+      "stage": "资产设计冲突校正",
+      "count": 1
+    },
+    {
+      "stage": "资产识别",
+      "count": 6
+    }
+  ],
+  "success": true,
+  "apiReadback": {
+    "scriptHTTP": 200,
+    "succeeded": 20,
+    "failed": 0,
+    "progressHTTP": 200,
+    "status": "completed",
+    "stage": "complete"
+  },
+  "uiReadback": {
+    "project": "新剧本",
+    "failedLabels": 0,
+    "runningLabels": 0,
+    "automaticallyUpdatedAfterResume": true,
+    "screenshot": "docs/character-card-verification/asset-extraction-success.jpg"
+  }
+}

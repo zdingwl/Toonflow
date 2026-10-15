@@ -1,0 +1,76 @@
+{
+  "scene": 2,
+  "attempt": 1,
+  "errors": [],
+  "finishReason": "stop",
+  "usage": {
+    "inputTokens": 33742,
+    "inputTokenDetails": {
+      "noCacheTokens": 13462,
+      "cacheReadTokens": 20280
+    },
+    "outputTokens": 1636,
+    "outputTokenDetails": {
+      "textTokens": 1636,
+      "reasoningTokens": 0
+    },
+    "totalTokens": 35378,
+    "raw": {
+      "prompt_tokens": 33742,
+      "completion_tokens": 1636,
+      "total_tokens": 35378,
+      "prompt_tokens_details": {
+        "cached_tokens": 20280
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "reasoningTokens": 0,
+    "cachedInputTokens": 20280
+  },
+  "elapsedMs": 49893,
+  "rawHash": "cf6de25095407fb446c204ddaac1dd6a3217709ed5b629301f73bf14a474e098",
+  "raw": "D:\\Toonflow-app-master\\docs\\storyboard-evaluation\\2026-10-09-direct-feedback\\scene-2.attempt-1.response.xml",
+  "markdown": "D:\\Toonflow-app-master\\docs\\storyboard-evaluation\\2026-10-09-direct-feedback\\scene-2.attempt-1.md",
+  "toolCalls": [
+    {
+      "name": "activate_skill",
+      "input": {
+        "name": "storyboard_table_techniques"
+      }
+    },
+    {
+      "name": "get_flowData",
+      "input": {
+        "key": "script",
+        "offset": 0,
+        "limit": 12000
+      }
+    },
+    {
+      "name": "get_flowData",
+      "input": {
+        "key": "assets",
+        "offset": 0,
+        "limit": 12000
+      }
+    },
+    {
+      "name": "get_flowData",
+      "input": {
+        "key": "scriptPlan",
+        "offset": 0,
+        "limit": 12000
+      }
+    },
+    {
+      "name": "get_flowData",
+      "input": {
+        "key": "storyboardTable",
+        "offset": 0,
+        "limit": 12000
+      }
+    }
+  ]
+}

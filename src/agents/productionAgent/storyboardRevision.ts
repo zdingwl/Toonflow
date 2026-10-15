@@ -62,7 +62,7 @@ export async function reviseStoryboardScene(db: Knex, request: StoryboardRevisio
     }
     const validation = validateStoryboardScene(scene, revised, extractSourceScene(script.content ?? "", scene));
     if (!validation.valid) throw new Error(`第${scene}场修订未通过校验：${validation.errors.join("；")}`);
-    await guardStoryboardContent(trx, projectId, script.content ?? "", data.scriptPlan ?? "", scene, revised);
+    await guardStoryboardContent(trx, projectId, script.content ?? "", data.scriptPlan ?? "", scene, revised, episodesId);
     if (revised === original) {
       return { changed: false, revision: progress.revision, scene, taskId,
         storyboardTable: data.storyboardTable as string, storyboardTableProgress: progress,

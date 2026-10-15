@@ -8,6 +8,7 @@ import { getOperationReceipt, withOperationReceipt } from "@/utils/agent/runtime
 import { generateAssetPrompt, loadAssetPromptContext } from "@/utils/assetPromptGeneration";
 import { descriptionVersion, saveGeneratedAssetPrompt } from "@/utils/assetDescriptionVersion";
 import { roleReferenceFingerprint } from "@/utils/assetReferenceMedia";
+import { syncCharacterCardAssetImageSafely } from "@/utils/characterCardAssetImageSync";
 
 const router = express.Router();
 const activeAssetGenerationRequests = new Set<string>();
@@ -185,6 +186,7 @@ export default router.post(
               await trx("o_assets").where({ id: item.id, projectId, imageId }).update({ ...referenceFields,
                 ...(context.asset.descriptionVersion !== undefined ? { imageDescriptionVersion: descriptionVersion(context.asset) } : {}) });
             }
+            if (completed) await syncCharacterCardAssetImageSafely(trx, { asset: context.asset, imageId });
           });
         } catch (reason) {
           // Keep the failed candidate for inspection and restore the previously selected result.
